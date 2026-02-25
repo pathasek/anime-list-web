@@ -1,0 +1,875 @@
+[
+  {
+    "name": "From Bureaucrat to Villainess: Dad's Been Reincarnated!",
+    "type": "TV",
+    "episodes": 12,
+    "status": 24,
+    "priority": 288,
+    "source": "Doporučení od Michala, má rád Villainess stuff, já toho ještě tolik neviděl, tak nevím, ale mohlo by být funny",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Zenshu",
+    "type": "TV",
+    "episodes": 12,
+    "status": 23,
+    "priority": 276,
+    "source": "MAPPA animace, původně jsem přidal, když vycházelo",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Tokyo Ravengers",
+    "type": "TV",
+    "episodes": 37,
+    "status": 23,
+    "priority": 851,
+    "source": "Původně mě zajímalo, ale nevěděl jsem nic o tom. Posléze jsem zjistitl, že neexistují dospělí? To mi kazí vibe a budu asi odkládat? Možná si to pletu",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Zipang",
+    "type": "TV",
+    "episodes": 26,
+    "status": 24,
+    "priority": 624,
+    "source": "Doporučeno od Michala, zmínil, že tam jsou missile warships",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Girls und Panzer (zbytek)",
+    "type": "Multiple",
+    "episodes": 1,
+    "status": 312,
+    "priority": 312,
+    "source": "Dal jsem pauzu na Girls und Panzer dříve, protože jsem nechtěl vidět v JAP dubu, teď mi to tolik nevadí už",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Mobile Suit Gundam: Iron-Blooded Orphans, S01 + S02",
+    "type": "TV",
+    "episodes": 1,
+    "status": 1200,
+    "priority": 1200,
+    "source": "Doporučeno od Michala, myslím, že bylo doporučeno po zhlédnutí Darling in the FranXX? Už si nepamatuji okolnosti",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Azur Lane",
+    "type": "Multiple",
+    "episodes": 12,
+    "status": 23,
+    "priority": 276,
+    "source": "Funny dub, herečky mají akcent podle toho, z jaké země \"připlouvají\", ship-girls?",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Tokyo Ghoul série + OVAs",
+    "type": "Multiple",
+    "episodes": 48,
+    "status": 24,
+    "priority": 1152,
+    "source": "Chci si přidat OP/ED do listu",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Cowboy Bebop",
+    "type": "Multiple",
+    "episodes": 26,
+    "status": 24,
+    "priority": 624,
+    "source": "Viděl jsem Lazarus, tohle je prý lepší, tak by se mi mohlo líbit",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Hunter x Hunter (2011 ver)",
+    "type": "Multiple",
+    "episodes": 148,
+    "status": 23,
+    "priority": 3404,
+    "source": "AI doporučení, nic moc o tom nevím",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Mushishi",
+    "type": "Multiple",
+    "episodes": 48,
+    "status": 23,
+    "priority": 1104,
+    "source": "AI doporučení, nic moc o tom nevím",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Clannad + After Story",
+    "type": "Multiple",
+    "episodes": 47,
+    "status": 24,
+    "priority": 1128,
+    "source": "Dostkrát zmíněno s Charlotte nebo Angel Beats! pokud se nepletu, mohlo by být i dost emotivní",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Mob Psycho",
+    "type": "TV",
+    "episodes": 37,
+    "status": 24,
+    "priority": 888,
+    "source": "Má hodně dobrý hodnocení a je to komedie, mohlo by být fun",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Paranoia Agent",
+    "type": "TV",
+    "episodes": 13,
+    "status": 24,
+    "priority": 312,
+    "source": "Hledal jsem si víc psychological Anime, co bych mohl vidět v létě po \"Monster\"",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Tengen Toppa Gurren Lagann",
+    "type": "Multiple",
+    "episodes": 1,
+    "status": 648,
+    "priority": 648,
+    "source": "Doporučil mi Michal a AI pokud se nepletu, jinak vůbec nic nevím",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Black Clover",
+    "type": "Multiple",
+    "episodes": 170,
+    "status": 23,
+    "priority": 3910,
+    "source": "Už jsem zapomněl, proč přesně bych chtěl dát, ale asi kvůli hodnocení, že je celkem vysoký",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Bleach",
+    "type": "Multiple",
+    "episodes": 366,
+    "status": 24,
+    "priority": 8784,
+    "source": "Vidím častěji a častěji na TT, kvůli záporákovi bych chtěl dát a kvůli story",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Fire Force",
+    "type": "Multiple",
+    "episodes": 60,
+    "status": 24,
+    "priority": 1440,
+    "source": "Podle Michala má dobrý story, jen pozor na Fan Service, chtěl bych dát",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Ghost in The Shell (existuje několik verzí)",
+    "type": "Movie",
+    "episodes": 1,
+    "status": 90,
+    "priority": 90,
+    "source": "Sci-Fi Anime, které bych měl vidět, může být dost zajímavé pro mě",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "One Punch Man",
+    "type": "Multiple",
+    "episodes": 29,
+    "status": 24,
+    "priority": 696,
+    "source": "Efekty jsou crazy, nelíbilo se mi poprvé, tak bych zkusil znovu",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Cosmic Horror/Lovecraftian story",
+    "type": "Multiple",
+    "episodes": null,
+    "status": null,
+    "priority": 0,
+    "source": "Made in Abyss mě moc bavilo, po zhlédnutí Astra Lost in Space bych chtěl víc kosmických horrorů (situace, kde musí postavy přežít ve vesmíru nebo v situacích podobných jako by bylo přežití ve vesmíru/proti divočině…)",
+    "notes": null
+  },
+  {
+    "name": "The Case Study of Vanitas",
+    "type": "Multiple",
+    "episodes": 24,
+    "status": 23,
+    "priority": 552,
+    "source": "Viděl jsem zmíněno na TT, mohlo by se mi líbit",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Wonder Egg Priority",
+    "type": "Multiple",
+    "episodes": 12,
+    "status": 23,
+    "priority": 276,
+    "source": "Viděl jsem zmíněno na TT, mohl by být hidden gem",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Darwin's Game",
+    "type": "TV",
+    "episodes": 11,
+    "status": 26,
+    "priority": 286,
+    "source": "Doporučil mi Michal, dobrý mystery na začátku (už nemůžu najít ten koment přesně)",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Perfect Blue",
+    "type": "Movie",
+    "episodes": 1,
+    "status": 81,
+    "priority": 81,
+    "source": "Viděl jsem poprvé zmíněno v TT; psychological Anime",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Gargantia on the Verdurous Planet",
+    "type": "Multiple",
+    "episodes": 13,
+    "status": 23,
+    "priority": 299,
+    "source": "Sci-Fi Mecha Anime, které by mohlo by být hidden gem pro mě",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Dragon Goes House-Hunting",
+    "type": "TV",
+    "episodes": 12,
+    "status": 23,
+    "priority": 276,
+    "source": "\"Here's Barney\" funny scéna",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "My Teen Romantic Comedy SNAFU",
+    "type": "TV",
+    "episodes": 38,
+    "status": 24,
+    "priority": 912,
+    "source": "\"Hikigaya je jeden z nejvíc relatable characters podle komunity\"",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Dark Gathering",
+    "type": "TV",
+    "episodes": 25,
+    "status": 23,
+    "priority": 575,
+    "source": "viděl jsem na TT list dobrých hororů, zmínky které jsem viděl (Another, Elfen Lied)",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Shadows House",
+    "type": "TV",
+    "episodes": 25,
+    "status": 23,
+    "priority": 575,
+    "source": "viděl jsem edit na TT, vypadá gruesome a horror",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Berserk (série)",
+    "type": "Multiple",
+    "episodes": 75.1,
+    "status": 23,
+    "priority": 1727.3,
+    "source": "Michal a Matouš doporučili originální seriál, existuje ještě 2016 adaptace a filmy, ohledně filmů: Eclipse mě zaujalo dost (taky memorial edition TV verze?)",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Initial D Stages",
+    "type": "Multiple",
+    "episodes": 88,
+    "status": 25,
+    "priority": 2200,
+    "source": "Doporučil mi Michal, COOOL OST",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "The Seven Deadly Sins série",
+    "type": "Multiple",
+    "episodes": 139,
+    "status": 24,
+    "priority": 3336,
+    "source": "Viděl jsem Re:Zero a FMAB, toto má doslova název Seven Deadly Sins, taky Escanor speech",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Clevatess",
+    "type": "TV",
+    "episodes": 8,
+    "status": 23,
+    "priority": 184,
+    "source": "Vidím dost hype na toto Anime na TT, i když je velmi nové",
+    "notes": "AIRING!"
+  },
+  {
+    "name": "World Trigger",
+    "type": "TV",
+    "episodes": 99,
+    "status": 23,
+    "priority": 2277,
+    "source": "Doporučil Vojta, \"seamless transition\" na další epizody",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Bungou Stray Dogs",
+    "type": "TV",
+    "episodes": 60,
+    "status": 23,
+    "priority": 1380,
+    "source": "TT doporučení, \"Is there really any value to this thing we call living?\"",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Aldnoah.Zero",
+    "type": "Multiple",
+    "episodes": 25,
+    "status": 23,
+    "priority": 575,
+    "source": "Earth vs Mars (stejný plot point, jako v The Expanse), doporučení od AnimePlus",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "JoJo's Bizarre Adventure series",
+    "type": "Multiple",
+    "episodes": 190,
+    "status": 24,
+    "priority": 4560,
+    "source": "Part 4 má time loops, doporučení z MAL RECOMMENDATIONS",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Kino's Journey",
+    "type": "Multiple",
+    "episodes": 1,
+    "status": 1000,
+    "priority": 1000,
+    "source": "Viděl jsem Girls' Last Tour, toto by se mi mohlo líbit (https://animefreakjapan.com/the-best-viewing-order-for-kinos-journey-anime-2024-edition/)",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "7th Time Loop: The Villainess Enjoys a Carefree Life Married to Her Worst Enemy!",
+    "type": "TV",
+    "episodes": 12,
+    "status": 23,
+    "priority": 276,
+    "source": "Time loop Villainess Anime, doporučení od Michala podle sdíleného videa (https://youtu.be/Usf5AHfF9xA?t=707)",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "World Break: Aria of Curse for a Holy Swordsman",
+    "type": "TV",
+    "episodes": 12,
+    "status": 24,
+    "priority": 288,
+    "source": "Max kvůli OST, co poslal Michal z 26.08.2025 v Discordu",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Seraph of the End",
+    "type": "Multiple",
+    "episodes": 25,
+    "status": 23,
+    "priority": 575,
+    "source": "Via AniList - má \"rotoscoping\" fluidní animace, začal jsem vyhledávat Anime s tímto stylem animací po zhlédnutí Eye-Candy animací, které má trilogie Kizumonogatari",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Guilty Crown",
+    "type": "Multiple",
+    "episodes": 23,
+    "status": 24,
+    "priority": 552,
+    "source": "\"Beautifully Flawed\", fun and visually stunning show - Tak uvidíme, až se k tomu dostanu",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Date a Live",
+    "type": "Multiple",
+    "episodes": 62,
+    "status": 25,
+    "priority": 1550,
+    "source": "Doporučil mi Matouš, \"Date a Live V\" má time manipulation podle AniListu (tag)",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Love, Chunibyo & Other Delusions!",
+    "type": "Multiple",
+    "episodes": 32,
+    "status": 24,
+    "priority": 768,
+    "source": "Girl fights against imaginary evil organisation",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "I Was Reincarnated as the 7th Prince so I Can Take My Time Perfecting My Magical Ability",
+    "type": "TV",
+    "episodes": 24,
+    "status": 23,
+    "priority": 552,
+    "source": "Podle TT komentáře má fakt good Animace",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Uma Musume: Cinderella Gray",
+    "type": "TV",
+    "episodes": 13,
+    "status": 23,
+    "priority": 299,
+    "source": "Písnička \"BRIGHTEST HEART\", dobré animace - potom ještě čeknout watch order ohledně orig. Uma Musume story",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "ACCA: 13-Territory Inspection Dept.",
+    "type": "Multiple",
+    "episodes": 14,
+    "status": 24,
+    "priority": 336,
+    "source": "\"Mám rád TT, ukáže mi random Anime, edit nebo scéna neni tak zajímavá (no spoilers), ale přesto styl je intriguing. Jde do plan to watch\" - klikni pro odkaz",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Erased",
+    "type": "TV",
+    "episodes": 12,
+    "status": 23,
+    "priority": 276,
+    "source": "Asi bych měl vidět, uvidím, jestli se mi bude líbit",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Dr. Stone",
+    "type": "Multiple",
+    "episodes": 83,
+    "status": 24,
+    "priority": 1992,
+    "source": "Vím o tom delší dobu, původně jsem moc nechtěl sledovat, ale to byl únor a tehdy bych nikdy nesnil třeba o Monogatari sérii…",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Sonny Boy",
+    "type": "TV",
+    "episodes": 11,
+    "status": 24,
+    "priority": 264,
+    "source": "\"Isekai\" o kterém jsem nikdy neslyšel až na Anime Recommendation TT, od Madhouse studia",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Now and Then, Here and There",
+    "type": "TV",
+    "episodes": 13,
+    "status": 24,
+    "priority": 312,
+    "source": "Z Anime Recommendation TT, Isekai a Military tag, dystopický svět, pokud se mi líbilo Made in Abyss, tohle se mi bude líbit taky (uvidíme)",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Moriarty the Patriot",
+    "type": "Multiple",
+    "episodes": 26,
+    "status": 23,
+    "priority": 598,
+    "source": "Cool OP, dobrý hodnocení, divím se, že jsem o tom ještě neslyšel, -odkaz-",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Sakamoto Days",
+    "type": "TV",
+    "episodes": 22,
+    "status": 23,
+    "priority": 506,
+    "source": "Jediný reason, proč to dát: ženská postava in black, -odkaz-",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "InterestStacks",
+    "type": "x",
+    "episodes": "x",
+    "status": "x",
+    "priority": "#VALUE!",
+    "source": "spousta možností vyhledat si společná Anime podle některých charakteristik",
+    "notes": "x"
+  },
+  {
+    "name": "InterestStacks",
+    "type": "x",
+    "episodes": "x",
+    "status": "x",
+    "priority": "#VALUE!",
+    "source": "Anime s energií zpěvu - band, odkaz, co mě inspirovalo (-odkaz-)",
+    "notes": "x"
+  },
+  {
+    "name": "Gnosia",
+    "type": "TV",
+    "episodes": 3,
+    "status": 23,
+    "priority": 69,
+    "source": " - Zajímavá animace a CGI, nové Anime, odkaz na Edit, který jsem viděl -",
+    "notes": "AIRING!"
+  },
+  {
+    "name": "Anime, co vypadají cute, ale jsou actually dark",
+    "type": "Multiple",
+    "episodes": "x",
+    "status": "x",
+    "priority": "#VALUE!",
+    "source": "Wonder Egg Priority, Black Bullet, Princess Tutu, Eden of the East, Flip Flappers, Shadows House",
+    "notes": "x"
+  },
+  {
+    "name": "Short Completed Anime with only 1 Season (either completed, or will never get real sequel)",
+    "type": "Multiple",
+    "episodes": "x",
+    "status": "x",
+    "priority": "#VALUE!",
+    "source": "https://myanimelist.net/stacks/7781",
+    "notes": "x"
+  },
+  {
+    "name": "Knights of Sidonia",
+    "type": "Multiple",
+    "episodes": 29,
+    "status": 24,
+    "priority": 696,
+    "source": "\"Space Thriller\"",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Ruri Rocks",
+    "type": "TV",
+    "episodes": 13,
+    "status": 23,
+    "priority": 299,
+    "source": "\"best jumping animation\", \"interestingly looking characters\"",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Ishura",
+    "type": "TV",
+    "episodes": 24,
+    "status": 23,
+    "priority": 552,
+    "source": "Battle royale, interesting fights",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Berserk of Gluttony",
+    "type": "TV",
+    "episodes": 12,
+    "status": 23,
+    "priority": 276,
+    "source": "7 deadly sins mentioned, taboo skill",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Great Pretender",
+    "type": "Multiple",
+    "episodes": 27,
+    "status": 23,
+    "priority": 621,
+    "source": "High stakes fraud",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "High-Rise Invasion",
+    "type": "ONA",
+    "episodes": 12,
+    "status": 24,
+    "priority": 288,
+    "source": "Gore on high rise buildings",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Darker than Black",
+    "type": "Multiple",
+    "episodes": 42,
+    "status": 24,
+    "priority": 1008,
+    "source": "Looks very promising, Noir and Black Butler style first impression",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "The Unwanted Undead Adventurer",
+    "type": "TV",
+    "episodes": 12,
+    "status": 23,
+    "priority": 276,
+    "source": "Podobný k The Skeleton Knight, \"I wouldn't mind if you wanted to eat me\", není isekai, found family tag",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Ya Boy Kongming!",
+    "type": "TV",
+    "episodes": 12,
+    "status": 23,
+    "priority": 276,
+    "source": "Hudba a komedie, Michalovi se líbí",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Star Wars: Visions",
+    "type": "ONA",
+    "episodes": 27,
+    "status": 16,
+    "priority": 432,
+    "source": "Volume 2 není by Jap studio, takže není na MAL, přidal jsem do plánu kvůli Kevin Penkin OST max",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Wandance",
+    "type": "TV",
+    "episodes": 8,
+    "status": 23,
+    "priority": 184,
+    "source": "Taneční Anime, zajímají mě postavy a feel - bohužel CGI je atrocious, ale 2D animace jsou od Madhouse",
+    "notes": "AIRING!"
+  },
+  {
+    "name": "ef - a tale of memories.",
+    "type": "Multiple",
+    "episodes": 27,
+    "status": 24,
+    "priority": 648,
+    "source": "Doporučení k The Place Promised in Our Early Days, vypadá zajímavě (tag - tragedy a classical music), má potenciál být překvapení jako Ascendance of a Bookworm?",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Noein: To Your Other Self",
+    "type": "TV",
+    "episodes": 24,
+    "status": 25,
+    "priority": 600,
+    "source": "Time travel, nic dalšího nevím",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Gyo",
+    "type": "Movie",
+    "episodes": 1,
+    "status": 70,
+    "priority": 70,
+    "source": "Perhaps další Gore Drama? Doporučení od Michala - \"Interesting\"",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "The Weakest Tamer Began a Journey to Pick Up Trash",
+    "type": "TV",
+    "episodes": 12,
+    "status": 23,
+    "priority": 276,
+    "source": "Další dobrý Isekai left: https://www.reddit.com/r/Isekai/comments/1pblzu9/what_good_isekai_do_i_still_have_left/",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Reincarnated as a Sword",
+    "type": "TV",
+    "episodes": 12,
+    "status": 23,
+    "priority": 276,
+    "source": "Další dobrý Isekai left: https://www.reddit.com/r/Isekai/comments/1pblzu9/what_good_isekai_do_i_still_have_left/",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Handyman Saitou in Another World",
+    "type": "TV",
+    "episodes": 12,
+    "status": 23,
+    "priority": 276,
+    "source": "Další dobrý Isekai left: https://www.reddit.com/r/Isekai/comments/1pblzu9/what_good_isekai_do_i_still_have_left/",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "A Wild Last Boss Appeared",
+    "type": "TV",
+    "episodes": 9,
+    "status": 23,
+    "priority": 207,
+    "source": "Isekai a above average animace, lidé o tom moc nemluví myslím, mohlo by být good Hodnocení od Michala: (Animace: byla celkem epic bych řekl dal bych tomu 9\nCGI: nevím jak moc tam je ale to je bych zmírnil jeho dopad tak 8\nMc: WE ARE LUFAS 9 má tam zajímavý plot to discover. \nSC: 8\nWaifu: WE ARE LUFAS 9 je to dark winged\nPlot: 9 isekai co je dost mysterious??? A zajímavý pro hráče takže by se ti mohlo líbit.\nPacing: 9 četl jsem manhwa ale je to podle novely tak idk ale vyšlo to že na konci je cliffhanger\nStory conclusion? Ještě to neskončilo jako anime a na konci je dost velký mystery 9\nOriginalita: gaming isekai? Je celkem běžný ale je tam jiný plottwist a dost originální ideas tak dám 9\nEmoce: moc tam nejsou bych řekl je to spíš o postavení do story nejdřív a je to dost mystery tak dám 4 kvůli pár jokes\nEnjoyment: good fights good twist 9\nOp: byl celkem good tak dám 9 ed si nepamatuji\nOst: v jednom fightu je metal funny enough 9)",
+    "notes": "AIRING!"
+  },
+  {
+    "name": "Dragon Raja -The Blazing Dawn-",
+    "type": "Donghua",
+    "episodes": 42,
+    "status": 24,
+    "priority": 1008,
+    "source": "viděl jsem edit s písničkou, Gore animace",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Link Click",
+    "type": "Donghua",
+    "episodes": 32,
+    "status": 23,
+    "priority": 736,
+    "source": "Time travel, podobné Steins;Gate?",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "To Be Hero X",
+    "type": "Donghua",
+    "episodes": 24,
+    "status": 25,
+    "priority": 600,
+    "source": "Chtěl jsem vidět v dubnu 2025, ignoroval prequels",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "The Legend of Hei",
+    "type": "Donghua",
+    "episodes": 1,
+    "status": 101,
+    "priority": 101,
+    "source": "viděl jsem video, jak borec měl god mode a spamovali ho raketami",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "The Founder of Diabolism",
+    "type": "Donghua",
+    "episodes": 23,
+    "status": 24,
+    "priority": 552,
+    "source": "Cultivation od stejného studia jako Lord of Mysteries",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Record of Ragnarok",
+    "type": "ONA",
+    "episodes": 42,
+    "status": 23,
+    "priority": 966,
+    "source": "Podobné k Fate - známe postavy a fights, ONA",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Agents of the Four Seasons",
+    "type": "TV",
+    "episodes": "?",
+    "status": "?",
+    "priority": "#VALUE!",
+    "source": "Příběh od autora Violet Evergarden, animuje Wit Studio, OST od Kensuke Ushio (CSM, A Silent Voice)",
+    "notes": "Nadcházející"
+  },
+  {
+    "name": "Gankutsuou: The Count of Monte Cristo",
+    "type": "TV",
+    "episodes": 24,
+    "status": 24,
+    "priority": 576,
+    "source": "Podobné k Monster, odehrává se v budoucnosti, vesmír a aliens, klasická literatura",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Legend of the Galactic Heroes",
+    "type": "Multiple",
+    "episodes": 111,
+    "status": 26,
+    "priority": 2886,
+    "source": "Až se oznámí S05 LOGH DNT, tak náplánovat rewatch + watch originálu",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Patema Inverted",
+    "type": "Multiple",
+    "episodes": 5,
+    "status": 25,
+    "priority": 125,
+    "source": "Film a 5x EP sequel, Post-apocalyptic, dystopian, zajímavá synopsis (a world turned upside down), hearwarming film",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "To Me, The One Who Loved You",
+    "type": "Movie",
+    "episodes": 1,
+    "status": 98,
+    "priority": 98,
+    "source": "Film, memory manipulation, time skip, zajímavý název, ne tak dobré hodnocení",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "To Every You I’ve Loved Before",
+    "type": "Movie",
+    "episodes": 1,
+    "status": 102,
+    "priority": 102,
+    "source": "Alternativa k To Me, The One Who Loved You (?)",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Colorful ~ The Motion Picture",
+    "type": "Movie",
+    "episodes": 1,
+    "status": 127,
+    "priority": 127,
+    "source": "Suicide and a second chance (?)",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Land of the Lustrous",
+    "type": "TV",
+    "episodes": 12,
+    "status": 24,
+    "priority": 288,
+    "source": "Celkem dobré hodnocení, CGI, vídám často na TT u těch zajímavějších Anime",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Carole & Tuesday",
+    "type": "TV",
+    "episodes": 24,
+    "status": 24,
+    "priority": 576,
+    "source": "Girls Band na Marsu - Cyberpunk, AI, female protagonists",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Apocalypse Hotel",
+    "type": "TV",
+    "episodes": 12,
+    "status": 23,
+    "priority": 276,
+    "source": "Episodic, post-apocalyptic, různé postavy, zajímavé (META), parody",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Delicious in Dungeon",
+    "type": "Multiple",
+    "episodes": 24,
+    "status": 25,
+    "priority": 600,
+    "source": "Must see, studio Trigger, před S02 někdy v roce 2026, Good Animace a jídlo? Dungeons? Předtím mě to tolik nezajímalo, ale chtěl bych nyní dát v blízké budoucnosti",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Problem Children Are Coming From Another World, Aren't They?",
+    "type": "Multiple",
+    "episodes": 11,
+    "status": 23,
+    "priority": 253,
+    "source": "Podobný jako No Game, No Life, very smart MC's that easily win any games, from modern world to fantasy world",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Super Crooks",
+    "type": "ONA",
+    "episodes": 13,
+    "status": 25,
+    "priority": 325,
+    "source": "Funny guy tancuje meme, ONA, \"One Last Heist\"",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Memories",
+    "type": "Movie",
+    "episodes": 3,
+    "status": 37,
+    "priority": 111,
+    "source": "1995, tři různé filmy, short (37 min), Space a Sci-Fi, na základě doporučení od Gemini k Made in Abyss",
+    "notes": "Vydáno"
+  }
+]
