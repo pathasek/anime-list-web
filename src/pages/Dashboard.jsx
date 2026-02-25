@@ -43,7 +43,49 @@ function Dashboard() {
     const [loading, setLoading] = useState(true)
     const [timeFilter, setTimeFilter] = useState('all')
     const [customRange, setCustomRange] = useState({ start: '', end: '' })
-    const [activeChartSettings, setActiveChartSettings] = useState(null)
+    const [chartOrder, setChartOrder] = useState(() => {
+        const savedOrder = localStorage.getItem('dashboardChartOrder')
+        if (savedOrder) return JSON.parse(savedOrder)
+        return ['types', 'studios', 'seasons', 'genres', 'themes', 'rating', 'monthly2025', 'releaseYears', 'status', 'dubbing', 'avgRatingType', 'studiosByRating', 'genresByRating', 'themesByRating', 'dailyWatching', 'monthlyWatching']
+    })
+
+    const [draggedChart, setDraggedChart] = useState(null)
+
+    const handleDragStart = (e, id) => {
+        setDraggedChart(id)
+        e.dataTransfer.effectAllowed = 'move'
+        // Add a class for visual feedback
+        e.currentTarget.classList.add('dragging')
+    }
+
+    const handleDragOver = (e, id) => {
+        e.preventDefault()
+        e.dataTransfer.dropEffect = 'move'
+    }
+
+    const handleDrop = (e, targetId) => {
+        e.preventDefault()
+        if (!draggedChart || draggedChart === targetId) return
+
+        const newOrder = [...chartOrder]
+        const draggedIdx = newOrder.indexOf(draggedChart)
+        const targetIdx = newOrder.indexOf(targetId)
+
+        newOrder.splice(draggedIdx, 1)
+        newOrder.splice(targetIdx, 0, draggedChart)
+
+        setChartOrder(newOrder)
+        localStorage.setItem('dashboardChartOrder', JSON.stringify(newOrder))
+        setDraggedChart(null)
+
+        // Remove dragging class
+        const draggables = document.querySelectorAll('.chart-container')
+        draggables.forEach(d => d.classList.remove('dragging'))
+    }
+
+    const handleDragEnd = (e) => {
+        e.currentTarget.classList.remove('dragging')
+    }
     const [settingsRefresh, setSettingsRefresh] = useState(0)
     const [statsData, setStatsData] = useState(null) // Stats from stats.json (with comments)
 
@@ -746,16 +788,22 @@ function Dashboard() {
 
         return (
             <div
-                className="chart-container"
+                className={`chart-container ${draggedChart === id ? 'dragging' : ''}`}
+                draggable="true"
+                onDragStart={(e) => handleDragStart(e, id)}
+                onDragOver={(e) => handleDragOver(e, id)}
+                onDrop={(e) => handleDrop(e, id)}
+                onDragEnd={handleDragEnd}
                 style={{
                     gridColumn: defaultGridColumn,
                     width: settings.customWidth ? `${settings.customWidth}px` : 'auto',
-                    height: settings.customHeight ? `${settings.customHeight}px` : 'auto'
+                    height: settings.customHeight ? `${settings.customHeight}px` : 'auto',
+                    cursor: 'grab'
                 }}
                 onMouseUp={handleMouseUp}
             >
                 <div className="chart-header">
-                    <div className="chart-title">{customTitle}</div>
+                    <div className="chart-title" style={{ cursor: 'grab' }}>{customTitle}</div>
                     <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, id, defaultTitle)} title="Nastavení">⚙️</button>
                 </div>
                 <div style={{ flex: 1, minHeight: 0, position: 'relative' }}>
@@ -852,13 +900,7 @@ function Dashboard() {
                         })
                     }
                 ]
-                // Type breakdown rows
-                const typeOrder = ['TV', 'TV Special', 'Special', 'Movie', 'OVA', 'ONA']
-                typeOrder.forEach(t => {
-                    if (all.typeBreakdown[t]) {
-                        rows.push({ label: `Počet — ${t}`, all: all.typeBreakdown[t] || 0, years: yearCols.map(y => ys[y]?.typeBreakdown[t] || 0), isType: true })
-                    }
-                })
+                // Removed type breakdown rows as requested
 
                 return (
                     <div className="card" style={{ marginBottom: 'var(--spacing-xl)', overflowX: 'auto' }}>
@@ -890,80 +932,91 @@ function Dashboard() {
             })()}
 
 
-            {/* Charts Row 1 */}\n            <div className="charts-grid">\n
-                <ChartWrapper id="types" defaultTitle="Rozdělení typů" defaultGridColumn="span 1">
-                    <Doughnut data={applyPalette(typeChartData, getChartSettings('types').palette)} options={buildChartOptions(pieOptions, { ...getChartSettings('types'), showGrid: false })} />
-                </ChartWrapper>
-
-                <ChartWrapper id="studios" defaultTitle="Top 10 Studií" defaultGridColumn="span 1">
-                    <Pie data={applyPalette(studioChartData, getChartSettings('studios').palette)} options={buildChartOptions(pieOptions, { ...getChartSettings('studios'), showGrid: false })} />
-                </ChartWrapper>
-
-                <ChartWrapper id="seasons" defaultTitle="Rozdělení podle sezón" defaultGridColumn="span 1">
-                    <Doughnut data={applyPalette(seasonsChartData, getChartSettings('seasons').palette)} options={buildChartOptions(pieOptions, { ...getChartSettings('seasons'), showGrid: false })} />
-                </ChartWrapper>
-
-                <ChartWrapper id="genres" defaultTitle="Top 10 Žánrů" defaultGridColumn="span 1">
-                    <Bar data={applyPalette(genreChartData, getChartSettings('genres').palette)} options={buildChartOptions({ ...chartOptions, indexAxis: 'y' }, getChartSettings('genres'))} />
-                </ChartWrapper>
-
-                <ChartWrapper id="themes" defaultTitle="Top 10 Témat" defaultGridColumn="span 1">
-                    <Bar data={applyPalette(themesChartData, getChartSettings('themes').palette)} options={buildChartOptions({ ...chartOptions, indexAxis: 'y' }, getChartSettings('themes'))} />
-                </ChartWrapper>
-
-                <ChartWrapper id="rating" defaultTitle="Rozdělení hodnocení" defaultGridColumn="span 1">
-                    <Bar data={applyPalette(ratingChartData, getChartSettings('rating').palette)} options={buildChartOptions(chartOptions, getChartSettings('rating'))} />
-                </ChartWrapper>
-
-                <ChartWrapper id="monthly2025" defaultTitle={`Sledování v roce ${stats.latestYear} (epizody/měsíc)`} defaultGridColumn="span 2">
-                    <Line data={applyPalette(monthlyData, getChartSettings('monthly2025').palette)} options={buildChartOptions(chartOptions, getChartSettings('monthly2025'))} />
-                </ChartWrapper>
-
-                <ChartWrapper id="releaseYears" defaultTitle="Stáří anime (podle data vydání)" defaultGridColumn="span 2">
-                    <Line data={applyPalette(releaseYearsData, getChartSettings('releaseYears').palette)} options={buildChartOptions(chartOptions, getChartSettings('releaseYears'))} />
-                </ChartWrapper>
-
-                <ChartWrapper id="status" defaultTitle="Rozdělení statusů" defaultGridColumn="span 1">
-                    <Doughnut data={applyPalette(statusChartData, getChartSettings('status').palette)} options={buildChartOptions(pieOptions, { ...getChartSettings('status'), showGrid: false })} />
-                </ChartWrapper>
-
-                <ChartWrapper id="dubbing" defaultTitle="Rozdělení dabingů" defaultGridColumn="span 1">
-                    <Bar data={applyPalette(dubChartData, getChartSettings('dubbing').palette)} options={buildChartOptions(chartOptions, getChartSettings('dubbing'))} />
-                </ChartWrapper>
-
-                <ChartWrapper id="avgRatingType" defaultTitle="Průměrné hodnocení dle typu" defaultGridColumn="span 1">
-                    <Bar data={applyPalette(avgRatingByTypeData, getChartSettings('avgRatingType').palette)} options={buildChartOptions(chartOptions, getChartSettings('avgRatingType'))} />
-                </ChartWrapper>
-
-                {stats.studiosByRating.length > 0 && (
-                    <ChartWrapper id="studiosByRating" defaultTitle="Top 10 studií podle hodnocení">
-                        <Bar data={applyPalette(studiosByRatingData, getChartSettings('studiosByRating').palette)} options={buildChartOptions(horizontalBarOptions, getChartSettings('studiosByRating'))} />
-                    </ChartWrapper>
-                )}
-
-                {stats.genresByRating.length > 0 && (
-                    <ChartWrapper id="genresByRating" defaultTitle="Top 10 žánrů podle hodnocení">
-                        <Bar data={applyPalette(genresByRatingData, getChartSettings('genresByRating').palette)} options={buildChartOptions(horizontalBarOptions, getChartSettings('genresByRating'))} />
-                    </ChartWrapper>
-                )}
-
-                {stats.themesByRating.length > 0 && (
-                    <ChartWrapper id="themesByRating" defaultTitle="Top 10 témat podle hodnocení">
-                        <Bar data={applyPalette(themesByRatingData, getChartSettings('themesByRating').palette)} options={buildChartOptions(horizontalBarOptions, getChartSettings('themesByRating'))} />
-                    </ChartWrapper>
-                )}
-
-                {dailyDates.length > 0 && (
-                    <ChartWrapper id="dailyWatching" defaultTitle="Denní sledování (posledních 365 dní)" defaultGridColumn="span 2">
-                        <Line data={applyPalette(dailyWatchingData, getChartSettings('dailyWatching').palette)} options={buildChartOptions(chartOptions, getChartSettings('dailyWatching'))} />
-                    </ChartWrapper>
-                )}
-
-                {monthlyDates.length > 0 && (
-                    <ChartWrapper id="monthlyWatching" defaultTitle="Měsíční sledování (v minutách)" defaultGridColumn="span 2">
-                        <Bar data={applyPalette(monthlyWatchingData, getChartSettings('monthlyWatching').palette)} options={buildChartOptions(chartOptions, getChartSettings('monthlyWatching'))} />
-                    </ChartWrapper>
-                )}
+            {/* Dynamic Charts Grid */}
+            <div className="charts-grid">
+                {chartOrder.map(id => {
+                    if (id === 'types') return (
+                        <ChartWrapper key={id} id="types" defaultTitle="Rozdělení typů">
+                            <Doughnut data={applyPalette(typeChartData, getChartSettings('types').palette)} options={buildChartOptions(pieOptions, { ...getChartSettings('types'), showGrid: false })} />
+                        </ChartWrapper>
+                    )
+                    if (id === 'studios') return (
+                        <ChartWrapper key={id} id="studios" defaultTitle="Top 10 Studií">
+                            <Pie data={applyPalette(studioChartData, getChartSettings('studios').palette)} options={buildChartOptions(pieOptions, { ...getChartSettings('studios'), showGrid: false })} />
+                        </ChartWrapper>
+                    )
+                    if (id === 'seasons') return (
+                        <ChartWrapper key={id} id="seasons" defaultTitle="Rozdělení podle sezón">
+                            <Doughnut data={applyPalette(seasonsChartData, getChartSettings('seasons').palette)} options={buildChartOptions(pieOptions, { ...getChartSettings('seasons'), showGrid: false })} />
+                        </ChartWrapper>
+                    )
+                    if (id === 'genres') return (
+                        <ChartWrapper key={id} id="genres" defaultTitle="Top 10 Žánrů">
+                            <Bar data={applyPalette(genreChartData, getChartSettings('genres').palette)} options={buildChartOptions({ ...chartOptions, indexAxis: 'y' }, getChartSettings('genres'))} />
+                        </ChartWrapper>
+                    )
+                    if (id === 'themes') return (
+                        <ChartWrapper key={id} id="themes" defaultTitle="Top 10 Témat">
+                            <Bar data={applyPalette(themesChartData, getChartSettings('themes').palette)} options={buildChartOptions({ ...chartOptions, indexAxis: 'y' }, getChartSettings('themes'))} />
+                        </ChartWrapper>
+                    )
+                    if (id === 'rating') return (
+                        <ChartWrapper key={id} id="rating" defaultTitle="Rozdělení hodnocení">
+                            <Bar data={applyPalette(ratingChartData, getChartSettings('rating').palette)} options={buildChartOptions(chartOptions, getChartSettings('rating'))} />
+                        </ChartWrapper>
+                    )
+                    if (id === 'monthly2025') return (
+                        <ChartWrapper key={id} id="monthly2025" defaultTitle={`Sledování v roce ${stats.latestYear} (epizody/měsíc)`} defaultGridColumn="span 2">
+                            <Line data={applyPalette(monthlyData, getChartSettings('monthly2025').palette)} options={buildChartOptions(chartOptions, getChartSettings('monthly2025'))} />
+                        </ChartWrapper>
+                    )
+                    if (id === 'releaseYears') return (
+                        <ChartWrapper key={id} id="releaseYears" defaultTitle="Stáří anime (podle data vydání)" defaultGridColumn="span 2">
+                            <Line data={applyPalette(releaseYearsData, getChartSettings('releaseYears').palette)} options={buildChartOptions(chartOptions, getChartSettings('releaseYears'))} />
+                        </ChartWrapper>
+                    )
+                    if (id === 'status') return (
+                        <ChartWrapper key={id} id="status" defaultTitle="Rozdělení statusů">
+                            <Doughnut data={applyPalette(statusChartData, getChartSettings('status').palette)} options={buildChartOptions(pieOptions, { ...getChartSettings('status'), showGrid: false })} />
+                        </ChartWrapper>
+                    )
+                    if (id === 'dubbing') return (
+                        <ChartWrapper key={id} id="dubbing" defaultTitle="Rozdělení dabingů">
+                            <Bar data={applyPalette(dubChartData, getChartSettings('dubbing').palette)} options={buildChartOptions(chartOptions, getChartSettings('dubbing'))} />
+                        </ChartWrapper>
+                    )
+                    if (id === 'avgRatingType') return (
+                        <ChartWrapper key={id} id="avgRatingType" defaultTitle="Průměrné hodnocení dle typu">
+                            <Bar data={applyPalette(avgRatingByTypeData, getChartSettings('avgRatingType').palette)} options={buildChartOptions(chartOptions, getChartSettings('avgRatingType'))} />
+                        </ChartWrapper>
+                    )
+                    if (id === 'studiosByRating' && stats.studiosByRating.length > 0) return (
+                        <ChartWrapper key={id} id="studiosByRating" defaultTitle="Top 10 studií podle hodnocení">
+                            <Bar data={applyPalette(studiosByRatingData, getChartSettings('studiosByRating').palette)} options={buildChartOptions(horizontalBarOptions, getChartSettings('studiosByRating'))} />
+                        </ChartWrapper>
+                    )
+                    if (id === 'genresByRating' && stats.genresByRating.length > 0) return (
+                        <ChartWrapper key={id} id="genresByRating" defaultTitle="Top 10 žánrů podle hodnocení">
+                            <Bar data={applyPalette(genresByRatingData, getChartSettings('genresByRating').palette)} options={buildChartOptions(horizontalBarOptions, getChartSettings('genresByRating'))} />
+                        </ChartWrapper>
+                    )
+                    if (id === 'themesByRating' && stats.themesByRating.length > 0) return (
+                        <ChartWrapper key={id} id="themesByRating" defaultTitle="Top 10 témat podle hodnocení">
+                            <Bar data={applyPalette(themesByRatingData, getChartSettings('themesByRating').palette)} options={buildChartOptions(horizontalBarOptions, getChartSettings('themesByRating'))} />
+                        </ChartWrapper>
+                    )
+                    if (id === 'dailyWatching' && dailyDates.length > 0) return (
+                        <ChartWrapper key={id} id="dailyWatching" defaultTitle="Denní sledování (posledních 365 dní)" defaultGridColumn="span 2">
+                            <Line data={applyPalette(dailyWatchingData, getChartSettings('dailyWatching').palette)} options={buildChartOptions(chartOptions, getChartSettings('dailyWatching'))} />
+                        </ChartWrapper>
+                    )
+                    if (id === 'monthlyWatching' && monthlyDates.length > 0) return (
+                        <ChartWrapper key={id} id="monthlyWatching" defaultTitle="Měsíční sledování (v minutách)" defaultGridColumn="span 2">
+                            <Bar data={applyPalette(monthlyWatchingData, getChartSettings('monthlyWatching').palette)} options={buildChartOptions(chartOptions, getChartSettings('monthlyWatching'))} />
+                        </ChartWrapper>
+                    )
+                    return null
+                })}
             </div>
 
             {/* Chart Settings Modal */}
