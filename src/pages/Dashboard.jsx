@@ -790,7 +790,7 @@ function Dashboard() {
 
             {/* Time Filter */}
             <div className="time-filter">
-                <label>📅 Časový filtr:</label>
+                <label title="Časové období aktualizuje grafy">📅 Časový filtr (pro grafy):</label>
                 <select
                     value={timeFilter}
                     onChange={e => setTimeFilter(e.target.value)}
@@ -965,7 +965,7 @@ function Dashboard() {
                     </ChartWrapper>
                 )}
             </div>
-            
+
             {/* Chart Settings Modal */}
             {activeChartSettings && (
                 <ChartSettingsModal

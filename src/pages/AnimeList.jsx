@@ -9,7 +9,10 @@ function AnimeList() {
     const [searchTerm, setSearchTerm] = useState('')
     const [sortConfig, setSortConfig] = useState({ key: 'end_date', direction: 'desc' })
     const [typeFilter, setTypeFilter] = useState('all')
-    const [statusFilter, setStatusFilter] = useState('all')
+    const [statusFilter, setStatusFilter] = useState(() => {
+        return localStorage.getItem('statusFilter') || 'AIRING!'
+    })
+    const [seriesFilter, setSeriesFilter] = useState(null)
 
 
     useEffect(() => {
@@ -27,10 +30,14 @@ function AnimeList() {
 
     // Get unique statuses for filter
     const statuses = useMemo(() => {
-        const s = new Set()
-        animeList.forEach(a => a.status && s.add(a.status))
-        return ['all', ...Array.from(s)]
-    }, [animeList])
+        // Enforce specific order: Pending -> Airing -> Finished
+        return ['all', 'PENDING', 'AIRING!', 'FINISHED']
+    }, [])
+
+    // Sync status filter to localStorage
+    useEffect(() => {
+        localStorage.setItem('statusFilter', statusFilter)
+    }, [statusFilter])
 
     // Get unique types for filter
     const types = useMemo(() => {
@@ -42,6 +49,11 @@ function AnimeList() {
     // Filter and sort
     const filteredList = useMemo(() => {
         let result = [...animeList]
+
+        // Series filter (takes precedence or works alongside status)
+        if (seriesFilter) {
+            result = result.filter(a => extractSeriesBaseName(a.name) === seriesFilter)
+        }
 
         // Search filter
         if (searchTerm) {
@@ -97,7 +109,7 @@ function AnimeList() {
         }
 
         return result
-    }, [animeList, searchTerm, typeFilter, sortConfig])
+    }, [animeList, searchTerm, typeFilter, statusFilter, sortConfig])
 
     const handleSort = (key) => {
         setSortConfig(prev => ({
@@ -139,6 +151,22 @@ function AnimeList() {
         if (!name) return false
         // Match patterns like S01, S02, Season 1, Part 1, Part 2, etc.
         return /,\s*S\d+|Season\s*\d+|Part\s*\d+|:\s*S\d+/i.test(name)
+    }
+
+    // Extract base name of a series for filtering
+    const extractSeriesBaseName = (name) => {
+        if (!name) return ''
+        // Extract everything before the first comma, colon, "Season", or "Part"
+        return name.split(/,\s*S\d+|Season\s*\d+|Part\s*\d+|:\s*S\d+/i)[0].trim()
+    }
+
+    const toggleSeriesFilter = (name) => {
+        const baseName = extractSeriesBaseName(name)
+        if (seriesFilter === baseName) {
+            setSeriesFilter(null)
+        } else {
+            setSeriesFilter(baseName)
+        }
     }
 
     // Get MAL URL - use direct URL or fallback to search
@@ -207,9 +235,9 @@ function AnimeList() {
                         style={{ padding: '0.4rem 0.8rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', fontSize: '0.9rem' }}
                     >
                         <option value="all">Všechny statusy</option>
-                        {statuses.filter(s => s !== 'all').map(s => (
-                            <option key={s} value={s}>{s}</option>
-                        ))}
+                        <option value="PENDING">Pending</option>
+                        <option value="AIRING!">Airing</option>
+                        <option value="FINISHED">Finished</option>
                     </select>
                     {types.map(t => (
                         <button
@@ -248,10 +276,10 @@ function AnimeList() {
                                 Ep.{getSortIndicator('episodes')}
                             </th>
                             <th onClick={() => handleSort('rating')} className={sortConfig.key === 'rating' ? 'sorted' : ''}>
-                                Hodnocení <span title="Kliknutím seřadíte od nejlepšího" style={{ cursor: 'help', fontSize: '0.8rem', opacity: 0.8 }}>ℹ️</span>{getSortIndicator('rating')}
+                                Hodnocení <span title="Pro detaily rozklikněte hodnocení v rámečku" style={{ cursor: 'help', fontSize: '0.8rem', opacity: 0.8 }}>ℹ️</span>{getSortIndicator('rating')}
                             </th>
-                            <th onClick={() => handleSort('start_date')} className={sortConfig.key === 'start_date' ? 'sorted' : ''}>
-                                Sledováno{getSortIndicator('start_date')}
+                            <th onClick={() => handleSort('end_date')} className={sortConfig.key === 'end_date' ? 'sorted' : ''}>
+                                Dosledováno{getSortIndicator('end_date')}
                             </th>
                             <th onClick={() => handleSort('status')} className={sortConfig.key === 'status' ? 'sorted' : ''}>
                                 Status{getSortIndicator('status')}
@@ -335,15 +363,23 @@ function AnimeList() {
                                             </a>
                                             {isPartOfSeries(anime.name) && (
                                                 <span
+                                                    onClick={(e) => {
+                                                        e.preventDefault()
+                                                        e.stopPropagation()
+                                                        toggleSeriesFilter(anime.name)
+                                                    }}
                                                     style={{
                                                         fontSize: '0.65rem',
                                                         padding: '2px 6px',
                                                         borderRadius: '4px',
-                                                        background: 'var(--color-secondary)',
+                                                        background: seriesFilter === extractSeriesBaseName(anime.name) ? 'var(--accent-primary)' : 'var(--bg-tertiary)',
                                                         color: 'white',
-                                                        whiteSpace: 'nowrap'
+                                                        whiteSpace: 'nowrap',
+                                                        cursor: 'pointer',
+                                                        border: `1px solid ${seriesFilter === extractSeriesBaseName(anime.name) ? 'var(--accent-primary)' : 'var(--border-color)'}`,
+                                                        boxShadow: seriesFilter === extractSeriesBaseName(anime.name) ? '0 0 10px rgba(99, 102, 241, 0.4)' : 'none'
                                                     }}
-                                                    title="Součást série"
+                                                    title={seriesFilter === extractSeriesBaseName(anime.name) ? "Zrušit filtr série" : "Filtrovat tuhle sérii"}
                                                 >
                                                     Série
                                                 </span>
@@ -378,10 +414,10 @@ function AnimeList() {
                                     ) : '-'}
                                 </td>
                                 <td style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                                    {formatDate(anime.start_date)}
+                                    {formatDate(anime.end_date)}
                                 </td>
                                 <td>
-                                    <span className={`status-badge ${(anime.status || 'FINISHED').toLowerCase()}`}>
+                                    <span className={`status-badge ${(anime.status || 'FINISHED').toLowerCase().replace('!', '')}`}>
                                         {anime.status || 'FINISHED'}
                                     </span>
                                 </td>

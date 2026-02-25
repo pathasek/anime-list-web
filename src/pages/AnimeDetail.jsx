@@ -124,13 +124,13 @@ function AnimeDetail() {
                     data: episodeRatings.map(ep => ep.rating),
                     backgroundColor: episodeRatings.map(ep => {
                         const r = ep.rating
-                        if (r >= 5 && r <= 5.75) return 'rgb(99, 57, 116)'
-                        if (r >= 6 && r <= 6.75) return 'rgb(243, 156, 18)'
-                        if (r >= 7 && r <= 7.75) return 'rgb(244, 208, 63)'
-                        if (r >= 8 && r <= 8.75) return 'rgb(40, 180, 99)'
-                        if (r >= 9 && r <= 9.5) return 'rgb(24, 106, 59)'
-                        if (r >= 9.75 && r <= 10) return 'rgb(29, 161, 242)'
-                        return 'rgba(239, 68, 68, 0.7)' // default from template
+                        if (r >= 9.75 && r <= 10) return 'rgb(29, 161, 242)' // Absolute Cinema
+                        if (r >= 9 && r <= 9.5) return 'rgb(24, 106, 59)' // Awesome
+                        if (r >= 8 && r <= 8.75) return 'rgb(40, 180, 99)' // Great
+                        if (r >= 7 && r <= 7.75) return 'rgb(244, 208, 63)' // Good
+                        if (r >= 6 && r <= 6.75) return 'rgb(243, 156, 18)' // Regular
+                        if (r >= 5 && r <= 5.75) return 'rgb(99, 57, 116)' // Bad
+                        return 'rgba(239, 68, 68, 0.7)'
                     }),
                     borderRadius: 4
                 }
@@ -144,6 +144,12 @@ function AnimeDetail() {
         return values.length > 0 ? Math.min(...values) : 0
     }, [categoryRatings])
 
+    const radarMax = useMemo(() => {
+        if (!categoryRatings) return 10
+        const values = Object.values(categoryRatings)
+        return values.length > 0 ? Math.max(...values) : 10
+    }, [categoryRatings])
+
     const radarOptions = {
         responsive: true,
         maintainAspectRatio: false,
@@ -151,9 +157,9 @@ function AnimeDetail() {
             r: {
                 beginAtZero: false,
                 min: radarMin,
-                max: 10,
+                max: radarMax,
                 ticks: {
-                    stepSize: 2,
+                    stepSize: 1,
                     color: 'rgba(255,255,255,0.6)'
                 },
                 grid: {
@@ -274,6 +280,14 @@ function AnimeDetail() {
                     <div><strong>Datum vydání:</strong> {anime.release_date ? new Date(anime.release_date).toLocaleDateString('cs-CZ') : 'N/A'}</div>
                     <div><strong>Sledováno:</strong> {anime.start_date ? new Date(anime.start_date).toLocaleDateString('cs-CZ') : 'N/A'} - {anime.end_date ? new Date(anime.end_date).toLocaleDateString('cs-CZ') : 'N/A'}</div>
                     <div><strong>Dabing:</strong> {anime.dub || 'N/A'}</div>
+                    {anime.status && (
+                        <div>
+                            <strong>Status:</strong>{' '}
+                            <span className={`status-badge ${anime.status.toLowerCase().replace('!', '')}`}>
+                                {anime.status}
+                            </span>
+                        </div>
+                    )}
                 </div>
 
                 {anime.genres && (
@@ -317,28 +331,32 @@ function AnimeDetail() {
                         </span>
                     </h3>
 
-                    <div style={{ height: '400px', maxWidth: '600px', margin: '0 auto' }}>
-                        <Radar data={radarData} options={radarOptions} />
-                    </div>
-
-                    <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
-                        gap: 'var(--spacing-sm)',
-                        marginTop: 'var(--spacing-lg)'
-                    }}>
-                        {Object.entries(categoryRatings).map(([cat, rating]) => (
-                            <div key={cat} style={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                padding: 'var(--spacing-xs) var(--spacing-sm)',
-                                background: 'var(--color-bg-elevated)',
-                                borderRadius: 'var(--radius-sm)'
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xl)', flexWrap: 'wrap-reverse' }}>
+                        <div style={{ flex: '1', minWidth: '250px' }}>
+                            <div style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
+                                gap: 'var(--spacing-sm)'
                             }}>
-                                <span>{cat}</span>
-                                <span className={`badge rating-${Math.floor(rating)}`}>{rating}</span>
+                                {Object.entries(categoryRatings).map(([cat, rating]) => (
+                                    <div key={cat} style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        padding: 'var(--spacing-xs) var(--spacing-sm)',
+                                        background: 'var(--bg-secondary)',
+                                        borderRadius: 'var(--radius-sm)',
+                                        border: '1px solid var(--border-color)'
+                                    }}>
+                                        <span style={{ fontSize: '0.9rem' }}>{cat}</span>
+                                        <span className={`badge rating-${Math.floor(rating)}`} style={{ fontWeight: 'bold' }}>{rating}</span>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
+                        </div>
+
+                        <div style={{ height: '500px', flex: '1.5', minWidth: '400px' }}>
+                            <Radar data={radarData} options={radarOptions} />
+                        </div>
                     </div>
                 </div>
             )}
@@ -346,14 +364,44 @@ function AnimeDetail() {
             {/* Episode Ratings */}
             {episodeRatings && episodeChartData && (
                 <div className="card" style={{ marginBottom: 'var(--spacing-xl)' }}>
-                    <h3 style={{ marginBottom: 'var(--spacing-md)' }}>
-                        Hodnocení epizod
-                        <span style={{ marginLeft: 'var(--spacing-md)', fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
-                            (Průměr: <span className="badge badge-primary">{avgEpisodeRating}</span>)
-                        </span>
-                    </h3>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--spacing-md)' }}>
+                        <h3 style={{ margin: 0 }}>
+                            Hodnocení epizod
+                            <span style={{ marginLeft: 'var(--spacing-md)', fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
+                                (Průměr: <span className="badge badge-primary">{avgEpisodeRating}</span>)
+                            </span>
+                        </h3>
 
-                    <div style={{ height: '300px' }}>
+                        {/* Custom Legend */}
+                        <div style={{ display: 'flex', gap: 'var(--spacing-sm)', flexWrap: 'wrap', justifyContent: 'flex-end', maxWidth: '500px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
+                                <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgb(29, 161, 242)' }}></span>
+                                <span>Absolute Cinema</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
+                                <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgb(24, 106, 59)' }}></span>
+                                <span>Awesome</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
+                                <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgb(40, 180, 99)' }}></span>
+                                <span>Great</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
+                                <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgb(244, 208, 63)' }}></span>
+                                <span>Good</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
+                                <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgb(243, 156, 18)' }}></span>
+                                <span>Regular</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
+                                <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgb(99, 57, 116)' }}></span>
+                                <span>Bad</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style={{ height: '350px' }}>
                         <Bar data={episodeChartData} options={barOptions} />
                     </div>
                 </div>
