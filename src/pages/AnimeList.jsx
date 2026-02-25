@@ -253,6 +253,9 @@ function AnimeList() {
                             <th onClick={() => handleSort('start_date')} className={sortConfig.key === 'start_date' ? 'sorted' : ''}>
                                 Sledováno{getSortIndicator('start_date')}
                             </th>
+                            <th onClick={() => handleSort('status')} className={sortConfig.key === 'status' ? 'sorted' : ''}>
+                                Status{getSortIndicator('status')}
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -376,6 +379,11 @@ function AnimeList() {
                                 </td>
                                 <td style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
                                     {formatDate(anime.start_date)}
+                                </td>
+                                <td>
+                                    <span className={`status-badge ${(anime.status || 'FINISHED').toLowerCase()}`}>
+                                        {anime.status || 'FINISHED'}
+                                    </span>
                                 </td>
                             </tr>
                         ))}

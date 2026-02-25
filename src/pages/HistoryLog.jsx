@@ -37,6 +37,85 @@ function HistoryLog() {
         return ['all', ...Array.from(y).sort((a, b) => b - a)]
     }, [historyLog])
 
+    const watchStreak = useMemo(() => {
+        if (!historyLog.length) return { current: 0, longest: 0 }
+
+        const dailyMinutes = {}
+        historyLog.forEach(h => {
+            if (!h.date) return
+            const dateStr = h.date.split('T')[0]
+            let mins = 0
+            if (h.time && h.time.includes('min')) {
+                mins = parseInt(h.time.split(' ')[0], 10)
+            }
+            if (!isNaN(mins) && mins > 0) {
+                dailyMinutes[dateStr] = (dailyMinutes[dateStr] || 0) + mins
+            }
+        })
+
+        const sortedDates = Object.keys(dailyMinutes).sort()
+        if (sortedDates.length === 0) return { current: 0, longest: 0 }
+
+        const minDate = new Date(sortedDates[0])
+        const maxDataDate = new Date(sortedDates[sortedDates.length - 1])
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+
+        const effectiveEndDate = maxDataDate > today ? maxDataDate : today
+
+        let currentStreak = 0
+        let longestStreak = 0
+        let inStreak = false
+
+        for (let d = new Date(minDate); d <= effectiveEndDate; d.setDate(d.getDate() + 1)) {
+            const dStr = d.toISOString().split('T')[0]
+            const mins = dailyMinutes[dStr] || 0
+
+            if (mins >= 20) {
+                if (!inStreak) {
+                    inStreak = true
+                    currentStreak = 1
+                } else {
+                    currentStreak++
+                }
+                if (currentStreak > longestStreak) {
+                    longestStreak = currentStreak
+                }
+            } else {
+                inStreak = false
+                currentStreak = 0
+            }
+        }
+
+        let actStreak = 0
+        const effStr = effectiveEndDate.toISOString().split('T')[0]
+        const prevDate = new Date(effectiveEndDate)
+        prevDate.setDate(prevDate.getDate() - 1)
+        const prevStr = prevDate.toISOString().split('T')[0]
+
+        let lastDateStr = null
+        if ((dailyMinutes[effStr] || 0) >= 20) {
+            lastDateStr = effStr
+        } else if ((dailyMinutes[prevStr] || 0) >= 20) {
+            lastDateStr = prevStr
+        }
+
+        if (lastDateStr) {
+            let d = new Date(lastDateStr)
+            while (d >= minDate) {
+                const dStr = d.toISOString().split('T')[0]
+                if ((dailyMinutes[dStr] || 0) >= 20) {
+                    actStreak++
+                    d.setDate(d.getDate() - 1)
+                } else {
+                    break
+                }
+            }
+        }
+
+        return { current: actStreak, longest: longestStreak }
+    }, [historyLog])
+
     // Group by date and filter
     const groupedHistory = useMemo(() => {
         let result = [...historyLog]
@@ -142,6 +221,32 @@ function HistoryLog() {
                         ({totalStats.episodes} epizod, {formatTime(totalStats.time)})
                     </span>
                 </h2>
+
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 'var(--spacing-md)',
+                    background: 'var(--color-bg-elevated)',
+                    padding: 'var(--spacing-sm) var(--spacing-lg)',
+                    borderRadius: 'var(--radius-md)',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Current Streak</span>
+                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
+                            <span style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--color-primary)' }}>{watchStreak.current}</span>
+                            <span style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>dní</span>
+                        </div>
+                    </div>
+                    <div style={{ width: '1px', height: '30px', background: 'var(--border-color)' }}></div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Longest Streak</span>
+                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
+                            <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--color-text-primary)' }}>{watchStreak.longest}</span>
+                            <span style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>dní</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             {/* Search and Filters */}

@@ -1,7 +1,7 @@
 [
   {
     "index": "1.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Jujutsu Kaisen 0.jpg",
     "name": "Jujutsu Kaisen 0",
     "type": "Movie",
     "studio": "MAPPA",
@@ -16,12 +16,12 @@
     "rewatch_count": 1,
     "total_time": 209.84,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/48561/Jujutsu_Kaisen_0_Movie"
   },
   {
     "index": "2.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Jujutsu Kaisen, S01.jpg",
     "name": "Jujutsu Kaisen, S01",
     "type": "TV",
     "studio": "MAPPA",
@@ -36,12 +36,12 @@
     "rewatch_count": 1,
     "total_time": 1145.016,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/40748/Jujutsu_Kaisen"
   },
   {
     "index": "3.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Jujutsu Kaisen, S02.jpg",
     "name": "Jujutsu Kaisen, S02",
     "type": "TV",
     "studio": "MAPPA",
@@ -56,12 +56,12 @@
     "rewatch_count": 1,
     "total_time": 1097.37784,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/51009/Jujutsu_Kaisen_2nd_Season"
   },
   {
     "index": "4.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/NieR_Automata Ver1.1a Part 1.jpg",
     "name": "NieR:Automata Ver1.1a Part 1",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -76,12 +76,12 @@
     "rewatch_count": 0,
     "total_time": 284.004,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/51105/NieR_Automata_Ver11a"
   },
   {
     "index": "5.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/NieR_Automata Ver1.1a Part 2_ Investigation Report.jpg",
     "name": "NieR:Automata Ver1.1a Part 2: Investigation Report",
     "type": "TV Special",
     "studio": "A-1 Pictures",
@@ -96,12 +96,12 @@
     "rewatch_count": 0,
     "total_time": 23,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/59562/NieR_Automata_Ver11a_Part_2__Chapter_13-18_Chousa_Report"
   },
   {
     "index": "6.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Classroom of the Elite, S01.jpg",
     "name": "Classroom of the Elite, S01",
     "type": "TV",
     "studio": "Lerche",
@@ -116,12 +116,12 @@
     "rewatch_count": 0,
     "total_time": 288,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/35507/Youkoso_Jitsuryoku_Shijou_Shugi_no_Kyoushitsu_e"
   },
   {
     "index": "7.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Classroom of the Elite, S02.jpg",
     "name": "Classroom of the Elite, S02",
     "type": "TV",
     "studio": "Lerche",
@@ -136,12 +136,12 @@
     "rewatch_count": 0,
     "total_time": 309.82899999999995,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/51096/Youkoso_Jitsuryoku_Shijou_Shugi_no_Kyoushitsu_e_2nd_Season"
   },
   {
     "index": "8.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/My Dress-Up Darling, S01.jpg",
     "name": "My Dress-Up Darling, S01",
     "type": "TV",
     "studio": "CloverWorks",
@@ -156,12 +156,12 @@
     "rewatch_count": 1,
     "total_time": 568.008,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/48736/Sono_Bisque_Doll_wa_Koi_wo_Suru"
   },
   {
     "index": "9.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/KonoSuba_ God's Blessing on This Wonderful World!, S01.jpg",
     "name": "KonoSuba: God's Blessing on This Wonderful World!, S01",
     "type": "TV",
     "studio": "Studio Deen",
@@ -176,12 +176,12 @@
     "rewatch_count": 0,
     "total_time": 239.503,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/30831/Kono_Subarashii_Sekai_ni_Shukufuku_wo"
   },
   {
     "index": "10.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/KonoSuba_ God's Blessing on This Wonderful World! - God's Blessing on This Wonderful Choker!.jpg",
     "name": "KonoSuba: God's Blessing on This Wonderful World! - God's Blessing on This Wonderful Choker!",
     "type": "OVA",
     "studio": "Studio Deen",
@@ -196,12 +196,12 @@
     "rewatch_count": 1,
     "total_time": 47.4,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/32380/Kono_Subarashii_Sekai_ni_Shukufuku_wo__Kono_Subarashii_Choker_ni_Shukufuku_wo"
   },
   {
     "index": "11.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/KonoSuba_ God's Blessing on This Wonderful World!, S02.jpg",
     "name": "KonoSuba: God's Blessing on This Wonderful World!, S02",
     "type": "TV",
     "studio": "Studio Deen",
@@ -216,12 +216,12 @@
     "rewatch_count": 0,
     "total_time": 243.598,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/32937/Kono_Subarashii_Sekai_ni_Shukufuku_wo_2"
   },
   {
     "index": "12.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/KonoSuba_ God's Blessing on This Wonderful World! 2 - God's Blessing on This Wonderful Art!.jpg",
     "name": "KonoSuba: God's Blessing on This Wonderful World! 2 - God's Blessing on This Wonderful Art!",
     "type": "OVA",
     "studio": "Studio Deen",
@@ -236,12 +236,12 @@
     "rewatch_count": 0,
     "total_time": 28.867,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/34626/Kono_Subarashii_Sekai_ni_Shukufuku_wo_2__Kono_Subarashii_Geijutsu_ni_Shukufuku_wo"
   },
   {
     "index": "13.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/KonoSuba_ God's Blessing on This Wonderful World! The Movie_ Crimson Legend.jpg",
     "name": "KonoSuba: God's Blessing on This Wonderful World! The Movie: Crimson Legend",
     "type": "Movie",
     "studio": "J.C.Staff",
@@ -256,12 +256,12 @@
     "rewatch_count": 0,
     "total_time": 90,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/38040/Kono_Subarashii_Sekai_ni_Shukufuku_wo_Movie__Kurenai_Densetsu"
   },
   {
     "index": "14.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/KonoSuba_ An Explosion on This Wonderful World!.jpg",
     "name": "KonoSuba: An Explosion on This Wonderful World!",
     "type": "TV",
     "studio": "Drive",
@@ -276,12 +276,12 @@
     "rewatch_count": 0,
     "total_time": 284.004,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/51958/Kono_Subarashii_Sekai_ni_Bakuen_wo"
   },
   {
     "index": "15.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Re_Zero - Starting Life in Another World, S01.jpg",
     "name": "Re:Zero -Starting Life in Another World-, S01",
     "type": "TV",
     "studio": "White Fox",
@@ -296,12 +296,12 @@
     "rewatch_count": 1,
     "total_time": 1308,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/31240/Re_Zero_kara_Hajimeru_Isekai_Seikatsu"
   },
   {
     "index": "16.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Re_Zero - Starting Life in Another World - Memory Snow.jpg",
     "name": "Re:Zero -Starting Life in Another World- Memory Snow",
     "type": "Movie",
     "studio": "White Fox",
@@ -316,12 +316,12 @@
     "rewatch_count": 0,
     "total_time": 59.5,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/36286/Re_Zero_kara_Hajimeru_Isekai_Seikatsu_-_Memory_Snow"
   },
   {
     "index": "17.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Re_Zero - Starting Life in Another World - The Frozen Bond.jpg",
     "name": "Re:Zero -Starting Life in Another World- The Frozen Bond",
     "type": "Movie",
     "studio": "White Fox",
@@ -336,12 +336,12 @@
     "rewatch_count": 0,
     "total_time": 76.37,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/38414/Re_Zero_kara_Hajimeru_Isekai_Seikatsu_-_Hyouketsu_no_Kizuna"
   },
   {
     "index": "18.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Re_Zero - Starting Life in Another World, S02 Part 1.jpg",
     "name": "Re:Zero -Starting Life in Another World-, S02 Part 1",
     "type": "TV",
     "studio": "White Fox",
@@ -356,12 +356,12 @@
     "rewatch_count": 1,
     "total_time": 686.9642,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/39587/Re_Zero_kara_Hajimeru_Isekai_Seikatsu_2nd_Season"
   },
   {
     "index": "19.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Mushoku Tensei_ Jobless Reincarnation - Eris the Goblin Slayer.jpg",
     "name": "Mushoku Tensei: Jobless Reincarnation - Eris the Goblin Slayer",
     "type": "OVA",
     "studio": "Studio Bind",
@@ -376,12 +376,12 @@
     "rewatch_count": 0,
     "total_time": 23.7,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/50360/Mushoku_Tensei__Isekai_Ittara_Honki_Dasu_-_Eris_no_Goblin_Toubatsu"
   },
   {
     "index": "20.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Mushoku Tensei_ Jobless Reincarnation, S01 Part 1.webp",
     "name": "Mushoku Tensei: Jobless Reincarnation, S01 Part 1",
     "type": "TV",
     "studio": "Studio Bind",
@@ -396,12 +396,12 @@
     "rewatch_count": 0,
     "total_time": 261.613,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/39535/Mushoku_Tensei__Isekai_Ittara_Honki_Dasu"
   },
   {
     "index": "21.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Mushoku Tensei_ Jobless Reincarnation, S01 Part 2.jpg",
     "name": "Mushoku Tensei: Jobless Reincarnation, S01 Part 2",
     "type": "TV",
     "studio": "Studio Bind",
@@ -416,12 +416,12 @@
     "rewatch_count": 0,
     "total_time": 285.396,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/45576/Mushoku_Tensei__Isekai_Ittara_Honki_Dasu_Part_2"
   },
   {
     "index": "22.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Mushoku Tensei_ Jobless Reincarnation Season 2 - Episode 0 'Guardian Fitz'.jpg",
     "name": "Mushoku Tensei: Jobless Reincarnation Season 2 - Episode 0 \"Guardian Fitz\"",
     "type": "TV Special",
     "studio": "Studio Bind",
@@ -436,12 +436,12 @@
     "rewatch_count": 0,
     "total_time": 23.667,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/55818/Mushoku_Tensei_II__Isekai_Ittara_Honki_Dasu_-_Shugo_Jutsushi_Fitz"
   },
   {
     "index": "23.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Mushoku Tensei_ Jobless Reincarnation, S02 Part 1.jpg",
     "name": "Mushoku Tensei: Jobless Reincarnation, S02 Part 1",
     "type": "TV",
     "studio": "Studio Bind",
@@ -456,12 +456,12 @@
     "rewatch_count": 0,
     "total_time": 283.79999999999995,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/51179/Mushoku_Tensei_II__Isekai_Ittara_Honki_Dasu"
   },
   {
     "index": "24.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Spy x Family, S01 Part 1.jpg",
     "name": "Spy x Family, S01 Part 1",
     "type": "TV",
     "studio": "Wit Studio; CloverWorks",
@@ -476,12 +476,12 @@
     "rewatch_count": 0,
     "total_time": 289.79999999999995,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/50265/Spy_x_Family"
   },
   {
     "index": "25.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/That Time I Got Reincarnated as a Slime, S02 Part 1.jpg",
     "name": "That Time I Got Reincarnated as a Slime, S02 Part 1",
     "type": "TV",
     "studio": "8bit",
@@ -496,12 +496,12 @@
     "rewatch_count": 0,
     "total_time": 284.4,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/39551/Tensei_shitara_Slime_Datta_Ken_2nd_Season"
   },
   {
     "index": "26.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/That Time I Got Reincarnated as a Slime, S02 Part 2.jpg",
     "name": "That Time I Got Reincarnated as a Slime, S02 Part 2",
     "type": "TV",
     "studio": "8bit",
@@ -516,12 +516,12 @@
     "rewatch_count": 0,
     "total_time": 284.4,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/41487/Tensei_shitara_Slime_Datta_Ken_2nd_Season_Part_2"
   },
   {
     "index": "27.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Eminence in Shadow, S01.jpg",
     "name": "The Eminence in Shadow, S01",
     "type": "TV",
     "studio": "Nexus",
@@ -536,12 +536,12 @@
     "rewatch_count": 0,
     "total_time": 485.79900000000004,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/48316/Kage_no_Jitsuryokusha_ni_Naritakute"
   },
   {
     "index": "28.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Steins;Gate 0.jpg",
     "name": "Steins;Gate 0",
     "type": "TV",
     "studio": "White Fox",
@@ -556,12 +556,12 @@
     "rewatch_count": 1,
     "total_time": 1089.3444,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/30484/Steins_Gate_0"
   },
   {
     "index": "29.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Steins;Gate_ Open the Missing Link - Divide By Zero.jpg",
     "name": "Steins;Gate: Open the Missing Link - Divide By Zero",
     "type": "TV Special",
     "studio": "White Fox",
@@ -576,12 +576,12 @@
     "rewatch_count": 1,
     "total_time": 47.4,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/32188/Steins_Gate__Kyoukaimenjou_no_Missing_Link_-_Divide_By_Zero"
   },
   {
     "index": "30.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Overlord, S01.jpg",
     "name": "Overlord, S01",
     "type": "TV",
     "studio": "Madhouse",
@@ -596,12 +596,12 @@
     "rewatch_count": 0,
     "total_time": 314.82099999999997,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/29803/Overlord"
   },
   {
     "index": "31.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Legend of the Galactic Heroes_ Die Neue These.webp",
     "name": "Legend of the Galactic Heroes: Die Neue These",
     "type": "TV",
     "studio": "Production I.G",
@@ -616,12 +616,12 @@
     "rewatch_count": 0,
     "total_time": 300,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/31433/Ginga_Eiyuu_Densetsu__Die_Neue_These_-_Kaikou"
   },
   {
     "index": "32.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Legend of the Galactic Heroes_ Die Neue These - Stellar War Part 1.jpg",
     "name": "Legend of the Galactic Heroes: Die Neue These - Stellar War Part 1",
     "type": "Movie",
     "studio": "Production I.G",
@@ -636,12 +636,12 @@
     "rewatch_count": 0,
     "total_time": 100,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/36369/Ginga_Eiyuu_Densetsu__Die_Neue_These_-_Seiran_1"
   },
   {
     "index": "33.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Legend of the Galactic Heroes_ Die Neue These - Stellar War Part 2.jpg",
     "name": "Legend of the Galactic Heroes: Die Neue These - Stellar War Part 2",
     "type": "Movie",
     "studio": "Production I.G",
@@ -656,12 +656,12 @@
     "rewatch_count": 0,
     "total_time": 100,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/36370/Ginga_Eiyuu_Densetsu__Die_Neue_These_-_Seiran_2"
   },
   {
     "index": "34.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Legend of the Galactic Heroes_ Die Neue These - Stellar War Part 3.jpg",
     "name": "Legend of the Galactic Heroes: Die Neue These - Stellar War Part 3",
     "type": "Movie",
     "studio": "Production I.G",
@@ -676,12 +676,12 @@
     "rewatch_count": 0,
     "total_time": 100,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/36371/Ginga_Eiyuu_Densetsu__Die_Neue_These_-_Seiran_3"
   },
   {
     "index": "35.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Black Lagoon.jpg",
     "name": "Black Lagoon",
     "type": "TV",
     "studio": "Madhouse",
@@ -696,12 +696,12 @@
     "rewatch_count": 0,
     "total_time": 279.396,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/889/Black_Lagoon"
   },
   {
     "index": "36.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Black Lagoon_ The Second Barrage.jpg",
     "name": "Black Lagoon: The Second Barrage",
     "type": "TV",
     "studio": "Madhouse",
@@ -716,12 +716,12 @@
     "rewatch_count": 0,
     "total_time": 279.396,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/1519/Black_Lagoon__The_Second_Barrage"
   },
   {
     "index": "37.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Overlord, S02.jpg",
     "name": "Overlord, S02",
     "type": "TV",
     "studio": "Madhouse",
@@ -736,12 +736,12 @@
     "rewatch_count": 0,
     "total_time": 307.67100000000005,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/35073/Overlord_II"
   },
   {
     "index": "38.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Overlord, S03.jpg",
     "name": "Overlord, S03",
     "type": "TV",
     "studio": "Madhouse",
@@ -756,12 +756,12 @@
     "rewatch_count": 0,
     "total_time": 307.45,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/37675/Overlord_III"
   },
   {
     "index": "39.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Overlord_ The Sacred Kingdom.jpg",
     "name": "Overlord: The Sacred Kingdom",
     "type": "Movie",
     "studio": "Madhouse",
@@ -776,12 +776,12 @@
     "rewatch_count": 1,
     "total_time": 270,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/48896/Overlord_Movie_3__Sei_Oukoku-hen"
   },
   {
     "index": "40.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/To Your Eternity, S01.jpg",
     "name": "To Your Eternity, S01",
     "type": "TV",
     "studio": "Brain's Base",
@@ -796,12 +796,12 @@
     "rewatch_count": 0,
     "total_time": 500,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/41025/Fumetsu_no_Anata_e"
   },
   {
     "index": "41.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/No Game, No Life_ Zero.jpg",
     "name": "No Game, No Life: Zero",
     "type": "Movie",
     "studio": "Madhouse",
@@ -816,12 +816,12 @@
     "rewatch_count": 0,
     "total_time": 106,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/33674/No_Game_No_Life__Zero"
   },
   {
     "index": "42.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/86 Eighty-Six, S01 Part 1.jpg",
     "name": "86 Eighty-Six, S01 Part 1",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -836,12 +836,12 @@
     "rewatch_count": 0,
     "total_time": 260.337,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/41457/86"
   },
   {
     "index": "43.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark), S01.jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S01",
     "type": "TV",
     "studio": "J.C.Staff",
@@ -856,12 +856,12 @@
     "rewatch_count": 0,
     "total_time": 307.879,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/28121/Dungeon_ni_Deai_wo_Motomeru_no_wa_Machigatteiru_Darou_ka"
   },
   {
     "index": "44.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark)_ Arrow of the Orion.jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon?: Arrow of the Orion",
     "type": "Movie",
     "studio": "J.C.Staff",
@@ -876,12 +876,12 @@
     "rewatch_count": 0,
     "total_time": 82.35,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/37348/Dungeon_ni_Deai_wo_Motomeru_no_wa_Machigatteiru_Darou_ka_Movie__Orion_no_Ya"
   },
   {
     "index": "45.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark)_ Is It Wrong to Expect a Hot Spring in a Dungeon (question mark).jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon?: Is It Wrong to Expect a Hot Spring in a Dungeon?",
     "type": "OVA",
     "studio": "J.C.Staff",
@@ -896,12 +896,12 @@
     "rewatch_count": 0,
     "total_time": 24.567,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/32801/Dungeon_ni_Deai_wo_Motomeru_no_wa_Machigatteiru_Darou_ka_OVA"
   },
   {
     "index": "46.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark) II_ Is It Wrong to go Searching for Herbs on a Deserted Island (question mark).jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon? II: Is It Wrong to go Searching for Herbs on a Deserted Island?",
     "type": "OVA",
     "studio": "J.C.Staff",
@@ -916,12 +916,12 @@
     "rewatch_count": 0,
     "total_time": 26.617,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/40453/Dungeon_ni_Deai_wo_Motomeru_no_wa_Machigatteiru_Darou_ka_II_OVA"
   },
   {
     "index": "47.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark), S02.jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S02",
     "type": "TV",
     "studio": "J.C.Staff",
@@ -936,12 +936,12 @@
     "rewatch_count": 0,
     "total_time": 293.196,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/37347/Dungeon_ni_Deai_wo_Motomeru_no_wa_Machigatteiru_Darou_ka_II"
   },
   {
     "index": "48.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark), S03.jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S03",
     "type": "TV",
     "studio": "J.C.Staff",
@@ -956,12 +956,12 @@
     "rewatch_count": 0,
     "total_time": 295.947,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/40454/Dungeon_ni_Deai_wo_Motomeru_no_wa_Machigatteiru_Darou_ka_III"
   },
   {
     "index": "49.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark), S04 Part 1.jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S04 Part 1",
     "type": "TV",
     "studio": "J.C.Staff",
@@ -976,12 +976,12 @@
     "rewatch_count": 0,
     "total_time": 265.73492,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/47164/Dungeon_ni_Deai_wo_Motomeru_no_wa_Machigatteiru_Darou_ka_IV__Shin_Shou_-_Meikyuu-hen"
   },
   {
     "index": "50.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Violet Evergarden.jpg",
     "name": "Violet Evergarden",
     "type": "TV",
     "studio": "Kyoto Animation",
@@ -996,12 +996,12 @@
     "rewatch_count": 0,
     "total_time": 316.9309,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/33352/Violet_Evergarden"
   },
   {
     "index": "51.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Violet Evergarden_ The Day You Understand 'I Love You' Will Surely Come.jpg",
     "name": "Violet Evergarden: The Day You Understand \"I Love You\" Will Surely Come",
     "type": "Special",
     "studio": "Kyoto Animation",
@@ -1016,12 +1016,12 @@
     "rewatch_count": 0,
     "total_time": 34.23,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/37095/Violet_Evergarden__Kitto_Ai_wo_Shiru_Hi_ga_Kuru_no_Darou"
   },
   {
     "index": "52.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Violet Evergarden_ Eternity and the Auto Memory Doll.jpg",
     "name": "Violet Evergarden: Eternity and the Auto Memory Doll",
     "type": "Movie",
     "studio": "Kyoto Animation",
@@ -1036,12 +1036,12 @@
     "rewatch_count": 0,
     "total_time": 90.65,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/39741/Violet_Evergarden_Gaiden__Eien_to_Jidou_Shuki_Ningyou"
   },
   {
     "index": "53.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Another_ The Other.jpg",
     "name": "Another: The Other",
     "type": "OVA",
     "studio": "P.A. Works",
@@ -1056,12 +1056,12 @@
     "rewatch_count": 0,
     "total_time": 24.7,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/11701/Another__The_Other_-_Inga"
   },
   {
     "index": "54.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sword Art Online, S02.jpg",
     "name": "Sword Art Online, S02",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -1076,12 +1076,12 @@
     "rewatch_count": 0,
     "total_time": 573.192,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/21881/Sword_Art_Online_II"
   },
   {
     "index": "55.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sword Art Online the Movie_ Ordinal Scale.jpg",
     "name": "Sword Art Online the Movie: Ordinal Scale",
     "type": "Movie",
     "studio": "A-1 Pictures",
@@ -1096,12 +1096,12 @@
     "rewatch_count": 0,
     "total_time": 120.2,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/31765/Sword_Art_Online_Movie__Ordinal_Scale"
   },
   {
     "index": "56.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sword Art Online_ Alicization.jpg",
     "name": "Sword Art Online: Alicization",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -1116,12 +1116,12 @@
     "rewatch_count": 0,
     "total_time": 592.011,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/36474/Sword_Art_Online__Alicization"
   },
   {
     "index": "57.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sword Art Online_ Alicization - War of Underworld, Part 1.jpg",
     "name": "Sword Art Online: Alicization - War of Underworld, Part 1",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -1136,12 +1136,12 @@
     "rewatch_count": 0,
     "total_time": 286.404,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/39597/Sword_Art_Online__Alicization_-_War_of_Underworld"
   },
   {
     "index": "58.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sword Art Online the Movie_ Progressive - Aria of a Starless Night.jpg",
     "name": "Sword Art Online the Movie: Progressive - Aria of a Starless Night",
     "type": "Movie",
     "studio": "A-1 Pictures",
@@ -1156,12 +1156,12 @@
     "rewatch_count": 0,
     "total_time": 97,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/42916/Sword_Art_Online__Progressive_Movie_-_Hoshi_Naki_Yoru_no_Aria"
   },
   {
     "index": "59.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sword Art Online Alternative_ Gun Gale Online, S01.jpg",
     "name": "Sword Art Online Alternative: Gun Gale Online, S01",
     "type": "TV",
     "studio": "Studio 3Hz",
@@ -1176,12 +1176,12 @@
     "rewatch_count": 0,
     "total_time": 284.004,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/36475/Sword_Art_Online_Alternative__Gun_Gale_Online"
   },
   {
     "index": "60.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_stay night [Unlimited Blade Works] - Prologue.jpg",
     "name": "Fate/stay night [Unlimited Blade Works] - Prologue",
     "type": "TV Special",
     "studio": "ufotable",
@@ -1196,12 +1196,12 @@
     "rewatch_count": 0,
     "total_time": 50.63,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/27821/Fate_stay_night__Unlimited_Blade_Works_Prologue"
   },
   {
     "index": "61.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_stay night [Unlimited Blade Works], S01.jpg",
     "name": "Fate/stay night [Unlimited Blade Works], S01",
     "type": "TV",
     "studio": "ufotable",
@@ -1216,12 +1216,12 @@
     "rewatch_count": 0,
     "total_time": 336.915,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/22297/Fate_stay_night__Unlimited_Blade_Works"
   },
   {
     "index": "62.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_stay night_ Heaven's Feel - II. Lost Butterfly.jpg",
     "name": "Fate/stay night: Heaven's Feel - II. Lost Butterfly",
     "type": "Movie",
     "studio": "ufotable",
@@ -1236,12 +1236,12 @@
     "rewatch_count": 0,
     "total_time": 117.13,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/33049/Fate_stay_night_Movie__Heavens_Feel_-_II_Lost_Butterfly"
   },
   {
     "index": "63.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_Zero, S01.jpg",
     "name": "Fate/Zero, S01",
     "type": "TV",
     "studio": "ufotable",
@@ -1256,12 +1256,12 @@
     "rewatch_count": 0,
     "total_time": 353.39599997,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/10087/Fate_Zero"
   },
   {
     "index": "64.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_Zero, S02.jpg",
     "name": "Fate/Zero, S02",
     "type": "TV",
     "studio": "ufotable",
@@ -1276,12 +1276,12 @@
     "rewatch_count": 0,
     "total_time": 289.43399999999997,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/11741/Fate_Zero_2nd_Season"
   },
   {
     "index": "65.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_Grand Order_ First Order.jpg",
     "name": "Fate/Grand Order: First Order",
     "type": "TV Special",
     "studio": "Lay-duce",
@@ -1296,12 +1296,12 @@
     "rewatch_count": 0,
     "total_time": 72.38,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/34321/Fate_Grand_Order__First_Order"
   },
   {
     "index": "66.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_Grand Order_ Divine Realm of the Round Table 1 - Camelot Wandering; Agateram.jpg",
     "name": "Fate/Grand Order: Divine Realm of the Round Table 1 - Camelot Wandering; Agateram",
     "type": "Movie",
     "studio": "Signal.MD",
@@ -1316,12 +1316,12 @@
     "rewatch_count": 0,
     "total_time": 89.62,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/38085/Fate_Grand_Order__Shinsei_Entaku_Ryouiki_Camelot_1_-_Wandering__Agateram"
   },
   {
     "index": "67.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_Grand Order_ Divine Realm of the Round Table 2 - Camelot Paladin; Agateram.jpg",
     "name": "Fate/Grand Order: Divine Realm of the Round Table 2 - Camelot Paladin; Agateram",
     "type": "Movie",
     "studio": "Production I.G",
@@ -1336,12 +1336,12 @@
     "rewatch_count": 0,
     "total_time": 96.05,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/38086/Fate_Grand_Order__Shinsei_Entaku_Ryouiki_Camelot_2_-_Paladin__Agateram"
   },
   {
     "index": "68.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_Grand Order_ Absolute Demonic Front - Babylonia.jpg",
     "name": "Fate/Grand Order: Absolute Demonic Front - Babylonia",
     "type": "TV",
     "studio": "CloverWorks",
@@ -1356,12 +1356,12 @@
     "rewatch_count": 0,
     "total_time": 498.498,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/38084/Fate_Grand_Order__Zettai_Majuu_Sensen_Babylonia"
   },
   {
     "index": "69.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_Grand Order_ Absolute Demonic Front - Babylonia Initium Iter.jpg",
     "name": "Fate/Grand Order: Absolute Demonic Front - Babylonia Initium Iter",
     "type": "Special",
     "studio": "CloverWorks",
@@ -1376,12 +1376,12 @@
     "rewatch_count": 0,
     "total_time": 27,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/40206/Fate_Grand_Order__Zettai_Majuu_Sensen_Babylonia_-_Initium_Iter"
   },
   {
     "index": "70.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_Grand Order_ Moonlight_Lostroom.jpg",
     "name": "Fate/Grand Order: Moonlight/Lostroom",
     "type": "TV Special",
     "studio": "Lay-duce",
@@ -1396,12 +1396,12 @@
     "rewatch_count": 0,
     "total_time": 32.733,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/36915/Fate_Grand_Order__Moonlight_Lostroom"
   },
   {
     "index": "71.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Garden of Sinners Chapter 1_ Overlooking View.jpg",
     "name": "The Garden of Sinners Chapter 1: Overlooking View",
     "type": "Movie",
     "studio": "ufotable",
@@ -1416,12 +1416,12 @@
     "rewatch_count": 0,
     "total_time": 50.15,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/2593/Kara_no_Kyoukai_Movie_1__Fukan_Fuukei"
   },
   {
     "index": "72.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Garden of Sinners Chapter 2_ A Study in Murder - Part 1.jpg",
     "name": "The Garden of Sinners Chapter 2: A Study in Murder - Part 1",
     "type": "Movie",
     "studio": "ufotable",
@@ -1436,12 +1436,12 @@
     "rewatch_count": 0,
     "total_time": 60,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/3782/Kara_no_Kyoukai_Movie_2__Satsujin_Kousatsu_Zen"
   },
   {
     "index": "73.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Garden of Sinners Chapter 3_ Remaining Sense of Pain.jpg",
     "name": "The Garden of Sinners Chapter 3: Remaining Sense of Pain",
     "type": "Movie",
     "studio": "ufotable",
@@ -1456,12 +1456,12 @@
     "rewatch_count": 0,
     "total_time": 57.4,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/3783/Kara_no_Kyoukai_Movie_3__Tsuukaku_Zanryuu"
   },
   {
     "index": "74.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Garden of Sinners Chapter 4_ The Hollow Shrine.jpg",
     "name": "The Garden of Sinners Chapter 4: The Hollow Shrine",
     "type": "Movie",
     "studio": "ufotable",
@@ -1476,12 +1476,12 @@
     "rewatch_count": 0,
     "total_time": 45.35,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/4280/Kara_no_Kyoukai_Movie_4__Garan_no_Dou"
   },
   {
     "index": "75.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Garden of Sinners Chapter 5_ Paradox Spiral.jpg",
     "name": "The Garden of Sinners Chapter 5: Paradox Spiral",
     "type": "Movie",
     "studio": "ufotable",
@@ -1496,12 +1496,12 @@
     "rewatch_count": 0,
     "total_time": 113.88,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/4282/Kara_no_Kyoukai_Movie_5__Mujun_Rasen"
   },
   {
     "index": "76.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Garden of Sinners (Ch. 1 - 6) - Remix_ Gate of Seventh Heaven.jpg",
     "name": "The Garden of Sinners (Ch. 1 - 6) - Remix: Gate of Seventh Heaven",
     "type": "Movie",
     "studio": "ufotable",
@@ -1516,12 +1516,12 @@
     "rewatch_count": 0,
     "total_time": 61.47,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/6624/Kara_no_Kyoukai_Remix__Gate_of_Seventh_Heaven"
   },
   {
     "index": "77.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Garden of Sinners Chapter 6_ Oblivion Recording.jpg",
     "name": "The Garden of Sinners Chapter 6: Oblivion Recording",
     "type": "Movie",
     "studio": "ufotable",
@@ -1536,12 +1536,12 @@
     "rewatch_count": 0,
     "total_time": 59.05,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/5204/Kara_no_Kyoukai_Movie_6__Boukyaku_Rokuon"
   },
   {
     "index": "78.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Garden of Sinners Chapter 7_ A Study in Murder - Part 2.jpg",
     "name": "The Garden of Sinners Chapter 7: A Study in Murder - Part 2",
     "type": "Movie",
     "studio": "ufotable",
@@ -1556,12 +1556,12 @@
     "rewatch_count": 0,
     "total_time": 120,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/5205/Kara_no_Kyoukai_Movie_7__Satsujin_Kousatsu_Go"
   },
   {
     "index": "79.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Garden of Sinners Chapter 8_ Epilogue.jpg",
     "name": "The Garden of Sinners Chapter 8: Epilogue",
     "type": "OVA",
     "studio": "ufotable",
@@ -1576,12 +1576,12 @@
     "rewatch_count": 0,
     "total_time": 33.067,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/6954/Kara_no_Kyoukai_Movie_8__Shuushou"
   },
   {
     "index": "80.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Garden of Sinners_ Future Gospel.jpg",
     "name": "The Garden of Sinners: Future Gospel",
     "type": "Movie",
     "studio": "ufotable",
@@ -1596,12 +1596,12 @@
     "rewatch_count": 0,
     "total_time": 88.73,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/14807/Kara_no_Kyoukai_Movie__Mirai_Fukuin"
   },
   {
     "index": "81.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Code Geass_ Lelouch of the Rebellion R1.jpg",
     "name": "Code Geass: Lelouch of the Rebellion R1",
     "type": "TV",
     "studio": "Sunrise",
@@ -1616,12 +1616,12 @@
     "rewatch_count": 0,
     "total_time": 608.159,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/1575/Code_Geass__Hangyaku_no_Lelouch"
   },
   {
     "index": "82.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Code Geass_ Akito the Exiled 1 - The Wyvern Arrives.jpg",
     "name": "Code Geass: Akito the Exiled 1 - The Wyvern Arrives",
     "type": "Movie",
     "studio": "Sunrise",
@@ -1636,12 +1636,12 @@
     "rewatch_count": 0,
     "total_time": 51.28,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/8888/Code_Geass__Boukoku_no_Akito_1_-_Yokuryuu_wa_Maiorita"
   },
   {
     "index": "83.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Code Geass_ Akito the Exiled 2 - The Wyvern Divided.jpg",
     "name": "Code Geass: Akito the Exiled 2 - The Wyvern Divided",
     "type": "Movie",
     "studio": "Sunrise",
@@ -1656,12 +1656,12 @@
     "rewatch_count": 0,
     "total_time": 60.27,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/15197/Code_Geass__Boukoku_no_Akito_2_-_Hikisakareshi_Yokuryuu"
   },
   {
     "index": "84.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Code Geass_ Akito the Exiled 3 - The Brightness Falls.jpg",
     "name": "Code Geass: Akito the Exiled 3 - The Brightness Falls",
     "type": "Movie",
     "studio": "Sunrise",
@@ -1676,12 +1676,12 @@
     "rewatch_count": 0,
     "total_time": 60.27,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/15199/Code_Geass__Boukoku_no_Akito_3_-_Kagayaku_Mono_Ten_yori_Otsu"
   },
   {
     "index": "85.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Code Geass_ Akito the Exiled 4 - Memories of Hatred.jpg",
     "name": "Code Geass: Akito the Exiled 4 - Memories of Hatred",
     "type": "Movie",
     "studio": "Sunrise",
@@ -1696,12 +1696,12 @@
     "rewatch_count": 0,
     "total_time": 60.23,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/15201/Code_Geass__Boukoku_no_Akito_4_-_Nikushimi_no_Kioku_kara"
   },
   {
     "index": "86.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Code Geass_ Akito the Exiled 5 - To Beloved Ones.jpg",
     "name": "Code Geass: Akito the Exiled 5 - To Beloved Ones",
     "type": "Movie",
     "studio": "Sunrise",
@@ -1716,12 +1716,12 @@
     "rewatch_count": 0,
     "total_time": 60.25,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/30711/Code_Geass__Boukoku_no_Akito_5_-_Itoshiki_Mono-tachi_e"
   },
   {
     "index": "87.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Solo Leveling, S01.jpg",
     "name": "Solo Leveling, S01",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -1736,12 +1736,12 @@
     "rewatch_count": 0,
     "total_time": 284.004,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/52299/Ore_dake_Level_Up_na_Ken"
   },
   {
     "index": "88.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Attack on Titan OAD.jpg",
     "name": "Attack on Titan OAD",
     "type": "OVA",
     "studio": "Wit Studio",
@@ -1756,12 +1756,12 @@
     "rewatch_count": 0,
     "total_time": 72.68298,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/18397/Shingeki_no_Kyojin_OVA"
   },
   {
     "index": "89.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Attack on Titan, S01.jpg",
     "name": "Attack on Titan, S01",
     "type": "TV",
     "studio": "Wit Studio",
@@ -1776,12 +1776,12 @@
     "rewatch_count": 0,
     "total_time": 612.0250000000001,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/16498/Shingeki_no_Kyojin"
   },
   {
     "index": "90.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Attack on Titan, S02.jpg",
     "name": "Attack on Titan, S02",
     "type": "TV",
     "studio": "Wit Studio",
@@ -1796,12 +1796,12 @@
     "rewatch_count": 0,
     "total_time": 292.8996,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/25777/Shingeki_no_Kyojin_Season_2"
   },
   {
     "index": "91.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Attack on Titan_ Lost Girls.jpg",
     "name": "Attack on Titan: Lost Girls",
     "type": "OVA",
     "studio": "Wit Studio",
@@ -1816,12 +1816,12 @@
     "rewatch_count": 0,
     "total_time": 71.799,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/36106/Shingeki_no_Kyojin__Lost_Girls"
   },
   {
     "index": "92.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Attack on Titan_ No Regrets.jpg",
     "name": "Attack on Titan: No Regrets",
     "type": "OVA",
     "studio": "Wit Studio",
@@ -1836,12 +1836,12 @@
     "rewatch_count": 0,
     "total_time": 54.05,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/25781/Shingeki_no_Kyojin__Kuinaki_Sentaku"
   },
   {
     "index": "93.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Attack on Titan, S03 Part 1.jpg",
     "name": "Attack on Titan, S03 Part 1",
     "type": "TV",
     "studio": "Wit Studio",
@@ -1856,12 +1856,12 @@
     "rewatch_count": 0,
     "total_time": 290.4,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/35760/Shingeki_no_Kyojin_Season_3"
   },
   {
     "index": "94.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Attack on Titan, S03 Part 2.jpg",
     "name": "Attack on Titan, S03 Part 2",
     "type": "TV",
     "studio": "Wit Studio",
@@ -1876,12 +1876,12 @@
     "rewatch_count": 0,
     "total_time": 242,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/38524/Shingeki_no_Kyojin_Season_3_Part_2"
   },
   {
     "index": "95.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Attack on Titan_ Final Season Part 1.jpg",
     "name": "Attack on Titan: Final Season Part 1",
     "type": "TV",
     "studio": "MAPPA",
@@ -1896,12 +1896,12 @@
     "rewatch_count": 0,
     "total_time": 387.2,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/40028/Shingeki_no_Kyojin__The_Final_Season"
   },
   {
     "index": "96.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Attack on Titan_ Final Season Part 2.jpg",
     "name": "Attack on Titan: Final Season Part 2",
     "type": "TV",
     "studio": "MAPPA",
@@ -1916,12 +1916,12 @@
     "rewatch_count": 0,
     "total_time": 287.004,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/48583/Shingeki_no_Kyojin__The_Final_Season_Part_2"
   },
   {
     "index": "97.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Neon Genesis Evangelion.jpg",
     "name": "Neon Genesis Evangelion",
     "type": "TV",
     "studio": "Gainax; Tatsunoko Production",
@@ -1936,12 +1936,12 @@
     "rewatch_count": 0,
     "total_time": 622.9574,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/30/Shinseiki_Evangelion"
   },
   {
     "index": "98.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Evangelion_ 1.0 You Are (Not) Alone.jpg",
     "name": "Evangelion: 1.0 You Are (Not) Alone",
     "type": "Movie",
     "studio": "Khara",
@@ -1956,12 +1956,12 @@
     "rewatch_count": 0,
     "total_time": 101,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/2759/Evangelion_Movie_1__Jo"
   },
   {
     "index": "99.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Evangelion_ 2.0 You Can (Not) Advance.jpg",
     "name": "Evangelion: 2.0 You Can (Not) Advance",
     "type": "Movie",
     "studio": "Khara",
@@ -1976,12 +1976,12 @@
     "rewatch_count": 0,
     "total_time": 112.15,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/3784/Evangelion_Movie_2__Ha"
   },
   {
     "index": "100.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Evangelion_ 3.0 You Can (Not) Redo.jpg",
     "name": "Evangelion: 3.0 You Can (Not) Redo",
     "type": "Movie",
     "studio": "Khara",
@@ -1996,12 +1996,12 @@
     "rewatch_count": 0,
     "total_time": 96.75,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/3785/Evangelion_Movie_3__Q"
   },
   {
     "index": "101.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Shangri-La Frontier, S01.jpg",
     "name": "Shangri-La Frontier, S01",
     "type": "TV",
     "studio": "C2C",
@@ -2016,12 +2016,12 @@
     "rewatch_count": 0,
     "total_time": 625,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/52347/Shangri-La_Frontier__Kusoge_Hunter_Kamige_ni_Idoman_to_su"
   },
   {
     "index": "102.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Made in Abyss.jpg",
     "name": "Made in Abyss",
     "type": "TV",
     "studio": "Kinema Citrus",
@@ -2036,12 +2036,12 @@
     "rewatch_count": 0,
     "total_time": 331.74699999999996,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/34599/Made_in_Abyss"
   },
   {
     "index": "103.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Made in Abyss_ Dawn of the Deep Soul.jpg",
     "name": "Made in Abyss: Dawn of the Deep Soul",
     "type": "Movie",
     "studio": "Kinema Citrus",
@@ -2056,12 +2056,12 @@
     "rewatch_count": 0,
     "total_time": 104.92,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/36862/Made_in_Abyss_Movie_3__Fukaki_Tamashii_no_Reimei"
   },
   {
     "index": "104.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Promised Neverland, S01.jpg",
     "name": "The Promised Neverland, S01",
     "type": "TV",
     "studio": "CloverWorks",
@@ -2076,12 +2076,12 @@
     "rewatch_count": 0,
     "total_time": 273.996,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/37779/Yakusoku_no_Neverland"
   },
   {
     "index": "105.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Goblin Slayer, S01.jpg",
     "name": "Goblin Slayer, S01",
     "type": "TV",
     "studio": "White Fox",
@@ -2096,12 +2096,12 @@
     "rewatch_count": 0,
     "total_time": 284.4,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/37349/Goblin_Slayer"
   },
   {
     "index": "106.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Goblin Slayer_ Goblin's Crown.jpg",
     "name": "Goblin Slayer: Goblin's Crown",
     "type": "Movie",
     "studio": "White Fox",
@@ -2116,12 +2116,12 @@
     "rewatch_count": 0,
     "total_time": 85.05,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/39576/Goblin_Slayer__Goblins_Crown"
   },
   {
     "index": "107.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Your Lie in April_ Moments.jpg",
     "name": "Your Lie in April: Moments",
     "type": "OVA",
     "studio": "A-1 Pictures",
@@ -2136,12 +2136,12 @@
     "rewatch_count": 0,
     "total_time": 23.067,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/28069/Shigatsu_wa_Kimi_no_Uso__Moments"
   },
   {
     "index": "108.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Angel Beats! Specials.jpg",
     "name": "Angel Beats! Specials",
     "type": "Special",
     "studio": "P.A. Works",
@@ -2156,12 +2156,12 @@
     "rewatch_count": 0,
     "total_time": 54.65,
     "dub": "JAP; ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/9062/Angel_Beats_Specials"
   },
   {
     "index": "109.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Angel Beats! Another Epilogue.jpg",
     "name": "Angel Beats! Another Epilogue",
     "type": "Special",
     "studio": "P.A. Works",
@@ -2176,12 +2176,12 @@
     "rewatch_count": 0,
     "total_time": 2.55,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/10067/Angel_Beats_Another_Epilogue"
   },
   {
     "index": "110.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Orange.jpg",
     "name": "Orange",
     "type": "TV",
     "studio": "Telecom Animation Film",
@@ -2196,12 +2196,12 @@
     "rewatch_count": 0,
     "total_time": 322.349989,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/32729/Orange"
   },
   {
     "index": "111.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Noragami.jpg",
     "name": "Noragami",
     "type": "TV",
     "studio": "Bones",
@@ -2216,12 +2216,12 @@
     "rewatch_count": 0,
     "total_time": 290.562996,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/20507/Noragami"
   },
   {
     "index": "112.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Noragami Aragoto OVA.jpg",
     "name": "Noragami Aragoto OVA",
     "type": "OVA",
     "studio": "Bones",
@@ -2236,12 +2236,12 @@
     "rewatch_count": 0,
     "total_time": 47.866,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/30885/Noragami_Aragoto_OVA"
   },
   {
     "index": "113.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Noragami OVA.jpg",
     "name": "Noragami OVA",
     "type": "OVA",
     "studio": "Bones",
@@ -2256,12 +2256,12 @@
     "rewatch_count": 0,
     "total_time": 48,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/20767/Noragami_OVA"
   },
   {
     "index": "114.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Death Billiards.jpg",
     "name": "Death Billiards",
     "type": "Movie",
     "studio": "Madhouse",
@@ -2276,12 +2276,12 @@
     "rewatch_count": 0,
     "total_time": 25.217,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/14353/Death_Billiards"
   },
   {
     "index": "115.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Spy x Family, S01 Part 2.jpg",
     "name": "Spy x Family, S01 Part 2",
     "type": "TV",
     "studio": "Wit Studio; CloverWorks",
@@ -2296,12 +2296,12 @@
     "rewatch_count": 0,
     "total_time": 314.379,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/50602/Spy_x_Family_Part_2"
   },
   {
     "index": "116.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Spy x Family, S02.jpg",
     "name": "Spy x Family, S02",
     "type": "TV",
     "studio": "Wit Studio; CloverWorks",
@@ -2316,12 +2316,12 @@
     "rewatch_count": 0,
     "total_time": 284.4,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/53887/Spy_x_Family_Season_2"
   },
   {
     "index": "117.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Spy x Family Code_ White.jpg",
     "name": "Spy x Family Code: White",
     "type": "Movie",
     "studio": "Wit Studio; CloverWorks",
@@ -2336,12 +2336,12 @@
     "rewatch_count": 0,
     "total_time": 110,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/53888/Spy_x_Family_Movie__Code__White"
   },
   {
     "index": "118.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Lord El-Melloi II's Case Files_ Rail Zeppelin Grace Note - A Grave Keeper, a Cat, and a Mage.jpg",
     "name": "Lord El-Melloi II's Case Files: Rail Zeppelin Grace Note - A Grave Keeper, a Cat, and a Mage",
     "type": "TV Special",
     "studio": "TROYCA",
@@ -2356,12 +2356,12 @@
     "rewatch_count": 0,
     "total_time": 24.583,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/38936/Lord_El-Melloi_II-sei_no_Jikenbo__Rail_Zeppelin_Grace_Note_-_Hakamori_to_Neko_to_Majutsushi"
   },
   {
     "index": "119.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Elfen Lied_ In the Passing Rain, or, How Can a Girl Have Reached Such Feelings (question mark).jpg",
     "name": "Elfen Lied: In the Passing Rain, or, How Can a Girl Have Reached Such Feelings?",
     "type": "Special",
     "studio": "Arms",
@@ -2376,12 +2376,12 @@
     "rewatch_count": 0,
     "total_time": 25.2,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/376/Elfen_Lied__Tooriame_nite_Arui_wa_Shoujo_wa_Ikani_Shite_Sono_Shinjou_ni_Itatta_ka_-_Regenschauer"
   },
   {
     "index": "120.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Call of the Night, S01.jpg",
     "name": "Call of the Night, S01",
     "type": "TV",
     "studio": "LIDENFILMS",
@@ -2396,12 +2396,12 @@
     "rewatch_count": 0,
     "total_time": 302.90000000000003,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/50346/Yofukashi_no_Uta"
   },
   {
     "index": "121.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Rising of the Shield Hero, S01.jpg",
     "name": "The Rising of the Shield Hero, S01",
     "type": "TV",
     "studio": "Kinema Citrus",
@@ -2416,12 +2416,12 @@
     "rewatch_count": 0,
     "total_time": 615.762,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/35790/Tate_no_Yuusha_no_Nariagari"
   },
   {
     "index": "122.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Rising of the Shield hero, S02.jpg",
     "name": "The Rising of the Shield Hero, S02",
     "type": "TV",
     "studio": "Kinema Citrus; DR Movie",
@@ -2436,12 +2436,12 @@
     "rewatch_count": 0,
     "total_time": 308.19599999499997,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/40356/Tate_no_Yuusha_no_Nariagari_Season_2"
   },
   {
     "index": "123.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Rising of the Shield Hero, S03.jpg",
     "name": "The Rising of the Shield Hero, S03",
     "type": "TV",
     "studio": "Kinema Citrus",
@@ -2456,12 +2456,12 @@
     "rewatch_count": 0,
     "total_time": 284.004,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/40357/Tate_no_Yuusha_no_Nariagari_Season_3"
   },
   {
     "index": "124.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Rascal Does Not Dream of Bunny Girl Senpai.jpg",
     "name": "Rascal Does Not Dream of Bunny Girl Senpai",
     "type": "TV",
     "studio": "CloverWorks",
@@ -2476,12 +2476,12 @@
     "rewatch_count": 0,
     "total_time": 325.221,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/37450/Seishun_Buta_Yarou_wa_Bunny_Girl_Senpai_no_Yume_wo_Minai"
   },
   {
     "index": "125.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Rascal Does Not Dream of a Dreaming Girl.jpg",
     "name": "Rascal Does Not Dream of a Dreaming Girl",
     "type": "Movie",
     "studio": "CloverWorks",
@@ -2496,12 +2496,12 @@
     "rewatch_count": 0,
     "total_time": 90,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/38329/Seishun_Buta_Yarou_wa_Yumemiru_Shoujo_no_Yume_wo_Minai"
   },
   {
     "index": "126.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Rascal Does Not Dream of a Knapsack Kid.jpg",
     "name": "Rascal Does Not Dream of a Knapsack Kid",
     "type": "Movie",
     "studio": "CloverWorks",
@@ -2516,12 +2516,12 @@
     "rewatch_count": 0,
     "total_time": 74.9,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/54870/Seishun_Buta_Yarou_wa_Randoseru_Girl_no_Yume_wo_Minai"
   },
   {
     "index": "127.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Rascal Does Not Dream of a Sister Venturing Out.jpg",
     "name": "Rascal Does Not Dream of a Sister Venturing Out",
     "type": "Movie",
     "studio": "CloverWorks",
@@ -2536,12 +2536,12 @@
     "rewatch_count": 0,
     "total_time": 73.88,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/53129/Seishun_Buta_Yarou_wa_Odekake_Sister_no_Yume_wo_Minai"
   },
   {
     "index": "128.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Black Butler, S01.jpg",
     "name": "Black Butler, S01",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -2556,12 +2556,12 @@
     "rewatch_count": 0,
     "total_time": 586.70784,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/4898/Kuroshitsuji"
   },
   {
     "index": "129.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Black Butler, S01 Special.jpg",
     "name": "Black Butler, S01 Special",
     "type": "Special",
     "studio": "A-1 Pictures",
@@ -2576,12 +2576,12 @@
     "rewatch_count": 0,
     "total_time": 26.65,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/6793/Kuroshitsuji__Sono_Shitsuji_Kougyou"
   },
   {
     "index": "130.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Black Butler, S02 Specials.jpg",
     "name": "Black Butler, S02 Specials",
     "type": "Special",
     "studio": "A-1 Pictures",
@@ -2596,12 +2596,12 @@
     "rewatch_count": 0,
     "total_time": 155.799,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/9136/Kuroshitsuji_II_Specials"
   },
   {
     "index": "131.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Black Butler_ Book of Circus.jpg",
     "name": "Black Butler: Book of Circus",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -2616,12 +2616,12 @@
     "rewatch_count": 0,
     "total_time": 243.56400000000002,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/22145/Kuroshitsuji__Book_of_Circus"
   },
   {
     "index": "132.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Black Butler_ Book of Murder.jpg",
     "name": "Black Butler: Book of Murder",
     "type": "OVA",
     "studio": "A-1 Pictures",
@@ -2636,12 +2636,12 @@
     "rewatch_count": 0,
     "total_time": 123.15,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/23317/Kuroshitsuji__Book_of_Murder"
   },
   {
     "index": "133.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Black Butler_ Book of the Atlantic.jpg",
     "name": "Black Butler: Book of the Atlantic",
     "type": "Movie",
     "studio": "A-1 Pictures",
@@ -2656,12 +2656,12 @@
     "rewatch_count": 0,
     "total_time": 100,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/31812/Kuroshitsuji_Movie__Book_of_the_Atlantic"
   },
   {
     "index": "134.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Black Butler_ Public School Arc.jpg",
     "name": "Black Butler: Public School Arc",
     "type": "TV",
     "studio": "CloverWorks",
@@ -2676,12 +2676,12 @@
     "rewatch_count": 0,
     "total_time": 260.6692,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/55855/Kuroshitsuji__Kishuku_Gakkou-hen"
   },
   {
     "index": "135.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Kaiju No.8_ Hoshina's Day Off.jpg",
     "name": "Kaiju No.8: Hoshina's Day Off",
     "type": "Special",
     "studio": "Production I.G",
@@ -2696,12 +2696,12 @@
     "rewatch_count": 0,
     "total_time": 23.667,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/59490/Kaijuu_8-gou__Hoshina_no_Kyuujitsu"
   },
   {
     "index": "136.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Steins;Gate 0_ Valentine's of Crystal Polymorphism -Bittersweet Intermedio-.jpg",
     "name": "Steins;Gate 0: Valentine's of Crystal Polymorphism -Bittersweet Intermedio-",
     "type": "Special",
     "studio": "White Fox",
@@ -2716,12 +2716,12 @@
     "rewatch_count": 0,
     "total_time": 23.683,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/37492/Steins_Gate_0__Kesshou_Takei_no_Valentine_-_Bittersweet_Intermedio"
   },
   {
     "index": "137.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Steins;Gate_ The Sagacious Wisdom of Cognitive Computing.jpg",
     "name": "Steins;Gate: The Sagacious Wisdom of Cognitive Computing",
     "type": "ONA",
     "studio": "White Fox",
@@ -2736,12 +2736,12 @@
     "rewatch_count": 0,
     "total_time": 15.4663,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/27957/Steins_Gate__Soumei_Eichi_no_Cognitive_Computing"
   },
   {
     "index": "138.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Steins;Gate_ Egoistic Poriomania.jpg",
     "name": "Steins;Gate: Egoistic Poriomania",
     "type": "Special",
     "studio": "White Fox",
@@ -2756,12 +2756,12 @@
     "rewatch_count": 0,
     "total_time": 24.667,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/10863/Steins_Gate__Oukoubakko_no_Poriomania"
   },
   {
     "index": "139.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fullmetal Alchemist_ The Sacred Star of Milos.jpg",
     "name": "Fullmetal Alchemist: The Sacred Star of Milos",
     "type": "Movie",
     "studio": "Bones",
@@ -2776,12 +2776,12 @@
     "rewatch_count": 0,
     "total_time": 110.93,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/9135/Fullmetal_Alchemist__The_Sacred_Star_of_Milos"
   },
   {
     "index": "140.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fullmetal Alchemist_ Brotherhood OVA Collection.jpg",
     "name": "Fullmetal Alchemist: Brotherhood OVA Collection",
     "type": "Special",
     "studio": "Bones",
@@ -2796,12 +2796,12 @@
     "rewatch_count": 0,
     "total_time": 60.584,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/6421/Fullmetal_Alchemist__Brotherhood_Specials"
   },
   {
     "index": "141.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Puella Magi Madoka Magica.jpg",
     "name": "Puella Magi Madoka Magica",
     "type": "TV",
     "studio": "Shaft",
@@ -2816,12 +2816,12 @@
     "rewatch_count": 0,
     "total_time": 296.5992,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/9756/Mahou_Shoujo_Madoka%E2%98%85Magica"
   },
   {
     "index": "142.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Magia Record_ Puella Magi Madoka Magica Side Story, S01.jpg",
     "name": "Magia Record: Puella Magi Madoka Magica Side Story, S01",
     "type": "TV",
     "studio": "Shaft",
@@ -2836,12 +2836,12 @@
     "rewatch_count": 0,
     "total_time": 308.51599999999996,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/38256/Magia_Record__Mahou_Shoujo_Madoka%E2%98%86Magica_Gaiden"
   },
   {
     "index": "143.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Magia Record_ Puella Magi Madoka Magica Side Story, S02 - The Eve of Awakening.jpg",
     "name": "Magia Record: Puella Magi Madoka Magica Side Story, S02 - The Eve of Awakening",
     "type": "TV",
     "studio": "Shaft",
@@ -2856,12 +2856,12 @@
     "rewatch_count": 0,
     "total_time": 188.936,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/41530/Magia_Record__Mahou_Shoujo_Madoka%E2%98%86Magica_Gaiden_2nd_Season_-_Kakusei_Zenya"
   },
   {
     "index": "144.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Higurashi_ When They Cry.jpg",
     "name": "Higurashi: When They Cry",
     "type": "TV",
     "studio": "Studio Deen",
@@ -2876,12 +2876,12 @@
     "rewatch_count": 0,
     "total_time": 616.1999999999999,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/934/Higurashi_no_Naku_Koro_ni"
   },
   {
     "index": "145.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Higurashi_ When They Cry - Cat Killing Chapter.jpg",
     "name": "Higurashi: When They Cry – Cat Killing Chapter",
     "type": "Special",
     "studio": "Studio Deen",
@@ -2896,12 +2896,12 @@
     "rewatch_count": 0,
     "total_time": 23.167,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/2899/Higurashi_no_Naku_Koro_ni_Special__Nekogoroshi-hen"
   },
   {
     "index": "146.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Higurashi_ When They Cry – Kai.jpg",
     "name": "Higurashi: When They Cry – Kai",
     "type": "TV",
     "studio": "Studio Deen",
@@ -2916,12 +2916,12 @@
     "rewatch_count": 0,
     "total_time": 586.0488,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/1889/Higurashi_no_Naku_Koro_ni_Kai"
   },
   {
     "index": "147.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Higurashi_ When They Cry – Kira.jpg",
     "name": "Higurashi: When They Cry – Kira",
     "type": "OVA",
     "studio": "Studio Deen",
@@ -2936,12 +2936,12 @@
     "rewatch_count": 0,
     "total_time": 118.934,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/10491/Higurashi_no_Naku_Koro_ni_Kira"
   },
   {
     "index": "148.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Higurashi_ When They Cry – Outbreak.jpg",
     "name": "Higurashi: When They Cry – Outbreak",
     "type": "OVA",
     "studio": "Studio Deen",
@@ -2956,12 +2956,12 @@
     "rewatch_count": 0,
     "total_time": 54.95,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/16700/Higurashi_no_Naku_Koro_ni_Kaku__Outbreak"
   },
   {
     "index": "149.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Higurashi_ When They Cry – Gou.jpg",
     "name": "Higurashi: When They Cry – Gou",
     "type": "TV",
     "studio": "Passione",
@@ -2976,12 +2976,12 @@
     "rewatch_count": 0,
     "total_time": 568.392,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/41006/Higurashi_no_Naku_Koro_ni_Gou"
   },
   {
     "index": "150.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Future Diary.jpg",
     "name": "The Future Diary",
     "type": "TV",
     "studio": "asread.",
@@ -2996,12 +2996,12 @@
     "rewatch_count": 0,
     "total_time": 583.284,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/10620/Mirai_Nikki_TV"
   },
   {
     "index": "151.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Shiki Specials.jpg",
     "name": "Shiki Specials",
     "type": "Special",
     "studio": "Daume",
@@ -3016,12 +3016,12 @@
     "rewatch_count": 0,
     "total_time": 46.834,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/10083/Shiki_Specials"
   },
   {
     "index": "152.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Bakemonogatari.jpg",
     "name": "Bakemonogatari",
     "type": "TV",
     "studio": "Shaft",
@@ -3036,12 +3036,12 @@
     "rewatch_count": 0,
     "total_time": 378.0645,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/5081/Bakemonogatari"
   },
   {
     "index": "153.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Kizumonogatari Part 1_ Iron-Blooded.jpg",
     "name": "Kizumonogatari Part 1: Iron-Blooded",
     "type": "Movie",
     "studio": "Shaft",
@@ -3056,12 +3056,12 @@
     "rewatch_count": 0,
     "total_time": 63.5,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/9260/Kizumonogatari_I__Tekketsu-hen"
   },
   {
     "index": "154.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Kizumonogatari Part 2_ Hot-Blooded.jpg",
     "name": "Kizumonogatari Part 2: Hot-Blooded",
     "type": "Movie",
     "studio": "Shaft",
@@ -3076,12 +3076,12 @@
     "rewatch_count": 0,
     "total_time": 68.25,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/31757/Kizumonogatari_II__Nekketsu-hen"
   },
   {
     "index": "155.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Kizumonogatari Part 3_ Cold-Blooded.jpg",
     "name": "Kizumonogatari Part 3: Cold-Blooded",
     "type": "Movie",
     "studio": "Shaft",
@@ -3096,12 +3096,12 @@
     "rewatch_count": 0,
     "total_time": 82.17,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/31758/Kizumonogatari_III__Reiketsu-hen"
   },
   {
     "index": "156.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Nisemonogatari.jpg",
     "name": "Nisemonogatari",
     "type": "TV",
     "studio": "Shaft",
@@ -3116,12 +3116,12 @@
     "rewatch_count": 0,
     "total_time": 280.36591,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/11597/Nisemonogatari"
   },
   {
     "index": "157.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Nekomonogatari Black.jpg",
     "name": "Nekomonogatari Black",
     "type": "TV Special",
     "studio": "Shaft",
@@ -3136,12 +3136,12 @@
     "rewatch_count": 0,
     "total_time": 107.95,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/15689/Nekomonogatari__Kuro"
   },
   {
     "index": "158.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Monogatari Series_ Second Season.jpg",
     "name": "Monogatari Series: Second Season",
     "type": "TV",
     "studio": "Shaft",
@@ -3156,12 +3156,12 @@
     "rewatch_count": 0,
     "total_time": 595.1159839999999,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/17074/Monogatari_Series__Second_Season"
   },
   {
     "index": "159.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Hanamonogatari.jpg",
     "name": "Hanamonogatari",
     "type": "TV Special",
     "studio": "Shaft",
@@ -3176,12 +3176,12 @@
     "rewatch_count": 0,
     "total_time": 129.667,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/21855/Hanamonogatari"
   },
   {
     "index": "160.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Tsukimonogatari.jpg",
     "name": "Tsukimonogatari",
     "type": "TV Special",
     "studio": "Shaft",
@@ -3196,12 +3196,12 @@
     "rewatch_count": 0,
     "total_time": 107.133,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/28025/Tsukimonogatari"
   },
   {
     "index": "161.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Koyomimonogatari.jpg",
     "name": "Koyomimonogatari",
     "type": "ONA",
     "studio": "Shaft",
@@ -3216,12 +3216,12 @@
     "rewatch_count": 0,
     "total_time": 152.1504,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/32268/Koyomimonogatari"
   },
   {
     "index": "162.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Owarimonogatari, S01.jpg",
     "name": "Owarimonogatari, S01",
     "type": "TV",
     "studio": "Shaft",
@@ -3236,12 +3236,12 @@
     "rewatch_count": 0,
     "total_time": 322.53520000000003,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/31181/Owarimonogatari"
   },
   {
     "index": "163.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Owarimonogatari, S02.jpg",
     "name": "Owarimonogatari, S02",
     "type": "TV Special",
     "studio": "Shaft",
@@ -3256,12 +3256,12 @@
     "rewatch_count": 0,
     "total_time": 168.08294999999998,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/35247/Owarimonogatari_2nd_Season"
   },
   {
     "index": "164.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Zoku Owarimonogatari.jpg",
     "name": "Zoku Owarimonogatari",
     "type": "TV",
     "studio": "Shaft",
@@ -3276,12 +3276,12 @@
     "rewatch_count": 0,
     "total_time": 157.284,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/36999/Zoku_Owarimonogatari"
   },
   {
     "index": "165.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Monogatari Series_ Off & Monster Season - A Cruel Fairy Tale_ The Beautiful Princess.jpg",
     "name": "Monogatari Series: Off & Monster Season - A Cruel Fairy Tale: The Beautiful Princess",
     "type": "ONA",
     "studio": "Shaft",
@@ -3296,12 +3296,12 @@
     "rewatch_count": 0,
     "total_time": 12.533,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/59612/Monogatari_Series__Off___Monster_Season_-_Zankoku_Douwa__Utsukushi-hime"
   },
   {
     "index": "166.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Melancholy of Haruhi Suzumiya, S02.jpg",
     "name": "The Melancholy of Haruhi Suzumiya, S02",
     "type": "TV",
     "studio": "Kyoto Animation",
@@ -3316,12 +3316,12 @@
     "rewatch_count": 0,
     "total_time": 345.6124,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/4382/Suzumiya_Haruhi_no_Yuuutsu_2009"
   },
   {
     "index": "167.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Apothecary Diaries, S01.jpg",
     "name": "The Apothecary Diaries, S01",
     "type": "TV",
     "studio": "OLM; TOHO animation STUDIO",
@@ -3336,12 +3336,12 @@
     "rewatch_count": 0,
     "total_time": 548.016,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/54492/Kusuriya_no_Hitorigoto"
   },
   {
     "index": "168.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Tower of God, S01.jpg",
     "name": "Tower of God, S01",
     "type": "TV",
     "studio": "Telecom Animation Film",
@@ -3356,12 +3356,12 @@
     "rewatch_count": 0,
     "total_time": 309.439,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/40221/Kami_no_Tou"
   },
   {
     "index": "169.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Tower of God, S02_ Return of the Prince.jpg",
     "name": "Tower of God, S02: Return of the Prince",
     "type": "TV",
     "studio": "The Answer Studio",
@@ -3376,12 +3376,12 @@
     "rewatch_count": 0,
     "total_time": 308.20399999999995,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/52635/Kami_no_Tou__Ouji_no_Kikan"
   },
   {
     "index": "170.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/I've Been Killing Slimes for 300 Years and Maxed Out My Level, S01.jpg",
     "name": "I've Been Killing Slimes for 300 Years and Maxed Out My Level, S01",
     "type": "TV",
     "studio": "Revoroot",
@@ -3396,12 +3396,12 @@
     "rewatch_count": 0,
     "total_time": 284.004,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/40586/Slime_Taoshite_300-nen_Shiranai_Uchi_ni_Level_Max_ni_Nattemashita"
   },
   {
     "index": "171.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Tsukimichi -Moonlit Fantasy-, S01.jpg",
     "name": "Tsukimichi -Moonlit Fantasy-, S01",
     "type": "TV",
     "studio": "C2C",
@@ -3416,12 +3416,12 @@
     "rewatch_count": 0,
     "total_time": 284.01599999999996,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/43523/Tsuki_ga_Michibiku_Isekai_Douchuu"
   },
   {
     "index": "172.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Ascendance of a Bookworm, S01.jpg",
     "name": "Ascendance of a Bookworm, S01",
     "type": "TV",
     "studio": "Ajia-do",
@@ -3436,12 +3436,12 @@
     "rewatch_count": 0,
     "total_time": 331.618,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/39468/Honzuki_no_Gekokujou__Shisho_ni_Naru_Tame_ni_wa_Shudan_wo_Erandeiraremasen"
   },
   {
     "index": "173.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Ascendance of a Bookworm_ Side Story.jpg",
     "name": "Ascendance of a Bookworm: Side Story",
     "type": "OVA",
     "studio": "Ajia-do",
@@ -3456,12 +3456,12 @@
     "rewatch_count": 0,
     "total_time": 24.108,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/40841/Honzuki_no_Gekokujou__Shisho_ni_Naru_Tame_ni_wa_Shudan_wo_Erandeiraremasen_OVA"
   },
   {
     "index": "174.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Ascendance of a Bookworm, S02.jpg",
     "name": "Ascendance of a Bookworm, S02",
     "type": "TV",
     "studio": "Ajia-do",
@@ -3476,12 +3476,12 @@
     "rewatch_count": 0,
     "total_time": 284.244,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/40815/Honzuki_no_Gekokujou__Shisho_ni_Naru_Tame_ni_wa_Shudan_wo_Erandeiraremasen_2nd_Season"
   },
   {
     "index": "175.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/GATE, S01 Part 1.jpg",
     "name": "GATE, S01 Part 1",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -3496,12 +3496,12 @@
     "rewatch_count": 0,
     "total_time": 284.004,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/28907/Gate__Jieitai_Kanochi_nite_Kaku_Tatakaeri"
   },
   {
     "index": "176.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/I'm Standing on a Million Lives, S01.jpg",
     "name": "I'm Standing on a Million Lives, S01",
     "type": "TV",
     "studio": "Maho Film",
@@ -3516,12 +3516,12 @@
     "rewatch_count": 0,
     "total_time": 284.208,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/41380/100-man_no_Inochi_no_Ue_ni_Ore_wa_Tatteiru"
   },
   {
     "index": "177.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Arifureta_ From Commonplace to World's Strongest - Prologue.jpg",
     "name": "Arifureta: From Commonplace to World's Strongest - Prologue",
     "type": "ONA",
     "studio": "asread.; White Fox",
@@ -3536,12 +3536,12 @@
     "rewatch_count": 0,
     "total_time": 5.723,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/46971/Arifureta_Shokugyou_de_Sekai_Saikyou__Prologue"
   },
   {
     "index": "178.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Arifureta_ From Commonplace to World's Strongest, S01.jpg",
     "name": "Arifureta: From Commonplace to World's Strongest, S01",
     "type": "TV",
     "studio": "asread.; White Fox",
@@ -3556,12 +3556,12 @@
     "rewatch_count": 0,
     "total_time": 307.37199999999996,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/36882/Arifureta_Shokugyou_de_Sekai_Saikyou"
   },
   {
     "index": "179.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Arifureta_ From Commonplace to World's Strongest Specials.jpg",
     "name": "Arifureta: From Commonplace to World's Strongest Specials",
     "type": "Special",
     "studio": "asread.; White Fox",
@@ -3576,12 +3576,12 @@
     "rewatch_count": 0,
     "total_time": 17.636,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/40083/Arifureta_Shokugyou_de_Sekai_Saikyou_Specials"
   },
   {
     "index": "180.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Arifureta_ From a Detour to the World's Strongest.jpg",
     "name": "Arifureta: From a Detour to the World's Strongest",
     "type": "Special",
     "studio": "asread.; studio MOTHER",
@@ -3596,12 +3596,12 @@
     "rewatch_count": 0,
     "total_time": 23.699,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/50916/Arifureta_Shokugyou_de_Sekai_Saikyou__Arifureta_Yorimichi_de_Sekai_Saikyou"
   },
   {
     "index": "181.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Arifureta_ From Commonplace to World's Strongest, S02.jpg",
     "name": "Arifureta: From Commonplace to World's Strongest, S02",
     "type": "TV",
     "studio": "asread.; studio MOTHER",
@@ -3616,12 +3616,12 @@
     "rewatch_count": 0,
     "total_time": 284.42400000000004,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/40507/Arifureta_Shokugyou_de_Sekai_Saikyou_2nd_Season"
   },
   {
     "index": "182.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Arifureta_ Phantom Adventure and Miraculous Encounter.jpg",
     "name": "Arifureta: Phantom Adventure and Miraculous Encounter",
     "type": "OVA",
     "studio": "asread.; studio MOTHER",
@@ -3636,12 +3636,12 @@
     "rewatch_count": 0,
     "total_time": 42.359,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/51473/Arifureta_Shokugyou_de_Sekai_Saikyou__Maboroshi_no_Bouken_to_Kiseki_no_Kaigou"
   },
   {
     "index": "183.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Grimgar_ Staking Our Youths on the Bath Wall - One More Centimeter.jpg",
     "name": "Grimgar: Staking Our Youths on the Bath Wall - One More Centimeter",
     "type": "Special",
     "studio": "A-1 Pictures",
@@ -3656,12 +3656,12 @@
     "rewatch_count": 0,
     "total_time": 11.434,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/32561/Hai_to_Gensou_no_Grimgar__Furoagari_no_Kabe_ni_Kaketa_Seishun_-_One_More_Centimeter"
   },
   {
     "index": "184.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Saga of Tanya the Evil, S01.jpg",
     "name": "Saga of Tanya the Evil, S01",
     "type": "TV",
     "studio": "Nut",
@@ -3676,12 +3676,12 @@
     "rewatch_count": 0,
     "total_time": 284.31600000000003,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/32615/Youjo_Senki"
   },
   {
     "index": "185.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Saga of Tanya the Evil_ Operation Desert Pasta.jpg",
     "name": "Saga of Tanya the Evil: Operation Desert Pasta",
     "type": "ONA",
     "studio": "Nut",
@@ -3696,12 +3696,12 @@
     "rewatch_count": 0,
     "total_time": 16.801,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/49236/Youjo_Senki__Sabaku_no_Pasta_Daisakusen"
   },
   {
     "index": "186.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Log Horizon, S01.jpg",
     "name": "Log Horizon, S01",
     "type": "TV",
     "studio": "Satelight",
@@ -3716,12 +3716,12 @@
     "rewatch_count": 0,
     "total_time": 613.375,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/17265/Log_Horizon"
   },
   {
     "index": "187.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Log Horizon, S02.jpg",
     "name": "Log Horizon, S02",
     "type": "TV",
     "studio": "Studio Deen",
@@ -3736,12 +3736,12 @@
     "rewatch_count": 0,
     "total_time": 613.35,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/23321/Log_Horizon_2nd_Season"
   },
   {
     "index": "188.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Chainsaw Man_ The Compilation.jpg",
     "name": "Chainsaw Man: The Compilation",
     "type": "ONA",
     "studio": "MAPPA",
@@ -3756,12 +3756,12 @@
     "rewatch_count": 0,
     "total_time": 214.856,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/62352/Chainsaw_Man_Recap"
   },
   {
     "index": "189.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Another World.jpg",
     "name": "Another World",
     "type": "ONA",
     "studio": "Graphinica",
@@ -3776,12 +3776,12 @@
     "rewatch_count": 0,
     "total_time": 30.156,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/40295/Another_World"
   },
   {
     "index": "190.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sound of the Sky.jpg",
     "name": "Sound of the Sky",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -3796,12 +3796,12 @@
     "rewatch_count": 0,
     "total_time": 293.964,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/6802/So_Ra_No_Wo_To"
   },
   {
     "index": "191.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Kabaneri of the Iron Fortress.jpg",
     "name": "Kabaneri of the Iron Fortress",
     "type": "TV",
     "studio": "Wit Studio",
@@ -3816,12 +3816,12 @@
     "rewatch_count": 0,
     "total_time": 274.236,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/28623/Koutetsujou_no_Kabaneri"
   },
   {
     "index": "192.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Demon Slayer.jpg",
     "name": "Demon Slayer",
     "type": "TV",
     "studio": "ufotable",
@@ -3836,12 +3836,12 @@
     "rewatch_count": 0,
     "total_time": 616.3820000000001,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/38000/Kimetsu_no_Yaiba"
   },
   {
     "index": "193.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Demon Slayer_ Mugen Train Arc.jpg",
     "name": "Demon Slayer: Mugen Train Arc",
     "type": "TV",
     "studio": "ufotable",
@@ -3856,12 +3856,12 @@
     "rewatch_count": 0,
     "total_time": 169.932,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/49926/Kimetsu_no_Yaiba__Mugen_Ressha-hen"
   },
   {
     "index": "194.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Demon Slayer_ Entertainment District Arc.jpg",
     "name": "Demon Slayer: Entertainment District Arc",
     "type": "TV",
     "studio": "ufotable",
@@ -3876,12 +3876,12 @@
     "rewatch_count": 0,
     "total_time": 292.996,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/47778/Kimetsu_no_Yaiba__Yuukaku-hen"
   },
   {
     "index": "195.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Demon Slayer_ Swordsmith Village Arc.jpg",
     "name": "Demon Slayer: Swordsmith Village Arc",
     "type": "TV",
     "studio": "ufotable",
@@ -3896,12 +3896,12 @@
     "rewatch_count": 0,
     "total_time": 317.185,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/51019/Kimetsu_no_Yaiba__Katanakaji_no_Sato-hen"
   },
   {
     "index": "196.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Demon Slayer_ Hashira Training Arc.jpg",
     "name": "Demon Slayer: Hashira Training Arc",
     "type": "TV",
     "studio": "ufotable",
@@ -3916,12 +3916,12 @@
     "rewatch_count": 0,
     "total_time": 239.832,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/55701/Kimetsu_no_Yaiba__Hashira_Geiko-hen"
   },
   {
     "index": "197.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Vinland Saga, S01.jpg",
     "name": "Vinland Saga, S01",
     "type": "TV",
     "studio": "Wit Studio",
@@ -3936,12 +3936,12 @@
     "rewatch_count": 0,
     "total_time": 590.616,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/37521/Vinland_Saga"
   },
   {
     "index": "198.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Vinland Saga, S02_ Drowning in the Shadow.jpg",
     "name": "Vinland Saga, S02: Drowning in the Shadow",
     "type": "ONA",
     "studio": "MAPPA",
@@ -3956,12 +3956,12 @@
     "rewatch_count": 0,
     "total_time": 2.524,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/54463/Vinland_Saga_Season_2__Drowning_in_the_Shadow"
   },
   {
     "index": "199.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Vinland Saga, S02_ Same Old Story.jpg",
     "name": "Vinland Saga, S02: Same Old Story",
     "type": "ONA",
     "studio": "MAPPA",
@@ -3976,12 +3976,12 @@
     "rewatch_count": 0,
     "total_time": 1.541,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/55272/Vinland_Saga_Season_2__Same_Old_Story"
   },
   {
     "index": "200.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Himouto! Umaru-chan.jpg",
     "name": "Himouto! Umaru-chan",
     "type": "TV",
     "studio": "Doga Kobo",
@@ -3996,12 +3996,12 @@
     "rewatch_count": 0,
     "total_time": 288,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/28825/Himouto_Umaru-chan"
   },
   {
     "index": "201.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Himouto! Umaru-chan Specials.jpg",
     "name": "Himouto! Umaru-chan Specials",
     "type": "Special",
     "studio": "Doga Kobo",
@@ -4016,12 +4016,12 @@
     "rewatch_count": 0,
     "total_time": 25.799999999999997,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/31234/Himouto_Umaru-chanS"
   },
   {
     "index": "202.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Himouto! Umaru-chan R.jpg",
     "name": "Himouto! Umaru-chan R",
     "type": "TV",
     "studio": "Doga Kobo",
@@ -4036,12 +4036,12 @@
     "rewatch_count": 0,
     "total_time": 284.21999999999997,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/35376/Himouto_Umaru-chan_R"
   },
   {
     "index": "203.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate strange Fake_ Whispers of Dawn.jpg",
     "name": "Fate/strange Fake: Whispers of Dawn",
     "type": "TV Special",
     "studio": "A-1 Pictures",
@@ -4056,12 +4056,12 @@
     "rewatch_count": 0,
     "total_time": 55.984,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/53127/Fate_strange_Fake__Whispers_of_Dawn"
   },
   {
     "index": "204.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Dorohedoro_ Bonus Curse or Extra Evil.jpg",
     "name": "Dorohedoro: Bonus Curse or Extra Evil",
     "type": "Special",
     "studio": "MAPPA",
@@ -4076,12 +4076,12 @@
     "rewatch_count": 0,
     "total_time": 25.488,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/41053/Dorohedoro__Ma_no_Omake"
   },
   {
     "index": "205.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Hell's Paradise, S01.jpg",
     "name": "Hell's Paradise, S01",
     "type": "TV",
     "studio": "MAPPA",
@@ -4096,12 +4096,12 @@
     "rewatch_count": 0,
     "total_time": 314.392,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/46569/Jigokuraku"
   },
   {
     "index": "206.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Ancient Magus' Bride, S01.jpg",
     "name": "The Ancient Magus' Bride, S01",
     "type": "TV",
     "studio": "Wit Studio",
@@ -4116,12 +4116,12 @@
     "rewatch_count": 0,
     "total_time": 583.8,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/35062/Mahoutsukai_no_Yome"
   },
   {
     "index": "207.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Ancient Magus' Bride_ Those Awaiting a Star.jpg",
     "name": "The Ancient Magus' Bride: Those Awaiting a Star",
     "type": "OVA",
     "studio": "Wit Studio",
@@ -4136,12 +4136,12 @@
     "rewatch_count": 0,
     "total_time": 72,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/32902/Mahoutsukai_no_Yome__Hoshi_Matsu_Hito"
   },
   {
     "index": "208.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Ancient Magus' Bride_ The Boy from the West and the Knight of the Blue Storm.jpg",
     "name": "The Ancient Magus' Bride: The Boy from the West and the Knight of the Blue Storm",
     "type": "OVA",
     "studio": "Studio Kafka",
@@ -4156,12 +4156,12 @@
     "rewatch_count": 0,
     "total_time": 68.94,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/48438/Mahoutsukai_no_Yome__Nishi_no_Shounen_to_Seiran_no_Kishi"
   },
   {
     "index": "209.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Ancient Magus' Bride, S02 Part 1.jpg",
     "name": "The Ancient Magus' Bride, S02 Part 1",
     "type": "TV",
     "studio": "Studio Kafka",
@@ -4176,12 +4176,12 @@
     "rewatch_count": 0,
     "total_time": 290.21999999999997,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/52955/Mahoutsukai_no_Yome_Season_2"
   },
   {
     "index": "210.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Magi_ The Labyrinth of Magic.jpg",
     "name": "Magi: The Labyrinth of Magic",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -4196,12 +4196,12 @@
     "rewatch_count": 0,
     "total_time": 611.025,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/14513/Magi__The_Labyrinth_of_Magic"
   },
   {
     "index": "211.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Magi_ Adventures of Sinbad.jpg",
     "name": "Magi: Adventures of Sinbad",
     "type": "TV",
     "studio": "Lay-duce",
@@ -4216,12 +4216,12 @@
     "rewatch_count": 0,
     "total_time": 312.728,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/31741/Magi__Sinbad_no_Bouken_TV"
   },
   {
     "index": "212.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Burn the Witch #0.8.jpg",
     "name": "Burn the Witch #0.8",
     "type": "TV Special",
     "studio": "Studio Colorido; team Yamahitsuji",
@@ -4236,12 +4236,12 @@
     "rewatch_count": 0,
     "total_time": 28.799,
     "dub": "JAP",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/56671/Burn_the_Witch_08"
   },
   {
     "index": "213.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Dead Dead Demons Dededede Destruction Episode 0.jpg",
     "name": "Dead Dead Demons Dededede Destruction Episode 0",
     "type": "ONA",
     "studio": "Production +h.",
@@ -4256,12 +4256,12 @@
     "rewatch_count": 0,
     "total_time": 23.885,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/58920/Dead_Dead_Demons_Dededede_Destruction_ONA_Episode_0"
   },
   {
     "index": "214.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Psycho-Pass, S01.jpg",
     "name": "Psycho-Pass, S01",
     "type": "TV",
     "studio": "Production I.G",
@@ -4276,12 +4276,12 @@
     "rewatch_count": 0,
     "total_time": 503.074,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/13601/Psycho-Pass"
   },
   {
     "index": "215.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Psycho-Pass, S02.jpg",
     "name": "Psycho-Pass, S02",
     "type": "TV",
     "studio": "Tatsunoko Production",
@@ -4296,12 +4296,12 @@
     "rewatch_count": 0,
     "total_time": 245.95999999999998,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/23281/Psycho-Pass_2"
   },
   {
     "index": "216.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Psycho-Pass_ The Movie.jpg",
     "name": "Psycho-Pass: The Movie",
     "type": "Movie",
     "studio": "Production I.G",
@@ -4316,12 +4316,12 @@
     "rewatch_count": 0,
     "total_time": 113.263,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/21339/Psycho-Pass_Movie_1"
   },
   {
     "index": "217.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Psycho-Pass_ Sinners of the System Case.1 - Crime and Punishment.jpg",
     "name": "Psycho-Pass: Sinners of the System Case.1 - Crime and Punishment",
     "type": "Movie",
     "studio": "Production I.G",
@@ -4336,12 +4336,12 @@
     "rewatch_count": 0,
     "total_time": 60.094,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/37440/Psycho-Pass__Sinners_of_the_System_Case1_-_Tsumi_to_Batsu"
   },
   {
     "index": "218.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Psycho-Pass_ Sinners of the System Case.2 - First Guardian.jpg",
     "name": "Psycho-Pass: Sinners of the System Case.2 - First Guardian",
     "type": "Movie",
     "studio": "Production I.G",
@@ -4356,12 +4356,12 @@
     "rewatch_count": 0,
     "total_time": 60.077,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/37441/Psycho-Pass__Sinners_of_the_System_Case2_-_First_Guardian"
   },
   {
     "index": "219.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Psycho-Pass_ Sinners of the System Case.3 - On the Other Side of Love and Hate.jpg",
     "name": "Psycho-Pass: Sinners of the System Case.3 - On the Other Side of Love and Hate",
     "type": "Movie",
     "studio": "Production I.G",
@@ -4376,12 +4376,12 @@
     "rewatch_count": 0,
     "total_time": 67.685,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/37442/Psycho-Pass__Sinners_of_the_System_Case3_-_Onshuu_no_Kanata_ni%EF%BC%BF%EF%BC%BF"
   },
   {
     "index": "220.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Psycho-Pass, S03.jpg",
     "name": "Psycho-Pass, S03",
     "type": "TV",
     "studio": "Production I.G",
@@ -4396,12 +4396,12 @@
     "rewatch_count": 0,
     "total_time": 366.264,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/39491/Psycho-Pass_3"
   },
   {
     "index": "221.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Psycho-Pass_ Providence.jpg",
     "name": "Psycho-Pass: Providence",
     "type": "Movie",
     "studio": "Production I.G",
@@ -4416,12 +4416,12 @@
     "rewatch_count": 0,
     "total_time": 120.154,
     "dub": "ENG",
-    "status": "Pokračování zhlédnuto",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/52747/Psycho-Pass_Movie_2__Providence"
   },
   {
     "index": "222.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Akame ga Kill!.jpg",
     "name": "Akame ga Kill!",
     "type": "TV",
     "studio": "White Fox",
@@ -4436,12 +4436,12 @@
     "rewatch_count": 0,
     "total_time": 568.8,
     "dub": "ENG",
-    "status": "Pokračování nepravděpodobné",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/22199/Akame_ga_Kill"
   },
   {
     "index": "223.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/No Game, No Life.jpg",
     "name": "No Game, No Life",
     "type": "TV",
     "studio": "Madhouse",
@@ -4456,12 +4456,12 @@
     "rewatch_count": 1,
     "total_time": 552,
     "dub": "ENG",
-    "status": "Pokračování nepravděpodobné",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/19815/No_Game_No_Life"
   },
   {
     "index": "224.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Another.jpg",
     "name": "Another",
     "type": "TV",
     "studio": "P.A. Works",
@@ -4476,12 +4476,12 @@
     "rewatch_count": 0,
     "total_time": 297.16895999999997,
     "dub": "ENG",
-    "status": "Pokračování nepravděpodobné",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/11111/Another"
   },
   {
     "index": "225.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Chivalry of a Failed Knight.jpg",
     "name": "Chivalry of a Failed Knight",
     "type": "TV",
     "studio": "SILVER LINK.; Nexus",
@@ -4496,12 +4496,12 @@
     "rewatch_count": 0,
     "total_time": 285.01692,
     "dub": "ENG",
-    "status": "Pokračování nepravděpodobné",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/30296/Rakudai_Kishi_no_Cavalry"
   },
   {
     "index": "226.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Deadman Wonderland.jpg",
     "name": "Deadman Wonderland",
     "type": "TV",
     "studio": "Manglobe",
@@ -4516,12 +4516,12 @@
     "rewatch_count": 0,
     "total_time": 294.91679999999997,
     "dub": "ENG",
-    "status": "Pokračování nepravděpodobné",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/6880/Deadman_Wonderland"
   },
   {
     "index": "227.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Tomodachi Game.jpg",
     "name": "Tomodachi Game",
     "type": "TV",
     "studio": "Okuruto Noboru",
@@ -4536,12 +4536,12 @@
     "rewatch_count": 0,
     "total_time": 274.404,
     "dub": "ENG",
-    "status": "Pokračování nepravděpodobné",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/50273/Tomodachi_Game"
   },
   {
     "index": "228.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Lord El-Melloi II's Case Files_ Rail Zeppelin Grace Note.jpg",
     "name": "Lord El-Melloi II's Case Files: Rail Zeppelin Grace Note",
     "type": "TV",
     "studio": "TROYCA",
@@ -4556,12 +4556,12 @@
     "rewatch_count": 0,
     "total_time": 308.59999949999997,
     "dub": "ENG",
-    "status": "Pokračování nepravděpodobné",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/38959/Lord_El-Melloi_II-sei_no_Jikenbo__Rail_Zeppelin_Grace_Note"
   },
   {
     "index": "229.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Girls' Last Tour.jpg",
     "name": "Girls' Last Tour",
     "type": "TV",
     "studio": "White Fox",
@@ -4576,12 +4576,12 @@
     "rewatch_count": 0,
     "total_time": 284.70000000000005,
     "dub": "ENG",
-    "status": "Pokračování nepravděpodobné",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/35838/Shoujo_Shuumatsu_Ryokou"
   },
   {
     "index": "230.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Electromagnetic Girlfriend.jpg",
     "name": "Electromagnetic Girlfriend",
     "type": "OVA",
     "studio": "Brain's Base",
@@ -4596,12 +4596,12 @@
     "rewatch_count": 0,
     "total_time": 86.33,
     "dub": "JAP",
-    "status": "Pokračování nepravděpodobné",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/5177/Denpa-teki_na_Kanojo"
   },
   {
     "index": "231.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/School-Live!.jpg",
     "name": "School-Live!",
     "type": "TV",
     "studio": "Lerche",
@@ -4616,12 +4616,12 @@
     "rewatch_count": 0,
     "total_time": 290.76599999999996,
     "dub": "ENG",
-    "status": "Pokračování nepravděpodobné",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/24765/Gakkougurashi"
   },
   {
     "index": "232.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Combatants Will Be Dispatched!.jpg",
     "name": "Combatants Will Be Dispatched!",
     "type": "TV",
     "studio": "J.C.Staff",
@@ -4636,7 +4636,7 @@
     "rewatch_count": 0,
     "total_time": 285.564,
     "dub": "ENG",
-    "status": "Pokračování nepravděpodobné",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/41456/Sentouin_Haken_shimasu"
   },
   {
@@ -4656,12 +4656,12 @@
     "rewatch_count": 0,
     "total_time": 569.376,
     "dub": "ENG",
-    "status": "Pokračování nepravděpodobné",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/37984/Kumo_desu_ga_Nani_ka"
   },
   {
     "index": "234.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Dungeon of Black Company.jpg",
     "name": "The Dungeon of Black Company",
     "type": "TV",
     "studio": "SILVER LINK.",
@@ -4676,12 +4676,12 @@
     "rewatch_count": 0,
     "total_time": 284.21999999999997,
     "dub": "ENG",
-    "status": "Pokračování nepravděpodobné",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/42340/Meikyuu_Black_Company"
   },
   {
     "index": "235.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/I'm Standing on a Million Lives, S02.jpg",
     "name": "I'm Standing on a Million Lives, S02",
     "type": "TV",
     "studio": "Maho Film",
@@ -4696,12 +4696,12 @@
     "rewatch_count": 0,
     "total_time": 284.376,
     "dub": "ENG",
-    "status": "Pokračování nepravděpodobné",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/44881/100-man_no_Inochi_no_Ue_ni_Ore_wa_Tatteiru_2nd_Season"
   },
   {
     "index": "236.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Grimgar_ Ashes and Illusions.jpg",
     "name": "Grimgar: Ashes and Illusions",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -4716,12 +4716,12 @@
     "rewatch_count": 0,
     "total_time": 284.052,
     "dub": "ENG",
-    "status": "Pokračování nepravděpodobné",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/31859/Hai_to_Gensou_no_Grimgar"
   },
   {
     "index": "237.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Log Horizon_ Destruction of the Round Table.jpg",
     "name": "Log Horizon: Destruction of the Round Table",
     "type": "TV",
     "studio": "Studio Deen",
@@ -4736,12 +4736,12 @@
     "rewatch_count": 0,
     "total_time": 294.564,
     "dub": "ENG",
-    "status": "Pokračování nepravděpodobné",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/41109/Log_Horizon__Entaku_Houkai"
   },
   {
     "index": "238.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Somali and the Forest Spirit.jpg",
     "name": "Somali and the Forest Spirit",
     "type": "TV",
     "studio": "Satelight; HORNETS",
@@ -4756,12 +4756,12 @@
     "rewatch_count": 0,
     "total_time": 284.448,
     "dub": "ENG",
-    "status": "Pokračování nepravděpodobné",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/39575/Somali_to_Mori_no_Kamisama"
   },
   {
     "index": "239.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Humanity Has Declined.jpg",
     "name": "Humanity Has Declined",
     "type": "TV",
     "studio": "AIC ASTA",
@@ -4776,12 +4776,12 @@
     "rewatch_count": 0,
     "total_time": 288.996,
     "dub": "JAP",
-    "status": "Pokračování nepravděpodobné",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/10357/Jinrui_wa_Suitai_Shimashita"
   },
   {
     "index": "240.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Himouto! Umaru-chan OVA.jpg",
     "name": "Himouto! Umaru-chan OVA",
     "type": "OVA",
     "studio": "Doga Kobo",
@@ -4796,12 +4796,12 @@
     "rewatch_count": 0,
     "total_time": 47.752,
     "dub": "JAP",
-    "status": "Pokračování nepravděpodobné",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/30991/Himouto_Umaru-chan_OVA"
   },
   {
     "index": "241.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Grimoire of Zero.jpg",
     "name": "Grimoire of Zero",
     "type": "TV",
     "studio": "White Fox",
@@ -4816,12 +4816,12 @@
     "rewatch_count": 0,
     "total_time": 284.472,
     "dub": "ENG",
-    "status": "Pokračování nepravděpodobné",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/34176/Zero_kara_Hajimeru_Mahou_no_Sho"
   },
   {
     "index": "242.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Dawn of the Witch.jpg",
     "name": "The Dawn of the Witch",
     "type": "TV",
     "studio": "Tezuka Productions",
@@ -4836,12 +4836,12 @@
     "rewatch_count": 0,
     "total_time": 289.94399999999996,
     "dub": "ENG",
-    "status": "Pokračování nepravděpodobné",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/48842/Mahoutsukai_Reimeiki"
   },
   {
     "index": "243.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Magi_ The Kingdom of Magic.jpg",
     "name": "Magi: The Kingdom of Magic",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -4856,12 +4856,12 @@
     "rewatch_count": 0,
     "total_time": 610.9250000000001,
     "dub": "ENG",
-    "status": "Pokračování nepravděpodobné",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/18115/Magi__The_Kingdom_of_Magic"
   },
   {
     "index": "244.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Spirited Away.jpg",
     "name": "Spirited Away",
     "type": "Movie",
     "studio": "Studio Ghibli",
@@ -4876,12 +4876,12 @@
     "rewatch_count": 1,
     "total_time": 250.4,
     "dub": "CZ; ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/199/Sen_to_Chihiro_no_Kamikakushi"
   },
   {
     "index": "245.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Howl's Moving Castle.jpg",
     "name": "Howl's Moving Castle",
     "type": "Movie",
     "studio": "Studio Ghibli",
@@ -4896,12 +4896,12 @@
     "rewatch_count": 1,
     "total_time": 238.3,
     "dub": "CZ; ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/431/Howl_no_Ugoku_Shiro"
   },
   {
     "index": "246.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Wind Rises.jpg",
     "name": "The Wind Rises",
     "type": "Movie",
     "studio": "Studio Ghibli",
@@ -4916,12 +4916,12 @@
     "rewatch_count": 0,
     "total_time": 126.78,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/16662/Kaze_Tachinu"
   },
   {
     "index": "247.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/NieR_Automata Ver1.1a Part 2.jpg",
     "name": "NieR:Automata Ver1.1a Part 2",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -4936,12 +4936,12 @@
     "rewatch_count": 0,
     "total_time": 284.004,
     "dub": "JAP; ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/56063/NieR_Automata_Ver11a_Part_2"
   },
   {
     "index": "248.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Parasyte_ The Maxim.jpg",
     "name": "Parasyte: The Maxim",
     "type": "TV",
     "studio": "Madhouse",
@@ -4956,12 +4956,12 @@
     "rewatch_count": 0,
     "total_time": 548.808,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/22535/Kiseijuu__Sei_no_Kakuritsu"
   },
   {
     "index": "249.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Summer Time Rendering.jpg",
     "name": "Summer Time Rendering",
     "type": "TV",
     "studio": "OLM",
@@ -4976,12 +4976,12 @@
     "rewatch_count": 0,
     "total_time": 595.95,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/47194/Summertime_Render"
   },
   {
     "index": "250.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Charlotte.jpg",
     "name": "Charlotte",
     "type": "TV",
     "studio": "P.A. Works",
@@ -4996,12 +4996,12 @@
     "rewatch_count": 0,
     "total_time": 312,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/28999/Charlotte"
   },
   {
     "index": "251.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Charlotte_ The Strong Ones.jpg",
     "name": "Charlotte: The Strong Ones",
     "type": "OVA",
     "studio": "P.A. Works",
@@ -5016,12 +5016,12 @@
     "rewatch_count": 0,
     "total_time": 24.1,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/31553/Charlotte__Tsuyoimono-tachi"
   },
   {
     "index": "252.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Violet Evergarden_ The Movie.jpg",
     "name": "Violet Evergarden: The Movie",
     "type": "Movie",
     "studio": "Kyoto Animation",
@@ -5036,12 +5036,12 @@
     "rewatch_count": 0,
     "total_time": 140,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/37987/Violet_Evergarden_Movie"
   },
   {
     "index": "253.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Suzume.jpg",
     "name": "Suzume",
     "type": "Movie",
     "studio": "CoMix Wave Films",
@@ -5056,12 +5056,12 @@
     "rewatch_count": 0,
     "total_time": 121.47,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/50594/Suzume_no_Tojimari"
   },
   {
     "index": "254.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Vivy_ Fluorite Eye's Song.jpg",
     "name": "Vivy: Fluorite Eye's Song",
     "type": "TV",
     "studio": "Wit Studio",
@@ -5076,12 +5076,12 @@
     "rewatch_count": 0,
     "total_time": 311.60299299999997,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/46095/Vivy__Fluorite_Eyes_Song"
   },
   {
     "index": "255.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_stay night_ Heaven's Feel - III. Spring Song.jpg",
     "name": "Fate/stay night: Heaven's Feel - III. Spring Song",
     "type": "Movie",
     "studio": "ufotable",
@@ -5096,12 +5096,12 @@
     "rewatch_count": 0,
     "total_time": 122.08,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/33050/Fate_stay_night_Movie__Heavens_Feel_-_III_Spring_Song"
   },
   {
     "index": "256.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_Apocrypha.jpg",
     "name": "Fate/Apocrypha",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -5116,12 +5116,12 @@
     "rewatch_count": 0,
     "total_time": 593.75,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/34662/Fate_Apocrypha"
   },
   {
     "index": "257.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_Grand Order_ Final Singularity - Grand Temple of Time_ Solomon.jpg",
     "name": "Fate/Grand Order: Final Singularity - Grand Temple of Time: Solomon",
     "type": "Movie",
     "studio": "CloverWorks",
@@ -5136,12 +5136,12 @@
     "rewatch_count": 0,
     "total_time": 94.38,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/41497/Fate_Grand_Order__Shuukyoku_Tokuiten_-_Kani_Jikan_Shinden_Solomon"
   },
   {
     "index": "258.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Garden of Sinners_ Future Gospel - Extra Chorus.jpg",
     "name": "The Garden of Sinners: Future Gospel - Extra Chorus",
     "type": "OVA",
     "studio": "ufotable",
@@ -5156,12 +5156,12 @@
     "rewatch_count": 0,
     "total_time": 31.883,
     "dub": "JAP",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/22763/Kara_no_Kyoukai_Movie__Mirai_Fukuin_-_Extra_Chorus"
   },
   {
     "index": "259.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Lazarus.jpg",
     "name": "Lazarus",
     "type": "TV",
     "studio": "MAPPA",
@@ -5176,12 +5176,12 @@
     "rewatch_count": 0,
     "total_time": 314.53299799999996,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/56038/Lazarus"
   },
   {
     "index": "260.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Code Geass_ Lelouch of the Rebellion R2.jpg",
     "name": "Code Geass: Lelouch of the Rebellion R2",
     "type": "TV",
     "studio": "Sunrise",
@@ -5196,12 +5196,12 @@
     "rewatch_count": 0,
     "total_time": 607.925,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/2904/Code_Geass__Hangyaku_no_Lelouch_R2"
   },
   {
     "index": "261.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Moonrise.jpg",
     "name": "Moonrise",
     "type": "ONA",
     "studio": "Wit Studio",
@@ -5216,12 +5216,12 @@
     "rewatch_count": 0,
     "total_time": 455.40000000000003,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/38903/Moonrise"
   },
   {
     "index": "262.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Attack on Titan_ Final Season - The Final Chapters.jpg",
     "name": "Attack on Titan: Final Season - The Final Chapters",
     "type": "TV Special",
     "studio": "MAPPA",
@@ -5236,12 +5236,12 @@
     "rewatch_count": 0,
     "total_time": 146,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/51535/Shingeki_no_Kyojin__The_Final_Season_-_Kanketsu-hen"
   },
   {
     "index": "263.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Neon Genesis Evangelion_ The End of Evangelion.jpg",
     "name": "Neon Genesis Evangelion: The End of Evangelion",
     "type": "Movie",
     "studio": "Gainax; Production I.G",
@@ -5256,12 +5256,12 @@
     "rewatch_count": 0,
     "total_time": 87.08,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/32/Shinseiki_Evangelion_Movie__Air_Magokoro_wo_Kimi_ni"
   },
   {
     "index": "264.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Evangelion_ 3.0+1.0 Thrice Upon a Time.jpg",
     "name": "Evangelion: 3.0+1.0 Thrice Upon a Time",
     "type": "Movie",
     "studio": "Khara",
@@ -5276,12 +5276,12 @@
     "rewatch_count": 0,
     "total_time": 155.77,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/3786/Shin_Evangelion_Movie_%7C%7C"
   },
   {
     "index": "265.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Darling in the FranXX.jpg",
     "name": "Darling in the FranXX",
     "type": "TV",
     "studio": "A-1 Pictures; Trigger; CloverWorks",
@@ -5296,12 +5296,12 @@
     "rewatch_count": 0,
     "total_time": 576,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/35849/Darling_in_the_FranXX"
   },
   {
     "index": "266.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Promised Neverland, S02.jpg",
     "name": "The Promised Neverland, S02",
     "type": "TV",
     "studio": "CloverWorks",
@@ -5316,12 +5316,12 @@
     "rewatch_count": 0,
     "total_time": 251.35000000000002,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/39617/Yakusoku_no_Neverland_2nd_Season"
   },
   {
     "index": "267.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Deadman Wonderland_ The Red Knife Wielder.jpg",
     "name": "Deadman Wonderland: The Red Knife Wielder",
     "type": "OVA",
     "studio": "Manglobe",
@@ -5336,12 +5336,12 @@
     "rewatch_count": 0,
     "total_time": 26.7,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/10418/Deadman_Wonderland__Akai_Knife_Tsukai"
   },
   {
     "index": "268.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Your Lie in April.jpg",
     "name": "Your Lie in April",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -5356,12 +5356,12 @@
     "rewatch_count": 0,
     "total_time": 503.074,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/23273/Shigatsu_wa_Kimi_no_Uso"
   },
   {
     "index": "269.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Angel Beats!.jpg",
     "name": "Angel Beats!",
     "type": "TV",
     "studio": "P.A. Works",
@@ -5376,12 +5376,12 @@
     "rewatch_count": 0,
     "total_time": 333.405995,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/6547/Angel_Beats"
   },
   {
     "index": "270.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Plastic Memories.jpg",
     "name": "Plastic Memories",
     "type": "TV",
     "studio": "Doga Kobo",
@@ -5396,12 +5396,12 @@
     "rewatch_count": 0,
     "total_time": 313.92899993000003,
     "dub": "JAP",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/27775/Plastic_Memories"
   },
   {
     "index": "271.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Orange_ Mirai.jpg",
     "name": "Orange: Mirai",
     "type": "Movie",
     "studio": "Telecom Animation Film",
@@ -5416,12 +5416,12 @@
     "rewatch_count": 0,
     "total_time": 62.08,
     "dub": "JAP",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/34136/Orange__Mirai"
   },
   {
     "index": "272.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Inuyashiki_ Last Hero.jpg",
     "name": "Inuyashiki: Last Hero",
     "type": "TV",
     "studio": "MAPPA",
@@ -5436,12 +5436,12 @@
     "rewatch_count": 0,
     "total_time": 251.89999999999998,
     "dub": "JAP",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/34542/Inuyashiki"
   },
   {
     "index": "273.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Serial Experiments Lain.jpg",
     "name": "Serial Experiments Lain",
     "type": "TV",
     "studio": "Triangle Staff",
@@ -5456,12 +5456,12 @@
     "rewatch_count": 0,
     "total_time": 309.82899999999995,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/339/Serial_Experiments_Lain"
   },
   {
     "index": "274.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Lycoris Recoil_ Friends Are Thieves of Time..jpg",
     "name": "Lycoris Recoil: Friends Are Thieves of Time.",
     "type": "ONA",
     "studio": "A-1 Pictures",
@@ -5476,12 +5476,12 @@
     "rewatch_count": 0,
     "total_time": 21.5493,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/59369/Lycoris_Recoil__Friends_Are_Thieves_of_Time"
   },
   {
     "index": "275.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Death Parade.jpg",
     "name": "Death Parade",
     "type": "TV",
     "studio": "Madhouse",
@@ -5496,12 +5496,12 @@
     "rewatch_count": 0,
     "total_time": 274.467,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/28223/Death_Parade"
   },
   {
     "index": "276.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Lord El-Melloi II's Case Files_ Rail Zeppelin Grace Note - Waver, Reunion, and the Magic Lantern.jpg",
     "name": "Lord El-Melloi II's Case Files: Rail Zeppelin Grace Note - Waver, Reunion, and the Magic Lantern",
     "type": "TV Special",
     "studio": "TROYCA",
@@ -5516,12 +5516,12 @@
     "rewatch_count": 0,
     "total_time": 53.02,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/49361/Lord_El-Melloi_II-sei_no_Jikenbo__Rail_Zeppelin_Grace_Note_Special"
   },
   {
     "index": "277.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Astra Lost in Space.jpg",
     "name": "Astra Lost in Space",
     "type": "TV",
     "studio": "Lerche",
@@ -5536,12 +5536,12 @@
     "rewatch_count": 0,
     "total_time": 332.54999999999995,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/39198/Kanata_no_Astra"
   },
   {
     "index": "278.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Terror in Resonance.jpg",
     "name": "Terror in Resonance",
     "type": "TV",
     "studio": "MAPPA",
@@ -5556,7 +5556,7 @@
     "rewatch_count": 0,
     "total_time": 251.537,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/23283/Zankyou_no_Terror"
   },
   {
@@ -5576,12 +5576,12 @@
     "rewatch_count": 0,
     "total_time": 327.099994,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/226/Elfen_Lied"
   },
   {
     "index": "280.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Your Name..jpg",
     "name": "Your Name.",
     "type": "Movie",
     "studio": "CoMix Wave Films",
@@ -5596,12 +5596,12 @@
     "rewatch_count": 0,
     "total_time": 106.47,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/32281/Kimi_no_Na_wa"
   },
   {
     "index": "281.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Weathering with You.jpg",
     "name": "Weathering with You",
     "type": "Movie",
     "studio": "CoMix Wave Films",
@@ -5616,12 +5616,12 @@
     "rewatch_count": 0,
     "total_time": 112.22,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/38826/Tenki_no_Ko"
   },
   {
     "index": "282.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Black Butler, S02.jpg",
     "name": "Black Butler, S02",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -5636,12 +5636,12 @@
     "rewatch_count": 0,
     "total_time": 293.10396,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/6707/Kuroshitsuji_II"
   },
   {
     "index": "283.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Takopi's Original Sin.jpg",
     "name": "Takopi's Original Sin",
     "type": "ONA",
     "studio": "Enishiya",
@@ -5656,12 +5656,12 @@
     "rewatch_count": 0,
     "total_time": 156.6966,
     "dub": "JAP",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/60489/Takopii_no_Genzai"
   },
   {
     "index": "284.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Steins;Gate_ The Movie - Load Region of Déjà Vu.jpg",
     "name": "Steins;Gate: The Movie - Load Region of Déjà Vu",
     "type": "Movie",
     "studio": "White Fox",
@@ -5676,12 +5676,12 @@
     "rewatch_count": 0,
     "total_time": 90.03,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/11577/Steins_Gate_Movie__Fuka_Ryouiki_no_D%C3%A9j%C3%A0_vu"
   },
   {
     "index": "285.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Tokyo Magnitude 8.0.jpg",
     "name": "Tokyo Magnitude 8.0",
     "type": "TV",
     "studio": "Bones; Kinema Citrus",
@@ -5696,12 +5696,12 @@
     "rewatch_count": 0,
     "total_time": 248.41299999999998,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/6211/Tokyo_Magnitude_80"
   },
   {
     "index": "286.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Haibane Renmei.jpg",
     "name": "Haibane Renmei",
     "type": "TV",
     "studio": "Radix",
@@ -5716,12 +5716,12 @@
     "rewatch_count": 0,
     "total_time": 310.46691,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/387/Haibane_Renmei"
   },
   {
     "index": "287.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Tunnel to Summer, the Exit of Goodbyes.jpg",
     "name": "The Tunnel to Summer, the Exit of Goodbyes",
     "type": "Movie",
     "studio": "CLAP",
@@ -5736,12 +5736,12 @@
     "rewatch_count": 0,
     "total_time": 82.65,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/50593/Natsu_e_no_Tunnel_Sayonara_no_Deguchi"
   },
   {
     "index": "288.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Magia Record_ Puella Magi Madoka Magica Side Story Final Season.jpg",
     "name": "Magia Record: Puella Magi Madoka Magica Side Story Final Season",
     "type": "TV Special",
     "studio": "Shaft",
@@ -5756,12 +5756,12 @@
     "rewatch_count": 0,
     "total_time": 98.718,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/49291/Magia_Record__Mahou_Shoujo_Madoka%E2%98%86Magica_Gaiden_Final_Season_-_Asaki_Yume_no_Akatsuki"
   },
   {
     "index": "289.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Cross Ange_ Rondo of Angel and Dragon.jpg",
     "name": "Cross Ange: Rondo of Angel and Dragon",
     "type": "TV",
     "studio": "Sunrise",
@@ -5776,12 +5776,12 @@
     "rewatch_count": 0,
     "total_time": 593.725,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/25731/Cross_Ange__Tenshi_to_Ryuu_no_Rondo"
   },
   {
     "index": "290.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Girl Who Leapt Through Time.jpg",
     "name": "The Girl Who Leapt Through Time",
     "type": "Movie",
     "studio": "Madhouse",
@@ -5796,12 +5796,12 @@
     "rewatch_count": 0,
     "total_time": 98.32,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/2236/Toki_wo_Kakeru_Shoujo"
   },
   {
     "index": "291.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Jin-Roh_ The Wolf Brigade.jpg",
     "name": "Jin-Roh: The Wolf Brigade",
     "type": "Movie",
     "studio": "Production I.G",
@@ -5816,12 +5816,12 @@
     "rewatch_count": 0,
     "total_time": 102,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/570/Jin-Rou"
   },
   {
     "index": "292.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Higurashi_ When They Cry – SOTSU.jpg",
     "name": "Higurashi: When They Cry – Sotsu",
     "type": "TV",
     "studio": "Passione",
@@ -5836,12 +5836,12 @@
     "rewatch_count": 0,
     "total_time": 355.245,
     "dub": "JAP",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/48488/Higurashi_no_Naku_Koro_ni_Sotsu"
   },
   {
     "index": "293.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Future Diary_ Redial.jpg",
     "name": "The Future Diary: Redial",
     "type": "OVA",
     "studio": "asread.",
@@ -5856,12 +5856,12 @@
     "rewatch_count": 0,
     "total_time": 30,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/16762/Mirai_Nikki__Redial"
   },
   {
     "index": "294.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/From the New World.jpg",
     "name": "From the New World",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -5876,12 +5876,12 @@
     "rewatch_count": 0,
     "total_time": 566.575,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/13125/Shinsekai_yori"
   },
   {
     "index": "295.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Shiki.jpg",
     "name": "Shiki",
     "type": "TV",
     "studio": "Daume",
@@ -5896,12 +5896,12 @@
     "rewatch_count": 0,
     "total_time": 515.35,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/7724/Shiki"
   },
   {
     "index": "296.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Disappearance of Haruhi Suzumiya.jpg",
     "name": "The Disappearance of Haruhi Suzumiya",
     "type": "Movie",
     "studio": "Kyoto Animation",
@@ -5916,12 +5916,12 @@
     "rewatch_count": 0,
     "total_time": 161.78,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/7311/Suzumiya_Haruhi_no_Shoushitsu"
   },
   {
     "index": "297.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Bâan_ The Boundary of Adulthood.jpg",
     "name": "Bâan: The Boundary of Adulthood",
     "type": "Movie",
     "studio": "Studio Daisy",
@@ -5936,7 +5936,7 @@
     "rewatch_count": 0,
     "total_time": 18.867,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/61984/B%C3%A2an__Otona_no_Kyoukai"
   },
   {
@@ -5956,12 +5956,12 @@
     "rewatch_count": 0,
     "total_time": 307.78799999999995,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/59846/Saigo_ni_Hitotsu_dake_Onegai_shitemo_Yoroshii_deshou_ka"
   },
   {
     "index": "299.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Takt Op. Destiny.jpg",
     "name": "Takt Op. Destiny",
     "type": "TV",
     "studio": "Madhouse; MAPPA",
@@ -5976,12 +5976,12 @@
     "rewatch_count": 0,
     "total_time": 284.784,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/48556/Takt_Op_Destiny"
   },
   {
     "index": "300.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Cautious Hero_ The Hero Is Overpowered but Overly Cautious.jpg",
     "name": "Cautious Hero: The Hero Is Overpowered but Overly Cautious",
     "type": "TV",
     "studio": "White Fox",
@@ -5996,12 +5996,12 @@
     "rewatch_count": 0,
     "total_time": 285.6,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/38659/Shinchou_Yuusha__Kono_Yuusha_ga_Ore_Tueee_Kuse_ni_Shinchou_Sugiru"
   },
   {
     "index": "301.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Tatsuki Fujimoto 17-26.jpg",
     "name": "Tatsuki Fujimoto 17-26",
     "type": "ONA",
     "studio": "P.A. Works; Zexcs; Lapin Track; Studio Kafka; 100studio; Studio Graph77",
@@ -6016,12 +6016,12 @@
     "rewatch_count": 0,
     "total_time": 144.544,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/62405/Fujimoto_Tatsuki_17-26"
   },
   {
     "index": "302.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Hello World.jpg",
     "name": "Hello World",
     "type": "Movie",
     "studio": "Graphinica",
@@ -6036,12 +6036,12 @@
     "rewatch_count": 0,
     "total_time": 97.723,
     "dub": "JAP",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/38816/Hello_World"
   },
   {
     "index": "303.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Voices of a Distant Star.jpg",
     "name": "Voices of a Distant Star",
     "type": "OVA",
     "studio": "CoMix Wave Films",
@@ -6056,12 +6056,12 @@
     "rewatch_count": 0,
     "total_time": 25.008,
     "dub": "JAP",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/256/Hoshi_no_Koe"
   },
   {
     "index": "304.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Look Back.jpg",
     "name": "Look Back",
     "type": "Movie",
     "studio": "Studio DURIAN",
@@ -6076,12 +6076,12 @@
     "rewatch_count": 0,
     "total_time": 57.234,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/58125/Look_Back"
   },
   {
     "index": "305.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Place Promised in Our Early Days.jpg",
     "name": "The Place Promised in Our Early Days",
     "type": "Movie",
     "studio": "CoMix Wave Films",
@@ -6096,12 +6096,12 @@
     "rewatch_count": 0,
     "total_time": 90.307,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/433/Kumo_no_Mukou_Yakusoku_no_Basho"
   },
   {
     "index": "306.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/She and Her Cat_ Their Standing Points.jpg",
     "name": "She and Her Cat: Their Standing Points",
     "type": "OVA",
     "studio": "CoMix Wave Films",
@@ -6116,12 +6116,12 @@
     "rewatch_count": 0,
     "total_time": 4.838,
     "dub": "JAP",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/1004/Kanojo_to_Kanojo_no_Neko"
   },
   {
     "index": "307.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/5 Centimeters per Second.jpg",
     "name": "5 Centimeters per Second",
     "type": "Movie",
     "studio": "CoMix Wave Films",
@@ -6136,12 +6136,12 @@
     "rewatch_count": 0,
     "total_time": 62.7669,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/1689/Byousoku_5_Centimeter"
   },
   {
     "index": "308.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Children Who Chase Lost Voices.jpg",
     "name": "Children Who Chase Lost Voices",
     "type": "Movie",
     "studio": "CoMix Wave Films",
@@ -6156,12 +6156,12 @@
     "rewatch_count": 0,
     "total_time": 115.992,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/9760/Hoshi_wo_Ou_Kodomo"
   },
   {
     "index": "309.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Garden of Words.jpg",
     "name": "The Garden of Words",
     "type": "Movie",
     "studio": "CoMix Wave Films",
@@ -6176,12 +6176,12 @@
     "rewatch_count": 0,
     "total_time": 46.016,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/16782/Kotonoha_no_Niwa"
   },
   {
     "index": "310.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/She and Her Cat_ Everything Flows.jpg",
     "name": "She and Her Cat: Everything Flows",
     "type": "TV",
     "studio": "LIDENFILMS",
@@ -6196,12 +6196,12 @@
     "rewatch_count": 0,
     "total_time": 27.505,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/32491/Kanojo_to_Kanojo_no_Neko__Everything_Flows"
   },
   {
     "index": "311.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Summer Ghost.jpg",
     "name": "Summer Ghost",
     "type": "Movie",
     "studio": "Flat Studio",
@@ -6216,12 +6216,12 @@
     "rewatch_count": 0,
     "total_time": 39.892,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/48171/Summer_Ghost"
   },
   {
     "index": "312.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Maquia_ When the Promised Flower Blooms.jpg",
     "name": "Maquia: When the Promised Flower Blooms",
     "type": "Movie",
     "studio": "P.A. Works",
@@ -6236,12 +6236,12 @@
     "rewatch_count": 0,
     "total_time": 114.965,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/35851/Sayonara_no_Asa_ni_Yakusoku_no_Hana_wo_Kazarou"
   },
   {
     "index": "313.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Into the Forest of Fireflies' Light.jpg",
     "name": "Into the Forest of Fireflies' Light",
     "type": "Movie",
     "studio": "Brain's Base",
@@ -6256,12 +6256,12 @@
     "rewatch_count": 0,
     "total_time": 44.995,
     "dub": "JAP",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/10408/Hotarubi_no_Mori_e"
   },
   {
     "index": "314.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Grave of the Fireflies.jpg",
     "name": "Grave of the Fireflies",
     "type": "Movie",
     "studio": "Studio Ghibli",
@@ -6276,12 +6276,12 @@
     "rewatch_count": 0,
     "total_time": 88.567,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/578/Hotaru_no_Haka"
   },
   {
     "index": "315.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Ride Your Wave.jpg",
     "name": "Ride Your Wave",
     "type": "Movie",
     "studio": "Science SARU",
@@ -6296,12 +6296,12 @@
     "rewatch_count": 0,
     "total_time": 95.931,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/38594/Kimi_to_Nami_ni_Noretara"
   },
   {
     "index": "316.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Wolf Children.jpg",
     "name": "Wolf Children",
     "type": "Movie",
     "studio": "Studio Chizu",
@@ -6316,12 +6316,12 @@
     "rewatch_count": 0,
     "total_time": 117.059,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/12355/Ookami_Kodomo_no_Ame_to_Yuki"
   },
   {
     "index": "317.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/A Silent Voice.jpg",
     "name": "A Silent Voice",
     "type": "Movie",
     "studio": "Kyoto Animation",
@@ -6336,12 +6336,12 @@
     "rewatch_count": 0,
     "total_time": 129.713,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/28851/Koe_no_Katachi"
   },
   {
     "index": "318.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/I Want to Eat Your Pancreas.jpg",
     "name": "I Want to Eat Your Pancreas",
     "type": "Movie",
     "studio": "Studio VOLN",
@@ -6356,12 +6356,12 @@
     "rewatch_count": 0,
     "total_time": 108.276,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/36098/Kimi_no_Suizou_wo_Tabetai"
   },
   {
     "index": "319.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/A Place Further Than The Universe.jpg",
     "name": "A Place Further Than The Universe",
     "type": "TV",
     "studio": "Madhouse",
@@ -6376,12 +6376,12 @@
     "rewatch_count": 0,
     "total_time": 308.98400000000004,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/35839/Sora_yori_mo_Tooi_Basho"
   },
   {
     "index": "320.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Anohana_ The Flower We Saw That Day.jpg",
     "name": "Anohana: The Flower We Saw That Day",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -6396,12 +6396,12 @@
     "rewatch_count": 0,
     "total_time": 255.134,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/9989/Ano_Hi_Mita_Hana_no_Namae_wo_Bokutachi_wa_Mada_Shiranai"
   },
   {
     "index": "321.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sound of the Sky Specials.jpg",
     "name": "Sound of the Sky Specials",
     "type": "Special",
     "studio": "A-1 Pictures",
@@ -6416,12 +6416,12 @@
     "rewatch_count": 0,
     "total_time": 53.238,
     "dub": "JAP",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/8197/So_Ra_No_Wo_To_Specials"
   },
   {
     "index": "322.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Casshern Sins.jpg",
     "name": "Casshern Sins",
     "type": "TV",
     "studio": "Madhouse",
@@ -6436,12 +6436,12 @@
     "rewatch_count": 0,
     "total_time": 570.408,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/4981/Casshern_Sins"
   },
   {
     "index": "323.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Josee, the Tiger and the Fish.jpg",
     "name": "Josee, the Tiger and the Fish",
     "type": "Movie",
     "studio": "Bones",
@@ -6456,12 +6456,12 @@
     "rewatch_count": 0,
     "total_time": 98.182,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/40787/Josee_to_Tora_to_Sakana-tachi"
   },
   {
     "index": "324.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Kabaneri of the Iron Fortress_ The Battle of Unato.jpg",
     "name": "Kabaneri of the Iron Fortress: The Battle of Unato",
     "type": "Movie",
     "studio": "Wit Studio",
@@ -6476,12 +6476,12 @@
     "rewatch_count": 0,
     "total_time": 67.935,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/34544/Koutetsujou_no_Kabaneri_Movie_3__Unato_Kessen"
   },
   {
     "index": "325.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Monster.jpg",
     "name": "Monster",
     "type": "TV",
     "studio": "Madhouse",
@@ -6496,12 +6496,12 @@
     "rewatch_count": 0,
     "total_time": 1770.154,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/19/Monster"
   },
   {
     "index": "326.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Mary and the Witch's Flower.jpg",
     "name": "Mary and the Witch's Flower",
     "type": "Movie",
     "studio": "Studio Ponoc",
@@ -6516,12 +6516,12 @@
     "rewatch_count": 0,
     "total_time": 102.823,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/34541/Mary_to_Majo_no_Hana"
   },
   {
     "index": "327.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Blast of Tempest.jpg",
     "name": "Blast of Tempest",
     "type": "TV",
     "studio": "Bones",
@@ -6536,12 +6536,12 @@
     "rewatch_count": 0,
     "total_time": 588.816,
     "dub": "JAP",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/14075/Zetsuen_no_Tempest"
   },
   {
     "index": "328.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Kiki's Delivery Service.jpg",
     "name": "Kiki's Delivery Service",
     "type": "Movie",
     "studio": "Studio Ghibli",
@@ -6556,12 +6556,12 @@
     "rewatch_count": 0,
     "total_time": 103.045,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/512/Majo_no_Takkyuubin"
   },
   {
     "index": "329.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Burn the Witch.jpg",
     "name": "Burn the Witch",
     "type": "ONA",
     "studio": "Studio Colorido; team Yamahitsuji",
@@ -6576,12 +6576,12 @@
     "rewatch_count": 0,
     "total_time": 62.583,
     "dub": "JAP",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/41468/Burn_the_Witch"
   },
   {
     "index": "330.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Dead Dead Demons Dededede Destruction.jpg",
     "name": "Dead Dead Demons Dededede Destruction",
     "type": "ONA",
     "studio": "Production +h.",
@@ -6596,12 +6596,12 @@
     "rewatch_count": 0,
     "total_time": 412.046,
     "dub": "ENG",
-    "status": "Neexistuje",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/58883/Dead_Dead_Demons_Dededede_Destruction_ONA"
   },
   {
     "index": "331.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Death Note.jpg",
     "name": "Death Note",
     "type": "TV",
     "studio": "Madhouse",
@@ -6616,12 +6616,12 @@
     "rewatch_count": 2,
     "total_time": 2546.3488799999996,
     "dub": "CZ; ENG",
-    "status": "Existuje TV Special (Relight) s drobnými změnami a cut story",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/1535/Death_Note"
   },
   {
     "index": "332.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fullmetal Alchemist_ Brotherhood.jpg",
     "name": "Fullmetal Alchemist: Brotherhood",
     "type": "TV",
     "studio": "Bones",
@@ -6636,12 +6636,12 @@
     "rewatch_count": 0,
     "total_time": 1572.4992,
     "dub": "ENG",
-    "status": "Existuje starší adaptace, která má Anime Original ending (+ Movie OG)",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/5114/Fullmetal_Alchemist__Brotherhood"
   },
   {
     "index": "333.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark), S04 Part 2.jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S04 Part 2",
     "type": "TV",
     "studio": "J.C.Staff",
@@ -6656,12 +6656,12 @@
     "rewatch_count": 0,
     "total_time": 261.90299300000004,
     "dub": "ENG",
-    "status": "Existuje Spin-Off série",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/53111/Dungeon_ni_Deai_wo_Motomeru_no_wa_Machigatteiru_Darou_ka_IV__Shin_Shou_-_Yakusai-hen"
   },
   {
     "index": "334.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Melancholy of Haruhi Suzumiya, S01.jpg",
     "name": "The Melancholy of Haruhi Suzumiya, S01",
     "type": "TV",
     "studio": "Kyoto Animation",
@@ -6676,12 +6676,12 @@
     "rewatch_count": 0,
     "total_time": 334.51599999999996,
     "dub": "ENG",
-    "status": "Existuje Spin-Off \"The Disappearance of Nagato Yuki-chan\"",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/849/Suzumiya_Haruhi_no_Yuuutsu"
   },
   {
     "index": "335.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_stay night [Unlimited Blade Works], S02.jpg",
     "name": "Fate/stay night [Unlimited Blade Works], S02",
     "type": "TV",
     "studio": "ufotable",
@@ -6696,12 +6696,12 @@
     "rewatch_count": 0,
     "total_time": 320.882991,
     "dub": "ENG",
-    "status": "Existuje první route (Saber route)",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/28701/Fate_stay_night__Unlimited_Blade_Works_2nd_Season"
   },
   {
     "index": "336.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Girls und Panzer.jpg",
     "name": "Girls und Panzer",
     "type": "TV",
     "studio": "Actas",
@@ -6716,12 +6716,12 @@
     "rewatch_count": 0,
     "total_time": 290.196,
     "dub": "ENG",
-    "status": "Existuje pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/14131/Girls___Panzer"
   },
   {
     "index": "337.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Girls und Panzer Der Film.jpg",
     "name": "Girls und Panzer Der Film",
     "type": "Movie",
     "studio": "Actas",
@@ -6736,12 +6736,12 @@
     "rewatch_count": 0,
     "total_time": 120.18,
     "dub": "ENG",
-    "status": "Existuje pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/18617/Girls___Panzer_Movie"
   },
   {
     "index": "338.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_stay night [Unlimited Blade Works], S02_ Sunny Day.jpg",
     "name": "Fate/stay night [Unlimited Blade Works], S02: Sunny Day",
     "type": "Special",
     "studio": "ufotable",
@@ -6756,12 +6756,12 @@
     "rewatch_count": 0,
     "total_time": 9.717,
     "dub": "ENG",
-    "status": "Existuje OVAs a Comedy spin offs",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/31389/Fate_stay_night__Unlimited_Blade_Works_2nd_Season_-_Sunny_Day"
   },
   {
     "index": "339.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/That Time I Got Reincarnated as a Slime, S01.jpg",
     "name": "That Time I Got Reincarnated as a Slime, S01",
     "type": "TV",
     "studio": "8bit",
@@ -6776,12 +6776,12 @@
     "rewatch_count": 0,
     "total_time": 568.8,
     "dub": "ENG",
-    "status": "Existuje OVA/MOVIE + Dost side contentu",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/37430/Tensei_shitara_Slime_Datta_Ken"
   },
   {
     "index": "340.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Yukikaze.jpg",
     "name": "Yukikaze",
     "type": "OVA",
     "studio": "Gonzo",
@@ -6796,12 +6796,12 @@
     "rewatch_count": 0,
     "total_time": 185,
     "dub": "ENG",
-    "status": "Existuje OVA",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/1080/Sentou_Yousei_Yukikaze"
   },
   {
     "index": "341.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Legend of the Galactic Heroes_ Die Neue These - Collision.jpg",
     "name": "Legend of the Galactic Heroes: Die Neue These - Collision",
     "type": "TV",
     "studio": "Production I.G",
@@ -6816,12 +6816,12 @@
     "rewatch_count": 0,
     "total_time": 300,
     "dub": "ENG",
-    "status": "Existuje originál v podobě OVA a Movies",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/42886/Ginga_Eiyuu_Densetsu__Die_Neue_These_-_Gekitotsu"
   },
   {
     "index": "342.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Code Geass_ Lelouch of the Re;surrection.jpg",
     "name": "Code Geass: Lelouch of the Re;surrection",
     "type": "Movie",
     "studio": "Sunrise",
@@ -6836,12 +6836,12 @@
     "rewatch_count": 0,
     "total_time": 113.13,
     "dub": "ENG",
-    "status": "Existuje ONA, OVAs a alternative Movies",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/34437/Code_Geass__Fukkatsu_no_Lelouch"
   },
   {
     "index": "343.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_stay night_ Heaven's Feel - I. Presage Flower.jpg",
     "name": "Fate/stay night: Heaven's Feel - I. Presage Flower",
     "type": "Movie",
     "studio": "ufotable",
@@ -6856,12 +6856,12 @@
     "rewatch_count": 0,
     "total_time": 120.58,
     "dub": "ENG",
-    "status": "Existuje Fate/Kaleid Liner Prisma Illya",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/25537/Fate_stay_night_Movie__Heavens_Feel_-_I_Presage_Flower"
   },
   {
     "index": "344.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sword Art Online, S01.jpg",
     "name": "Sword Art Online, S01",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -6876,12 +6876,12 @@
     "rewatch_count": 0,
     "total_time": 598.6419999999999,
     "dub": "ENG",
-    "status": "Existuje Extra Special po S01",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/11757/Sword_Art_Online"
   },
   {
     "index": "345.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Steins;Gate.jpg",
     "name": "Steins;Gate",
     "type": "TV",
     "studio": "White Fox",
@@ -6896,12 +6896,12 @@
     "rewatch_count": 1,
     "total_time": 1152,
     "dub": "ENG",
-    "status": "Existuje další příběh ze Steins;Gate univerza",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/9253/Steins_Gate"
   },
   {
     "index": "346.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Higurashi_ When They Cry – Rei.jpg",
     "name": "Higurashi: When They Cry – Rei",
     "type": "OVA",
     "studio": "Studio Deen",
@@ -6916,12 +6916,12 @@
     "rewatch_count": 0,
     "total_time": 149.86700000000002,
     "dub": "JAP",
-    "status": "Existuje další příběh z When They Cry univerza",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/3652/Higurashi_no_Naku_Koro_ni_Rei"
   },
   {
     "index": "347.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Re_Zero - Starting Life in Another World, S02 Part 2.jpg",
     "name": "Re:Zero -Starting Life in Another World-, S02 Part 2",
     "type": "TV",
     "studio": "White Fox",
@@ -6936,12 +6936,12 @@
     "rewatch_count": 1,
     "total_time": 699.66,
     "dub": "ENG",
-    "status": "Existuje Break Time mini specials, které navazují co se stalo v eps",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/42203/Re_Zero_kara_Hajimeru_Isekai_Seikatsu_2nd_Season_Part_2"
   },
   {
     "index": "348.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Cyberpunk Edgerunners, S01.jpg",
     "name": "Cyberpunk Edgerunners, S01",
     "type": "ONA",
     "studio": "Trigger",
@@ -6956,12 +6956,12 @@
     "rewatch_count": 0,
     "total_time": 259.085,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/42310/Cyberpunk__Edgerunners"
   },
   {
     "index": "349.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Chainsaw Man.jpg",
     "name": "Chainsaw Man",
     "type": "TV",
     "studio": "MAPPA",
@@ -6976,12 +6976,12 @@
     "rewatch_count": 1,
     "total_time": 580.008,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/44511/Chainsaw_Man"
   },
   {
     "index": "350.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Kaiju No.8, S01.jpg",
     "name": "Kaiju No.8, S01",
     "type": "TV",
     "studio": "Production I.G",
@@ -6996,12 +6996,12 @@
     "rewatch_count": 0,
     "total_time": 284.004,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/52588/Kaijuu_8-gou"
   },
   {
     "index": "351.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Classroom of the Elite, S03.jpg",
     "name": "Classroom of the Elite, S03",
     "type": "TV",
     "studio": "Lerche",
@@ -7016,12 +7016,12 @@
     "rewatch_count": 0,
     "total_time": 307.67100000000005,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/51180/Youkoso_Jitsuryoku_Shijou_Shugi_no_Kyoushitsu_e_3rd_Season"
   },
   {
     "index": "352.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Frieren_ Beyond Journey's End, S01.jpg",
     "name": "Frieren: Beyond Journey's End, S01",
     "type": "TV",
     "studio": "Madhouse",
@@ -7036,12 +7036,12 @@
     "rewatch_count": 1,
     "total_time": 1379.5236,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/52991/Sousou_no_Frieren"
   },
   {
     "index": "353.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/KonoSuba_ God's Blessing on This Wonderful World!, S03.jpg",
     "name": "KonoSuba: God's Blessing on This Wonderful World!, S03",
     "type": "TV",
     "studio": "Drive",
@@ -7056,12 +7056,12 @@
     "rewatch_count": 0,
     "total_time": 260.20291000000003,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/49458/Kono_Subarashii_Sekai_ni_Shukufuku_wo_3"
   },
   {
     "index": "354.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Re_Zero - Starting Life in Another World, S03.jpg",
     "name": "Re:Zero -Starting Life in Another World-, S03",
     "type": "TV",
     "studio": "White Fox",
@@ -7076,12 +7076,12 @@
     "rewatch_count": 1,
     "total_time": 912.342,
     "dub": "JAP; ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/54857/Re_Zero_kara_Hajimeru_Isekai_Seikatsu_3rd_Season"
   },
   {
     "index": "355.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Mushoku Tensei_ Jobless Reincarnation, S02 Part 2.jpg",
     "name": "Mushoku Tensei: Jobless Reincarnation, S02 Part 2",
     "type": "TV",
     "studio": "Studio Bind",
@@ -7096,12 +7096,12 @@
     "rewatch_count": 0,
     "total_time": 284.25396,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/55888/Mushoku_Tensei_II__Isekai_Ittara_Honki_Dasu_Part_2"
   },
   {
     "index": "356.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/That Time I Got Reincarnated as a Slime, S03.jpg",
     "name": "That Time I Got Reincarnated as a Slime, S03",
     "type": "TV",
     "studio": "8bit",
@@ -7116,12 +7116,12 @@
     "rewatch_count": 0,
     "total_time": 587.592,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/53580/Tensei_shitara_Slime_Datta_Ken_3rd_Season"
   },
   {
     "index": "357.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Eminence in Shadow, S02.jpg",
     "name": "The Eminence in Shadow, S02",
     "type": "TV",
     "studio": "Nexus",
@@ -7136,12 +7136,12 @@
     "rewatch_count": 0,
     "total_time": 287.14992,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/54595/Kage_no_Jitsuryokusha_ni_Naritakute_2nd_Season"
   },
   {
     "index": "358.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Legend of the Galactic Heroes_ Die Neue These - Intrigue.jpg",
     "name": "Legend of the Galactic Heroes: Die Neue These - Intrigue",
     "type": "TV",
     "studio": "Production I.G",
@@ -7156,12 +7156,12 @@
     "rewatch_count": 0,
     "total_time": 299.78292,
     "dub": "JAP",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/51805/Ginga_Eiyuu_Densetsu__Die_Neue_These_-_Sakubou"
   },
   {
     "index": "359.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Black Lagoon_ Roberta's Blood Trail.jpg",
     "name": "Black Lagoon: Roberta's Blood Trail",
     "type": "OVA",
     "studio": "Madhouse",
@@ -7176,12 +7176,12 @@
     "rewatch_count": 0,
     "total_time": 170.45000000000002,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/4901/Black_Lagoon__Robertas_Blood_Trail"
   },
   {
     "index": "360.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Overlord, S04.jpg",
     "name": "Overlord, S04",
     "type": "TV",
     "studio": "Madhouse",
@@ -7196,12 +7196,12 @@
     "rewatch_count": 0,
     "total_time": 310.830195,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/48895/Overlord_IV"
   },
   {
     "index": "361.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/To Your Eternity, S02.jpg",
     "name": "To Your Eternity, S02",
     "type": "TV",
     "studio": "Drive",
@@ -7216,12 +7216,12 @@
     "rewatch_count": 0,
     "total_time": 500.16700000000003,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/49709/Fumetsu_no_Anata_e_Season_2"
   },
   {
     "index": "362.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/86 Eighty-Six, S01 Part 2.jpg",
     "name": "86 Eighty-Six, S01 Part 2",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -7236,12 +7236,12 @@
     "rewatch_count": 0,
     "total_time": 284.004,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/48569/86_Part_2"
   },
   {
     "index": "363.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark) III_ Is It Wrong to Try to Find a Hot Spring in Orario (question mark).jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon? III: Is It Wrong to Try to Find a Hot Spring in Orario?",
     "type": "OVA",
     "studio": "J.C.Staff",
@@ -7256,12 +7256,12 @@
     "rewatch_count": 0,
     "total_time": 28.767,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/44983/Dungeon_ni_Deai_wo_Motomeru_no_wa_Machigatteiru_Darou_ka_III_OVA"
   },
   {
     "index": "364.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark), S05.jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S05",
     "type": "TV",
     "studio": "J.C.Staff",
@@ -7276,12 +7276,12 @@
     "rewatch_count": 0,
     "total_time": 355.5,
     "dub": "JAP; ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/57066/Dungeon_ni_Deai_wo_Motomeru_no_wa_Machigatteiru_Darou_ka_V__Houjou_no_Megami-hen"
   },
   {
     "index": "365.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sword Art Online_ Alicization - War of Underworld, Part 2.jpg",
     "name": "Sword Art Online: Alicization - War of Underworld, Part 2",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -7296,12 +7296,12 @@
     "rewatch_count": 0,
     "total_time": 262.53700000000003,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/40540/Sword_Art_Online__Alicization_-_War_of_Underworld_2nd_Season"
   },
   {
     "index": "366.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sword Art Online the Movie_ Progressive - Scherzo of Deep Night.jpg",
     "name": "Sword Art Online the Movie: Progressive - Scherzo of Deep Night",
     "type": "Movie",
     "studio": "A-1 Pictures",
@@ -7316,12 +7316,12 @@
     "rewatch_count": 0,
     "total_time": 100.83,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/50275/Sword_Art_Online__Progressive_Movie_-_Kuraki_Yuuyami_no_Scherzo"
   },
   {
     "index": "367.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sword Art Online Alternative_ Gun Gale Online, S02.jpg",
     "name": "Sword Art Online Alternative: Gun Gale Online, S02",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -7336,7 +7336,7 @@
     "rewatch_count": 0,
     "total_time": 284.61696,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/55994/Sword_Art_Online_Alternative__Gun_Gale_Online_II"
   },
   {
@@ -7356,12 +7356,12 @@
     "rewatch_count": 0,
     "total_time": 273.996,
     "dub": "JAP",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/60146/Saikyou_no_Ousama_Nidome_no_Jinsei_wa_Nani_wo_Suru"
   },
   {
     "index": "369.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/From Old Country Bumpkin to Master Swordsman, S01.jpg",
     "name": "From Old Country Bumpkin to Master Swordsman, S01",
     "type": "TV",
     "studio": "Passione; Hayabusa Film",
@@ -7376,12 +7376,12 @@
     "rewatch_count": 0,
     "total_time": 287.7096,
     "dub": "JAP; ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/59452/Katainaka_no_Ossan_Kensei_ni_Naru"
   },
   {
     "index": "370.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Solo Leveling, S02_ Arise from the Shadow.jpg",
     "name": "Solo Leveling, S02: Arise from the Shadow",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -7396,12 +7396,12 @@
     "rewatch_count": 0,
     "total_time": 308.09999999999997,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/58567/Ore_dake_Level_Up_na_Ken_Season_2__Arise_from_the_Shadow"
   },
   {
     "index": "371.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/KonoSuba_ God's Blessing on This Wonderful World! 3 OVA.jpg",
     "name": "KonoSuba: God's Blessing on This Wonderful World! 3 OVA",
     "type": "OVA",
     "studio": "Drive",
@@ -7416,12 +7416,12 @@
     "rewatch_count": 0,
     "total_time": 51.25,
     "dub": "JAP",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/59833/Kono_Subarashii_Sekai_ni_Shukufuku_wo_3__Bonus_Stage"
   },
   {
     "index": "372.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Shangri-La Frontier, S02.jpg",
     "name": "Shangri-La Frontier, S02",
     "type": "TV",
     "studio": "C2C",
@@ -7436,12 +7436,12 @@
     "rewatch_count": 0,
     "total_time": 595.6750000000001,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/58572/Shangri-La_Frontier__Kusoge_Hunter_Kamige_ni_Idoman_to_su_2nd_Season"
   },
   {
     "index": "373.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Heavenly Delusion.jpg",
     "name": "Heavenly Delusion",
     "type": "TV",
     "studio": "Production I.G",
@@ -7456,12 +7456,12 @@
     "rewatch_count": 0,
     "total_time": 308.36,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/53393/Tengoku_Daimakyou"
   },
   {
     "index": "374.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Made in Abyss_ The Golden City of the Scorching Sun.jpg",
     "name": "Made in Abyss: The Golden City of the Scorching Sun",
     "type": "TV",
     "studio": "Kinema Citrus",
@@ -7476,12 +7476,12 @@
     "rewatch_count": 0,
     "total_time": 311.064,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/41084/Made_in_Abyss__Retsujitsu_no_Ougonkyou"
   },
   {
     "index": "375.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Goblin Slayer, S02.jpg",
     "name": "Goblin Slayer, S02",
     "type": "TV",
     "studio": "LIDENFILMS",
@@ -7496,12 +7496,12 @@
     "rewatch_count": 0,
     "total_time": 284.4,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/47160/Goblin_Slayer_II"
   },
   {
     "index": "376.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Bocchi the Rock!.jpg",
     "name": "Bocchi the Rock!",
     "type": "TV",
     "studio": "CloverWorks",
@@ -7516,12 +7516,12 @@
     "rewatch_count": 0,
     "total_time": 285,
     "dub": "JAP",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/47917/Bocchi_the_Rock"
   },
   {
     "index": "377.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Noragami Aragoto.jpg",
     "name": "Noragami Aragoto",
     "type": "TV",
     "studio": "Bones",
@@ -7536,12 +7536,12 @@
     "rewatch_count": 0,
     "total_time": 314.12899699999997,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/30503/Noragami_Aragoto"
   },
   {
     "index": "378.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Lycoris Recoil.jpg",
     "name": "Lycoris Recoil",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -7556,12 +7556,12 @@
     "rewatch_count": 0,
     "total_time": 312.42900000000003,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/50709/Lycoris_Recoil/"
   },
   {
     "index": "379.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Ragna Crimson.jpg",
     "name": "Ragna Crimson",
     "type": "TV",
     "studio": "SILVER LINK.",
@@ -7576,12 +7576,12 @@
     "rewatch_count": 0,
     "total_time": 593.733,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/51297/Ragna_Crimson"
   },
   {
     "index": "380.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Lord of Mysteries.jpg",
     "name": "Lord of Mysteries",
     "type": "Donghua",
     "studio": "B.CMAY PICTURES",
@@ -7596,12 +7596,12 @@
     "rewatch_count": 1,
     "total_time": 864.7080000000001,
     "dub": "CHN; ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/49818/Guimi_Zhi_Zhu__Xiaochou_Pian"
   },
   {
     "index": "381.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Call of the Night, S02.jpg",
     "name": "Call of the Night, S02",
     "type": "TV",
     "studio": "LIDENFILMS",
@@ -7616,12 +7616,12 @@
     "rewatch_count": 0,
     "total_time": 276.312,
     "dub": "JAP",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/58390/Yofukashi_no_Uta_Season_2"
   },
   {
     "index": "382.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Water Magician.jpg",
     "name": "The Water Magician",
     "type": "TV",
     "studio": "Typhoon Graphics; WonderLand",
@@ -7636,12 +7636,12 @@
     "rewatch_count": 0,
     "total_time": 290.77200000000005,
     "dub": "JAP",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/60732/Mizu_Zokusei_no_Mahoutsukai"
   },
   {
     "index": "383.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/My Dress-Up Darling, S02.jpg",
     "name": "My Dress-Up Darling, S02",
     "type": "TV",
     "studio": "CloverWorks",
@@ -7656,12 +7656,12 @@
     "rewatch_count": 0,
     "total_time": 284.004,
     "dub": "JAP",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/53065/Sono_Bisque_Doll_wa_Koi_wo_Suru_Season_2"
   },
   {
     "index": "384.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Rising of the Shield Hero, S04.jpg",
     "name": "The Rising of the Shield Hero, S04",
     "type": "TV",
     "studio": "Kinema Citrus",
@@ -7676,7 +7676,7 @@
     "rewatch_count": 0,
     "total_time": 284.01599999999996,
     "dub": "JAP; ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/57907/Tate_no_Yuusha_no_Nariagari_Season_4"
   },
   {
@@ -7696,12 +7696,12 @@
     "rewatch_count": 0,
     "total_time": 277.764,
     "dub": "JAP",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/58913/Hikaru_ga_Shinda_Natsu"
   },
   {
     "index": "386.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Rascal Does Not Dream of Santa Claus.jpg",
     "name": "Rascal Does Not Dream of Santa Claus",
     "type": "TV",
     "studio": "CloverWorks",
@@ -7716,12 +7716,12 @@
     "rewatch_count": 0,
     "total_time": 312.052,
     "dub": "JAP",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/57433/Seishun_Buta_Yarou_wa_Santa_Claus_no_Yume_wo_Minai"
   },
   {
     "index": "387.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Black Butler_ Emerald Witch Arc.jpg",
     "name": "Black Butler: Emerald Witch Arc",
     "type": "TV",
     "studio": "CloverWorks",
@@ -7736,12 +7736,12 @@
     "rewatch_count": 0,
     "total_time": 307.67100000000005,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/59228/Kuroshitsuji__Midori_no_Majo-hen"
   },
   {
     "index": "388.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Kaiju No.8, S02.jpg",
     "name": "Kaiju No.8, S02",
     "type": "TV",
     "studio": "Production I.G",
@@ -7756,12 +7756,12 @@
     "rewatch_count": 0,
     "total_time": 260.348,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/59177/Kaijuu_8-gou_2nd_Season"
   },
   {
     "index": "389.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Puella Magi Madoka Magica the Movie_ Rebellion.jpg",
     "name": "Puella Magi Madoka Magica the Movie: Rebellion",
     "type": "Movie",
     "studio": "Shaft",
@@ -7776,12 +7776,12 @@
     "rewatch_count": 0,
     "total_time": 116.62,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/11981/Mahou_Shoujo_Madoka%E2%98%85Magica_Movie_3__Hangyaku_no_Monogatari"
   },
   {
     "index": "390.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Monogatari Series_ Off & Monster Season.jpg",
     "name": "Monogatari Series: Off & Monster Season",
     "type": "ONA",
     "studio": "Shaft",
@@ -7796,12 +7796,12 @@
     "rewatch_count": 0,
     "total_time": 353.76599999999996,
     "dub": "JAP",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/57864/Monogatari_Series__Off___Monster_Season"
   },
   {
     "index": "391.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Spice and Wolf_ Merchant Meets the Wise Wolf, S01.jpg",
     "name": "Spice and Wolf: Merchant Meets the Wise Wolf, S01",
     "type": "TV",
     "studio": "Passione",
@@ -7816,12 +7816,12 @@
     "rewatch_count": 0,
     "total_time": 596.2725,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/51122/Ookami_to_Koushinryou__Merchant_Meets_the_Wise_Wolf"
   },
   {
     "index": "392.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Apothecary Diaries, S02.jpg",
     "name": "The Apothecary Diaries, S02",
     "type": "TV",
     "studio": "OLM; TOHO animation STUDIO",
@@ -7836,12 +7836,12 @@
     "rewatch_count": 0,
     "total_time": 575.952,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/58514/Kusuriya_no_Hitorigoto_2nd_Season"
   },
   {
     "index": "393.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Spy x Family, S03.jpg",
     "name": "Spy x Family, S03",
     "type": "TV",
     "studio": "Wit Studio; CloverWorks",
@@ -7856,12 +7856,12 @@
     "rewatch_count": 0,
     "total_time": 310.12800000000004,
     "dub": "JAP",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/59027/Spy_x_Family_Season_3"
   },
   {
     "index": "394.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Tower of God, S02_ Workshop Battle.jpg",
     "name": "Tower of God, S02: Workshop Battle",
     "type": "TV",
     "studio": "The Answer Studio",
@@ -7876,12 +7876,12 @@
     "rewatch_count": 0,
     "total_time": 308.594,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/59989/Kami_no_Tou__Koubou-sen"
   },
   {
     "index": "395.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/I've Been Killing Slimes for 300 Years and Maxed Out My Level, S02.jpg",
     "name": "I've Been Killing Slimes for 300 Years and Maxed Out My Level, S02",
     "type": "TV",
     "studio": "Teddy",
@@ -7896,12 +7896,12 @@
     "rewatch_count": 0,
     "total_time": 284.004,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/50738/Slime_Taoshite_300-nen_Shiranai_Uchi_ni_Level_Max_ni_Nattemashita__Sono_Ni"
   },
   {
     "index": "396.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Tsukimichi -Moonlit Fantasy-, S02.jpg",
     "name": "Tsukimichi -Moonlit Fantasy-, S02",
     "type": "TV",
     "studio": "J.C.Staff",
@@ -7916,12 +7916,12 @@
     "rewatch_count": 0,
     "total_time": 591.6999999999999,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/49889/Tsuki_ga_Michibiku_Isekai_Douchuu_2nd_Season"
   },
   {
     "index": "397.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Ascendance of a Bookworm, S03.jpg",
     "name": "Ascendance of a Bookworm, S03",
     "type": "TV",
     "studio": "Ajia-do",
@@ -7936,12 +7936,12 @@
     "rewatch_count": 0,
     "total_time": 237.04000000000002,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/42429/Honzuki_no_Gekokujou__Shisho_ni_Naru_Tame_ni_wa_Shudan_wo_Erandeiraremasen_3rd_Season"
   },
   {
     "index": "398.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/GATE, S01 Part 2.jpg",
     "name": "GATE, S01 Part 2",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -7956,12 +7956,12 @@
     "rewatch_count": 0,
     "total_time": 284.028,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/31637/Gate__Jieitai_Kanochi_nite_Kaku_Tatakaeri_Part_2"
   },
   {
     "index": "399.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Skeleton Knight in Another World, S01.jpg",
     "name": "Skeleton Knight in Another World, S01",
     "type": "TV",
     "studio": "Studio KAI; HORNETS",
@@ -7976,12 +7976,12 @@
     "rewatch_count": 0,
     "total_time": 286.032,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/48760/Gaikotsu_Kishi-sama_Tadaima_Isekai_e_Odekakechuu"
   },
   {
     "index": "400.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Arifureta_ From Commonplace to World's Strongest, S03.jpg",
     "name": "Arifureta: From Commonplace to World's Strongest, S03",
     "type": "TV",
     "studio": "asread.",
@@ -7996,12 +7996,12 @@
     "rewatch_count": 0,
     "total_time": 380.256,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/52995/Arifureta_Shokugyou_de_Sekai_Saikyou_Season_3"
   },
   {
     "index": "401.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Saga of Tanya the Evil_ The Movie.jpg",
     "name": "Saga of Tanya the Evil: The Movie",
     "type": "Movie",
     "studio": "Nut",
@@ -8016,12 +8016,12 @@
     "rewatch_count": 0,
     "total_time": 98.437,
     "dub": "JAP",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/37055/Youjo_Senki_Movie"
   },
   {
     "index": "402.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Chainsaw Man the Movie_ Reze Arc.jpg",
     "name": "Chainsaw Man the Movie: Reze Arc",
     "type": "Movie",
     "studio": "MAPPA",
@@ -8036,12 +8036,12 @@
     "rewatch_count": 1,
     "total_time": 200.518,
     "dub": "JAP; ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/57555/Chainsaw_Man_Movie__Reze-hen"
   },
   {
     "index": "403.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Demon Slayer_ The Movie_ Infinity Castle - Part 1_ Akaza Returns.jpg",
     "name": "Demon Slayer: The Movie: Infinity Castle - Part 1: Akaza Returns",
     "type": "Movie",
     "studio": "ufotable",
@@ -8056,12 +8056,12 @@
     "rewatch_count": 0,
     "total_time": 154.675,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/59192/Kimetsu_no_Yaiba_Movie_1__Mugenjou-hen_-_Akaza_Sairai"
   },
   {
     "index": "404.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Vinland Saga, S02.jpg",
     "name": "Vinland Saga, S02",
     "type": "TV",
     "studio": "MAPPA",
@@ -8076,7 +8076,7 @@
     "rewatch_count": 0,
     "total_time": 616.416,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/49387/Vinland_Saga_Season_2"
   },
   {
@@ -8096,12 +8096,12 @@
     "rewatch_count": 0,
     "total_time": 284.568,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/38668/Dorohedoro"
   },
   {
     "index": "406.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Wandering Witch_ The Journey of Elaina.jpg",
     "name": "Wandering Witch: The Journey of Elaina",
     "type": "TV",
     "studio": "C2C",
@@ -8116,12 +8116,12 @@
     "rewatch_count": 0,
     "total_time": 286.404,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/40571/Majo_no_Tabitabi"
   },
   {
     "index": "407.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Secrets of the Silent Witch.jpg",
     "name": "Secrets of the Silent Witch",
     "type": "TV",
     "studio": "Studio Gokumi",
@@ -8136,12 +8136,12 @@
     "rewatch_count": 0,
     "total_time": 314.912,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/59459/Silent_Witch__Chinmoku_no_Majo_no_Kakushigoto"
   },
   {
     "index": "408.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Once Upon a Witch's Death.jpg",
     "name": "Once Upon a Witch's Death",
     "type": "TV",
     "studio": "EMT Squared",
@@ -8156,12 +8156,12 @@
     "rewatch_count": 0,
     "total_time": 284.01599999999996,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/59169/Aru_Majo_ga_Shinu_Made"
   },
   {
     "index": "409.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Ancient Magus' Bride, S02 Part 2.jpg",
     "name": "The Ancient Magus' Bride, S02 Part 2",
     "type": "TV",
     "studio": "Studio Kafka",
@@ -8176,12 +8176,12 @@
     "rewatch_count": 0,
     "total_time": 290.4,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/55742/Mahoutsukai_no_Yome_Season_2_Part_2"
   },
   {
     "index": "410.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Psycho-Pass, S03_ First Inspector.jpg",
     "name": "Psycho-Pass, S03: First Inspector",
     "type": "ONA",
     "studio": "Production I.G",
@@ -8196,12 +8196,12 @@
     "rewatch_count": 0,
     "total_time": 134.352,
     "dub": "ENG",
-    "status": "Čekám na pokračování",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/40858/Psycho-Pass_3__First_Inspector"
   },
   {
     "index": "411.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/To Your Eternity, S03.jpg",
     "name": "To Your Eternity, S03",
     "type": "TV",
     "studio": "Drive; Studio Massket",
@@ -8216,12 +8216,12 @@
     "rewatch_count": 0,
     "total_time": 400,
     "dub": "ENG",
-    "status": "AIRING!",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/54703/Fumetsu_no_Anata_e_Season_3"
   },
   {
     "index": "412.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate strange Fake.jpg",
     "name": "Fate/strange Fake",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -8236,12 +8236,12 @@
     "rewatch_count": 0,
     "total_time": 184,
     "dub": "ENG",
-    "status": "AIRING!",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/55830/Fate_strange_Fake"
   },
   {
     "index": "413.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sentenced to Be a Hero.jpg",
     "name": "Sentenced to Be a Hero",
     "type": "TV",
     "studio": "Studio KAI",
@@ -8256,12 +8256,12 @@
     "rewatch_count": 0,
     "total_time": 168,
     "dub": "ENG",
-    "status": "AIRING!",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/56009/Yuusha-kei_ni_Shosu__Choubatsu_Yuusha_9004-tai_Keimu_Kiroku"
   },
   {
     "index": "414.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Jujutsu Kaisen_ The Culling Game Part 1.jpg",
     "name": "Jujutsu Kaisen: The Culling Game Part 1",
     "type": "TV",
     "studio": "MAPPA",
@@ -8276,12 +8276,12 @@
     "rewatch_count": 0,
     "total_time": 161,
     "dub": "JAP",
-    "status": "AIRING!",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/57658/Jujutsu_Kaisen__Shimetsu_Kaiyuu_-_Zenpen"
   },
   {
     "index": "415.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Hell's Paradise, S02.jpg",
     "name": "Hell's Paradise, S02",
     "type": "TV",
     "studio": "MAPPA",
@@ -8296,12 +8296,12 @@
     "rewatch_count": 0,
     "total_time": 161,
     "dub": "JAP",
-    "status": "AIRING!",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/55825/Jigokuraku_2nd_Season"
   },
   {
     "index": "416.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Frieren_ Beyond Journey's End, S02.jpg",
     "name": "Frieren: Beyond Journey's End, S02",
     "type": "TV",
     "studio": "Madhouse",
@@ -8316,7 +8316,7 @@
     "rewatch_count": 0,
     "total_time": 120,
     "dub": "JAP",
-    "status": "AIRING!",
+    "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/59978/Sousou_no_Frieren_2nd_Season"
   },
   {
@@ -8336,7 +8336,7 @@
     "rewatch_count": 0,
     "total_time": 259.61,
     "dub": "ENG",
-    "status": null,
+    "status": "PENDING",
     "mal_url": "https://myanimelist.net/anime/790/Ergo_Proxy"
   }
 ]
