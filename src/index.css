@@ -349,8 +349,8 @@ tr:hover td {
   padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: var(--radius-full);
   font-weight: 600;
-  font-size: 0.875rem;
-  min-width: 2.5rem;
+  font-size: 1rem;
+  min-width: 3.5rem;
 }
 
 .rating-badge.excellent {

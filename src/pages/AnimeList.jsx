@@ -158,15 +158,18 @@ function AnimeList() {
     // Check if anime is part of a series (not standalone)
     const isPartOfSeries = (name) => {
         if (!name) return false
-        // Match patterns like S01, S02, Season 1, Part 1, Part 2, etc.
-        return /,\s*S\d+|Season\s*\d+|Part\s*\d+|:\s*S\d+/i.test(name)
+        // Match patterns like S01, S02, Season 1, Part 1, Part 2, Case 1, Sinners of the System, etc.
+        // Also a colon if followed by more text is a good indicator for series/movie parts
+        return /,\s*S\d+|Season\s*\d+|Part\s*\d+|:\s*S\d+|Case\s*\d+|Sinners\s+of\s+the\s+System|电影|Movie|Film/i.test(name) || name.includes(':')
     }
 
     // Extract base name of a series for filtering
     const extractSeriesBaseName = (name) => {
         if (!name) return ''
-        // Extract everything before the first comma, colon, "Season", or "Part"
-        return name.split(/,\s*S\d+|Season\s*\d+|Part\s*\d+|:\s*S\d+/i)[0].trim()
+        // Extract everything before common series indicators
+        const base = name.split(/,\s*S\d+|Season\s*\d+|Part\s*\d+|:\s*S\d+|Case\s*\d+|Sinners\s+of\s+the\s+System|电影|Movie|Film/i)[0] || name.split(':')[0]
+        // Clean up trailing punctuation like colons, commas, or dashes
+        return base.replace(/[:,\-\s]+$/, '').trim()
     }
 
     const toggleSeriesFilter = (name) => {
@@ -175,6 +178,10 @@ function AnimeList() {
             setSeriesFilter(null)
         } else {
             setSeriesFilter(baseName)
+            // Reset other filters to show the FULL series as requested
+            setStatusFilter('all')
+            setTypeFilter('all')
+            setSearchTerm('')
         }
     }
 
@@ -418,7 +425,7 @@ function AnimeList() {
                                             onClick={() => navigate(`/anime/${encodeURIComponent(anime.name)}`)}
                                             title="Zobrazit detailní hodnocení"
                                         >
-                                            {parseFloat(anime.rating).toFixed(1)}
+                                            {parseFloat(anime.rating).toFixed(1)}/10
                                         </span>
                                     ) : '-'}
                                 </td>
