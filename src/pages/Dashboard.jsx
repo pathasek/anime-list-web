@@ -49,6 +49,7 @@ function Dashboard() {
         return ['types', 'studios', 'seasons', 'genres', 'themes', 'rating', 'monthly2025', 'releaseYears', 'status', 'dubbing', 'avgRatingType', 'studiosByRating', 'genresByRating', 'themesByRating', 'dailyWatching', 'monthlyWatching']
     })
 
+    const [activeChartSettings, setActiveChartSettings] = useState(null)
     const [draggedChart, setDraggedChart] = useState(null)
 
     const handleDragStart = (e, id) => {

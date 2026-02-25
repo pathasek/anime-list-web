@@ -98,6 +98,14 @@ function AnimeList() {
                     bVal = parseFloat(bVal) || 0
                 }
 
+                // Handle custom status sort order
+                if (sortConfig.key === 'status') {
+                    const order = { 'PENDING': 1, 'AIRING!': 2, 'FINISHED': 3 }
+                    aVal = order[aVal] || 99
+                    bVal = order[bVal] || 99
+                    return sortConfig.direction === 'asc' ? aVal - bVal : bVal - aVal
+                }
+
                 if (typeof aVal === 'string') {
                     return sortConfig.direction === 'asc'
                         ? aVal.localeCompare(bVal)
