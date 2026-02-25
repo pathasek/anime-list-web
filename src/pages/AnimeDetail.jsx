@@ -141,12 +141,15 @@ function AnimeDetail() {
     const radarMin = useMemo(() => {
         if (!categoryRatings) return 0
         const values = Object.values(categoryRatings)
-        return values.length > 0 ? Math.min(...values) : 0
+        // Use a slightly lower min to give the chart some "breathing room" in the center if values are high
+        const minVal = values.length > 0 ? Math.min(...values) : 0
+        return Math.max(0, Math.floor(minVal - 1))
     }, [categoryRatings])
 
     const radarMax = useMemo(() => {
         if (!categoryRatings) return 10
         const values = Object.values(categoryRatings)
+        // Set max exactly to the highest rating found to maximize the spider web spread
         return values.length > 0 ? Math.max(...values) : 10
     }, [categoryRatings])
 
@@ -331,31 +334,36 @@ function AnimeDetail() {
                         </span>
                     </h3>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xl)', flexWrap: 'wrap-reverse' }}>
-                        <div style={{ flex: '1', minWidth: '250px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xl)', flexWrap: 'wrap' }}>
+                        {/* Labels on the Left */}
+                        <div style={{ flex: '1', minWidth: '300px' }}>
                             <div style={{
                                 display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
-                                gap: 'var(--spacing-sm)'
+                                gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
+                                gap: 'var(--spacing-xs)'
                             }}>
                                 {Object.entries(categoryRatings).map(([cat, rating]) => (
                                     <div key={cat} style={{
                                         display: 'flex',
                                         justifyContent: 'space-between',
-                                        padding: 'var(--spacing-xs) var(--spacing-sm)',
+                                        padding: '4px 8px',
                                         background: 'var(--bg-secondary)',
                                         borderRadius: 'var(--radius-sm)',
-                                        border: '1px solid var(--border-color)'
+                                        border: '1px solid var(--border-color)',
+                                        fontSize: '0.8rem'
                                     }}>
-                                        <span style={{ fontSize: '0.9rem' }}>{cat}</span>
+                                        <span>{cat}</span>
                                         <span className={`badge rating-${Math.floor(rating)}`} style={{ fontWeight: 'bold' }}>{rating}</span>
                                     </div>
                                 ))}
                             </div>
                         </div>
 
-                        <div style={{ height: '500px', flex: '1.5', minWidth: '400px' }}>
-                            <Radar data={radarData} options={radarOptions} />
+                        {/* Chart on the Right - Enlarged */}
+                        <div style={{ height: '550px', flex: '2', minWidth: '400px', display: 'flex', justifyContent: 'center' }}>
+                            <div style={{ width: '100%', height: '100%' }}>
+                                <Radar data={radarData} options={radarOptions} />
+                            </div>
                         </div>
                     </div>
                 </div>
