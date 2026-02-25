@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
+import ChartSettingsModal from '../components/ChartSettingsModal'
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -29,6 +30,22 @@ function Favorites() {
     const [ratingFilter, setRatingFilter] = useState('all')
     const [sortColumn, setSortColumn] = useState(null)
     const [sortDirection, setSortDirection] = useState('desc')
+    const [activeChartSettings, setActiveChartSettings] = useState(null)
+
+    // Czech number formatting: dot → comma
+    const toCS = (val) => String(val).replace('.', ',')
+
+    const openChartSettings = (e, id, title) => {
+        const r = e.currentTarget.getBoundingClientRect()
+        setActiveChartSettings({
+            id,
+            title,
+            anchorPosition: {
+                top: r.bottom + window.scrollY,
+                left: r.left + window.scrollX
+            }
+        })
+    }
 
     useEffect(() => {
         fetch('/data/favorites.json')
@@ -137,13 +154,13 @@ function Favorites() {
 
         // Average ratings by category
         const avgRatings = {
-            lyrics: lyricsCount > 0 ? (lyricsSum / lyricsCount).toFixed(2) : null,
-            music: musicCount > 0 ? (musicSum / musicCount).toFixed(2) : null,
-            visuals: visualsCount > 0 ? (visualsSum / visualsCount).toFixed(2) : null,
-            frisson: frissonCount > 0 ? (frissonSum / frissonCount).toFixed(2) : null,
-            fh: fhCount > 0 ? (fhSum / fhCount).toFixed(2) : null,
-            avg: avgCount > 0 ? (avgSum / avgCount).toFixed(2) : null,
-            total: totalCount > 0 ? (totalSum / totalCount).toFixed(2) : null
+            lyrics: lyricsCount > 0 ? toCS((lyricsSum / lyricsCount).toFixed(2)) : null,
+            music: musicCount > 0 ? toCS((musicSum / musicCount).toFixed(2)) : null,
+            visuals: visualsCount > 0 ? toCS((visualsSum / visualsCount).toFixed(2)) : null,
+            frisson: frissonCount > 0 ? toCS((frissonSum / frissonCount).toFixed(2)) : null,
+            fh: fhCount > 0 ? toCS((fhSum / fhCount).toFixed(2)) : null,
+            avg: avgCount > 0 ? toCS((avgSum / avgCount).toFixed(2)) : null,
+            total: totalCount > 0 ? toCS((totalSum / totalCount).toFixed(2)) : null
         }
 
         // OST items
@@ -376,19 +393,28 @@ function Favorites() {
             {/* 3. Charts */}
             <div className="charts-grid">
                 <div className="chart-container">
-                    <div className="chart-title">Rozdělení typů</div>
+                    <div className="chart-header">
+                        <div className="chart-title">Rozdělení typů</div>
+                        <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'fav_types', 'Rozdělení typů')} title="Nastavení">⚙️</button>
+                    </div>
                     <div style={{ height: '250px' }}>
                         <Pie data={typeChartData} options={pieOptions} />
                     </div>
                 </div>
                 <div className="chart-container">
-                    <div className="chart-title">Top 10 autorů</div>
+                    <div className="chart-header">
+                        <div className="chart-title">Top 10 autorů</div>
+                        <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'fav_authors', 'Top 10 autorů')} title="Nastavení">⚙️</button>
+                    </div>
                     <div style={{ height: '250px' }}>
                         <Bar data={authorsChartData} options={{ ...chartOptions, indexAxis: 'y' }} />
                     </div>
                 </div>
                 <div className="chart-container">
-                    <div className="chart-title">Top Séries (dle FH)</div>
+                    <div className="chart-header">
+                        <div className="chart-title">Top Séries (dle FH)</div>
+                        <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'fav_series_fh', 'Top Séries (dle FH)')} title="Nastavení">⚙️</button>
+                    </div>
                     <div style={{ height: '250px' }}>
                         <Bar data={topSeriesFHData} options={{
                             ...chartOptions, scales: {
@@ -500,9 +526,9 @@ function Favorites() {
                                 </td>
 
                                 <td>
-                                    {fav.rating_total ? (
+                                    {fav.rating_total && !isNaN(parseFloat(fav.rating_total)) ? (
                                         <span className={`rating-badge ${parseFloat(fav.rating_total) >= 9 ? 'excellent' : 'good'}`}>
-                                            {parseFloat(fav.rating_total).toFixed(1)}
+                                            {toCS(parseFloat(fav.rating_total).toFixed(1))}
                                         </span>
                                     ) : '-'}
                                 </td>
@@ -554,9 +580,9 @@ function Favorites() {
                                             {ost.author || '-'}
                                         </td>
                                         <td>
-                                            {ost.rating_total ? (
+                                            {ost.rating_total && !isNaN(parseFloat(ost.rating_total)) ? (
                                                 <span className={`rating-badge ${parseFloat(ost.rating_total) >= 9 ? 'excellent' : 'good'}`}>
-                                                    {parseFloat(ost.rating_total).toFixed(1)}
+                                                    {toCS(parseFloat(ost.rating_total).toFixed(1))}
                                                 </span>
                                             ) : '-'}
                                         </td>
@@ -567,6 +593,15 @@ function Favorites() {
                     </div>
                 </div>
             )}
+
+            {/* Chart Settings Popover */}
+            <ChartSettingsModal
+                isOpen={!!activeChartSettings}
+                onClose={() => setActiveChartSettings(null)}
+                chartId={activeChartSettings?.id}
+                chartTitle={activeChartSettings?.title}
+                anchorPosition={activeChartSettings?.anchorPosition}
+            />
         </div>
     )
 }
