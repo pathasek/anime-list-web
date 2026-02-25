@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { BrowserRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom'
+import { HashRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom'
 import Dashboard from './pages/Dashboard'
 import AnimeList from './pages/AnimeList'
 import AnimeDetail from './pages/AnimeDetail'
@@ -163,16 +163,16 @@ function App() {
   const [stats, setStats] = useState(null)
 
   useEffect(() => {
-    fetch('/data/stats.json')
+    fetch('data/stats.json')
       .then(res => res.json())
       .then(data => setStats(data))
       .catch(err => console.error('Failed to load stats:', err))
   }, [])
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <AppContent stats={stats} />
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 

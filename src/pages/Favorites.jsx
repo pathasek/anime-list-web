@@ -48,7 +48,7 @@ function Favorites() {
     }
 
     useEffect(() => {
-        fetch('/data/favorites.json')
+        fetch('data/favorites.json')
             .then(r => r.json())
             .then(data => {
                 setFavorites(data)
@@ -430,13 +430,37 @@ function Favorites() {
 
             {/* Search and Filters */}
             <div className="search-bar">
-                <input
-                    type="text"
-                    className="search-input"
-                    placeholder="Hledat anime, song, autora..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
+                <div style={{ position: 'relative', flex: 1, display: 'flex', alignItems: 'center' }}>
+                    <input
+                        type="text"
+                        className="search-input"
+                        placeholder="Hledat anime, song, autora..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        style={{ width: '100%', paddingRight: '2rem' }}
+                    />
+                    {searchTerm && (
+                        <button
+                            onClick={() => setSearchTerm('')}
+                            style={{
+                                position: 'absolute',
+                                right: '12px',
+                                background: 'transparent',
+                                border: 'none',
+                                color: 'var(--text-muted)',
+                                cursor: 'pointer',
+                                fontSize: '1.2rem',
+                                padding: '0 4px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                            title="Vymazat hledání"
+                        >
+                            ×
+                        </button>
+                    )}
+                </div>
                 <div className="filter-group">
                     {['all', 'OP', 'ED', 'OST'].map(t => (
                         <button

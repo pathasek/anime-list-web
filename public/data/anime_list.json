@@ -1,7 +1,7 @@
 [
   {
     "index": "1.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Jujutsu Kaisen 0.jpg",
     "name": "Jujutsu Kaisen 0",
     "type": "Movie",
     "studio": "MAPPA",
@@ -21,7 +21,7 @@
   },
   {
     "index": "2.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Jujutsu Kaisen, S01.jpg",
     "name": "Jujutsu Kaisen, S01",
     "type": "TV",
     "studio": "MAPPA",
@@ -41,7 +41,7 @@
   },
   {
     "index": "3.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Jujutsu Kaisen, S02.jpg",
     "name": "Jujutsu Kaisen, S02",
     "type": "TV",
     "studio": "MAPPA",
@@ -61,7 +61,7 @@
   },
   {
     "index": "4.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/NieR_Automata Ver1.1a Part 1.jpg",
     "name": "NieR:Automata Ver1.1a Part 1",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -81,7 +81,7 @@
   },
   {
     "index": "5.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/NieR_Automata Ver1.1a Part 2_ Investigation Report.jpg",
     "name": "NieR:Automata Ver1.1a Part 2: Investigation Report",
     "type": "TV Special",
     "studio": "A-1 Pictures",
@@ -101,7 +101,7 @@
   },
   {
     "index": "6.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Classroom of the Elite, S01.jpg",
     "name": "Classroom of the Elite, S01",
     "type": "TV",
     "studio": "Lerche",
@@ -121,7 +121,7 @@
   },
   {
     "index": "7.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Classroom of the Elite, S02.jpg",
     "name": "Classroom of the Elite, S02",
     "type": "TV",
     "studio": "Lerche",
@@ -141,7 +141,7 @@
   },
   {
     "index": "8.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/My Dress-Up Darling, S01.jpg",
     "name": "My Dress-Up Darling, S01",
     "type": "TV",
     "studio": "CloverWorks",
@@ -161,7 +161,7 @@
   },
   {
     "index": "9.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/KonoSuba_ God's Blessing on This Wonderful World!, S01.jpg",
     "name": "KonoSuba: God's Blessing on This Wonderful World!, S01",
     "type": "TV",
     "studio": "Studio Deen",
@@ -181,7 +181,7 @@
   },
   {
     "index": "10.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/KonoSuba_ God's Blessing on This Wonderful World! - God's Blessing on This Wonderful Choker!.jpg",
     "name": "KonoSuba: God's Blessing on This Wonderful World! - God's Blessing on This Wonderful Choker!",
     "type": "OVA",
     "studio": "Studio Deen",
@@ -201,7 +201,7 @@
   },
   {
     "index": "11.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/KonoSuba_ God's Blessing on This Wonderful World!, S02.jpg",
     "name": "KonoSuba: God's Blessing on This Wonderful World!, S02",
     "type": "TV",
     "studio": "Studio Deen",
@@ -221,7 +221,7 @@
   },
   {
     "index": "12.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/KonoSuba_ God's Blessing on This Wonderful World! 2 - God's Blessing on This Wonderful Art!.jpg",
     "name": "KonoSuba: God's Blessing on This Wonderful World! 2 - God's Blessing on This Wonderful Art!",
     "type": "OVA",
     "studio": "Studio Deen",
@@ -241,7 +241,7 @@
   },
   {
     "index": "13.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/KonoSuba_ God's Blessing on This Wonderful World! The Movie_ Crimson Legend.jpg",
     "name": "KonoSuba: God's Blessing on This Wonderful World! The Movie: Crimson Legend",
     "type": "Movie",
     "studio": "J.C.Staff",
@@ -261,7 +261,7 @@
   },
   {
     "index": "14.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/KonoSuba_ An Explosion on This Wonderful World!.jpg",
     "name": "KonoSuba: An Explosion on This Wonderful World!",
     "type": "TV",
     "studio": "Drive",
@@ -281,7 +281,7 @@
   },
   {
     "index": "15.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Re_Zero - Starting Life in Another World, S01.jpg",
     "name": "Re:Zero -Starting Life in Another World-, S01",
     "type": "TV",
     "studio": "White Fox",
@@ -301,7 +301,7 @@
   },
   {
     "index": "16.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Re_Zero - Starting Life in Another World - Memory Snow.jpg",
     "name": "Re:Zero -Starting Life in Another World- Memory Snow",
     "type": "Movie",
     "studio": "White Fox",
@@ -321,7 +321,7 @@
   },
   {
     "index": "17.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Re_Zero - Starting Life in Another World - The Frozen Bond.jpg",
     "name": "Re:Zero -Starting Life in Another World- The Frozen Bond",
     "type": "Movie",
     "studio": "White Fox",
@@ -341,7 +341,7 @@
   },
   {
     "index": "18.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Re_Zero - Starting Life in Another World, S02 Part 1.jpg",
     "name": "Re:Zero -Starting Life in Another World-, S02 Part 1",
     "type": "TV",
     "studio": "White Fox",
@@ -361,7 +361,7 @@
   },
   {
     "index": "19.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Mushoku Tensei_ Jobless Reincarnation - Eris the Goblin Slayer.jpg",
     "name": "Mushoku Tensei: Jobless Reincarnation - Eris the Goblin Slayer",
     "type": "OVA",
     "studio": "Studio Bind",
@@ -381,7 +381,7 @@
   },
   {
     "index": "20.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Mushoku Tensei_ Jobless Reincarnation, S01 Part 1.webp",
     "name": "Mushoku Tensei: Jobless Reincarnation, S01 Part 1",
     "type": "TV",
     "studio": "Studio Bind",
@@ -401,7 +401,7 @@
   },
   {
     "index": "21.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Mushoku Tensei_ Jobless Reincarnation, S01 Part 2.jpg",
     "name": "Mushoku Tensei: Jobless Reincarnation, S01 Part 2",
     "type": "TV",
     "studio": "Studio Bind",
@@ -421,7 +421,7 @@
   },
   {
     "index": "22.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Mushoku Tensei_ Jobless Reincarnation Season 2 - Episode 0 'Guardian Fitz'.jpg",
     "name": "Mushoku Tensei: Jobless Reincarnation Season 2 - Episode 0 \"Guardian Fitz\"",
     "type": "TV Special",
     "studio": "Studio Bind",
@@ -441,7 +441,7 @@
   },
   {
     "index": "23.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Mushoku Tensei_ Jobless Reincarnation, S02 Part 1.jpg",
     "name": "Mushoku Tensei: Jobless Reincarnation, S02 Part 1",
     "type": "TV",
     "studio": "Studio Bind",
@@ -461,7 +461,7 @@
   },
   {
     "index": "24.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Spy x Family, S01 Part 1.jpg",
     "name": "Spy x Family, S01 Part 1",
     "type": "TV",
     "studio": "Wit Studio; CloverWorks",
@@ -481,7 +481,7 @@
   },
   {
     "index": "25.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/That Time I Got Reincarnated as a Slime, S02 Part 1.jpg",
     "name": "That Time I Got Reincarnated as a Slime, S02 Part 1",
     "type": "TV",
     "studio": "8bit",
@@ -501,7 +501,7 @@
   },
   {
     "index": "26.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/That Time I Got Reincarnated as a Slime, S02 Part 2.jpg",
     "name": "That Time I Got Reincarnated as a Slime, S02 Part 2",
     "type": "TV",
     "studio": "8bit",
@@ -521,7 +521,7 @@
   },
   {
     "index": "27.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Eminence in Shadow, S01.jpg",
     "name": "The Eminence in Shadow, S01",
     "type": "TV",
     "studio": "Nexus",
@@ -541,7 +541,7 @@
   },
   {
     "index": "28.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Steins;Gate 0.jpg",
     "name": "Steins;Gate 0",
     "type": "TV",
     "studio": "White Fox",
@@ -561,7 +561,7 @@
   },
   {
     "index": "29.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Steins;Gate_ Open the Missing Link - Divide By Zero.jpg",
     "name": "Steins;Gate: Open the Missing Link - Divide By Zero",
     "type": "TV Special",
     "studio": "White Fox",
@@ -581,7 +581,7 @@
   },
   {
     "index": "30.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Overlord, S01.jpg",
     "name": "Overlord, S01",
     "type": "TV",
     "studio": "Madhouse",
@@ -601,7 +601,7 @@
   },
   {
     "index": "31.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Legend of the Galactic Heroes_ Die Neue These.webp",
     "name": "Legend of the Galactic Heroes: Die Neue These",
     "type": "TV",
     "studio": "Production I.G",
@@ -621,7 +621,7 @@
   },
   {
     "index": "32.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Legend of the Galactic Heroes_ Die Neue These - Stellar War Part 1.jpg",
     "name": "Legend of the Galactic Heroes: Die Neue These - Stellar War Part 1",
     "type": "Movie",
     "studio": "Production I.G",
@@ -641,7 +641,7 @@
   },
   {
     "index": "33.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Legend of the Galactic Heroes_ Die Neue These - Stellar War Part 2.jpg",
     "name": "Legend of the Galactic Heroes: Die Neue These - Stellar War Part 2",
     "type": "Movie",
     "studio": "Production I.G",
@@ -661,7 +661,7 @@
   },
   {
     "index": "34.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Legend of the Galactic Heroes_ Die Neue These - Stellar War Part 3.jpg",
     "name": "Legend of the Galactic Heroes: Die Neue These - Stellar War Part 3",
     "type": "Movie",
     "studio": "Production I.G",
@@ -681,7 +681,7 @@
   },
   {
     "index": "35.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Black Lagoon.jpg",
     "name": "Black Lagoon",
     "type": "TV",
     "studio": "Madhouse",
@@ -701,7 +701,7 @@
   },
   {
     "index": "36.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Black Lagoon_ The Second Barrage.jpg",
     "name": "Black Lagoon: The Second Barrage",
     "type": "TV",
     "studio": "Madhouse",
@@ -721,7 +721,7 @@
   },
   {
     "index": "37.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Overlord, S02.jpg",
     "name": "Overlord, S02",
     "type": "TV",
     "studio": "Madhouse",
@@ -741,7 +741,7 @@
   },
   {
     "index": "38.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Overlord, S03.jpg",
     "name": "Overlord, S03",
     "type": "TV",
     "studio": "Madhouse",
@@ -761,7 +761,7 @@
   },
   {
     "index": "39.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Overlord_ The Sacred Kingdom.jpg",
     "name": "Overlord: The Sacred Kingdom",
     "type": "Movie",
     "studio": "Madhouse",
@@ -781,7 +781,7 @@
   },
   {
     "index": "40.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/To Your Eternity, S01.jpg",
     "name": "To Your Eternity, S01",
     "type": "TV",
     "studio": "Brain's Base",
@@ -801,7 +801,7 @@
   },
   {
     "index": "41.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/No Game, No Life_ Zero.jpg",
     "name": "No Game, No Life: Zero",
     "type": "Movie",
     "studio": "Madhouse",
@@ -821,7 +821,7 @@
   },
   {
     "index": "42.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/86 Eighty-Six, S01 Part 1.jpg",
     "name": "86 Eighty-Six, S01 Part 1",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -841,7 +841,7 @@
   },
   {
     "index": "43.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark), S01.jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S01",
     "type": "TV",
     "studio": "J.C.Staff",
@@ -861,7 +861,7 @@
   },
   {
     "index": "44.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark)_ Arrow of the Orion.jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon?: Arrow of the Orion",
     "type": "Movie",
     "studio": "J.C.Staff",
@@ -881,7 +881,7 @@
   },
   {
     "index": "45.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark)_ Is It Wrong to Expect a Hot Spring in a Dungeon (question mark).jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon?: Is It Wrong to Expect a Hot Spring in a Dungeon?",
     "type": "OVA",
     "studio": "J.C.Staff",
@@ -901,7 +901,7 @@
   },
   {
     "index": "46.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark) II_ Is It Wrong to go Searching for Herbs on a Deserted Island (question mark).jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon? II: Is It Wrong to go Searching for Herbs on a Deserted Island?",
     "type": "OVA",
     "studio": "J.C.Staff",
@@ -921,7 +921,7 @@
   },
   {
     "index": "47.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark), S02.jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S02",
     "type": "TV",
     "studio": "J.C.Staff",
@@ -941,7 +941,7 @@
   },
   {
     "index": "48.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark), S03.jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S03",
     "type": "TV",
     "studio": "J.C.Staff",
@@ -961,7 +961,7 @@
   },
   {
     "index": "49.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark), S04 Part 1.jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S04 Part 1",
     "type": "TV",
     "studio": "J.C.Staff",
@@ -981,7 +981,7 @@
   },
   {
     "index": "50.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Violet Evergarden.jpg",
     "name": "Violet Evergarden",
     "type": "TV",
     "studio": "Kyoto Animation",
@@ -1001,7 +1001,7 @@
   },
   {
     "index": "51.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Violet Evergarden_ The Day You Understand 'I Love You' Will Surely Come.jpg",
     "name": "Violet Evergarden: The Day You Understand \"I Love You\" Will Surely Come",
     "type": "Special",
     "studio": "Kyoto Animation",
@@ -1021,7 +1021,7 @@
   },
   {
     "index": "52.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Violet Evergarden_ Eternity and the Auto Memory Doll.jpg",
     "name": "Violet Evergarden: Eternity and the Auto Memory Doll",
     "type": "Movie",
     "studio": "Kyoto Animation",
@@ -1041,7 +1041,7 @@
   },
   {
     "index": "53.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Another_ The Other.jpg",
     "name": "Another: The Other",
     "type": "OVA",
     "studio": "P.A. Works",
@@ -1061,7 +1061,7 @@
   },
   {
     "index": "54.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sword Art Online, S02.jpg",
     "name": "Sword Art Online, S02",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -1081,7 +1081,7 @@
   },
   {
     "index": "55.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sword Art Online the Movie_ Ordinal Scale.jpg",
     "name": "Sword Art Online the Movie: Ordinal Scale",
     "type": "Movie",
     "studio": "A-1 Pictures",
@@ -1101,7 +1101,7 @@
   },
   {
     "index": "56.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sword Art Online_ Alicization.jpg",
     "name": "Sword Art Online: Alicization",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -1121,7 +1121,7 @@
   },
   {
     "index": "57.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sword Art Online_ Alicization - War of Underworld, Part 1.jpg",
     "name": "Sword Art Online: Alicization - War of Underworld, Part 1",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -1141,7 +1141,7 @@
   },
   {
     "index": "58.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sword Art Online the Movie_ Progressive - Aria of a Starless Night.jpg",
     "name": "Sword Art Online the Movie: Progressive - Aria of a Starless Night",
     "type": "Movie",
     "studio": "A-1 Pictures",
@@ -1161,7 +1161,7 @@
   },
   {
     "index": "59.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sword Art Online Alternative_ Gun Gale Online, S01.jpg",
     "name": "Sword Art Online Alternative: Gun Gale Online, S01",
     "type": "TV",
     "studio": "Studio 3Hz",
@@ -1181,7 +1181,7 @@
   },
   {
     "index": "60.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_stay night [Unlimited Blade Works] - Prologue.jpg",
     "name": "Fate/stay night [Unlimited Blade Works] - Prologue",
     "type": "TV Special",
     "studio": "ufotable",
@@ -1201,7 +1201,7 @@
   },
   {
     "index": "61.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_stay night [Unlimited Blade Works], S01.jpg",
     "name": "Fate/stay night [Unlimited Blade Works], S01",
     "type": "TV",
     "studio": "ufotable",
@@ -1221,7 +1221,7 @@
   },
   {
     "index": "62.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_stay night_ Heaven's Feel - II. Lost Butterfly.jpg",
     "name": "Fate/stay night: Heaven's Feel - II. Lost Butterfly",
     "type": "Movie",
     "studio": "ufotable",
@@ -1241,7 +1241,7 @@
   },
   {
     "index": "63.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_Zero, S01.jpg",
     "name": "Fate/Zero, S01",
     "type": "TV",
     "studio": "ufotable",
@@ -1261,7 +1261,7 @@
   },
   {
     "index": "64.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_Zero, S02.jpg",
     "name": "Fate/Zero, S02",
     "type": "TV",
     "studio": "ufotable",
@@ -1281,7 +1281,7 @@
   },
   {
     "index": "65.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_Grand Order_ First Order.jpg",
     "name": "Fate/Grand Order: First Order",
     "type": "TV Special",
     "studio": "Lay-duce",
@@ -1301,7 +1301,7 @@
   },
   {
     "index": "66.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_Grand Order_ Divine Realm of the Round Table 1 - Camelot Wandering; Agateram.jpg",
     "name": "Fate/Grand Order: Divine Realm of the Round Table 1 - Camelot Wandering; Agateram",
     "type": "Movie",
     "studio": "Signal.MD",
@@ -1321,7 +1321,7 @@
   },
   {
     "index": "67.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_Grand Order_ Divine Realm of the Round Table 2 - Camelot Paladin; Agateram.jpg",
     "name": "Fate/Grand Order: Divine Realm of the Round Table 2 - Camelot Paladin; Agateram",
     "type": "Movie",
     "studio": "Production I.G",
@@ -1341,7 +1341,7 @@
   },
   {
     "index": "68.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_Grand Order_ Absolute Demonic Front - Babylonia.jpg",
     "name": "Fate/Grand Order: Absolute Demonic Front - Babylonia",
     "type": "TV",
     "studio": "CloverWorks",
@@ -1361,7 +1361,7 @@
   },
   {
     "index": "69.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_Grand Order_ Absolute Demonic Front - Babylonia Initium Iter.jpg",
     "name": "Fate/Grand Order: Absolute Demonic Front - Babylonia Initium Iter",
     "type": "Special",
     "studio": "CloverWorks",
@@ -1381,7 +1381,7 @@
   },
   {
     "index": "70.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_Grand Order_ Moonlight_Lostroom.jpg",
     "name": "Fate/Grand Order: Moonlight/Lostroom",
     "type": "TV Special",
     "studio": "Lay-duce",
@@ -1401,7 +1401,7 @@
   },
   {
     "index": "71.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Garden of Sinners Chapter 1_ Overlooking View.jpg",
     "name": "The Garden of Sinners Chapter 1: Overlooking View",
     "type": "Movie",
     "studio": "ufotable",
@@ -1421,7 +1421,7 @@
   },
   {
     "index": "72.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Garden of Sinners Chapter 2_ A Study in Murder - Part 1.jpg",
     "name": "The Garden of Sinners Chapter 2: A Study in Murder - Part 1",
     "type": "Movie",
     "studio": "ufotable",
@@ -1441,7 +1441,7 @@
   },
   {
     "index": "73.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Garden of Sinners Chapter 3_ Remaining Sense of Pain.jpg",
     "name": "The Garden of Sinners Chapter 3: Remaining Sense of Pain",
     "type": "Movie",
     "studio": "ufotable",
@@ -1461,7 +1461,7 @@
   },
   {
     "index": "74.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Garden of Sinners Chapter 4_ The Hollow Shrine.jpg",
     "name": "The Garden of Sinners Chapter 4: The Hollow Shrine",
     "type": "Movie",
     "studio": "ufotable",
@@ -1481,7 +1481,7 @@
   },
   {
     "index": "75.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Garden of Sinners Chapter 5_ Paradox Spiral.jpg",
     "name": "The Garden of Sinners Chapter 5: Paradox Spiral",
     "type": "Movie",
     "studio": "ufotable",
@@ -1501,7 +1501,7 @@
   },
   {
     "index": "76.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Garden of Sinners (Ch. 1 - 6) - Remix_ Gate of Seventh Heaven.jpg",
     "name": "The Garden of Sinners (Ch. 1 - 6) - Remix: Gate of Seventh Heaven",
     "type": "Movie",
     "studio": "ufotable",
@@ -1521,7 +1521,7 @@
   },
   {
     "index": "77.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Garden of Sinners Chapter 6_ Oblivion Recording.jpg",
     "name": "The Garden of Sinners Chapter 6: Oblivion Recording",
     "type": "Movie",
     "studio": "ufotable",
@@ -1541,7 +1541,7 @@
   },
   {
     "index": "78.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Garden of Sinners Chapter 7_ A Study in Murder - Part 2.jpg",
     "name": "The Garden of Sinners Chapter 7: A Study in Murder - Part 2",
     "type": "Movie",
     "studio": "ufotable",
@@ -1561,7 +1561,7 @@
   },
   {
     "index": "79.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Garden of Sinners Chapter 8_ Epilogue.jpg",
     "name": "The Garden of Sinners Chapter 8: Epilogue",
     "type": "OVA",
     "studio": "ufotable",
@@ -1581,7 +1581,7 @@
   },
   {
     "index": "80.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Garden of Sinners_ Future Gospel.jpg",
     "name": "The Garden of Sinners: Future Gospel",
     "type": "Movie",
     "studio": "ufotable",
@@ -1601,7 +1601,7 @@
   },
   {
     "index": "81.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Code Geass_ Lelouch of the Rebellion R1.jpg",
     "name": "Code Geass: Lelouch of the Rebellion R1",
     "type": "TV",
     "studio": "Sunrise",
@@ -1621,7 +1621,7 @@
   },
   {
     "index": "82.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Code Geass_ Akito the Exiled 1 - The Wyvern Arrives.jpg",
     "name": "Code Geass: Akito the Exiled 1 - The Wyvern Arrives",
     "type": "Movie",
     "studio": "Sunrise",
@@ -1641,7 +1641,7 @@
   },
   {
     "index": "83.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Code Geass_ Akito the Exiled 2 - The Wyvern Divided.jpg",
     "name": "Code Geass: Akito the Exiled 2 - The Wyvern Divided",
     "type": "Movie",
     "studio": "Sunrise",
@@ -1661,7 +1661,7 @@
   },
   {
     "index": "84.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Code Geass_ Akito the Exiled 3 - The Brightness Falls.jpg",
     "name": "Code Geass: Akito the Exiled 3 - The Brightness Falls",
     "type": "Movie",
     "studio": "Sunrise",
@@ -1681,7 +1681,7 @@
   },
   {
     "index": "85.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Code Geass_ Akito the Exiled 4 - Memories of Hatred.jpg",
     "name": "Code Geass: Akito the Exiled 4 - Memories of Hatred",
     "type": "Movie",
     "studio": "Sunrise",
@@ -1701,7 +1701,7 @@
   },
   {
     "index": "86.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Code Geass_ Akito the Exiled 5 - To Beloved Ones.jpg",
     "name": "Code Geass: Akito the Exiled 5 - To Beloved Ones",
     "type": "Movie",
     "studio": "Sunrise",
@@ -1721,7 +1721,7 @@
   },
   {
     "index": "87.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Solo Leveling, S01.jpg",
     "name": "Solo Leveling, S01",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -1741,7 +1741,7 @@
   },
   {
     "index": "88.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Attack on Titan OAD.jpg",
     "name": "Attack on Titan OAD",
     "type": "OVA",
     "studio": "Wit Studio",
@@ -1761,7 +1761,7 @@
   },
   {
     "index": "89.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Attack on Titan, S01.jpg",
     "name": "Attack on Titan, S01",
     "type": "TV",
     "studio": "Wit Studio",
@@ -1781,7 +1781,7 @@
   },
   {
     "index": "90.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Attack on Titan, S02.jpg",
     "name": "Attack on Titan, S02",
     "type": "TV",
     "studio": "Wit Studio",
@@ -1801,7 +1801,7 @@
   },
   {
     "index": "91.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Attack on Titan_ Lost Girls.jpg",
     "name": "Attack on Titan: Lost Girls",
     "type": "OVA",
     "studio": "Wit Studio",
@@ -1821,7 +1821,7 @@
   },
   {
     "index": "92.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Attack on Titan_ No Regrets.jpg",
     "name": "Attack on Titan: No Regrets",
     "type": "OVA",
     "studio": "Wit Studio",
@@ -1841,7 +1841,7 @@
   },
   {
     "index": "93.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Attack on Titan, S03 Part 1.jpg",
     "name": "Attack on Titan, S03 Part 1",
     "type": "TV",
     "studio": "Wit Studio",
@@ -1861,7 +1861,7 @@
   },
   {
     "index": "94.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Attack on Titan, S03 Part 2.jpg",
     "name": "Attack on Titan, S03 Part 2",
     "type": "TV",
     "studio": "Wit Studio",
@@ -1881,7 +1881,7 @@
   },
   {
     "index": "95.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Attack on Titan_ Final Season Part 1.jpg",
     "name": "Attack on Titan: Final Season Part 1",
     "type": "TV",
     "studio": "MAPPA",
@@ -1901,7 +1901,7 @@
   },
   {
     "index": "96.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Attack on Titan_ Final Season Part 2.jpg",
     "name": "Attack on Titan: Final Season Part 2",
     "type": "TV",
     "studio": "MAPPA",
@@ -1921,7 +1921,7 @@
   },
   {
     "index": "97.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Neon Genesis Evangelion.jpg",
     "name": "Neon Genesis Evangelion",
     "type": "TV",
     "studio": "Gainax; Tatsunoko Production",
@@ -1941,7 +1941,7 @@
   },
   {
     "index": "98.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Evangelion_ 1.0 You Are (Not) Alone.jpg",
     "name": "Evangelion: 1.0 You Are (Not) Alone",
     "type": "Movie",
     "studio": "Khara",
@@ -1961,7 +1961,7 @@
   },
   {
     "index": "99.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Evangelion_ 2.0 You Can (Not) Advance.jpg",
     "name": "Evangelion: 2.0 You Can (Not) Advance",
     "type": "Movie",
     "studio": "Khara",
@@ -1981,7 +1981,7 @@
   },
   {
     "index": "100.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Evangelion_ 3.0 You Can (Not) Redo.jpg",
     "name": "Evangelion: 3.0 You Can (Not) Redo",
     "type": "Movie",
     "studio": "Khara",
@@ -2001,7 +2001,7 @@
   },
   {
     "index": "101.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Shangri-La Frontier, S01.jpg",
     "name": "Shangri-La Frontier, S01",
     "type": "TV",
     "studio": "C2C",
@@ -2021,7 +2021,7 @@
   },
   {
     "index": "102.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Made in Abyss.jpg",
     "name": "Made in Abyss",
     "type": "TV",
     "studio": "Kinema Citrus",
@@ -2041,7 +2041,7 @@
   },
   {
     "index": "103.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Made in Abyss_ Dawn of the Deep Soul.jpg",
     "name": "Made in Abyss: Dawn of the Deep Soul",
     "type": "Movie",
     "studio": "Kinema Citrus",
@@ -2061,7 +2061,7 @@
   },
   {
     "index": "104.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Promised Neverland, S01.jpg",
     "name": "The Promised Neverland, S01",
     "type": "TV",
     "studio": "CloverWorks",
@@ -2081,7 +2081,7 @@
   },
   {
     "index": "105.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Goblin Slayer, S01.jpg",
     "name": "Goblin Slayer, S01",
     "type": "TV",
     "studio": "White Fox",
@@ -2101,7 +2101,7 @@
   },
   {
     "index": "106.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Goblin Slayer_ Goblin's Crown.jpg",
     "name": "Goblin Slayer: Goblin's Crown",
     "type": "Movie",
     "studio": "White Fox",
@@ -2121,7 +2121,7 @@
   },
   {
     "index": "107.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Your Lie in April_ Moments.jpg",
     "name": "Your Lie in April: Moments",
     "type": "OVA",
     "studio": "A-1 Pictures",
@@ -2141,7 +2141,7 @@
   },
   {
     "index": "108.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Angel Beats! Specials.jpg",
     "name": "Angel Beats! Specials",
     "type": "Special",
     "studio": "P.A. Works",
@@ -2161,7 +2161,7 @@
   },
   {
     "index": "109.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Angel Beats! Another Epilogue.jpg",
     "name": "Angel Beats! Another Epilogue",
     "type": "Special",
     "studio": "P.A. Works",
@@ -2181,7 +2181,7 @@
   },
   {
     "index": "110.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Orange.jpg",
     "name": "Orange",
     "type": "TV",
     "studio": "Telecom Animation Film",
@@ -2201,7 +2201,7 @@
   },
   {
     "index": "111.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Noragami.jpg",
     "name": "Noragami",
     "type": "TV",
     "studio": "Bones",
@@ -2221,7 +2221,7 @@
   },
   {
     "index": "112.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Noragami Aragoto OVA.jpg",
     "name": "Noragami Aragoto OVA",
     "type": "OVA",
     "studio": "Bones",
@@ -2241,7 +2241,7 @@
   },
   {
     "index": "113.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Noragami OVA.jpg",
     "name": "Noragami OVA",
     "type": "OVA",
     "studio": "Bones",
@@ -2261,7 +2261,7 @@
   },
   {
     "index": "114.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Death Billiards.jpg",
     "name": "Death Billiards",
     "type": "Movie",
     "studio": "Madhouse",
@@ -2281,7 +2281,7 @@
   },
   {
     "index": "115.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Spy x Family, S01 Part 2.jpg",
     "name": "Spy x Family, S01 Part 2",
     "type": "TV",
     "studio": "Wit Studio; CloverWorks",
@@ -2301,7 +2301,7 @@
   },
   {
     "index": "116.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Spy x Family, S02.jpg",
     "name": "Spy x Family, S02",
     "type": "TV",
     "studio": "Wit Studio; CloverWorks",
@@ -2321,7 +2321,7 @@
   },
   {
     "index": "117.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Spy x Family Code_ White.jpg",
     "name": "Spy x Family Code: White",
     "type": "Movie",
     "studio": "Wit Studio; CloverWorks",
@@ -2341,7 +2341,7 @@
   },
   {
     "index": "118.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Lord El-Melloi II's Case Files_ Rail Zeppelin Grace Note - A Grave Keeper, a Cat, and a Mage.jpg",
     "name": "Lord El-Melloi II's Case Files: Rail Zeppelin Grace Note - A Grave Keeper, a Cat, and a Mage",
     "type": "TV Special",
     "studio": "TROYCA",
@@ -2361,7 +2361,7 @@
   },
   {
     "index": "119.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Elfen Lied_ In the Passing Rain, or, How Can a Girl Have Reached Such Feelings (question mark).jpg",
     "name": "Elfen Lied: In the Passing Rain, or, How Can a Girl Have Reached Such Feelings?",
     "type": "Special",
     "studio": "Arms",
@@ -2381,7 +2381,7 @@
   },
   {
     "index": "120.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Call of the Night, S01.jpg",
     "name": "Call of the Night, S01",
     "type": "TV",
     "studio": "LIDENFILMS",
@@ -2401,7 +2401,7 @@
   },
   {
     "index": "121.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Rising of the Shield Hero, S01.jpg",
     "name": "The Rising of the Shield Hero, S01",
     "type": "TV",
     "studio": "Kinema Citrus",
@@ -2421,7 +2421,7 @@
   },
   {
     "index": "122.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Rising of the Shield hero, S02.jpg",
     "name": "The Rising of the Shield Hero, S02",
     "type": "TV",
     "studio": "Kinema Citrus; DR Movie",
@@ -2441,7 +2441,7 @@
   },
   {
     "index": "123.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Rising of the Shield Hero, S03.jpg",
     "name": "The Rising of the Shield Hero, S03",
     "type": "TV",
     "studio": "Kinema Citrus",
@@ -2461,7 +2461,7 @@
   },
   {
     "index": "124.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Rascal Does Not Dream of Bunny Girl Senpai.jpg",
     "name": "Rascal Does Not Dream of Bunny Girl Senpai",
     "type": "TV",
     "studio": "CloverWorks",
@@ -2481,7 +2481,7 @@
   },
   {
     "index": "125.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Rascal Does Not Dream of a Dreaming Girl.jpg",
     "name": "Rascal Does Not Dream of a Dreaming Girl",
     "type": "Movie",
     "studio": "CloverWorks",
@@ -2501,7 +2501,7 @@
   },
   {
     "index": "126.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Rascal Does Not Dream of a Knapsack Kid.jpg",
     "name": "Rascal Does Not Dream of a Knapsack Kid",
     "type": "Movie",
     "studio": "CloverWorks",
@@ -2521,7 +2521,7 @@
   },
   {
     "index": "127.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Rascal Does Not Dream of a Sister Venturing Out.jpg",
     "name": "Rascal Does Not Dream of a Sister Venturing Out",
     "type": "Movie",
     "studio": "CloverWorks",
@@ -2541,7 +2541,7 @@
   },
   {
     "index": "128.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Black Butler, S01.jpg",
     "name": "Black Butler, S01",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -2561,7 +2561,7 @@
   },
   {
     "index": "129.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Black Butler, S01 Special.jpg",
     "name": "Black Butler, S01 Special",
     "type": "Special",
     "studio": "A-1 Pictures",
@@ -2581,7 +2581,7 @@
   },
   {
     "index": "130.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Black Butler, S02 Specials.jpg",
     "name": "Black Butler, S02 Specials",
     "type": "Special",
     "studio": "A-1 Pictures",
@@ -2601,7 +2601,7 @@
   },
   {
     "index": "131.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Black Butler_ Book of Circus.jpg",
     "name": "Black Butler: Book of Circus",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -2621,7 +2621,7 @@
   },
   {
     "index": "132.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Black Butler_ Book of Murder.jpg",
     "name": "Black Butler: Book of Murder",
     "type": "OVA",
     "studio": "A-1 Pictures",
@@ -2641,7 +2641,7 @@
   },
   {
     "index": "133.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Black Butler_ Book of the Atlantic.jpg",
     "name": "Black Butler: Book of the Atlantic",
     "type": "Movie",
     "studio": "A-1 Pictures",
@@ -2661,7 +2661,7 @@
   },
   {
     "index": "134.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Black Butler_ Public School Arc.jpg",
     "name": "Black Butler: Public School Arc",
     "type": "TV",
     "studio": "CloverWorks",
@@ -2681,7 +2681,7 @@
   },
   {
     "index": "135.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Kaiju No.8_ Hoshina's Day Off.jpg",
     "name": "Kaiju No.8: Hoshina's Day Off",
     "type": "Special",
     "studio": "Production I.G",
@@ -2701,7 +2701,7 @@
   },
   {
     "index": "136.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Steins;Gate 0_ Valentine's of Crystal Polymorphism -Bittersweet Intermedio-.jpg",
     "name": "Steins;Gate 0: Valentine's of Crystal Polymorphism -Bittersweet Intermedio-",
     "type": "Special",
     "studio": "White Fox",
@@ -2721,7 +2721,7 @@
   },
   {
     "index": "137.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Steins;Gate_ The Sagacious Wisdom of Cognitive Computing.jpg",
     "name": "Steins;Gate: The Sagacious Wisdom of Cognitive Computing",
     "type": "ONA",
     "studio": "White Fox",
@@ -2741,7 +2741,7 @@
   },
   {
     "index": "138.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Steins;Gate_ Egoistic Poriomania.jpg",
     "name": "Steins;Gate: Egoistic Poriomania",
     "type": "Special",
     "studio": "White Fox",
@@ -2761,7 +2761,7 @@
   },
   {
     "index": "139.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fullmetal Alchemist_ The Sacred Star of Milos.jpg",
     "name": "Fullmetal Alchemist: The Sacred Star of Milos",
     "type": "Movie",
     "studio": "Bones",
@@ -2781,7 +2781,7 @@
   },
   {
     "index": "140.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fullmetal Alchemist_ Brotherhood OVA Collection.jpg",
     "name": "Fullmetal Alchemist: Brotherhood OVA Collection",
     "type": "Special",
     "studio": "Bones",
@@ -2801,7 +2801,7 @@
   },
   {
     "index": "141.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Puella Magi Madoka Magica.jpg",
     "name": "Puella Magi Madoka Magica",
     "type": "TV",
     "studio": "Shaft",
@@ -2821,7 +2821,7 @@
   },
   {
     "index": "142.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Magia Record_ Puella Magi Madoka Magica Side Story, S01.jpg",
     "name": "Magia Record: Puella Magi Madoka Magica Side Story, S01",
     "type": "TV",
     "studio": "Shaft",
@@ -2841,7 +2841,7 @@
   },
   {
     "index": "143.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Magia Record_ Puella Magi Madoka Magica Side Story, S02 - The Eve of Awakening.jpg",
     "name": "Magia Record: Puella Magi Madoka Magica Side Story, S02 - The Eve of Awakening",
     "type": "TV",
     "studio": "Shaft",
@@ -2861,7 +2861,7 @@
   },
   {
     "index": "144.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Higurashi_ When They Cry.jpg",
     "name": "Higurashi: When They Cry",
     "type": "TV",
     "studio": "Studio Deen",
@@ -2881,7 +2881,7 @@
   },
   {
     "index": "145.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Higurashi_ When They Cry - Cat Killing Chapter.jpg",
     "name": "Higurashi: When They Cry – Cat Killing Chapter",
     "type": "Special",
     "studio": "Studio Deen",
@@ -2901,7 +2901,7 @@
   },
   {
     "index": "146.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Higurashi_ When They Cry – Kai.jpg",
     "name": "Higurashi: When They Cry – Kai",
     "type": "TV",
     "studio": "Studio Deen",
@@ -2921,7 +2921,7 @@
   },
   {
     "index": "147.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Higurashi_ When They Cry – Kira.jpg",
     "name": "Higurashi: When They Cry – Kira",
     "type": "OVA",
     "studio": "Studio Deen",
@@ -2941,7 +2941,7 @@
   },
   {
     "index": "148.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Higurashi_ When They Cry – Outbreak.jpg",
     "name": "Higurashi: When They Cry – Outbreak",
     "type": "OVA",
     "studio": "Studio Deen",
@@ -2961,7 +2961,7 @@
   },
   {
     "index": "149.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Higurashi_ When They Cry – Gou.jpg",
     "name": "Higurashi: When They Cry – Gou",
     "type": "TV",
     "studio": "Passione",
@@ -2981,7 +2981,7 @@
   },
   {
     "index": "150.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Future Diary.jpg",
     "name": "The Future Diary",
     "type": "TV",
     "studio": "asread.",
@@ -3001,7 +3001,7 @@
   },
   {
     "index": "151.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Shiki Specials.jpg",
     "name": "Shiki Specials",
     "type": "Special",
     "studio": "Daume",
@@ -3021,7 +3021,7 @@
   },
   {
     "index": "152.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Bakemonogatari.jpg",
     "name": "Bakemonogatari",
     "type": "TV",
     "studio": "Shaft",
@@ -3041,7 +3041,7 @@
   },
   {
     "index": "153.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Kizumonogatari Part 1_ Iron-Blooded.jpg",
     "name": "Kizumonogatari Part 1: Iron-Blooded",
     "type": "Movie",
     "studio": "Shaft",
@@ -3061,7 +3061,7 @@
   },
   {
     "index": "154.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Kizumonogatari Part 2_ Hot-Blooded.jpg",
     "name": "Kizumonogatari Part 2: Hot-Blooded",
     "type": "Movie",
     "studio": "Shaft",
@@ -3081,7 +3081,7 @@
   },
   {
     "index": "155.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Kizumonogatari Part 3_ Cold-Blooded.jpg",
     "name": "Kizumonogatari Part 3: Cold-Blooded",
     "type": "Movie",
     "studio": "Shaft",
@@ -3101,7 +3101,7 @@
   },
   {
     "index": "156.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Nisemonogatari.jpg",
     "name": "Nisemonogatari",
     "type": "TV",
     "studio": "Shaft",
@@ -3121,7 +3121,7 @@
   },
   {
     "index": "157.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Nekomonogatari Black.jpg",
     "name": "Nekomonogatari Black",
     "type": "TV Special",
     "studio": "Shaft",
@@ -3141,7 +3141,7 @@
   },
   {
     "index": "158.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Monogatari Series_ Second Season.jpg",
     "name": "Monogatari Series: Second Season",
     "type": "TV",
     "studio": "Shaft",
@@ -3161,7 +3161,7 @@
   },
   {
     "index": "159.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Hanamonogatari.jpg",
     "name": "Hanamonogatari",
     "type": "TV Special",
     "studio": "Shaft",
@@ -3181,7 +3181,7 @@
   },
   {
     "index": "160.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Tsukimonogatari.jpg",
     "name": "Tsukimonogatari",
     "type": "TV Special",
     "studio": "Shaft",
@@ -3201,7 +3201,7 @@
   },
   {
     "index": "161.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Koyomimonogatari.jpg",
     "name": "Koyomimonogatari",
     "type": "ONA",
     "studio": "Shaft",
@@ -3221,7 +3221,7 @@
   },
   {
     "index": "162.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Owarimonogatari, S01.jpg",
     "name": "Owarimonogatari, S01",
     "type": "TV",
     "studio": "Shaft",
@@ -3241,7 +3241,7 @@
   },
   {
     "index": "163.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Owarimonogatari, S02.jpg",
     "name": "Owarimonogatari, S02",
     "type": "TV Special",
     "studio": "Shaft",
@@ -3261,7 +3261,7 @@
   },
   {
     "index": "164.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Zoku Owarimonogatari.jpg",
     "name": "Zoku Owarimonogatari",
     "type": "TV",
     "studio": "Shaft",
@@ -3281,7 +3281,7 @@
   },
   {
     "index": "165.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Monogatari Series_ Off & Monster Season - A Cruel Fairy Tale_ The Beautiful Princess.jpg",
     "name": "Monogatari Series: Off & Monster Season - A Cruel Fairy Tale: The Beautiful Princess",
     "type": "ONA",
     "studio": "Shaft",
@@ -3301,7 +3301,7 @@
   },
   {
     "index": "166.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Melancholy of Haruhi Suzumiya, S02.jpg",
     "name": "The Melancholy of Haruhi Suzumiya, S02",
     "type": "TV",
     "studio": "Kyoto Animation",
@@ -3321,7 +3321,7 @@
   },
   {
     "index": "167.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Apothecary Diaries, S01.jpg",
     "name": "The Apothecary Diaries, S01",
     "type": "TV",
     "studio": "OLM; TOHO animation STUDIO",
@@ -3341,7 +3341,7 @@
   },
   {
     "index": "168.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Tower of God, S01.jpg",
     "name": "Tower of God, S01",
     "type": "TV",
     "studio": "Telecom Animation Film",
@@ -3361,7 +3361,7 @@
   },
   {
     "index": "169.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Tower of God, S02_ Return of the Prince.jpg",
     "name": "Tower of God, S02: Return of the Prince",
     "type": "TV",
     "studio": "The Answer Studio",
@@ -3381,7 +3381,7 @@
   },
   {
     "index": "170.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/I've Been Killing Slimes for 300 Years and Maxed Out My Level, S01.jpg",
     "name": "I've Been Killing Slimes for 300 Years and Maxed Out My Level, S01",
     "type": "TV",
     "studio": "Revoroot",
@@ -3401,7 +3401,7 @@
   },
   {
     "index": "171.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Tsukimichi -Moonlit Fantasy-, S01.jpg",
     "name": "Tsukimichi -Moonlit Fantasy-, S01",
     "type": "TV",
     "studio": "C2C",
@@ -3421,7 +3421,7 @@
   },
   {
     "index": "172.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Ascendance of a Bookworm, S01.jpg",
     "name": "Ascendance of a Bookworm, S01",
     "type": "TV",
     "studio": "Ajia-do",
@@ -3441,7 +3441,7 @@
   },
   {
     "index": "173.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Ascendance of a Bookworm_ Side Story.jpg",
     "name": "Ascendance of a Bookworm: Side Story",
     "type": "OVA",
     "studio": "Ajia-do",
@@ -3461,7 +3461,7 @@
   },
   {
     "index": "174.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Ascendance of a Bookworm, S02.jpg",
     "name": "Ascendance of a Bookworm, S02",
     "type": "TV",
     "studio": "Ajia-do",
@@ -3481,7 +3481,7 @@
   },
   {
     "index": "175.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/GATE, S01 Part 1.jpg",
     "name": "GATE, S01 Part 1",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -3501,7 +3501,7 @@
   },
   {
     "index": "176.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/I'm Standing on a Million Lives, S01.jpg",
     "name": "I'm Standing on a Million Lives, S01",
     "type": "TV",
     "studio": "Maho Film",
@@ -3521,7 +3521,7 @@
   },
   {
     "index": "177.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Arifureta_ From Commonplace to World's Strongest - Prologue.jpg",
     "name": "Arifureta: From Commonplace to World's Strongest - Prologue",
     "type": "ONA",
     "studio": "asread.; White Fox",
@@ -3541,7 +3541,7 @@
   },
   {
     "index": "178.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Arifureta_ From Commonplace to World's Strongest, S01.jpg",
     "name": "Arifureta: From Commonplace to World's Strongest, S01",
     "type": "TV",
     "studio": "asread.; White Fox",
@@ -3561,7 +3561,7 @@
   },
   {
     "index": "179.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Arifureta_ From Commonplace to World's Strongest Specials.jpg",
     "name": "Arifureta: From Commonplace to World's Strongest Specials",
     "type": "Special",
     "studio": "asread.; White Fox",
@@ -3581,7 +3581,7 @@
   },
   {
     "index": "180.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Arifureta_ From a Detour to the World's Strongest.jpg",
     "name": "Arifureta: From a Detour to the World's Strongest",
     "type": "Special",
     "studio": "asread.; studio MOTHER",
@@ -3601,7 +3601,7 @@
   },
   {
     "index": "181.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Arifureta_ From Commonplace to World's Strongest, S02.jpg",
     "name": "Arifureta: From Commonplace to World's Strongest, S02",
     "type": "TV",
     "studio": "asread.; studio MOTHER",
@@ -3621,7 +3621,7 @@
   },
   {
     "index": "182.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Arifureta_ Phantom Adventure and Miraculous Encounter.jpg",
     "name": "Arifureta: Phantom Adventure and Miraculous Encounter",
     "type": "OVA",
     "studio": "asread.; studio MOTHER",
@@ -3641,7 +3641,7 @@
   },
   {
     "index": "183.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Grimgar_ Staking Our Youths on the Bath Wall - One More Centimeter.jpg",
     "name": "Grimgar: Staking Our Youths on the Bath Wall - One More Centimeter",
     "type": "Special",
     "studio": "A-1 Pictures",
@@ -3661,7 +3661,7 @@
   },
   {
     "index": "184.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Saga of Tanya the Evil, S01.jpg",
     "name": "Saga of Tanya the Evil, S01",
     "type": "TV",
     "studio": "Nut",
@@ -3681,7 +3681,7 @@
   },
   {
     "index": "185.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Saga of Tanya the Evil_ Operation Desert Pasta.jpg",
     "name": "Saga of Tanya the Evil: Operation Desert Pasta",
     "type": "ONA",
     "studio": "Nut",
@@ -3701,7 +3701,7 @@
   },
   {
     "index": "186.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Log Horizon, S01.jpg",
     "name": "Log Horizon, S01",
     "type": "TV",
     "studio": "Satelight",
@@ -3721,7 +3721,7 @@
   },
   {
     "index": "187.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Log Horizon, S02.jpg",
     "name": "Log Horizon, S02",
     "type": "TV",
     "studio": "Studio Deen",
@@ -3741,7 +3741,7 @@
   },
   {
     "index": "188.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Chainsaw Man_ The Compilation.jpg",
     "name": "Chainsaw Man: The Compilation",
     "type": "ONA",
     "studio": "MAPPA",
@@ -3761,7 +3761,7 @@
   },
   {
     "index": "189.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Another World.jpg",
     "name": "Another World",
     "type": "ONA",
     "studio": "Graphinica",
@@ -3781,7 +3781,7 @@
   },
   {
     "index": "190.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sound of the Sky.jpg",
     "name": "Sound of the Sky",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -3801,7 +3801,7 @@
   },
   {
     "index": "191.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Kabaneri of the Iron Fortress.jpg",
     "name": "Kabaneri of the Iron Fortress",
     "type": "TV",
     "studio": "Wit Studio",
@@ -3821,7 +3821,7 @@
   },
   {
     "index": "192.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Demon Slayer.jpg",
     "name": "Demon Slayer",
     "type": "TV",
     "studio": "ufotable",
@@ -3841,7 +3841,7 @@
   },
   {
     "index": "193.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Demon Slayer_ Mugen Train Arc.jpg",
     "name": "Demon Slayer: Mugen Train Arc",
     "type": "TV",
     "studio": "ufotable",
@@ -3861,7 +3861,7 @@
   },
   {
     "index": "194.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Demon Slayer_ Entertainment District Arc.jpg",
     "name": "Demon Slayer: Entertainment District Arc",
     "type": "TV",
     "studio": "ufotable",
@@ -3881,7 +3881,7 @@
   },
   {
     "index": "195.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Demon Slayer_ Swordsmith Village Arc.jpg",
     "name": "Demon Slayer: Swordsmith Village Arc",
     "type": "TV",
     "studio": "ufotable",
@@ -3901,7 +3901,7 @@
   },
   {
     "index": "196.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Demon Slayer_ Hashira Training Arc.jpg",
     "name": "Demon Slayer: Hashira Training Arc",
     "type": "TV",
     "studio": "ufotable",
@@ -3921,7 +3921,7 @@
   },
   {
     "index": "197.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Vinland Saga, S01.jpg",
     "name": "Vinland Saga, S01",
     "type": "TV",
     "studio": "Wit Studio",
@@ -3941,7 +3941,7 @@
   },
   {
     "index": "198.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Vinland Saga, S02_ Drowning in the Shadow.jpg",
     "name": "Vinland Saga, S02: Drowning in the Shadow",
     "type": "ONA",
     "studio": "MAPPA",
@@ -3961,7 +3961,7 @@
   },
   {
     "index": "199.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Vinland Saga, S02_ Same Old Story.jpg",
     "name": "Vinland Saga, S02: Same Old Story",
     "type": "ONA",
     "studio": "MAPPA",
@@ -3981,7 +3981,7 @@
   },
   {
     "index": "200.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Himouto! Umaru-chan.jpg",
     "name": "Himouto! Umaru-chan",
     "type": "TV",
     "studio": "Doga Kobo",
@@ -4001,7 +4001,7 @@
   },
   {
     "index": "201.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Himouto! Umaru-chan Specials.jpg",
     "name": "Himouto! Umaru-chan Specials",
     "type": "Special",
     "studio": "Doga Kobo",
@@ -4021,7 +4021,7 @@
   },
   {
     "index": "202.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Himouto! Umaru-chan R.jpg",
     "name": "Himouto! Umaru-chan R",
     "type": "TV",
     "studio": "Doga Kobo",
@@ -4041,7 +4041,7 @@
   },
   {
     "index": "203.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate strange Fake_ Whispers of Dawn.jpg",
     "name": "Fate/strange Fake: Whispers of Dawn",
     "type": "TV Special",
     "studio": "A-1 Pictures",
@@ -4061,7 +4061,7 @@
   },
   {
     "index": "204.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Dorohedoro_ Bonus Curse or Extra Evil.jpg",
     "name": "Dorohedoro: Bonus Curse or Extra Evil",
     "type": "Special",
     "studio": "MAPPA",
@@ -4081,7 +4081,7 @@
   },
   {
     "index": "205.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Hell's Paradise, S01.jpg",
     "name": "Hell's Paradise, S01",
     "type": "TV",
     "studio": "MAPPA",
@@ -4101,7 +4101,7 @@
   },
   {
     "index": "206.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Ancient Magus' Bride, S01.jpg",
     "name": "The Ancient Magus' Bride, S01",
     "type": "TV",
     "studio": "Wit Studio",
@@ -4121,7 +4121,7 @@
   },
   {
     "index": "207.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Ancient Magus' Bride_ Those Awaiting a Star.jpg",
     "name": "The Ancient Magus' Bride: Those Awaiting a Star",
     "type": "OVA",
     "studio": "Wit Studio",
@@ -4141,7 +4141,7 @@
   },
   {
     "index": "208.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Ancient Magus' Bride_ The Boy from the West and the Knight of the Blue Storm.jpg",
     "name": "The Ancient Magus' Bride: The Boy from the West and the Knight of the Blue Storm",
     "type": "OVA",
     "studio": "Studio Kafka",
@@ -4161,7 +4161,7 @@
   },
   {
     "index": "209.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Ancient Magus' Bride, S02 Part 1.jpg",
     "name": "The Ancient Magus' Bride, S02 Part 1",
     "type": "TV",
     "studio": "Studio Kafka",
@@ -4181,7 +4181,7 @@
   },
   {
     "index": "210.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Magi_ The Labyrinth of Magic.jpg",
     "name": "Magi: The Labyrinth of Magic",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -4201,7 +4201,7 @@
   },
   {
     "index": "211.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Magi_ Adventures of Sinbad.jpg",
     "name": "Magi: Adventures of Sinbad",
     "type": "TV",
     "studio": "Lay-duce",
@@ -4221,7 +4221,7 @@
   },
   {
     "index": "212.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Burn the Witch #0.8.jpg",
     "name": "Burn the Witch #0.8",
     "type": "TV Special",
     "studio": "Studio Colorido; team Yamahitsuji",
@@ -4241,7 +4241,7 @@
   },
   {
     "index": "213.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Dead Dead Demons Dededede Destruction Episode 0.jpg",
     "name": "Dead Dead Demons Dededede Destruction Episode 0",
     "type": "ONA",
     "studio": "Production +h.",
@@ -4261,7 +4261,7 @@
   },
   {
     "index": "214.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Psycho-Pass, S01.jpg",
     "name": "Psycho-Pass, S01",
     "type": "TV",
     "studio": "Production I.G",
@@ -4281,7 +4281,7 @@
   },
   {
     "index": "215.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Psycho-Pass, S02.jpg",
     "name": "Psycho-Pass, S02",
     "type": "TV",
     "studio": "Tatsunoko Production",
@@ -4301,7 +4301,7 @@
   },
   {
     "index": "216.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Psycho-Pass_ The Movie.jpg",
     "name": "Psycho-Pass: The Movie",
     "type": "Movie",
     "studio": "Production I.G",
@@ -4321,7 +4321,7 @@
   },
   {
     "index": "217.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Psycho-Pass_ Sinners of the System Case.1 - Crime and Punishment.jpg",
     "name": "Psycho-Pass: Sinners of the System Case.1 - Crime and Punishment",
     "type": "Movie",
     "studio": "Production I.G",
@@ -4341,7 +4341,7 @@
   },
   {
     "index": "218.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Psycho-Pass_ Sinners of the System Case.2 - First Guardian.jpg",
     "name": "Psycho-Pass: Sinners of the System Case.2 - First Guardian",
     "type": "Movie",
     "studio": "Production I.G",
@@ -4361,7 +4361,7 @@
   },
   {
     "index": "219.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Psycho-Pass_ Sinners of the System Case.3 - On the Other Side of Love and Hate.jpg",
     "name": "Psycho-Pass: Sinners of the System Case.3 - On the Other Side of Love and Hate",
     "type": "Movie",
     "studio": "Production I.G",
@@ -4381,7 +4381,7 @@
   },
   {
     "index": "220.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Psycho-Pass, S03.jpg",
     "name": "Psycho-Pass, S03",
     "type": "TV",
     "studio": "Production I.G",
@@ -4401,7 +4401,7 @@
   },
   {
     "index": "221.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Psycho-Pass_ Providence.jpg",
     "name": "Psycho-Pass: Providence",
     "type": "Movie",
     "studio": "Production I.G",
@@ -4421,7 +4421,7 @@
   },
   {
     "index": "222.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Akame ga Kill!.jpg",
     "name": "Akame ga Kill!",
     "type": "TV",
     "studio": "White Fox",
@@ -4441,7 +4441,7 @@
   },
   {
     "index": "223.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/No Game, No Life.jpg",
     "name": "No Game, No Life",
     "type": "TV",
     "studio": "Madhouse",
@@ -4461,7 +4461,7 @@
   },
   {
     "index": "224.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Another.jpg",
     "name": "Another",
     "type": "TV",
     "studio": "P.A. Works",
@@ -4481,7 +4481,7 @@
   },
   {
     "index": "225.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Chivalry of a Failed Knight.jpg",
     "name": "Chivalry of a Failed Knight",
     "type": "TV",
     "studio": "SILVER LINK.; Nexus",
@@ -4501,7 +4501,7 @@
   },
   {
     "index": "226.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Deadman Wonderland.jpg",
     "name": "Deadman Wonderland",
     "type": "TV",
     "studio": "Manglobe",
@@ -4521,7 +4521,7 @@
   },
   {
     "index": "227.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Tomodachi Game.jpg",
     "name": "Tomodachi Game",
     "type": "TV",
     "studio": "Okuruto Noboru",
@@ -4541,7 +4541,7 @@
   },
   {
     "index": "228.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Lord El-Melloi II's Case Files_ Rail Zeppelin Grace Note.jpg",
     "name": "Lord El-Melloi II's Case Files: Rail Zeppelin Grace Note",
     "type": "TV",
     "studio": "TROYCA",
@@ -4561,7 +4561,7 @@
   },
   {
     "index": "229.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Girls' Last Tour.jpg",
     "name": "Girls' Last Tour",
     "type": "TV",
     "studio": "White Fox",
@@ -4581,7 +4581,7 @@
   },
   {
     "index": "230.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Electromagnetic Girlfriend.jpg",
     "name": "Electromagnetic Girlfriend",
     "type": "OVA",
     "studio": "Brain's Base",
@@ -4601,7 +4601,7 @@
   },
   {
     "index": "231.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/School-Live!.jpg",
     "name": "School-Live!",
     "type": "TV",
     "studio": "Lerche",
@@ -4621,7 +4621,7 @@
   },
   {
     "index": "232.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Combatants Will Be Dispatched!.jpg",
     "name": "Combatants Will Be Dispatched!",
     "type": "TV",
     "studio": "J.C.Staff",
@@ -4661,7 +4661,7 @@
   },
   {
     "index": "234.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Dungeon of Black Company.jpg",
     "name": "The Dungeon of Black Company",
     "type": "TV",
     "studio": "SILVER LINK.",
@@ -4681,7 +4681,7 @@
   },
   {
     "index": "235.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/I'm Standing on a Million Lives, S02.jpg",
     "name": "I'm Standing on a Million Lives, S02",
     "type": "TV",
     "studio": "Maho Film",
@@ -4701,7 +4701,7 @@
   },
   {
     "index": "236.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Grimgar_ Ashes and Illusions.jpg",
     "name": "Grimgar: Ashes and Illusions",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -4721,7 +4721,7 @@
   },
   {
     "index": "237.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Log Horizon_ Destruction of the Round Table.jpg",
     "name": "Log Horizon: Destruction of the Round Table",
     "type": "TV",
     "studio": "Studio Deen",
@@ -4741,7 +4741,7 @@
   },
   {
     "index": "238.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Somali and the Forest Spirit.jpg",
     "name": "Somali and the Forest Spirit",
     "type": "TV",
     "studio": "Satelight; HORNETS",
@@ -4761,7 +4761,7 @@
   },
   {
     "index": "239.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Humanity Has Declined.jpg",
     "name": "Humanity Has Declined",
     "type": "TV",
     "studio": "AIC ASTA",
@@ -4781,7 +4781,7 @@
   },
   {
     "index": "240.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Himouto! Umaru-chan OVA.jpg",
     "name": "Himouto! Umaru-chan OVA",
     "type": "OVA",
     "studio": "Doga Kobo",
@@ -4801,7 +4801,7 @@
   },
   {
     "index": "241.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Grimoire of Zero.jpg",
     "name": "Grimoire of Zero",
     "type": "TV",
     "studio": "White Fox",
@@ -4821,7 +4821,7 @@
   },
   {
     "index": "242.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Dawn of the Witch.jpg",
     "name": "The Dawn of the Witch",
     "type": "TV",
     "studio": "Tezuka Productions",
@@ -4841,7 +4841,7 @@
   },
   {
     "index": "243.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Magi_ The Kingdom of Magic.jpg",
     "name": "Magi: The Kingdom of Magic",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -4861,7 +4861,7 @@
   },
   {
     "index": "244.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Spirited Away.jpg",
     "name": "Spirited Away",
     "type": "Movie",
     "studio": "Studio Ghibli",
@@ -4881,7 +4881,7 @@
   },
   {
     "index": "245.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Howl's Moving Castle.jpg",
     "name": "Howl's Moving Castle",
     "type": "Movie",
     "studio": "Studio Ghibli",
@@ -4901,7 +4901,7 @@
   },
   {
     "index": "246.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Wind Rises.jpg",
     "name": "The Wind Rises",
     "type": "Movie",
     "studio": "Studio Ghibli",
@@ -4921,7 +4921,7 @@
   },
   {
     "index": "247.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/NieR_Automata Ver1.1a Part 2.jpg",
     "name": "NieR:Automata Ver1.1a Part 2",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -4941,7 +4941,7 @@
   },
   {
     "index": "248.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Parasyte_ The Maxim.jpg",
     "name": "Parasyte: The Maxim",
     "type": "TV",
     "studio": "Madhouse",
@@ -4961,7 +4961,7 @@
   },
   {
     "index": "249.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Summer Time Rendering.jpg",
     "name": "Summer Time Rendering",
     "type": "TV",
     "studio": "OLM",
@@ -4981,7 +4981,7 @@
   },
   {
     "index": "250.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Charlotte.jpg",
     "name": "Charlotte",
     "type": "TV",
     "studio": "P.A. Works",
@@ -5001,7 +5001,7 @@
   },
   {
     "index": "251.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Charlotte_ The Strong Ones.jpg",
     "name": "Charlotte: The Strong Ones",
     "type": "OVA",
     "studio": "P.A. Works",
@@ -5021,7 +5021,7 @@
   },
   {
     "index": "252.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Violet Evergarden_ The Movie.jpg",
     "name": "Violet Evergarden: The Movie",
     "type": "Movie",
     "studio": "Kyoto Animation",
@@ -5041,7 +5041,7 @@
   },
   {
     "index": "253.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Suzume.jpg",
     "name": "Suzume",
     "type": "Movie",
     "studio": "CoMix Wave Films",
@@ -5061,7 +5061,7 @@
   },
   {
     "index": "254.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Vivy_ Fluorite Eye's Song.jpg",
     "name": "Vivy: Fluorite Eye's Song",
     "type": "TV",
     "studio": "Wit Studio",
@@ -5081,7 +5081,7 @@
   },
   {
     "index": "255.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_stay night_ Heaven's Feel - III. Spring Song.jpg",
     "name": "Fate/stay night: Heaven's Feel - III. Spring Song",
     "type": "Movie",
     "studio": "ufotable",
@@ -5101,7 +5101,7 @@
   },
   {
     "index": "256.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_Apocrypha.jpg",
     "name": "Fate/Apocrypha",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -5121,7 +5121,7 @@
   },
   {
     "index": "257.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_Grand Order_ Final Singularity - Grand Temple of Time_ Solomon.jpg",
     "name": "Fate/Grand Order: Final Singularity - Grand Temple of Time: Solomon",
     "type": "Movie",
     "studio": "CloverWorks",
@@ -5141,7 +5141,7 @@
   },
   {
     "index": "258.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Garden of Sinners_ Future Gospel - Extra Chorus.jpg",
     "name": "The Garden of Sinners: Future Gospel - Extra Chorus",
     "type": "OVA",
     "studio": "ufotable",
@@ -5161,7 +5161,7 @@
   },
   {
     "index": "259.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Lazarus.jpg",
     "name": "Lazarus",
     "type": "TV",
     "studio": "MAPPA",
@@ -5181,7 +5181,7 @@
   },
   {
     "index": "260.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Code Geass_ Lelouch of the Rebellion R2.jpg",
     "name": "Code Geass: Lelouch of the Rebellion R2",
     "type": "TV",
     "studio": "Sunrise",
@@ -5201,7 +5201,7 @@
   },
   {
     "index": "261.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Moonrise.jpg",
     "name": "Moonrise",
     "type": "ONA",
     "studio": "Wit Studio",
@@ -5221,7 +5221,7 @@
   },
   {
     "index": "262.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Attack on Titan_ Final Season - The Final Chapters.jpg",
     "name": "Attack on Titan: Final Season - The Final Chapters",
     "type": "TV Special",
     "studio": "MAPPA",
@@ -5241,7 +5241,7 @@
   },
   {
     "index": "263.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Neon Genesis Evangelion_ The End of Evangelion.jpg",
     "name": "Neon Genesis Evangelion: The End of Evangelion",
     "type": "Movie",
     "studio": "Gainax; Production I.G",
@@ -5261,7 +5261,7 @@
   },
   {
     "index": "264.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Evangelion_ 3.0+1.0 Thrice Upon a Time.jpg",
     "name": "Evangelion: 3.0+1.0 Thrice Upon a Time",
     "type": "Movie",
     "studio": "Khara",
@@ -5281,7 +5281,7 @@
   },
   {
     "index": "265.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Darling in the FranXX.jpg",
     "name": "Darling in the FranXX",
     "type": "TV",
     "studio": "A-1 Pictures; Trigger; CloverWorks",
@@ -5301,7 +5301,7 @@
   },
   {
     "index": "266.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Promised Neverland, S02.jpg",
     "name": "The Promised Neverland, S02",
     "type": "TV",
     "studio": "CloverWorks",
@@ -5321,7 +5321,7 @@
   },
   {
     "index": "267.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Deadman Wonderland_ The Red Knife Wielder.jpg",
     "name": "Deadman Wonderland: The Red Knife Wielder",
     "type": "OVA",
     "studio": "Manglobe",
@@ -5341,7 +5341,7 @@
   },
   {
     "index": "268.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Your Lie in April.jpg",
     "name": "Your Lie in April",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -5361,7 +5361,7 @@
   },
   {
     "index": "269.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Angel Beats!.jpg",
     "name": "Angel Beats!",
     "type": "TV",
     "studio": "P.A. Works",
@@ -5381,7 +5381,7 @@
   },
   {
     "index": "270.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Plastic Memories.jpg",
     "name": "Plastic Memories",
     "type": "TV",
     "studio": "Doga Kobo",
@@ -5401,7 +5401,7 @@
   },
   {
     "index": "271.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Orange_ Mirai.jpg",
     "name": "Orange: Mirai",
     "type": "Movie",
     "studio": "Telecom Animation Film",
@@ -5421,7 +5421,7 @@
   },
   {
     "index": "272.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Inuyashiki_ Last Hero.jpg",
     "name": "Inuyashiki: Last Hero",
     "type": "TV",
     "studio": "MAPPA",
@@ -5441,7 +5441,7 @@
   },
   {
     "index": "273.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Serial Experiments Lain.jpg",
     "name": "Serial Experiments Lain",
     "type": "TV",
     "studio": "Triangle Staff",
@@ -5461,7 +5461,7 @@
   },
   {
     "index": "274.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Lycoris Recoil_ Friends Are Thieves of Time..jpg",
     "name": "Lycoris Recoil: Friends Are Thieves of Time.",
     "type": "ONA",
     "studio": "A-1 Pictures",
@@ -5481,7 +5481,7 @@
   },
   {
     "index": "275.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Death Parade.jpg",
     "name": "Death Parade",
     "type": "TV",
     "studio": "Madhouse",
@@ -5501,7 +5501,7 @@
   },
   {
     "index": "276.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Lord El-Melloi II's Case Files_ Rail Zeppelin Grace Note - Waver, Reunion, and the Magic Lantern.jpg",
     "name": "Lord El-Melloi II's Case Files: Rail Zeppelin Grace Note - Waver, Reunion, and the Magic Lantern",
     "type": "TV Special",
     "studio": "TROYCA",
@@ -5521,7 +5521,7 @@
   },
   {
     "index": "277.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Astra Lost in Space.jpg",
     "name": "Astra Lost in Space",
     "type": "TV",
     "studio": "Lerche",
@@ -5541,7 +5541,7 @@
   },
   {
     "index": "278.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Terror in Resonance.jpg",
     "name": "Terror in Resonance",
     "type": "TV",
     "studio": "MAPPA",
@@ -5581,7 +5581,7 @@
   },
   {
     "index": "280.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Your Name..jpg",
     "name": "Your Name.",
     "type": "Movie",
     "studio": "CoMix Wave Films",
@@ -5601,7 +5601,7 @@
   },
   {
     "index": "281.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Weathering with You.jpg",
     "name": "Weathering with You",
     "type": "Movie",
     "studio": "CoMix Wave Films",
@@ -5621,7 +5621,7 @@
   },
   {
     "index": "282.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Black Butler, S02.jpg",
     "name": "Black Butler, S02",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -5641,7 +5641,7 @@
   },
   {
     "index": "283.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Takopi's Original Sin.jpg",
     "name": "Takopi's Original Sin",
     "type": "ONA",
     "studio": "Enishiya",
@@ -5661,7 +5661,7 @@
   },
   {
     "index": "284.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Steins;Gate_ The Movie - Load Region of Déjà Vu.jpg",
     "name": "Steins;Gate: The Movie - Load Region of Déjà Vu",
     "type": "Movie",
     "studio": "White Fox",
@@ -5681,7 +5681,7 @@
   },
   {
     "index": "285.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Tokyo Magnitude 8.0.jpg",
     "name": "Tokyo Magnitude 8.0",
     "type": "TV",
     "studio": "Bones; Kinema Citrus",
@@ -5701,7 +5701,7 @@
   },
   {
     "index": "286.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Haibane Renmei.jpg",
     "name": "Haibane Renmei",
     "type": "TV",
     "studio": "Radix",
@@ -5721,7 +5721,7 @@
   },
   {
     "index": "287.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Tunnel to Summer, the Exit of Goodbyes.jpg",
     "name": "The Tunnel to Summer, the Exit of Goodbyes",
     "type": "Movie",
     "studio": "CLAP",
@@ -5741,7 +5741,7 @@
   },
   {
     "index": "288.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Magia Record_ Puella Magi Madoka Magica Side Story Final Season.jpg",
     "name": "Magia Record: Puella Magi Madoka Magica Side Story Final Season",
     "type": "TV Special",
     "studio": "Shaft",
@@ -5761,7 +5761,7 @@
   },
   {
     "index": "289.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Cross Ange_ Rondo of Angel and Dragon.jpg",
     "name": "Cross Ange: Rondo of Angel and Dragon",
     "type": "TV",
     "studio": "Sunrise",
@@ -5781,7 +5781,7 @@
   },
   {
     "index": "290.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Girl Who Leapt Through Time.jpg",
     "name": "The Girl Who Leapt Through Time",
     "type": "Movie",
     "studio": "Madhouse",
@@ -5801,7 +5801,7 @@
   },
   {
     "index": "291.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Jin-Roh_ The Wolf Brigade.jpg",
     "name": "Jin-Roh: The Wolf Brigade",
     "type": "Movie",
     "studio": "Production I.G",
@@ -5821,7 +5821,7 @@
   },
   {
     "index": "292.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Higurashi_ When They Cry – SOTSU.jpg",
     "name": "Higurashi: When They Cry – Sotsu",
     "type": "TV",
     "studio": "Passione",
@@ -5841,7 +5841,7 @@
   },
   {
     "index": "293.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Future Diary_ Redial.jpg",
     "name": "The Future Diary: Redial",
     "type": "OVA",
     "studio": "asread.",
@@ -5861,7 +5861,7 @@
   },
   {
     "index": "294.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/From the New World.jpg",
     "name": "From the New World",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -5881,7 +5881,7 @@
   },
   {
     "index": "295.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Shiki.jpg",
     "name": "Shiki",
     "type": "TV",
     "studio": "Daume",
@@ -5901,7 +5901,7 @@
   },
   {
     "index": "296.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Disappearance of Haruhi Suzumiya.jpg",
     "name": "The Disappearance of Haruhi Suzumiya",
     "type": "Movie",
     "studio": "Kyoto Animation",
@@ -5921,7 +5921,7 @@
   },
   {
     "index": "297.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Bâan_ The Boundary of Adulthood.jpg",
     "name": "Bâan: The Boundary of Adulthood",
     "type": "Movie",
     "studio": "Studio Daisy",
@@ -5961,7 +5961,7 @@
   },
   {
     "index": "299.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Takt Op. Destiny.jpg",
     "name": "Takt Op. Destiny",
     "type": "TV",
     "studio": "Madhouse; MAPPA",
@@ -5981,7 +5981,7 @@
   },
   {
     "index": "300.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Cautious Hero_ The Hero Is Overpowered but Overly Cautious.jpg",
     "name": "Cautious Hero: The Hero Is Overpowered but Overly Cautious",
     "type": "TV",
     "studio": "White Fox",
@@ -6001,7 +6001,7 @@
   },
   {
     "index": "301.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Tatsuki Fujimoto 17-26.jpg",
     "name": "Tatsuki Fujimoto 17-26",
     "type": "ONA",
     "studio": "P.A. Works; Zexcs; Lapin Track; Studio Kafka; 100studio; Studio Graph77",
@@ -6021,7 +6021,7 @@
   },
   {
     "index": "302.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Hello World.jpg",
     "name": "Hello World",
     "type": "Movie",
     "studio": "Graphinica",
@@ -6041,7 +6041,7 @@
   },
   {
     "index": "303.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Voices of a Distant Star.jpg",
     "name": "Voices of a Distant Star",
     "type": "OVA",
     "studio": "CoMix Wave Films",
@@ -6061,7 +6061,7 @@
   },
   {
     "index": "304.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Look Back.jpg",
     "name": "Look Back",
     "type": "Movie",
     "studio": "Studio DURIAN",
@@ -6081,7 +6081,7 @@
   },
   {
     "index": "305.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Place Promised in Our Early Days.jpg",
     "name": "The Place Promised in Our Early Days",
     "type": "Movie",
     "studio": "CoMix Wave Films",
@@ -6101,7 +6101,7 @@
   },
   {
     "index": "306.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/She and Her Cat_ Their Standing Points.jpg",
     "name": "She and Her Cat: Their Standing Points",
     "type": "OVA",
     "studio": "CoMix Wave Films",
@@ -6121,7 +6121,7 @@
   },
   {
     "index": "307.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/5 Centimeters per Second.jpg",
     "name": "5 Centimeters per Second",
     "type": "Movie",
     "studio": "CoMix Wave Films",
@@ -6141,7 +6141,7 @@
   },
   {
     "index": "308.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Children Who Chase Lost Voices.jpg",
     "name": "Children Who Chase Lost Voices",
     "type": "Movie",
     "studio": "CoMix Wave Films",
@@ -6161,7 +6161,7 @@
   },
   {
     "index": "309.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Garden of Words.jpg",
     "name": "The Garden of Words",
     "type": "Movie",
     "studio": "CoMix Wave Films",
@@ -6181,7 +6181,7 @@
   },
   {
     "index": "310.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/She and Her Cat_ Everything Flows.jpg",
     "name": "She and Her Cat: Everything Flows",
     "type": "TV",
     "studio": "LIDENFILMS",
@@ -6201,7 +6201,7 @@
   },
   {
     "index": "311.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Summer Ghost.jpg",
     "name": "Summer Ghost",
     "type": "Movie",
     "studio": "Flat Studio",
@@ -6221,7 +6221,7 @@
   },
   {
     "index": "312.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Maquia_ When the Promised Flower Blooms.jpg",
     "name": "Maquia: When the Promised Flower Blooms",
     "type": "Movie",
     "studio": "P.A. Works",
@@ -6241,7 +6241,7 @@
   },
   {
     "index": "313.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Into the Forest of Fireflies' Light.jpg",
     "name": "Into the Forest of Fireflies' Light",
     "type": "Movie",
     "studio": "Brain's Base",
@@ -6261,7 +6261,7 @@
   },
   {
     "index": "314.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Grave of the Fireflies.jpg",
     "name": "Grave of the Fireflies",
     "type": "Movie",
     "studio": "Studio Ghibli",
@@ -6281,7 +6281,7 @@
   },
   {
     "index": "315.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Ride Your Wave.jpg",
     "name": "Ride Your Wave",
     "type": "Movie",
     "studio": "Science SARU",
@@ -6301,7 +6301,7 @@
   },
   {
     "index": "316.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Wolf Children.jpg",
     "name": "Wolf Children",
     "type": "Movie",
     "studio": "Studio Chizu",
@@ -6321,7 +6321,7 @@
   },
   {
     "index": "317.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/A Silent Voice.jpg",
     "name": "A Silent Voice",
     "type": "Movie",
     "studio": "Kyoto Animation",
@@ -6341,7 +6341,7 @@
   },
   {
     "index": "318.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/I Want to Eat Your Pancreas.jpg",
     "name": "I Want to Eat Your Pancreas",
     "type": "Movie",
     "studio": "Studio VOLN",
@@ -6361,7 +6361,7 @@
   },
   {
     "index": "319.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/A Place Further Than The Universe.jpg",
     "name": "A Place Further Than The Universe",
     "type": "TV",
     "studio": "Madhouse",
@@ -6381,7 +6381,7 @@
   },
   {
     "index": "320.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Anohana_ The Flower We Saw That Day.jpg",
     "name": "Anohana: The Flower We Saw That Day",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -6401,7 +6401,7 @@
   },
   {
     "index": "321.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sound of the Sky Specials.jpg",
     "name": "Sound of the Sky Specials",
     "type": "Special",
     "studio": "A-1 Pictures",
@@ -6421,7 +6421,7 @@
   },
   {
     "index": "322.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Casshern Sins.jpg",
     "name": "Casshern Sins",
     "type": "TV",
     "studio": "Madhouse",
@@ -6441,7 +6441,7 @@
   },
   {
     "index": "323.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Josee, the Tiger and the Fish.jpg",
     "name": "Josee, the Tiger and the Fish",
     "type": "Movie",
     "studio": "Bones",
@@ -6461,7 +6461,7 @@
   },
   {
     "index": "324.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Kabaneri of the Iron Fortress_ The Battle of Unato.jpg",
     "name": "Kabaneri of the Iron Fortress: The Battle of Unato",
     "type": "Movie",
     "studio": "Wit Studio",
@@ -6481,7 +6481,7 @@
   },
   {
     "index": "325.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Monster.jpg",
     "name": "Monster",
     "type": "TV",
     "studio": "Madhouse",
@@ -6501,7 +6501,7 @@
   },
   {
     "index": "326.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Mary and the Witch's Flower.jpg",
     "name": "Mary and the Witch's Flower",
     "type": "Movie",
     "studio": "Studio Ponoc",
@@ -6521,7 +6521,7 @@
   },
   {
     "index": "327.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Blast of Tempest.jpg",
     "name": "Blast of Tempest",
     "type": "TV",
     "studio": "Bones",
@@ -6541,7 +6541,7 @@
   },
   {
     "index": "328.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Kiki's Delivery Service.jpg",
     "name": "Kiki's Delivery Service",
     "type": "Movie",
     "studio": "Studio Ghibli",
@@ -6561,7 +6561,7 @@
   },
   {
     "index": "329.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Burn the Witch.jpg",
     "name": "Burn the Witch",
     "type": "ONA",
     "studio": "Studio Colorido; team Yamahitsuji",
@@ -6581,7 +6581,7 @@
   },
   {
     "index": "330.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Dead Dead Demons Dededede Destruction.jpg",
     "name": "Dead Dead Demons Dededede Destruction",
     "type": "ONA",
     "studio": "Production +h.",
@@ -6601,7 +6601,7 @@
   },
   {
     "index": "331.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Death Note.jpg",
     "name": "Death Note",
     "type": "TV",
     "studio": "Madhouse",
@@ -6621,7 +6621,7 @@
   },
   {
     "index": "332.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fullmetal Alchemist_ Brotherhood.jpg",
     "name": "Fullmetal Alchemist: Brotherhood",
     "type": "TV",
     "studio": "Bones",
@@ -6641,7 +6641,7 @@
   },
   {
     "index": "333.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark), S04 Part 2.jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S04 Part 2",
     "type": "TV",
     "studio": "J.C.Staff",
@@ -6661,7 +6661,7 @@
   },
   {
     "index": "334.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Melancholy of Haruhi Suzumiya, S01.jpg",
     "name": "The Melancholy of Haruhi Suzumiya, S01",
     "type": "TV",
     "studio": "Kyoto Animation",
@@ -6681,7 +6681,7 @@
   },
   {
     "index": "335.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_stay night [Unlimited Blade Works], S02.jpg",
     "name": "Fate/stay night [Unlimited Blade Works], S02",
     "type": "TV",
     "studio": "ufotable",
@@ -6701,7 +6701,7 @@
   },
   {
     "index": "336.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Girls und Panzer.jpg",
     "name": "Girls und Panzer",
     "type": "TV",
     "studio": "Actas",
@@ -6721,7 +6721,7 @@
   },
   {
     "index": "337.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Girls und Panzer Der Film.jpg",
     "name": "Girls und Panzer Der Film",
     "type": "Movie",
     "studio": "Actas",
@@ -6741,7 +6741,7 @@
   },
   {
     "index": "338.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_stay night [Unlimited Blade Works], S02_ Sunny Day.jpg",
     "name": "Fate/stay night [Unlimited Blade Works], S02: Sunny Day",
     "type": "Special",
     "studio": "ufotable",
@@ -6761,7 +6761,7 @@
   },
   {
     "index": "339.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/That Time I Got Reincarnated as a Slime, S01.jpg",
     "name": "That Time I Got Reincarnated as a Slime, S01",
     "type": "TV",
     "studio": "8bit",
@@ -6781,7 +6781,7 @@
   },
   {
     "index": "340.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Yukikaze.jpg",
     "name": "Yukikaze",
     "type": "OVA",
     "studio": "Gonzo",
@@ -6801,7 +6801,7 @@
   },
   {
     "index": "341.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Legend of the Galactic Heroes_ Die Neue These - Collision.jpg",
     "name": "Legend of the Galactic Heroes: Die Neue These - Collision",
     "type": "TV",
     "studio": "Production I.G",
@@ -6821,7 +6821,7 @@
   },
   {
     "index": "342.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Code Geass_ Lelouch of the Re;surrection.jpg",
     "name": "Code Geass: Lelouch of the Re;surrection",
     "type": "Movie",
     "studio": "Sunrise",
@@ -6841,7 +6841,7 @@
   },
   {
     "index": "343.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate_stay night_ Heaven's Feel - I. Presage Flower.jpg",
     "name": "Fate/stay night: Heaven's Feel - I. Presage Flower",
     "type": "Movie",
     "studio": "ufotable",
@@ -6861,7 +6861,7 @@
   },
   {
     "index": "344.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sword Art Online, S01.jpg",
     "name": "Sword Art Online, S01",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -6881,7 +6881,7 @@
   },
   {
     "index": "345.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Steins;Gate.jpg",
     "name": "Steins;Gate",
     "type": "TV",
     "studio": "White Fox",
@@ -6901,7 +6901,7 @@
   },
   {
     "index": "346.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Higurashi_ When They Cry – Rei.jpg",
     "name": "Higurashi: When They Cry – Rei",
     "type": "OVA",
     "studio": "Studio Deen",
@@ -6921,7 +6921,7 @@
   },
   {
     "index": "347.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Re_Zero - Starting Life in Another World, S02 Part 2.jpg",
     "name": "Re:Zero -Starting Life in Another World-, S02 Part 2",
     "type": "TV",
     "studio": "White Fox",
@@ -6941,7 +6941,7 @@
   },
   {
     "index": "348.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Cyberpunk Edgerunners, S01.jpg",
     "name": "Cyberpunk Edgerunners, S01",
     "type": "ONA",
     "studio": "Trigger",
@@ -6961,7 +6961,7 @@
   },
   {
     "index": "349.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Chainsaw Man.jpg",
     "name": "Chainsaw Man",
     "type": "TV",
     "studio": "MAPPA",
@@ -6981,7 +6981,7 @@
   },
   {
     "index": "350.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Kaiju No.8, S01.jpg",
     "name": "Kaiju No.8, S01",
     "type": "TV",
     "studio": "Production I.G",
@@ -7001,7 +7001,7 @@
   },
   {
     "index": "351.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Classroom of the Elite, S03.jpg",
     "name": "Classroom of the Elite, S03",
     "type": "TV",
     "studio": "Lerche",
@@ -7021,7 +7021,7 @@
   },
   {
     "index": "352.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Frieren_ Beyond Journey's End, S01.jpg",
     "name": "Frieren: Beyond Journey's End, S01",
     "type": "TV",
     "studio": "Madhouse",
@@ -7041,7 +7041,7 @@
   },
   {
     "index": "353.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/KonoSuba_ God's Blessing on This Wonderful World!, S03.jpg",
     "name": "KonoSuba: God's Blessing on This Wonderful World!, S03",
     "type": "TV",
     "studio": "Drive",
@@ -7061,7 +7061,7 @@
   },
   {
     "index": "354.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Re_Zero - Starting Life in Another World, S03.jpg",
     "name": "Re:Zero -Starting Life in Another World-, S03",
     "type": "TV",
     "studio": "White Fox",
@@ -7081,7 +7081,7 @@
   },
   {
     "index": "355.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Mushoku Tensei_ Jobless Reincarnation, S02 Part 2.jpg",
     "name": "Mushoku Tensei: Jobless Reincarnation, S02 Part 2",
     "type": "TV",
     "studio": "Studio Bind",
@@ -7101,7 +7101,7 @@
   },
   {
     "index": "356.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/That Time I Got Reincarnated as a Slime, S03.jpg",
     "name": "That Time I Got Reincarnated as a Slime, S03",
     "type": "TV",
     "studio": "8bit",
@@ -7121,7 +7121,7 @@
   },
   {
     "index": "357.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Eminence in Shadow, S02.jpg",
     "name": "The Eminence in Shadow, S02",
     "type": "TV",
     "studio": "Nexus",
@@ -7141,7 +7141,7 @@
   },
   {
     "index": "358.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Legend of the Galactic Heroes_ Die Neue These - Intrigue.jpg",
     "name": "Legend of the Galactic Heroes: Die Neue These - Intrigue",
     "type": "TV",
     "studio": "Production I.G",
@@ -7161,7 +7161,7 @@
   },
   {
     "index": "359.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Black Lagoon_ Roberta's Blood Trail.jpg",
     "name": "Black Lagoon: Roberta's Blood Trail",
     "type": "OVA",
     "studio": "Madhouse",
@@ -7181,7 +7181,7 @@
   },
   {
     "index": "360.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Overlord, S04.jpg",
     "name": "Overlord, S04",
     "type": "TV",
     "studio": "Madhouse",
@@ -7201,7 +7201,7 @@
   },
   {
     "index": "361.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/To Your Eternity, S02.jpg",
     "name": "To Your Eternity, S02",
     "type": "TV",
     "studio": "Drive",
@@ -7221,7 +7221,7 @@
   },
   {
     "index": "362.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/86 Eighty-Six, S01 Part 2.jpg",
     "name": "86 Eighty-Six, S01 Part 2",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -7241,7 +7241,7 @@
   },
   {
     "index": "363.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark) III_ Is It Wrong to Try to Find a Hot Spring in Orario (question mark).jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon? III: Is It Wrong to Try to Find a Hot Spring in Orario?",
     "type": "OVA",
     "studio": "J.C.Staff",
@@ -7261,7 +7261,7 @@
   },
   {
     "index": "364.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark), S05.jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S05",
     "type": "TV",
     "studio": "J.C.Staff",
@@ -7281,7 +7281,7 @@
   },
   {
     "index": "365.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sword Art Online_ Alicization - War of Underworld, Part 2.jpg",
     "name": "Sword Art Online: Alicization - War of Underworld, Part 2",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -7301,7 +7301,7 @@
   },
   {
     "index": "366.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sword Art Online the Movie_ Progressive - Scherzo of Deep Night.jpg",
     "name": "Sword Art Online the Movie: Progressive - Scherzo of Deep Night",
     "type": "Movie",
     "studio": "A-1 Pictures",
@@ -7321,7 +7321,7 @@
   },
   {
     "index": "367.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sword Art Online Alternative_ Gun Gale Online, S02.jpg",
     "name": "Sword Art Online Alternative: Gun Gale Online, S02",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -7361,7 +7361,7 @@
   },
   {
     "index": "369.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/From Old Country Bumpkin to Master Swordsman, S01.jpg",
     "name": "From Old Country Bumpkin to Master Swordsman, S01",
     "type": "TV",
     "studio": "Passione; Hayabusa Film",
@@ -7381,7 +7381,7 @@
   },
   {
     "index": "370.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Solo Leveling, S02_ Arise from the Shadow.jpg",
     "name": "Solo Leveling, S02: Arise from the Shadow",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -7401,7 +7401,7 @@
   },
   {
     "index": "371.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/KonoSuba_ God's Blessing on This Wonderful World! 3 OVA.jpg",
     "name": "KonoSuba: God's Blessing on This Wonderful World! 3 OVA",
     "type": "OVA",
     "studio": "Drive",
@@ -7421,7 +7421,7 @@
   },
   {
     "index": "372.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Shangri-La Frontier, S02.jpg",
     "name": "Shangri-La Frontier, S02",
     "type": "TV",
     "studio": "C2C",
@@ -7441,7 +7441,7 @@
   },
   {
     "index": "373.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Heavenly Delusion.jpg",
     "name": "Heavenly Delusion",
     "type": "TV",
     "studio": "Production I.G",
@@ -7461,7 +7461,7 @@
   },
   {
     "index": "374.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Made in Abyss_ The Golden City of the Scorching Sun.jpg",
     "name": "Made in Abyss: The Golden City of the Scorching Sun",
     "type": "TV",
     "studio": "Kinema Citrus",
@@ -7481,7 +7481,7 @@
   },
   {
     "index": "375.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Goblin Slayer, S02.jpg",
     "name": "Goblin Slayer, S02",
     "type": "TV",
     "studio": "LIDENFILMS",
@@ -7501,7 +7501,7 @@
   },
   {
     "index": "376.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Bocchi the Rock!.jpg",
     "name": "Bocchi the Rock!",
     "type": "TV",
     "studio": "CloverWorks",
@@ -7521,7 +7521,7 @@
   },
   {
     "index": "377.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Noragami Aragoto.jpg",
     "name": "Noragami Aragoto",
     "type": "TV",
     "studio": "Bones",
@@ -7541,7 +7541,7 @@
   },
   {
     "index": "378.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Lycoris Recoil.jpg",
     "name": "Lycoris Recoil",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -7561,7 +7561,7 @@
   },
   {
     "index": "379.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Ragna Crimson.jpg",
     "name": "Ragna Crimson",
     "type": "TV",
     "studio": "SILVER LINK.",
@@ -7581,7 +7581,7 @@
   },
   {
     "index": "380.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Lord of Mysteries.jpg",
     "name": "Lord of Mysteries",
     "type": "Donghua",
     "studio": "B.CMAY PICTURES",
@@ -7601,7 +7601,7 @@
   },
   {
     "index": "381.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Call of the Night, S02.jpg",
     "name": "Call of the Night, S02",
     "type": "TV",
     "studio": "LIDENFILMS",
@@ -7621,7 +7621,7 @@
   },
   {
     "index": "382.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Water Magician.jpg",
     "name": "The Water Magician",
     "type": "TV",
     "studio": "Typhoon Graphics; WonderLand",
@@ -7641,7 +7641,7 @@
   },
   {
     "index": "383.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/My Dress-Up Darling, S02.jpg",
     "name": "My Dress-Up Darling, S02",
     "type": "TV",
     "studio": "CloverWorks",
@@ -7661,7 +7661,7 @@
   },
   {
     "index": "384.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Rising of the Shield Hero, S04.jpg",
     "name": "The Rising of the Shield Hero, S04",
     "type": "TV",
     "studio": "Kinema Citrus",
@@ -7701,7 +7701,7 @@
   },
   {
     "index": "386.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Rascal Does Not Dream of Santa Claus.jpg",
     "name": "Rascal Does Not Dream of Santa Claus",
     "type": "TV",
     "studio": "CloverWorks",
@@ -7721,7 +7721,7 @@
   },
   {
     "index": "387.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Black Butler_ Emerald Witch Arc.jpg",
     "name": "Black Butler: Emerald Witch Arc",
     "type": "TV",
     "studio": "CloverWorks",
@@ -7741,7 +7741,7 @@
   },
   {
     "index": "388.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Kaiju No.8, S02.jpg",
     "name": "Kaiju No.8, S02",
     "type": "TV",
     "studio": "Production I.G",
@@ -7761,7 +7761,7 @@
   },
   {
     "index": "389.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Puella Magi Madoka Magica the Movie_ Rebellion.jpg",
     "name": "Puella Magi Madoka Magica the Movie: Rebellion",
     "type": "Movie",
     "studio": "Shaft",
@@ -7781,7 +7781,7 @@
   },
   {
     "index": "390.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Monogatari Series_ Off & Monster Season.jpg",
     "name": "Monogatari Series: Off & Monster Season",
     "type": "ONA",
     "studio": "Shaft",
@@ -7801,7 +7801,7 @@
   },
   {
     "index": "391.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Spice and Wolf_ Merchant Meets the Wise Wolf, S01.jpg",
     "name": "Spice and Wolf: Merchant Meets the Wise Wolf, S01",
     "type": "TV",
     "studio": "Passione",
@@ -7821,7 +7821,7 @@
   },
   {
     "index": "392.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Apothecary Diaries, S02.jpg",
     "name": "The Apothecary Diaries, S02",
     "type": "TV",
     "studio": "OLM; TOHO animation STUDIO",
@@ -7841,7 +7841,7 @@
   },
   {
     "index": "393.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Spy x Family, S03.jpg",
     "name": "Spy x Family, S03",
     "type": "TV",
     "studio": "Wit Studio; CloverWorks",
@@ -7861,7 +7861,7 @@
   },
   {
     "index": "394.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Tower of God, S02_ Workshop Battle.jpg",
     "name": "Tower of God, S02: Workshop Battle",
     "type": "TV",
     "studio": "The Answer Studio",
@@ -7881,7 +7881,7 @@
   },
   {
     "index": "395.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/I've Been Killing Slimes for 300 Years and Maxed Out My Level, S02.jpg",
     "name": "I've Been Killing Slimes for 300 Years and Maxed Out My Level, S02",
     "type": "TV",
     "studio": "Teddy",
@@ -7901,7 +7901,7 @@
   },
   {
     "index": "396.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Tsukimichi -Moonlit Fantasy-, S02.jpg",
     "name": "Tsukimichi -Moonlit Fantasy-, S02",
     "type": "TV",
     "studio": "J.C.Staff",
@@ -7921,7 +7921,7 @@
   },
   {
     "index": "397.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Ascendance of a Bookworm, S03.jpg",
     "name": "Ascendance of a Bookworm, S03",
     "type": "TV",
     "studio": "Ajia-do",
@@ -7941,7 +7941,7 @@
   },
   {
     "index": "398.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/GATE, S01 Part 2.jpg",
     "name": "GATE, S01 Part 2",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -7961,7 +7961,7 @@
   },
   {
     "index": "399.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Skeleton Knight in Another World, S01.jpg",
     "name": "Skeleton Knight in Another World, S01",
     "type": "TV",
     "studio": "Studio KAI; HORNETS",
@@ -7981,7 +7981,7 @@
   },
   {
     "index": "400.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Arifureta_ From Commonplace to World's Strongest, S03.jpg",
     "name": "Arifureta: From Commonplace to World's Strongest, S03",
     "type": "TV",
     "studio": "asread.",
@@ -8001,7 +8001,7 @@
   },
   {
     "index": "401.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Saga of Tanya the Evil_ The Movie.jpg",
     "name": "Saga of Tanya the Evil: The Movie",
     "type": "Movie",
     "studio": "Nut",
@@ -8021,7 +8021,7 @@
   },
   {
     "index": "402.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Chainsaw Man the Movie_ Reze Arc.jpg",
     "name": "Chainsaw Man the Movie: Reze Arc",
     "type": "Movie",
     "studio": "MAPPA",
@@ -8041,7 +8041,7 @@
   },
   {
     "index": "403.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Demon Slayer_ The Movie_ Infinity Castle - Part 1_ Akaza Returns.jpg",
     "name": "Demon Slayer: The Movie: Infinity Castle - Part 1: Akaza Returns",
     "type": "Movie",
     "studio": "ufotable",
@@ -8061,7 +8061,7 @@
   },
   {
     "index": "404.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Vinland Saga, S02.jpg",
     "name": "Vinland Saga, S02",
     "type": "TV",
     "studio": "MAPPA",
@@ -8101,7 +8101,7 @@
   },
   {
     "index": "406.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Wandering Witch_ The Journey of Elaina.jpg",
     "name": "Wandering Witch: The Journey of Elaina",
     "type": "TV",
     "studio": "C2C",
@@ -8121,7 +8121,7 @@
   },
   {
     "index": "407.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Secrets of the Silent Witch.jpg",
     "name": "Secrets of the Silent Witch",
     "type": "TV",
     "studio": "Studio Gokumi",
@@ -8141,7 +8141,7 @@
   },
   {
     "index": "408.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Once Upon a Witch's Death.jpg",
     "name": "Once Upon a Witch's Death",
     "type": "TV",
     "studio": "EMT Squared",
@@ -8161,7 +8161,7 @@
   },
   {
     "index": "409.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/The Ancient Magus' Bride, S02 Part 2.jpg",
     "name": "The Ancient Magus' Bride, S02 Part 2",
     "type": "TV",
     "studio": "Studio Kafka",
@@ -8181,7 +8181,7 @@
   },
   {
     "index": "410.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Psycho-Pass, S03_ First Inspector.jpg",
     "name": "Psycho-Pass, S03: First Inspector",
     "type": "ONA",
     "studio": "Production I.G",
@@ -8201,7 +8201,7 @@
   },
   {
     "index": "411.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/To Your Eternity, S03.jpg",
     "name": "To Your Eternity, S03",
     "type": "TV",
     "studio": "Drive; Studio Massket",
@@ -8221,7 +8221,7 @@
   },
   {
     "index": "412.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Fate strange Fake.jpg",
     "name": "Fate/strange Fake",
     "type": "TV",
     "studio": "A-1 Pictures",
@@ -8241,7 +8241,7 @@
   },
   {
     "index": "413.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Sentenced to Be a Hero.jpg",
     "name": "Sentenced to Be a Hero",
     "type": "TV",
     "studio": "Studio KAI",
@@ -8261,7 +8261,7 @@
   },
   {
     "index": "414.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Jujutsu Kaisen_ The Culling Game Part 1.jpg",
     "name": "Jujutsu Kaisen: The Culling Game Part 1",
     "type": "TV",
     "studio": "MAPPA",
@@ -8281,7 +8281,7 @@
   },
   {
     "index": "415.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Hell's Paradise, S02.jpg",
     "name": "Hell's Paradise, S02",
     "type": "TV",
     "studio": "MAPPA",
@@ -8301,7 +8301,7 @@
   },
   {
     "index": "416.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Frieren_ Beyond Journey's End, S02.jpg",
     "name": "Frieren: Beyond Journey's End, S02",
     "type": "TV",
     "studio": "Madhouse",

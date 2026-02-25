@@ -12,9 +12,10 @@ function AnimeList() {
 
 
     useEffect(() => {
-        loadData(STORAGE_KEYS.ANIME_LIST, '/data/anime_list.json')
+        loadData(STORAGE_KEYS.ANIME_LIST, 'data/anime_list.json')
             .then(data => {
-                setAnimeList(data)
+                const indexedData = data.map((item, idx) => ({ ...item, originalIndex: idx + 1 }))
+                setAnimeList(indexedData)
                 setLoading(false)
             })
             .catch(err => {
@@ -53,8 +54,8 @@ function AnimeList() {
         // Sort
         if (sortConfig.key) {
             result.sort((a, b) => {
-                let aVal = a[sortConfig.key]
-                let bVal = b[sortConfig.key]
+                let aVal = sortConfig.key === 'index' ? a.originalIndex : a[sortConfig.key]
+                let bVal = sortConfig.key === 'index' ? b.originalIndex : b[sortConfig.key]
 
                 // Handle null values
                 if (aVal == null) return 1
@@ -117,7 +118,7 @@ function AnimeList() {
     const formatDate = (dateStr) => {
         if (!dateStr) return '-'
         const d = new Date(dateStr)
-        return d.toLocaleDateString('cs-CZ', { year: 'numeric', month: 'short', day: 'numeric' })
+        return d.toLocaleDateString('cs-CZ', { year: 'numeric', month: 'numeric', day: 'numeric' })
     }
 
     // Check if anime is part of a series (not standalone)
@@ -154,13 +155,37 @@ function AnimeList() {
 
             {/* Search and Filters */}
             <div className="search-bar">
-                <input
-                    type="text"
-                    className="search-input"
-                    placeholder="Hledat anime, studio, žánr..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
+                <div style={{ position: 'relative', flex: 1, display: 'flex', alignItems: 'center' }}>
+                    <input
+                        type="text"
+                        className="search-input"
+                        placeholder="Hledat anime, studio, žánr..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        style={{ width: '100%', paddingRight: '2rem' }}
+                    />
+                    {searchTerm && (
+                        <button
+                            onClick={() => setSearchTerm('')}
+                            style={{
+                                position: 'absolute',
+                                right: '12px',
+                                background: 'transparent',
+                                border: 'none',
+                                color: 'var(--text-muted)',
+                                cursor: 'pointer',
+                                fontSize: '1.2rem',
+                                padding: '0 4px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                            title="Vymazat hledání"
+                        >
+                            ×
+                        </button>
+                    )}
+                </div>
                 <div className="filter-group">
                     {types.map(t => (
                         <button

@@ -15,7 +15,7 @@ import { Bar, Pie, Doughnut, Line } from 'react-chartjs-2'
 
 import ChartContainer from '../components/ChartContainer'
 import ChartSettingsModal from '../components/ChartSettingsModal'
-import { getChartSettings, colorPalettes, loadChartSettings } from '../utils/chartSettings'
+import { getChartSettings, colorPalettes, applyPalette, buildChartOptions } from '../utils/chartSettings'
 
 // Register Chart.js components
 ChartJS.register(
@@ -54,9 +54,9 @@ function Dashboard() {
 
     useEffect(() => {
         Promise.all([
-            fetch('/data/anime_list.json').then(r => r.json()),
-            fetch('/data/history_log.json').then(r => r.json()),
-            fetch('/data/stats.json').then(r => r.json()).catch(() => null)
+            fetch('data/anime_list.json').then(r => r.json()),
+            fetch('data/history_log.json').then(r => r.json()),
+            fetch('data/stats.json').then(r => r.json()).catch(() => null)
         ])
             .then(([anime, history, statsJson]) => {
                 setAnimeList(anime)
@@ -77,7 +77,7 @@ function Dashboard() {
         if (!animeList.length) return null
 
         // --- Filter Logic ---
-        const getYear = (dateStr) => {
+        function getYear(dateStr) {
             if (!dateStr) return null
             const d = new Date(dateStr)
             return d.getFullYear()
@@ -279,8 +279,14 @@ function Dashboard() {
         // Dubbing distribution
         const dubs = {}
         list.forEach(a => {
-            const dub = a.dub || 'Neznámý'
-            dubs[dub] = (dubs[dub] || 0) + 1
+            if (a.dub) {
+                a.dub.split(';').forEach(d => {
+                    const dub = d.trim()
+                    if (dub) dubs[dub] = (dubs[dub] || 0) + 1
+                })
+            } else {
+                dubs['Neznámý'] = (dubs['Neznámý'] || 0) + 1
+            }
         })
 
         // Average rating by type
@@ -796,6 +802,7 @@ function Dashboard() {
                 const all = stats.allTimeStats
                 const filtered = stats.filteredStats
                 const ys = stats.yearStats
+                const getYear = (dateStr) => { if (!dateStr) return null; return new Date(dateStr).getFullYear() }
                 const rows = [
                     { label: 'Čas sledování (hh:mm)', all: formatMins(all.totalMins), years: yearCols.map(y => formatMins(ys[y]?.totalMins || 0)) },
                     { label: 'Čas sledování (dny)', all: formatDays(all.totalMins), years: yearCols.map(y => formatDays(ys[y]?.totalMins || 0)) },
@@ -817,8 +824,6 @@ function Dashboard() {
                         rows.push({ label: `Počet — ${t}`, all: all.typeBreakdown[t] || 0, years: yearCols.map(y => ys[y]?.typeBreakdown[t] || 0), isType: true })
                     }
                 })
-
-                const getYear = (dateStr) => { if (!dateStr) return null; return new Date(dateStr).getFullYear() }
 
                 return (
                     <div className="card" style={{ marginBottom: 'var(--spacing-xl)', overflowX: 'auto' }}>
@@ -859,7 +864,7 @@ function Dashboard() {
                         <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'types', 'Rozdělení typů')} title="Nastavení">⚙️</button>
                     </div>
                     <div style={{ height: '280px' }}>
-                        <Doughnut data={typeChartData} options={pieOptions} />
+                        <Doughnut data={applyPalette(typeChartData, getChartSettings('types').palette)} options={buildChartOptions(pieOptions, getChartSettings('types'))} />
                     </div>
                 </div>
 
@@ -870,7 +875,7 @@ function Dashboard() {
                         <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'studios', 'Top 10 Studií')} title="Nastavení">⚙️</button>
                     </div>
                     <div style={{ height: '280px' }}>
-                        <Pie data={studioChartData} options={pieOptions} />
+                        <Pie data={applyPalette(studioChartData, getChartSettings('studios').palette)} options={buildChartOptions(pieOptions, getChartSettings('studios'))} />
                     </div>
                 </div>
 
@@ -881,7 +886,7 @@ function Dashboard() {
                         <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'seasons', 'Rozdělení podle sezón')} title="Nastavení">⚙️</button>
                     </div>
                     <div style={{ height: '280px' }}>
-                        <Doughnut data={seasonsChartData} options={pieOptions} />
+                        <Doughnut data={applyPalette(seasonsChartData, getChartSettings('seasons').palette)} options={buildChartOptions(pieOptions, getChartSettings('seasons'))} />
                     </div>
                 </div>
 
@@ -892,7 +897,7 @@ function Dashboard() {
                         <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'genres', 'Top 10 Žánrů')} title="Nastavení">⚙️</button>
                     </div>
                     <div style={{ height: '280px' }}>
-                        <Bar data={genreChartData} options={{ ...chartOptions, indexAxis: 'y' }} />
+                        <Bar data={applyPalette(genreChartData, getChartSettings('genres').palette)} options={buildChartOptions({ ...chartOptions, indexAxis: 'y' }, getChartSettings('genres'))} />
                     </div>
                 </div>
 
@@ -903,7 +908,7 @@ function Dashboard() {
                         <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'themes', 'Top 10 Témat')} title="Nastavení">⚙️</button>
                     </div>
                     <div style={{ height: '280px' }}>
-                        <Bar data={themesChartData} options={{ ...chartOptions, indexAxis: 'y' }} />
+                        <Bar data={applyPalette(themesChartData, getChartSettings('themes').palette)} options={buildChartOptions({ ...chartOptions, indexAxis: 'y' }, getChartSettings('themes'))} />
                     </div>
                 </div>
 
@@ -914,7 +919,7 @@ function Dashboard() {
                         <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'rating', 'Rozdělení hodnocení')} title="Nastavení">⚙️</button>
                     </div>
                     <div style={{ height: '280px' }}>
-                        <Bar data={ratingChartData} options={chartOptions} />
+                        <Bar data={applyPalette(ratingChartData, getChartSettings('rating').palette)} options={buildChartOptions(chartOptions, getChartSettings('rating'))} />
                     </div>
                 </div>
 
@@ -925,7 +930,7 @@ function Dashboard() {
                         <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'monthly2025', 'Sledování v roce 2025')} title="Nastavení">⚙️</button>
                     </div>
                     <div style={{ height: '280px' }}>
-                        <Line data={monthlyData} options={chartOptions} />
+                        <Line data={applyPalette(monthlyData, getChartSettings('monthly2025').palette)} options={buildChartOptions(chartOptions, getChartSettings('monthly2025'))} />
                     </div>
                 </div>
 
@@ -936,7 +941,7 @@ function Dashboard() {
                         <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'releaseYears', 'Stáří anime')} title="Nastavení">⚙️</button>
                     </div>
                     <div style={{ height: '280px' }}>
-                        <Line data={releaseYearsData} options={chartOptions} />
+                        <Line data={applyPalette(releaseYearsData, getChartSettings('releaseYears').palette)} options={buildChartOptions(chartOptions, getChartSettings('releaseYears'))} />
                     </div>
                 </div>
 
@@ -947,7 +952,7 @@ function Dashboard() {
                         <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'status', 'Rozdělení statusů')} title="Nastavení">⚙️</button>
                     </div>
                     <div style={{ height: '280px' }}>
-                        <Doughnut data={statusChartData} options={pieOptions} />
+                        <Doughnut data={applyPalette(statusChartData, getChartSettings('status').palette)} options={buildChartOptions(pieOptions, getChartSettings('status'))} />
                     </div>
                 </div>
 
@@ -958,7 +963,7 @@ function Dashboard() {
                         <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'dubbing', 'Rozdělení dabingů')} title="Nastavení">⚙️</button>
                     </div>
                     <div style={{ height: '280px' }}>
-                        <Bar data={dubChartData} options={chartOptions} />
+                        <Bar data={applyPalette(dubChartData, getChartSettings('dubbing').palette)} options={buildChartOptions(chartOptions, getChartSettings('dubbing'))} />
                     </div>
                 </div>
 
@@ -969,7 +974,7 @@ function Dashboard() {
                         <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'avgRatingType', 'Průměrné hodnocení dle typu')} title="Nastavení">⚙️</button>
                     </div>
                     <div style={{ height: '280px' }}>
-                        <Bar data={avgRatingByTypeData} options={chartOptions} />
+                        <Bar data={applyPalette(avgRatingByTypeData, getChartSettings('avgRatingType').palette)} options={buildChartOptions(chartOptions, getChartSettings('avgRatingType'))} />
                     </div>
                 </div>
 
@@ -981,7 +986,7 @@ function Dashboard() {
                             <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'studiosByRating', 'Top 10 studií podle hodnocení')} title="Nastavení">⚙️</button>
                         </div>
                         <div style={{ height: '320px' }}>
-                            <Bar data={studiosByRatingData} options={horizontalBarOptions} />
+                            <Bar data={applyPalette(studiosByRatingData, getChartSettings('studiosByRating').palette)} options={buildChartOptions(horizontalBarOptions, getChartSettings('studiosByRating'))} />
                         </div>
                     </div>
                 )}
@@ -994,7 +999,7 @@ function Dashboard() {
                             <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'genresByRating', 'Top 10 žánrů podle hodnocení')} title="Nastavení">⚙️</button>
                         </div>
                         <div style={{ height: '320px' }}>
-                            <Bar data={genresByRatingData} options={horizontalBarOptions} />
+                            <Bar data={applyPalette(genresByRatingData, getChartSettings('genresByRating').palette)} options={buildChartOptions(horizontalBarOptions, getChartSettings('genresByRating'))} />
                         </div>
                     </div>
                 )}
@@ -1007,7 +1012,7 @@ function Dashboard() {
                             <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'themesByRating', 'Top 10 témat podle hodnocení')} title="Nastavení">⚙️</button>
                         </div>
                         <div style={{ height: '320px' }}>
-                            <Bar data={themesByRatingData} options={horizontalBarOptions} />
+                            <Bar data={applyPalette(themesByRatingData, getChartSettings('themesByRating').palette)} options={buildChartOptions(horizontalBarOptions, getChartSettings('themesByRating'))} />
                         </div>
                     </div>
                 )}
@@ -1020,7 +1025,7 @@ function Dashboard() {
                             <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'dailyWatching', 'Denní sledování')} title="Nastavení">⚙️</button>
                         </div>
                         <div style={{ height: '280px' }}>
-                            <Line data={dailyWatchingData} options={chartOptions} />
+                            <Line data={applyPalette(dailyWatchingData, getChartSettings('dailyWatching').palette)} options={buildChartOptions(chartOptions, getChartSettings('dailyWatching'))} />
                         </div>
                     </div>
                 )}
@@ -1033,7 +1038,7 @@ function Dashboard() {
                             <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'monthlyWatching', 'Měsíční sledování')} title="Nastavení">⚙️</button>
                         </div>
                         <div style={{ height: '280px' }}>
-                            <Bar data={monthlyWatchingData} options={chartOptions} />
+                            <Bar data={applyPalette(monthlyWatchingData, getChartSettings('monthlyWatching').palette)} options={buildChartOptions(chartOptions, getChartSettings('monthlyWatching'))} />
                         </div>
                     </div>
                 )}

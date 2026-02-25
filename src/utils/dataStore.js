@@ -17,7 +17,7 @@ let versionChecked = false
 
 async function checkServerVersion() {
     try {
-        const response = await fetch('/data/metadata.json?v=' + Date.now())
+        const response = await fetch('data/metadata.json?v=' + Date.now())
         if (!response.ok) return
 
         const meta = await response.json()
@@ -25,7 +25,7 @@ async function checkServerVersion() {
         const localTime = parseInt(localStorage.getItem('data_last_updated') || '0')
 
         if (serverTime > localTime) {
-            console.log('New data version detected. refresh local data.')
+            console.log('New data version detected. refresh local data.');
             // Clear cached data keys
             [
                 STORAGE_KEYS.ANIME_LIST,
@@ -91,7 +91,7 @@ export function saveData(key, data) {
  * @returns {Promise<Object>} - Added anime with generated index
  */
 export async function addAnime(anime) {
-    const list = await loadData(STORAGE_KEYS.ANIME_LIST, '/data/anime_list.json')
+    const list = await loadData(STORAGE_KEYS.ANIME_LIST, 'data/anime_list.json')
 
     // Generate new index
     const maxIndex = list.reduce((max, a) => {
@@ -123,7 +123,7 @@ export async function addAnime(anime) {
  * @returns {Promise<Object|null>} - Updated anime or null if not found
  */
 export async function updateAnime(name, updates) {
-    const list = await loadData(STORAGE_KEYS.ANIME_LIST, '/data/anime_list.json')
+    const list = await loadData(STORAGE_KEYS.ANIME_LIST, 'data/anime_list.json')
 
     const index = list.findIndex(a => a.name === name)
     if (index === -1) return null
@@ -142,7 +142,7 @@ export async function updateAnime(name, updates) {
  * @returns {Promise<boolean>}
  */
 export async function deleteAnime(name) {
-    const list = await loadData(STORAGE_KEYS.ANIME_LIST, '/data/anime_list.json')
+    const list = await loadData(STORAGE_KEYS.ANIME_LIST, 'data/anime_list.json')
 
     const index = list.findIndex(a => a.name === name)
     if (index === -1) return false
@@ -161,7 +161,7 @@ export async function deleteAnime(name) {
  * @returns {Promise<Object>}
  */
 export async function addHistoryEntry(entry) {
-    const history = await loadData(STORAGE_KEYS.HISTORY_LOG, '/data/history_log.json')
+    const history = await loadData(STORAGE_KEYS.HISTORY_LOG, 'data/history_log.json')
 
     const newEntry = {
         ...entry,
@@ -184,7 +184,7 @@ export async function addHistoryEntry(entry) {
  * @returns {Promise<Object>}
  */
 export async function updateCategoryRatings(name, categories) {
-    const ratings = await loadData(STORAGE_KEYS.CATEGORY_RATINGS, '/data/category_ratings.json')
+    const ratings = await loadData(STORAGE_KEYS.CATEGORY_RATINGS, 'data/category_ratings.json')
 
     const index = ratings.findIndex(r => r.name === name)
 

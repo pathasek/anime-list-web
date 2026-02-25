@@ -8,7 +8,7 @@ function PlanToWatch() {
     const [statusFilter, setStatusFilter] = useState('all')
 
     useEffect(() => {
-        fetch('/data/plan_to_watch.json')
+        fetch('data/plan_to_watch.json')
             .then(r => r.json())
             .then(data => {
                 // Filter out invalid entries (placeholders like InterestStacks)
@@ -130,6 +130,38 @@ function PlanToWatch() {
         return 'tv'
     }
 
+    const ExpandableSource = ({ text }) => {
+        const [expanded, setExpanded] = useState(false);
+        if (!text) return '-';
+
+        const linkify = (t) => {
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            return t.split(urlRegex).map((part, i) => {
+                if (part.match(urlRegex)) {
+                    return <a key={i} href={part} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)', textDecoration: 'underline' }}>{part.length > 50 ? part.substring(0, 50) + '...' : part}</a>
+                }
+                return part;
+            });
+        };
+
+        const isLong = text.length > 100;
+        const displayText = expanded ? text : (isLong ? text.substring(0, 100) + '...' : text);
+
+        return (
+            <div>
+                {linkify(displayText)}
+                {isLong && (
+                    <button
+                        onClick={() => { setExpanded(!expanded) }}
+                        style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', marginLeft: '4px', fontSize: '0.75rem', textDecoration: 'underline' }}
+                    >
+                        {expanded ? 'Méně' : 'Více'}
+                    </button>
+                )}
+            </div>
+        );
+    };
+
     if (loading) {
         return <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)' }}>Načítání...</div>
     }
@@ -165,13 +197,37 @@ function PlanToWatch() {
 
             {/* Search and Filters */}
             <div className="search-bar">
-                <input
-                    type="text"
-                    className="search-input"
-                    placeholder="Hledat anime nebo důvod..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
+                <div style={{ position: 'relative', flex: 1, display: 'flex', alignItems: 'center' }}>
+                    <input
+                        type="text"
+                        className="search-input"
+                        placeholder="Hledat anime nebo důvod..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        style={{ width: '100%', paddingRight: '2rem' }}
+                    />
+                    {searchTerm && (
+                        <button
+                            onClick={() => setSearchTerm('')}
+                            style={{
+                                position: 'absolute',
+                                right: '12px',
+                                background: 'transparent',
+                                border: 'none',
+                                color: 'var(--text-muted)',
+                                cursor: 'pointer',
+                                fontSize: '1.2rem',
+                                padding: '0 4px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                            title="Vymazat hledání"
+                        >
+                            ×
+                        </button>
+                    )}
+                </div>
                 <div className="filter-group">
                     <button
                         className={`filter-btn ${statusFilter === 'all' ? 'active' : ''}`}
@@ -245,7 +301,7 @@ function PlanToWatch() {
                                     ) : '-'}
                                 </td>
                                 <td style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', maxWidth: '350px' }}>
-                                    {item.source ? (item.source.length > 100 ? item.source.substring(0, 100) + '...' : item.source) : '-'}
+                                    <ExpandableSource text={item.source} />
                                 </td>
                                 <td>
                                     {item.notes === 'AIRING!' ? (

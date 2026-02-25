@@ -11,8 +11,8 @@ function HistoryLog() {
 
     useEffect(() => {
         Promise.all([
-            loadData(STORAGE_KEYS.HISTORY_LOG, '/data/history_log.json'),
-            loadData(STORAGE_KEYS.ANIME_LIST, '/data/anime_list.json')
+            loadData(STORAGE_KEYS.HISTORY_LOG, 'data/history_log.json'),
+            loadData(STORAGE_KEYS.ANIME_LIST, 'data/anime_list.json')
         ]).then(([history, anime]) => {
             setHistoryLog(history)
             setAnimeList(anime)
@@ -146,13 +146,37 @@ function HistoryLog() {
 
             {/* Search and Filters */}
             <div className="search-bar">
-                <input
-                    type="text"
-                    className="search-input"
-                    placeholder="Hledat anime..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
+                <div style={{ position: 'relative', flex: 1, display: 'flex', alignItems: 'center' }}>
+                    <input
+                        type="text"
+                        className="search-input"
+                        placeholder="Hledat anime..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        style={{ width: '100%', paddingRight: '2rem' }}
+                    />
+                    {searchTerm && (
+                        <button
+                            onClick={() => setSearchTerm('')}
+                            style={{
+                                position: 'absolute',
+                                right: '12px',
+                                background: 'transparent',
+                                border: 'none',
+                                color: 'var(--text-muted)',
+                                cursor: 'pointer',
+                                fontSize: '1.2rem',
+                                padding: '0 4px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                            title="Vymazat hledání"
+                        >
+                            ×
+                        </button>
+                    )}
+                </div>
                 <div className="filter-group">
                     {years.map(y => (
                         <button
