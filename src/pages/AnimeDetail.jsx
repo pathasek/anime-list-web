@@ -12,6 +12,7 @@ import {
     BarElement
 } from 'chart.js'
 import { Radar, Bar } from 'react-chartjs-2'
+import regression from 'regression'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, CategoryScale, LinearScale, BarElement)
 
@@ -61,15 +62,25 @@ function AnimeDetail() {
         })
     }, [name])
 
+    const categoryWeights = useMemo(() => ({
+        "Animace": 2.0, "CGI": 1.8, "MC": 3.0, "Vedlejší postavy": 2.5, "Waifu": 1.5,
+        "Plot": 4.0, "Pacing": 1.5, "Story Conclusion": 1.5, "Originalita": 2.5,
+        "Emoce": 3.5, "Enjoyment": 4.0, "OP": 1.0, "ED": 0.5, "OST": 2.0
+    }), [])
+
     // Radar chart data
     const radarData = useMemo(() => {
         if (!categoryRatings) return null
 
         const categories = Object.keys(categoryRatings)
+        const labels = categories.map(c => {
+            const w = categoryWeights[c] || 1
+            return `${c} (v. ${w})`
+        })
         const values = Object.values(categoryRatings)
 
         return {
-            labels: categories,
+            labels: labels,
             datasets: [{
                 label: 'Hodnocení',
                 data: values,
@@ -81,36 +92,65 @@ function AnimeDetail() {
                 pointRadius: 4
             }]
         }
-    }, [categoryRatings])
+    }, [categoryRatings, categoryWeights])
 
     // Episode ratings bar chart
     const episodeChartData = useMemo(() => {
         if (!episodeRatings || episodeRatings.length === 0) return null
 
+        const dataPoints = episodeRatings.map((ep, i) => [i + 1, ep.rating])
+        let trendData = []
+        if (dataPoints.length > 1) {
+            const result = regression.polynomial(dataPoints, { order: 6, precision: 10 })
+            trendData = dataPoints.map(p => result.predict(p[0])[1])
+        }
+
         return {
             labels: episodeRatings.map(ep => ep.episode),
-            datasets: [{
-                label: 'Hodnocení epizody',
-                data: episodeRatings.map(ep => ep.rating),
-                backgroundColor: episodeRatings.map(ep => {
-                    const r = ep.rating
-                    if (r >= 9) return 'rgba(16, 185, 129, 0.7)'
-                    if (r >= 7.5) return 'rgba(99, 102, 241, 0.7)'
-                    if (r >= 6) return 'rgba(245, 158, 11, 0.7)'
-                    return 'rgba(239, 68, 68, 0.7)'
-                }),
-                borderRadius: 4
-            }]
+            datasets: [
+                {
+                    type: 'line',
+                    label: 'Polyn. (Celkem)',
+                    data: trendData,
+                    borderColor: 'rgb(255, 0, 0)',
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    fill: false,
+                    tension: 0.4
+                },
+                {
+                    type: 'bar',
+                    label: 'Hodnocení epizody',
+                    data: episodeRatings.map(ep => ep.rating),
+                    backgroundColor: episodeRatings.map(ep => {
+                        const r = ep.rating
+                        if (r >= 5 && r <= 5.75) return 'rgb(99, 57, 116)'
+                        if (r >= 6 && r <= 6.75) return 'rgb(243, 156, 18)'
+                        if (r >= 7 && r <= 7.75) return 'rgb(244, 208, 63)'
+                        if (r >= 8 && r <= 8.75) return 'rgb(40, 180, 99)'
+                        if (r >= 9 && r <= 9.5) return 'rgb(24, 106, 59)'
+                        if (r >= 9.75 && r <= 10) return 'rgb(29, 161, 242)'
+                        return 'rgba(239, 68, 68, 0.7)' // default from template
+                    }),
+                    borderRadius: 4
+                }
+            ]
         }
     }, [episodeRatings])
+
+    const radarMin = useMemo(() => {
+        if (!categoryRatings) return 0
+        const values = Object.values(categoryRatings)
+        return values.length > 0 ? Math.min(...values) : 0
+    }, [categoryRatings])
 
     const radarOptions = {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
             r: {
-                beginAtZero: true,
-                min: 0,
+                beginAtZero: false,
+                min: radarMin,
                 max: 10,
                 ticks: {
                     stepSize: 2,
@@ -138,8 +178,8 @@ function AnimeDetail() {
         maintainAspectRatio: false,
         scales: {
             y: {
-                beginAtZero: true,
-                min: 0,
+                beginAtZero: false,
+                min: 4.75,
                 max: 10,
                 ticks: { color: 'rgba(255,255,255,0.6)' },
                 grid: { color: 'rgba(255,255,255,0.1)' }
@@ -154,12 +194,18 @@ function AnimeDetail() {
         }
     }
 
-    // Calculate average rating from categories
+    // Calculate average rating from categories using weights
     const avgCategoryRating = useMemo(() => {
         if (!categoryRatings) return null
-        const values = Object.values(categoryRatings)
-        return (values.reduce((a, b) => a + b, 0) / values.length).toFixed(2)
-    }, [categoryRatings])
+        let sumProd = 0
+        let sumWeight = 0
+        Object.entries(categoryRatings).forEach(([cat, rating]) => {
+            const w = categoryWeights[cat] || 1
+            sumProd += rating * w
+            sumWeight += w
+        })
+        return sumWeight > 0 ? (sumProd / sumWeight).toFixed(2) : 'N/A'
+    }, [categoryRatings, categoryWeights])
 
     // Calculate average episode rating
     const avgEpisodeRating = useMemo(() => {
@@ -326,7 +372,7 @@ function AnimeDetail() {
                             </tr>
                         </thead>
                         <tbody>
-                            {history.slice(0, 10).map((h, i) => (
+                            {history.map((h, i) => (
                                 <tr key={i}>
                                     <td>{h.date ? new Date(h.date).toLocaleDateString('cs-CZ') : 'N/A'}</td>
                                     <td>{h.episodes}</td>
@@ -335,11 +381,6 @@ function AnimeDetail() {
                             ))}
                         </tbody>
                     </table>
-                    {history.length > 10 && (
-                        <p style={{ marginTop: 'var(--spacing-sm)', color: 'var(--color-text-muted)' }}>
-                            ...a dalších {history.length - 10} záznamů
-                        </p>
-                    )}
                 </div>
             )}
         </div>

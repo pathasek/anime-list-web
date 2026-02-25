@@ -114,25 +114,7 @@ function ChartSettingsModal({ isOpen, onClose, chartId, chartTitle, onSettingsCh
                     />
                 </div>
 
-                {/* Size */}
-                <div className="settings-group">
-                    <label>Velikost</label>
-                    <div className="settings-buttons">
-                        {Object.keys(chartSizes).map(size => (
-                            <button
-                                key={size}
-                                className={`settings-btn ${settings.size === size ? 'active' : ''}`}
-                                onClick={() => handleChange('size', size)}
-                            >
-                                {size === 'small' && '📱 Malý'}
-                                {size === 'medium' && '💻 Střední'}
-                                {size === 'large' && '🖥️ Velký'}
-                                {size === 'wide' && '📺 Široký'}
-                                {size === 'extraWide' && '🎬 Extra široký'}
-                            </button>
-                        ))}
-                    </div>
-                </div>
+
 
                 {/* Color Palette */}
                 <div className="settings-group">

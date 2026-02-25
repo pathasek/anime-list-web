@@ -731,7 +731,42 @@ function Dashboard() {
     }
 
 
+
+    const ChartWrapper = ({ id, defaultTitle, defaultGridColumn = 'span 1', children }) => {
+        const settings = getChartSettings(id)
+        const customTitle = settings.customTitle || defaultTitle
+
+        const handleMouseUp = (e) => {
+            const el = e.currentTarget
+            if (el.offsetWidth !== settings.customWidth || el.offsetHeight !== settings.customHeight) {
+                saveChartSettings(id, { ...settings, customWidth: el.offsetWidth, customHeight: el.offsetHeight })
+                setSettingsRefresh(prev => prev + 1)
+            }
+        }
+
+        return (
+            <div
+                className="chart-container"
+                style={{
+                    gridColumn: defaultGridColumn,
+                    width: settings.customWidth ? `${settings.customWidth}px` : 'auto',
+                    height: settings.customHeight ? `${settings.customHeight}px` : 'auto'
+                }}
+                onMouseUp={handleMouseUp}
+            >
+                <div className="chart-header">
+                    <div className="chart-title">{customTitle}</div>
+                    <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, id, defaultTitle)} title="Nastavení">⚙️</button>
+                </div>
+                <div style={{ flex: 1, minHeight: 0, position: 'relative' }}>
+                    {children}
+                </div>
+            </div>
+        )
+    }
+
     return (
+
         <div className="fade-in">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-xl)' }}>
                 <h2 style={{ margin: 0 }}>Dashboard</h2>
@@ -855,195 +890,82 @@ function Dashboard() {
             })()}
 
 
-            {/* Charts Row 1 */}
-            <div className="charts-grid">
-                {/* Types Pie */}
-                <div className="chart-container">
-                    <div className="chart-header">
-                        <div className="chart-title">Rozdělení typů</div>
-                        <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'types', 'Rozdělení typů')} title="Nastavení">⚙️</button>
-                    </div>
-                    <div style={{ height: '280px' }}>
-                        <Doughnut data={applyPalette(typeChartData, getChartSettings('types').palette)} options={buildChartOptions(pieOptions, getChartSettings('types'))} />
-                    </div>
-                </div>
+            {/* Charts Row 1 */}\n            <div className="charts-grid">\n
+                <ChartWrapper id="types" defaultTitle="Rozdělení typů" defaultGridColumn="span 1">
+                    <Doughnut data={applyPalette(typeChartData, getChartSettings('types').palette)} options={buildChartOptions(pieOptions, { ...getChartSettings('types'), showGrid: false })} />
+                </ChartWrapper>
 
-                {/* Studios Pie */}
-                <div className="chart-container">
-                    <div className="chart-header">
-                        <div className="chart-title">Top 10 Studií</div>
-                        <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'studios', 'Top 10 Studií')} title="Nastavení">⚙️</button>
-                    </div>
-                    <div style={{ height: '280px' }}>
-                        <Pie data={applyPalette(studioChartData, getChartSettings('studios').palette)} options={buildChartOptions(pieOptions, getChartSettings('studios'))} />
-                    </div>
-                </div>
+                <ChartWrapper id="studios" defaultTitle="Top 10 Studií" defaultGridColumn="span 1">
+                    <Pie data={applyPalette(studioChartData, getChartSettings('studios').palette)} options={buildChartOptions(pieOptions, { ...getChartSettings('studios'), showGrid: false })} />
+                </ChartWrapper>
 
-                {/* Seasons Pie */}
-                <div className="chart-container">
-                    <div className="chart-header">
-                        <div className="chart-title">Rozdělení podle sezón</div>
-                        <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'seasons', 'Rozdělení podle sezón')} title="Nastavení">⚙️</button>
-                    </div>
-                    <div style={{ height: '280px' }}>
-                        <Doughnut data={applyPalette(seasonsChartData, getChartSettings('seasons').palette)} options={buildChartOptions(pieOptions, getChartSettings('seasons'))} />
-                    </div>
-                </div>
+                <ChartWrapper id="seasons" defaultTitle="Rozdělení podle sezón" defaultGridColumn="span 1">
+                    <Doughnut data={applyPalette(seasonsChartData, getChartSettings('seasons').palette)} options={buildChartOptions(pieOptions, { ...getChartSettings('seasons'), showGrid: false })} />
+                </ChartWrapper>
 
-                {/* Genres Bar */}
-                <div className="chart-container">
-                    <div className="chart-header">
-                        <div className="chart-title">Top 10 Žánrů</div>
-                        <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'genres', 'Top 10 Žánrů')} title="Nastavení">⚙️</button>
-                    </div>
-                    <div style={{ height: '280px' }}>
-                        <Bar data={applyPalette(genreChartData, getChartSettings('genres').palette)} options={buildChartOptions({ ...chartOptions, indexAxis: 'y' }, getChartSettings('genres'))} />
-                    </div>
-                </div>
+                <ChartWrapper id="genres" defaultTitle="Top 10 Žánrů" defaultGridColumn="span 1">
+                    <Bar data={applyPalette(genreChartData, getChartSettings('genres').palette)} options={buildChartOptions({ ...chartOptions, indexAxis: 'y' }, getChartSettings('genres'))} />
+                </ChartWrapper>
 
-                {/* Themes Bar */}
-                <div className="chart-container">
-                    <div className="chart-header">
-                        <div className="chart-title">Top 10 Témat</div>
-                        <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'themes', 'Top 10 Témat')} title="Nastavení">⚙️</button>
-                    </div>
-                    <div style={{ height: '280px' }}>
-                        <Bar data={applyPalette(themesChartData, getChartSettings('themes').palette)} options={buildChartOptions({ ...chartOptions, indexAxis: 'y' }, getChartSettings('themes'))} />
-                    </div>
-                </div>
+                <ChartWrapper id="themes" defaultTitle="Top 10 Témat" defaultGridColumn="span 1">
+                    <Bar data={applyPalette(themesChartData, getChartSettings('themes').palette)} options={buildChartOptions({ ...chartOptions, indexAxis: 'y' }, getChartSettings('themes'))} />
+                </ChartWrapper>
 
-                {/* Rating Distribution */}
-                <div className="chart-container">
-                    <div className="chart-header">
-                        <div className="chart-title">Rozdělení hodnocení</div>
-                        <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'rating', 'Rozdělení hodnocení')} title="Nastavení">⚙️</button>
-                    </div>
-                    <div style={{ height: '280px' }}>
-                        <Bar data={applyPalette(ratingChartData, getChartSettings('rating').palette)} options={buildChartOptions(chartOptions, getChartSettings('rating'))} />
-                    </div>
-                </div>
+                <ChartWrapper id="rating" defaultTitle="Rozdělení hodnocení" defaultGridColumn="span 1">
+                    <Bar data={applyPalette(ratingChartData, getChartSettings('rating').palette)} options={buildChartOptions(chartOptions, getChartSettings('rating'))} />
+                </ChartWrapper>
 
-                {/* Monthly Episodes 2025 */}
-                <div className="chart-container" style={{ gridColumn: 'span 2' }}>
-                    <div className="chart-header">
-                        <div className="chart-title">Sledování v roce 2025 (epizody/měsíc)</div>
-                        <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'monthly2025', 'Sledování v roce 2025')} title="Nastavení">⚙️</button>
-                    </div>
-                    <div style={{ height: '280px' }}>
-                        <Line data={applyPalette(monthlyData, getChartSettings('monthly2025').palette)} options={buildChartOptions(chartOptions, getChartSettings('monthly2025'))} />
-                    </div>
-                </div>
+                <ChartWrapper id="monthly2025" defaultTitle={`Sledování v roce ${stats.latestYear} (epizody/měsíc)`} defaultGridColumn="span 2">
+                    <Line data={applyPalette(monthlyData, getChartSettings('monthly2025').palette)} options={buildChartOptions(chartOptions, getChartSettings('monthly2025'))} />
+                </ChartWrapper>
 
-                {/* Release Years / Anime Age */}
-                <div className="chart-container" style={{ gridColumn: 'span 2' }}>
-                    <div className="chart-header">
-                        <div className="chart-title">Stáří anime (podle data vydání)</div>
-                        <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'releaseYears', 'Stáří anime')} title="Nastavení">⚙️</button>
-                    </div>
-                    <div style={{ height: '280px' }}>
-                        <Line data={applyPalette(releaseYearsData, getChartSettings('releaseYears').palette)} options={buildChartOptions(chartOptions, getChartSettings('releaseYears'))} />
-                    </div>
-                </div>
+                <ChartWrapper id="releaseYears" defaultTitle="Stáří anime (podle data vydání)" defaultGridColumn="span 2">
+                    <Line data={applyPalette(releaseYearsData, getChartSettings('releaseYears').palette)} options={buildChartOptions(chartOptions, getChartSettings('releaseYears'))} />
+                </ChartWrapper>
 
-                {/* Status Distribution */}
-                <div className="chart-container">
-                    <div className="chart-header">
-                        <div className="chart-title">Rozdělení statusů</div>
-                        <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'status', 'Rozdělení statusů')} title="Nastavení">⚙️</button>
-                    </div>
-                    <div style={{ height: '280px' }}>
-                        <Doughnut data={applyPalette(statusChartData, getChartSettings('status').palette)} options={buildChartOptions(pieOptions, getChartSettings('status'))} />
-                    </div>
-                </div>
+                <ChartWrapper id="status" defaultTitle="Rozdělení statusů" defaultGridColumn="span 1">
+                    <Doughnut data={applyPalette(statusChartData, getChartSettings('status').palette)} options={buildChartOptions(pieOptions, { ...getChartSettings('status'), showGrid: false })} />
+                </ChartWrapper>
 
-                {/* Dubbing Distribution */}
-                <div className="chart-container">
-                    <div className="chart-header">
-                        <div className="chart-title">Rozdělení dabingů</div>
-                        <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'dubbing', 'Rozdělení dabingů')} title="Nastavení">⚙️</button>
-                    </div>
-                    <div style={{ height: '280px' }}>
-                        <Bar data={applyPalette(dubChartData, getChartSettings('dubbing').palette)} options={buildChartOptions(chartOptions, getChartSettings('dubbing'))} />
-                    </div>
-                </div>
+                <ChartWrapper id="dubbing" defaultTitle="Rozdělení dabingů" defaultGridColumn="span 1">
+                    <Bar data={applyPalette(dubChartData, getChartSettings('dubbing').palette)} options={buildChartOptions(chartOptions, getChartSettings('dubbing'))} />
+                </ChartWrapper>
 
-                {/* Average Rating by Type */}
-                <div className="chart-container">
-                    <div className="chart-header">
-                        <div className="chart-title">Průměrné hodnocení dle typu</div>
-                        <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'avgRatingType', 'Průměrné hodnocení dle typu')} title="Nastavení">⚙️</button>
-                    </div>
-                    <div style={{ height: '280px' }}>
-                        <Bar data={applyPalette(avgRatingByTypeData, getChartSettings('avgRatingType').palette)} options={buildChartOptions(chartOptions, getChartSettings('avgRatingType'))} />
-                    </div>
-                </div>
+                <ChartWrapper id="avgRatingType" defaultTitle="Průměrné hodnocení dle typu" defaultGridColumn="span 1">
+                    <Bar data={applyPalette(avgRatingByTypeData, getChartSettings('avgRatingType').palette)} options={buildChartOptions(chartOptions, getChartSettings('avgRatingType'))} />
+                </ChartWrapper>
 
-                {/* Top 10 Studios by Rating */}
                 {stats.studiosByRating.length > 0 && (
-                    <div className="chart-container">
-                        <div className="chart-header">
-                            <div className="chart-title">Top 10 studií podle hodnocení</div>
-                            <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'studiosByRating', 'Top 10 studií podle hodnocení')} title="Nastavení">⚙️</button>
-                        </div>
-                        <div style={{ height: '320px' }}>
-                            <Bar data={applyPalette(studiosByRatingData, getChartSettings('studiosByRating').palette)} options={buildChartOptions(horizontalBarOptions, getChartSettings('studiosByRating'))} />
-                        </div>
-                    </div>
+                    <ChartWrapper id="studiosByRating" defaultTitle="Top 10 studií podle hodnocení">
+                        <Bar data={applyPalette(studiosByRatingData, getChartSettings('studiosByRating').palette)} options={buildChartOptions(horizontalBarOptions, getChartSettings('studiosByRating'))} />
+                    </ChartWrapper>
                 )}
 
-                {/* Top 10 Genres by Rating */}
                 {stats.genresByRating.length > 0 && (
-                    <div className="chart-container">
-                        <div className="chart-header">
-                            <div className="chart-title">Top 10 žánrů podle hodnocení</div>
-                            <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'genresByRating', 'Top 10 žánrů podle hodnocení')} title="Nastavení">⚙️</button>
-                        </div>
-                        <div style={{ height: '320px' }}>
-                            <Bar data={applyPalette(genresByRatingData, getChartSettings('genresByRating').palette)} options={buildChartOptions(horizontalBarOptions, getChartSettings('genresByRating'))} />
-                        </div>
-                    </div>
+                    <ChartWrapper id="genresByRating" defaultTitle="Top 10 žánrů podle hodnocení">
+                        <Bar data={applyPalette(genresByRatingData, getChartSettings('genresByRating').palette)} options={buildChartOptions(horizontalBarOptions, getChartSettings('genresByRating'))} />
+                    </ChartWrapper>
                 )}
 
-                {/* Top 10 Themes by Rating */}
                 {stats.themesByRating.length > 0 && (
-                    <div className="chart-container">
-                        <div className="chart-header">
-                            <div className="chart-title">Top 10 témat podle hodnocení</div>
-                            <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'themesByRating', 'Top 10 témat podle hodnocení')} title="Nastavení">⚙️</button>
-                        </div>
-                        <div style={{ height: '320px' }}>
-                            <Bar data={applyPalette(themesByRatingData, getChartSettings('themesByRating').palette)} options={buildChartOptions(horizontalBarOptions, getChartSettings('themesByRating'))} />
-                        </div>
-                    </div>
+                    <ChartWrapper id="themesByRating" defaultTitle="Top 10 témat podle hodnocení">
+                        <Bar data={applyPalette(themesByRatingData, getChartSettings('themesByRating').palette)} options={buildChartOptions(horizontalBarOptions, getChartSettings('themesByRating'))} />
+                    </ChartWrapper>
                 )}
 
-                {/* Daily Watching (last 365 days) */}
                 {dailyDates.length > 0 && (
-                    <div className="chart-container" style={{ gridColumn: 'span 2' }}>
-                        <div className="chart-header">
-                            <div className="chart-title">Denní sledování (posledních 365 dní)</div>
-                            <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'dailyWatching', 'Denní sledování')} title="Nastavení">⚙️</button>
-                        </div>
-                        <div style={{ height: '280px' }}>
-                            <Line data={applyPalette(dailyWatchingData, getChartSettings('dailyWatching').palette)} options={buildChartOptions(chartOptions, getChartSettings('dailyWatching'))} />
-                        </div>
-                    </div>
+                    <ChartWrapper id="dailyWatching" defaultTitle="Denní sledování (posledních 365 dní)" defaultGridColumn="span 2">
+                        <Line data={applyPalette(dailyWatchingData, getChartSettings('dailyWatching').palette)} options={buildChartOptions(chartOptions, getChartSettings('dailyWatching'))} />
+                    </ChartWrapper>
                 )}
 
-                {/* Monthly Watching */}
                 {monthlyDates.length > 0 && (
-                    <div className="chart-container" style={{ gridColumn: 'span 2' }}>
-                        <div className="chart-header">
-                            <div className="chart-title">Měsíční sledování (v minutách)</div>
-                            <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'monthlyWatching', 'Měsíční sledování')} title="Nastavení">⚙️</button>
-                        </div>
-                        <div style={{ height: '280px' }}>
-                            <Bar data={applyPalette(monthlyWatchingData, getChartSettings('monthlyWatching').palette)} options={buildChartOptions(chartOptions, getChartSettings('monthlyWatching'))} />
-                        </div>
-                    </div>
+                    <ChartWrapper id="monthlyWatching" defaultTitle="Měsíční sledování (v minutách)" defaultGridColumn="span 2">
+                        <Bar data={applyPalette(monthlyWatchingData, getChartSettings('monthlyWatching').palette)} options={buildChartOptions(chartOptions, getChartSettings('monthlyWatching'))} />
+                    </ChartWrapper>
                 )}
             </div>
-
+            
             {/* Chart Settings Modal */}
             {activeChartSettings && (
                 <ChartSettingsModal

@@ -7,8 +7,9 @@ function AnimeList() {
     const [animeList, setAnimeList] = useState([])
     const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
-    const [sortConfig, setSortConfig] = useState({ key: 'index', direction: 'asc' })
+    const [sortConfig, setSortConfig] = useState({ key: 'end_date', direction: 'desc' })
     const [typeFilter, setTypeFilter] = useState('all')
+    const [statusFilter, setStatusFilter] = useState('all')
 
 
     useEffect(() => {
@@ -23,6 +24,13 @@ function AnimeList() {
                 setLoading(false)
             })
     }, [])
+
+    // Get unique statuses for filter
+    const statuses = useMemo(() => {
+        const s = new Set()
+        animeList.forEach(a => a.status && s.add(a.status))
+        return ['all', ...Array.from(s)]
+    }, [animeList])
 
     // Get unique types for filter
     const types = useMemo(() => {
@@ -49,6 +57,11 @@ function AnimeList() {
         // Type filter
         if (typeFilter !== 'all') {
             result = result.filter(a => a.type === typeFilter)
+        }
+
+        // Status filter
+        if (statusFilter !== 'all') {
+            result = result.filter(a => a.status === statusFilter)
         }
 
         // Sort
@@ -187,6 +200,17 @@ function AnimeList() {
                     )}
                 </div>
                 <div className="filter-group">
+                    <select
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                        className="select"
+                        style={{ padding: '0.4rem 0.8rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', fontSize: '0.9rem' }}
+                    >
+                        <option value="all">Všechny statusy</option>
+                        {statuses.filter(s => s !== 'all').map(s => (
+                            <option key={s} value={s}>{s}</option>
+                        ))}
+                    </select>
                     {types.map(t => (
                         <button
                             key={t}
@@ -224,7 +248,7 @@ function AnimeList() {
                                 Ep.{getSortIndicator('episodes')}
                             </th>
                             <th onClick={() => handleSort('rating')} className={sortConfig.key === 'rating' ? 'sorted' : ''}>
-                                Hodnocení{getSortIndicator('rating')}
+                                Hodnocení <span title="Kliknutím seřadíte od nejlepšího" style={{ cursor: 'help', fontSize: '0.8rem', opacity: 0.8 }}>ℹ️</span>{getSortIndicator('rating')}
                             </th>
                             <th onClick={() => handleSort('start_date')} className={sortConfig.key === 'start_date' ? 'sorted' : ''}>
                                 Sledováno{getSortIndicator('start_date')}

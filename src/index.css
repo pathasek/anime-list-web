@@ -386,13 +386,18 @@ tr:hover td {
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: var(--spacing-lg);
-  min-height: 350px;
+  min-height: 250px;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  resize: both;
+  overflow: hidden;
 }
 
 .chart-title {
   font-size: 1rem;
   font-weight: 600;
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-sm);
   color: var(--text-primary);
 }
 
