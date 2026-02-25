@@ -149,8 +149,9 @@ function AnimeList() {
     }
 
     const formatDate = (dateStr) => {
-        if (!dateStr) return '-'
+        if (!dateStr || dateStr === 'X') return '-'
         const d = new Date(dateStr)
+        if (isNaN(d.getTime())) return '-'
         return d.toLocaleDateString('cs-CZ', { year: 'numeric', month: 'numeric', day: 'numeric' })
     }
 
