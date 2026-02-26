@@ -187,11 +187,21 @@ function AnimeList() {
         return anime.series || anime.name || ''
     }
 
+    const [savedScrollPos, setSavedScrollPos] = useState(0)
+
     const toggleSeriesFilter = (anime) => {
         const baseName = extractSeriesBaseName(anime)
         if (seriesFilter === baseName) {
             setSeriesFilter(null)
+
+            // Wait for React to re-render the full list, then restore scroll position
+            setTimeout(() => {
+                window.scrollTo({ top: savedScrollPos, behavior: 'instant' })
+            }, 10)
         } else {
+            // Save current scroll position before filtering shrinks the page
+            setSavedScrollPos(window.scrollY)
+
             setSeriesFilter(baseName)
             // Reset other filters to show the FULL series as requested
             setStatusFilter('all')
