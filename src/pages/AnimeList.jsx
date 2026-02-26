@@ -325,41 +325,55 @@ function AnimeList() {
                                 </td>
                                 <td style={{ padding: '4px' }}>
                                     {anime.thumbnail ? (
-                                        <img
-                                            src={anime.thumbnail}
-                                            alt={anime.name}
+                                        <div
                                             style={{
                                                 width: '80px',
                                                 height: '45px',
-                                                objectFit: 'cover',
-                                                borderRadius: '4px',
-                                                boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
-                                                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-                                                cursor: 'zoom-in'
+                                                position: 'relative',
+                                                overflow: 'visible'
                                             }}
-                                            loading="lazy"
                                             onMouseEnter={(e) => {
-                                                const rect = e.target.getBoundingClientRect();
+                                                const img = e.currentTarget.querySelector('img');
+                                                if (!img) return;
+                                                const rect = e.currentTarget.getBoundingClientRect();
                                                 const viewportW = window.innerWidth;
                                                 const viewportH = window.innerHeight;
                                                 const isBottom = rect.top > viewportH * 0.5;
                                                 const isRight = rect.left > viewportW * 0.5;
                                                 const originY = isBottom ? 'bottom' : 'top';
                                                 const originX = isRight ? 'right' : 'left';
-                                                e.target.style.transformOrigin = `${originY} ${originX}`;
-                                                e.target.style.transform = 'scale(4)';
-                                                e.target.style.zIndex = '1000';
-                                                e.target.style.position = 'relative';
-                                                e.target.style.boxShadow = '0 8px 24px rgba(0,0,0,0.8)';
-                                                e.target.style.borderRadius = '2px';
+                                                img.style.transformOrigin = `${originY} ${originX}`;
+                                                img.style.transform = 'scale(6)';
+                                                img.style.zIndex = '1000';
+                                                img.style.boxShadow = '0 8px 24px rgba(0,0,0,0.8)';
+                                                img.style.borderRadius = '2px';
                                             }}
                                             onMouseLeave={(e) => {
-                                                e.target.style.transform = 'scale(1)';
-                                                e.target.style.zIndex = '1';
-                                                e.target.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)';
-                                                e.target.style.borderRadius = '4px';
+                                                const img = e.currentTarget.querySelector('img');
+                                                if (!img) return;
+                                                img.style.transform = 'scale(1)';
+                                                img.style.zIndex = '1';
+                                                img.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)';
+                                                img.style.borderRadius = '4px';
                                             }}
-                                        />
+                                        >
+                                            <img
+                                                src={anime.thumbnail}
+                                                alt={anime.name}
+                                                style={{
+                                                    width: '80px',
+                                                    height: '45px',
+                                                    objectFit: 'cover',
+                                                    borderRadius: '4px',
+                                                    boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                                                    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                                                    cursor: 'zoom-in',
+                                                    pointerEvents: 'none',
+                                                    position: 'relative'
+                                                }}
+                                                loading="lazy"
+                                            />
+                                        </div>
                                     ) : (
                                         <div style={{
                                             width: '80px',
