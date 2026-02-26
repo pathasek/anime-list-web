@@ -255,8 +255,8 @@ function AnimeDetail() {
                     {/* Left: Thumbnail */}
                     {anime.thumbnail && (
                         <div style={{
-                            flex: '0 0 220px',
-                            minHeight: '140px',
+                            flex: '0 0 260px',
+                            aspectRatio: '16 / 9',
                             borderRadius: 'var(--radius-md)',
                             overflow: 'hidden',
                             boxShadow: 'var(--shadow-md)'
