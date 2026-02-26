@@ -163,17 +163,20 @@ function AnimeDetail() {
                 max: radarMax,
                 ticks: {
                     stepSize: 1,
-                    color: 'rgba(255,255,255,0.6)'
+                    color: 'rgba(255,255,255,0.85)',
+                    font: { size: 13, weight: '600' },
+                    backdropColor: 'rgba(0,0,0,0.5)',
+                    backdropPadding: 3
                 },
                 grid: {
-                    color: 'rgba(255,255,255,0.1)'
+                    color: 'rgba(255,255,255,0.15)'
                 },
                 angleLines: {
-                    color: 'rgba(255,255,255,0.1)'
+                    color: 'rgba(255,255,255,0.15)'
                 },
                 pointLabels: {
-                    color: 'rgba(255,255,255,0.8)',
-                    font: { size: 11 }
+                    color: 'rgba(255,255,255,0.9)',
+                    font: { size: 13, weight: '500' }
                 }
             }
         },
