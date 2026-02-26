@@ -45,7 +45,7 @@ function HistoryLog() {
     }, [historyLog])
 
     const watchStreak = useMemo(() => {
-        if (!historyLog.length) return { current: 0, longest: 0 }
+        if (!historyLog.length) return { current: 0, longest: 0, currentStart: null, currentEnd: null, longestStart: null, longestEnd: null }
 
         const dailyMinutes = {}
         historyLog.forEach(h => {
@@ -61,7 +61,7 @@ function HistoryLog() {
         })
 
         const sortedDates = Object.keys(dailyMinutes).sort()
-        if (sortedDates.length === 0) return { current: 0, longest: 0 }
+        if (sortedDates.length === 0) return { current: 0, longest: 0, currentStart: null, currentEnd: null, longestStart: null, longestEnd: null }
 
         const minDate = new Date(sortedDates[0])
         const maxDataDate = new Date(sortedDates[sortedDates.length - 1])
@@ -70,9 +70,10 @@ function HistoryLog() {
 
         const effectiveEndDate = maxDataDate > today ? maxDataDate : today
 
-        let currentStreak = 0
-        let longestStreak = 0
+        // 1. Longest streak (historical)
+        let currentStreak = 0, longestStreak = 0
         let inStreak = false
+        let tempStart = null, maxStart = null, maxEnd = null
 
         for (let d = new Date(minDate); d <= effectiveEndDate; d.setDate(d.getDate() + 1)) {
             const dStr = d.toISOString().split('T')[0]
@@ -81,12 +82,15 @@ function HistoryLog() {
             if (mins >= 20) {
                 if (!inStreak) {
                     inStreak = true
+                    tempStart = new Date(d)
                     currentStreak = 1
                 } else {
                     currentStreak++
                 }
                 if (currentStreak > longestStreak) {
                     longestStreak = currentStreak
+                    maxStart = new Date(tempStart)
+                    maxEnd = new Date(d)
                 }
             } else {
                 inStreak = false
@@ -94,25 +98,28 @@ function HistoryLog() {
             }
         }
 
-        let actStreak = 0
+        // 2. Current streak (from today/yesterday backwards)
+        let actStreak = 0, actStart = null, actEnd = null
         const effStr = effectiveEndDate.toISOString().split('T')[0]
         const prevDate = new Date(effectiveEndDate)
         prevDate.setDate(prevDate.getDate() - 1)
         const prevStr = prevDate.toISOString().split('T')[0]
 
-        let lastDateStr = null
+        let lastDate = null
         if ((dailyMinutes[effStr] || 0) >= 20) {
-            lastDateStr = effStr
+            lastDate = new Date(effectiveEndDate)
         } else if ((dailyMinutes[prevStr] || 0) >= 20) {
-            lastDateStr = prevStr
+            lastDate = new Date(prevDate)
         }
 
-        if (lastDateStr) {
-            let d = new Date(lastDateStr)
+        if (lastDate) {
+            actEnd = new Date(lastDate)
+            let d = new Date(lastDate)
             while (d >= minDate) {
                 const dStr = d.toISOString().split('T')[0]
                 if ((dailyMinutes[dStr] || 0) >= 20) {
                     actStreak++
+                    actStart = new Date(d)
                     d.setDate(d.getDate() - 1)
                 } else {
                     break
@@ -120,7 +127,14 @@ function HistoryLog() {
             }
         }
 
-        return { current: actStreak, longest: longestStreak }
+        return {
+            current: actStreak,
+            longest: longestStreak,
+            currentStart: actStart,
+            currentEnd: actEnd,
+            longestStart: maxStart,
+            longestEnd: maxEnd
+        }
     }, [historyLog])
 
     // Group by date and filter
@@ -231,27 +245,84 @@ function HistoryLog() {
 
                 <div style={{
                     display: 'flex',
-                    alignItems: 'center',
-                    gap: 'var(--spacing-md)',
+                    alignItems: 'stretch',
+                    gap: '0',
                     background: 'var(--color-bg-elevated)',
-                    padding: 'var(--spacing-sm) var(--spacing-lg)',
                     borderRadius: 'var(--radius-md)',
-                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                    overflow: 'hidden'
                 }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <span style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Current Streak</span>
+                    {/* Current Streak */}
+                    <div style={{
+                        display: 'flex', flexDirection: 'column', alignItems: 'center',
+                        padding: 'var(--spacing-sm) var(--spacing-lg)',
+                        background: watchStreak.current > 0
+                            ? (watchStreak.current >= watchStreak.longest
+                                ? 'linear-gradient(135deg, rgba(16,185,129,0.15), rgba(16,185,129,0.05))'
+                                : 'linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05))')
+                            : 'transparent',
+                        position: 'relative',
+                        minWidth: '140px'
+                    }}>
+                        <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>
+                            🔥 Aktuální Streak
+                        </span>
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                            <span style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--color-primary)' }}>{watchStreak.current}</span>
-                            <span style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>dní</span>
+                            <span style={{
+                                fontSize: '2rem', fontWeight: '800',
+                                color: watchStreak.current >= watchStreak.longest ? 'var(--accent-emerald)' : 'var(--accent-amber)'
+                            }}>
+                                {watchStreak.current}
+                            </span>
+                            <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                                {watchStreak.current === 1 ? 'den' : watchStreak.current >= 2 && watchStreak.current <= 4 ? 'dny' : 'dní'}
+                            </span>
                         </div>
+                        {watchStreak.currentStart && (
+                            <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                                {watchStreak.currentStart.toLocaleDateString('cs-CZ')} – {watchStreak.currentEnd.toLocaleDateString('cs-CZ')}
+                            </span>
+                        )}
+                        {/* Progress bar: current vs longest */}
+                        {watchStreak.longest > 0 && (
+                            <div style={{
+                                width: '100%', height: '3px', background: 'rgba(255,255,255,0.1)',
+                                borderRadius: '2px', marginTop: '6px', overflow: 'hidden'
+                            }}>
+                                <div style={{
+                                    width: `${Math.min(100, (watchStreak.current / watchStreak.longest) * 100)}%`,
+                                    height: '100%',
+                                    background: watchStreak.current >= watchStreak.longest
+                                        ? 'var(--accent-emerald)' : 'var(--accent-amber)',
+                                    borderRadius: '2px',
+                                    transition: 'width 0.5s ease'
+                                }} />
+                            </div>
+                        )}
                     </div>
-                    <div style={{ width: '1px', height: '30px', background: 'var(--border-color)' }}></div>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <span style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Longest Streak</span>
+                    <div style={{ width: '1px', background: 'var(--border-color)' }} />
+                    {/* Longest Streak */}
+                    <div style={{
+                        display: 'flex', flexDirection: 'column', alignItems: 'center',
+                        padding: 'var(--spacing-sm) var(--spacing-lg)',
+                        minWidth: '140px'
+                    }}>
+                        <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>
+                            🏆 Nejdelší Streak
+                        </span>
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                            <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--color-text-primary)' }}>{watchStreak.longest}</span>
-                            <span style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>dní</span>
+                            <span style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--text-primary)' }}>
+                                {watchStreak.longest}
+                            </span>
+                            <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                                {watchStreak.longest === 1 ? 'den' : watchStreak.longest >= 2 && watchStreak.longest <= 4 ? 'dny' : 'dní'}
+                            </span>
                         </div>
+                        {watchStreak.longestStart && (
+                            <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                                {watchStreak.longestStart.toLocaleDateString('cs-CZ')} – {watchStreak.longestEnd.toLocaleDateString('cs-CZ')}
+                            </span>
+                        )}
                     </div>
                 </div>
             </div>
