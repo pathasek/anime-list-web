@@ -70,13 +70,19 @@ function HistoryLog() {
 
         const effectiveEndDate = maxDataDate > today ? maxDataDate : today
 
+        // Helper to format date strictly as local YYYY-MM-DD to avoid UTC shift
+        const getLocalISOString = (d) => {
+            const pad = (n) => n.toString().padStart(2, '0')
+            return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+        }
+
         // 1. Longest streak (historical)
         let currentStreak = 0, longestStreak = 0
         let inStreak = false
         let tempStart = null, maxStart = null, maxEnd = null
 
         for (let d = new Date(minDate); d <= effectiveEndDate; d.setDate(d.getDate() + 1)) {
-            const dStr = d.toISOString().split('T')[0]
+            const dStr = getLocalISOString(d)
             const mins = dailyMinutes[dStr] || 0
 
             if (mins >= 20) {
@@ -87,6 +93,7 @@ function HistoryLog() {
                 } else {
                     currentStreak++
                 }
+
                 if (currentStreak > longestStreak) {
                     longestStreak = currentStreak
                     maxStart = new Date(tempStart)
@@ -98,12 +105,19 @@ function HistoryLog() {
             }
         }
 
+        // Handle case where the longest streak is still ongoing at the end of the data
+        if (inStreak && currentStreak > longestStreak) {
+            longestStreak = currentStreak
+            maxStart = new Date(tempStart)
+            maxEnd = new Date(effectiveEndDate)
+        }
+
         // 2. Current streak (from today/yesterday backwards)
         let actStreak = 0, actStart = null, actEnd = null
-        const effStr = effectiveEndDate.toISOString().split('T')[0]
+        const effStr = getLocalISOString(effectiveEndDate)
         const prevDate = new Date(effectiveEndDate)
         prevDate.setDate(prevDate.getDate() - 1)
-        const prevStr = prevDate.toISOString().split('T')[0]
+        const prevStr = getLocalISOString(prevDate)
 
         let lastDate = null
         if ((dailyMinutes[effStr] || 0) >= 20) {
@@ -116,7 +130,7 @@ function HistoryLog() {
             actEnd = new Date(lastDate)
             let d = new Date(lastDate)
             while (d >= minDate) {
-                const dStr = d.toISOString().split('T')[0]
+                const dStr = getLocalISOString(d)
                 if ((dailyMinutes[dStr] || 0) >= 20) {
                     actStreak++
                     actStart = new Date(d)
