@@ -176,13 +176,13 @@ function AnimeList() {
     }
 
     // Check if anime is part of a series using exported series field
-    const isPartOfSeries = (anime) => {
+    function isPartOfSeries(anime) {
         if (!anime) return false
         return !!anime.series
     }
 
     // Extract base name of a series for filtering — use series field directly
-    const extractSeriesBaseName = (anime) => {
+    function extractSeriesBaseName(anime) {
         if (!anime) return ''
         return anime.series || anime.name || ''
     }
