@@ -352,9 +352,9 @@ function AnimeList() {
                                                 const img = e.currentTarget.querySelector('img');
                                                 if (!img) return;
                                                 img.style.transform = 'scale(1)';
+                                                img.style.zIndex = '500';
                                                 img.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)';
                                                 img.style.borderRadius = '4px';
-                                                // Keep z-index high during shrink animation, reset after transition
                                                 setTimeout(() => { img.style.zIndex = '1'; }, 350);
                                             }}
                                         >
