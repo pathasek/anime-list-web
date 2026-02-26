@@ -52,9 +52,9 @@ function AnimeDetail() {
             const foundNote = notes.find(n => n.name === decodedName)
             setNote(foundNote?.note || null)
 
-            // Find watching history
+            // Find watching history (exact match)
             const animeHistory = historyLog.filter(h =>
-                h.name && h.name.toLowerCase().includes(decodedName.toLowerCase().split(',')[0])
+                h.name && h.name.trim() === decodedName.trim()
             )
             setHistory(animeHistory)
 
