@@ -254,11 +254,11 @@ function AnimeDetail() {
 
             <div className="card" style={{ marginBottom: 'var(--spacing-xl)', overflow: 'hidden' }}>
                 {/* Hero Section: Thumbnail + Info */}
-                <div style={{ display: 'flex', gap: 'var(--spacing-xl)', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--spacing-xl)', flexWrap: 'wrap' }}>
                     {/* Left: Thumbnail */}
                     {anime.thumbnail && (
                         <div style={{
-                            flex: '0 0 260px',
+                            flex: '0 0 280px',
                             aspectRatio: '16 / 9',
                             borderRadius: 'var(--radius-md)',
                             overflow: 'hidden',
