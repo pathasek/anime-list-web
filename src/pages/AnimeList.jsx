@@ -133,7 +133,7 @@ function AnimeList() {
         }
 
         return result
-    }, [animeList, searchTerm, typeFilter, statusFilter, sortConfig])
+    }, [animeList, searchTerm, typeFilter, statusFilter, sortConfig, seriesFilter])
 
     const handleSort = (key) => {
         if (key === sortConfig.key && sortConfig.key !== 'default') {
