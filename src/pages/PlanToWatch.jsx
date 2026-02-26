@@ -4,7 +4,7 @@ function PlanToWatch() {
     const [planList, setPlanList] = useState([])
     const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
-    const [sortConfig, setSortConfig] = useState({ key: 'priority', direction: 'asc' })
+    const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' })
     const [statusFilter, setStatusFilter] = useState('all')
 
     useEffect(() => {
@@ -33,6 +33,7 @@ function PlanToWatch() {
         if (!planList.length) return null
 
         let totalEpisodes = 0
+        let totalMinutes = 0
         let airingCount = 0
         let releasedCount = 0
         const types = {}
@@ -41,6 +42,13 @@ function PlanToWatch() {
             const eps = parseInt(item.episodes)
             if (!isNaN(eps) && eps > 0) totalEpisodes += eps
 
+            // Use real total_time from export (in minutes), fallback to 24 min/ep
+            if (item.total_time && !isNaN(item.total_time)) {
+                totalMinutes += item.total_time
+            } else if (!isNaN(eps) && eps > 0) {
+                totalMinutes += eps * 24
+            }
+
             if (item.notes === 'AIRING!') airingCount++
             else if (item.notes === 'Vydáno') releasedCount++
 
@@ -48,13 +56,13 @@ function PlanToWatch() {
             types[type] = (types[type] || 0) + 1
         })
 
-        // Estimated time (assuming 24 min per episode)
-        const estimatedHours = Math.round(totalEpisodes * 24 / 60)
+        // Convert minutes to days
+        const estimatedDays = Math.round(totalMinutes / 60 / 24 * 10) / 10
 
         return {
             total: planList.length,
             totalEpisodes,
-            estimatedHours,
+            estimatedDays,
             airingCount,
             releasedCount,
             types
@@ -90,8 +98,8 @@ function PlanToWatch() {
                 if (aVal == null) return 1
                 if (bVal == null) return -1
 
-                // Numeric for priority and episodes
-                if (sortConfig.key === 'priority' || sortConfig.key === 'episodes') {
+                // Numeric for episodes
+                if (sortConfig.key === 'episodes') {
                     aVal = parseFloat(aVal) || 0
                     bVal = parseFloat(bVal) || 0
                 }
@@ -186,7 +194,7 @@ function PlanToWatch() {
                     <div className="stat-label">Celkem epizod</div>
                 </div>
                 <div className="stat-card cyan">
-                    <div className="stat-value">{Math.floor((stats?.estimatedHours || 0) / 24)} dní</div>
+                    <div className="stat-value">{stats?.estimatedDays || 0} dní</div>
                     <div className="stat-label">Odhadovaný čas</div>
                 </div>
                 <div className="stat-card emerald">
@@ -264,9 +272,7 @@ function PlanToWatch() {
                             <th onClick={() => handleSort('episodes')} className={sortConfig.key === 'episodes' ? 'sorted' : ''}>
                                 Ep.{getSortIndicator('episodes')}
                             </th>
-                            <th onClick={() => handleSort('priority')} className={sortConfig.key === 'priority' ? 'sorted' : ''}>
-                                Priorita{getSortIndicator('priority')}
-                            </th>
+
                             <th>Důvod / Zdroj</th>
                             <th>Status</th>
                         </tr>
@@ -287,19 +293,7 @@ function PlanToWatch() {
                                 <td style={{ textAlign: 'center' }}>
                                     {item.episodes && !isNaN(parseInt(item.episodes)) ? parseInt(item.episodes) : '-'}
                                 </td>
-                                <td style={{ textAlign: 'center' }}>
-                                    {item.priority && !isNaN(parseFloat(item.priority)) ? (
-                                        <span style={{
-                                            padding: '2px 8px',
-                                            background: parseFloat(item.priority) > 1000 ? 'rgba(239, 68, 68, 0.2)' : 'rgba(99, 102, 241, 0.2)',
-                                            color: parseFloat(item.priority) > 1000 ? 'var(--accent-red)' : 'var(--accent-primary)',
-                                            borderRadius: '4px',
-                                            fontSize: '0.875rem'
-                                        }}>
-                                            {Math.round(parseFloat(item.priority))}
-                                        </span>
-                                    ) : '-'}
-                                </td>
+
                                 <td style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', maxWidth: '350px' }}>
                                     <ExpandableSource text={item.source} />
                                 </td>

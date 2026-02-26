@@ -213,14 +213,14 @@ function AnimeDetail() {
             sumProd += rating * w
             sumWeight += w
         })
-        return sumWeight > 0 ? (sumProd / sumWeight).toFixed(2) : 'N/A'
+        return sumWeight > 0 ? (sumProd / sumWeight).toLocaleString('cs-CZ', { maximumFractionDigits: 2 }) : 'N/A'
     }, [categoryRatings, categoryWeights])
 
     // Calculate average episode rating
     const avgEpisodeRating = useMemo(() => {
         if (!episodeRatings || episodeRatings.length === 0) return null
         const sum = episodeRatings.reduce((a, ep) => a + ep.rating, 0)
-        return (sum / episodeRatings.length).toFixed(2)
+        return (sum / episodeRatings.length).toLocaleString('cs-CZ', { maximumFractionDigits: 2 })
     }, [episodeRatings])
 
     if (loading) {
@@ -277,7 +277,7 @@ function AnimeDetail() {
                     <div>
                         <strong>Hodnocení:</strong>{' '}
                         <span className={`badge rating-${Math.floor(anime.rating || 0)}`}>
-                            {anime.rating}/10
+                            {Number(anime.rating) % 1 === 0 ? parseInt(anime.rating) : parseFloat(anime.rating).toFixed(1)}/10
                         </span>
                     </div>
                     <div><strong>Datum vydání:</strong> {anime.release_date ? new Date(anime.release_date).toLocaleDateString('cs-CZ') : 'N/A'}</div>

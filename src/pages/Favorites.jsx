@@ -67,17 +67,17 @@ function Favorites() {
         const types = { OP: 0, ED: 0, OST: 0, Other: 0 }
         const authors = {}
         const anime = {}
-        const animeFH = {} // For Top Series by FH
+        const animeByFinal = {} // For Top Series by final rating
         let withRating = 0
 
         // Rating category sums
         let lyricsSum = 0, lyricsCount = 0
-        let musicSum = 0, musicCount = 0
-        let visualsSum = 0, visualsCount = 0
-        let frissonSum = 0, frissonCount = 0
-        let fhSum = 0, fhCount = 0
+        let emotionSum = 0, emotionCount = 0
+        let melodySum = 0, melodyCount = 0
+        let videoSum = 0, videoCount = 0
+        let voiceSum = 0, voiceCount = 0
         let avgSum = 0, avgCount = 0
-        let totalSum = 0, totalCount = 0
+        let finalSum = 0, finalCount = 0
 
         favorites.forEach(f => {
             // Type distribution
@@ -96,39 +96,39 @@ function Favorites() {
                 const animeName = f.anime_name.split(',')[0].trim()
                 anime[animeName] = (anime[animeName] || 0) + 1
 
-                // Track FH for Top Series
-                if (f.rating_fh && !isNaN(parseFloat(f.rating_fh))) {
-                    if (!animeFH[animeName]) animeFH[animeName] = { sum: 0, count: 0 }
-                    animeFH[animeName].sum += parseFloat(f.rating_fh)
-                    animeFH[animeName].count++
+                // Track final rating for Top Series
+                if (f.rating_final && !isNaN(parseFloat(f.rating_final))) {
+                    if (!animeByFinal[animeName]) animeByFinal[animeName] = { sum: 0, count: 0 }
+                    animeByFinal[animeName].sum += parseFloat(f.rating_final)
+                    animeByFinal[animeName].count++
                 }
             }
 
-            // Rating stats
-            if (f.rating_total && !isNaN(parseFloat(f.rating_total))) {
+            // Count items with final rating ("S hodnocením")
+            if (f.rating_final && !isNaN(parseFloat(f.rating_final))) {
                 withRating++
-                totalSum += parseFloat(f.rating_total)
-                totalCount++
+                finalSum += parseFloat(f.rating_final)
+                finalCount++
             }
             if (f.rating_lyrics && !isNaN(parseFloat(f.rating_lyrics))) {
                 lyricsSum += parseFloat(f.rating_lyrics)
                 lyricsCount++
             }
-            if (f.rating_music && !isNaN(parseFloat(f.rating_music))) {
-                musicSum += parseFloat(f.rating_music)
-                musicCount++
+            if (f.rating_emotion && !isNaN(parseFloat(f.rating_emotion))) {
+                emotionSum += parseFloat(f.rating_emotion)
+                emotionCount++
             }
-            if (f.rating_visuals && !isNaN(parseFloat(f.rating_visuals))) {
-                visualsSum += parseFloat(f.rating_visuals)
-                visualsCount++
+            if (f.rating_melody && !isNaN(parseFloat(f.rating_melody))) {
+                melodySum += parseFloat(f.rating_melody)
+                melodyCount++
             }
-            if (f.rating_frisson && !isNaN(parseFloat(f.rating_frisson))) {
-                frissonSum += parseFloat(f.rating_frisson)
-                frissonCount++
+            if (f.rating_video && !isNaN(parseFloat(f.rating_video))) {
+                videoSum += parseFloat(f.rating_video)
+                videoCount++
             }
-            if (f.rating_fh && !isNaN(parseFloat(f.rating_fh))) {
-                fhSum += parseFloat(f.rating_fh)
-                fhCount++
+            if (f.rating_voice && !isNaN(parseFloat(f.rating_voice))) {
+                voiceSum += parseFloat(f.rating_voice)
+                voiceCount++
             }
             if (f.rating_avg && !isNaN(parseFloat(f.rating_avg))) {
                 avgSum += parseFloat(f.rating_avg)
@@ -146,27 +146,28 @@ function Favorites() {
             .sort((a, b) => b[1] - a[1])
             .slice(0, 10)
 
-        // Top 6 series by average FH
-        const topSeriesByFH = Object.entries(animeFH)
-            .map(([name, data]) => ({ name, avgFH: data.sum / data.count }))
-            .sort((a, b) => b.avgFH - a.avgFH)
+        // Top 6 series by average final rating
+        const topSeriesByFinal = Object.entries(animeByFinal)
+            .filter(([, data]) => data.count >= 2)
+            .map(([name, data]) => ({ name, avgFinal: data.sum / data.count }))
+            .sort((a, b) => b.avgFinal - a.avgFinal)
             .slice(0, 6)
 
         // Average ratings by category
         const avgRatings = {
             lyrics: lyricsCount > 0 ? toCS((lyricsSum / lyricsCount).toFixed(2)) : null,
-            music: musicCount > 0 ? toCS((musicSum / musicCount).toFixed(2)) : null,
-            visuals: visualsCount > 0 ? toCS((visualsSum / visualsCount).toFixed(2)) : null,
-            frisson: frissonCount > 0 ? toCS((frissonSum / frissonCount).toFixed(2)) : null,
-            fh: fhCount > 0 ? toCS((fhSum / fhCount).toFixed(2)) : null,
+            emotion: emotionCount > 0 ? toCS((emotionSum / emotionCount).toFixed(2)) : null,
+            melody: melodyCount > 0 ? toCS((melodySum / melodyCount).toFixed(2)) : null,
+            video: videoCount > 0 ? toCS((videoSum / videoCount).toFixed(2)) : null,
+            voice: voiceCount > 0 ? toCS((voiceSum / voiceCount).toFixed(2)) : null,
             avg: avgCount > 0 ? toCS((avgSum / avgCount).toFixed(2)) : null,
-            total: totalCount > 0 ? toCS((totalSum / totalCount).toFixed(2)) : null
+            final: finalCount > 0 ? toCS((finalSum / finalCount).toFixed(2)) : null
         }
 
         // OST items
         const ostItems = favorites.filter(f => f.type?.toUpperCase() === 'OST')
 
-        return { types, topAuthors, topAnime, withRating, total: favorites.length, avgRatings, ostItems, topSeriesByFH }
+        return { types, topAuthors, topAnime, withRating, total: favorites.length, avgRatings, ostItems, topSeriesByFinal }
     }, [favorites])
 
     // Filter and Sort
@@ -188,16 +189,12 @@ function Favorites() {
 
         if (ratingFilter !== 'all') {
             result = result.filter(f => {
-                const rating = parseFloat(f.rating_total)
-                if (isNaN(rating)) return false
-                if (ratingFilter === '9+') return rating >= 9
-                if (ratingFilter === '8+') return rating >= 8
-                if (ratingFilter === '7+') return rating >= 7
+                const rating = parseFloat(f.rating_final)
+                if (ratingFilter === '9+') return !isNaN(rating) && rating >= 9
+                if (ratingFilter === '8+') return !isNaN(rating) && rating >= 8
+                if (ratingFilter === '7+') return !isNaN(rating) && rating >= 7
                 if (ratingFilter === 'rated') return !isNaN(rating)
-
-                // New rating filters
-                if (ratingFilter === 'frisson') return f.rating_frisson && parseFloat(f.rating_frisson) > 0
-                if (ratingFilter === 'fh') return f.rating_fh && parseFloat(f.rating_fh) > 0
+                if (ratingFilter === 'frisson') return f.has_frisson === true
 
                 return true
             })
@@ -265,12 +262,12 @@ function Favorites() {
         }]
     }
 
-    // Top Series by FH Chart
-    const topSeriesFHData = {
-        labels: stats?.topSeriesByFH.map(s => s.name.substring(0, 20)) || [],
+    // Top Series by Final Rating Chart
+    const topSeriesFinalData = {
+        labels: stats?.topSeriesByFinal.map(s => s.name.substring(0, 20)) || [],
         datasets: [{
-            label: 'Průměrné FH',
-            data: stats?.topSeriesByFH.map(s => s.avgFH) || [],
+            label: 'Prům. finální hodnocení',
+            data: stats?.topSeriesByFinal.map(s => s.avgFinal) || [],
             backgroundColor: '#10b981',
             borderRadius: 4
         }]
@@ -322,7 +319,7 @@ function Favorites() {
             </h2>
 
             {/* 1. Average Ratings Section (Moved to top) */}
-            {stats?.avgRatings?.total && (
+            {stats?.avgRatings?.final && (
                 <div style={{ marginBottom: 'var(--spacing-xl)' }}>
                     <h3 style={{ marginBottom: 'var(--spacing-lg)', color: 'var(--accent-primary)', fontSize: '1.25rem' }}>
                         📊 Průměrná hodnocení kategorií
@@ -330,41 +327,41 @@ function Favorites() {
                     <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))' }}>
                         <div className="stat-card">
                             <div className="stat-value">{stats.avgRatings.avg}</div>
-                            <div className="stat-label">AVG</div>
+                            <div className="stat-label">Průměrné</div>
                         </div>
                         {stats.avgRatings.lyrics && (
                             <div className="stat-card">
                                 <div className="stat-value">{stats.avgRatings.lyrics}</div>
-                                <div className="stat-label">Text / Lyrics</div>
+                                <div className="stat-label">Text</div>
                             </div>
                         )}
-                        {stats.avgRatings.music && (
+                        {stats.avgRatings.emotion && (
                             <div className="stat-card pink">
-                                <div className="stat-value">{stats.avgRatings.music}</div>
-                                <div className="stat-label">Hudba / Music</div>
+                                <div className="stat-value">{stats.avgRatings.emotion}</div>
+                                <div className="stat-label">Emoce</div>
                             </div>
                         )}
-                        {stats.avgRatings.visuals && (
+                        {stats.avgRatings.melody && (
                             <div className="stat-card cyan">
-                                <div className="stat-value">{stats.avgRatings.visuals}</div>
-                                <div className="stat-label">Vizuál / Visuals</div>
+                                <div className="stat-value">{stats.avgRatings.melody}</div>
+                                <div className="stat-label">Melodie</div>
                             </div>
                         )}
-                        {stats.avgRatings.frisson && (
+                        {stats.avgRatings.video && (
                             <div className="stat-card amber">
-                                <div className="stat-value">{stats.avgRatings.frisson}</div>
-                                <div className="stat-label">Frisson</div>
+                                <div className="stat-value">{stats.avgRatings.video}</div>
+                                <div className="stat-label">Videoklip</div>
                             </div>
                         )}
-                        {stats.avgRatings.fh && (
+                        {stats.avgRatings.voice && (
                             <div className="stat-card emerald">
-                                <div className="stat-value">{stats.avgRatings.fh}</div>
-                                <div className="stat-label">FH</div>
+                                <div className="stat-value">{stats.avgRatings.voice}</div>
+                                <div className="stat-label">Hlas</div>
                             </div>
                         )}
                         <div className="stat-card">
-                            <div className="stat-value" style={{ color: 'var(--accent-primary)' }}>{stats.avgRatings.total}</div>
-                            <div className="stat-label">Celkové / Total</div>
+                            <div className="stat-value" style={{ color: 'var(--accent-primary)' }}>{stats.avgRatings.final}</div>
+                            <div className="stat-label">Finální</div>
                         </div>
                     </div>
                 </div>
@@ -412,11 +409,11 @@ function Favorites() {
                 </div>
                 <div className="chart-container">
                     <div className="chart-header">
-                        <div className="chart-title">Top Séries (dle FH)</div>
-                        <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'fav_series_fh', 'Top Séries (dle FH)')} title="Nastavení">⚙️</button>
+                        <div className="chart-title">Top Série (dle fin. hodnocení)</div>
+                        <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'fav_series_final', 'Top Série (dle fin. hodnocení)')} title="Nastavení">⚙️</button>
                     </div>
                     <div style={{ height: '250px' }}>
-                        <Bar data={topSeriesFHData} options={{
+                        <Bar data={topSeriesFinalData} options={{
                             ...chartOptions, scales: {
                                 y: {
                                     beginAtZero: false,
@@ -483,7 +480,6 @@ function Favorites() {
                         <option value="7+">7+ (Dobré)</option>
                         <option value="rated">Ohodnocené</option>
                         <option value="frisson">Má Frisson</option>
-                        <option value="fh">Má FH</option>
                     </select>
                 </div>
             </div>
@@ -498,13 +494,14 @@ function Favorites() {
                             <th onClick={() => handleSort('type')}>Typ {getSortIcon('type')}</th>
                             <th onClick={() => handleSort('song')}>Song {getSortIcon('song')}</th>
                             <th onClick={() => handleSort('author')}>Autor {getSortIcon('author')}</th>
-                            <th title="Lyrics" onClick={() => handleSort('rating_lyrics')}>Text {getSortIcon('rating_lyrics')}</th>
-                            <th title="Music" onClick={() => handleSort('rating_music')}>Hudba {getSortIcon('rating_music')}</th>
-                            <th title="Visuals" onClick={() => handleSort('rating_visuals')}>Vizuál {getSortIcon('rating_visuals')}</th>
+                            <th title="Hodnocení textu" onClick={() => handleSort('rating_lyrics')}>Text {getSortIcon('rating_lyrics')}</th>
+                            <th title="Emoce" onClick={() => handleSort('rating_emotion')}>Emoce {getSortIcon('rating_emotion')}</th>
+                            <th title="Melodie" onClick={() => handleSort('rating_melody')}>Melodie {getSortIcon('rating_melody')}</th>
+                            <th title="Videoklip" onClick={() => handleSort('rating_video')}>Video {getSortIcon('rating_video')}</th>
+                            <th title="Kvalita hlasu" onClick={() => handleSort('rating_voice')}>Hlas {getSortIcon('rating_voice')}</th>
                             <th title="Frisson">⚡</th>
-                            <th title="Future House">FH</th>
-                            <th title="Average">AVG</th>
-                            <th onClick={() => handleSort('rating_total')}>Total {getSortIcon('rating_total')}</th>
+                            <th title="Průměrné hodnocení" onClick={() => handleSort('rating_avg')}>Prům. {getSortIcon('rating_avg')}</th>
+                            <th onClick={() => handleSort('rating_final')}>Finální {getSortIcon('rating_final')}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -529,30 +526,32 @@ function Favorites() {
                                 <td style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', maxWidth: '150px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={fav.author}>
                                     {fav.author || '-'}
                                 </td>
-                                {/* Extra Ratings */}
+                                {/* Sub-ratings */}
                                 <td style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                                    {fav.rating_lyrics}
+                                    {fav.rating_lyrics && !isNaN(parseFloat(fav.rating_lyrics)) ? toCS(parseFloat(fav.rating_lyrics)) : ''}
                                 </td>
                                 <td style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                                    {fav.rating_music}
+                                    {fav.rating_emotion && !isNaN(parseFloat(fav.rating_emotion)) ? toCS(parseFloat(fav.rating_emotion)) : ''}
                                 </td>
                                 <td style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                                    {fav.rating_visuals}
+                                    {fav.rating_melody && !isNaN(parseFloat(fav.rating_melody)) ? toCS(parseFloat(fav.rating_melody)) : ''}
+                                </td>
+                                <td style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                                    {fav.rating_video && !isNaN(parseFloat(fav.rating_video)) ? toCS(parseFloat(fav.rating_video)) : ''}
+                                </td>
+                                <td style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                                    {fav.rating_voice && !isNaN(parseFloat(fav.rating_voice)) ? toCS(parseFloat(fav.rating_voice)) : ''}
                                 </td>
                                 <td style={{ textAlign: 'center', color: 'var(--accent-amber)' }}>
-                                    {fav.rating_frisson && parseFloat(fav.rating_frisson) > 0 ? fav.rating_frisson : ''}
-                                </td>
-                                <td style={{ textAlign: 'center', color: 'var(--accent-emerald)' }}>
-                                    {fav.rating_fh && parseFloat(fav.rating_fh) > 0 ? fav.rating_fh : ''}
+                                    {fav.has_frisson ? '⚡' : ''}
                                 </td>
                                 <td style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
-                                    {fav.rating_avg}
+                                    {fav.rating_avg && !isNaN(parseFloat(fav.rating_avg)) ? toCS(parseFloat(parseFloat(fav.rating_avg).toFixed(1))) : ''}
                                 </td>
-
                                 <td>
-                                    {fav.rating_total && !isNaN(parseFloat(fav.rating_total)) ? (
-                                        <span className={`rating-badge ${parseFloat(fav.rating_total) >= 9 ? 'excellent' : 'good'}`}>
-                                            {toCS(parseFloat(fav.rating_total).toFixed(1))}
+                                    {fav.rating_final && !isNaN(parseFloat(fav.rating_final)) ? (
+                                        <span className={`rating-badge ${parseFloat(fav.rating_final) >= 9 ? 'excellent' : 'good'}`}>
+                                            {toCS(parseFloat(parseFloat(fav.rating_final).toFixed(1)))}
                                         </span>
                                     ) : '-'}
                                 </td>
@@ -604,9 +603,9 @@ function Favorites() {
                                             {ost.author || '-'}
                                         </td>
                                         <td>
-                                            {ost.rating_total && !isNaN(parseFloat(ost.rating_total)) ? (
-                                                <span className={`rating-badge ${parseFloat(ost.rating_total) >= 9 ? 'excellent' : 'good'}`}>
-                                                    {toCS(parseFloat(ost.rating_total).toFixed(1))}
+                                            {ost.rating_final && !isNaN(parseFloat(ost.rating_final)) ? (
+                                                <span className={`rating-badge ${parseFloat(ost.rating_final) >= 9 ? 'excellent' : 'good'}`}>
+                                                    {toCS(parseFloat(parseFloat(ost.rating_final).toFixed(1)))}
                                                 </span>
                                             ) : '-'}
                                         </td>

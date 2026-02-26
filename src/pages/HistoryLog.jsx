@@ -2,6 +2,13 @@ import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { loadData, STORAGE_KEYS } from '../utils/dataStore'
 
+// Czech declension: 1 epizoda, 2-4 epizody, 5+ epizod
+const pluralEpizoda = (n) => {
+    if (n === 1) return '1 epizoda'
+    if (n >= 2 && n <= 4) return `${n} epizody`
+    return `${n} epizod`
+}
+
 function HistoryLog() {
     const [historyLog, setHistoryLog] = useState([])
     const [animeList, setAnimeList] = useState([])
@@ -218,7 +225,7 @@ function HistoryLog() {
                 <h2 style={{ margin: 0 }}>
                     History Log
                     <span style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginLeft: '12px' }}>
-                        ({totalStats.episodes} epizod, {formatTime(totalStats.time)})
+                        ({pluralEpizoda(totalStats.episodes)}, {formatTime(totalStats.time)})
                     </span>
                 </h2>
 
@@ -313,7 +320,7 @@ function HistoryLog() {
                             </div>
                             <div style={{ display: 'flex', gap: 'var(--spacing-lg)', fontSize: '0.875rem' }}>
                                 <span style={{ color: 'var(--accent-cyan)' }}>
-                                    {group.totalEpisodes} epizod
+                                    {pluralEpizoda(group.totalEpisodes)}
                                 </span>
                                 <span style={{ color: 'var(--accent-amber)' }}>
                                     {formatTime(group.totalTime)}

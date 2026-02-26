@@ -167,10 +167,16 @@ function Dashboard() {
             const typeBreakdown = {}
             subset.forEach(a => {
                 const eps = parseInt(a.episodes) || 0
+                const rc = parseInt(a.rewatch_count) || 0
                 const dur = parseFloat(a.episode_duration) || 24
-                totalEps += eps
-                totalMins += eps * dur
-                if (a.rewatch_count && parseInt(a.rewatch_count) > 0) rewatchCount += parseInt(a.rewatch_count)
+
+                // Use pre-calculated totalTime from JSON if available, otherwise fallback
+                const time = parseFloat(a.total_time) || (eps * dur * (1 + rc))
+
+                totalEps += eps * (1 + rc)
+                totalMins += time
+                rewatchCount += rc
+
                 const t = a.type || 'Jiný'
                 typeBreakdown[t] = (typeBreakdown[t] || 0) + 1
             })
@@ -199,14 +205,20 @@ function Dashboard() {
             episodesByYear[y] = yearStats[y].totalEps
         })
 
-        // Calculate total episodes
-        const totalEpisodes = list.reduce((sum, a) => sum + (parseInt(a.episodes) || 0), 0)
-
-        // Calculate total time (in hours)
-        const totalTime = list.reduce((sum, a) => {
+        // Calculate total episodes (including rewatches)
+        const totalEpisodesSum = list.reduce((sum, a) => {
             const eps = parseInt(a.episodes) || 0
+            const rc = parseInt(a.rewatch_count) || 0
+            return sum + (eps * (1 + rc))
+        }, 0)
+
+        // Calculate total time (in hours, including rewatches)
+        const totalTimeSum = list.reduce((sum, a) => {
+            const eps = parseInt(a.episodes) || 0
+            const rc = parseInt(a.rewatch_count) || 0
             const dur = parseFloat(a.episode_duration) || 24
-            return sum + (eps * dur / 60)
+            const time = parseFloat(a.total_time) || (eps * dur * (1 + rc))
+            return sum + (time / 60)
         }, 0)
 
         // Average rating
@@ -267,7 +279,9 @@ function Dashboard() {
                 const d = new Date(h.date)
                 if (d.getFullYear() === latestYear) {
                     const month = d.getMonth()
-                    const eps = parseInt(h.episodes?.replace(/[^\d]/g, '')) || 0
+                    // Extract episode count from "(Nx) EP X-Y" or "(Nx)" pattern
+                    const match = h.episodes?.match(/\((\d+)x\)/)
+                    const eps = match ? parseInt(match[1]) : (parseInt(h.episodes?.replace(/[^\d]/g, '')) || 0)
                     monthlyLatestYear[month] = (monthlyLatestYear[month] || 0) + eps
                 }
             }
@@ -346,7 +360,7 @@ function Dashboard() {
         })
         const avgRatingByType = {}
         Object.keys(typeRatings).forEach(type => {
-            avgRatingByType[type] = (typeRatings[type] / typeCounts[type]).toFixed(2)
+            avgRatingByType[type] = parseFloat((typeRatings[type] / typeCounts[type]).toFixed(2))
         })
 
         // Top 10 Studios by Average Rating (min 2 anime)
@@ -365,7 +379,7 @@ function Dashboard() {
             .filter(([studio]) => studioCounts[studio] >= 2)
             .map(([studio, sum]) => ({
                 name: studio,
-                avg: (sum / studioCounts[studio]).toFixed(2),
+                avg: parseFloat((sum / studioCounts[studio]).toFixed(2)),
                 count: studioCounts[studio]
             }))
             .sort((a, b) => parseFloat(b.avg) - parseFloat(a.avg))
@@ -392,7 +406,7 @@ function Dashboard() {
             .filter(([genre]) => genreCounts[genre] >= 3)
             .map(([genre, sum]) => ({
                 name: genre,
-                avg: (sum / genreCounts[genre]).toFixed(2),
+                avg: parseFloat((sum / genreCounts[genre]).toFixed(2)),
                 count: genreCounts[genre]
             }))
             .sort((a, b) => parseFloat(b.avg) - parseFloat(a.avg))
@@ -419,7 +433,7 @@ function Dashboard() {
             .filter(([theme]) => themeCounts[theme] >= 3)
             .map(([theme, sum]) => ({
                 name: theme,
-                avg: (sum / themeCounts[theme]).toFixed(2),
+                avg: parseFloat((sum / themeCounts[theme]).toFixed(2)),
                 count: themeCounts[theme]
             }))
             .sort((a, b) => parseFloat(b.avg) - parseFloat(a.avg))
@@ -477,9 +491,9 @@ function Dashboard() {
             episodesByYear,
             latestYear,
             sortedYears: sortedYearsAll,
-            totalEpisodes,
-            totalTime: Math.round(totalTime),
-            avgRating: avgRating.toFixed(2),
+            totalEpisodes: totalEpisodesSum,
+            totalTime: Math.round(totalTimeSum),
+            avgRating: parseFloat(avgRating.toFixed(2)),
             types,
             genres,
             studios,
@@ -887,13 +901,63 @@ function Dashboard() {
                 const filtered = stats.filteredStats
                 const ys = stats.yearStats
                 const getYear = (dateStr) => { if (!dateStr) return null; return new Date(dateStr).getFullYear() }
+                // Determine values from statsData (stats.json) if available
+                const getFromStatsData = (label, yearIdx) => {
+                    if (!statsData || !statsData.dashboard_table) return null
+                    const row = statsData.dashboard_table.find(r => r[0].toLowerCase().includes(label.toLowerCase()))
+                    if (!row) return null
+                    // yearIdx: -1 for total, 0 for first year in yearCols, etc.
+                    if (yearIdx === -1) return row[1]
+
+                    // Match year value to column index in stats.json
+                    const year = yearCols[yearIdx]
+                    const headerRow = statsData.dashboard_table[0]
+                    const colIdx = headerRow.findIndex(h => h.includes(String(year)))
+                    return colIdx !== -1 ? row[colIdx] : null
+                }
+
+                const getComment = (key, year) => {
+                    if (!statsData || !statsData.comments || !statsData.comments[key]) return null
+                    return year === 'total' ? statsData.comments[key].total : statsData.comments[key][year]
+                }
+
                 const rows = [
-                    { label: 'Čas sledování (hh:mm)', all: formatMins(all.totalMins), years: yearCols.map(y => formatMins(ys[y]?.totalMins || 0)) },
-                    { label: 'Čas sledování (dny)', all: formatDays(all.totalMins), years: yearCols.map(y => formatDays(ys[y]?.totalMins || 0)) },
-                    { label: 'Počet zhlédnutých epizod', all: all.totalEps.toLocaleString('cs-CZ'), years: yearCols.map(y => (ys[y]?.totalEps || 0).toLocaleString('cs-CZ')) },
-                    { label: 'Prům. délka epizody (min)', all: toCS(all.avgEpDur.toFixed(1)), years: yearCols.map(y => toCS((ys[y]?.avgEpDur || 0).toFixed(1))) },
-                    { label: 'Počet Rewatchů', all: all.rewatchCount, years: yearCols.map(y => ys[y]?.rewatchCount || 0) },
-                    { label: 'Celkový počet Anime', all: all.count, years: yearCols.map(y => ys[y]?.count || 0) },
+                    {
+                        label: 'Čas sledování (hh:mm)',
+                        all: getFromStatsData('Čas sledování (hh:mm)', -1) || formatMins(all.totalMins),
+                        years: yearCols.map((y, idx) => getFromStatsData('Čas sledování (hh:mm)', idx) || formatMins(ys[y]?.totalMins || 0)),
+                        commentAll: getComment('total_time', 'total'),
+                        commentYears: yearCols.map(y => getComment('total_time', String(y)))
+                    },
+                    {
+                        label: 'Čas sledování (dny)',
+                        all: getFromStatsData('dny', -1) || formatDays(all.totalMins),
+                        years: yearCols.map((y, idx) => getFromStatsData('dny', idx) || formatDays(ys[y]?.totalMins || 0))
+                    },
+                    {
+                        label: 'Počet zhlédnutých epizod',
+                        all: getFromStatsData('epizod', -1) || all.totalEps.toLocaleString('cs-CZ'),
+                        years: yearCols.map((y, idx) => getFromStatsData('epizod', idx) || (ys[y]?.totalEps || 0).toLocaleString('cs-CZ')),
+                        commentAll: getComment('total_episodes', 'total'),
+                        commentYears: yearCols.map(y => getComment('total_episodes', String(y)))
+                    },
+                    {
+                        label: 'Prům. délka epizody (min)',
+                        all: toCS(getFromStatsData('Průměrná délka', -1)?.replace(',', '.') || all.avgEpDur.toFixed(1)),
+                        years: yearCols.map((y, idx) => toCS(getFromStatsData('Průměrná délka', idx)?.replace(',', '.') || (ys[y]?.avgEpDur || 0).toFixed(1)))
+                    },
+                    {
+                        label: 'Počet Rewatchů',
+                        all: getFromStatsData('Počet Rewatchů', -1) || all.rewatchCount,
+                        years: yearCols.map((y, idx) => getFromStatsData('Počet Rewatchů', idx) || ys[y]?.rewatchCount || 0),
+                        commentAll: getComment('rewatch_count', 'total'),
+                        commentYears: yearCols.map(y => getComment('rewatch_count', String(y)))
+                    },
+                    {
+                        label: 'Celkový počet Anime',
+                        all: getFromStatsData('Celkový počet', -1) || all.count,
+                        years: yearCols.map((y, idx) => getFromStatsData('Celkový počet', idx) || ys[y]?.count || 0)
+                    },
                     {
                         label: 'Průměrné hodnocení', all: toCS(stats.avgRating), years: yearCols.map(y => {
                             const yAnime = animeList.filter(a => getYear(a.start_date) === y).filter(a => a.rating && !isNaN(parseFloat(a.rating)))
@@ -920,9 +984,20 @@ function Dashboard() {
                                 {rows.map((row, i) => (
                                     <tr key={i} style={{ borderBottom: '1px solid var(--border-color)', opacity: row.isType ? 0.85 : 1 }}>
                                         <td style={{ padding: '8px 12px', fontWeight: row.isType ? 400 : 500, paddingLeft: row.isType ? '24px' : '12px', color: row.isType ? 'var(--text-secondary)' : 'var(--text-primary)' }}>{row.label}</td>
-                                        <td style={{ textAlign: 'center', padding: '8px 12px', fontWeight: 600, background: 'rgba(99,102,241,0.05)' }}>{row.all}</td>
+                                        <td
+                                            style={{ textAlign: 'center', padding: '8px 12px', fontWeight: 600, background: 'rgba(99,102,241,0.05)', cursor: row.commentAll ? 'help' : 'default' }}
+                                            title={row.commentAll}
+                                        >
+                                            {row.all}
+                                        </td>
                                         {row.years.map((v, j) => (
-                                            <td key={j} style={{ textAlign: 'center', padding: '8px 12px' }}>{v}</td>
+                                            <td
+                                                key={j}
+                                                style={{ textAlign: 'center', padding: '8px 12px', cursor: row.commentYears?.[j] ? 'help' : 'default' }}
+                                                title={row.commentYears?.[j]}
+                                            >
+                                                {v}
+                                            </td>
                                         ))}
                                     </tr>
                                 ))}

@@ -7,7 +7,7 @@ function AnimeList() {
     const [animeList, setAnimeList] = useState([])
     const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
-    const [sortConfig, setSortConfig] = useState({ key: 'end_date', direction: 'desc' })
+    const [sortConfig, setSortConfig] = useState({ key: 'default', direction: 'asc' })
     const [typeFilter, setTypeFilter] = useState('all')
     const [statusFilter, setStatusFilter] = useState(() => {
         return localStorage.getItem('statusFilter') || 'AIRING!'
@@ -52,7 +52,7 @@ function AnimeList() {
 
         // Series filter (takes precedence or works alongside status)
         if (seriesFilter) {
-            result = result.filter(a => extractSeriesBaseName(a.name) === seriesFilter)
+            result = result.filter(a => extractSeriesBaseName(a) === seriesFilter)
         }
 
         // Search filter
@@ -79,6 +79,22 @@ function AnimeList() {
         // Sort
         if (sortConfig.key) {
             result.sort((a, b) => {
+                // Default multi-level sort: Status → end_date desc → name asc
+                if (sortConfig.key === 'default') {
+                    const statusOrder = { 'PENDING': 1, 'AIRING!': 2, 'FINISHED': 3 }
+                    const aStatus = statusOrder[a.status] || 99
+                    const bStatus = statusOrder[b.status] || 99
+                    if (aStatus !== bStatus) return aStatus - bStatus
+
+                    // Within same status, sort by end_date desc
+                    const aDate = new Date(a.end_date || '1900-01-01').getTime()
+                    const bDate = new Date(b.end_date || '1900-01-01').getTime()
+                    if (aDate !== bDate) return bDate - aDate
+
+                    // Then by name asc
+                    return (a.name || '').localeCompare(b.name || '')
+                }
+
                 let aVal = sortConfig.key === 'index' ? a.originalIndex : a[sortConfig.key]
                 let bVal = sortConfig.key === 'index' ? b.originalIndex : b[sortConfig.key]
 
@@ -120,10 +136,14 @@ function AnimeList() {
     }, [animeList, searchTerm, typeFilter, statusFilter, sortConfig])
 
     const handleSort = (key) => {
-        setSortConfig(prev => ({
-            key,
-            direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc'
-        }))
+        if (key === sortConfig.key && sortConfig.key !== 'default') {
+            setSortConfig(prev => ({
+                key,
+                direction: prev.direction === 'asc' ? 'desc' : 'asc'
+            }))
+        } else {
+            setSortConfig({ key, direction: key === 'default' ? 'asc' : 'desc' })
+        }
     }
 
     const getSortIndicator = (key) => {
@@ -155,25 +175,20 @@ function AnimeList() {
         return d.toLocaleDateString('cs-CZ', { year: 'numeric', month: 'numeric', day: 'numeric' })
     }
 
-    // Check if anime is part of a series (not standalone)
-    const isPartOfSeries = (name) => {
-        if (!name) return false
-        // Match patterns like S01, S02, Season 1, Part 1, Part 2, Case 1, Sinners of the System, etc.
-        // Also a colon if followed by more text is a good indicator for series/movie parts
-        return /,\s*S\d+|Season\s*\d+|Part\s*\d+|:\s*S\d+|Case\s*\d+|Sinners\s+of\s+the\s+System|电影|Movie|Film/i.test(name) || name.includes(':')
+    // Check if anime is part of a series using exported series field
+    const isPartOfSeries = (anime) => {
+        if (!anime) return false
+        return !!anime.series
     }
 
-    // Extract base name of a series for filtering
-    const extractSeriesBaseName = (name) => {
-        if (!name) return ''
-        // Extract everything before common series indicators
-        const base = name.split(/,\s*S\d+|Season\s*\d+|Part\s*\d+|:\s*S\d+|Case\s*\d+|Sinners\s+of\s+the\s+System|电影|Movie|Film/i)[0] || name.split(':')[0]
-        // Clean up trailing punctuation like colons, commas, or dashes
-        return base.replace(/[:,\-\s]+$/, '').trim()
+    // Extract base name of a series for filtering — use series field directly
+    const extractSeriesBaseName = (anime) => {
+        if (!anime) return ''
+        return anime.series || anime.name || ''
     }
 
-    const toggleSeriesFilter = (name) => {
-        const baseName = extractSeriesBaseName(name)
+    const toggleSeriesFilter = (anime) => {
+        const baseName = extractSeriesBaseName(anime)
         if (seriesFilter === baseName) {
             setSeriesFilter(null)
         } else {
@@ -377,25 +392,26 @@ function AnimeList() {
                                             >
                                                 {anime.name}
                                             </a>
-                                            {isPartOfSeries(anime.name) && (
+                                            {isPartOfSeries(anime) && (
                                                 <span
                                                     onClick={(e) => {
                                                         e.preventDefault()
                                                         e.stopPropagation()
-                                                        toggleSeriesFilter(anime.name)
+                                                        toggleSeriesFilter(anime)
                                                     }}
+                                                    className={`series-badge ${seriesFilter === extractSeriesBaseName(anime) ? 'active' : ''}`}
                                                     style={{
                                                         fontSize: '0.65rem',
                                                         padding: '2px 6px',
                                                         borderRadius: '4px',
-                                                        background: seriesFilter === extractSeriesBaseName(anime.name) ? 'var(--accent-primary)' : 'var(--bg-tertiary)',
+                                                        background: seriesFilter === extractSeriesBaseName(anime) ? 'var(--accent-primary)' : 'var(--bg-tertiary)',
                                                         color: 'white',
                                                         whiteSpace: 'nowrap',
                                                         cursor: 'pointer',
-                                                        border: `1px solid ${seriesFilter === extractSeriesBaseName(anime.name) ? 'var(--accent-primary)' : 'var(--border-color)'}`,
-                                                        boxShadow: seriesFilter === extractSeriesBaseName(anime.name) ? '0 0 10px rgba(99, 102, 241, 0.4)' : 'none'
+                                                        border: `1px solid ${seriesFilter === extractSeriesBaseName(anime) ? 'var(--accent-primary)' : 'var(--border-color)'}`,
+                                                        boxShadow: seriesFilter === extractSeriesBaseName(anime) ? '0 0 10px rgba(99, 102, 241, 0.4)' : 'none'
                                                     }}
-                                                    title={seriesFilter === extractSeriesBaseName(anime.name) ? "Zrušit filtr série" : "Filtrovat tuhle sérii"}
+                                                    title={seriesFilter === extractSeriesBaseName(anime) ? "Zrušit filtr série" : "Filtrovat tuhle sérii"}
                                                 >
                                                     Série
                                                 </span>
@@ -418,14 +434,14 @@ function AnimeList() {
                                     {anime.episodes || '-'}
                                 </td>
                                 <td>
-                                    {anime.rating ? (
+                                    {anime.rating && !isNaN(Number(anime.rating)) ? (
                                         <span
                                             className={`rating-badge ${getRatingClass(anime.rating)}`}
                                             style={{ cursor: 'pointer' }}
                                             onClick={() => navigate(`/anime/${encodeURIComponent(anime.name)}`)}
                                             title="Zobrazit detailní hodnocení"
                                         >
-                                            {parseFloat(anime.rating).toFixed(1)}/10
+                                            {Number(anime.rating) % 1 === 0 ? parseInt(anime.rating) : parseFloat(anime.rating).toFixed(1)}/10
                                         </span>
                                     ) : '-'}
                                 </td>
@@ -442,7 +458,7 @@ function AnimeList() {
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div >
     )
 }
 
