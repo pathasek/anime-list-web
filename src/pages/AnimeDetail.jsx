@@ -249,71 +249,147 @@ function AnimeDetail() {
                 ← Zpět
             </button>
 
-            <div className="card" style={{ marginBottom: 'var(--spacing-xl)' }}>
-                <h2 style={{ marginBottom: 'var(--spacing-md)', color: 'var(--color-primary)' }}>
-                    {anime.name}
-                    {anime.mal_url && (
-                        <a
-                            href={anime.mal_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{ marginLeft: '12px', fontSize: '0.8rem' }}
-                        >
-                            🔗 MAL
-                        </a>
-                    )}
-                </h2>
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--spacing-md)' }}>
-                    <div>
-                        <strong>Typ:</strong>{' '}
-                        <span className={`badge badge-${(anime.type || '').toLowerCase().replace(' ', '-')}`}>
-                            {anime.type}
-                        </span>
-                    </div>
-                    <div><strong>Studio:</strong> {anime.studio || 'N/A'}</div>
-                    <div><strong>Epizody:</strong> {anime.episodes || 'N/A'}</div>
-                    <div><strong>Délka epizody:</strong> {anime.episode_duration ? `${Math.round(anime.episode_duration)} min` : 'N/A'}</div>
-                    <div>
-                        <strong>Hodnocení:</strong>{' '}
-                        <span className={`badge rating-${Math.floor(anime.rating || 0)}`}>
-                            {Number(anime.rating) % 1 === 0 ? parseInt(anime.rating) : parseFloat(anime.rating).toFixed(1)}/10
-                        </span>
-                    </div>
-                    <div><strong>Datum vydání:</strong> {anime.release_date ? new Date(anime.release_date).toLocaleDateString('cs-CZ') : 'N/A'}</div>
-                    <div><strong>Sledováno:</strong> {anime.start_date ? new Date(anime.start_date).toLocaleDateString('cs-CZ') : 'N/A'} - {anime.end_date ? new Date(anime.end_date).toLocaleDateString('cs-CZ') : 'N/A'}</div>
-                    <div><strong>Dabing:</strong> {anime.dub || 'N/A'}</div>
-                    {anime.status && (
-                        <div>
-                            <strong>Status:</strong>{' '}
-                            <span className={`status-badge ${anime.status.toLowerCase().replace('!', '')}`}>
-                                {anime.status}
-                            </span>
+            <div className="card" style={{ marginBottom: 'var(--spacing-xl)', overflow: 'hidden' }}>
+                {/* Hero Section: Thumbnail + Info */}
+                <div style={{ display: 'flex', gap: 'var(--spacing-xl)', flexWrap: 'wrap' }}>
+                    {/* Left: Thumbnail */}
+                    {anime.thumbnail && (
+                        <div style={{
+                            flex: '0 0 220px',
+                            minHeight: '140px',
+                            borderRadius: 'var(--radius-md)',
+                            overflow: 'hidden',
+                            boxShadow: 'var(--shadow-md)'
+                        }}>
+                            <img
+                                src={anime.thumbnail}
+                                alt={anime.name}
+                                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                            />
                         </div>
                     )}
+
+                    {/* Right: Info */}
+                    <div style={{ flex: 1, minWidth: '300px' }}>
+                        {/* Title Row */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)', flexWrap: 'wrap', marginBottom: 'var(--spacing-md)' }}>
+                            <h2 style={{ margin: 0, fontSize: '1.75rem' }}>{anime.name}</h2>
+                            <span className={`type-badge ${(anime.type || '').toLowerCase().replace(' ', '-')}`} style={{ fontSize: '0.8rem' }}>
+                                {anime.type}
+                            </span>
+                            {anime.status && (
+                                <span className={`status-badge ${anime.status.toLowerCase().replace('!', '')}`}>
+                                    {anime.status}
+                                </span>
+                            )}
+                            {anime.mal_url && (
+                                <a href={anime.mal_url} target="_blank" rel="noopener noreferrer"
+                                    style={{ fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                    🔗 MAL
+                                </a>
+                            )}
+                        </div>
+
+                        {/* Rating + Key Info Row */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xl)', marginBottom: 'var(--spacing-lg)' }}>
+                            {/* Big Rating Circle */}
+                            {anime.rating && !isNaN(Number(anime.rating)) && (
+                                <div style={{
+                                    width: '72px', height: '72px',
+                                    borderRadius: '50%',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    flexDirection: 'column',
+                                    border: `3px solid ${Number(anime.rating) >= 9 ? 'var(--accent-emerald)' :
+                                        Number(anime.rating) >= 7 ? 'var(--accent-cyan)' :
+                                            Number(anime.rating) >= 5 ? 'var(--accent-amber)' : 'var(--accent-red)'}`,
+                                    background: `${Number(anime.rating) >= 9 ? 'rgba(16,185,129,0.1)' :
+                                        Number(anime.rating) >= 7 ? 'rgba(6,182,212,0.1)' :
+                                            Number(anime.rating) >= 5 ? 'rgba(245,158,11,0.1)' : 'rgba(239,68,68,0.1)'}`,
+                                    flexShrink: 0
+                                }}>
+                                    <span style={{
+                                        fontSize: '1.5rem', fontWeight: '800', lineHeight: 1,
+                                        color: Number(anime.rating) >= 9 ? 'var(--accent-emerald)' :
+                                            Number(anime.rating) >= 7 ? 'var(--accent-cyan)' :
+                                                Number(anime.rating) >= 5 ? 'var(--accent-amber)' : 'var(--accent-red)'
+                                    }}>
+                                        {Number(anime.rating) % 1 === 0 ? parseInt(anime.rating) : parseFloat(anime.rating).toFixed(1)}
+                                    </span>
+                                    <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', lineHeight: 1 }}>/10</span>
+                                </div>
+                            )}
+
+                            {/* Info Grid */}
+                            <div style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
+                                gap: 'var(--spacing-sm) var(--spacing-lg)',
+                                flex: 1
+                            }}>
+                                <div>
+                                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Studio</span>
+                                    <div style={{ fontWeight: '500' }}>{anime.studio || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Epizody</span>
+                                    <div style={{ fontWeight: '500' }}>{anime.episodes || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Délka epizody</span>
+                                    <div style={{ fontWeight: '500' }}>{anime.episode_duration ? `${Math.round(anime.episode_duration)} min` : 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Datum vydání</span>
+                                    <div style={{ fontWeight: '500' }}>{anime.release_date ? new Date(anime.release_date).toLocaleDateString('cs-CZ') : 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Sledováno</span>
+                                    <div style={{ fontWeight: '500' }}>
+                                        {anime.start_date ? new Date(anime.start_date).toLocaleDateString('cs-CZ') : '?'} – {anime.end_date ? new Date(anime.end_date).toLocaleDateString('cs-CZ') : '?'}
+                                    </div>
+                                </div>
+                                <div>
+                                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Dabing</span>
+                                    <div style={{ fontWeight: '500' }}>{anime.dub || 'N/A'}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Tags: Genres + Themes */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)' }}>
+                            {anime.genres && (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)', flexWrap: 'wrap' }}>
+                                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginRight: '4px' }}>Žánry</span>
+                                    {anime.genres.split(';').map((g, i) => (
+                                        <span key={i} style={{
+                                            padding: '2px 10px', borderRadius: 'var(--radius-full)',
+                                            fontSize: '0.75rem', fontWeight: '500',
+                                            background: 'rgba(6,182,212,0.15)', color: 'var(--accent-cyan)',
+                                            border: '1px solid rgba(6,182,212,0.3)'
+                                        }}>
+                                            {g.trim()}
+                                        </span>
+                                    ))}
+                                </div>
+                            )}
+                            {anime.themes && anime.themes !== 'X' && (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)', flexWrap: 'wrap' }}>
+                                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginRight: '4px' }}>Témata</span>
+                                    {anime.themes.split(';').map((t, i) => (
+                                        <span key={i} style={{
+                                            padding: '2px 10px', borderRadius: 'var(--radius-full)',
+                                            fontSize: '0.75rem', fontWeight: '500',
+                                            background: 'rgba(139,92,246,0.15)', color: 'var(--accent-secondary)',
+                                            border: '1px solid rgba(139,92,246,0.3)'
+                                        }}>
+                                            {t.trim()}
+                                        </span>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
-
-                {anime.genres && (
-                    <div style={{ marginTop: 'var(--spacing-md)' }}>
-                        <strong>Žánry:</strong>{' '}
-                        {anime.genres.split(';').map((g, i) => (
-                            <span key={i} className="badge badge-cyan" style={{ marginRight: '4px', marginBottom: '4px' }}>
-                                {g.trim()}
-                            </span>
-                        ))}
-                    </div>
-                )}
-
-                {anime.themes && anime.themes !== 'X' && (
-                    <div style={{ marginTop: 'var(--spacing-sm)' }}>
-                        <strong>Témata:</strong>{' '}
-                        {anime.themes.split(';').map((t, i) => (
-                            <span key={i} className="badge badge-secondary" style={{ marginRight: '4px', marginBottom: '4px' }}>
-                                {t.trim()}
-                            </span>
-                        ))}
-                    </div>
-                )}
             </div>
 
             {/* Narrative Review / Note */}
