@@ -595,11 +595,21 @@ function Dashboard() {
 
     // Monthly episodes (latest year)
     const monthNames = ['Led', 'Úno', 'Bře', 'Dub', 'Kvě', 'Čvn', 'Čvc', 'Srp', 'Zář', 'Říj', 'Lis', 'Pro']
+
+    // Determine current year and month for boundary check
+    const currentYear = new Date().getFullYear()
+    const currentMonth = new Date().getMonth()
+
     const monthlyData = {
         labels: monthNames,
         datasets: [{
             label: `Epizody v roce ${stats.latestYear}`,
-            data: monthNames.map((_, i) => stats.monthlyLatestYear[i] || 0),
+            data: monthNames.map((_, i) => {
+                if (parseInt(stats.latestYear) === currentYear && i > currentMonth) {
+                    return null
+                }
+                return stats.monthlyLatestYear[i] || 0
+            }),
             borderColor: colors.primary,
             backgroundColor: 'rgba(99, 102, 241, 0.1)',
             fill: true,
