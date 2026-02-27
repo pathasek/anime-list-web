@@ -252,17 +252,21 @@ function AnimeDetail() {
                 ← Zpět
             </button>
 
-            <div className="card" style={{ marginBottom: 'var(--spacing-xl)', overflow: 'hidden' }}>
+            <div className="card" style={{ marginBottom: 'var(--spacing-xl)', overflow: 'hidden', padding: 'var(--spacing-md)' }}>
                 {/* Hero Section: Thumbnail + Info */}
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--spacing-xl)', flexWrap: 'wrap' }}>
-                    {/* Left: Thumbnail */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xl)', flexWrap: 'wrap', justifyContent: 'center' }}>
+                    {/* Left: Thumbnail - Fixed for mobile centering */}
                     {anime.thumbnail && (
                         <div style={{
-                            flex: '0 0 280px',
+                            flex: '0 1 280px', // Allow shrinking, don't force width
+                            width: '100%',
+                            maxWidth: '280px',
+                            minWidth: '200px',
                             aspectRatio: '16 / 9',
                             borderRadius: 'var(--radius-md)',
                             overflow: 'hidden',
-                            boxShadow: 'var(--shadow-md)'
+                            boxShadow: 'var(--shadow-md)',
+                            margin: '0 auto' // Center horizontally when wrapped
                         }}>
                             <img
                                 src={anime.thumbnail}
@@ -273,9 +277,9 @@ function AnimeDetail() {
                     )}
 
                     {/* Right: Info */}
-                    <div style={{ flex: 1, minWidth: '300px' }}>
+                    <div style={{ flex: '1 1 300px', minWidth: 0, width: '100%' }}>
                         {/* Title Row */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)', flexWrap: 'wrap', marginBottom: 'var(--spacing-md)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)', flexWrap: 'wrap', marginBottom: 'var(--spacing-md)', justifyContent: 'center' }}>
                             <h2 style={{ margin: 0, fontSize: '1.75rem' }}>{anime.name}</h2>
                             <span className={`type-badge ${(anime.type || '').toLowerCase().replace(' ', '-')}`} style={{ fontSize: '0.8rem' }}>
                                 {anime.type}
@@ -348,7 +352,15 @@ function AnimeDetail() {
                                 <div>
                                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Sledováno</span>
                                     <div style={{ fontWeight: '500' }}>
-                                        {anime.start_date ? new Date(anime.start_date).toLocaleDateString('cs-CZ') : '?'} – {anime.end_date ? new Date(anime.end_date).toLocaleDateString('cs-CZ') : '?'}
+                                        {(() => {
+                                            const start = anime.start_date && !isNaN(new Date(anime.start_date).getTime()) ? new Date(anime.start_date).toLocaleDateString('cs-CZ') : '?';
+                                            const end = anime.end_date && !isNaN(new Date(anime.end_date).getTime()) ? new Date(anime.end_date).toLocaleDateString('cs-CZ') : '?';
+
+                                            if (start === '?' && end === '?') return '?';
+                                            if (start === end) return start;
+                                            if (end === '?') return start;
+                                            return `${start} – ${end}`;
+                                        })()}
                                     </div>
                                 </div>
                                 <div>

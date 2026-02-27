@@ -90,12 +90,23 @@ function Dashboard() {
     const [settingsRefresh, setSettingsRefresh] = useState(0)
     const [statsData, setStatsData] = useState(null) // Stats from stats.json (with comments)
     const [expandedNote, setExpandedNote] = useState(null)
+    const [showAllCharts, setShowAllCharts] = useState(false)
 
-    const toggleNote = (id, text) => {
-        if (expandedNote && expandedNote.id === id) {
-            setExpandedNote(null)
+    const toggleNote = (rowIndex, colId, text, isRewatch) => {
+        if (isRewatch) {
+            const id = `${rowIndex}-${colId}`
+            if (expandedNote && expandedNote.id === id) {
+                setExpandedNote(null)
+            } else {
+                setExpandedNote({ id, text, rowIndex, isRewatch: true })
+            }
         } else {
-            setExpandedNote({ id, text })
+            const id = `row-${rowIndex}`
+            if (expandedNote && expandedNote.id === id) {
+                setExpandedNote(null)
+            } else {
+                setExpandedNote({ id, rowIndex, isRewatch: false })
+            }
         }
     }
 
@@ -811,6 +822,8 @@ function Dashboard() {
     const ChartWrapper = ({ id, defaultTitle, defaultGridColumn = 'span 1', children }) => {
         const settings = getChartSettings(id)
         const customTitle = settings.customTitle || defaultTitle
+        const index = chartOrder.indexOf(id)
+        const isHiddenMobile = !showAllCharts && index > 0
 
         const handleMouseUp = (e) => {
             const el = e.currentTarget
@@ -822,7 +835,7 @@ function Dashboard() {
 
         return (
             <div
-                className={`chart-container ${draggedChart === id ? 'dragging' : ''}`}
+                className={`chart-container ${draggedChart === id ? 'dragging' : ''} ${isHiddenMobile ? 'hide-mobile' : ''}`}
                 draggable="true"
                 onDragStart={(e) => handleDragStart(e, id)}
                 onDragOver={(e) => handleDragOver(e, id)}
@@ -987,69 +1000,156 @@ function Dashboard() {
                 // Removed type breakdown rows as requested
 
                 return (
-                    <div className="card" style={{ marginBottom: 'var(--spacing-xl)', overflowX: 'auto' }}>
+                    <div className="card" style={{ marginBottom: 'var(--spacing-xl)' }}>
                         <h3 style={{ marginBottom: 'var(--spacing-md)', display: 'flex', alignItems: 'center', gap: '8px' }}>📊 Sledovaní Anime — Data projekt</h3>
-                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
-                            <thead>
-                                <tr style={{ borderBottom: '2px solid var(--border-light)' }}>
-                                    <th style={{ textAlign: 'left', padding: '8px 12px', color: 'var(--text-secondary)' }}>Sledovaná data</th>
-                                    <th style={{ textAlign: 'center', padding: '8px 12px', background: 'rgba(99,102,241,0.1)', borderRadius: '4px 4px 0 0' }}>Za celou dobu</th>
-                                    {yearCols.map(y => (
-                                        <th key={y} style={{ textAlign: 'center', padding: '8px 12px', background: 'rgba(16,185,129,0.08)' }}>Za rok {y}</th>
-                                    ))}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {rows.map((row, i) => (
-                                    <Fragment key={i}>
-                                        <tr style={{ borderBottom: '1px solid var(--border-color)', opacity: row.isType ? 0.85 : 1 }}>
-                                            <td style={{ padding: '8px 12px', fontWeight: row.isType ? 400 : 500, paddingLeft: row.isType ? '24px' : '12px', color: row.isType ? 'var(--text-secondary)' : 'var(--text-primary)' }}>{row.label}</td>
-                                            <td
-                                                style={{ textAlign: 'center', padding: '8px 12px', fontWeight: 600, background: 'rgba(99,102,241,0.05)' }}
-                                            >
-                                                {row.all}
-                                                {row.commentAll && (
-                                                    <span
-                                                        style={{ marginLeft: '6px', cursor: 'pointer', color: expandedNote?.id === `${i}-all` ? 'var(--accent-primary)' : 'var(--text-secondary)' }}
-                                                        onClick={() => toggleNote(`${i}-all`, row.commentAll)}
-                                                        title="Zobrazit poznámku"
-                                                    >
-                                                        ⓘ
-                                                    </span>
+
+                        {/* DESKTOP TABLE */}
+                        <div className="hide-mobile" style={{ overflowX: 'auto' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                                <thead>
+                                    <tr style={{ borderBottom: '2px solid var(--border-light)' }}>
+                                        <th style={{ textAlign: 'left', padding: '8px 12px', color: 'var(--text-secondary)' }}>Sledovaná data</th>
+                                        <th style={{ textAlign: 'center', padding: '8px 12px', background: 'rgba(99,102,241,0.1)', borderRadius: '4px 4px 0 0' }}>Za celou dobu</th>
+                                        {yearCols.map(y => (
+                                            <th key={y} style={{ textAlign: 'center', padding: '8px 12px', background: 'rgba(16,185,129,0.08)' }}>Za rok {y}</th>
+                                        ))}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {rows.map((row, i) => {
+                                        const isRewatch = row.label === 'Počet Rewatchů'
+                                        const isRowExpanded = expandedNote && !expandedNote.isRewatch && expandedNote.rowIndex === i
+
+                                        return (
+                                            <Fragment key={i}>
+                                                <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
+                                                    <td style={{ padding: '8px 12px', fontWeight: 500, color: 'var(--text-primary)' }}>{row.label}</td>
+                                                    <td style={{ textAlign: 'center', padding: '8px 12px', fontWeight: 600, background: 'rgba(99,102,241,0.05)' }}>
+                                                        {row.all}
+                                                        {row.commentAll && (
+                                                            <span
+                                                                style={{ marginLeft: '6px', cursor: 'pointer', color: (isRewatch ? expandedNote?.id === `${i}-all` : isRowExpanded) ? 'var(--accent-primary)' : 'var(--text-secondary)' }}
+                                                                onClick={() => toggleNote(i, 'all', row.commentAll, isRewatch)}
+                                                                title="Zobrazit poznámku"
+                                                            >
+                                                                ⓘ
+                                                            </span>
+                                                        )}
+                                                    </td>
+                                                    {row.years.map((v, j) => (
+                                                        <td key={j} style={{ textAlign: 'center', padding: '8px 12px' }}>
+                                                            {v}
+                                                            {row.commentYears?.[j] && (
+                                                                <span
+                                                                    style={{ marginLeft: '6px', cursor: 'pointer', color: (isRewatch ? expandedNote?.id === `${i}-${j}` : isRowExpanded) ? 'var(--accent-primary)' : 'var(--text-secondary)' }}
+                                                                    onClick={() => toggleNote(i, j, row.commentYears[j], isRewatch)}
+                                                                    title="Zobrazit poznámku"
+                                                                >
+                                                                    ⓘ
+                                                                </span>
+                                                            )}
+                                                        </td>
+                                                    ))}
+                                                </tr>
+
+                                                {/* Expanded Note Row (Rewatch uses colSpan, others use matching columns) */}
+                                                {expandedNote && expandedNote.rowIndex === i && (
+                                                    <tr style={{ backgroundColor: 'rgba(99,102,241,0.03)' }}>
+                                                        {expandedNote.isRewatch ? (
+                                                            <td colSpan={2 + yearCols.length} style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-color)' }}>
+                                                                <div style={{ whiteSpace: 'pre-wrap', fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.6, textAlign: 'left' }}>
+                                                                    {expandedNote.text}
+                                                                </div>
+                                                            </td>
+                                                        ) : (
+                                                            <>
+                                                                <td style={{ borderBottom: '1px solid var(--border-color)' }}></td>
+                                                                <td style={{ padding: '12px 8px', borderBottom: '1px solid var(--border-color)', verticalAlign: 'top', textAlign: 'center' }}>
+                                                                    <div style={{ whiteSpace: 'pre-wrap', fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                                                                        {row.commentAll}
+                                                                    </div>
+                                                                </td>
+                                                                {row.years.map((_, j) => (
+                                                                    <td key={j} style={{ padding: '12px 8px', borderBottom: '1px solid var(--border-color)', verticalAlign: 'top', textAlign: 'center' }}>
+                                                                        <div style={{ whiteSpace: 'pre-wrap', fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                                                                            {row.commentYears?.[j]}
+                                                                        </div>
+                                                                    </td>
+                                                                ))}
+                                                            </>
+                                                        )}
+                                                    </tr>
                                                 )}
-                                            </td>
-                                            {row.years.map((v, j) => (
-                                                <td
-                                                    key={j}
-                                                    style={{ textAlign: 'center', padding: '8px 12px' }}
-                                                >
-                                                    {v}
-                                                    {row.commentYears?.[j] && (
+                                            </Fragment>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {/* MOBILE CARDS */}
+                        <div className="hide-desktop" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)' }}>
+                            {rows.map((row, i) => {
+                                const isRewatch = row.label === 'Počet Rewatchů'
+                                const isRowExpanded = expandedNote && !expandedNote.isRewatch && expandedNote.rowIndex === i
+
+                                return (
+                                    <div key={i} style={{ background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', overflow: 'hidden' }}>
+                                        <div style={{ background: 'rgba(99,102,241,0.1)', padding: '10px 12px', fontWeight: '600', color: 'var(--text-primary)', borderBottom: '1px solid var(--border-color)' }}>
+                                            {row.label}
+                                        </div>
+
+                                        <div style={{ padding: '0 12px' }}>
+                                            {/* Total Row */}
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--border-light)' }}>
+                                                <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Za celou dobu <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>(Celkem)</span></span>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                    <span style={{ fontWeight: '600', color: 'var(--accent-primary)' }}>{row.all}</span>
+                                                    {row.commentAll && (
                                                         <span
-                                                            style={{ marginLeft: '6px', cursor: 'pointer', color: expandedNote?.id === `${i}-${j}` ? 'var(--accent-primary)' : 'var(--text-secondary)' }}
-                                                            onClick={() => toggleNote(`${i}-${j}`, row.commentYears[j])}
-                                                            title="Zobrazit poznámku"
+                                                            style={{ cursor: 'pointer', color: (isRewatch ? expandedNote?.id === `${i}-all` : isRowExpanded) ? 'var(--accent-primary)' : 'var(--text-secondary)' }}
+                                                            onClick={() => toggleNote(i, 'all', row.commentAll, isRewatch)}
                                                         >
                                                             ⓘ
                                                         </span>
                                                     )}
-                                                </td>
-                                            ))}
-                                        </tr>
-                                        {/* Expanded Note Row */}
-                                        {expandedNote && expandedNote.id.startsWith(`${i}-`) && (
-                                            <tr style={{ backgroundColor: 'rgba(99,102,241,0.03)' }}>
-                                                <td colSpan={2 + yearCols.length} style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-color)' }}>
-                                                    <div style={{ whiteSpace: 'pre-wrap', fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.6, textAlign: 'left' }}>
-                                                        {expandedNote.text}
+                                                </div>
+                                            </div>
+                                            {(expandedNote?.id === `${i}-all` || isRowExpanded) && row.commentAll && (
+                                                <div style={{ padding: '8px 12px', background: 'rgba(0,0,0,0.1)', borderRadius: '4px', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '8px' }}>
+                                                    {row.commentAll}
+                                                </div>
+                                            )}
+
+                                            {/* Yearly Rows */}
+                                            {row.years.map((yVal, j) => (
+                                                <Fragment key={j}>
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: j < row.years.length - 1 ? '1px solid var(--border-light)' : 'none' }}>
+                                                        <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{yearCols[j]}</span>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                            <span style={{ fontWeight: '500' }}>{yVal}</span>
+                                                            {row.commentYears?.[j] && (
+                                                                <span
+                                                                    style={{ cursor: 'pointer', color: (isRewatch ? expandedNote?.id === `${i}-${j}` : isRowExpanded) ? 'var(--accent-primary)' : 'var(--text-secondary)' }}
+                                                                    onClick={() => toggleNote(i, j, row.commentYears[j], isRewatch)}
+                                                                >
+                                                                    ⓘ
+                                                                </span>
+                                                            )}
+                                                        </div>
                                                     </div>
-                                                </td>
-                                            </tr>
-                                        )}
-                                    </Fragment>
-                                ))}
-                            </tbody>
-                        </table>
+                                                    {(expandedNote?.id === `${i}-${j}` || isRowExpanded) && row.commentYears?.[j] && (
+                                                        <div style={{ padding: '8px 12px', background: 'rgba(0,0,0,0.1)', borderRadius: '4px', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: j < row.years.length - 1 ? '8px' : '0' }}>
+                                                            {row.commentYears[j]}
+                                                        </div>
+                                                    )}
+                                                </Fragment>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </div>
                     </div>
                 )
             })()}
@@ -1141,6 +1241,16 @@ function Dashboard() {
                     return null
                 })}
             </div>
+
+            {chartOrder.length > 1 && (
+                <button
+                    className="filter-btn hide-desktop"
+                    onClick={() => setShowAllCharts(!showAllCharts)}
+                    style={{ width: '100%', marginTop: 'var(--spacing-md)', justifyContent: 'center', padding: '12px' }}
+                >
+                    {showAllCharts ? 'SKRÝT DALŠÍ GRAFY ▲' : 'ZOBRAZIT DALŠÍ GRAFY ▼'}
+                </button>
+            )}
 
             {/* Chart Settings Modal */}
             {activeChartSettings && (

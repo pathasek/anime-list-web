@@ -13,7 +13,7 @@ function AnimeList() {
         return localStorage.getItem('statusFilter') || 'AIRING!'
     })
     const [seriesFilter, setSeriesFilter] = useState(null)
-
+    const [expandedImage, setExpandedImage] = useState(null)
 
     useEffect(() => {
         loadData(STORAGE_KEYS.ANIME_LIST, 'data/anime_list.json')
@@ -21,6 +21,15 @@ function AnimeList() {
                 const indexedData = data.map((item, idx) => ({ ...item, originalIndex: idx + 1 }))
                 setAnimeList(indexedData)
                 setLoading(false)
+
+                // Skok na uloženou pozici (Scroll restoration)
+                setTimeout(() => {
+                    const savedScroll = sessionStorage.getItem('animeListScroll')
+                    if (savedScroll) {
+                        window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'instant' })
+                        sessionStorage.removeItem('animeListScroll')
+                    }
+                }, 50)
             })
             .catch(err => {
                 console.error('Failed to load anime list:', err)
@@ -374,7 +383,8 @@ function AnimeList() {
                                                 style={{
                                                     width: '80px',
                                                     height: '45px',
-                                                    objectFit: 'cover',
+                                                    objectFit: 'contain',
+                                                    backgroundColor: 'rgba(0,0,0,0.1)',
                                                     borderRadius: '4px',
                                                     boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
                                                     transition: 'transform 0.35s ease, box-shadow 0.35s ease',
@@ -463,12 +473,27 @@ function AnimeList() {
                                         <span
                                             className={`rating-badge ${getRatingClass(anime.rating)}`}
                                             style={{ cursor: 'pointer' }}
-                                            onClick={() => navigate(`/anime/${encodeURIComponent(anime.name)}`)}
+                                            onClick={() => {
+                                                sessionStorage.setItem('animeListScroll', window.scrollY)
+                                                navigate(`/anime/${encodeURIComponent(anime.name)}`)
+                                            }}
                                             title="Zobrazit detailní hodnocení"
                                         >
                                             {Number(anime.rating) % 1 === 0 ? parseInt(anime.rating) : parseFloat(anime.rating).toFixed(1)}/10
                                         </span>
-                                    ) : '-'}
+                                    ) : (
+                                        <span
+                                            className="rating-badge"
+                                            style={{ cursor: 'pointer', backgroundColor: 'var(--bg-tertiary)', color: 'var(--text-muted)' }}
+                                            onClick={() => {
+                                                sessionStorage.setItem('animeListScroll', window.scrollY)
+                                                navigate(`/anime/${encodeURIComponent(anime.name)}`)
+                                            }}
+                                            title="Zobrazit detailní hodnocení"
+                                        >
+                                            X/10
+                                        </span>
+                                    )}
                                 </td>
                                 <td style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
                                     {formatDate(anime.end_date)}
@@ -489,22 +514,47 @@ function AnimeList() {
                 {filteredList.map((anime, idx) => (
                     <div key={idx} className="mobile-card">
                         <div className="mobile-card-header">
-                            <div style={{ display: 'flex', gap: 'var(--spacing-md)', flex: 1, alignItems: 'center' }}>
-                                <div style={{ minWidth: '70px', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 'bold' }}>
-                                    #{idx + 1}
+                            <div style={{ display: 'flex', gap: 'var(--spacing-md)', width: '100%', alignItems: 'center' }}>
+                                {/* Image on the left */}
+                                <div style={{ minWidth: '64px', cursor: 'pointer' }} onClick={(e) => { e.stopPropagation(); anime.thumbnail && setExpandedImage(anime.thumbnail); }}>
+                                    {anime.thumbnail ? (
+                                        <img
+                                            src={anime.thumbnail}
+                                            alt={anime.name}
+                                            style={{
+                                                width: '64px', height: '80px', objectFit: 'contain', backgroundColor: 'rgba(0,0,0,0.1)',
+                                                borderRadius: '4px', boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
+                                            }}
+                                            loading="lazy"
+                                        />
+                                    ) : (
+                                        <div style={{
+                                            width: '64px', height: '80px', backgroundColor: 'var(--bg-tertiary)',
+                                            borderRadius: '4px', display: 'flex', alignItems: 'center',
+                                            justifyContent: 'center', fontSize: '1rem', color: 'var(--text-muted)'
+                                        }}>?</div>
+                                    )}
                                 </div>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1 }}>
-                                    <div className="mobile-card-title">
-                                        <a
-                                            href={getMALUrl(anime)}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            style={{ color: 'var(--text-primary)', textDecoration: 'none' }}
-                                        >
-                                            {anime.name}
-                                        </a>
+
+                                {/* Content container */}
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, minWidth: 0 }}>
+                                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', minWidth: 0 }}>
+                                        <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 'bold', flexShrink: 0 }}>
+                                            #{idx + 1}
+                                        </div>
+                                        <div className="mobile-card-title" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>
+                                            <a
+                                                href={getMALUrl(anime)}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                style={{ color: 'var(--text-primary)', textDecoration: 'none' }}
+                                            >
+                                                {anime.name}
+                                            </a>
+                                        </div>
                                     </div>
-                                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+
+                                    <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap' }}>
                                         <span className={`type-badge ${getTypeBadgeClass(anime.type)}`} style={{ padding: '2px 6px', fontSize: '0.65rem' }}>
                                             {anime.type || '-'}
                                         </span>
@@ -524,26 +574,35 @@ function AnimeList() {
                                         )}
                                     </div>
                                 </div>
-                                <div style={{ minWidth: '64px', textAlign: 'right' }}>
-                                    {anime.thumbnail ? (
-                                        <img
-                                            src={anime.thumbnail}
-                                            alt={anime.name}
-                                            style={{
-                                                width: '64px', height: '36px', objectFit: 'cover',
-                                                borderRadius: '4px', boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
-                                            }}
-                                            loading="lazy"
-                                        />
-                                    ) : (
-                                        <div style={{
-                                            width: '64px', height: '36px', backgroundColor: 'var(--bg-tertiary)',
-                                            borderRadius: '4px', display: 'flex', alignItems: 'center',
-                                            justifyContent: 'center', fontSize: '0.7rem', color: 'var(--text-muted)',
-                                            marginLeft: 'auto'
-                                        }}>?</div>
-                                    )}
-                                </div>
+
+                                {/* Big Rating on the right */}
+                                {anime.rating && !isNaN(Number(anime.rating)) ? (
+                                    <div
+                                        style={{ textAlign: 'right', minWidth: '50px', marginLeft: 'auto', cursor: 'pointer', display: 'flex', alignItems: 'baseline', justifyContent: 'flex-end', gap: '2px' }}
+                                        onClick={() => {
+                                            sessionStorage.setItem('animeListScroll', window.scrollY)
+                                            navigate(`/anime/${encodeURIComponent(anime.name)}`)
+                                        }}
+                                    >
+                                        <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--accent-primary)' }}>
+                                            {Number(anime.rating) % 1 === 0 ? parseInt(anime.rating) : parseFloat(anime.rating).toFixed(1)}
+                                        </span>
+                                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>/10</span>
+                                    </div>
+                                ) : (
+                                    <div
+                                        style={{ textAlign: 'right', minWidth: '50px', marginLeft: 'auto', cursor: 'pointer', display: 'flex', alignItems: 'baseline', justifyContent: 'flex-end', gap: '2px' }}
+                                        onClick={() => {
+                                            sessionStorage.setItem('animeListScroll', window.scrollY)
+                                            navigate(`/anime/${encodeURIComponent(anime.name)}`)
+                                        }}
+                                    >
+                                        <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--text-muted)' }}>
+                                            X
+                                        </span>
+                                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>/10</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -553,16 +612,8 @@ function AnimeList() {
                                 <span style={{ color: 'var(--text-primary)', fontWeight: '500' }}>{anime.episodes || '-'}</span>
                             </div>
                             <div className="mobile-card-row">
-                                <span>Hodnocení:</span>
-                                {anime.rating && !isNaN(Number(anime.rating)) ? (
-                                    <span
-                                        className={`rating-badge ${getRatingClass(anime.rating)}`}
-                                        style={{ fontSize: '0.75rem', padding: '2px 6px', minWidth: 'auto', cursor: 'pointer' }}
-                                        onClick={() => navigate(`/anime/${encodeURIComponent(anime.name)}`)}
-                                    >
-                                        {Number(anime.rating) % 1 === 0 ? parseInt(anime.rating) : parseFloat(anime.rating).toFixed(1)}/10
-                                    </span>
-                                ) : '-'}
+                                <span>Zhlédnuto:</span>
+                                <span style={{ color: 'var(--text-primary)' }}>{formatDate(anime.end_date)}</span>
                             </div>
                             <div className="mobile-card-row" style={{ gridColumn: '1 / -1' }}>
                                 <span>Studio:</span>
@@ -572,14 +623,37 @@ function AnimeList() {
                                 <span>Žánry:</span>
                                 <span style={{ color: 'var(--text-primary)', textAlign: 'right' }}>{anime.genres || '-'}</span>
                             </div>
-                            <div className="mobile-card-row" style={{ gridColumn: '1 / -1' }}>
-                                <span>Zhlédnuto:</span>
-                                <span style={{ color: 'var(--text-primary)' }}>{formatDate(anime.end_date)}</span>
-                            </div>
                         </div>
                     </div>
                 ))}
             </div>
+
+            {/* Full-screen Image Modal */}
+            {expandedImage && (
+                <div
+                    style={{
+                        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+                        backgroundColor: 'rgba(0, 0, 0, 0.9)', zIndex: 999999,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        padding: '16px'
+                    }}
+                    onClick={() => setExpandedImage(null)}
+                >
+                    <img
+                        src={expandedImage}
+                        alt="Zvětšený náhled"
+                        style={{
+                            maxWidth: '100%',
+                            maxHeight: '100%',
+                            objectFit: 'contain',
+                            borderRadius: '8px',
+                            boxShadow: '0 4px 24px rgba(0,0,0,0.5)',
+                            display: 'block'
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                    />
+                </div>
+            )}
         </div >
     )
 }

@@ -31,6 +31,8 @@ function Favorites() {
     const [sortColumn, setSortColumn] = useState(null)
     const [sortDirection, setSortDirection] = useState('desc')
     const [activeChartSettings, setActiveChartSettings] = useState(null)
+    const [showAllRatings, setShowAllRatings] = useState(false)
+    const [expandedCardIdx, setExpandedCardIdx] = useState(null)
 
     // Czech number formatting: dot → comma
     const toCS = (val) => String(val).replace('.', ',')
@@ -208,6 +210,10 @@ function Favorites() {
                     aVal = (a[sortColumn] || '').toLowerCase()
                     bVal = (b[sortColumn] || '').toLowerCase()
                     return sortDirection === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal)
+                } else if (sortColumn === 'has_frisson') {
+                    aVal = a[sortColumn] ? 1 : 0
+                    bVal = b[sortColumn] ? 1 : 0
+                    return sortDirection === 'asc' ? aVal - bVal : bVal - aVal
                 } else {
                     aVal = parseFloat(a[sortColumn]) || 0
                     bVal = parseFloat(b[sortColumn]) || 0
@@ -324,46 +330,54 @@ function Favorites() {
                     <h3 style={{ marginBottom: 'var(--spacing-lg)', color: 'var(--accent-primary)', fontSize: '1.25rem' }}>
                         📊 Průměrná hodnocení kategorií
                     </h3>
-                    <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))' }}>
+                    <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))' }}>
                         <div className="stat-card">
                             <div className="stat-value">{stats.avgRatings.avg}</div>
                             <div className="stat-label">Průměrné</div>
                         </div>
-                        {stats.avgRatings.lyrics && (
-                            <div className="stat-card">
-                                <div className="stat-value">{stats.avgRatings.lyrics}</div>
-                                <div className="stat-label">Text</div>
-                            </div>
-                        )}
+                        <div className="stat-card">
+                            <div className="stat-value" style={{ color: 'var(--accent-primary)' }}>{stats.avgRatings.final}</div>
+                            <div className="stat-label">Finální</div>
+                        </div>
                         {stats.avgRatings.emotion && (
-                            <div className="stat-card pink">
+                            <div className={`stat-card pink ${!showAllRatings ? 'hide-mobile' : ''}`}>
                                 <div className="stat-value">{stats.avgRatings.emotion}</div>
                                 <div className="stat-label">Emoce</div>
                             </div>
                         )}
+                        {stats.avgRatings.lyrics && (
+                            <div className={`stat-card ${!showAllRatings ? 'hide-mobile' : ''}`}>
+                                <div className="stat-value">{stats.avgRatings.lyrics}</div>
+                                <div className="stat-label">Text</div>
+                            </div>
+                        )}
                         {stats.avgRatings.melody && (
-                            <div className="stat-card cyan">
+                            <div className={`stat-card cyan ${!showAllRatings ? 'hide-mobile' : ''}`}>
                                 <div className="stat-value">{stats.avgRatings.melody}</div>
                                 <div className="stat-label">Melodie</div>
                             </div>
                         )}
                         {stats.avgRatings.video && (
-                            <div className="stat-card amber">
+                            <div className={`stat-card amber ${!showAllRatings ? 'hide-mobile' : ''}`}>
                                 <div className="stat-value">{stats.avgRatings.video}</div>
                                 <div className="stat-label">Videoklip</div>
                             </div>
                         )}
                         {stats.avgRatings.voice && (
-                            <div className="stat-card emerald">
+                            <div className={`stat-card emerald ${!showAllRatings ? 'hide-mobile' : ''}`}>
                                 <div className="stat-value">{stats.avgRatings.voice}</div>
                                 <div className="stat-label">Hlas</div>
                             </div>
                         )}
-                        <div className="stat-card">
-                            <div className="stat-value" style={{ color: 'var(--accent-primary)' }}>{stats.avgRatings.final}</div>
-                            <div className="stat-label">Finální</div>
-                        </div>
                     </div>
+                    {/* Toggle button for extra ratings */}
+                    <button
+                        className="filter-btn hide-desktop"
+                        style={{ marginTop: 'var(--spacing-md)', width: '100%', justifyContent: 'center' }}
+                        onClick={() => setShowAllRatings(!showAllRatings)}
+                    >
+                        {showAllRatings ? 'MÉNĚ HODNOCENÍ ▲' : 'VÍCE HODNOCENÍ ▼'}
+                    </button>
                 </div>
             )}
 
@@ -499,7 +513,7 @@ function Favorites() {
                             <th title="Melodie" onClick={() => handleSort('rating_melody')}>Melodie {getSortIcon('rating_melody')}</th>
                             <th title="Videoklip" onClick={() => handleSort('rating_video')}>Video {getSortIcon('rating_video')}</th>
                             <th title="Kvalita hlasu" onClick={() => handleSort('rating_voice')}>Hlas {getSortIcon('rating_voice')}</th>
-                            <th title="Frisson">⚡</th>
+                            <th title="Frisson" onClick={() => handleSort('has_frisson')} style={{ cursor: 'pointer' }}>⚡ {getSortIcon('has_frisson')}</th>
                             <th title="Průměrné hodnocení" onClick={() => handleSort('rating_avg')}>Prům. {getSortIcon('rating_avg')}</th>
                             <th onClick={() => handleSort('rating_final')}>Finální {getSortIcon('rating_final')}</th>
                         </tr>
@@ -508,7 +522,7 @@ function Favorites() {
                         {filteredFavorites.map((fav, idx) => (
                             <tr key={idx}>
                                 <td style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
-                                    {fav.index}
+                                    {idx + 1}
                                 </td>
                                 <td>
                                     <div style={{ fontWeight: '500', maxWidth: '220px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={fav.anime_name}>
@@ -568,7 +582,7 @@ function Favorites() {
                         <div className="mobile-card-header">
                             <div style={{ display: 'flex', gap: 'var(--spacing-md)', flex: 1, alignItems: 'flex-start' }}>
                                 <div style={{ minWidth: '24px', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 'bold' }}>
-                                    #{fav.index}
+                                    #{idx + 1}
                                 </div>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1 }}>
                                     <div className="mobile-card-title">
@@ -607,6 +621,44 @@ function Favorites() {
                                     ) : '-'}
                                 </div>
                             </div>
+
+                            <div className="mobile-card-row" style={{ gridColumn: '1 / -1', marginTop: '8px' }}>
+                                <button
+                                    onClick={() => setExpandedCardIdx(expandedCardIdx === idx ? null : idx)}
+                                    style={{
+                                        width: '100%',
+                                        padding: '6px',
+                                        background: 'var(--bg-tertiary)',
+                                        border: '1px solid var(--border-color)',
+                                        borderRadius: 'var(--radius-sm)',
+                                        color: 'var(--text-primary)',
+                                        fontSize: '0.8rem',
+                                        cursor: 'pointer',
+                                    }}
+                                >
+                                    {expandedCardIdx === idx ? 'Skrýt detaily ▲' : 'Detailní hodnocení ▼'}
+                                </button>
+                            </div>
+
+                            {expandedCardIdx === idx && (
+                                <div style={{ gridColumn: '1 / -1', display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '4px', padding: '8px', background: 'rgba(0,0,0,0.1)', borderRadius: 'var(--radius-sm)' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                                        <span>Text:</span><span>{fav.rating_lyrics && !isNaN(parseFloat(fav.rating_lyrics)) ? toCS(parseFloat(fav.rating_lyrics)) : '-'}</span>
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                                        <span>Emoce:</span><span>{fav.rating_emotion && !isNaN(parseFloat(fav.rating_emotion)) ? toCS(parseFloat(fav.rating_emotion)) : '-'}</span>
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                                        <span>Melodie:</span><span>{fav.rating_melody && !isNaN(parseFloat(fav.rating_melody)) ? toCS(parseFloat(fav.rating_melody)) : '-'}</span>
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                                        <span>Videoklip:</span><span>{fav.rating_video && !isNaN(parseFloat(fav.rating_video)) ? toCS(parseFloat(fav.rating_video)) : '-'}</span>
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                                        <span>Hlas:</span><span>{fav.rating_voice && !isNaN(parseFloat(fav.rating_voice)) ? toCS(parseFloat(fav.rating_voice)) : '-'}</span>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 ))}

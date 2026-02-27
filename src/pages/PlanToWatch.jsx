@@ -326,40 +326,41 @@ function PlanToWatch() {
                 {filteredList.map((item, idx) => (
                     <div key={idx} className="mobile-card">
                         <div className="mobile-card-header">
-                            <div style={{ display: 'flex', gap: 'var(--spacing-md)', flex: 1, alignItems: 'flex-start' }}>
-                                <div style={{ minWidth: '30px', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 'bold' }}>
-                                    #{idx + 1}
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 'var(--spacing-md)' }}>
+                                <div className="mobile-card-title" style={{ flex: 1, paddingRight: '8px' }}>
+                                    {item.name}
                                 </div>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
-                                    <div className="mobile-card-title">
-                                        {item.name}
-                                    </div>
-                                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-                                        <span className={`type-badge ${getTypeBadgeClass(item.type)}`} style={{ padding: '2px 6px', fontSize: '0.65rem' }}>
-                                            {item.type || '-'}
+                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px', flexShrink: 0 }}>
+                                    <span className={`type-badge ${getTypeBadgeClass(item.type)}`} style={{ padding: '2px 8px', fontSize: '0.65rem' }}>
+                                        {item.type || '-'}
+                                    </span>
+                                    {item.notes === 'AIRING!' ? (
+                                        <span style={{
+                                            padding: '2px 8px',
+                                            background: 'rgba(239, 68, 68, 0.2)',
+                                            color: 'var(--accent-red)',
+                                            borderRadius: '4px',
+                                            fontSize: '0.65rem',
+                                            fontWeight: '600'
+                                        }}>
+                                            🔴 AIRING
                                         </span>
-                                        {item.notes === 'AIRING!' ? (
-                                            <span style={{
-                                                padding: '2px 6px',
-                                                background: 'rgba(239, 68, 68, 0.2)',
-                                                color: 'var(--accent-red)',
-                                                borderRadius: '4px',
-                                                fontSize: '0.65rem',
-                                                fontWeight: '600'
-                                            }}>
-                                                🔴 AIRING
-                                            </span>
-                                        ) : (
-                                            <span style={{ color: 'var(--accent-emerald)', fontSize: '0.75rem' }}>
-                                                ✓ Vydáno
-                                            </span>
-                                        )}
-                                    </div>
+                                    ) : (
+                                        <span style={{ color: 'var(--accent-emerald)', fontSize: '0.75rem', fontWeight: '600' }}>
+                                            ✓ VYDÁNO
+                                        </span>
+                                    )}
                                 </div>
                             </div>
                         </div>
 
                         <div className="mobile-card-grid">
+                            <div className="mobile-card-row">
+                                <span>Pořadí v listu:</span>
+                                <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 'bold' }}>
+                                    #{idx + 1}
+                                </span>
+                            </div>
                             <div className="mobile-card-row">
                                 <span>Epizody:</span>
                                 <span style={{ color: 'var(--text-primary)', fontWeight: '500' }}>

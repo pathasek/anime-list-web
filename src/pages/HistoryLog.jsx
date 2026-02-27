@@ -15,6 +15,8 @@ function HistoryLog() {
     const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
     const [yearFilter, setYearFilter] = useState('all')
+    const [sortBy, setSortBy] = useState('date') // 'date', 'animeCount', 'episodes', 'time'
+    const [dateRange, setDateRange] = useState({ start: '', end: '' })
 
     useEffect(() => {
         Promise.all([
@@ -174,6 +176,25 @@ function HistoryLog() {
             })
         }
 
+        // Date Range filter
+        if (dateRange.start || dateRange.end) {
+            const startStr = dateRange.start ? new Date(dateRange.start) : null;
+            const endStr = dateRange.end ? new Date(dateRange.end) : null;
+
+            // normalize end date to end of day
+            if (endStr) {
+                endStr.setHours(23, 59, 59, 999);
+            }
+
+            result = result.filter(h => {
+                if (!h.date) return false;
+                const d = new Date(h.date);
+                if (startStr && d < startStr) return false;
+                if (endStr && d > endStr) return false;
+                return true;
+            })
+        }
+
         // Group by date
         const groups = {}
         let currentDate = null
@@ -206,13 +227,28 @@ function HistoryLog() {
             }
         })
 
-        // Convert to array and sort by date descending
-        return Object.values(groups).sort((a, b) => {
+        // Convert to array and sort
+        const arr = Object.values(groups)
+
+        arr.sort((a, b) => {
+            if (sortBy === 'episodes') {
+                if (b.totalEpisodes !== a.totalEpisodes) return b.totalEpisodes - a.totalEpisodes;
+            }
+            if (sortBy === 'time') {
+                if (b.totalTime !== a.totalTime) return b.totalTime - a.totalTime;
+            }
+            if (sortBy === 'animeCount') {
+                if (b.entries.length !== a.entries.length) return b.entries.length - a.entries.length;
+            }
+
+            // default or tiebreaker: date desc
             const dateA = new Date(a.date || 0).getTime()
             const dateB = new Date(b.date || 0).getTime()
             return dateB - dateA
         })
-    }, [historyLog, searchTerm, yearFilter])
+
+        return arr;
+    }, [historyLog, searchTerm, yearFilter, sortBy, dateRange])
 
     const formatDate = (dateStr) => {
         if (!dateStr) return 'Neznámé datum'
@@ -254,22 +290,27 @@ function HistoryLog() {
 
     return (
         <div className="fade-in">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-xl)' }}>
-                <h2 style={{ margin: 0 }}>
+            {/* Header and Streaks */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)', marginBottom: 'var(--spacing-xl)' }}>
+                <h2 style={{ margin: 0, display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--spacing-sm)' }}>
                     History Log
-                    <span style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginLeft: '12px' }}>
+                    <span style={{ fontSize: '1rem', color: 'var(--text-secondary)' }}>
                         ({pluralEpizoda(totalStats.episodes)}, {formatTime(totalStats.time)})
                     </span>
                 </h2>
 
-                <div style={{
+                <div className="history-streaks-container" style={{
                     display: 'flex',
                     alignItems: 'stretch',
                     gap: '0',
                     background: 'var(--color-bg-elevated)',
                     borderRadius: 'var(--radius-md)',
                     boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-                    overflow: 'hidden'
+                    overflow: 'hidden',
+                    alignSelf: 'flex-start', // Prevent stretching full width
+                    flexWrap: 'nowrap', // Ensure they stay side-by-side on mobile
+                    maxWidth: '100%', // Prevent overflow
+                    overflowX: 'auto' // Allow scrolling if extremely small
                 }}>
                     {/* Current Streak */}
                     <div style={{
@@ -281,24 +322,25 @@ function HistoryLog() {
                                 : 'linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05))')
                             : 'transparent',
                         position: 'relative',
-                        minWidth: '140px'
+                        minWidth: '130px',
+                        flex: 1 // Allow flexible width
                     }}>
-                        <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>
+                        <span style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px', textAlign: 'center' }}>
                             🔥 Aktuální Streak
                         </span>
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
                             <span style={{
-                                fontSize: '2rem', fontWeight: '800',
+                                fontSize: '1.8rem', fontWeight: '800', // Slightly smaller for mobile safety
                                 color: watchStreak.current >= watchStreak.longest ? 'var(--accent-emerald)' : 'var(--accent-amber)'
                             }}>
                                 {watchStreak.current}
                             </span>
-                            <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
                                 {watchStreak.current === 1 ? 'den' : watchStreak.current >= 2 && watchStreak.current <= 4 ? 'dny' : 'dní'}
                             </span>
                         </div>
                         {watchStreak.currentStart && (
-                            <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                            <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', marginTop: '2px', textAlign: 'center' }}>
                                 {watchStreak.currentStart.toLocaleDateString('cs-CZ')} – {watchStreak.currentEnd.toLocaleDateString('cs-CZ')}
                             </span>
                         )}
@@ -319,26 +361,27 @@ function HistoryLog() {
                             </div>
                         )}
                     </div>
-                    <div style={{ width: '1px', background: 'var(--border-color)' }} />
+                    <div style={{ width: '1px', background: 'var(--border-color)', flexShrink: 0 }} />
                     {/* Longest Streak */}
                     <div style={{
                         display: 'flex', flexDirection: 'column', alignItems: 'center',
                         padding: 'var(--spacing-sm) var(--spacing-lg)',
-                        minWidth: '140px'
+                        minWidth: '130px',
+                        flex: 1 // Allow flexible width
                     }}>
-                        <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>
+                        <span style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px', textAlign: 'center' }}>
                             🏆 Nejdelší Streak
                         </span>
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                            <span style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--text-primary)' }}>
+                            <span style={{ fontSize: '1.4rem', fontWeight: '700', color: 'var(--text-primary)' }}>
                                 {watchStreak.longest}
                             </span>
-                            <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
                                 {watchStreak.longest === 1 ? 'den' : watchStreak.longest >= 2 && watchStreak.longest <= 4 ? 'dny' : 'dní'}
                             </span>
                         </div>
                         {watchStreak.longestStart && (
-                            <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                            <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', marginTop: '2px', textAlign: 'center' }}>
                                 {watchStreak.longestStart.toLocaleDateString('cs-CZ')} – {watchStreak.longestEnd.toLocaleDateString('cs-CZ')}
                             </span>
                         )}
@@ -379,14 +422,56 @@ function HistoryLog() {
                         </button>
                     )}
                 </div>
-                <div className="filter-group">
+                <div className="filter-group" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
+                    <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value)}
+                        className="select"
+                        style={{ padding: '0.4rem 0.8rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', fontSize: '0.9rem' }}
+                    >
+                        <option value="date">Řadit dle: Data</option>
+                        <option value="animeCount">Řadit dle: Počtu Anime</option>
+                        <option value="episodes">Řadit dle: Epizod</option>
+                        <option value="time">Řadit dle: Času</option>
+                    </select>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <input
+                            type="date"
+                            value={dateRange.start}
+                            onChange={(e) => setDateRange(prev => ({ ...prev, start: e.target.value }))}
+                            className="select"
+                            style={{ padding: '0.4rem 0.8rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', fontSize: '0.9rem' }}
+                            title="Od data"
+                        />
+                        <span style={{ color: 'var(--text-muted)' }}>-</span>
+                        <input
+                            type="date"
+                            value={dateRange.end}
+                            onChange={(e) => setDateRange(prev => ({ ...prev, end: e.target.value }))}
+                            className="select"
+                            style={{ padding: '0.4rem 0.8rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', fontSize: '0.9rem' }}
+                            title="Do data"
+                        />
+                    </div>
+
+                    {(dateRange.start || dateRange.end) && (
+                        <button
+                            onClick={() => setDateRange({ start: '', end: '' })}
+                            className="filter-btn"
+                            style={{ padding: '0.4rem 0.8rem' }}
+                        >
+                            Vymazat datum
+                        </button>
+                    )}
+
                     {years.map(y => (
                         <button
                             key={y}
                             className={`filter-btn ${yearFilter === y ? 'active' : ''}`}
                             onClick={() => setYearFilter(y)}
                         >
-                            {y === 'all' ? 'Vše' : y}
+                            {y === 'all' ? 'Všechny roky' : y}
                         </button>
                     ))}
                 </div>
@@ -424,15 +509,17 @@ function HistoryLog() {
                                     key={entryIdx}
                                     style={{
                                         display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
+                                        flexDirection: 'column', // Stack vertically on all screens to ensure space
+                                        justifyContent: 'center',
+                                        alignItems: 'flex-start',
+                                        gap: '6px',
                                         padding: 'var(--spacing-sm) var(--spacing-md)',
                                         background: 'var(--bg-tertiary)',
                                         borderRadius: 'var(--radius-sm)',
                                         borderLeft: '3px solid var(--accent-secondary)'
                                     }}
                                 >
-                                    <div style={{ fontWeight: '500' }}>
+                                    <div style={{ fontWeight: '500', width: '100%', wordBreak: 'break-word', lineHeight: '1.4' }}>
                                         <Link
                                             to={`/anime/${encodeURIComponent(entry.name)}`}
                                             style={{ color: 'inherit', textDecoration: 'none' }}
@@ -445,18 +532,22 @@ function HistoryLog() {
                                     <div style={{
                                         display: 'flex',
                                         gap: 'var(--spacing-lg)',
-                                        fontSize: '0.875rem',
-                                        color: 'var(--text-secondary)'
+                                        fontSize: '0.85rem',
+                                        color: 'var(--text-secondary)',
+                                        alignItems: 'center'
                                     }}>
                                         <span style={{
                                             padding: '2px 8px',
                                             background: 'rgba(99, 102, 241, 0.2)',
                                             borderRadius: '4px',
-                                            color: 'var(--accent-primary)'
+                                            color: 'var(--accent-primary)',
+                                            fontWeight: '600'
                                         }}>
                                             {entry.episodes}
                                         </span>
-                                        <span>{entry.time}</span>
+                                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            ⏱️ {entry.time}
+                                        </span>
                                     </div>
                                 </div>
                             ))}
