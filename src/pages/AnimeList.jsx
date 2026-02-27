@@ -661,7 +661,10 @@ function AnimeList() {
                             boxShadow: '0 4px 24px rgba(0,0,0,0.5)',
                             display: 'block'
                         }}
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setExpandedImage(null);
+                        }}
                     />
                 </div>,
                 document.body
