@@ -553,7 +553,7 @@ function AnimeList() {
                                         <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 'bold', flexShrink: 0 }}>
                                             #{idx + 1}
                                         </div>
-                                        <div className="mobile-card-title" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>
+                                        <div className="mobile-card-title" style={{ overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', wordBreak: 'break-word', minWidth: 0, paddingRight: '10px' }}>
                                             <a
                                                 href={getMALUrl(anime)}
                                                 target="_blank"
@@ -654,8 +654,8 @@ function AnimeList() {
                         src={expandedImage}
                         alt="Zvětšený náhled"
                         style={{
-                            maxWidth: '100%',
-                            maxHeight: '100%',
+                            maxWidth: '90vw',
+                            maxHeight: '90vh',
                             objectFit: 'contain',
                             borderRadius: '8px',
                             boxShadow: '0 4px 24px rgba(0,0,0,0.5)',
