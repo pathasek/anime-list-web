@@ -302,6 +302,18 @@ table {
   font-size: 0.9rem;
 }
 
+.dashboard-table.pc-view {
+  table-layout: fixed;
+}
+
+.dashboard-table th,
+.dashboard-table td {
+  background: var(--bg-tertiary);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
 thead {
   background: var(--bg-tertiary);
   position: sticky;
@@ -424,6 +436,24 @@ tr:hover td {
   outline: none;
   border-color: var(--accent-primary);
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
 }
 
 .search-input::placeholder {
@@ -818,6 +848,7 @@ tr:hover td {
   box-shadow: var(--shadow-sm);
   transition: all var(--transition-normal);
 }
+
 .mobile-card:hover {
   border-color: var(--accent-primary);
   box-shadow: var(--shadow-md);

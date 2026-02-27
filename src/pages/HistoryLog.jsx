@@ -1,6 +1,10 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { loadData, STORAGE_KEYS } from '../utils/dataStore'
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js'
+import { Bar } from 'react-chartjs-2'
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 // Czech declension: 1 epizoda, 2-4 epizody, 5+ epizod
 const pluralEpizoda = (n) => {
@@ -11,7 +15,6 @@ const pluralEpizoda = (n) => {
 
 function HistoryLog() {
     const [historyLog, setHistoryLog] = useState([])
-    const [animeList, setAnimeList] = useState([])
     const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
     const [yearFilter, setYearFilter] = useState('all')
@@ -19,17 +22,15 @@ function HistoryLog() {
     const [dateRange, setDateRange] = useState({ start: '', end: '' })
 
     useEffect(() => {
-        Promise.all([
-            loadData(STORAGE_KEYS.HISTORY_LOG, 'data/history_log.json'),
-            loadData(STORAGE_KEYS.ANIME_LIST, 'data/anime_list.json')
-        ]).then(([history, anime]) => {
-            setHistoryLog(history)
-            setAnimeList(anime)
-            setLoading(false)
-        }).catch(err => {
-            console.error('Failed to load data:', err)
-            setLoading(false)
-        })
+        loadData(STORAGE_KEYS.HISTORY_LOG, 'data/history_log.json')
+            .then(data => {
+                setHistoryLog(data)
+                setLoading(false)
+            })
+            .catch(err => {
+                console.error('Failed to load data:', err)
+                setLoading(false)
+            })
     }, [])
 
 
@@ -158,8 +159,7 @@ function HistoryLog() {
         }
     }, [historyLog])
 
-    // Group by date and filter
-    const groupedHistory = useMemo(() => {
+    const filteredHistory = useMemo(() => {
         let result = [...historyLog]
 
         // Search filter
@@ -194,6 +194,105 @@ function HistoryLog() {
                 return true;
             })
         }
+        return result
+    }, [historyLog, searchTerm, yearFilter, dateRange])
+
+    const chartData = useMemo(() => {
+        if (!filteredHistory.length) return null
+
+        const dailyEps = {}
+        let minDate = null
+        let maxDate = null
+
+        filteredHistory.forEach(item => {
+            if (!item.date) return
+            const dStr = item.date.split('T')[0]
+            const epMatch = item.episodes?.match(/\d+/)
+            const eps = epMatch ? parseInt(epMatch[0]) : 0
+
+            dailyEps[dStr] = (dailyEps[dStr] || 0) + eps
+            if (!minDate || dStr < minDate) minDate = dStr
+            if (!maxDate || dStr > maxDate) maxDate = dStr
+        })
+
+        if (!minDate) return null
+
+        const labels = []
+        const data = []
+
+        const start = new Date(minDate)
+        const end = new Date(maxDate)
+
+        const diffDays = (end - start) / (1000 * 60 * 60 * 24)
+        if (diffDays > 90) {
+            const monthlyEps = {}
+            filteredHistory.forEach(item => {
+                if (!item.date) return
+                const monthStr = item.date.substring(0, 7)
+                const epMatch = item.episodes?.match(/\d+/)
+                const eps = epMatch ? parseInt(epMatch[0]) : 0
+                monthlyEps[monthStr] = (monthlyEps[monthStr] || 0) + eps
+            })
+            const sortedMonths = Object.keys(monthlyEps).sort()
+            sortedMonths.forEach(m => {
+                const [y, mo] = m.split('-')
+                labels.push(`${mo}/${y.slice(-2)}`)
+                data.push(monthlyEps[m])
+            })
+        } else {
+            for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+                const pad = (n) => n.toString().padStart(2, '0')
+                const dStr = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+                labels.push(`${d.getDate()}.${d.getMonth() + 1}.`)
+                data.push(dailyEps[dStr] || 0)
+            }
+        }
+
+        return {
+            labels,
+            datasets: [
+                {
+                    label: 'Zhlédnuté epizody',
+                    data,
+                    backgroundColor: 'rgba(99, 102, 241, 0.8)',
+                    borderRadius: 4,
+                }
+            ]
+        }
+    }, [filteredHistory])
+
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false },
+            title: {
+                display: false,
+            },
+            tooltip: {
+                backgroundColor: 'rgba(18, 18, 26, 0.9)',
+                titleColor: '#f1f5f9',
+                bodyColor: '#f1f5f9',
+                borderColor: '#3a3a4a',
+                borderWidth: 1,
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                ticks: { color: '#64748b', precision: 0 }
+            },
+            x: {
+                grid: { display: false },
+                ticks: { color: '#64748b', maxRotation: 45, minRotation: 0 }
+            }
+        }
+    }
+
+    // Group by date and filter
+    const groupedHistory = useMemo(() => {
+        let result = filteredHistory
 
         // Group by date
         const groups = {}
@@ -248,7 +347,7 @@ function HistoryLog() {
         })
 
         return arr;
-    }, [historyLog, searchTerm, yearFilter, sortBy, dateRange])
+    }, [filteredHistory, sortBy])
 
     const formatDate = (dateStr) => {
         if (!dateStr) return 'Neznámé datum'
@@ -299,93 +398,116 @@ function HistoryLog() {
                     </span>
                 </h2>
 
-                <div className="history-streaks-container" style={{
-                    display: 'flex',
-                    alignItems: 'stretch',
-                    gap: '0',
-                    background: 'var(--color-bg-elevated)',
-                    borderRadius: 'var(--radius-md)',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-                    overflow: 'hidden',
-                    alignSelf: 'flex-start', // Prevent stretching full width
-                    flexWrap: 'nowrap', // Ensure they stay side-by-side on mobile
-                    maxWidth: '100%', // Prevent overflow
-                    overflowX: 'auto' // Allow scrolling if extremely small
-                }}>
-                    {/* Current Streak */}
-                    <div style={{
-                        display: 'flex', flexDirection: 'column', alignItems: 'center',
-                        padding: 'var(--spacing-sm) var(--spacing-lg)',
-                        background: watchStreak.current > 0
-                            ? (watchStreak.current >= watchStreak.longest
-                                ? 'linear-gradient(135deg, rgba(16,185,129,0.15), rgba(16,185,129,0.05))'
-                                : 'linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05))')
-                            : 'transparent',
-                        position: 'relative',
-                        minWidth: '130px',
-                        flex: 1 // Allow flexible width
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--spacing-lg)', alignItems: 'stretch' }}>
+                    <div className="history-streaks-container" style={{
+                        display: 'flex',
+                        alignItems: 'stretch',
+                        gap: '0',
+                        background: 'var(--color-bg-elevated)',
+                        borderRadius: 'var(--radius-md)',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                        overflow: 'hidden',
+                        alignSelf: 'flex-start', // Prevent stretching full width
+                        flexWrap: 'nowrap', // Ensure they stay side-by-side on mobile
+                        maxWidth: '100%', // Prevent overflow
+                        overflowX: 'auto' // Allow scrolling if extremely small
                     }}>
-                        <span style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px', textAlign: 'center' }}>
-                            🔥 Aktuální Streak
-                        </span>
-                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                            <span style={{
-                                fontSize: '1.8rem', fontWeight: '800', // Slightly smaller for mobile safety
-                                color: watchStreak.current >= watchStreak.longest ? 'var(--accent-emerald)' : 'var(--accent-amber)'
-                            }}>
-                                {watchStreak.current}
+                        {/* Current Streak */}
+                        <div style={{
+                            display: 'flex', flexDirection: 'column', alignItems: 'center',
+                            padding: 'var(--spacing-sm) var(--spacing-lg)',
+                            background: watchStreak.current > 0
+                                ? (watchStreak.current >= watchStreak.longest
+                                    ? 'linear-gradient(135deg, rgba(16,185,129,0.15), rgba(16,185,129,0.05))'
+                                    : 'linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05))')
+                                : 'transparent',
+                            position: 'relative',
+                            minWidth: '130px',
+                            flex: 1 // Allow flexible width
+                        }}>
+                            <span style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px', textAlign: 'center' }}>
+                                🔥 Aktuální Streak
                             </span>
-                            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                                {watchStreak.current === 1 ? 'den' : watchStreak.current >= 2 && watchStreak.current <= 4 ? 'dny' : 'dní'}
-                            </span>
-                        </div>
-                        {watchStreak.currentStart && (
-                            <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', marginTop: '2px', textAlign: 'center' }}>
-                                {watchStreak.currentStart.toLocaleDateString('cs-CZ')} – {watchStreak.currentEnd.toLocaleDateString('cs-CZ')}
-                            </span>
-                        )}
-                        {/* Progress bar: current vs longest */}
-                        {watchStreak.longest > 0 && (
-                            <div style={{
-                                width: '100%', height: '3px', background: 'rgba(255,255,255,0.1)',
-                                borderRadius: '2px', marginTop: '6px', overflow: 'hidden'
-                            }}>
-                                <div style={{
-                                    width: `${Math.min(100, (watchStreak.current / watchStreak.longest) * 100)}%`,
-                                    height: '100%',
-                                    background: watchStreak.current >= watchStreak.longest
-                                        ? 'var(--accent-emerald)' : 'var(--accent-amber)',
-                                    borderRadius: '2px',
-                                    transition: 'width 0.5s ease'
-                                }} />
+                            <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
+                                <span style={{
+                                    fontSize: '1.8rem', fontWeight: '800', // Slightly smaller for mobile safety
+                                    color: watchStreak.current >= watchStreak.longest ? 'var(--accent-emerald)' : 'var(--accent-amber)'
+                                }}>
+                                    {watchStreak.current}
+                                </span>
+                                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                                    {watchStreak.current === 1 ? 'den' : watchStreak.current >= 2 && watchStreak.current <= 4 ? 'dny' : 'dní'}
+                                </span>
                             </div>
-                        )}
-                    </div>
-                    <div style={{ width: '1px', background: 'var(--border-color)', flexShrink: 0 }} />
-                    {/* Longest Streak */}
-                    <div style={{
-                        display: 'flex', flexDirection: 'column', alignItems: 'center',
-                        padding: 'var(--spacing-sm) var(--spacing-lg)',
-                        minWidth: '130px',
-                        flex: 1 // Allow flexible width
-                    }}>
-                        <span style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px', textAlign: 'center' }}>
-                            🏆 Nejdelší Streak
-                        </span>
-                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                            <span style={{ fontSize: '1.4rem', fontWeight: '700', color: 'var(--text-primary)' }}>
-                                {watchStreak.longest}
-                            </span>
-                            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                                {watchStreak.longest === 1 ? 'den' : watchStreak.longest >= 2 && watchStreak.longest <= 4 ? 'dny' : 'dní'}
-                            </span>
+                            {watchStreak.currentStart && (
+                                <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', marginTop: '2px', textAlign: 'center' }}>
+                                    {watchStreak.currentStart.toLocaleDateString('cs-CZ')} – {watchStreak.currentEnd.toLocaleDateString('cs-CZ')}
+                                </span>
+                            )}
+                            {/* Progress bar: current vs longest */}
+                            {watchStreak.longest > 0 && (
+                                <div style={{
+                                    width: '100%', height: '3px', background: 'rgba(255,255,255,0.1)',
+                                    borderRadius: '2px', marginTop: '6px', overflow: 'hidden'
+                                }}>
+                                    <div style={{
+                                        width: `${Math.min(100, (watchStreak.current / watchStreak.longest) * 100)}%`,
+                                        height: '100%',
+                                        background: watchStreak.current >= watchStreak.longest
+                                            ? 'var(--accent-emerald)' : 'var(--accent-amber)',
+                                        borderRadius: '2px',
+                                        transition: 'width 0.5s ease'
+                                    }} />
+                                </div>
+                            )}
                         </div>
-                        {watchStreak.longestStart && (
-                            <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', marginTop: '2px', textAlign: 'center' }}>
-                                {watchStreak.longestStart.toLocaleDateString('cs-CZ')} – {watchStreak.longestEnd.toLocaleDateString('cs-CZ')}
+                        <div style={{ width: '1px', background: 'var(--border-color)', flexShrink: 0 }} />
+                        {/* Longest Streak */}
+                        <div style={{
+                            display: 'flex', flexDirection: 'column', alignItems: 'center',
+                            padding: 'var(--spacing-sm) var(--spacing-lg)',
+                            minWidth: '130px',
+                            flex: 1 // Allow flexible width
+                        }}>
+                            <span style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px', textAlign: 'center' }}>
+                                🏆 Nejdelší Streak
                             </span>
-                        )}
+                            <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
+                                <span style={{ fontSize: '1.4rem', fontWeight: '700', color: 'var(--text-primary)' }}>
+                                    {watchStreak.longest}
+                                </span>
+                                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                                    {watchStreak.longest === 1 ? 'den' : watchStreak.longest >= 2 && watchStreak.longest <= 4 ? 'dny' : 'dní'}
+                                </span>
+                            </div>
+                            {watchStreak.longestStart && (
+                                <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', marginTop: '2px', textAlign: 'center' }}>
+                                    {watchStreak.longestStart.toLocaleDateString('cs-CZ')} – {watchStreak.longestEnd.toLocaleDateString('cs-CZ')}
+                                </span>
+                            )}
+                        </div>
                     </div>
+
+                    {chartData && (
+                        <div style={{
+                            flex: '1 1 300px',
+                            minWidth: '300px',
+                            background: 'var(--bg-secondary)',
+                            borderRadius: 'var(--radius-md)',
+                            padding: 'var(--spacing-md)',
+                            border: '1px solid var(--border-color)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            minHeight: '160px'
+                        }}>
+                            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '8px', fontWeight: '500' }}>
+                                GRAF ZHLÉDNUTÝCH EPIZOD {dateRange.start || dateRange.end || yearFilter !== 'all' ? '(FILTROVÁNO)' : ''}
+                            </div>
+                            <div style={{ flex: 1, position: 'relative' }}>
+                                <Bar options={chartOptions} data={chartData} />
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 
