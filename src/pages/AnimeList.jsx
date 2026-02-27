@@ -352,6 +352,11 @@ function AnimeList() {
                                                 overflow: 'visible'
                                             }}
                                             onMouseEnter={(e) => {
+                                                const td = e.currentTarget.closest('td');
+                                                if (td) {
+                                                    td.style.position = 'relative';
+                                                    td.style.zIndex = '1000';
+                                                }
                                                 const img = e.currentTarget.querySelector('img');
                                                 if (!img) return;
                                                 const rect = e.currentTarget.getBoundingClientRect();
@@ -368,6 +373,11 @@ function AnimeList() {
                                                 img.style.borderRadius = '2px';
                                             }}
                                             onMouseLeave={(e) => {
+                                                const td = e.currentTarget.closest('td');
+                                                if (td) {
+                                                    td.style.position = '';
+                                                    td.style.zIndex = '';
+                                                }
                                                 const img = e.currentTarget.querySelector('img');
                                                 if (!img) return;
                                                 img.style.transform = 'scale(1)';
@@ -383,7 +393,7 @@ function AnimeList() {
                                                 style={{
                                                     width: '80px',
                                                     height: '45px',
-                                                    objectFit: 'contain',
+                                                    objectFit: 'cover',
                                                     backgroundColor: 'rgba(0,0,0,0.1)',
                                                     borderRadius: '4px',
                                                     boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
