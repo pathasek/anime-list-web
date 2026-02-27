@@ -776,7 +776,18 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   }
 
   .filter-group {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+  }
+
+  .filter-group::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari and Opera */
   }
 
   /* Rating badge in table */
@@ -823,13 +834,13 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 /* ─── Mobile View Helpers & Cards ─── */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .hide-mobile {
     display: none !important;
   }
 }
 
-@media (min-width: 769px) {
+@media (min-width: 1025px) {
   .hide-desktop {
     display: none !important;
   }
