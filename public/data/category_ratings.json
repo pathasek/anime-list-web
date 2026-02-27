@@ -1,5 +1,24 @@
 [
   {
+    "name": "Chainsaw Man",
+    "categories": {
+      "Animace": 10.0,
+      "CGI": 10.0,
+      "MC": 7.0,
+      "Vedlejší postavy": 10.0,
+      "Waifu": 9.0,
+      "Plot": 9.0,
+      "Pacing": 8.0,
+      "Story Conclusion": 9.0,
+      "Originalita": 10.0,
+      "Emoce": 8.5,
+      "Enjoyment": 9.0,
+      "OP": 9.0,
+      "ED": 9.0,
+      "OST": 8.0
+    }
+  },
+  {
     "name": "Jujutsu Kaisen 0",
     "categories": {
       "Animace": 10.0,
@@ -55,6 +74,25 @@
     }
   },
   {
+    "name": "Kaiju No.8, S01",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 7.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 8.0,
+      "Plot": 8.0,
+      "Pacing": 8.0,
+      "Story Conclusion": 9.0,
+      "Originalita": 8.0,
+      "Emoce": 8.0,
+      "Enjoyment": 8.0,
+      "OP": 9.0,
+      "ED": 9.0,
+      "OST": 8.0
+    }
+  },
+  {
     "name": "My Dress-Up Darling, S01",
     "categories": {
       "Animace": 10.0,
@@ -74,6 +112,25 @@
     }
   },
   {
+    "name": "Frieren: Beyond Journey's End, S01",
+    "categories": {
+      "Animace": 10.0,
+      "CGI": 9.5,
+      "MC": 10.0,
+      "Vedlejší postavy": 10.0,
+      "Waifu": 9.0,
+      "Plot": 10.0,
+      "Pacing": 10.0,
+      "Story Conclusion": 10.0,
+      "Originalita": 10.0,
+      "Emoce": 9.5,
+      "Enjoyment": 10.0,
+      "OP": 9.0,
+      "ED": 9.0,
+      "OST": 10.0
+    }
+  },
+  {
     "name": "Spy x Family, S01 Part 1",
     "categories": {
       "Animace": 8.5,
@@ -88,6 +145,25 @@
       "Emoce": 8.0,
       "Enjoyment": 7.0,
       "OP": 7.0,
+      "ED": 7.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "Steins;Gate",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 8.0,
+      "MC": 10.0,
+      "Vedlejší postavy": 10.0,
+      "Waifu": 10.0,
+      "Plot": 10.0,
+      "Pacing": 10.0,
+      "Story Conclusion": 10.0,
+      "Originalita": 10.0,
+      "Emoce": 10.0,
+      "Enjoyment": 10.0,
+      "OP": 9.0,
       "ED": 7.0,
       "OST": 10.0
     }
@@ -188,6 +264,24 @@
     }
   },
   {
+    "name": "Lord of Mysteries",
+    "categories": {
+      "Animace": 10.0,
+      "CGI": 10.0,
+      "MC": 10.0,
+      "Vedlejší postavy": 10.0,
+      "Waifu": 9.0,
+      "Plot": 10.0,
+      "Pacing": 8.0,
+      "Story Conclusion": 10.0,
+      "Originalita": 10.0,
+      "Emoce": 10.0,
+      "Enjoyment": 10.0,
+      "ED": 10.0,
+      "OST": 10.0
+    }
+  },
+  {
     "name": "Call of the Night, S01",
     "categories": {
       "Animace": 8.5,
@@ -203,6 +297,63 @@
       "Enjoyment": 8.0,
       "OP": 9.0,
       "ED": 8.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Call of the Night, S02",
+    "categories": {
+      "Animace": 8.5,
+      "CGI": 7.5,
+      "MC": 8.0,
+      "Vedlejší postavy": 9.0,
+      "Waifu": 9.0,
+      "Plot": 8.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 8.0,
+      "Emoce": 9.0,
+      "Enjoyment": 8.0,
+      "OP": 9.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "The Water Magician",
+    "categories": {
+      "Animace": 6.5,
+      "CGI": 6.0,
+      "MC": 6.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 7.0,
+      "Plot": 7.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 7.0,
+      "Emoce": 8.0,
+      "Enjoyment": 7.0,
+      "OP": 8.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "My Dress-Up Darling, S02",
+    "categories": {
+      "Animace": 10.0,
+      "CGI": 9.0,
+      "MC": 9.0,
+      "Vedlejší postavy": 9.0,
+      "Waifu": 10.0,
+      "Plot": 8.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 9.0,
+      "Emoce": 8.0,
+      "Enjoyment": 8.0,
+      "OP": 9.0,
+      "ED": 7.0,
       "OST": 8.0
     }
   },
@@ -260,6 +411,44 @@
       "Enjoyment": 7.0,
       "OP": 9.0,
       "ED": 7.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "The Summer Hikaru Died, S01",
+    "categories": {
+      "Animace": 9.0,
+      "CGI": 8.5,
+      "MC": 9.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 7.0,
+      "Plot": 9.0,
+      "Pacing": 9.0,
+      "Story Conclusion": 10.0,
+      "Originalita": 9.0,
+      "Emoce": 9.0,
+      "Enjoyment": 9.0,
+      "OP": 7.0,
+      "ED": 9.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "The Rising of the Shield Hero, S04",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 7.0,
+      "MC": 7.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 10.0,
+      "Plot": 7.0,
+      "Pacing": 8.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 7.0,
+      "Emoce": 7.0,
+      "Enjoyment": 7.0,
+      "OP": 7.0,
+      "ED": 9.0,
       "OST": 10.0
     }
   },
@@ -334,6 +523,25 @@
     }
   },
   {
+    "name": "Rascal Does Not Dream of Santa Claus",
+    "categories": {
+      "Animace": 7.5,
+      "CGI": 8.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 9.0,
+      "Plot": 8.0,
+      "Pacing": 8.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 9.0,
+      "Emoce": 7.0,
+      "Enjoyment": 7.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
     "name": "Black Butler, S01",
     "categories": {
       "Animace": 8.0,
@@ -369,6 +577,25 @@
       "OP": 8.0,
       "ED": 8.0,
       "OST": 7.0
+    }
+  },
+  {
+    "name": "Black Butler, S02",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 7.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 7.0,
+      "Plot": 7.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 8.0,
+      "Emoce": 7.0,
+      "Enjoyment": 7.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
     }
   },
   {
@@ -463,6 +690,62 @@
     }
   },
   {
+    "name": "Black Butler: Emerald Witch Arc",
+    "categories": {
+      "Animace": 9.0,
+      "CGI": 9.0,
+      "MC": 9.0,
+      "Vedlejší postavy": 10.0,
+      "Waifu": 8.0,
+      "Plot": 8.0,
+      "Pacing": 9.0,
+      "Story Conclusion": 9.0,
+      "Originalita": 9.0,
+      "Emoce": 10.0,
+      "Enjoyment": 9.0,
+      "OP": 9.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Takopi's Original Sin",
+    "categories": {
+      "Animace": 9.0,
+      "CGI": 8.0,
+      "MC": 9.0,
+      "Vedlejší postavy": 9.0,
+      "Plot": 9.0,
+      "Pacing": 10.0,
+      "Story Conclusion": 10.0,
+      "Originalita": 10.0,
+      "Emoce": 10.0,
+      "Enjoyment": 9.0,
+      "OP": 10.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Kaiju No.8, S02",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 7.0,
+      "MC": 7.0,
+      "Vedlejší postavy": 9.0,
+      "Waifu": 8.0,
+      "Plot": 8.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 9.0,
+      "Originalita": 8.0,
+      "Emoce": 9.0,
+      "Enjoyment": 8.0,
+      "OP": 9.0,
+      "ED": 9.0,
+      "OST": 8.0
+    }
+  },
+  {
     "name": "Steins;Gate 0: Valentine's of Crystal Polymorphism -Bittersweet Intermedio-",
     "categories": {
       "Animace": 8.0,
@@ -517,6 +800,44 @@
     }
   },
   {
+    "name": "Steins;Gate: The Movie - Load Region of Déjà Vu",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 8.0,
+      "MC": 9.0,
+      "Vedlejší postavy": 9.0,
+      "Waifu": 10.0,
+      "Plot": 9.0,
+      "Pacing": 9.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 10.0,
+      "Emoce": 9.0,
+      "Enjoyment": 9.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "Fullmetal Alchemist: Brotherhood",
+    "categories": {
+      "Animace": 8.5,
+      "CGI": 8.0,
+      "MC": 9.0,
+      "Vedlejší postavy": 10.0,
+      "Waifu": 9.0,
+      "Plot": 9.0,
+      "Pacing": 9.0,
+      "Story Conclusion": 10.0,
+      "Originalita": 9.0,
+      "Emoce": 10.0,
+      "Enjoyment": 9.0,
+      "OP": 9.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
     "name": "Fullmetal Alchemist: The Sacred Star of Milos",
     "categories": {
       "Animace": 9.0,
@@ -553,6 +874,60 @@
     }
   },
   {
+    "name": "Tokyo Magnitude 8.0",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 6.5,
+      "MC": 10.0,
+      "Vedlejší postavy": 9.0,
+      "Waifu": 9.0,
+      "Plot": 10.0,
+      "Pacing": 10.0,
+      "Story Conclusion": 10.0,
+      "Originalita": 10.0,
+      "Emoce": 10.0,
+      "Enjoyment": 10.0,
+      "OP": 9.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Haibane Renmei",
+    "categories": {
+      "Animace": 6.0,
+      "CGI": 6.0,
+      "MC": 7.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 7.0,
+      "Plot": 7.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 9.0,
+      "Emoce": 7.0,
+      "Enjoyment": 5.0,
+      "OP": 6.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "The Tunnel to Summer, the Exit of Goodbyes",
+    "categories": {
+      "Animace": 9.0,
+      "CGI": 9.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 7.0,
+      "Plot": 6.0,
+      "Pacing": 5.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 9.0,
+      "Emoce": 7.0,
+      "Enjoyment": 7.0,
+      "OST": 9.0
+    }
+  },
+  {
     "name": "Puella Magi Madoka Magica",
     "categories": {
       "Animace": 9.0,
@@ -567,6 +942,22 @@
       "Enjoyment": 10.0,
       "OP": 7.0,
       "ED": 9.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "Puella Magi Madoka Magica the Movie: Rebellion",
+    "categories": {
+      "Animace": 9.0,
+      "CGI": 8.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 8.0,
+      "Plot": 7.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 9.0,
+      "Emoce": 8.0,
+      "Enjoyment": 7.0,
       "OST": 10.0
     }
   },
@@ -604,6 +995,78 @@
       "OP": 7.0,
       "ED": 7.0,
       "OST": 10.0
+    }
+  },
+  {
+    "name": "Magia Record: Puella Magi Madoka Magica Side Story Final Season",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 7.0,
+      "MC": 7.0,
+      "Vedlejší postavy": 7.0,
+      "Plot": 6.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 6.0,
+      "Originalita": 7.0,
+      "Emoce": 7.0,
+      "Enjoyment": 7.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "Cross Ange: Rondo of Angel and Dragon",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 9.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 8.0,
+      "Plot": 7.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 7.0,
+      "Emoce": 7.0,
+      "Enjoyment": 8.0,
+      "OP": 8.0,
+      "ED": 8.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "The Girl Who Leapt Through Time",
+    "categories": {
+      "Animace": 7.5,
+      "CGI": 7.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 8.0,
+      "Plot": 7.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 9.0,
+      "Emoce": 8.0,
+      "Enjoyment": 8.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Jin-Roh: The Wolf Brigade",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 8.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 7.0,
+      "Plot": 8.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 9.0,
+      "Emoce": 8.0,
+      "Enjoyment": 8.0,
+      "ED": 5.0,
+      "OST": 8.0
     }
   },
   {
@@ -658,6 +1121,25 @@
       "Originalita": 10.0,
       "Emoce": 10.0,
       "Enjoyment": 10.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Higurashi: When They Cry – Rei",
+    "categories": {
+      "Animace": 6.0,
+      "CGI": 6.0,
+      "MC": 10.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 9.0,
+      "Plot": 8.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 8.0,
+      "Emoce": 8.0,
+      "Enjoyment": 8.0,
       "OP": 7.0,
       "ED": 7.0,
       "OST": 8.0
@@ -720,6 +1202,25 @@
     }
   },
   {
+    "name": "Higurashi: When They Cry – Sotsu",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 8.0,
+      "MC": 9.0,
+      "Vedlejší postavy": 10.0,
+      "Waifu": 8.0,
+      "Plot": 8.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 9.0,
+      "Originalita": 8.0,
+      "Emoce": 9.5,
+      "Enjoyment": 9.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 9.0
+    }
+  },
+  {
     "name": "The Future Diary",
     "categories": {
       "Animace": 8.0,
@@ -739,6 +1240,117 @@
     }
   },
   {
+    "name": "The Future Diary: Redial",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 6.0,
+      "MC": 7.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 7.0,
+      "Plot": 7.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 8.0,
+      "Emoce": 8.0,
+      "Enjoyment": 7.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Girls' Last Tour",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 9.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 8.0,
+      "Plot": 7.0,
+      "Pacing": 10.0,
+      "Story Conclusion": 9.0,
+      "Originalita": 9.0,
+      "Emoce": 9.0,
+      "Enjoyment": 9.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "The Melancholy of Haruhi Suzumiya, S01",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 7.0,
+      "MC": 9.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 8.0,
+      "Plot": 8.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 8.0,
+      "Emoce": 7.0,
+      "Enjoyment": 7.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 9.0
+    }
+  },
+  {
+    "name": "From the New World",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 8.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 7.0,
+      "Plot": 7.0,
+      "Pacing": 6.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 8.0,
+      "Emoce": 7.0,
+      "Enjoyment": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Electromagnetic Girlfriend",
+    "categories": {
+      "Animace": 9.0,
+      "CGI": 8.0,
+      "MC": 9.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 9.0,
+      "Plot": 7.0,
+      "Pacing": 8.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 9.0,
+      "Emoce": 8.0,
+      "Enjoyment": 8.0,
+      "ED": 8.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Shiki",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 7.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 8.0,
+      "Plot": 8.0,
+      "Pacing": 9.0,
+      "Story Conclusion": 10.0,
+      "Originalita": 9.0,
+      "Emoce": 9.0,
+      "Enjoyment": 8.0,
+      "OP": 9.0,
+      "ED": 7.0,
+      "OST": 9.0
+    }
+  },
+  {
     "name": "Shiki Specials",
     "categories": {
       "Animace": 7.0,
@@ -753,6 +1365,25 @@
       "Emoce": 9.0,
       "Enjoyment": 8.0,
       "OP": 9.0,
+      "ED": 7.0,
+      "OST": 9.0
+    }
+  },
+  {
+    "name": "School-Live!",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 8.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 8.0,
+      "Plot": 8.0,
+      "Pacing": 9.0,
+      "Story Conclusion": 9.0,
+      "Originalita": 9.0,
+      "Emoce": 10.0,
+      "Enjoyment": 8.0,
+      "OP": 7.0,
       "ED": 7.0,
       "OST": 9.0
     }
@@ -999,6 +1630,25 @@
     }
   },
   {
+    "name": "Monogatari Series: Off & Monster Season",
+    "categories": {
+      "Animace": 9.0,
+      "CGI": 8.0,
+      "MC": 9.0,
+      "Vedlejší postavy": 9.0,
+      "Waifu": 10.0,
+      "Plot": 8.0,
+      "Pacing": 8.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 10.0,
+      "Emoce": 8.0,
+      "Enjoyment": 8.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
     "name": "Monogatari Series: Off & Monster Season - A Cruel Fairy Tale: The Beautiful Princess",
     "categories": {
       "Animace": 5.0,
@@ -1036,6 +1686,60 @@
     }
   },
   {
+    "name": "The Disappearance of Haruhi Suzumiya",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 8.0,
+      "MC": 10.0,
+      "Vedlejší postavy": 10.0,
+      "Waifu": 9.0,
+      "Plot": 9.0,
+      "Pacing": 10.0,
+      "Story Conclusion": 9.0,
+      "Originalita": 9.0,
+      "Emoce": 10.0,
+      "Enjoyment": 9.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Bâan: The Boundary of Adulthood",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 7.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 6.0,
+      "Waifu": 6.0,
+      "Plot": 7.0,
+      "Pacing": 6.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 8.0,
+      "Emoce": 8.0,
+      "Enjoyment": 8.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "Spice and Wolf: Merchant Meets the Wise Wolf, S01",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 7.0,
+      "MC": 9.0,
+      "Vedlejší postavy": 9.0,
+      "Waifu": 10.0,
+      "Plot": 9.0,
+      "Pacing": 9.0,
+      "Story Conclusion": 9.0,
+      "Originalita": 8.0,
+      "Emoce": 9.0,
+      "Enjoyment": 10.0,
+      "OP": 9.0,
+      "ED": 9.0,
+      "OST": 10.0
+    }
+  },
+  {
     "name": "The Apothecary Diaries, S01",
     "categories": {
       "Animace": 8.5,
@@ -1050,6 +1754,82 @@
       "Emoce": 9.0,
       "Enjoyment": 8.0,
       "OP": 10.0,
+      "ED": 7.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "The Apothecary Diaries, S02",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 8.0,
+      "MC": 9.0,
+      "Vedlejší postavy": 9.0,
+      "Waifu": 9.0,
+      "Plot": 8.0,
+      "Pacing": 8.0,
+      "Story Conclusion": 9.0,
+      "Originalita": 9.0,
+      "Emoce": 9.0,
+      "Enjoyment": 8.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "May I Ask for One Final Thing?",
+    "categories": {
+      "Animace": 7.5,
+      "CGI": 7.0,
+      "MC": 9.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 10.0,
+      "Plot": 7.0,
+      "Pacing": 8.0,
+      "Story Conclusion": 9.0,
+      "Originalita": 8.5,
+      "Emoce": 7.5,
+      "Enjoyment": 9.0,
+      "OP": 9.0,
+      "ED": 9.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Takt Op. Destiny",
+    "categories": {
+      "Animace": 9.0,
+      "CGI": 9.0,
+      "MC": 7.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 7.0,
+      "Plot": 7.0,
+      "Pacing": 8.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 9.0,
+      "Emoce": 8.0,
+      "Enjoyment": 8.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 9.0
+    }
+  },
+  {
+    "name": "Spy x Family, S03",
+    "categories": {
+      "Animace": 8.5,
+      "CGI": 7.5,
+      "MC": 9.0,
+      "Vedlejší postavy": 8.5,
+      "Waifu": 8.5,
+      "Plot": 8.0,
+      "Pacing": 7.5,
+      "Story Conclusion": 8.0,
+      "Originalita": 9.0,
+      "Emoce": 8.5,
+      "Enjoyment": 8.0,
+      "OP": 7.0,
       "ED": 7.0,
       "OST": 10.0
     }
@@ -1093,6 +1873,25 @@
     }
   },
   {
+    "name": "Tower of God, S02: Workshop Battle",
+    "categories": {
+      "Animace": 6.5,
+      "CGI": 6.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 8.0,
+      "Plot": 7.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 8.0,
+      "Emoce": 7.0,
+      "Enjoyment": 7.0,
+      "OP": 9.0,
+      "ED": 9.0,
+      "OST": 10.0
+    }
+  },
+  {
     "name": "I've Been Killing Slimes for 300 Years and Maxed Out My Level, S01",
     "categories": {
       "Animace": 7.0,
@@ -1106,6 +1905,82 @@
       "Originalita": 7.0,
       "Emoce": 6.0,
       "Enjoyment": 6.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "I've Been Killing Slimes for 300 Years and Maxed Out My Level, S02",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 7.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 8.0,
+      "Plot": 7.0,
+      "Pacing": 8.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 7.0,
+      "Emoce": 7.0,
+      "Enjoyment": 7.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Combatants Will Be Dispatched!",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 7.0,
+      "MC": 6.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 7.0,
+      "Plot": 6.0,
+      "Pacing": 8.0,
+      "Story Conclusion": 6.0,
+      "Originalita": 6.0,
+      "Emoce": 6.0,
+      "Enjoyment": 7.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Cautious Hero: The Hero Is Overpowered but Overly Cautious",
+    "categories": {
+      "Animace": 7.5,
+      "CGI": 6.5,
+      "MC": 8.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 7.0,
+      "Plot": 8.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 9.0,
+      "Originalita": 8.0,
+      "Emoce": 9.0,
+      "Enjoyment": 8.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "So I'm a Spider, So What?",
+    "categories": {
+      "Animace": 6.5,
+      "CGI": 6.0,
+      "MC": 7.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 7.0,
+      "Plot": 6.0,
+      "Pacing": 6.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 7.0,
+      "Emoce": 7.0,
+      "Enjoyment": 7.0,
       "OP": 7.0,
       "ED": 7.0,
       "OST": 8.0
@@ -1128,6 +2003,44 @@
       "OP": 7.0,
       "ED": 8.0,
       "OST": 10.0
+    }
+  },
+  {
+    "name": "Tsukimichi -Moonlit Fantasy-, S02",
+    "categories": {
+      "Animace": 7.5,
+      "CGI": 7.5,
+      "MC": 8.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 8.0,
+      "Plot": 8.0,
+      "Pacing": 8.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 8.0,
+      "Emoce": 7.0,
+      "Enjoyment": 8.0,
+      "OP": 7.0,
+      "ED": 8.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "The Dungeon of Black Company",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 7.0,
+      "MC": 7.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 7.0,
+      "Plot": 7.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 7.0,
+      "Emoce": 7.0,
+      "Enjoyment": 7.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
     }
   },
   {
@@ -1188,6 +2101,25 @@
     }
   },
   {
+    "name": "Ascendance of a Bookworm, S03",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 7.0,
+      "MC": 10.0,
+      "Vedlejší postavy": 10.0,
+      "Waifu": 7.0,
+      "Plot": 9.0,
+      "Pacing": 10.0,
+      "Story Conclusion": 10.0,
+      "Originalita": 10.0,
+      "Emoce": 10.0,
+      "Enjoyment": 9.0,
+      "OP": 7.0,
+      "ED": 9.0,
+      "OST": 8.0
+    }
+  },
+  {
     "name": "GATE, S01 Part 1",
     "categories": {
       "Animace": 7.0,
@@ -1197,6 +2129,25 @@
       "Waifu": 9.0,
       "Plot": 8.0,
       "Pacing": 7.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 10.0,
+      "Emoce": 8.0,
+      "Enjoyment": 8.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "GATE, S01 Part 2",
+    "categories": {
+      "Animace": 7.5,
+      "CGI": 8.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 9.0,
+      "Plot": 8.0,
+      "Pacing": 8.0,
       "Story Conclusion": 8.0,
       "Originalita": 10.0,
       "Emoce": 8.0,
@@ -1222,6 +2173,44 @@
       "Enjoyment": 7.0,
       "OP": 7.0,
       "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "I'm Standing on a Million Lives, S02",
+    "categories": {
+      "Animace": 6.5,
+      "CGI": 6.5,
+      "MC": 8.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 7.0,
+      "Plot": 7.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 8.0,
+      "Emoce": 7.0,
+      "Enjoyment": 7.0,
+      "OP": 7.0,
+      "ED": 8.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Skeleton Knight in Another World, S01",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 8.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 9.0,
+      "Plot": 7.0,
+      "Pacing": 8.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 7.0,
+      "Emoce": 8.0,
+      "Enjoyment": 8.0,
+      "OP": 9.0,
+      "ED": 9.0,
       "OST": 8.0
     }
   },
@@ -1337,6 +2326,25 @@
     }
   },
   {
+    "name": "Arifureta: From Commonplace to World's Strongest, S03",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 6.5,
+      "MC": 7.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 8.0,
+      "Plot": 7.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 8.0,
+      "Emoce": 7.0,
+      "Enjoyment": 7.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 9.0
+    }
+  },
+  {
     "name": "Grimgar: Staking Our Youths on the Bath Wall - One More Centimeter",
     "categories": {
       "Animace": 7.5,
@@ -1353,6 +2361,25 @@
       "OP": 7.0,
       "ED": 9.0,
       "OST": 8.0
+    }
+  },
+  {
+    "name": "Grimgar: Ashes and Illusions",
+    "categories": {
+      "Animace": 7.5,
+      "CGI": 7.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 8.0,
+      "Plot": 7.0,
+      "Pacing": 8.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 9.0,
+      "Emoce": 9.0,
+      "Enjoyment": 8.0,
+      "OP": 7.0,
+      "ED": 9.0,
+      "OST": 10.0
     }
   },
   {
@@ -1390,6 +2417,24 @@
       "Enjoyment": 8.0,
       "ED": 9.0,
       "OST": 8.0
+    }
+  },
+  {
+    "name": "Saga of Tanya the Evil: The Movie",
+    "categories": {
+      "Animace": 8.5,
+      "CGI": 7.0,
+      "MC": 9.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 8.0,
+      "Plot": 8.0,
+      "Pacing": 9.0,
+      "Story Conclusion": 9.0,
+      "Originalita": 10.0,
+      "Emoce": 8.0,
+      "Enjoyment": 9.0,
+      "ED": 9.0,
+      "OST": 9.0
     }
   },
   {
@@ -1431,630 +2476,6 @@
     }
   },
   {
-    "name": "Chainsaw Man: The Compilation",
-    "categories": {
-      "Animace": 10.0,
-      "CGI": 10.0,
-      "MC": 7.0,
-      "Vedlejší postavy": 10.0,
-      "Waifu": 9.0,
-      "Plot": 9.0,
-      "Pacing": 9.0,
-      "Story Conclusion": 8.0,
-      "Originalita": 10.0,
-      "Emoce": 8.0,
-      "Enjoyment": 9.0,
-      "OP": 9.0,
-      "ED": 9.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Another World",
-    "categories": {
-      "Animace": 7.0,
-      "CGI": 7.5,
-      "MC": 7.0,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 7.0,
-      "Plot": 7.0,
-      "Pacing": 7.0,
-      "Story Conclusion": 8.0,
-      "Originalita": 8.0,
-      "Emoce": 7.0,
-      "Enjoyment": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Sound of the Sky",
-    "categories": {
-      "Animace": 6.5,
-      "CGI": 7.5,
-      "MC": 7.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 8.0,
-      "Plot": 7.0,
-      "Pacing": 7.0,
-      "Story Conclusion": 9.0,
-      "Originalita": 8.5,
-      "Emoce": 8.0,
-      "Enjoyment": 8.0,
-      "OP": 8.0,
-      "ED": 7.0,
-      "OST": 9.0
-    }
-  },
-  {
-    "name": "Kabaneri of the Iron Fortress",
-    "categories": {
-      "Animace": 9.0,
-      "CGI": 8.5,
-      "MC": 7.5,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 8.0,
-      "Plot": 7.0,
-      "Pacing": 8.0,
-      "Story Conclusion": 7.0,
-      "Originalita": 6.0,
-      "Emoce": 8.0,
-      "Enjoyment": 8.0,
-      "OP": 9.0,
-      "ED": 9.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "Demon Slayer",
-    "categories": {
-      "Animace": 10.0,
-      "CGI": 10.0,
-      "MC": 10.0,
-      "Vedlejší postavy": 9.0,
-      "Waifu": 9.0,
-      "Plot": 9.0,
-      "Pacing": 9.0,
-      "Story Conclusion": 9.0,
-      "Originalita": 9.0,
-      "Emoce": 9.0,
-      "Enjoyment": 10.0,
-      "OP": 10.0,
-      "ED": 10.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "Demon Slayer: Mugen Train Arc",
-    "categories": {
-      "Animace": 10.0,
-      "CGI": 10.0,
-      "MC": 10.0,
-      "Vedlejší postavy": 10.0,
-      "Waifu": 8.0,
-      "Plot": 8.0,
-      "Pacing": 10.0,
-      "Story Conclusion": 10.0,
-      "Originalita": 9.0,
-      "Emoce": 8.5,
-      "Enjoyment": 10.0,
-      "OP": 10.0,
-      "ED": 9.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "Demon Slayer: Entertainment District Arc",
-    "categories": {
-      "Animace": 10.0,
-      "CGI": 10.0,
-      "MC": 10.0,
-      "Vedlejší postavy": 10.0,
-      "Waifu": 9.0,
-      "Plot": 8.0,
-      "Pacing": 9.0,
-      "Story Conclusion": 10.0,
-      "Originalita": 9.0,
-      "Emoce": 9.0,
-      "Enjoyment": 10.0,
-      "OP": 9.0,
-      "ED": 7.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "Demon Slayer: Swordsmith Village Arc",
-    "categories": {
-      "Animace": 10.0,
-      "CGI": 10.0,
-      "MC": 10.0,
-      "Vedlejší postavy": 9.0,
-      "Waifu": 8.0,
-      "Plot": 8.0,
-      "Pacing": 8.0,
-      "Story Conclusion": 10.0,
-      "Originalita": 9.0,
-      "Emoce": 9.5,
-      "Enjoyment": 9.5,
-      "OP": 7.0,
-      "ED": 9.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "Demon Slayer: Hashira Training Arc",
-    "categories": {
-      "Animace": 10.0,
-      "CGI": 10.0,
-      "MC": 10.0,
-      "Vedlejší postavy": 9.0,
-      "Waifu": 7.0,
-      "Plot": 7.5,
-      "Pacing": 7.0,
-      "Story Conclusion": 10.0,
-      "Originalita": 9.0,
-      "Emoce": 8.0,
-      "Enjoyment": 8.5,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "Vinland Saga, S01",
-    "categories": {
-      "Animace": 9.0,
-      "CGI": 8.0,
-      "MC": 7.0,
-      "Vedlejší postavy": 9.0,
-      "Waifu": 6.0,
-      "Plot": 8.0,
-      "Pacing": 7.0,
-      "Story Conclusion": 8.0,
-      "Originalita": 10.0,
-      "Emoce": 8.0,
-      "Enjoyment": 7.5,
-      "OP": 8.0,
-      "ED": 9.0,
-      "OST": 9.0
-    }
-  },
-  {
-    "name": "Vinland Saga, S02: Drowning in the Shadow",
-    "categories": {
-      "Animace": 9.0,
-      "CGI": 8.0,
-      "MC": 7.0,
-      "Vedlejší postavy": 6.0,
-      "Plot": 6.0,
-      "Pacing": 6.0,
-      "Story Conclusion": 6.0,
-      "Originalita": 6.0,
-      "Emoce": 7.0,
-      "Enjoyment": 6.0,
-      "OST": 7.0
-    }
-  },
-  {
-    "name": "Vinland Saga, S02: Same Old Story",
-    "categories": {
-      "Animace": 8.0,
-      "CGI": 8.0,
-      "Vedlejší postavy": 7.0,
-      "Plot": 6.5,
-      "Pacing": 7.0,
-      "Story Conclusion": 7.0,
-      "Originalita": 7.0,
-      "Emoce": 7.0,
-      "Enjoyment": 6.0,
-      "OST": 7.0
-    }
-  },
-  {
-    "name": "Himouto! Umaru-chan",
-    "categories": {
-      "Animace": 7.0,
-      "CGI": 8.5,
-      "MC": 8.0,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 6.0,
-      "Plot": 6.0,
-      "Pacing": 8.0,
-      "Story Conclusion": 7.0,
-      "Originalita": 7.5,
-      "Emoce": 6.5,
-      "Enjoyment": 7.5,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Himouto! Umaru-chan Specials",
-    "categories": {
-      "Animace": 6.5,
-      "CGI": 7.0,
-      "MC": 7.0,
-      "Vedlejší postavy": 6.5,
-      "Waifu": 5.5,
-      "Plot": 5.0,
-      "Pacing": 8.5,
-      "Story Conclusion": 5.0,
-      "Originalita": 7.0,
-      "Emoce": 6.0,
-      "Enjoyment": 6.5,
-      "OST": 7.0
-    }
-  },
-  {
-    "name": "Himouto! Umaru-chan R",
-    "categories": {
-      "Animace": 7.0,
-      "CGI": 8.0,
-      "MC": 8.0,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 6.5,
-      "Plot": 6.5,
-      "Pacing": 7.5,
-      "Story Conclusion": 7.0,
-      "Originalita": 7.5,
-      "Emoce": 7.0,
-      "Enjoyment": 7.5,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Fate/strange Fake: Whispers of Dawn",
-    "categories": {
-      "Animace": 9.5,
-      "CGI": 8.5,
-      "MC": 8.5,
-      "Waifu": 7.0,
-      "Plot": 7.5,
-      "Pacing": 8.0,
-      "Story Conclusion": 9.5,
-      "Originalita": 7.5,
-      "Emoce": 7.0,
-      "Enjoyment": 8.5,
-      "OST": 9.0
-    }
-  },
-  {
-    "name": "Dorohedoro: Bonus Curse or Extra Evil",
-    "categories": {
-      "Animace": 5.0,
-      "MC": 7.0,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 5.0,
-      "Plot": 5.0,
-      "Pacing": 8.0,
-      "Story Conclusion": 6.0,
-      "Originalita": 6.0,
-      "Emoce": 5.5,
-      "Enjoyment": 5.0,
-      "ED": 8.0,
-      "OST": 7.0
-    }
-  },
-  {
-    "name": "Hell's Paradise, S01",
-    "categories": {
-      "Animace": 8.0,
-      "CGI": 7.5,
-      "MC": 8.0,
-      "Vedlejší postavy": 9.0,
-      "Waifu": 9.5,
-      "Plot": 8.5,
-      "Pacing": 8.0,
-      "Story Conclusion": 9.0,
-      "Originalita": 9.0,
-      "Emoce": 8.0,
-      "Enjoyment": 8.5,
-      "OP": 9.0,
-      "ED": 10.0,
-      "OST": 9.0
-    }
-  },
-  {
-    "name": "The Ancient Magus' Bride, S01",
-    "categories": {
-      "Animace": 7.5,
-      "CGI": 7.5,
-      "MC": 9.5,
-      "Vedlejší postavy": 9.0,
-      "Waifu": 9.5,
-      "Plot": 9.0,
-      "Pacing": 8.5,
-      "Story Conclusion": 9.0,
-      "Originalita": 9.5,
-      "Emoce": 9.0,
-      "Enjoyment": 9.0,
-      "OP": 9.0,
-      "ED": 9.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "The Ancient Magus' Bride: Those Awaiting a Star",
-    "categories": {
-      "Animace": 7.5,
-      "CGI": 7.0,
-      "MC": 9.0,
-      "Vedlejší postavy": 8.5,
-      "Waifu": 8.5,
-      "Plot": 8.5,
-      "Pacing": 9.0,
-      "Story Conclusion": 9.0,
-      "Originalita": 9.5,
-      "Emoce": 9.0,
-      "Enjoyment": 9.0,
-      "ED": 7.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "The Ancient Magus' Bride: The Boy from the West and the Knight of the Blue Storm",
-    "categories": {
-      "Animace": 7.5,
-      "CGI": 8.0,
-      "MC": 8.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 9.0,
-      "Plot": 7.5,
-      "Pacing": 7.0,
-      "Story Conclusion": 8.5,
-      "Originalita": 8.5,
-      "Emoce": 7.5,
-      "Enjoyment": 8.0,
-      "ED": 7.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "The Ancient Magus' Bride, S02 Part 1",
-    "categories": {
-      "Animace": 8.0,
-      "CGI": 8.0,
-      "MC": 9.0,
-      "Vedlejší postavy": 8.5,
-      "Waifu": 9.0,
-      "Plot": 7.5,
-      "Pacing": 7.0,
-      "Story Conclusion": 8.0,
-      "Originalita": 8.0,
-      "Emoce": 7.5,
-      "Enjoyment": 7.5,
-      "OP": 9.0,
-      "ED": 7.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "Magi: The Labyrinth of Magic",
-    "categories": {
-      "Animace": 6.5,
-      "CGI": 6.5,
-      "MC": 7.5,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 8.0,
-      "Plot": 7.0,
-      "Pacing": 7.5,
-      "Story Conclusion": 8.0,
-      "Originalita": 8.0,
-      "Emoce": 8.5,
-      "Enjoyment": 7.0,
-      "OP": 9.0,
-      "ED": 7.0,
-      "OST": 9.0
-    }
-  },
-  {
-    "name": "Magi: Adventures of Sinbad",
-    "categories": {
-      "Animace": 6.5,
-      "CGI": 6.5,
-      "MC": 8.0,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 6.5,
-      "Plot": 7.0,
-      "Pacing": 6.5,
-      "Story Conclusion": 7.0,
-      "Originalita": 7.5,
-      "Emoce": 7.5,
-      "Enjoyment": 7.0,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Burn the Witch #0.8",
-    "categories": {
-      "Animace": 8.0,
-      "CGI": 8.5,
-      "MC": 7.0,
-      "Vedlejší postavy": 6.5,
-      "Waifu": 8.0,
-      "Plot": 7.0,
-      "Pacing": 8.0,
-      "Story Conclusion": 7.0,
-      "Originalita": 7.0,
-      "Emoce": 6.5,
-      "Enjoyment": 7.0,
-      "ED": 8.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Dead Dead Demons Dededede Destruction Episode 0",
-    "categories": {
-      "Animace": 8.0,
-      "CGI": 8.5,
-      "MC": 7.5,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 6.5,
-      "Plot": 7.5,
-      "Pacing": 8.0,
-      "Story Conclusion": 7.5,
-      "Originalita": 8.5,
-      "Emoce": 7.5,
-      "Enjoyment": 8.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Girls' Last Tour",
-    "categories": {
-      "Animace": 7.0,
-      "CGI": 9.0,
-      "MC": 8.0,
-      "Vedlejší postavy": 8.0,
-      "Plot": 7.0,
-      "Pacing": 10.0,
-      "Story Conclusion": 9.0,
-      "Originalita": 9.0,
-      "Emoce": 9.0,
-      "Enjoyment": 9.0,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "Electromagnetic Girlfriend",
-    "categories": {
-      "Animace": 9.0,
-      "CGI": 8.0,
-      "MC": 9.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 9.0,
-      "Plot": 7.0,
-      "Pacing": 8.0,
-      "Story Conclusion": 8.0,
-      "Originalita": 9.0,
-      "Emoce": 8.0,
-      "Enjoyment": 8.0,
-      "ED": 8.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "School-Live!",
-    "categories": {
-      "Animace": 7.0,
-      "CGI": 8.0,
-      "MC": 8.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 8.0,
-      "Plot": 8.0,
-      "Pacing": 9.0,
-      "Story Conclusion": 9.0,
-      "Originalita": 9.0,
-      "Emoce": 10.0,
-      "Enjoyment": 8.0,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 9.0
-    }
-  },
-  {
-    "name": "Combatants Will Be Dispatched!",
-    "categories": {
-      "Animace": 7.0,
-      "CGI": 7.0,
-      "MC": 6.0,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 7.0,
-      "Plot": 6.0,
-      "Pacing": 8.0,
-      "Story Conclusion": 6.0,
-      "Originalita": 6.0,
-      "Emoce": 6.0,
-      "Enjoyment": 7.0,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "So I'm a Spider, So What?",
-    "categories": {
-      "Animace": 6.5,
-      "CGI": 6.0,
-      "MC": 7.0,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 7.0,
-      "Plot": 6.0,
-      "Pacing": 6.0,
-      "Story Conclusion": 7.0,
-      "Originalita": 7.0,
-      "Emoce": 7.0,
-      "Enjoyment": 7.0,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "The Dungeon of Black Company",
-    "categories": {
-      "Animace": 7.0,
-      "CGI": 7.0,
-      "MC": 7.0,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 7.0,
-      "Plot": 7.0,
-      "Pacing": 7.0,
-      "Story Conclusion": 7.0,
-      "Originalita": 7.0,
-      "Emoce": 7.0,
-      "Enjoyment": 7.0,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "I'm Standing on a Million Lives, S02",
-    "categories": {
-      "Animace": 6.5,
-      "CGI": 6.5,
-      "MC": 8.0,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 7.0,
-      "Plot": 7.0,
-      "Pacing": 7.0,
-      "Story Conclusion": 7.0,
-      "Originalita": 8.0,
-      "Emoce": 7.0,
-      "Enjoyment": 7.0,
-      "OP": 7.0,
-      "ED": 8.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Grimgar: Ashes and Illusions",
-    "categories": {
-      "Animace": 7.5,
-      "CGI": 7.0,
-      "MC": 8.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 8.0,
-      "Plot": 7.0,
-      "Pacing": 8.0,
-      "Story Conclusion": 8.0,
-      "Originalita": 9.0,
-      "Emoce": 9.0,
-      "Enjoyment": 8.0,
-      "OP": 7.0,
-      "ED": 9.0,
-      "OST": 10.0
-    }
-  },
-  {
     "name": "Log Horizon: Destruction of the Round Table",
     "categories": {
       "Animace": 7.0,
@@ -2074,465 +2495,21 @@
     }
   },
   {
-    "name": "Somali and the Forest Spirit",
+    "name": "Chainsaw Man: The Compilation",
     "categories": {
-      "Animace": 6.5,
-      "CGI": 7.0,
-      "MC": 9.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 7.0,
-      "Plot": 8.5,
-      "Pacing": 8.0,
-      "Story Conclusion": 10.0,
-      "Originalita": 9.0,
-      "Emoce": 10.0,
-      "Enjoyment": 10.0,
-      "OP": 7.0,
-      "ED": 10.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "Humanity Has Declined",
-    "categories": {
-      "Animace": 6.0,
-      "CGI": 6.5,
-      "MC": 7.5,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 8.0,
-      "Plot": 6.5,
-      "Pacing": 7.0,
-      "Story Conclusion": 7.0,
-      "Originalita": 10.0,
-      "Emoce": 7.0,
-      "Enjoyment": 7.0,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 9.0
-    }
-  },
-  {
-    "name": "Himouto! Umaru-chan OVA",
-    "categories": {
-      "Animace": 7.0,
-      "CGI": 7.5,
-      "MC": 8.0,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 6.0,
-      "Plot": 6.0,
-      "Pacing": 7.5,
-      "Story Conclusion": 7.0,
-      "Originalita": 7.5,
-      "Emoce": 6.0,
-      "Enjoyment": 7.5,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Grimoire of Zero",
-    "categories": {
-      "Animace": 6.5,
-      "CGI": 7.0,
-      "MC": 8.0,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 8.0,
-      "Plot": 6.5,
-      "Pacing": 6.5,
-      "Story Conclusion": 7.0,
-      "Originalita": 7.5,
-      "Emoce": 7.5,
-      "Enjoyment": 7.0,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "The Dawn of the Witch",
-    "categories": {
-      "Animace": 6.5,
-      "CGI": 6.5,
-      "MC": 6.5,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 8.0,
-      "Plot": 6.0,
-      "Pacing": 6.0,
-      "Story Conclusion": 7.0,
-      "Originalita": 6.5,
-      "Emoce": 7.0,
-      "Enjoyment": 6.0,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Magi: The Kingdom of Magic",
-    "categories": {
-      "Animace": 6.5,
-      "CGI": 7.0,
-      "MC": 8.0,
-      "Vedlejší postavy": 8.5,
-      "Waifu": 7.5,
-      "Plot": 7.5,
-      "Pacing": 7.0,
-      "Story Conclusion": 9.0,
-      "Originalita": 8.5,
-      "Emoce": 8.5,
-      "Enjoyment": 8.0,
-      "OP": 7.0,
-      "ED": 9.0,
-      "OST": 9.0
-    }
-  },
-  {
-    "name": "Black Butler, S02",
-    "categories": {
-      "Animace": 8.0,
-      "CGI": 7.0,
-      "MC": 8.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 7.0,
-      "Plot": 7.0,
-      "Pacing": 7.0,
-      "Story Conclusion": 7.0,
-      "Originalita": 8.0,
-      "Emoce": 7.0,
-      "Enjoyment": 7.0,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Takopi's Original Sin",
-    "categories": {
-      "Animace": 9.0,
-      "CGI": 8.0,
-      "MC": 9.0,
-      "Vedlejší postavy": 9.0,
-      "Plot": 9.0,
-      "Pacing": 10.0,
-      "Story Conclusion": 10.0,
-      "Originalita": 10.0,
-      "Emoce": 10.0,
-      "Enjoyment": 9.0,
-      "OP": 10.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Steins;Gate: The Movie - Load Region of Déjà Vu",
-    "categories": {
-      "Animace": 8.0,
-      "CGI": 8.0,
-      "MC": 9.0,
-      "Vedlejší postavy": 9.0,
-      "Waifu": 10.0,
+      "Animace": 10.0,
+      "CGI": 10.0,
+      "MC": 7.0,
+      "Vedlejší postavy": 10.0,
+      "Waifu": 9.0,
       "Plot": 9.0,
       "Pacing": 9.0,
       "Story Conclusion": 8.0,
       "Originalita": 10.0,
-      "Emoce": 9.0,
-      "Enjoyment": 9.0,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "Tokyo Magnitude 8.0",
-    "categories": {
-      "Animace": 7.0,
-      "CGI": 6.5,
-      "MC": 10.0,
-      "Vedlejší postavy": 9.0,
-      "Waifu": 9.0,
-      "Plot": 10.0,
-      "Pacing": 10.0,
-      "Story Conclusion": 10.0,
-      "Originalita": 10.0,
-      "Emoce": 10.0,
-      "Enjoyment": 10.0,
-      "OP": 9.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Haibane Renmei",
-    "categories": {
-      "Animace": 6.0,
-      "CGI": 6.0,
-      "MC": 7.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 7.0,
-      "Plot": 7.0,
-      "Pacing": 7.0,
-      "Story Conclusion": 7.0,
-      "Originalita": 9.0,
-      "Emoce": 7.0,
-      "Enjoyment": 5.0,
-      "OP": 6.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "The Tunnel to Summer, the Exit of Goodbyes",
-    "categories": {
-      "Animace": 9.0,
-      "CGI": 9.0,
-      "MC": 8.0,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 7.0,
-      "Plot": 6.0,
-      "Pacing": 5.0,
-      "Story Conclusion": 8.0,
-      "Originalita": 9.0,
-      "Emoce": 7.0,
-      "Enjoyment": 7.0,
-      "OST": 9.0
-    }
-  },
-  {
-    "name": "Magia Record: Puella Magi Madoka Magica Side Story Final Season",
-    "categories": {
-      "Animace": 7.0,
-      "CGI": 7.0,
-      "MC": 7.0,
-      "Vedlejší postavy": 7.0,
-      "Plot": 6.0,
-      "Pacing": 7.0,
-      "Story Conclusion": 6.0,
-      "Originalita": 7.0,
-      "Emoce": 7.0,
-      "Enjoyment": 7.0,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "Cross Ange: Rondo of Angel and Dragon",
-    "categories": {
-      "Animace": 8.0,
-      "CGI": 9.0,
-      "MC": 8.0,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 8.0,
-      "Plot": 7.0,
-      "Pacing": 7.0,
-      "Story Conclusion": 7.0,
-      "Originalita": 7.0,
-      "Emoce": 7.0,
-      "Enjoyment": 8.0,
-      "OP": 8.0,
-      "ED": 8.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "The Girl Who Leapt Through Time",
-    "categories": {
-      "Animace": 7.5,
-      "CGI": 7.0,
-      "MC": 8.0,
-      "Vedlejší postavy": 8.0,
-      "Plot": 7.0,
-      "Pacing": 7.0,
-      "Story Conclusion": 8.0,
-      "Originalita": 9.0,
       "Emoce": 8.0,
-      "Enjoyment": 8.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Jin-Roh: The Wolf Brigade",
-    "categories": {
-      "Animace": 8.0,
-      "CGI": 8.0,
-      "MC": 8.0,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 7.0,
-      "Plot": 8.0,
-      "Pacing": 7.0,
-      "Story Conclusion": 8.0,
-      "Originalita": 9.0,
-      "Emoce": 8.0,
-      "Enjoyment": 8.0,
-      "ED": 5.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Higurashi: When They Cry – Sotsu",
-    "categories": {
-      "Animace": 8.0,
-      "CGI": 8.0,
-      "MC": 9.0,
-      "Vedlejší postavy": 10.0,
-      "Waifu": 8.0,
-      "Plot": 8.0,
-      "Pacing": 7.0,
-      "Story Conclusion": 9.0,
-      "Originalita": 8.0,
-      "Emoce": 9.5,
-      "Enjoyment": 9.0,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 9.0
-    }
-  },
-  {
-    "name": "The Future Diary: Redial",
-    "categories": {
-      "Animace": 8.0,
-      "CGI": 6.0,
-      "MC": 7.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 7.0,
-      "Plot": 7.0,
-      "Pacing": 7.0,
-      "Story Conclusion": 8.0,
-      "Originalita": 8.0,
-      "Emoce": 8.0,
-      "Enjoyment": 7.0,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "From the New World",
-    "categories": {
-      "Animace": 8.0,
-      "CGI": 8.0,
-      "MC": 8.0,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 7.0,
-      "Plot": 7.0,
-      "Pacing": 6.0,
-      "Story Conclusion": 7.0,
-      "Originalita": 8.0,
-      "Emoce": 7.0,
-      "Enjoyment": 7.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Shiki",
-    "categories": {
-      "Animace": 7.0,
-      "CGI": 7.0,
-      "MC": 8.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 8.0,
-      "Plot": 8.0,
-      "Pacing": 9.0,
-      "Story Conclusion": 10.0,
-      "Originalita": 9.0,
-      "Emoce": 9.0,
-      "Enjoyment": 8.0,
-      "OP": 9.0,
-      "ED": 7.0,
-      "OST": 9.0
-    }
-  },
-  {
-    "name": "The Disappearance of Haruhi Suzumiya",
-    "categories": {
-      "Animace": 8.0,
-      "CGI": 8.0,
-      "MC": 10.0,
-      "Vedlejší postavy": 10.0,
-      "Waifu": 9.0,
-      "Plot": 9.0,
-      "Pacing": 10.0,
-      "Story Conclusion": 9.0,
-      "Originalita": 9.0,
-      "Emoce": 10.0,
-      "Enjoyment": 9.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Bâan: The Boundary of Adulthood",
-    "categories": {
-      "Animace": 8.0,
-      "CGI": 7.0,
-      "MC": 8.0,
-      "Vedlejší postavy": 6.0,
-      "Waifu": 6.0,
-      "Plot": 7.0,
-      "Pacing": 6.0,
-      "Story Conclusion": 7.0,
-      "Originalita": 8.0,
-      "Emoce": 8.0,
-      "Enjoyment": 8.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "May I Ask for One Final Thing?",
-    "categories": {
-      "Animace": 7.5,
-      "CGI": 7.0,
-      "MC": 9.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 10.0,
-      "Plot": 7.0,
-      "Pacing": 8.0,
-      "Story Conclusion": 9.0,
-      "Originalita": 8.5,
-      "Emoce": 7.5,
       "Enjoyment": 9.0,
       "OP": 9.0,
       "ED": 9.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Takt Op. Destiny",
-    "categories": {
-      "Animace": 9.0,
-      "CGI": 9.0,
-      "MC": 7.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 7.0,
-      "Plot": 7.0,
-      "Pacing": 8.0,
-      "Story Conclusion": 8.0,
-      "Originalita": 9.0,
-      "Emoce": 8.0,
-      "Enjoyment": 8.0,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 9.0
-    }
-  },
-  {
-    "name": "Cautious Hero: The Hero Is Overpowered but Overly Cautious",
-    "categories": {
-      "Animace": 7.5,
-      "CGI": 6.5,
-      "MC": 8.0,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 7.0,
-      "Plot": 8.0,
-      "Pacing": 7.0,
-      "Story Conclusion": 9.0,
-      "Originalita": 8.0,
-      "Emoce": 9.0,
-      "Enjoyment": 8.0,
-      "OP": 7.0,
-      "ED": 7.0,
       "OST": 8.0
     }
   },
@@ -2552,6 +2529,41 @@
       "Enjoyment": 8.0,
       "ED": 8.0,
       "OST": 9.0
+    }
+  },
+  {
+    "name": "Chainsaw Man the Movie: Reze Arc",
+    "categories": {
+      "Animace": 10.0,
+      "CGI": 10.0,
+      "MC": 7.0,
+      "Vedlejší postavy": 9.0,
+      "Waifu": 10.0,
+      "Plot": 8.0,
+      "Pacing": 9.0,
+      "Story Conclusion": 9.0,
+      "Originalita": 10.0,
+      "Emoce": 8.0,
+      "Enjoyment": 9.0,
+      "OP": 9.0,
+      "OST": 9.0
+    }
+  },
+  {
+    "name": "Another World",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 7.5,
+      "MC": 7.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 7.0,
+      "Plot": 7.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 8.0,
+      "Emoce": 7.0,
+      "Enjoyment": 7.0,
+      "OST": 8.0
     }
   },
   {
@@ -2619,7 +2631,7 @@
       "Originalita": 8.0,
       "Emoce": 7.0,
       "Enjoyment": 6.5,
-      "OST": 8.0
+      "OST": 9.0
     }
   },
   {
@@ -2882,6 +2894,25 @@
     }
   },
   {
+    "name": "Sound of the Sky",
+    "categories": {
+      "Animace": 6.5,
+      "CGI": 7.5,
+      "MC": 7.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 8.0,
+      "Plot": 7.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 9.0,
+      "Originalita": 8.5,
+      "Emoce": 8.0,
+      "Enjoyment": 8.0,
+      "OP": 8.0,
+      "ED": 7.0,
+      "OST": 9.0
+    }
+  },
+  {
     "name": "Sound of the Sky Specials",
     "categories": {
       "Animace": 6.5,
@@ -2898,6 +2929,44 @@
       "OP": 8.0,
       "ED": 7.0,
       "OST": 8.0
+    }
+  },
+  {
+    "name": "Somali and the Forest Spirit",
+    "categories": {
+      "Animace": 6.5,
+      "CGI": 7.0,
+      "MC": 9.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 7.0,
+      "Plot": 8.5,
+      "Pacing": 8.0,
+      "Story Conclusion": 10.0,
+      "Originalita": 9.0,
+      "Emoce": 10.0,
+      "Enjoyment": 10.0,
+      "OP": 7.0,
+      "ED": 10.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "Humanity Has Declined",
+    "categories": {
+      "Animace": 6.0,
+      "CGI": 6.5,
+      "MC": 7.5,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 8.0,
+      "Plot": 6.5,
+      "Pacing": 7.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 10.0,
+      "Emoce": 7.0,
+      "Enjoyment": 7.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 9.0
     }
   },
   {
@@ -2937,6 +3006,25 @@
     }
   },
   {
+    "name": "Kabaneri of the Iron Fortress",
+    "categories": {
+      "Animace": 9.0,
+      "CGI": 8.5,
+      "MC": 7.5,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 8.0,
+      "Plot": 7.0,
+      "Pacing": 8.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 6.0,
+      "Emoce": 8.0,
+      "Enjoyment": 8.0,
+      "OP": 9.0,
+      "ED": 9.0,
+      "OST": 10.0
+    }
+  },
+  {
     "name": "Kabaneri of the Iron Fortress: The Battle of Unato",
     "categories": {
       "Animace": 9.0,
@@ -2950,6 +3038,118 @@
       "Originalita": 6.0,
       "Emoce": 7.5,
       "Enjoyment": 8.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "Demon Slayer",
+    "categories": {
+      "Animace": 10.0,
+      "CGI": 10.0,
+      "MC": 10.0,
+      "Vedlejší postavy": 9.0,
+      "Waifu": 9.0,
+      "Plot": 9.0,
+      "Pacing": 9.0,
+      "Story Conclusion": 9.0,
+      "Originalita": 9.0,
+      "Emoce": 9.0,
+      "Enjoyment": 10.0,
+      "OP": 10.0,
+      "ED": 10.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "Demon Slayer: Mugen Train Arc",
+    "categories": {
+      "Animace": 10.0,
+      "CGI": 10.0,
+      "MC": 10.0,
+      "Vedlejší postavy": 10.0,
+      "Waifu": 8.0,
+      "Plot": 8.0,
+      "Pacing": 10.0,
+      "Story Conclusion": 10.0,
+      "Originalita": 9.0,
+      "Emoce": 8.5,
+      "Enjoyment": 10.0,
+      "OP": 10.0,
+      "ED": 9.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "Demon Slayer: Entertainment District Arc",
+    "categories": {
+      "Animace": 10.0,
+      "CGI": 10.0,
+      "MC": 10.0,
+      "Vedlejší postavy": 10.0,
+      "Waifu": 9.0,
+      "Plot": 8.0,
+      "Pacing": 9.0,
+      "Story Conclusion": 10.0,
+      "Originalita": 9.0,
+      "Emoce": 9.0,
+      "Enjoyment": 10.0,
+      "OP": 9.0,
+      "ED": 7.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "Demon Slayer: Swordsmith Village Arc",
+    "categories": {
+      "Animace": 10.0,
+      "CGI": 10.0,
+      "MC": 10.0,
+      "Vedlejší postavy": 9.0,
+      "Waifu": 8.0,
+      "Plot": 8.0,
+      "Pacing": 8.0,
+      "Story Conclusion": 10.0,
+      "Originalita": 9.0,
+      "Emoce": 9.5,
+      "Enjoyment": 9.5,
+      "OP": 7.0,
+      "ED": 9.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "Demon Slayer: Hashira Training Arc",
+    "categories": {
+      "Animace": 10.0,
+      "CGI": 10.0,
+      "MC": 10.0,
+      "Vedlejší postavy": 9.0,
+      "Waifu": 7.0,
+      "Plot": 7.5,
+      "Pacing": 7.0,
+      "Story Conclusion": 10.0,
+      "Originalita": 9.0,
+      "Emoce": 8.0,
+      "Enjoyment": 8.5,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "Demon Slayer: The Movie: Infinity Castle - Part 1: Akaza Returns",
+    "categories": {
+      "Animace": 10.0,
+      "CGI": 10.0,
+      "MC": 10.0,
+      "Vedlejší postavy": 10.0,
+      "Waifu": 8.0,
+      "Plot": 8.0,
+      "Pacing": 10.0,
+      "Story Conclusion": 10.0,
+      "Originalita": 9.0,
+      "Emoce": 8.0,
+      "Enjoyment": 10.0,
       "OST": 10.0
     }
   },
@@ -2973,6 +3173,258 @@
     }
   },
   {
+    "name": "Vinland Saga, S01",
+    "categories": {
+      "Animace": 9.0,
+      "CGI": 8.0,
+      "MC": 7.0,
+      "Vedlejší postavy": 9.0,
+      "Waifu": 6.0,
+      "Plot": 8.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 10.0,
+      "Emoce": 8.0,
+      "Enjoyment": 7.5,
+      "OP": 8.0,
+      "ED": 9.0,
+      "OST": 9.0
+    }
+  },
+  {
+    "name": "Vinland Saga, S02: Drowning in the Shadow",
+    "categories": {
+      "Animace": 9.0,
+      "CGI": 8.0,
+      "MC": 7.0,
+      "Vedlejší postavy": 6.0,
+      "Plot": 6.0,
+      "Pacing": 6.0,
+      "Story Conclusion": 6.0,
+      "Originalita": 6.0,
+      "Emoce": 7.0,
+      "Enjoyment": 6.0,
+      "OST": 7.0
+    }
+  },
+  {
+    "name": "Vinland Saga, S02",
+    "categories": {
+      "Animace": 9.0,
+      "CGI": 8.0,
+      "MC": 9.5,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 8.5,
+      "Plot": 7.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 10.0,
+      "Originalita": 10.0,
+      "Emoce": 9.0,
+      "Enjoyment": 8.5,
+      "OP": 9.0,
+      "ED": 8.0,
+      "OST": 9.0
+    }
+  },
+  {
+    "name": "Vinland Saga, S02: Same Old Story",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 8.0,
+      "Vedlejší postavy": 7.0,
+      "Plot": 6.5,
+      "Pacing": 7.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 7.0,
+      "Emoce": 7.0,
+      "Enjoyment": 6.0,
+      "OST": 7.0
+    }
+  },
+  {
+    "name": "Himouto! Umaru-chan",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 8.5,
+      "MC": 8.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 6.0,
+      "Plot": 6.0,
+      "Pacing": 8.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 7.5,
+      "Emoce": 6.5,
+      "Enjoyment": 7.5,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Himouto! Umaru-chan Specials",
+    "categories": {
+      "Animace": 6.5,
+      "CGI": 7.0,
+      "MC": 7.0,
+      "Vedlejší postavy": 6.5,
+      "Waifu": 5.5,
+      "Plot": 5.0,
+      "Pacing": 8.5,
+      "Story Conclusion": 5.0,
+      "Originalita": 7.0,
+      "Emoce": 6.0,
+      "Enjoyment": 6.5,
+      "OST": 7.0
+    }
+  },
+  {
+    "name": "Himouto! Umaru-chan R",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 8.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 6.5,
+      "Plot": 6.5,
+      "Pacing": 7.5,
+      "Story Conclusion": 7.0,
+      "Originalita": 7.5,
+      "Emoce": 7.0,
+      "Enjoyment": 7.5,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Himouto! Umaru-chan OVA",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 7.5,
+      "MC": 8.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 6.0,
+      "Plot": 6.0,
+      "Pacing": 7.5,
+      "Story Conclusion": 7.0,
+      "Originalita": 7.5,
+      "Emoce": 6.0,
+      "Enjoyment": 7.5,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Fate/strange Fake: Whispers of Dawn",
+    "categories": {
+      "Animace": 9.5,
+      "CGI": 8.5,
+      "MC": 8.5,
+      "Waifu": 7.0,
+      "Plot": 7.5,
+      "Pacing": 8.0,
+      "Story Conclusion": 9.5,
+      "Originalita": 7.5,
+      "Emoce": 7.0,
+      "Enjoyment": 8.5,
+      "OST": 9.0
+    }
+  },
+  {
+    "name": "Dorohedoro: Bonus Curse or Extra Evil",
+    "categories": {
+      "Animace": 5.0,
+      "MC": 7.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 5.0,
+      "Plot": 5.0,
+      "Pacing": 8.0,
+      "Story Conclusion": 6.0,
+      "Originalita": 6.0,
+      "Emoce": 5.5,
+      "Enjoyment": 5.0,
+      "ED": 8.0,
+      "OST": 7.0
+    }
+  },
+  {
+    "name": "Dorohedoro, S01",
+    "categories": {
+      "Animace": 8.5,
+      "CGI": 9.0,
+      "MC": 7.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 5.0,
+      "Plot": 6.5,
+      "Pacing": 6.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 8.0,
+      "Emoce": 5.5,
+      "Enjoyment": 6.0,
+      "OP": 7.0,
+      "ED": 8.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Hell's Paradise, S01",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 7.5,
+      "MC": 8.0,
+      "Vedlejší postavy": 9.0,
+      "Waifu": 9.5,
+      "Plot": 8.5,
+      "Pacing": 8.0,
+      "Story Conclusion": 9.0,
+      "Originalita": 9.0,
+      "Emoce": 8.0,
+      "Enjoyment": 8.5,
+      "OP": 9.0,
+      "ED": 10.0,
+      "OST": 9.0
+    }
+  },
+  {
+    "name": "Wandering Witch: The Journey of Elaina",
+    "categories": {
+      "Animace": 7.5,
+      "CGI": 8.5,
+      "MC": 8.0,
+      "Vedlejší postavy": 7.5,
+      "Waifu": 8.0,
+      "Plot": 7.5,
+      "Pacing": 7.5,
+      "Story Conclusion": 8.0,
+      "Originalita": 8.5,
+      "Emoce": 8.5,
+      "Enjoyment": 8.0,
+      "OP": 7.0,
+      "ED": 9.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Secrets of the Silent Witch",
+    "categories": {
+      "Animace": 7.5,
+      "CGI": 8.0,
+      "MC": 7.5,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 7.5,
+      "Plot": 6.5,
+      "Pacing": 7.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 7.0,
+      "Emoce": 7.5,
+      "Enjoyment": 7.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 9.0
+    }
+  },
+  {
     "name": "Mary and the Witch's Flower",
     "categories": {
       "Animace": 8.5,
@@ -2987,6 +3439,156 @@
       "Emoce": 6.5,
       "Enjoyment": 6.5,
       "OST": 8.0
+    }
+  },
+  {
+    "name": "Once Upon a Witch's Death",
+    "categories": {
+      "Animace": 6.5,
+      "CGI": 7.0,
+      "MC": 7.5,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 7.0,
+      "Plot": 6.5,
+      "Pacing": 6.5,
+      "Story Conclusion": 7.0,
+      "Originalita": 7.0,
+      "Emoce": 8.0,
+      "Enjoyment": 7.5,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Grimoire of Zero",
+    "categories": {
+      "Animace": 6.5,
+      "CGI": 7.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 8.0,
+      "Plot": 6.5,
+      "Pacing": 6.5,
+      "Story Conclusion": 7.0,
+      "Originalita": 7.5,
+      "Emoce": 7.5,
+      "Enjoyment": 7.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "The Dawn of the Witch",
+    "categories": {
+      "Animace": 6.5,
+      "CGI": 6.5,
+      "MC": 6.5,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 8.0,
+      "Plot": 6.0,
+      "Pacing": 6.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 6.5,
+      "Emoce": 7.0,
+      "Enjoyment": 6.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "The Ancient Magus' Bride: Those Awaiting a Star",
+    "categories": {
+      "Animace": 7.5,
+      "CGI": 7.0,
+      "MC": 9.0,
+      "Vedlejší postavy": 8.5,
+      "Waifu": 8.5,
+      "Plot": 8.5,
+      "Pacing": 9.0,
+      "Story Conclusion": 9.0,
+      "Originalita": 9.5,
+      "Emoce": 9.0,
+      "Enjoyment": 9.0,
+      "ED": 7.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "The Ancient Magus' Bride, S01",
+    "categories": {
+      "Animace": 7.5,
+      "CGI": 7.5,
+      "MC": 9.5,
+      "Vedlejší postavy": 9.0,
+      "Waifu": 9.5,
+      "Plot": 9.0,
+      "Pacing": 8.5,
+      "Story Conclusion": 9.0,
+      "Originalita": 9.5,
+      "Emoce": 9.0,
+      "Enjoyment": 9.0,
+      "OP": 9.0,
+      "ED": 9.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "The Ancient Magus' Bride: The Boy from the West and the Knight of the Blue Storm",
+    "categories": {
+      "Animace": 7.5,
+      "CGI": 8.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 9.0,
+      "Plot": 7.5,
+      "Pacing": 7.0,
+      "Story Conclusion": 8.5,
+      "Originalita": 8.5,
+      "Emoce": 7.5,
+      "Enjoyment": 8.0,
+      "ED": 7.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "The Ancient Magus' Bride, S02 Part 1",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 8.0,
+      "MC": 9.0,
+      "Vedlejší postavy": 8.5,
+      "Waifu": 9.0,
+      "Plot": 7.5,
+      "Pacing": 7.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 8.0,
+      "Emoce": 7.5,
+      "Enjoyment": 7.5,
+      "OP": 9.0,
+      "ED": 7.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "The Ancient Magus' Bride, S02 Part 2",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 8.0,
+      "MC": 9.0,
+      "Vedlejší postavy": 8.5,
+      "Waifu": 9.0,
+      "Plot": 8.0,
+      "Pacing": 8.0,
+      "Story Conclusion": 9.0,
+      "Originalita": 9.0,
+      "Emoce": 8.0,
+      "Enjoyment": 8.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 10.0
     }
   },
   {
@@ -3006,6 +3608,81 @@
       "OP": 9.0,
       "ED": 7.0,
       "OST": 9.0
+    }
+  },
+  {
+    "name": "Magi: The Labyrinth of Magic",
+    "categories": {
+      "Animace": 6.5,
+      "CGI": 6.5,
+      "MC": 7.5,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 8.0,
+      "Plot": 7.0,
+      "Pacing": 7.5,
+      "Story Conclusion": 8.0,
+      "Originalita": 8.0,
+      "Emoce": 8.5,
+      "Enjoyment": 7.0,
+      "OP": 9.0,
+      "ED": 7.0,
+      "OST": 9.0
+    }
+  },
+  {
+    "name": "Magi: The Kingdom of Magic",
+    "categories": {
+      "Animace": 6.5,
+      "CGI": 7.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 8.5,
+      "Waifu": 7.5,
+      "Plot": 7.5,
+      "Pacing": 7.0,
+      "Story Conclusion": 9.0,
+      "Originalita": 8.5,
+      "Emoce": 8.5,
+      "Enjoyment": 8.0,
+      "OP": 7.0,
+      "ED": 9.0,
+      "OST": 9.0
+    }
+  },
+  {
+    "name": "Magi: Adventures of Sinbad",
+    "categories": {
+      "Animace": 6.5,
+      "CGI": 6.5,
+      "MC": 8.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 6.5,
+      "Plot": 7.0,
+      "Pacing": 6.5,
+      "Story Conclusion": 7.0,
+      "Originalita": 7.5,
+      "Emoce": 7.5,
+      "Enjoyment": 7.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Burn the Witch #0.8",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 8.5,
+      "MC": 7.0,
+      "Vedlejší postavy": 6.5,
+      "Waifu": 8.0,
+      "Plot": 7.0,
+      "Pacing": 8.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 7.0,
+      "Emoce": 6.5,
+      "Enjoyment": 7.0,
+      "ED": 8.0,
+      "OST": 8.0
     }
   },
   {
@@ -3062,698 +3739,21 @@
     }
   },
   {
-    "name": "Fullmetal Alchemist: Brotherhood",
-    "categories": {
-      "Animace": 8.5,
-      "CGI": 8.0,
-      "MC": 9.0,
-      "Vedlejší postavy": 10.0,
-      "Waifu": 9.0,
-      "Plot": 9.0,
-      "Pacing": 9.0,
-      "Story Conclusion": 10.0,
-      "Originalita": 9.0,
-      "Emoce": 10.0,
-      "Enjoyment": 9.0,
-      "OP": 9.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "The Melancholy of Haruhi Suzumiya, S01",
-    "categories": {
-      "Animace": 7.0,
-      "CGI": 7.0,
-      "MC": 9.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 8.0,
-      "Plot": 8.0,
-      "Pacing": 7.0,
-      "Story Conclusion": 7.0,
-      "Originalita": 8.0,
-      "Emoce": 7.0,
-      "Enjoyment": 7.0,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 9.0
-    }
-  },
-  {
-    "name": "Steins;Gate",
+    "name": "Dead Dead Demons Dededede Destruction Episode 0",
     "categories": {
       "Animace": 8.0,
-      "CGI": 8.0,
-      "MC": 10.0,
-      "Vedlejší postavy": 10.0,
-      "Waifu": 10.0,
-      "Plot": 10.0,
-      "Pacing": 10.0,
-      "Story Conclusion": 10.0,
-      "Originalita": 10.0,
-      "Emoce": 10.0,
-      "Enjoyment": 10.0,
-      "OP": 9.0,
-      "ED": 7.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "Higurashi: When They Cry – Rei",
-    "categories": {
-      "Animace": 6.0,
-      "CGI": 6.0,
-      "MC": 10.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 9.0,
-      "Plot": 8.0,
-      "Pacing": 7.0,
-      "Story Conclusion": 7.0,
-      "Originalita": 8.0,
-      "Emoce": 8.0,
-      "Enjoyment": 8.0,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Chainsaw Man",
-    "categories": {
-      "Animace": 10.0,
-      "CGI": 10.0,
-      "MC": 7.0,
-      "Vedlejší postavy": 10.0,
-      "Waifu": 9.0,
-      "Plot": 9.0,
-      "Pacing": 8.0,
-      "Story Conclusion": 9.0,
-      "Originalita": 10.0,
-      "Emoce": 8.5,
-      "Enjoyment": 9.0,
-      "OP": 9.0,
-      "ED": 9.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Kaiju No.8, S01",
-    "categories": {
-      "Animace": 8.0,
-      "CGI": 7.0,
-      "MC": 8.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 8.0,
-      "Plot": 8.0,
-      "Pacing": 8.0,
-      "Story Conclusion": 9.0,
-      "Originalita": 8.0,
-      "Emoce": 8.0,
-      "Enjoyment": 8.0,
-      "OP": 9.0,
-      "ED": 9.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Frieren: Beyond Journey's End, S01",
-    "categories": {
-      "Animace": 10.0,
-      "CGI": 9.5,
-      "MC": 10.0,
-      "Vedlejší postavy": 10.0,
-      "Waifu": 9.0,
-      "Plot": 10.0,
-      "Pacing": 10.0,
-      "Story Conclusion": 10.0,
-      "Originalita": 10.0,
-      "Emoce": 9.5,
-      "Enjoyment": 10.0,
-      "OP": 9.0,
-      "ED": 9.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "Lord of Mysteries",
-    "categories": {
-      "Animace": 10.0,
-      "CGI": 10.0,
-      "MC": 10.0,
-      "Vedlejší postavy": 10.0,
-      "Waifu": 9.0,
-      "Plot": 10.0,
-      "Pacing": 8.0,
-      "Story Conclusion": 10.0,
-      "Originalita": 10.0,
-      "Emoce": 10.0,
-      "Enjoyment": 10.0,
-      "ED": 10.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "Call of the Night, S02",
-    "categories": {
-      "Animace": 8.5,
-      "CGI": 7.5,
-      "MC": 8.0,
-      "Vedlejší postavy": 9.0,
-      "Waifu": 9.0,
-      "Plot": 8.0,
-      "Pacing": 7.0,
-      "Story Conclusion": 8.0,
-      "Originalita": 8.0,
-      "Emoce": 9.0,
-      "Enjoyment": 8.0,
-      "OP": 9.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "The Water Magician",
-    "categories": {
-      "Animace": 6.5,
-      "CGI": 6.0,
-      "MC": 6.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 7.0,
-      "Plot": 7.0,
-      "Pacing": 7.0,
-      "Story Conclusion": 8.0,
-      "Originalita": 7.0,
-      "Emoce": 8.0,
-      "Enjoyment": 7.0,
-      "OP": 8.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "My Dress-Up Darling, S02",
-    "categories": {
-      "Animace": 10.0,
-      "CGI": 9.0,
-      "MC": 9.0,
-      "Vedlejší postavy": 9.0,
-      "Waifu": 10.0,
-      "Plot": 8.0,
-      "Pacing": 7.0,
-      "Story Conclusion": 8.0,
-      "Originalita": 9.0,
-      "Emoce": 8.0,
-      "Enjoyment": 8.0,
-      "OP": 9.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "The Rising of the Shield Hero, S04",
-    "categories": {
-      "Animace": 8.0,
-      "CGI": 7.0,
-      "MC": 7.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 10.0,
-      "Plot": 7.0,
-      "Pacing": 8.0,
-      "Story Conclusion": 8.0,
-      "Originalita": 7.0,
-      "Emoce": 7.0,
-      "Enjoyment": 7.0,
-      "OP": 7.0,
-      "ED": 9.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "The Summer Hikaru Died, S01",
-    "categories": {
-      "Animace": 9.0,
       "CGI": 8.5,
-      "MC": 9.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 7.0,
-      "Plot": 9.0,
-      "Pacing": 9.0,
-      "Story Conclusion": 10.0,
-      "Originalita": 9.0,
-      "Emoce": 9.0,
-      "Enjoyment": 9.0,
-      "OP": 7.0,
-      "ED": 9.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Rascal Does Not Dream of Santa Claus",
-    "categories": {
-      "Animace": 7.5,
-      "CGI": 8.0,
-      "MC": 8.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 9.0,
-      "Plot": 8.0,
-      "Pacing": 8.0,
-      "Story Conclusion": 8.0,
-      "Originalita": 9.0,
-      "Emoce": 7.0,
-      "Enjoyment": 7.0,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Black Butler: Emerald Witch Arc",
-    "categories": {
-      "Animace": 9.0,
-      "CGI": 9.0,
-      "MC": 9.0,
-      "Vedlejší postavy": 10.0,
-      "Waifu": 8.0,
-      "Plot": 8.0,
-      "Pacing": 9.0,
-      "Story Conclusion": 9.0,
-      "Originalita": 9.0,
-      "Emoce": 10.0,
-      "Enjoyment": 9.0,
-      "OP": 9.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Kaiju No.8, S02",
-    "categories": {
-      "Animace": 8.0,
-      "CGI": 7.0,
-      "MC": 7.0,
-      "Vedlejší postavy": 9.0,
-      "Waifu": 8.0,
-      "Plot": 8.0,
-      "Pacing": 7.0,
-      "Story Conclusion": 9.0,
-      "Originalita": 8.0,
-      "Emoce": 9.0,
-      "Enjoyment": 8.0,
-      "OP": 9.0,
-      "ED": 9.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Puella Magi Madoka Magica the Movie: Rebellion",
-    "categories": {
-      "Animace": 9.0,
-      "CGI": 8.0,
-      "MC": 8.0,
-      "Vedlejší postavy": 8.0,
-      "Plot": 7.0,
-      "Pacing": 7.0,
-      "Story Conclusion": 7.0,
-      "Originalita": 9.0,
-      "Emoce": 8.0,
-      "Enjoyment": 7.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "Monogatari Series: Off & Monster Season",
-    "categories": {
-      "Animace": 9.0,
-      "CGI": 8.0,
-      "MC": 9.0,
-      "Vedlejší postavy": 9.0,
-      "Waifu": 10.0,
-      "Plot": 8.0,
-      "Pacing": 8.0,
-      "Story Conclusion": 8.0,
-      "Originalita": 10.0,
-      "Emoce": 8.0,
-      "Enjoyment": 8.0,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Spice and Wolf: Merchant Meets the Wise Wolf, S01",
-    "categories": {
-      "Animace": 7.0,
-      "CGI": 7.0,
-      "MC": 9.0,
-      "Vedlejší postavy": 9.0,
-      "Waifu": 10.0,
-      "Plot": 9.0,
-      "Pacing": 9.0,
-      "Story Conclusion": 9.0,
-      "Originalita": 8.0,
-      "Emoce": 9.0,
-      "Enjoyment": 10.0,
-      "OP": 9.0,
-      "ED": 9.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "The Apothecary Diaries, S02",
-    "categories": {
-      "Animace": 8.0,
-      "CGI": 8.0,
-      "MC": 9.0,
-      "Vedlejší postavy": 9.0,
-      "Waifu": 9.0,
-      "Plot": 8.0,
-      "Pacing": 8.0,
-      "Story Conclusion": 9.0,
-      "Originalita": 9.0,
-      "Emoce": 9.0,
-      "Enjoyment": 8.0,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "Spy x Family, S03",
-    "categories": {
-      "Animace": 8.5,
-      "CGI": 7.5,
-      "MC": 9.0,
-      "Vedlejší postavy": 8.5,
-      "Waifu": 8.5,
-      "Plot": 8.0,
-      "Pacing": 7.5,
-      "Story Conclusion": 8.0,
-      "Originalita": 9.0,
-      "Emoce": 8.5,
-      "Enjoyment": 8.0,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "Tower of God, S02: Workshop Battle",
-    "categories": {
-      "Animace": 6.5,
-      "CGI": 6.0,
-      "MC": 8.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 8.0,
-      "Plot": 7.0,
-      "Pacing": 7.0,
-      "Story Conclusion": 7.0,
-      "Originalita": 8.0,
-      "Emoce": 7.0,
-      "Enjoyment": 7.0,
-      "OP": 9.0,
-      "ED": 9.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "I've Been Killing Slimes for 300 Years and Maxed Out My Level, S02",
-    "categories": {
-      "Animace": 7.0,
-      "CGI": 7.0,
-      "MC": 8.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 8.0,
-      "Plot": 7.0,
-      "Pacing": 8.0,
-      "Story Conclusion": 7.0,
-      "Originalita": 7.0,
-      "Emoce": 7.0,
-      "Enjoyment": 7.0,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Tsukimichi -Moonlit Fantasy-, S02",
-    "categories": {
-      "Animace": 7.5,
-      "CGI": 7.5,
-      "MC": 8.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 8.0,
-      "Plot": 8.0,
-      "Pacing": 8.0,
-      "Story Conclusion": 8.0,
-      "Originalita": 8.0,
-      "Emoce": 7.0,
-      "Enjoyment": 8.0,
-      "OP": 7.0,
-      "ED": 8.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "Ascendance of a Bookworm, S03",
-    "categories": {
-      "Animace": 7.0,
-      "CGI": 7.0,
-      "MC": 10.0,
-      "Vedlejší postavy": 10.0,
-      "Waifu": 7.0,
-      "Plot": 9.0,
-      "Pacing": 10.0,
-      "Story Conclusion": 10.0,
-      "Originalita": 10.0,
-      "Emoce": 10.0,
-      "Enjoyment": 9.0,
-      "OP": 7.0,
-      "ED": 9.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "GATE, S01 Part 2",
-    "categories": {
-      "Animace": 7.5,
-      "CGI": 8.0,
-      "MC": 8.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 9.0,
-      "Plot": 8.0,
-      "Pacing": 8.0,
-      "Story Conclusion": 8.0,
-      "Originalita": 10.0,
-      "Emoce": 8.0,
-      "Enjoyment": 8.0,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Skeleton Knight in Another World, S01",
-    "categories": {
-      "Animace": 7.0,
-      "CGI": 8.0,
-      "MC": 8.0,
+      "MC": 7.5,
       "Vedlejší postavy": 7.0,
-      "Waifu": 9.0,
-      "Plot": 7.0,
-      "Pacing": 8.0,
-      "Story Conclusion": 8.0,
-      "Originalita": 7.0,
-      "Emoce": 8.0,
-      "Enjoyment": 8.0,
-      "OP": 9.0,
-      "ED": 9.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Arifureta: From Commonplace to World's Strongest, S03",
-    "categories": {
-      "Animace": 7.0,
-      "CGI": 6.5,
-      "MC": 7.0,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 8.0,
-      "Plot": 7.0,
-      "Pacing": 7.0,
-      "Story Conclusion": 7.0,
-      "Originalita": 8.0,
-      "Emoce": 7.0,
-      "Enjoyment": 7.0,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 9.0
-    }
-  },
-  {
-    "name": "Saga of Tanya the Evil: The Movie",
-    "categories": {
-      "Animace": 8.5,
-      "CGI": 7.0,
-      "MC": 9.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 8.0,
-      "Plot": 8.0,
-      "Pacing": 9.0,
-      "Story Conclusion": 9.0,
-      "Originalita": 10.0,
-      "Emoce": 8.0,
-      "Enjoyment": 9.0,
-      "ED": 9.0,
-      "OST": 9.0
-    }
-  },
-  {
-    "name": "Chainsaw Man the Movie: Reze Arc",
-    "categories": {
-      "Animace": 10.0,
-      "CGI": 10.0,
-      "MC": 7.0,
-      "Vedlejší postavy": 9.0,
-      "Waifu": 10.0,
-      "Plot": 8.0,
-      "Pacing": 9.0,
-      "Story Conclusion": 9.0,
-      "Originalita": 10.0,
-      "Emoce": 8.0,
-      "Enjoyment": 9.0,
-      "OP": 9.0,
-      "OST": 9.0
-    }
-  },
-  {
-    "name": "Demon Slayer: The Movie: Infinity Castle - Part 1: Akaza Returns",
-    "categories": {
-      "Animace": 10.0,
-      "CGI": 10.0,
-      "MC": 10.0,
-      "Vedlejší postavy": 10.0,
-      "Waifu": 8.0,
-      "Plot": 8.0,
-      "Pacing": 10.0,
-      "Story Conclusion": 10.0,
-      "Originalita": 9.0,
-      "Emoce": 8.0,
-      "Enjoyment": 10.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "Vinland Saga, S02",
-    "categories": {
-      "Animace": 9.0,
-      "CGI": 8.0,
-      "MC": 9.5,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 8.5,
-      "Plot": 7.0,
-      "Pacing": 7.0,
-      "Story Conclusion": 10.0,
-      "Originalita": 10.0,
-      "Emoce": 9.0,
-      "Enjoyment": 8.5,
-      "OP": 9.0,
-      "ED": 8.0,
-      "OST": 9.0
-    }
-  },
-  {
-    "name": "Dorohedoro, S01",
-    "categories": {
-      "Animace": 8.5,
-      "CGI": 9.0,
-      "MC": 7.0,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 5.0,
-      "Plot": 6.5,
-      "Pacing": 6.0,
-      "Story Conclusion": 7.0,
-      "Originalita": 8.0,
-      "Emoce": 5.5,
-      "Enjoyment": 6.0,
-      "OP": 7.0,
-      "ED": 8.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Wandering Witch: The Journey of Elaina",
-    "categories": {
-      "Animace": 7.5,
-      "CGI": 8.5,
-      "MC": 8.0,
-      "Vedlejší postavy": 7.5,
-      "Waifu": 8.0,
+      "Waifu": 6.5,
       "Plot": 7.5,
-      "Pacing": 7.5,
-      "Story Conclusion": 8.0,
-      "Originalita": 8.5,
-      "Emoce": 8.5,
-      "Enjoyment": 8.0,
-      "OP": 7.0,
-      "ED": 9.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Secrets of the Silent Witch",
-    "categories": {
-      "Animace": 7.5,
-      "CGI": 8.0,
-      "MC": 7.5,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 7.5,
-      "Plot": 6.5,
-      "Pacing": 7.0,
-      "Story Conclusion": 8.0,
-      "Originalita": 7.0,
-      "Emoce": 7.5,
-      "Enjoyment": 7.0,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 9.0
-    }
-  },
-  {
-    "name": "Once Upon a Witch's Death",
-    "categories": {
-      "Animace": 6.5,
-      "CGI": 7.0,
-      "MC": 7.5,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 7.0,
-      "Plot": 6.5,
-      "Pacing": 6.5,
-      "Story Conclusion": 7.0,
-      "Originalita": 7.0,
-      "Emoce": 8.0,
-      "Enjoyment": 7.5,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "The Ancient Magus' Bride, S02 Part 2",
-    "categories": {
-      "Animace": 8.0,
-      "CGI": 8.0,
-      "MC": 9.0,
-      "Vedlejší postavy": 8.5,
-      "Waifu": 9.0,
-      "Plot": 8.0,
       "Pacing": 8.0,
-      "Story Conclusion": 9.0,
-      "Originalita": 9.0,
-      "Emoce": 8.0,
+      "Story Conclusion": 7.5,
+      "Originalita": 8.5,
+      "Emoce": 7.5,
       "Enjoyment": 8.0,
-      "OP": 7.0,
       "ED": 7.0,
-      "OST": 10.0
+      "OST": 8.0
     }
   },
   {
@@ -3912,7 +3912,7 @@
     "name": "Psycho-Pass: Providence",
     "categories": {
       "Animace": 7.5,
-      "CGI": 8.5,
+      "CGI": 9.0,
       "MC": 8.5,
       "Vedlejší postavy": 8.5,
       "Waifu": 8.0,
@@ -3925,6 +3925,25 @@
       "OP": 7.0,
       "ED": 7.0,
       "OST": 8.0
+    }
+  },
+  {
+    "name": "Ergo Proxy",
+    "categories": {
+      "Animace": 7.5,
+      "CGI": 8.0,
+      "MC": 9.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 7.5,
+      "Plot": 8.5,
+      "Pacing": 8.0,
+      "Story Conclusion": 9.0,
+      "Originalita": 10.0,
+      "Emoce": 8.0,
+      "Enjoyment": 9.0,
+      "OP": 9.0,
+      "ED": 7.0,
+      "OST": 9.0
     }
   }
 ]
