@@ -485,7 +485,7 @@ function Favorites() {
             </div>
 
             {/* Table */}
-            <div className="table-container">
+            <div className="table-container hide-mobile">
                 <table style={{ fontSize: '0.85rem' }}>
                     <thead>
                         <tr>
@@ -561,6 +561,57 @@ function Favorites() {
                 </table>
             </div>
 
+            {/* Mobile Cards for Favorites */}
+            <div className="mobile-card-list hide-desktop">
+                {filteredFavorites.map((fav, idx) => (
+                    <div key={idx} className="mobile-card">
+                        <div className="mobile-card-header">
+                            <div style={{ display: 'flex', gap: 'var(--spacing-md)', flex: 1, alignItems: 'flex-start' }}>
+                                <div style={{ minWidth: '24px', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 'bold' }}>
+                                    #{fav.index}
+                                </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1 }}>
+                                    <div className="mobile-card-title">
+                                        <span style={{ color: 'var(--accent-primary)' }}>{fav.song}</span>
+                                    </div>
+                                    <div style={{ fontSize: '0.85rem', color: 'var(--text-primary)', fontWeight: '500' }}>
+                                        {fav.anime_name}
+                                    </div>
+                                </div>
+                                <div style={{ textAlign: 'right' }}>
+                                    <span className={`type-badge ${fav.type === 'OP' ? 'tv' : fav.type === 'ED' ? 'movie' : 'special'}`} style={{ padding: '2px 6px', fontSize: '0.65rem' }}>
+                                        {fav.type}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mobile-card-grid">
+                            <div className="mobile-card-row" style={{ gridColumn: '1 / -1' }}>
+                                <span>Autor:</span>
+                                <span style={{ color: 'var(--text-secondary)', textAlign: 'right' }}>{fav.author || '-'}</span>
+                            </div>
+
+                            <div className="mobile-card-row" style={{ gridColumn: '1 / -1', borderTop: '1px solid var(--border-color)', paddingTop: '8px', marginTop: '4px' }}>
+                                <span>Hodnocení (Průměr / Finální):</span>
+                                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                    {fav.has_frisson && <span title="Frisson" style={{ color: 'var(--accent-amber)' }}>⚡</span>}
+                                    <span style={{ color: 'var(--text-muted)' }}>
+                                        {fav.rating_avg && !isNaN(parseFloat(fav.rating_avg)) ? toCS(parseFloat(parseFloat(fav.rating_avg).toFixed(1))) : '-'}
+                                    </span>
+                                    <span>/</span>
+                                    {fav.rating_final && !isNaN(parseFloat(fav.rating_final)) ? (
+                                        <span className={`rating-badge ${parseFloat(fav.rating_final) >= 9 ? 'excellent' : 'good'}`} style={{ fontSize: '0.75rem', padding: '2px 6px', minWidth: 'auto' }}>
+                                            {toCS(parseFloat(parseFloat(fav.rating_final).toFixed(1)))}
+                                        </span>
+                                    ) : '-'}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
             {/* OST Section */}
             {stats?.ostItems?.length > 0 && (
                 <div style={{ marginTop: 'var(--spacing-2xl)' }}>
@@ -576,7 +627,7 @@ function Favorites() {
                             ({stats.ostItems.length} skladeb)
                         </span>
                     </h3>
-                    <div className="table-container">
+                    <div className="table-container hide-mobile">
                         <table>
                             <thead>
                                 <tr>
@@ -613,6 +664,43 @@ function Favorites() {
                                 ))}
                             </tbody>
                         </table>
+                    </div>
+
+                    {/* Mobile Cards for OST */}
+                    <div className="mobile-card-list hide-desktop">
+                        {stats.ostItems.map((ost, idx) => (
+                            <div key={idx} className="mobile-card">
+                                <div className="mobile-card-header">
+                                    <div style={{ display: 'flex', gap: 'var(--spacing-md)', flex: 1, alignItems: 'flex-start' }}>
+                                        <div style={{ minWidth: '24px', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 'bold' }}>
+                                            #{idx + 1}
+                                        </div>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1 }}>
+                                            <div className="mobile-card-title">
+                                                <span style={{ color: 'var(--accent-amber)' }}>{ost.song}</span>
+                                            </div>
+                                            <div style={{ fontSize: '0.85rem', color: 'var(--text-primary)', fontWeight: '500' }}>
+                                                {ost.anime_name}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="mobile-card-grid">
+                                    <div className="mobile-card-row" style={{ gridColumn: '1 / -1' }}>
+                                        <span>Autor:</span>
+                                        <span style={{ color: 'var(--text-secondary)', textAlign: 'right' }}>{ost.author || '-'}</span>
+                                    </div>
+                                    <div className="mobile-card-row" style={{ gridColumn: '1 / -1' }}>
+                                        <span>Hodnocení:</span>
+                                        {ost.rating_final && !isNaN(parseFloat(ost.rating_final)) ? (
+                                            <span className={`rating-badge ${parseFloat(ost.rating_final) >= 9 ? 'excellent' : 'good'}`} style={{ fontSize: '0.75rem', padding: '2px 6px', minWidth: 'auto' }}>
+                                                {toCS(parseFloat(parseFloat(ost.rating_final).toFixed(1)))}
+                                            </span>
+                                        ) : '-'}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             )}

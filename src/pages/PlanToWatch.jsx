@@ -259,7 +259,7 @@ function PlanToWatch() {
             </div>
 
             {/* Table */}
-            <div className="table-container">
+            <div className="table-container hide-mobile">
                 <table>
                     <thead>
                         <tr>
@@ -319,6 +319,64 @@ function PlanToWatch() {
                         ))}
                     </tbody>
                 </table>
+            </div>
+
+            {/* Mobile Cards */}
+            <div className="mobile-card-list hide-desktop">
+                {filteredList.map((item, idx) => (
+                    <div key={idx} className="mobile-card">
+                        <div className="mobile-card-header">
+                            <div style={{ display: 'flex', gap: 'var(--spacing-md)', flex: 1, alignItems: 'flex-start' }}>
+                                <div style={{ minWidth: '30px', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 'bold' }}>
+                                    #{idx + 1}
+                                </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
+                                    <div className="mobile-card-title">
+                                        {item.name}
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+                                        <span className={`type-badge ${getTypeBadgeClass(item.type)}`} style={{ padding: '2px 6px', fontSize: '0.65rem' }}>
+                                            {item.type || '-'}
+                                        </span>
+                                        {item.notes === 'AIRING!' ? (
+                                            <span style={{
+                                                padding: '2px 6px',
+                                                background: 'rgba(239, 68, 68, 0.2)',
+                                                color: 'var(--accent-red)',
+                                                borderRadius: '4px',
+                                                fontSize: '0.65rem',
+                                                fontWeight: '600'
+                                            }}>
+                                                🔴 AIRING
+                                            </span>
+                                        ) : (
+                                            <span style={{ color: 'var(--accent-emerald)', fontSize: '0.75rem' }}>
+                                                ✓ Vydáno
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mobile-card-grid">
+                            <div className="mobile-card-row">
+                                <span>Epizody:</span>
+                                <span style={{ color: 'var(--text-primary)', fontWeight: '500' }}>
+                                    {item.episodes && !isNaN(parseInt(item.episodes)) ? parseInt(item.episodes) : '-'}
+                                </span>
+                            </div>
+                            <div className="mobile-card-row" style={{ gridColumn: '1 / -1', borderTop: '1px solid var(--border-color)', paddingTop: '8px', marginTop: '4px' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', width: '100%' }}>
+                                    <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Zdroj / Důvod:</span>
+                                    <div style={{ fontSize: '0.85rem' }}>
+                                        <ExpandableSource text={item.source} />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ))}
             </div>
         </div>
     )
