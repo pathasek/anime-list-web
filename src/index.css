@@ -291,9 +291,14 @@ a:hover {
 
 /* ─── Tables ─── */
 .table-container {
-  overflow-x: auto;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-color);
+}
+
+@media (max-width: 1024px) {
+  .table-container {
+    overflow-x: auto;
+  }
 }
 
 table {

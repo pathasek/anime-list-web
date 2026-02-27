@@ -1005,13 +1005,13 @@ function Dashboard() {
 
                         {/* DESKTOP TABLE */}
                         <div className="hide-mobile" style={{ overflowX: 'auto' }}>
-                            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                            <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                                 <thead>
                                     <tr style={{ borderBottom: '2px solid var(--border-light)' }}>
-                                        <th style={{ textAlign: 'left', padding: '8px 12px', color: 'var(--text-secondary)' }}>Sledovaná data</th>
-                                        <th style={{ textAlign: 'center', padding: '8px 12px', background: 'rgba(99,102,241,0.1)', borderRadius: '4px 4px 0 0' }}>Za celou dobu</th>
+                                        <th style={{ width: '20%', textAlign: 'left', padding: '8px 12px', color: 'var(--text-secondary)' }}>Sledovaná data</th>
+                                        <th style={{ width: '20%', textAlign: 'center', padding: '8px 12px', background: 'rgba(99,102,241,0.1)', borderRadius: '4px 4px 0 0' }}>Za celou dobu</th>
                                         {yearCols.map(y => (
-                                            <th key={y} style={{ textAlign: 'center', padding: '8px 12px', background: 'rgba(16,185,129,0.08)' }}>Za rok {y}</th>
+                                            <th key={y} style={{ width: '20%', textAlign: 'center', padding: '8px 12px', background: 'rgba(16,185,129,0.08)' }}>Za rok {y}</th>
                                         ))}
                                     </tr>
                                 </thead>
