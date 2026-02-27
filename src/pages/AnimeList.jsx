@@ -527,20 +527,20 @@ function AnimeList() {
                         <div className="mobile-card-header">
                             <div style={{ display: 'flex', gap: 'var(--spacing-md)', width: '100%', alignItems: 'center' }}>
                                 {/* Image on the left */}
-                                <div style={{ minWidth: '64px', cursor: 'pointer' }} onClick={(e) => { e.stopPropagation(); anime.thumbnail && setExpandedImage(anime.thumbnail); }}>
+                                <div style={{ minWidth: '80px', cursor: 'pointer' }} onClick={(e) => { e.stopPropagation(); anime.thumbnail && setExpandedImage(anime.thumbnail); }}>
                                     {anime.thumbnail ? (
                                         <img
                                             src={anime.thumbnail}
                                             alt={anime.name}
                                             style={{
-                                                width: '64px', height: '80px', objectFit: 'contain', backgroundColor: 'rgba(0,0,0,0.1)',
+                                                width: '80px', height: '45px', objectFit: 'cover', backgroundColor: 'rgba(0,0,0,0.1)',
                                                 borderRadius: '4px', boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
                                             }}
                                             loading="lazy"
                                         />
                                     ) : (
                                         <div style={{
-                                            width: '64px', height: '80px', backgroundColor: 'var(--bg-tertiary)',
+                                            width: '80px', height: '45px', backgroundColor: 'var(--bg-tertiary)',
                                             borderRadius: '4px', display: 'flex', alignItems: 'center',
                                             justifyContent: 'center', fontSize: '1rem', color: 'var(--text-muted)'
                                         }}>?</div>
