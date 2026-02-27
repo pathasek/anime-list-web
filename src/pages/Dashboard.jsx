@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, Fragment } from 'react'
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -89,6 +89,15 @@ function Dashboard() {
     }
     const [settingsRefresh, setSettingsRefresh] = useState(0)
     const [statsData, setStatsData] = useState(null) // Stats from stats.json (with comments)
+    const [expandedNote, setExpandedNote] = useState(null)
+
+    const toggleNote = (id, text) => {
+        if (expandedNote && expandedNote.id === id) {
+            setExpandedNote(null)
+        } else {
+            setExpandedNote({ id, text })
+        }
+    }
 
     const openChartSettings = (e, id, title) => {
         const r = e.currentTarget.getBoundingClientRect()
@@ -992,24 +1001,52 @@ function Dashboard() {
                             </thead>
                             <tbody>
                                 {rows.map((row, i) => (
-                                    <tr key={i} style={{ borderBottom: '1px solid var(--border-color)', opacity: row.isType ? 0.85 : 1 }}>
-                                        <td style={{ padding: '8px 12px', fontWeight: row.isType ? 400 : 500, paddingLeft: row.isType ? '24px' : '12px', color: row.isType ? 'var(--text-secondary)' : 'var(--text-primary)' }}>{row.label}</td>
-                                        <td
-                                            style={{ textAlign: 'center', padding: '8px 12px', fontWeight: 600, background: 'rgba(99,102,241,0.05)', cursor: row.commentAll ? 'help' : 'default' }}
-                                            title={row.commentAll}
-                                        >
-                                            {row.all}
-                                        </td>
-                                        {row.years.map((v, j) => (
+                                    <Fragment key={i}>
+                                        <tr style={{ borderBottom: '1px solid var(--border-color)', opacity: row.isType ? 0.85 : 1 }}>
+                                            <td style={{ padding: '8px 12px', fontWeight: row.isType ? 400 : 500, paddingLeft: row.isType ? '24px' : '12px', color: row.isType ? 'var(--text-secondary)' : 'var(--text-primary)' }}>{row.label}</td>
                                             <td
-                                                key={j}
-                                                style={{ textAlign: 'center', padding: '8px 12px', cursor: row.commentYears?.[j] ? 'help' : 'default' }}
-                                                title={row.commentYears?.[j]}
+                                                style={{ textAlign: 'center', padding: '8px 12px', fontWeight: 600, background: 'rgba(99,102,241,0.05)' }}
                                             >
-                                                {v}
+                                                {row.all}
+                                                {row.commentAll && (
+                                                    <span
+                                                        style={{ marginLeft: '6px', cursor: 'pointer', color: expandedNote?.id === `${i}-all` ? 'var(--accent-primary)' : 'var(--text-secondary)' }}
+                                                        onClick={() => toggleNote(`${i}-all`, row.commentAll)}
+                                                        title="Zobrazit poznámku"
+                                                    >
+                                                        ⓘ
+                                                    </span>
+                                                )}
                                             </td>
-                                        ))}
-                                    </tr>
+                                            {row.years.map((v, j) => (
+                                                <td
+                                                    key={j}
+                                                    style={{ textAlign: 'center', padding: '8px 12px' }}
+                                                >
+                                                    {v}
+                                                    {row.commentYears?.[j] && (
+                                                        <span
+                                                            style={{ marginLeft: '6px', cursor: 'pointer', color: expandedNote?.id === `${i}-${j}` ? 'var(--accent-primary)' : 'var(--text-secondary)' }}
+                                                            onClick={() => toggleNote(`${i}-${j}`, row.commentYears[j])}
+                                                            title="Zobrazit poznámku"
+                                                        >
+                                                            ⓘ
+                                                        </span>
+                                                    )}
+                                                </td>
+                                            ))}
+                                        </tr>
+                                        {/* Expanded Note Row */}
+                                        {expandedNote && expandedNote.id.startsWith(`${i}-`) && (
+                                            <tr style={{ backgroundColor: 'rgba(99,102,241,0.03)' }}>
+                                                <td colSpan={2 + yearCols.length} style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-color)' }}>
+                                                    <div style={{ whiteSpace: 'pre-wrap', fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.6, textAlign: 'left' }}>
+                                                        {expandedNote.text}
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </Fragment>
                                 ))}
                             </tbody>
                         </table>
