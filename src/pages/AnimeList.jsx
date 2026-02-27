@@ -14,6 +14,7 @@ function AnimeList() {
     })
     const [seriesFilter, setSeriesFilter] = useState(null)
     const [expandedImage, setExpandedImage] = useState(null)
+    const [hoveredThumb, setHoveredThumb] = useState(null)
 
     useEffect(() => {
         loadData(STORAGE_KEYS.ANIME_LIST, 'data/anime_list.json')
@@ -346,59 +347,39 @@ function AnimeList() {
                                     {anime.thumbnail ? (
                                         <div
                                             style={{
-                                                width: '80px',
-                                                height: '45px',
+                                                width: '45px',
+                                                height: '64px',
                                                 position: 'relative',
-                                                overflow: 'visible'
+                                                cursor: 'zoom-in'
                                             }}
                                             onMouseEnter={(e) => {
-                                                const img = e.currentTarget.querySelector('img');
-                                                if (!img) return;
                                                 const rect = e.currentTarget.getBoundingClientRect();
-                                                const viewportW = window.innerWidth;
-                                                const viewportH = window.innerHeight;
-                                                const isBottom = rect.top > viewportH * 0.5;
-                                                const isRight = rect.left > viewportW * 0.5;
-                                                const originY = isBottom ? 'bottom' : 'top';
-                                                const originX = isRight ? 'right' : 'left';
-                                                img.style.transformOrigin = `${originY} ${originX}`;
-                                                img.style.transform = 'scale(6)';
-                                                img.style.zIndex = '1000';
-                                                img.style.boxShadow = '0 8px 24px rgba(0,0,0,0.8)';
-                                                img.style.borderRadius = '2px';
+                                                setHoveredThumb({
+                                                    src: anime.thumbnail,
+                                                    name: anime.name,
+                                                    rect: rect
+                                                });
                                             }}
-                                            onMouseLeave={(e) => {
-                                                const img = e.currentTarget.querySelector('img');
-                                                if (!img) return;
-                                                img.style.transform = 'scale(1)';
-                                                img.style.zIndex = '500';
-                                                img.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)';
-                                                img.style.borderRadius = '4px';
-                                                setTimeout(() => { img.style.zIndex = '1'; }, 350);
-                                            }}
+                                            onMouseLeave={() => setHoveredThumb(null)}
+                                            onClick={() => setExpandedImage(anime.thumbnail)}
                                         >
                                             <img
                                                 src={anime.thumbnail}
                                                 alt={anime.name}
                                                 style={{
-                                                    width: '80px',
-                                                    height: '45px',
-                                                    objectFit: 'contain',
-                                                    backgroundColor: 'rgba(0,0,0,0.1)',
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    objectFit: 'cover',
                                                     borderRadius: '4px',
-                                                    boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
-                                                    transition: 'transform 0.35s ease, box-shadow 0.35s ease',
-                                                    cursor: 'zoom-in',
-                                                    pointerEvents: 'none',
-                                                    position: 'relative'
+                                                    boxShadow: 'var(--shadow-sm)'
                                                 }}
                                                 loading="lazy"
                                             />
                                         </div>
                                     ) : (
                                         <div style={{
-                                            width: '80px',
-                                            height: '45px',
+                                            width: '45px',
+                                            height: '64px',
                                             backgroundColor: 'var(--bg-secondary)',
                                             borderRadius: '4px',
                                             display: 'flex',
@@ -651,6 +632,38 @@ function AnimeList() {
                             display: 'block'
                         }}
                         onClick={(e) => e.stopPropagation()}
+                    />
+                </div>
+            )}
+
+            {/* Hovered Thumbnail Portal (Desktop) */}
+            {hoveredThumb && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        zIndex: 999998,
+                        pointerEvents: 'none',
+                        top: hoveredThumb.rect.top > window.innerHeight / 2 ? 'auto' : Math.max(10, hoveredThumb.rect.top - 10),
+                        bottom: hoveredThumb.rect.top > window.innerHeight / 2 ? Math.max(10, window.innerHeight - hoveredThumb.rect.bottom - 10) : 'auto',
+                        left: hoveredThumb.rect.left > window.innerWidth / 2 ? 'auto' : hoveredThumb.rect.right + 15,
+                        right: hoveredThumb.rect.left > window.innerWidth / 2 ? window.innerWidth - hoveredThumb.rect.left + 15 : 'auto',
+                        backgroundColor: 'var(--bg-secondary)',
+                        padding: '6px',
+                        borderRadius: '8px',
+                        boxShadow: '0 12px 40px rgba(0,0,0,0.8)',
+                        border: '1px solid var(--border-light)'
+                    }}
+                >
+                    <img
+                        src={hoveredThumb.src}
+                        alt={hoveredThumb.name}
+                        style={{
+                            maxWidth: '300px',
+                            maxHeight: '400px',
+                            objectFit: 'contain',
+                            display: 'block',
+                            borderRadius: '4px'
+                        }}
                     />
                 </div>
             )}
