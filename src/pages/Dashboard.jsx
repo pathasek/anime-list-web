@@ -1116,7 +1116,7 @@ function Dashboard() {
                                                 </div>
                                             </div>
                                             {(expandedNote?.id === `${i}-all` || isRowExpanded) && row.commentAll && (
-                                                <div style={{ padding: '8px 12px', background: 'rgba(0,0,0,0.1)', borderRadius: '4px', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '8px' }}>
+                                                <div style={{ padding: '8px 12px', background: 'rgba(0,0,0,0.1)', borderRadius: '4px', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '8px', whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>
                                                     {row.commentAll}
                                                 </div>
                                             )}
@@ -1139,7 +1139,7 @@ function Dashboard() {
                                                         </div>
                                                     </div>
                                                     {(expandedNote?.id === `${i}-${j}` || isRowExpanded) && row.commentYears?.[j] && (
-                                                        <div style={{ padding: '8px 12px', background: 'rgba(0,0,0,0.1)', borderRadius: '4px', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: j < row.years.length - 1 ? '8px' : '0' }}>
+                                                        <div style={{ padding: '8px 12px', background: 'rgba(0,0,0,0.1)', borderRadius: '4px', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: j < row.years.length - 1 ? '8px' : '0', whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>
                                                             {row.commentYears[j]}
                                                         </div>
                                                     )}

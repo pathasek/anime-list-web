@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
+import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
 import { loadData, STORAGE_KEYS } from '../utils/dataStore'
 
@@ -639,7 +640,7 @@ function AnimeList() {
             </div>
 
             {/* Full-screen Image Modal */}
-            {expandedImage && (
+            {expandedImage && createPortal(
                 <div
                     style={{
                         position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
@@ -662,7 +663,8 @@ function AnimeList() {
                         }}
                         onClick={(e) => e.stopPropagation()}
                     />
-                </div>
+                </div>,
+                document.body
             )}
         </div >
     )

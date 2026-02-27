@@ -558,23 +558,33 @@ function HistoryLog() {
                     </select>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <input
-                            type="date"
-                            value={dateRange.start}
-                            onChange={(e) => setDateRange(prev => ({ ...prev, start: e.target.value }))}
-                            className="select"
-                            style={{ padding: '0.4rem 0.8rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', fontSize: '0.9rem' }}
-                            title="Od data"
-                        />
+                        <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                            {!dateRange.start && (
+                                <span style={{ position: 'absolute', left: '10px', color: 'var(--text-muted)', fontSize: '0.85rem', pointerEvents: 'none' }}>Od...</span>
+                            )}
+                            <input
+                                type="date"
+                                value={dateRange.start}
+                                onChange={(e) => setDateRange(prev => ({ ...prev, start: e.target.value }))}
+                                className="select"
+                                style={{ padding: '0.4rem 0.8rem', paddingLeft: dateRange.start ? '0.8rem' : '2.5rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-secondary)', color: dateRange.start ? 'var(--text-primary)' : 'transparent', border: '1px solid var(--border-color)', fontSize: '0.9rem' }}
+                                title="Od data"
+                            />
+                        </div>
                         <span style={{ color: 'var(--text-muted)' }}>-</span>
-                        <input
-                            type="date"
-                            value={dateRange.end}
-                            onChange={(e) => setDateRange(prev => ({ ...prev, end: e.target.value }))}
-                            className="select"
-                            style={{ padding: '0.4rem 0.8rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', fontSize: '0.9rem' }}
-                            title="Do data"
-                        />
+                        <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                            {!dateRange.end && (
+                                <span style={{ position: 'absolute', left: '10px', color: 'var(--text-muted)', fontSize: '0.85rem', pointerEvents: 'none' }}>Do...</span>
+                            )}
+                            <input
+                                type="date"
+                                value={dateRange.end}
+                                onChange={(e) => setDateRange(prev => ({ ...prev, end: e.target.value }))}
+                                className="select"
+                                style={{ padding: '0.4rem 0.8rem', paddingLeft: dateRange.end ? '0.8rem' : '2.5rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-secondary)', color: dateRange.end ? 'var(--text-primary)' : 'transparent', border: '1px solid var(--border-color)', fontSize: '0.9rem' }}
+                                title="Do data"
+                            />
+                        </div>
                     </div>
 
                     {(dateRange.start || dateRange.end) && (
