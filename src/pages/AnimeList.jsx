@@ -169,6 +169,14 @@ function AnimeList() {
         return 'below'
     }
 
+    const getRatingColor = (rating) => {
+        const r = parseFloat(rating)
+        if (r >= 9) return 'var(--accent-emerald)'
+        if (r >= 7.5) return 'var(--accent-cyan)'
+        if (r >= 6) return 'var(--accent-amber)'
+        return 'var(--accent-red)'
+    }
+
     const getTypeBadgeClass = (type) => {
         const t = type?.toLowerCase() || ''
         if (t.includes('movie')) return 'movie'
@@ -595,7 +603,7 @@ function AnimeList() {
                                             navigate(`/anime/${encodeURIComponent(anime.name)}`)
                                         }}
                                     >
-                                        <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--accent-primary)' }}>
+                                        <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: getRatingColor(anime.rating) }}>
                                             {Number(anime.rating) % 1 === 0 ? parseInt(anime.rating) : parseFloat(anime.rating).toFixed(1)}
                                         </span>
                                         <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>/10</span>
