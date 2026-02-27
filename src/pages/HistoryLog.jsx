@@ -63,12 +63,17 @@ function HistoryLog() {
         const sortedDates = Object.keys(dailyMinutes).sort()
         if (sortedDates.length === 0) return { current: 0, longest: 0, currentStart: null, currentEnd: null, longestStart: null, longestEnd: null }
 
-        const minDate = new Date(sortedDates[0])
-        const maxDataDate = new Date(sortedDates[sortedDates.length - 1])
-        const today = new Date()
-        today.setHours(0, 0, 0, 0)
+        const parseISOLocal = (s) => {
+            const [y, m, d] = s.split('-');
+            return new Date(y, parseInt(m, 10) - 1, d);
+        }
 
-        const effectiveEndDate = maxDataDate > today ? maxDataDate : today
+        const minDate = parseISOLocal(sortedDates[0]);
+        const maxDataDate = parseISOLocal(sortedDates[sortedDates.length - 1]);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const effectiveEndDate = maxDataDate > today ? maxDataDate : today;
 
         // Helper to format date strictly as local YYYY-MM-DD to avoid UTC shift
         const getLocalISOString = (d) => {

@@ -449,7 +449,7 @@ function AnimeDetail() {
             )}
 
             {/* Episode Ratings */}
-            {episodeRatings && episodeChartData && (
+            {episodeRatings && episodeChartData && !['movie', 'film', 'music'].includes((anime.type || '').toLowerCase()) && (
                 <div className="card" style={{ marginBottom: 'var(--spacing-xl)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--spacing-md)' }}>
                         <h3 style={{ margin: 0 }}>
