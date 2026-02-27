@@ -75,6 +75,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -84,6 +85,8 @@ body {
   line-height: 1.6;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  position: relative;
 }
 
 #root {
@@ -199,6 +202,8 @@ a:hover {
   padding: var(--spacing-xl);
   background: var(--bg-primary);
   min-height: 100vh;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* ─── Cards ─── */
@@ -773,6 +778,9 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   .search-bar {
     flex-direction: column;
     align-items: stretch;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
   }
 
   .filter-group {
@@ -783,6 +791,9 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     /* Firefox */
     -ms-overflow-style: none;
     /* IE and Edge */
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
   }
 
   .filter-group::-webkit-scrollbar {
