@@ -3585,5 +3585,22 @@
     "has_frisson": true,
     "rating_avg": 8.5,
     "rating_final": 9
+  },
+  {
+    "index": "212.",
+    "anime_name": "Ergo Proxy",
+    "type": "OP",
+    "song": "Kiri",
+    "author": "MONORAL",
+    "language": "ENG",
+    "rating_lyrics": 8,
+    "rating_emotion": 8.25,
+    "rating_melody": 8.75,
+    "rating_video": 9.5,
+    "rating_voice": 9.25,
+    "sing_along": 10,
+    "has_frisson": false,
+    "rating_avg": 8.75,
+    "rating_final": 9
   }
 ]
