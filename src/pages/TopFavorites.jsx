@@ -11,8 +11,8 @@ const TopFavorites = () => {
         const fetchData = async () => {
             try {
                 const [favoritesRes, animeListRes] = await Promise.all([
-                    fetch(`${process.env.PUBLIC_URL}/data/top_favorites.json`),
-                    fetch(`${process.env.PUBLIC_URL}/data/anime_list.json`)
+                    fetch('data/top_favorites.json'),
+                    fetch('data/anime_list.json')
                 ]);
 
                 if (!favoritesRes.ok || !animeListRes.ok) throw new Error('Failed to fetch data');
@@ -58,7 +58,7 @@ const TopFavorites = () => {
                 <div className="favorites-grid">
                     {items.map((item, index) => {
                         const name = item.data.NAME || item.data.ANIME_NAME;
-                        let finalImage = item.image_file ? `${process.env.PUBLIC_URL}/${item.image_file}` : null;
+                        let finalImage = item.image_file ? `${item.image_file}` : null;
 
                         // If it's an anime, try to grab its poster from the main anime_list map instead, 
                         // as Top10 Anime don't have direct embedded image extractions right now (they are grouped shape backgrounds)
@@ -67,7 +67,7 @@ const TopFavorites = () => {
                             // To keep things simple visually, sometimes posters from anime list look great for anime items
                             const mappedAnime = animeMap[name.toLowerCase()];
                             if (mappedAnime && mappedAnime.image_file) {
-                                finalImage = finalImage || `${process.env.PUBLIC_URL}/${mappedAnime.image_file}`;
+                                finalImage = finalImage || `${mappedAnime.image_file}`;
                             }
                         }
 
