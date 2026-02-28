@@ -356,7 +356,7 @@ function AnimeDetail() {
                                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Datum vydání</span>
                                     <div style={{ fontWeight: '500' }}>{anime.release_date ? new Date(anime.release_date).toLocaleDateString('cs-CZ') : 'N/A'}</div>
                                 </div>
-                                <div style={{ minWidth: '220px' }}>
+                                <div style={{ minWidth: '150px', flex: '1 1 auto' }}>
                                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Sledováno</span>
                                     <div style={{ fontWeight: '500', whiteSpace: 'nowrap' }}>
                                         {(() => {
@@ -375,9 +375,9 @@ function AnimeDetail() {
                                         <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Rewatch</span>
                                         <div
                                             style={{ fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}
-                                            title={anime.end_date ? `Naposledy sledováno: ${new Date(anime.end_date).toLocaleDateString('cs-CZ')}` : ''}
+                                            title={anime.end_date ? `${anime.rewatch_count}. Rewatch; ${new Date(anime.end_date).toLocaleDateString('cs-CZ', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\s/g, '')}` : ''}
                                         >
-                                            {anime.rewatch_count}. Rewatch
+                                            {anime.rewatch_count}x
                                             <span style={{
                                                 display: 'inline-flex',
                                                 alignItems: 'center',

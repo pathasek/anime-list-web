@@ -564,7 +564,7 @@ function Favorites() {
                                 </td>
                                 <td>
                                     {fav.rating_final && !isNaN(parseFloat(fav.rating_final)) ? (
-                                        <span className={`rating-badge ${parseFloat(fav.rating_final) >= 9 ? 'excellent' : 'good'}`}>
+                                        <span className={`rating-badge rating-${Math.floor(parseFloat(fav.rating_final))}`}>
                                             {toCS(parseFloat(parseFloat(fav.rating_final).toFixed(1)))}
                                         </span>
                                     ) : '-'}
@@ -615,7 +615,7 @@ function Favorites() {
                                     </span>
                                     <span>/</span>
                                     {fav.rating_final && !isNaN(parseFloat(fav.rating_final)) ? (
-                                        <span className={`rating-badge ${parseFloat(fav.rating_final) >= 9 ? 'excellent' : 'good'}`} style={{ fontSize: '0.75rem', padding: '2px 6px', minWidth: 'auto' }}>
+                                        <span className={`rating-badge rating-${Math.floor(parseFloat(fav.rating_final))}`} style={{ fontSize: '0.75rem', padding: '2px 6px', minWidth: 'auto' }}>
                                             {toCS(parseFloat(parseFloat(fav.rating_final).toFixed(1)))}
                                         </span>
                                     ) : '-'}
@@ -707,7 +707,7 @@ function Favorites() {
                                         </td>
                                         <td>
                                             {ost.rating_final && !isNaN(parseFloat(ost.rating_final)) ? (
-                                                <span className={`rating-badge ${parseFloat(ost.rating_final) >= 9 ? 'excellent' : 'good'}`}>
+                                                <span className={`rating-badge rating-${Math.floor(parseFloat(ost.rating_final))}`}>
                                                     {toCS(parseFloat(parseFloat(ost.rating_final).toFixed(1)))}
                                                 </span>
                                             ) : '-'}
@@ -745,7 +745,7 @@ function Favorites() {
                                     <div className="mobile-card-row" style={{ gridColumn: '1 / -1' }}>
                                         <span>Hodnocení:</span>
                                         {ost.rating_final && !isNaN(parseFloat(ost.rating_final)) ? (
-                                            <span className={`rating-badge ${parseFloat(ost.rating_final) >= 9 ? 'excellent' : 'good'}`} style={{ fontSize: '0.75rem', padding: '2px 6px', minWidth: 'auto' }}>
+                                            <span className={`rating-badge rating-${Math.floor(parseFloat(ost.rating_final))}`} style={{ fontSize: '0.75rem', padding: '2px 6px', minWidth: 'auto' }}>
                                                 {toCS(parseFloat(parseFloat(ost.rating_final).toFixed(1)))}
                                             </span>
                                         ) : '-'}

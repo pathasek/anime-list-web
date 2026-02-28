@@ -172,11 +172,19 @@ function AnimeList() {
     }
 
     const getRatingClass = (rating) => {
-        const r = parseFloat(rating)
-        if (r >= 9) return 'excellent'
-        if (r >= 7.5) return 'good'
-        if (r >= 6) return 'average'
-        return 'below'
+        if (!rating || rating === 'X' || isNaN(rating)) return '';
+        const r = Math.floor(parseFloat(rating));
+        if (r >= 10) return 'rating-10';
+        if (r >= 9) return 'rating-9';
+        if (r >= 8) return 'rating-8';
+        if (r >= 7) return 'rating-7';
+        if (r >= 6) return 'rating-6';
+        if (r >= 5) return 'rating-5';
+        if (r === 4) return 'rating-4';
+        if (r === 3) return 'rating-3';
+        if (r === 2) return 'rating-2';
+        if (r === 1) return 'rating-1';
+        return 'rating-1';
     }
 
     const getRatingColor = (rating) => {
@@ -458,7 +466,7 @@ function AnimeList() {
                                                 }}
                                                 title={anime.mal_url ? "Otevřít na MyAnimeList" : "Hledat na MyAnimeList"}
                                             >
-                                                {anime.name}
+                                                {anime.name.replace(/ (\d+)$/, '\u00A0$1')}
                                             </a>
                                             {isPartOfSeries(anime) && (
                                                 <span

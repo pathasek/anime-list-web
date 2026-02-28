@@ -20,6 +20,18 @@
   --accent-amber: #f59e0b;
   --accent-red: #ef4444;
 
+  /* Excel Rating Colors */
+  --rating-10: #63be7b;
+  --rating-9: #b1d580;
+  --rating-8: #ffeb84;
+  --rating-7: #fcbf7b;
+  --rating-6: #fa9473;
+  --rating-5: #f8696b;
+  --rating-4: #ed5557;
+  --rating-3: #e24143;
+  --rating-2: #d62d2f;
+  --rating-1: #c9181a;
+
   /* Text Colors */
   --text-primary: #f1f5f9;
   --text-secondary: #94a3b8;
@@ -375,24 +387,64 @@ tr:hover td {
   min-width: 3.5rem;
 }
 
-.rating-badge.excellent {
-  background: rgba(16, 185, 129, 0.2);
-  color: var(--accent-emerald);
+.rating-badge.rating-10 {
+  background: rgba(99, 190, 123, 0.2);
+  color: var(--rating-10);
+  border: 1px solid rgba(99, 190, 123, 0.3);
 }
 
-.rating-badge.good {
-  background: rgba(6, 182, 212, 0.2);
-  color: var(--accent-cyan);
+.rating-badge.rating-9 {
+  background: rgba(177, 213, 128, 0.2);
+  color: var(--rating-9);
+  border: 1px solid rgba(177, 213, 128, 0.3);
 }
 
-.rating-badge.average {
-  background: rgba(245, 158, 11, 0.2);
-  color: var(--accent-amber);
+.rating-badge.rating-8 {
+  background: rgba(255, 235, 132, 0.2);
+  color: var(--rating-8);
+  border: 1px solid rgba(255, 235, 132, 0.3);
 }
 
-.rating-badge.below {
-  background: rgba(239, 68, 68, 0.2);
-  color: var(--accent-red);
+.rating-badge.rating-7 {
+  background: rgba(252, 191, 123, 0.2);
+  color: var(--rating-7);
+  border: 1px solid rgba(252, 191, 123, 0.3);
+}
+
+.rating-badge.rating-6 {
+  background: rgba(250, 148, 115, 0.2);
+  color: var(--rating-6);
+  border: 1px solid rgba(250, 148, 115, 0.3);
+}
+
+.rating-badge.rating-5 {
+  background: rgba(248, 105, 107, 0.2);
+  color: var(--rating-5);
+  border: 1px solid rgba(248, 105, 107, 0.3);
+}
+
+.rating-badge.rating-4 {
+  background: rgba(237, 85, 87, 0.2);
+  color: var(--rating-4);
+  border: 1px solid rgba(237, 85, 87, 0.3);
+}
+
+.rating-badge.rating-3 {
+  background: rgba(226, 65, 67, 0.2);
+  color: var(--rating-3);
+  border: 1px solid rgba(226, 65, 67, 0.3);
+}
+
+.rating-badge.rating-2 {
+  background: rgba(214, 45, 47, 0.2);
+  color: var(--rating-2);
+  border: 1px solid rgba(214, 45, 47, 0.3);
+}
+
+.rating-badge.rating-1 {
+  background: rgba(201, 24, 26, 0.2);
+  color: var(--rating-1);
+  border: 1px solid rgba(201, 24, 26, 0.3);
 }
 
 /* ─── Charts Container ─── */
