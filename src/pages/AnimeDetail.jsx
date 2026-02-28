@@ -376,7 +376,7 @@ function AnimeDetail() {
                                         <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Rewatch</span>
                                         <div
                                             style={{ fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}
-                                            title={anime.end_date ? `${anime.rewatch_count}. Rewatch; ${new Date(anime.end_date).toLocaleDateString('cs-CZ', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\s/g, '')}` : ''}
+                                            title={anime.rewatches && anime.rewatches.length > 0 ? anime.rewatches.join('\n') : (anime.end_date ? `${anime.rewatch_count}. Rewatch; ${new Date(anime.end_date).toLocaleDateString('cs-CZ', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\s/g, '')}` : '')}
                                         >
                                             {anime.rewatch_count}x
                                             <span style={{
