@@ -1,10 +1,11 @@
 import { useState, useEffect, useMemo } from 'react'
 import { createPortal } from 'react-dom'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { loadData, STORAGE_KEYS } from '../utils/dataStore'
 
 function AnimeList() {
     const navigate = useNavigate()
+    const location = useLocation()
     const [animeList, setAnimeList] = useState([])
     const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
@@ -22,6 +23,22 @@ function AnimeList() {
                 const indexedData = data.map((item, idx) => ({ ...item, originalIndex: idx + 1 }))
                 setAnimeList(indexedData)
                 setLoading(false)
+
+                // Check URL for search parameter and auto-open modal if exact match
+                const searchParams = new URLSearchParams(location.search)
+                const searchQ = searchParams.get('search')
+                if (searchQ) {
+                    setSearchTerm(searchQ)
+                    // Reset StatusFilter if searching from another tab
+                    setStatusFilter('all')
+                    const exactMatch = indexedData.find(a =>
+                        a.name.toLowerCase() === searchQ.toLowerCase() ||
+                        (a.series && a.series.toLowerCase() === searchQ.toLowerCase())
+                    )
+                    if (exactMatch) {
+                        setExpandedImage(exactMatch)
+                    }
+                }
 
                 // Skok na uloženou pozici (Scroll restoration)
                 setTimeout(() => {
