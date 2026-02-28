@@ -336,9 +336,9 @@ function AnimeDetail() {
                             )}
 
                             <div style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
-                                gap: 'var(--spacing-sm) var(--spacing-lg)',
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                gap: 'var(--spacing-md) var(--spacing-xl)',
                                 flex: 1
                             }}>
                                 <div>
