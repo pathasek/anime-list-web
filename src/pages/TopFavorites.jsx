@@ -5,6 +5,7 @@ import './TopFavorites.css';
 const TopFavorites = () => {
     const [data, setData] = useState({ top10_anime: [], hm_anime: [], top10_chars: [] });
     const [animeMap, setAnimeMap] = useState({});
+    const [rawAnimeList, setRawAnimeList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -12,8 +13,8 @@ const TopFavorites = () => {
         const fetchData = async () => {
             try {
                 const [favoritesRes, animeListRes] = await Promise.all([
-                    fetch('data/top_favorites.json'),
-                    fetch('data/anime_list.json')
+                    fetch(`data/top_favorites.json?v=${Date.now()}`),
+                    fetch(`data/anime_list.json?v=${Date.now()}`)
                 ]);
 
                 if (!favoritesRes.ok || !animeListRes.ok) throw new Error('Failed to fetch data');
@@ -25,10 +26,12 @@ const TopFavorites = () => {
                 const map = {};
                 animeListData.forEach(anime => {
                     map[anime.name.toLowerCase()] = anime;
+                    // Also potentially create a series fallback map...
                 });
 
                 setData(favData);
                 setAnimeMap(map);
+                setRawAnimeList(animeListData);
                 setLoading(false);
             } catch (err) {
                 setError(err.message);
@@ -65,10 +68,53 @@ const TopFavorites = () => {
                         // as Top10 Anime don't have direct embedded image extractions right now (they are grouped shape backgrounds)
                         // Or if they do, we will use it natively.
                         let mappedAnime = null;
+                        let seriesItems = [];
+
                         if (isAnimeLists) {
                             mappedAnime = animeMap[name.toLowerCase()];
+
+                            // If explicit map fails, try to find matches where `series` equals `name`
+                            if (!mappedAnime) {
+                                seriesItems = rawAnimeList.filter(a => (a.series && a.series.toLowerCase() === name.toLowerCase()));
+                                if (seriesItems.length > 0) {
+                                    mappedAnime = seriesItems[0];
+                                }
+                            } else {
+                                // Get all items in the series if mappedAnime has a series
+                                if (mappedAnime.series) {
+                                    seriesItems = rawAnimeList.filter(a => a.series === mappedAnime.series);
+                                } else {
+                                    seriesItems = [mappedAnime];
+                                }
+                            }
+
                             if (mappedAnime && mappedAnime.thumbnail) {
                                 finalImage = finalImage || `${mappedAnime.thumbnail}`;
+                            }
+                        }
+
+                        // Calculate average FH
+                        let fhDisplay = null;
+                        if (isAnimeLists && seriesItems.length > 0) {
+                            const ratedItems = seriesItems.filter(a => a.rating && a.rating !== 'X');
+                            if (ratedItems.length > 0) {
+                                const sum = ratedItems.reduce((acc, curr) => acc + parseFloat(curr.rating), 0);
+                                const avg = sum / ratedItems.length;
+                                fhDisplay = Number.isInteger(avg) ? avg.toString() : avg.toFixed(1);
+                            }
+                        } else if (isAnimeLists && mappedAnime && mappedAnime.rating) {
+                            fhDisplay = mappedAnime.rating !== 'X' ? mappedAnime.rating : null;
+                        }
+
+                        // Determine routing Link
+                        let detailLink = null;
+                        if (isAnimeLists) {
+                            if (seriesItems.length > 1) {
+                                // If it's a series with multiple entries, link to the AnimeList with a search filter so they can pick
+                                detailLink = `/anime?search=${encodeURIComponent(mappedAnime.series)}`;
+                            } else if (mappedAnime) {
+                                // If it's a single anime, go directly to AnimeDetail
+                                detailLink = `/anime/${encodeURIComponent(mappedAnime.name)}`;
                             }
                         }
 
@@ -92,13 +138,15 @@ const TopFavorites = () => {
                                                         MAL
                                                     </a>
                                                 )}
-                                                <Link to={`/anime?search=${encodeURIComponent(mappedAnime ? (mappedAnime.series || mappedAnime.name) : name)}`} className="hover-btn detail-btn" title="View in Anime List">
-                                                    Detail
-                                                </Link>
+                                                {detailLink && (
+                                                    <Link to={detailLink} className="hover-btn detail-btn" title="View Detail">
+                                                        Detail
+                                                    </Link>
+                                                )}
                                             </div>
                                             <div className="hover-actions-bottom">
-                                                {mappedAnime && mappedAnime.rating ? (
-                                                    <span className="hover-fh">FH {mappedAnime.rating}/10</span>
+                                                {fhDisplay ? (
+                                                    <span className="hover-fh">FH {fhDisplay}/10</span>
                                                 ) : null}
                                             </div>
                                         </>
