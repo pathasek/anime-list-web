@@ -218,7 +218,8 @@
       "shape_name": "Top10_Char_1",
       "data": {
         "CHAR_ID": "118735",
-        "ANIME_NAME": "Re:Zero -Starting Life in Another World-"
+        "ANIME_NAME": "Re:Zero -Starting Life in Another World-",
+        "NAME": "Re:Zero -Starting Life in Another World-"
       },
       "image_file": "images/top_favorites/Top10_Char_1.jpg"
     },
@@ -226,7 +227,8 @@
       "shape_name": "Top10_Char_2",
       "data": {
         "CHAR_ID": "1534",
-        "ANIME_NAME": "Higurashi: When They Cry"
+        "ANIME_NAME": "Higurashi: When They Cry",
+        "NAME": "Higurashi: When They Cry"
       },
       "image_file": "images/top_favorites/Top10_Char_2.jpg"
     },
@@ -234,7 +236,8 @@
       "shape_name": "Top10_Char_3",
       "data": {
         "CHAR_ID": "35252",
-        "ANIME_NAME": "Steins;Gate"
+        "ANIME_NAME": "Steins",
+        "NAME": "Steins"
       },
       "image_file": "images/top_favorites/Top10_Char_3.jpg"
     },
@@ -242,7 +245,8 @@
       "shape_name": "Top10_Char_4",
       "data": {
         "CHAR_ID": "417",
-        "ANIME_NAME": "Code Geass: Lelouch of the Rebellion"
+        "ANIME_NAME": "Code Geass: Lelouch of the Rebellion",
+        "NAME": "Code Geass: Lelouch of the Rebellion"
       },
       "image_file": "images/top_favorites/Top10_Char_4.jpg"
     },
@@ -250,7 +254,8 @@
       "shape_name": "Top10_Char_5",
       "data": {
         "CHAR_ID": "80",
-        "ANIME_NAME": "Death Note"
+        "ANIME_NAME": "Death Note",
+        "NAME": "Death Note"
       },
       "image_file": "images/top_favorites/Top10_Char_5.jpg"
     },
@@ -258,7 +263,8 @@
       "shape_name": "Top10_Char_6",
       "data": {
         "CHAR_ID": "81853",
-        "ANIME_NAME": "Death Parade"
+        "ANIME_NAME": "Death Parade",
+        "NAME": "Death Parade"
       },
       "image_file": "images/top_favorites/Top10_Char_6.jpg"
     },
@@ -266,7 +272,8 @@
       "shape_name": "Top10_Char_7",
       "data": {
         "CHAR_ID": "213429",
-        "ANIME_NAME": "Shangri-La Frontier"
+        "ANIME_NAME": "Shangri-La Frontier",
+        "NAME": "Shangri-La Frontier"
       },
       "image_file": "images/top_favorites/Top10_Char_7.jpg"
     },
@@ -274,7 +281,8 @@
       "shape_name": "Top10_Char_8",
       "data": {
         "CHAR_ID": "163811",
-        "ANIME_NAME": "Ascendance of a Bookworm"
+        "ANIME_NAME": "Ascendance of a Bookworm",
+        "NAME": "Ascendance of a Bookworm"
       },
       "image_file": "images/top_favorites/Top10_Char_8.jpg"
     },
@@ -282,7 +290,8 @@
       "shape_name": "Top10_Char_9",
       "data": {
         "CHAR_ID": "206276",
-        "ANIME_NAME": "Bocchi the Rock!"
+        "ANIME_NAME": "Bocchi the Rock!",
+        "NAME": "Bocchi the Rock!"
       },
       "image_file": "images/top_favorites/Top10_Char_9.jpg"
     },
@@ -290,7 +299,8 @@
       "shape_name": "Top10_Char_10",
       "data": {
         "CHAR_ID": "36828",
-        "ANIME_NAME": "Sword Art Online"
+        "ANIME_NAME": "Sword Art Online",
+        "NAME": "Sword Art Online"
       },
       "image_file": "images/top_favorites/Top10_Char_10.jpg"
     }

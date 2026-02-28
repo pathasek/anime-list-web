@@ -64,11 +64,11 @@ const TopFavorites = () => {
                         // If it's an anime, try to grab its poster from the main anime_list map instead, 
                         // as Top10 Anime don't have direct embedded image extractions right now (they are grouped shape backgrounds)
                         // Or if they do, we will use it natively.
+                        let mappedAnime = null;
                         if (isAnimeLists) {
-                            // To keep things simple visually, sometimes posters from anime list look great for anime items
-                            const mappedAnime = animeMap[name.toLowerCase()];
-                            if (mappedAnime && mappedAnime.image_file) {
-                                finalImage = finalImage || `${mappedAnime.image_file}`;
+                            mappedAnime = animeMap[name.toLowerCase()];
+                            if (mappedAnime && mappedAnime.thumbnail) {
+                                finalImage = finalImage || `${mappedAnime.thumbnail}`;
                             }
                         }
 
