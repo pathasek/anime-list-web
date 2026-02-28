@@ -36,6 +36,7 @@ function PlanToWatch() {
         let totalMinutes = 0
         let airingCount = 0
         let releasedCount = 0
+        let upcomingCount = 0
         const types = {}
 
         planList.forEach(item => {
@@ -51,6 +52,7 @@ function PlanToWatch() {
 
             if (item.notes === 'AIRING!') airingCount++
             else if (item.notes === 'Vydáno') releasedCount++
+            else if (item.notes === 'Nadcházející') upcomingCount++
 
             const type = item.type || 'Unknown'
             types[type] = (types[type] || 0) + 1
@@ -65,6 +67,7 @@ function PlanToWatch() {
             estimatedDays,
             airingCount,
             releasedCount,
+            upcomingCount,
             types
         }
     }, [planList])
@@ -87,6 +90,8 @@ function PlanToWatch() {
             result = result.filter(item => item.notes === 'AIRING!')
         } else if (statusFilter === 'released') {
             result = result.filter(item => item.notes === 'Vydáno')
+        } else if (statusFilter === 'upcoming') {
+            result = result.filter(item => item.notes === 'Nadcházející')
         }
 
         // Sort
@@ -255,6 +260,12 @@ function PlanToWatch() {
                     >
                         Vydáno
                     </button>
+                    <button
+                        className={`filter-btn ${statusFilter === 'upcoming' ? 'active' : ''}`}
+                        onClick={() => setStatusFilter('upcoming')}
+                    >
+                        ⏳ Nadcházející
+                    </button>
                 </div>
             </div>
 
@@ -309,6 +320,10 @@ function PlanToWatch() {
                                         }}>
                                             🔴 AIRING
                                         </span>
+                                    ) : item.notes === 'Nadcházející' ? (
+                                        <span style={{ color: 'var(--accent-cyan)', fontSize: '0.875rem', fontWeight: '500' }}>
+                                            ⏳ Nadcházející
+                                        </span>
                                     ) : (
                                         <span style={{ color: 'var(--accent-emerald)', fontSize: '0.875rem' }}>
                                             ✓ Vydáno
@@ -344,6 +359,10 @@ function PlanToWatch() {
                                             fontWeight: '600'
                                         }}>
                                             🔴 AIRING
+                                        </span>
+                                    ) : item.notes === 'Nadcházející' ? (
+                                        <span style={{ color: 'var(--accent-cyan)', fontSize: '0.75rem', fontWeight: '600' }}>
+                                            ⏳ NADCHÁZEJÍCÍ
                                         </span>
                                     ) : (
                                         <span style={{ color: 'var(--accent-emerald)', fontSize: '0.75rem', fontWeight: '600' }}>
