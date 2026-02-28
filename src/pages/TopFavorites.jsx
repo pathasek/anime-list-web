@@ -83,7 +83,7 @@ const TopFavorites = () => {
                             }
 
                             if (mappedAnime && mappedAnime.thumbnail) {
-                                finalImage = finalImage || `${mappedAnime.thumbnail}`;
+                                finalImage = finalImage || `${mappedAnime.thumbnail.replace(/#/g, '%23')}`;
                             }
                         }
 

@@ -415,7 +415,7 @@ function AnimeList() {
                                             }}
                                         >
                                             <img
-                                                src={anime.thumbnail}
+                                                src={anime.thumbnail.replace(/#/g, '%23')}
                                                 alt={anime.name}
                                                 style={{
                                                     width: '80px',
@@ -562,7 +562,7 @@ function AnimeList() {
                                 <div style={{ minWidth: '80px', cursor: 'pointer' }} onClick={(e) => { e.stopPropagation(); anime.thumbnail && setExpandedImage(anime.thumbnail); }}>
                                     {anime.thumbnail ? (
                                         <img
-                                            src={anime.thumbnail}
+                                            src={anime.thumbnail.replace(/#/g, '%23')}
                                             alt={anime.name}
                                             style={{
                                                 width: '80px', height: '45px', objectFit: 'cover', backgroundColor: 'rgba(0,0,0,0.1)',
