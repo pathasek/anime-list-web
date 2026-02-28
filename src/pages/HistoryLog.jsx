@@ -414,23 +414,24 @@ function HistoryLog() {
                     }}>
                         {/* Current Streak */}
                         <div style={{
-                            display: 'flex', flexDirection: 'column', alignItems: 'center',
-                            padding: 'var(--spacing-sm) var(--spacing-lg)',
+                            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                            padding: 'var(--spacing-md) var(--spacing-lg)',
                             background: watchStreak.current > 0
                                 ? (watchStreak.current >= watchStreak.longest
                                     ? 'linear-gradient(135deg, rgba(16,185,129,0.15), rgba(16,185,129,0.05))'
                                     : 'linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05))')
                                 : 'transparent',
                             position: 'relative',
-                            minWidth: '130px',
-                            flex: 1 // Allow flexible width
+                            minWidth: '140px',
+                            minHeight: '110px',
+                            flex: 1
                         }}>
-                            <span style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px', textAlign: 'center' }}>
+                            <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px', textAlign: 'center', fontWeight: 'bold' }}>
                                 🔥 Aktuální Streak
                             </span>
                             <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
                                 <span style={{
-                                    fontSize: '1.8rem', fontWeight: '800', // Slightly smaller for mobile safety
+                                    fontSize: '1.6rem', fontWeight: '800',
                                     color: watchStreak.current >= watchStreak.longest ? 'var(--accent-emerald)' : 'var(--accent-amber)'
                                 }}>
                                     {watchStreak.current}
@@ -440,40 +441,43 @@ function HistoryLog() {
                                 </span>
                             </div>
                             {watchStreak.currentStart && (
-                                <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', marginTop: '2px', textAlign: 'center' }}>
+                                <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', marginTop: '4px', textAlign: 'center' }}>
                                     {watchStreak.currentStart.toLocaleDateString('cs-CZ')} – {watchStreak.currentEnd.toLocaleDateString('cs-CZ')}
                                 </span>
                             )}
-                            {/* Progress bar: current vs longest */}
-                            {watchStreak.longest > 0 && (
-                                <div style={{
-                                    width: '100%', height: '3px', background: 'rgba(255,255,255,0.1)',
-                                    borderRadius: '2px', marginTop: '6px', overflow: 'hidden'
-                                }}>
+                            {/* Progress bar spacer or bar */}
+                            <div style={{ width: '100%', height: '3px', marginTop: '8px', position: 'relative' }}>
+                                {watchStreak.longest > 0 && watchStreak.current > 0 && (
                                     <div style={{
-                                        width: `${Math.min(100, (watchStreak.current / watchStreak.longest) * 100)}%`,
-                                        height: '100%',
-                                        background: watchStreak.current >= watchStreak.longest
-                                            ? 'var(--accent-emerald)' : 'var(--accent-amber)',
-                                        borderRadius: '2px',
-                                        transition: 'width 0.5s ease'
-                                    }} />
-                                </div>
-                            )}
+                                        width: '100%', height: '100%', background: 'rgba(255,255,255,0.05)',
+                                        borderRadius: '2px', overflow: 'hidden'
+                                    }}>
+                                        <div style={{
+                                            width: `${Math.min(100, (watchStreak.current / watchStreak.longest) * 100)}%`,
+                                            height: '100%',
+                                            background: watchStreak.current >= watchStreak.longest
+                                                ? 'var(--accent-emerald)' : 'var(--accent-amber)',
+                                            borderRadius: '2px',
+                                            transition: 'width 0.5s ease'
+                                        }} />
+                                    </div>
+                                )}
+                            </div>
                         </div>
                         <div style={{ width: '1px', background: 'var(--border-color)', flexShrink: 0 }} />
                         {/* Longest Streak */}
                         <div style={{
-                            display: 'flex', flexDirection: 'column', alignItems: 'center',
-                            padding: 'var(--spacing-sm) var(--spacing-lg)',
-                            minWidth: '130px',
-                            flex: 1 // Allow flexible width
+                            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                            padding: 'var(--spacing-md) var(--spacing-lg)',
+                            minWidth: '140px',
+                            minHeight: '110px',
+                            flex: 1
                         }}>
-                            <span style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px', textAlign: 'center' }}>
+                            <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px', textAlign: 'center', fontWeight: 'bold' }}>
                                 🏆 Nejdelší Streak
                             </span>
                             <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                                <span style={{ fontSize: '1.4rem', fontWeight: '700', color: 'var(--text-primary)' }}>
+                                <span style={{ fontSize: '1.6rem', fontWeight: '800', color: 'var(--text-primary)' }}>
                                     {watchStreak.longest}
                                 </span>
                                 <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
@@ -481,10 +485,12 @@ function HistoryLog() {
                                 </span>
                             </div>
                             {watchStreak.longestStart && (
-                                <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', marginTop: '2px', textAlign: 'center' }}>
+                                <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', marginTop: '4px', textAlign: 'center' }}>
                                     {watchStreak.longestStart.toLocaleDateString('cs-CZ')} – {watchStreak.longestEnd.toLocaleDateString('cs-CZ')}
                                 </span>
                             )}
+                            {/* Spacer to match height if no bar */}
+                            <div style={{ width: '100%', height: '3px', marginTop: '8px' }} />
                         </div>
                     </div>
 
@@ -660,6 +666,17 @@ function HistoryLog() {
                                         >
                                             {entry.name}
                                         </Link>
+                                        {entry.rewatch && (
+                                            <span style={{
+                                                marginLeft: '8px',
+                                                fontSize: '0.85rem',
+                                                fontStyle: 'italic',
+                                                color: 'rgba(255, 255, 255, 0.5)',
+                                                fontWeight: 'normal'
+                                            }}>
+                                                ({entry.rewatch}. Rewatch)
+                                            </span>
+                                        )}
                                     </div>
                                     <div style={{
                                         display: 'flex',

@@ -348,9 +348,9 @@ function AnimeDetail() {
                                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Datum vydání</span>
                                     <div style={{ fontWeight: '500' }}>{anime.release_date ? new Date(anime.release_date).toLocaleDateString('cs-CZ') : 'N/A'}</div>
                                 </div>
-                                <div>
+                                <div style={{ minWidth: '150px' }}>
                                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Sledováno</span>
-                                    <div style={{ fontWeight: '500' }}>
+                                    <div style={{ fontWeight: '500', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                         {(() => {
                                             const start = anime.start_date && !isNaN(new Date(anime.start_date).getTime()) ? new Date(anime.start_date).toLocaleDateString('cs-CZ') : '?';
                                             const end = anime.end_date && !isNaN(new Date(anime.end_date).getTime()) ? new Date(anime.end_date).toLocaleDateString('cs-CZ') : '?';
@@ -362,6 +362,29 @@ function AnimeDetail() {
                                         })()}
                                     </div>
                                 </div>
+                                {anime.rewatch_count > 0 && (
+                                    <div>
+                                        <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Rewatch</span>
+                                        <div
+                                            style={{ fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}
+                                            title={anime.end_date ? `Naposledy sledováno: ${new Date(anime.end_date).toLocaleDateString('cs-CZ')}` : ''}
+                                        >
+                                            {anime.rewatch_count}. Rewatch
+                                            <span style={{
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                width: '16px',
+                                                height: '16px',
+                                                borderRadius: '50%',
+                                                background: 'var(--accent-primary)',
+                                                color: 'white',
+                                                fontSize: '0.65rem',
+                                                cursor: 'help'
+                                            }}>?</span>
+                                        </div>
+                                    </div>
+                                )}
                                 <div>
                                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Dabing</span>
                                     <div style={{ fontWeight: '500' }}>{anime.dub || 'N/A'}</div>

@@ -26,7 +26,6 @@ const TopFavorites = () => {
                 const map = {};
                 animeListData.forEach(anime => {
                     map[anime.name.toLowerCase()] = anime;
-                    // Also potentially create a series fallback map...
                 });
 
                 setData(favData);
@@ -64,23 +63,18 @@ const TopFavorites = () => {
                         const name = item.data.NAME || item.data.ANIME_NAME;
                         let finalImage = item.image_file ? `${item.image_file}` : null;
 
-                        // If it's an anime, try to grab its poster from the main anime_list map instead, 
-                        // as Top10 Anime don't have direct embedded image extractions right now (they are grouped shape backgrounds)
-                        // Or if they do, we will use it natively.
                         let mappedAnime = null;
                         let seriesItems = [];
 
                         if (isAnimeLists) {
                             mappedAnime = animeMap[name.toLowerCase()];
 
-                            // If explicit map fails, try to find matches where `series` equals `name`
                             if (!mappedAnime) {
                                 seriesItems = rawAnimeList.filter(a => (a.series && a.series.toLowerCase() === name.toLowerCase()));
                                 if (seriesItems.length > 0) {
                                     mappedAnime = seriesItems[0];
                                 }
                             } else {
-                                // Get all items in the series if mappedAnime has a series
                                 if (mappedAnime.series) {
                                     seriesItems = rawAnimeList.filter(a => a.series === mappedAnime.series);
                                 } else {
@@ -93,7 +87,6 @@ const TopFavorites = () => {
                             }
                         }
 
-                        // Calculate average FH
                         let fhDisplay = null;
                         let ratedItemsCount = 0;
                         if (isAnimeLists && seriesItems.length > 0) {
@@ -109,19 +102,16 @@ const TopFavorites = () => {
                             ratedItemsCount = fhDisplay ? 1 : 0;
                         }
 
-                        // Determine routing Link
                         let detailLink = null;
                         if (isAnimeLists) {
                             if (mappedAnime) {
-                                // For both series and single anime, we link to AnimeList with the series filter.
-                                // AnimeList's `extractSeriesBaseName` defaults back to `name` if `series` is blank!
                                 const queryTerm = mappedAnime.series || mappedAnime.name;
                                 detailLink = `/anime?series=${encodeURIComponent(queryTerm)}`;
                             }
                         }
 
                         return (
-                            <div className="favorite-card hover-glow" key={item.shape_name}>
+                            <div className={`favorite-card hover-glow ${!isAnimeLists ? 'char-card' : 'anime-card'}`} key={item.shape_name}>
                                 <div className="rank-badge">
                                     {isHM ? 'HM' : `#${index + 1}`}
                                 </div>
@@ -154,11 +144,10 @@ const TopFavorites = () => {
                                         </>
                                     ) : (
                                         <>
-                                            <div className="hover-char-top">
-                                                <span className="hover-char-name">{name}</span>
-                                                {item.data.ANIME_NAME && item.data.ANIME_NAME !== name && (
-                                                    <span className="hover-char-anime">{item.data.ANIME_NAME}</span>
-                                                )}
+                                            <div className="hover-char-top" style={{ marginBottom: 'var(--spacing-md)' }}>
+                                                <span className="hover-char-anime" style={{ fontWeight: '600', color: 'var(--accent-primary)', fontSize: '1rem' }}>
+                                                    {item.data.ANIME_NAME || 'Unknown Anime'}
+                                                </span>
                                             </div>
                                             <a href={`https://myanimelist.net/character/${item.data.CHAR_ID}`} target="_blank" rel="noopener noreferrer" className="hover-char-link hover-btn">
                                                 MyAnimeList
@@ -180,10 +169,6 @@ const TopFavorites = () => {
 
     return (
         <div className="top-favorites-page fade-in">
-            <div className="page-header mt-8 mb-6">
-                <h1>Top Favorites</h1>
-            </div>
-
             <div className="favorites-content">
                 {renderSection('TOP 10 Anime', data.top10_anime, true)}
                 {renderSection('Honourable Mentions', data.hm_anime, true, true)}

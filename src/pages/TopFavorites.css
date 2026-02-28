@@ -19,7 +19,7 @@
     margin-bottom: 0.5rem;
     text-transform: uppercase;
     letter-spacing: 2px;
-    background: linear-gradient(90deg, var(--accent-color), #ff8a00);
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -33,7 +33,7 @@
 .favorites-content {
     display: flex;
     flex-direction: column;
-    gap: 4rem;
+    gap: 2rem;
 }
 
 .favorites-section {
@@ -75,7 +75,7 @@
 }
 
 .star-icon {
-    color: var(--accent-color);
+    color: var(--accent-primary);
     font-size: 1.2rem;
     animation: pulse 2s infinite;
 }
@@ -107,8 +107,8 @@
 
 .favorite-card:hover {
     transform: translateY(-8px);
-    border-color: var(--accent-color);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(230, 57, 70, 0.2);
+    border-color: var(--accent-primary);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(99, 102, 241, 0.2);
 }
 
 .rank-badge {
@@ -231,8 +231,8 @@
 }
 
 .detail-btn {
-    background: rgba(var(--accent-color-rgb, 230, 57, 70), 0.8);
-    border: 1px solid var(--accent-color);
+    background: rgba(99, 102, 241, 0.8);
+    border: 1px solid var(--accent-primary);
 }
 
 .detail-btn:hover {
@@ -300,7 +300,11 @@
     background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.7) 50%, transparent 100%);
     z-index: 2;
     transform: translateY(0);
-    transition: transform 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.char-card:hover .favorite-info {
+    opacity: 0;
 }
 
 .favorite-name {

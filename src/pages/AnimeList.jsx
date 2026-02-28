@@ -412,14 +412,18 @@ function AnimeList() {
                                                 style={{
                                                     width: '80px',
                                                     height: '45px',
+                                                    minWidth: '80px',
+                                                    minHeight: '45px',
+                                                    aspectRatio: '16/9',
                                                     objectFit: 'cover',
-                                                    backgroundColor: 'rgba(0,0,0,0.1)',
+                                                    backgroundColor: 'rgba(0,0,0,0.3)',
                                                     borderRadius: '4px',
                                                     boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
                                                     transition: 'transform 0.35s ease, box-shadow 0.35s ease',
                                                     cursor: 'zoom-in',
                                                     pointerEvents: 'none',
-                                                    position: 'relative'
+                                                    position: 'relative',
+                                                    display: 'block'
                                                 }}
                                                 loading="lazy"
                                             />
