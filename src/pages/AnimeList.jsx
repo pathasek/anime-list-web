@@ -24,20 +24,13 @@ function AnimeList() {
                 setAnimeList(indexedData)
                 setLoading(false)
 
-                // Check URL for search parameter and auto-open modal if exact match
+                // Check URL for series parameter directly toggle the series filter
                 const searchParams = new URLSearchParams(location.search)
-                const searchQ = searchParams.get('search')
-                if (searchQ) {
-                    setSearchTerm(searchQ)
-                    // Reset StatusFilter if searching from another tab
+                const seriesQ = searchParams.get('series')
+                if (seriesQ) {
+                    setSeriesFilter(seriesQ)
                     setStatusFilter('all')
-                    const exactMatch = indexedData.find(a =>
-                        a.name.toLowerCase() === searchQ.toLowerCase() ||
-                        (a.series && a.series.toLowerCase() === searchQ.toLowerCase())
-                    )
-                    if (exactMatch) {
-                        setExpandedImage(exactMatch)
-                    }
+                    setTypeFilter('all')
                 }
 
                 // Skok na uloženou pozici (Scroll restoration)

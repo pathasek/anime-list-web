@@ -109,12 +109,11 @@ const TopFavorites = () => {
                         // Determine routing Link
                         let detailLink = null;
                         if (isAnimeLists) {
-                            if (seriesItems.length > 1) {
-                                // If it's a series with multiple entries, link to the AnimeList with a search filter so they can pick
-                                detailLink = `/anime?search=${encodeURIComponent(mappedAnime.series)}`;
-                            } else if (mappedAnime) {
-                                // If it's a single anime, go directly to AnimeDetail
-                                detailLink = `/anime/${encodeURIComponent(mappedAnime.name)}`;
+                            if (mappedAnime) {
+                                // For both series and single anime, we link to AnimeList with the series filter.
+                                // AnimeList's `extractSeriesBaseName` defaults back to `name` if `series` is blank!
+                                const queryTerm = mappedAnime.series || mappedAnime.name;
+                                detailLink = `/anime?series=${encodeURIComponent(queryTerm)}`;
                             }
                         }
 
@@ -124,7 +123,7 @@ const TopFavorites = () => {
                                     {isHM ? 'HM' : `#${index + 1}`}
                                 </div>
                                 {finalImage ? (
-                                    <img src={finalImage} alt={name} className="favorite-image" loading="lazy" />
+                                    <img src={`${finalImage}?v=${Date.now()}`} alt={name} className="favorite-image" loading="lazy" />
                                 ) : (
                                     <div className="favorite-image-placeholder">No Image</div>
                                 )}
@@ -139,14 +138,14 @@ const TopFavorites = () => {
                                                     </a>
                                                 )}
                                                 {detailLink && (
-                                                    <Link to={detailLink} className="hover-btn detail-btn" title="View Detail">
-                                                        Detail
+                                                    <Link to={detailLink} className="hover-btn detail-btn" title="View List">
+                                                        List
                                                     </Link>
                                                 )}
                                             </div>
                                             <div className="hover-actions-bottom">
                                                 {fhDisplay ? (
-                                                    <span className="hover-fh">FH {fhDisplay.toString().replace('.', ',')}/10</span>
+                                                    <span className="hover-fh">FH {fhDisplay.toString().replace('.', ',')}/10 {seriesItems.length > 1 ? '(AVG)' : ''}</span>
                                                 ) : null}
                                             </div>
                                         </>
