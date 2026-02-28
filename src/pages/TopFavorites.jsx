@@ -95,8 +95,10 @@ const TopFavorites = () => {
 
                         // Calculate average FH
                         let fhDisplay = null;
+                        let ratedItemsCount = 0;
                         if (isAnimeLists && seriesItems.length > 0) {
                             const ratedItems = seriesItems.filter(a => a.rating && a.rating !== 'X');
+                            ratedItemsCount = ratedItems.length;
                             if (ratedItems.length > 0) {
                                 const sum = ratedItems.reduce((acc, curr) => acc + parseFloat(curr.rating), 0);
                                 const avg = sum / ratedItems.length;
@@ -104,6 +106,7 @@ const TopFavorites = () => {
                             }
                         } else if (isAnimeLists && mappedAnime && mappedAnime.rating) {
                             fhDisplay = mappedAnime.rating !== 'X' ? mappedAnime.rating : null;
+                            ratedItemsCount = fhDisplay ? 1 : 0;
                         }
 
                         // Determine routing Link
@@ -145,7 +148,7 @@ const TopFavorites = () => {
                                             </div>
                                             <div className="hover-actions-bottom">
                                                 {fhDisplay ? (
-                                                    <span className="hover-fh">FH {fhDisplay.toString().replace('.', ',')}/10 {seriesItems.length > 1 ? '(AVG)' : ''}</span>
+                                                    <span className="hover-fh">FH {fhDisplay.toString().replace('.', ',')}/10 {ratedItemsCount > 1 ? '(AVG)' : ''}</span>
                                                 ) : null}
                                             </div>
                                         </>
