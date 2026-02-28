@@ -156,6 +156,9 @@ const TopFavorites = () => {
                                         <>
                                             <div className="hover-char-top">
                                                 <span className="hover-char-name">{name}</span>
+                                                {item.data.ANIME_NAME && item.data.ANIME_NAME !== name && (
+                                                    <span className="hover-char-anime">{item.data.ANIME_NAME}</span>
+                                                )}
                                             </div>
                                             <a href={`https://myanimelist.net/character/${item.data.CHAR_ID}`} target="_blank" rel="noopener noreferrer" className="hover-char-link hover-btn">
                                                 MyAnimeList
@@ -179,7 +182,6 @@ const TopFavorites = () => {
         <div className="top-favorites-page fade-in">
             <div className="page-header mt-8 mb-6">
                 <h1>Top Favorites</h1>
-                <p className="subtitle">Mých oblíbených TOP 10 Anime a Postav</p>
             </div>
 
             <div className="favorites-content">

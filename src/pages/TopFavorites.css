@@ -256,7 +256,8 @@
 
 .hover-char-top {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     margin-top: 1rem;
 }
 
@@ -266,6 +267,15 @@
     color: white;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
     text-align: center;
+}
+
+.hover-char-anime {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+    text-align: center;
+    margin-top: 0.25rem;
 }
 
 .hover-char-link {
