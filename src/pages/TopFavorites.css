@@ -169,6 +169,115 @@
     font-size: 0.9rem;
 }
 
+.favorite-hover-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem;
+}
+
+/* On mobile, standard hover doesn't exist, we can show it lightly or rely on tap */
+@media (hover: hover) {
+    .favorite-card:hover .favorite-hover-overlay {
+        opacity: 1;
+    }
+}
+
+@media (hover: none) {
+
+    /* Always slightly visible on touch devices so users know it's there */
+    .favorite-hover-overlay {
+        opacity: 1;
+        background: rgba(0, 0, 0, 0.3);
+        backdrop-filter: none;
+    }
+}
+
+.hover-actions-top {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.hover-btn {
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(4px);
+}
+
+.mal-btn {
+    background: rgba(46, 81, 162, 0.8);
+    border: 1px solid #2e51a2;
+}
+
+.mal-btn:hover {
+    background: #2e51a2;
+    transform: scale(1.05);
+}
+
+.detail-btn {
+    background: rgba(var(--accent-color-rgb, 230, 57, 70), 0.8);
+    border: 1px solid var(--accent-color);
+}
+
+.detail-btn:hover {
+    background: var(--accent-color);
+    transform: scale(1.05);
+}
+
+.hover-actions-bottom {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 2.5rem;
+    /* above the gradient info box */
+}
+
+.hover-fh {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.hover-char-top {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.hover-char-name {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    text-align: center;
+}
+
+.hover-char-link {
+    align-self: center;
+    margin-bottom: 3rem;
+    background: rgba(46, 81, 162, 0.8);
+    padding: 0.5rem 1rem;
+    border: 1px solid #2e51a2;
+}
+
+.hover-char-link:hover {
+    background: #2e51a2;
+    transform: scale(1.05);
+}
+
 .favorite-info {
     position: absolute;
     bottom: 0;

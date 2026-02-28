@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import './TopFavorites.css';
 
 const TopFavorites = () => {
@@ -81,6 +82,38 @@ const TopFavorites = () => {
                                 ) : (
                                     <div className="favorite-image-placeholder">No Image</div>
                                 )}
+
+                                <div className="favorite-hover-overlay">
+                                    {isAnimeLists ? (
+                                        <>
+                                            <div className="hover-actions-top">
+                                                {mappedAnime && mappedAnime.mal_url && (
+                                                    <a href={mappedAnime.mal_url} target="_blank" rel="noopener noreferrer" className="hover-btn mal-btn" title="View on MyAnimeList">
+                                                        MAL
+                                                    </a>
+                                                )}
+                                                <Link to={`/anime?search=${encodeURIComponent(mappedAnime ? (mappedAnime.series || mappedAnime.name) : name)}`} className="hover-btn detail-btn" title="View in Anime List">
+                                                    Detail
+                                                </Link>
+                                            </div>
+                                            <div className="hover-actions-bottom">
+                                                {mappedAnime && mappedAnime.rating ? (
+                                                    <span className="hover-fh">FH {mappedAnime.rating}/10</span>
+                                                ) : null}
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="hover-char-top">
+                                                <span className="hover-char-name">{name}</span>
+                                            </div>
+                                            <a href={`https://myanimelist.net/character/${item.data.CHAR_ID}`} target="_blank" rel="noopener noreferrer" className="hover-char-link hover-btn">
+                                                MyAnimeList
+                                            </a>
+                                        </>
+                                    )}
+                                </div>
+
                                 <div className="favorite-info">
                                     <h3 className="favorite-name">{name}</h3>
                                 </div>

@@ -5,70 +5,70 @@
       "data": {
         "NAME": "Code Geass"
       },
-      "image_file": null
+      "image_file": "images/top_favorites/Jikan_Code Geass.jpg"
     },
     {
       "shape_name": "Top10_Anime_2",
       "data": {
         "NAME": "Attack on Titan"
       },
-      "image_file": null
+      "image_file": "images/top_favorites/Jikan_Attack on Titan.jpg"
     },
     {
       "shape_name": "Top10_Anime_3",
       "data": {
         "NAME": "Re:Zero -Starting Life in Another World-"
       },
-      "image_file": null
+      "image_file": "images/top_favorites/Jikan_ReZero -Starting Life in Another World-.jpg"
     },
     {
       "shape_name": "Top10_Anime_4",
       "data": {
         "NAME": "Steins;Gate"
       },
-      "image_file": null
+      "image_file": "images/top_favorites/Jikan_SteinsGate.jpg"
     },
     {
       "shape_name": "Top10_Anime_5",
       "data": {
         "NAME": "Frieren: Beyond Journey's End"
       },
-      "image_file": null
+      "image_file": "images/top_favorites/Jikan_Frieren Beyond Journeys End.jpg"
     },
     {
       "shape_name": "Top10_Anime_6",
       "data": {
         "NAME": "Sword Art Online"
       },
-      "image_file": null
+      "image_file": "images/top_favorites/Jikan_Sword Art Online.jpg"
     },
     {
       "shape_name": "Top10_Anime_7",
       "data": {
         "NAME": "Violet Evergarden"
       },
-      "image_file": null
+      "image_file": "images/top_favorites/Jikan_Violet Evergarden.jpg"
     },
     {
       "shape_name": "Top10_Anime_8",
       "data": {
         "NAME": "Fate"
       },
-      "image_file": null
+      "image_file": "images/top_favorites/Jikan_Fate.jpg"
     },
     {
       "shape_name": "Top10_Anime_9",
       "data": {
         "NAME": "Made in Abyss"
       },
-      "image_file": null
+      "image_file": "images/top_favorites/Jikan_Made in Abyss.jpg"
     },
     {
       "shape_name": "Top10_Anime_10",
       "data": {
         "NAME": "Tokyo Magnitude 8.0"
       },
-      "image_file": null
+      "image_file": "images/top_favorites/Jikan_Tokyo Magnitude 80.jpg"
     }
   ],
   "hm_anime": [
@@ -234,7 +234,7 @@
       "shape_name": "Top10_Char_3",
       "data": {
         "CHAR_ID": "35252",
-        "ANIME_NAME": "Steins"
+        "ANIME_NAME": "Steins;Gate"
       },
       "image_file": "images/top_favorites/Top10_Char_3.jpg"
     },
