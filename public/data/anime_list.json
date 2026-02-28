@@ -2668,8 +2668,8 @@
   },
   {
     "index": "128.",
-    "thumbnail": null,
-    "name": "The Beginning After the End",
+    "thumbnail": "images/anime/The Beginning After the End, S01.jpg",
+    "name": "The Beginning After the End, S01",
     "type": "TV",
     "studio": "Studio A-CAT",
     "release_date": "2025-04-02T00:00:00",
@@ -8044,7 +8044,7 @@
   },
   {
     "index": "384.",
-    "thumbnail": null,
+    "thumbnail": "images/anime/Dorohedoro, S01.jpg",
     "name": "Dorohedoro, S01",
     "type": "TV",
     "studio": "MAPPA",

@@ -36,18 +36,6 @@
     "date": "2026-02-23T00:00:00"
   },
   {
-    "name": "Psycho-Pass, S03",
-    "episodes": "(1x) EP 8",
-    "time": "46 min",
-    "date": "2026-02-22T00:00:00"
-  },
-  {
-    "name": "Psycho-Pass, S03: First Inspector",
-    "episodes": "(1x) EP 1",
-    "time": "134 min (2,2 hod)",
-    "date": "2026-02-22T00:00:00"
-  },
-  {
     "name": "Fate/strange Fake",
     "episodes": "(1x) EP 8",
     "time": "23 min",
@@ -63,6 +51,18 @@
     "name": "Hell's Paradise, S02",
     "episodes": "(1x) EP 7",
     "time": "23 min",
+    "date": "2026-02-22T00:00:00"
+  },
+  {
+    "name": "Psycho-Pass, S03",
+    "episodes": "(1x) EP 8",
+    "time": "46 min",
+    "date": "2026-02-22T00:00:00"
+  },
+  {
+    "name": "Psycho-Pass, S03: First Inspector",
+    "episodes": "(1x) EP 1",
+    "time": "134 min (2,2 hod)",
     "date": "2026-02-22T00:00:00"
   },
   {
@@ -126,18 +126,6 @@
     "date": "2026-02-16T00:00:00"
   },
   {
-    "name": "Dead Dead Demons Dededede Destruction Episode 0",
-    "episodes": "(1x) EP 1",
-    "time": "24 min",
-    "date": "2026-02-15T00:00:00"
-  },
-  {
-    "name": "Dead Dead Demons Dededede Destruction",
-    "episodes": "(7x) EP 11-17",
-    "time": "170 min (2,8 hod)",
-    "date": "2026-02-15T00:00:00"
-  },
-  {
     "name": "Fate/strange Fake",
     "episodes": "(1x) EP 7",
     "time": "23 min",
@@ -158,6 +146,18 @@
   {
     "name": "Frieren: Beyond Journey's End, S02",
     "episodes": "(1x) EP 5",
+    "time": "24 min",
+    "date": "2026-02-15T00:00:00"
+  },
+  {
+    "name": "Dead Dead Demons Dededede Destruction",
+    "episodes": "(7x) EP 11-17",
+    "time": "170 min (2,8 hod)",
+    "date": "2026-02-15T00:00:00"
+  },
+  {
+    "name": "Dead Dead Demons Dededede Destruction Episode 0",
+    "episodes": "(1x) EP 1",
     "time": "24 min",
     "date": "2026-02-15T00:00:00"
   },
@@ -186,15 +186,15 @@
     "date": "2026-02-13T00:00:00"
   },
   {
-    "name": "Magi: Adventures of Sinbad",
-    "episodes": "(13x) EP 1-13",
-    "time": "313 min (5,2 hod)",
-    "date": "2026-02-12T00:00:00"
-  },
-  {
     "name": "Jujutsu Kaisen: The Culling Game Part 1",
     "episodes": "(1x) EP 7",
     "time": "23 min",
+    "date": "2026-02-12T00:00:00"
+  },
+  {
+    "name": "Magi: Adventures of Sinbad",
+    "episodes": "(13x) EP 1-13",
+    "time": "313 min (5,2 hod)",
     "date": "2026-02-12T00:00:00"
   },
   {
@@ -214,12 +214,6 @@
     "episodes": "(6x) EP 7-12",
     "time": "147 min (2,4 hod)",
     "date": "2026-02-09T00:00:00"
-  },
-  {
-    "name": "Magi: The Kingdom of Magic",
-    "episodes": "(6x) EP 1-6",
-    "time": "147 min (2,4 hod)",
-    "date": "2026-02-08T00:00:00"
   },
   {
     "name": "Fate/strange Fake",
@@ -246,6 +240,12 @@
     "date": "2026-02-08T00:00:00"
   },
   {
+    "name": "Magi: The Kingdom of Magic",
+    "episodes": "(6x) EP 1-6",
+    "time": "147 min (2,4 hod)",
+    "date": "2026-02-08T00:00:00"
+  },
+  {
     "name": "Magi: The Labyrinth of Magic",
     "episodes": "(10x) EP 16-25",
     "time": "244 min (4,1 hod)",
@@ -258,15 +258,15 @@
     "date": "2026-02-06T00:00:00"
   },
   {
-    "name": "Magi: The Labyrinth of Magic",
-    "episodes": "(6x) EP 5-10",
-    "time": "147 min (2,4 hod)",
-    "date": "2026-02-05T00:00:00"
-  },
-  {
     "name": "Jujutsu Kaisen: The Culling Game Part 1",
     "episodes": "(1x) EP 6",
     "time": "23 min",
+    "date": "2026-02-05T00:00:00"
+  },
+  {
+    "name": "Magi: The Labyrinth of Magic",
+    "episodes": "(6x) EP 5-10",
+    "time": "147 min (2,4 hod)",
     "date": "2026-02-05T00:00:00"
   },
   {
@@ -286,12 +286,6 @@
     "episodes": "(8x) EP 9-16",
     "time": "196 min (3,3 hod)",
     "date": "2026-02-02T00:00:00"
-  },
-  {
-    "name": "Blast of Tempest",
-    "episodes": "(8x) EP 1-8",
-    "time": "196 min (3,3 hod)",
-    "date": "2026-02-01T00:00:00"
   },
   {
     "name": "To Your Eternity, S03",
@@ -324,6 +318,12 @@
     "date": "2026-02-01T00:00:00"
   },
   {
+    "name": "Blast of Tempest",
+    "episodes": "(8x) EP 1-8",
+    "time": "196 min (3,3 hod)",
+    "date": "2026-02-01T00:00:00"
+  },
+  {
     "name": "The Ancient Magus' Bride, S02 Part 2",
     "episodes": "(12x) EP 1-12",
     "time": "290 min (4,8 hod)",
@@ -336,15 +336,15 @@
     "date": "2026-01-30T00:00:00"
   },
   {
-    "name": "The Ancient Magus' Bride, S02 Part 1",
-    "episodes": "(6x) EP 1-6",
-    "time": "145 min (2,4 hod)",
-    "date": "2026-01-29T00:00:00"
-  },
-  {
     "name": "Jujutsu Kaisen: The Culling Game Part 1",
     "episodes": "(1x) EP 5",
     "time": "23 min",
+    "date": "2026-01-29T00:00:00"
+  },
+  {
+    "name": "The Ancient Magus' Bride, S02 Part 1",
+    "episodes": "(6x) EP 1-6",
+    "time": "145 min (2,4 hod)",
     "date": "2026-01-29T00:00:00"
   },
   {
@@ -396,15 +396,15 @@
     "date": "2026-01-26T00:00:00"
   },
   {
-    "name": "The Ancient Magus' Bride, S01",
-    "episodes": "(15x) EP 1-15",
-    "time": "365 min (6,1 hod)",
-    "date": "2026-01-25T00:00:00"
-  },
-  {
     "name": "The Ancient Magus' Bride: Those Awaiting a Star",
     "episodes": "(3x) EP 1-3",
     "time": "72 min (1,2 hod)",
+    "date": "2026-01-25T00:00:00"
+  },
+  {
+    "name": "The Ancient Magus' Bride, S01",
+    "episodes": "(15x) EP 1-15",
+    "time": "365 min (6,1 hod)",
     "date": "2026-01-25T00:00:00"
   },
   {
@@ -420,15 +420,15 @@
     "date": "2026-01-23T00:00:00"
   },
   {
-    "name": "Grimoire of Zero",
-    "episodes": "(6x) EP 1-6",
-    "time": "142 min (2,4 hod)",
-    "date": "2026-01-22T00:00:00"
-  },
-  {
     "name": "Jujutsu Kaisen: The Culling Game Part 1",
     "episodes": "(1x) EP 4",
     "time": "23 min",
+    "date": "2026-01-22T00:00:00"
+  },
+  {
+    "name": "Grimoire of Zero",
+    "episodes": "(6x) EP 1-6",
+    "time": "142 min (2,4 hod)",
     "date": "2026-01-22T00:00:00"
   },
   {
@@ -442,12 +442,6 @@
     "episodes": "(6x) EP 1-6",
     "time": "142 min (2,4 hod)",
     "date": "2026-01-20T00:00:00"
-  },
-  {
-    "name": "Mary and the Witch's Flower",
-    "episodes": "(1x) EP 1",
-    "time": "103 min (1,7 hod)",
-    "date": "2026-01-19T00:00:00"
   },
   {
     "name": "Fate/strange Fake",
@@ -471,6 +465,12 @@
     "name": "Hell's Paradise, S02",
     "episodes": "(1x) EP 2",
     "time": "23 min",
+    "date": "2026-01-19T00:00:00"
+  },
+  {
+    "name": "Mary and the Witch's Flower",
+    "episodes": "(1x) EP 1",
+    "time": "103 min (1,7 hod)",
     "date": "2026-01-19T00:00:00"
   },
   {
@@ -522,12 +522,6 @@
     "date": "2026-01-12T00:00:00"
   },
   {
-    "name": "Hell's Paradise, S01",
-    "episodes": "(13x) EP 1-13",
-    "time": "314 min (5,2 hod)",
-    "date": "2026-01-11T00:00:00"
-  },
-  {
     "name": "To Your Eternity, S03",
     "episodes": "(2x) EP 13-14",
     "time": "50 min",
@@ -537,6 +531,12 @@
     "name": "Fate/strange Fake",
     "episodes": "(1x) EP 2",
     "time": "23 min",
+    "date": "2026-01-11T00:00:00"
+  },
+  {
+    "name": "Hell's Paradise, S01",
+    "episodes": "(13x) EP 1-13",
+    "time": "314 min (5,2 hod)",
     "date": "2026-01-11T00:00:00"
   },
   {
@@ -612,15 +612,15 @@
     "date": "2026-01-03T00:00:00"
   },
   {
-    "name": "Fate/strange Fake: Whispers of Dawn",
-    "episodes": "(1x) EP 1",
-    "time": "56 min",
-    "date": "2026-01-03T00:00:00"
-  },
-  {
     "name": "Himouto! Umaru-chan OVA",
     "episodes": "(1x) EP 2",
     "time": "24 min",
+    "date": "2026-01-03T00:00:00"
+  },
+  {
+    "name": "Fate/strange Fake: Whispers of Dawn",
+    "episodes": "(1x) EP 1",
+    "time": "56 min",
     "date": "2026-01-03T00:00:00"
   },
   {
@@ -660,15 +660,15 @@
     "date": "2026-01-02T00:00:00"
   },
   {
-    "name": "Himouto! Umaru-chan",
-    "episodes": "(5x) EP 1-5",
-    "time": "120 min (2,0 hod)",
-    "date": "2026-01-01T00:00:00"
-  },
-  {
     "name": "Lord of Mysteries",
     "episodes": "(5x) EP 9-13",
     "time": "166 min (2,8 hod)",
+    "date": "2026-01-01T00:00:00"
+  },
+  {
+    "name": "Himouto! Umaru-chan",
+    "episodes": "(5x) EP 1-5",
+    "time": "120 min (2,0 hod)",
     "date": "2026-01-01T00:00:00"
   },
   {
@@ -678,27 +678,27 @@
     "date": "2025-12-31T00:00:00"
   },
   {
-    "name": "Vinland Saga, S02: Same Old Story",
-    "episodes": "(1x) EP 1",
-    "time": "2 min",
-    "date": "2025-12-30T00:00:00"
-  },
-  {
     "name": "Vinland Saga, S02",
     "episodes": "(14x) EP 11-24",
     "time": "360 min (6,0 hod)",
     "date": "2025-12-30T00:00:00"
   },
   {
-    "name": "Vinland Saga, S02: Drowning in the Shadow",
+    "name": "Vinland Saga, S02: Same Old Story",
     "episodes": "(1x) EP 1",
-    "time": "3 min",
-    "date": "2025-12-29T00:00:00"
+    "time": "2 min",
+    "date": "2025-12-30T00:00:00"
   },
   {
     "name": "Spy x Family, S03",
     "episodes": "(1x) EP 13",
     "time": "24 min",
+    "date": "2025-12-29T00:00:00"
+  },
+  {
+    "name": "Vinland Saga, S02: Drowning in the Shadow",
+    "episodes": "(1x) EP 1",
+    "time": "3 min",
     "date": "2025-12-29T00:00:00"
   },
   {
@@ -756,12 +756,6 @@
     "date": "2025-12-21T00:00:00"
   },
   {
-    "name": "Monster",
-    "episodes": "(10x) EP 11-20",
-    "time": "239 min (4,0 hod)",
-    "date": "2025-12-21T00:00:00"
-  },
-  {
     "name": "Spy x Family, S03",
     "episodes": "(1x) EP 12",
     "time": "24 min",
@@ -771,6 +765,12 @@
     "name": "To Your Eternity, S03",
     "episodes": "(1x) EP 12",
     "time": "25 min",
+    "date": "2025-12-21T00:00:00"
+  },
+  {
+    "name": "Monster",
+    "episodes": "(10x) EP 11-20",
+    "time": "239 min (4,0 hod)",
     "date": "2025-12-21T00:00:00"
   },
   {
@@ -822,18 +822,6 @@
     "date": "2025-12-15T00:00:00"
   },
   {
-    "name": "Demon Slayer",
-    "episodes": "(9x) EP 18-26",
-    "time": "213 min (3,6 hod)",
-    "date": "2025-12-14T00:00:00"
-  },
-  {
-    "name": "Demon Slayer: Mugen Train Arc",
-    "episodes": "(7x) EP 1-7",
-    "time": "170 min (2,8 hod)",
-    "date": "2025-12-14T00:00:00"
-  },
-  {
     "name": "May I Ask for One Final Thing?",
     "episodes": "(1x) EP 12",
     "time": "24 min",
@@ -853,20 +841,32 @@
   },
   {
     "name": "Demon Slayer",
+    "episodes": "(9x) EP 18-26",
+    "time": "213 min (3,6 hod)",
+    "date": "2025-12-14T00:00:00"
+  },
+  {
+    "name": "Demon Slayer: Mugen Train Arc",
+    "episodes": "(7x) EP 1-7",
+    "time": "170 min (2,8 hod)",
+    "date": "2025-12-14T00:00:00"
+  },
+  {
+    "name": "Demon Slayer",
     "episodes": "(17x) EP 1-17",
     "time": "403 min (6,7 hod)",
     "date": "2025-12-13T00:00:00"
   },
   {
-    "name": "Kabaneri of the Iron Fortress: The Battle of Unato",
-    "episodes": "(1x) EP 1",
-    "time": "68 min (1,1 hod)",
-    "date": "2025-12-12T00:00:00"
-  },
-  {
     "name": "Chainsaw Man the Movie: Reze Arc",
     "episodes": "(1x) EP 1",
     "time": "100 min (1,7 hod)",
+    "date": "2025-12-12T00:00:00"
+  },
+  {
+    "name": "Kabaneri of the Iron Fortress: The Battle of Unato",
+    "episodes": "(1x) EP 1",
+    "time": "68 min (1,1 hod)",
     "date": "2025-12-12T00:00:00"
   },
   {
@@ -900,12 +900,6 @@
     "date": "2025-12-07T00:00:00"
   },
   {
-    "name": "Casshern Sins",
-    "episodes": "(11x) EP 7-17",
-    "time": "261 min (4,4 hod)",
-    "date": "2025-12-07T00:00:00"
-  },
-  {
     "name": "Spy x Family, S03",
     "episodes": "(1x) EP 10",
     "time": "24 min",
@@ -915,6 +909,12 @@
     "name": "To Your Eternity, S03",
     "episodes": "(1x) EP 10",
     "time": "25 min",
+    "date": "2025-12-07T00:00:00"
+  },
+  {
+    "name": "Casshern Sins",
+    "episodes": "(11x) EP 7-17",
+    "time": "261 min (4,4 hod)",
     "date": "2025-12-07T00:00:00"
   },
   {
@@ -972,12 +972,6 @@
     "date": "2025-11-30T00:00:00"
   },
   {
-    "name": "Anohana: The Flower We Saw That Day",
-    "episodes": "(11x) EP 1-11",
-    "time": "255 min (4,3 hod)",
-    "date": "2025-11-30T00:00:00"
-  },
-  {
     "name": "Spy x Family, S03",
     "episodes": "(1x) EP 9",
     "time": "24 min",
@@ -987,6 +981,12 @@
     "name": "To Your Eternity, S03",
     "episodes": "(1x) EP 9",
     "time": "25 min",
+    "date": "2025-11-30T00:00:00"
+  },
+  {
+    "name": "Anohana: The Flower We Saw That Day",
+    "episodes": "(11x) EP 1-11",
+    "time": "255 min (4,3 hod)",
     "date": "2025-11-30T00:00:00"
   },
   {
@@ -1050,6 +1050,18 @@
     "date": "2025-11-23T00:00:00"
   },
   {
+    "name": "Spy x Family, S03",
+    "episodes": "(1x) EP 8",
+    "time": "24 min",
+    "date": "2025-11-23T00:00:00"
+  },
+  {
+    "name": "To Your Eternity, S03",
+    "episodes": "(1x) EP 8",
+    "time": "25 min",
+    "date": "2025-11-23T00:00:00"
+  },
+  {
     "name": "She and Her Cat: Their Standing Points",
     "episodes": "(1x) EP 1",
     "time": "5 min",
@@ -1077,18 +1089,6 @@
     "name": "She and Her Cat: Everything Flows",
     "episodes": "(4x) EP 1-4",
     "time": "28 min",
-    "date": "2025-11-23T00:00:00"
-  },
-  {
-    "name": "Spy x Family, S03",
-    "episodes": "(1x) EP 8",
-    "time": "24 min",
-    "date": "2025-11-23T00:00:00"
-  },
-  {
-    "name": "To Your Eternity, S03",
-    "episodes": "(1x) EP 8",
-    "time": "25 min",
     "date": "2025-11-23T00:00:00"
   },
   {
@@ -1152,12 +1152,6 @@
     "date": "2025-11-18T00:00:00"
   },
   {
-    "name": "Log Horizon, S02",
-    "episodes": "(10x) EP 16-25",
-    "time": "245 min (4,1 hod)",
-    "date": "2025-11-17T00:00:00"
-  },
-  {
     "name": "May I Ask for One Final Thing?",
     "episodes": "(1x) EP 8",
     "time": "24 min",
@@ -1173,6 +1167,12 @@
     "name": "To Your Eternity, S03",
     "episodes": "(1x) EP 7",
     "time": "25 min",
+    "date": "2025-11-17T00:00:00"
+  },
+  {
+    "name": "Log Horizon, S02",
+    "episodes": "(10x) EP 16-25",
+    "time": "245 min (4,1 hod)",
     "date": "2025-11-17T00:00:00"
   },
   {
@@ -1230,18 +1230,6 @@
     "date": "2025-11-10T00:00:00"
   },
   {
-    "name": "Grimgar: Staking Our Youths on the Bath Wall - One More Centimeter",
-    "episodes": "(1x) EP 1",
-    "time": "11 min",
-    "date": "2025-11-09T00:00:00"
-  },
-  {
-    "name": "Grimgar: Ashes and Illusions",
-    "episodes": "(7x) EP 1-7",
-    "time": "166 min (2,8 hod)",
-    "date": "2025-11-09T00:00:00"
-  },
-  {
     "name": "May I Ask for One Final Thing?",
     "episodes": "(1x) EP 7",
     "time": "24 min",
@@ -1254,15 +1242,27 @@
     "date": "2025-11-09T00:00:00"
   },
   {
+    "name": "To Your Eternity, S03",
+    "episodes": "(1x) EP 6",
+    "time": "25 min",
+    "date": "2025-11-09T00:00:00"
+  },
+  {
     "name": "Arifureta: From Commonplace to World's Strongest, S03",
     "episodes": "(4x) EP 13-16",
     "time": "95 min (1,6 hod)",
     "date": "2025-11-09T00:00:00"
   },
   {
-    "name": "To Your Eternity, S03",
-    "episodes": "(1x) EP 6",
-    "time": "25 min",
+    "name": "Grimgar: Staking Our Youths on the Bath Wall - One More Centimeter",
+    "episodes": "(1x) EP 1",
+    "time": "11 min",
+    "date": "2025-11-09T00:00:00"
+  },
+  {
+    "name": "Grimgar: Ashes and Illusions",
+    "episodes": "(7x) EP 1-7",
+    "time": "166 min (2,8 hod)",
     "date": "2025-11-09T00:00:00"
   },
   {
@@ -1314,6 +1314,12 @@
     "date": "2025-11-05T00:00:00"
   },
   {
+    "name": "Skeleton Knight in Another World, S01",
+    "episodes": "(2x) EP 11-12",
+    "time": "48 min",
+    "date": "2025-11-04T00:00:00"
+  },
+  {
     "name": "Arifureta: From Commonplace to World's Strongest - Prologue",
     "episodes": "(1x) EP 1",
     "time": "6 min",
@@ -1327,21 +1333,9 @@
   },
   {
     "name": "Skeleton Knight in Another World, S01",
-    "episodes": "(2x) EP 11-12",
-    "time": "48 min",
-    "date": "2025-11-04T00:00:00"
-  },
-  {
-    "name": "Skeleton Knight in Another World, S01",
     "episodes": "(10x) EP 1-10",
     "time": "238 min (4,0 hod)",
     "date": "2025-11-03T00:00:00"
-  },
-  {
-    "name": "I'm Standing on a Million Lives, S02",
-    "episodes": "(10x) EP 3-12",
-    "time": "237 min (3,9 hod)",
-    "date": "2025-11-02T00:00:00"
   },
   {
     "name": "May I Ask for One Final Thing?",
@@ -1359,6 +1353,12 @@
     "name": "To Your Eternity, S03",
     "episodes": "(1x) EP 5",
     "time": "25 min",
+    "date": "2025-11-02T00:00:00"
+  },
+  {
+    "name": "I'm Standing on a Million Lives, S02",
+    "episodes": "(10x) EP 3-12",
+    "time": "237 min (3,9 hod)",
     "date": "2025-11-02T00:00:00"
   },
   {
@@ -1422,12 +1422,6 @@
     "date": "2025-10-27T00:00:00"
   },
   {
-    "name": "The Dungeon of Black Company",
-    "episodes": "(10x) EP 3-12",
-    "time": "237 min (3,9 hod)",
-    "date": "2025-10-26T00:00:00"
-  },
-  {
     "name": "May I Ask for One Final Thing?",
     "episodes": "(1x) EP 5",
     "time": "24 min",
@@ -1447,14 +1441,20 @@
   },
   {
     "name": "The Dungeon of Black Company",
-    "episodes": "(2x) EP 1-2",
-    "time": "47 min",
-    "date": "2025-10-25T00:00:00"
+    "episodes": "(10x) EP 3-12",
+    "time": "237 min (3,9 hod)",
+    "date": "2025-10-26T00:00:00"
   },
   {
     "name": "Tsukimichi -Moonlit Fantasy-, S02",
     "episodes": "(13x) EP 13-25",
     "time": "308 min (5,1 hod)",
+    "date": "2025-10-25T00:00:00"
+  },
+  {
+    "name": "The Dungeon of Black Company",
+    "episodes": "(2x) EP 1-2",
+    "time": "47 min",
     "date": "2025-10-25T00:00:00"
   },
   {
@@ -1488,12 +1488,6 @@
     "date": "2025-10-20T00:00:00"
   },
   {
-    "name": "So I'm a Spider, So What?",
-    "episodes": "(14x) EP 5-18",
-    "time": "332 min (5,5 hod)",
-    "date": "2025-10-19T00:00:00"
-  },
-  {
     "name": "May I Ask for One Final Thing?",
     "episodes": "(1x) EP 4",
     "time": "24 min",
@@ -1513,14 +1507,20 @@
   },
   {
     "name": "So I'm a Spider, So What?",
-    "episodes": "(4x) EP 1-4",
-    "time": "95 min (1,6 hod)",
-    "date": "2025-10-18T00:00:00"
+    "episodes": "(14x) EP 5-18",
+    "time": "332 min (5,5 hod)",
+    "date": "2025-10-19T00:00:00"
   },
   {
     "name": "Cautious Hero: The Hero Is Overpowered but Overly Cautious",
     "episodes": "(12x) EP 1-12",
     "time": "286 min (4,8 hod)",
+    "date": "2025-10-18T00:00:00"
+  },
+  {
+    "name": "So I'm a Spider, So What?",
+    "episodes": "(4x) EP 1-4",
+    "time": "95 min (1,6 hod)",
     "date": "2025-10-18T00:00:00"
   },
   {
@@ -1530,15 +1530,15 @@
     "date": "2025-10-17T00:00:00"
   },
   {
-    "name": "Combatants Will Be Dispatched!",
-    "episodes": "(5x) EP 1-5",
-    "time": "119 min (2,0 hod)",
-    "date": "2025-10-16T00:00:00"
-  },
-  {
     "name": "I've Been Killing Slimes for 300 Years and Maxed Out My Level, S02",
     "episodes": "(4x) EP 9-12",
     "time": "95 min (1,6 hod)",
+    "date": "2025-10-16T00:00:00"
+  },
+  {
+    "name": "Combatants Will Be Dispatched!",
+    "episodes": "(5x) EP 1-5",
+    "time": "119 min (2,0 hod)",
     "date": "2025-10-16T00:00:00"
   },
   {
@@ -1560,12 +1560,6 @@
     "date": "2025-10-13T00:00:00"
   },
   {
-    "name": "I've Been Killing Slimes for 300 Years and Maxed Out My Level, S01",
-    "episodes": "(7x) EP 1-7",
-    "time": "166 min (2,8 hod)",
-    "date": "2025-10-12T00:00:00"
-  },
-  {
     "name": "May I Ask for One Final Thing?",
     "episodes": "(1x) EP 3",
     "time": "24 min",
@@ -1578,15 +1572,21 @@
     "date": "2025-10-12T00:00:00"
   },
   {
+    "name": "To Your Eternity, S03",
+    "episodes": "(1x) EP 2",
+    "time": "25 min",
+    "date": "2025-10-12T00:00:00"
+  },
+  {
     "name": "Tower of God, S02: Workshop Battle",
     "episodes": "(3x) EP 11-13",
     "time": "71 min (1,2 hod)",
     "date": "2025-10-12T00:00:00"
   },
   {
-    "name": "To Your Eternity, S03",
-    "episodes": "(1x) EP 2",
-    "time": "25 min",
+    "name": "I've Been Killing Slimes for 300 Years and Maxed Out My Level, S01",
+    "episodes": "(7x) EP 1-7",
+    "time": "166 min (2,8 hod)",
     "date": "2025-10-12T00:00:00"
   },
   {
@@ -1632,15 +1632,15 @@
     "date": "2025-10-06T00:00:00"
   },
   {
-    "name": "Takt Op. Destiny",
-    "episodes": "(7x) EP 1-7",
-    "time": "166 min (2,8 hod)",
-    "date": "2025-10-05T00:00:00"
-  },
-  {
     "name": "The Apothecary Diaries, S02",
     "episodes": "(3x) EP 22-24",
     "time": "72 min (1,2 hod)",
+    "date": "2025-10-05T00:00:00"
+  },
+  {
+    "name": "Takt Op. Destiny",
+    "episodes": "(7x) EP 1-7",
+    "time": "166 min (2,8 hod)",
     "date": "2025-10-05T00:00:00"
   },
   {
@@ -1656,15 +1656,15 @@
     "date": "2025-10-05T00:00:00"
   },
   {
-    "name": "May I Ask for One Final Thing?",
-    "episodes": "(2x) EP 1-2",
-    "time": "47 min",
-    "date": "2025-10-04T00:00:00"
-  },
-  {
     "name": "The Apothecary Diaries, S02",
     "episodes": "(10x) EP 12-21",
     "time": "240 min (4,0 hod)",
+    "date": "2025-10-04T00:00:00"
+  },
+  {
+    "name": "May I Ask for One Final Thing?",
+    "episodes": "(2x) EP 1-2",
+    "time": "47 min",
     "date": "2025-10-04T00:00:00"
   },
   {
@@ -1698,12 +1698,6 @@
     "date": "2025-09-29T00:00:00"
   },
   {
-    "name": "The Apothecary Diaries, S01",
-    "episodes": "(8x) EP 8-15",
-    "time": "183 min (3,0 hod)",
-    "date": "2025-09-28T00:00:00"
-  },
-  {
     "name": "The Summer Hikaru Died, S01",
     "episodes": "(3x) EP 10-12",
     "time": "69 min (1,2 hod)",
@@ -1717,9 +1711,9 @@
   },
   {
     "name": "The Apothecary Diaries, S01",
-    "episodes": "(7x) EP 1-7",
-    "time": "160 min (2,7 hod)",
-    "date": "2025-09-27T00:00:00"
+    "episodes": "(8x) EP 8-15",
+    "time": "183 min (3,0 hod)",
+    "date": "2025-09-28T00:00:00"
   },
   {
     "name": "The Water Magician",
@@ -1731,6 +1725,12 @@
     "name": "Rascal Does Not Dream of Santa Claus",
     "episodes": "(3x) EP 11-13",
     "time": "72 min (1,2 hod)",
+    "date": "2025-09-27T00:00:00"
+  },
+  {
+    "name": "The Apothecary Diaries, S01",
+    "episodes": "(7x) EP 1-7",
+    "time": "160 min (2,7 hod)",
     "date": "2025-09-27T00:00:00"
   },
   {
@@ -1764,12 +1764,6 @@
     "date": "2025-09-22T00:00:00"
   },
   {
-    "name": "Bâan: The Boundary of Adulthood",
-    "episodes": "(1x) EP 1",
-    "time": "19 min",
-    "date": "2025-09-21T00:00:00"
-  },
-  {
     "name": "Call of the Night, S02",
     "episodes": "(2x) EP 11-12",
     "time": "46 min",
@@ -1788,10 +1782,22 @@
     "date": "2025-09-21T00:00:00"
   },
   {
+    "name": "Bâan: The Boundary of Adulthood",
+    "episodes": "(1x) EP 1",
+    "time": "19 min",
+    "date": "2025-09-21T00:00:00"
+  },
+  {
     "name": "Spice and Wolf: Merchant Meets the Wise Wolf, S01",
     "episodes": "(2x) EP 1-2",
     "time": "48 min",
     "date": "2025-09-21T00:00:00"
+  },
+  {
+    "name": "The Melancholy of Haruhi Suzumiya, S01",
+    "episodes": "(4x) EP 11-14",
+    "time": "96 min (1,6 hod)",
+    "date": "2025-09-20T00:00:00"
   },
   {
     "name": "The Melancholy of Haruhi Suzumiya, S02",
@@ -1806,27 +1812,21 @@
     "date": "2025-09-20T00:00:00"
   },
   {
-    "name": "The Melancholy of Haruhi Suzumiya, S01",
-    "episodes": "(4x) EP 11-14",
-    "time": "96 min (1,6 hod)",
-    "date": "2025-09-20T00:00:00"
-  },
-  {
     "name": "The Melancholy of Haruhi Suzumiya, S02",
     "episodes": "(6x) EP 2-7",
     "time": "148 min (2,5 hod)",
     "date": "2025-09-19T00:00:00"
   },
   {
-    "name": "The Melancholy of Haruhi Suzumiya, S02",
-    "episodes": "(1x) EP 1",
-    "time": "25 min",
-    "date": "2025-09-18T00:00:00"
-  },
-  {
     "name": "The Melancholy of Haruhi Suzumiya, S01",
     "episodes": "(3x) EP 8-10",
     "time": "72 min (1,2 hod)",
+    "date": "2025-09-18T00:00:00"
+  },
+  {
+    "name": "The Melancholy of Haruhi Suzumiya, S02",
+    "episodes": "(1x) EP 1",
+    "time": "25 min",
     "date": "2025-09-18T00:00:00"
   },
   {
@@ -1842,15 +1842,15 @@
     "date": "2025-09-16T00:00:00"
   },
   {
-    "name": "Monogatari Series: Off & Monster Season - A Cruel Fairy Tale: The Beautiful Princess",
-    "episodes": "(1x) EP 1",
-    "time": "13 min",
-    "date": "2025-09-15T00:00:00"
-  },
-  {
     "name": "Monogatari Series: Off & Monster Season",
     "episodes": "(4x) EP 5-8",
     "time": "101 min (1,7 hod)",
+    "date": "2025-09-15T00:00:00"
+  },
+  {
+    "name": "Monogatari Series: Off & Monster Season - A Cruel Fairy Tale: The Beautiful Princess",
+    "episodes": "(1x) EP 1",
+    "time": "13 min",
     "date": "2025-09-15T00:00:00"
   },
   {
@@ -1914,12 +1914,6 @@
     "date": "2025-09-08T00:00:00"
   },
   {
-    "name": "Monogatari Series: Second Season",
-    "episodes": "(10x) EP 14-23",
-    "time": "259 min (4,3 hod)",
-    "date": "2025-09-07T00:00:00"
-  },
-  {
     "name": "My Dress-Up Darling, S02",
     "episodes": "(1x) EP 10",
     "time": "24 min",
@@ -1929,6 +1923,12 @@
     "name": "Rascal Does Not Dream of Santa Claus",
     "episodes": "(2x) EP 9-10",
     "time": "48 min",
+    "date": "2025-09-07T00:00:00"
+  },
+  {
+    "name": "Monogatari Series: Second Season",
+    "episodes": "(10x) EP 14-23",
+    "time": "259 min (4,3 hod)",
     "date": "2025-09-07T00:00:00"
   },
   {
@@ -1944,15 +1944,15 @@
     "date": "2025-09-06T00:00:00"
   },
   {
-    "name": "The Rising of the Shield Hero, S04",
-    "episodes": "(1x) EP 8",
-    "time": "24 min",
-    "date": "2025-09-06T00:00:00"
-  },
-  {
     "name": "The Summer Hikaru Died, S01",
     "episodes": "(1x) EP 9",
     "time": "23 min",
+    "date": "2025-09-06T00:00:00"
+  },
+  {
+    "name": "The Rising of the Shield Hero, S04",
+    "episodes": "(1x) EP 8",
+    "time": "24 min",
     "date": "2025-09-06T00:00:00"
   },
   {
@@ -1986,15 +1986,15 @@
     "date": "2025-09-02T00:00:00"
   },
   {
-    "name": "Monogatari Series: Second Season",
-    "episodes": "(5x) EP 1-5",
-    "time": "129 min (2,2 hod)",
-    "date": "2025-09-01T00:00:00"
-  },
-  {
     "name": "My Dress-Up Darling, S02",
     "episodes": "(1x) EP 9",
     "time": "24 min",
+    "date": "2025-09-01T00:00:00"
+  },
+  {
+    "name": "Monogatari Series: Second Season",
+    "episodes": "(5x) EP 1-5",
+    "time": "129 min (2,2 hod)",
     "date": "2025-09-01T00:00:00"
   },
   {
@@ -2040,16 +2040,22 @@
     "date": "2025-08-29T00:00:00"
   },
   {
+    "name": "School-Live!",
+    "episodes": "(10x) EP 3-12",
+    "time": "242 min (4,0 hod)",
+    "date": "2025-08-28T00:00:00"
+  },
+  {
     "name": "Bakemonogatari",
     "episodes": "(4x) EP 1-4",
     "time": "101 min (1,7 hod)",
     "date": "2025-08-28T00:00:00"
   },
   {
-    "name": "School-Live!",
-    "episodes": "(10x) EP 3-12",
-    "time": "242 min (4,0 hod)",
-    "date": "2025-08-28T00:00:00"
+    "name": "Shiki",
+    "episodes": "(8x) EP 15-22",
+    "time": "187 min (3,1 hod)",
+    "date": "2025-08-27T00:00:00"
   },
   {
     "name": "Shiki Specials",
@@ -2064,18 +2070,6 @@
     "date": "2025-08-27T00:00:00"
   },
   {
-    "name": "Shiki",
-    "episodes": "(8x) EP 15-22",
-    "time": "187 min (3,1 hod)",
-    "date": "2025-08-27T00:00:00"
-  },
-  {
-    "name": "Shiki",
-    "episodes": "(8x) EP 7-14",
-    "time": "187 min (3,1 hod)",
-    "date": "2025-08-26T00:00:00"
-  },
-  {
     "name": "Lord of Mysteries",
     "episodes": "(2x) EP 12-13",
     "time": "67 min (1,1 hod)",
@@ -2083,9 +2077,9 @@
   },
   {
     "name": "Shiki",
-    "episodes": "(6x) EP 1-6",
-    "time": "141 min (2,3 hod)",
-    "date": "2025-08-25T00:00:00"
+    "episodes": "(8x) EP 7-14",
+    "time": "187 min (3,1 hod)",
+    "date": "2025-08-26T00:00:00"
   },
   {
     "name": "Rascal Does Not Dream of Santa Claus",
@@ -2100,10 +2094,10 @@
     "date": "2025-08-25T00:00:00"
   },
   {
-    "name": "Electromagnetic Girlfriend",
-    "episodes": "(2x) EP 1-2",
-    "time": "86 min (1,4 hod)",
-    "date": "2025-08-24T00:00:00"
+    "name": "Shiki",
+    "episodes": "(6x) EP 1-6",
+    "time": "141 min (2,3 hod)",
+    "date": "2025-08-25T00:00:00"
   },
   {
     "name": "From the New World",
@@ -2112,10 +2106,10 @@
     "date": "2025-08-24T00:00:00"
   },
   {
-    "name": "From the New World",
-    "episodes": "(7x) EP 10-16",
-    "time": "159 min (2,6 hod)",
-    "date": "2025-08-23T00:00:00"
+    "name": "Electromagnetic Girlfriend",
+    "episodes": "(2x) EP 1-2",
+    "time": "86 min (1,4 hod)",
+    "date": "2025-08-24T00:00:00"
   },
   {
     "name": "Call of the Night, S02",
@@ -2136,6 +2130,18 @@
     "date": "2025-08-23T00:00:00"
   },
   {
+    "name": "From the New World",
+    "episodes": "(7x) EP 10-16",
+    "time": "159 min (2,6 hod)",
+    "date": "2025-08-23T00:00:00"
+  },
+  {
+    "name": "The Water Magician",
+    "episodes": "(1x) EP 7",
+    "time": "24 min",
+    "date": "2025-08-22T00:00:00"
+  },
+  {
     "name": "Girls' Last Tour",
     "episodes": "(3x) EP 10-12",
     "time": "71 min (1,2 hod)",
@@ -2145,12 +2151,6 @@
     "name": "From the New World",
     "episodes": "(9x) EP 1-9",
     "time": "204 min (3,4 hod)",
-    "date": "2025-08-22T00:00:00"
-  },
-  {
-    "name": "The Water Magician",
-    "episodes": "(1x) EP 7",
-    "time": "24 min",
     "date": "2025-08-22T00:00:00"
   },
   {
@@ -2166,18 +2166,6 @@
     "date": "2025-08-21T00:00:00"
   },
   {
-    "name": "The Future Diary",
-    "episodes": "(8x) EP 19-26",
-    "time": "179 min (3,0 hod)",
-    "date": "2025-08-20T00:00:00"
-  },
-  {
-    "name": "The Future Diary: Redial",
-    "episodes": "(1x) EP 1",
-    "time": "30 min",
-    "date": "2025-08-20T00:00:00"
-  },
-  {
     "name": "Lord of Mysteries",
     "episodes": "(1x) EP 11",
     "time": "33 min",
@@ -2191,15 +2179,21 @@
   },
   {
     "name": "The Future Diary",
-    "episodes": "(12x) EP 7-18",
-    "time": "269 min (4,5 hod)",
-    "date": "2025-08-19T00:00:00"
+    "episodes": "(8x) EP 19-26",
+    "time": "179 min (3,0 hod)",
+    "date": "2025-08-20T00:00:00"
+  },
+  {
+    "name": "The Future Diary: Redial",
+    "episodes": "(1x) EP 1",
+    "time": "30 min",
+    "date": "2025-08-20T00:00:00"
   },
   {
     "name": "The Future Diary",
-    "episodes": "(6x) EP 1-6",
-    "time": "135 min (2,2 hod)",
-    "date": "2025-08-18T00:00:00"
+    "episodes": "(12x) EP 7-18",
+    "time": "269 min (4,5 hod)",
+    "date": "2025-08-19T00:00:00"
   },
   {
     "name": "Lord of Mysteries",
@@ -2226,16 +2220,16 @@
     "date": "2025-08-18T00:00:00"
   },
   {
+    "name": "The Future Diary",
+    "episodes": "(6x) EP 1-6",
+    "time": "135 min (2,2 hod)",
+    "date": "2025-08-18T00:00:00"
+  },
+  {
     "name": "Higurashi: When They Cry – Sotsu",
     "episodes": "(15x) EP 1-15",
     "time": "355 min (5,9 hod)",
     "date": "2025-08-17T00:00:00"
-  },
-  {
-    "name": "Higurashi: When They Cry – Gou",
-    "episodes": "(11x) EP 14-24",
-    "time": "261 min (4,3 hod)",
-    "date": "2025-08-16T00:00:00"
   },
   {
     "name": "Lord of Mysteries",
@@ -2251,21 +2245,15 @@
   },
   {
     "name": "Higurashi: When They Cry – Gou",
+    "episodes": "(11x) EP 14-24",
+    "time": "261 min (4,3 hod)",
+    "date": "2025-08-16T00:00:00"
+  },
+  {
+    "name": "Higurashi: When They Cry – Gou",
     "episodes": "(13x) EP 1-13",
     "time": "308 min (5,1 hod)",
     "date": "2025-08-15T00:00:00"
-  },
-  {
-    "name": "Higurashi: When They Cry – Kira",
-    "episodes": "(4x) EP 1-4",
-    "time": "119 min (2,0 hod)",
-    "date": "2025-08-14T00:00:00"
-  },
-  {
-    "name": "Higurashi: When They Cry – Outbreak",
-    "episodes": "(1x) EP 1",
-    "time": "55 min",
-    "date": "2025-08-14T00:00:00"
   },
   {
     "name": "The Water Magician",
@@ -2277,6 +2265,18 @@
     "name": "The Rising of the Shield Hero, S04",
     "episodes": "(1x) EP 6",
     "time": "24 min",
+    "date": "2025-08-14T00:00:00"
+  },
+  {
+    "name": "Higurashi: When They Cry – Kira",
+    "episodes": "(4x) EP 1-4",
+    "time": "119 min (2,0 hod)",
+    "date": "2025-08-14T00:00:00"
+  },
+  {
+    "name": "Higurashi: When They Cry – Outbreak",
+    "episodes": "(1x) EP 1",
+    "time": "55 min",
     "date": "2025-08-14T00:00:00"
   },
   {
@@ -2298,18 +2298,6 @@
     "date": "2025-08-12T00:00:00"
   },
   {
-    "name": "Higurashi: When They Cry – Cat Killing Chapter",
-    "episodes": "(1x) EP 1",
-    "time": "23 min",
-    "date": "2025-08-11T00:00:00"
-  },
-  {
-    "name": "Higurashi: When They Cry – Kai",
-    "episodes": "(1x) EP 1",
-    "time": "24 min",
-    "date": "2025-08-11T00:00:00"
-  },
-  {
     "name": "Lord of Mysteries",
     "episodes": "(1x) EP 8",
     "time": "33 min",
@@ -2328,15 +2316,15 @@
     "date": "2025-08-11T00:00:00"
   },
   {
-    "name": "The Rising of the Shield Hero, S04",
-    "episodes": "(1x) EP 5",
-    "time": "24 min",
-    "date": "2025-08-11T00:00:00"
-  },
-  {
     "name": "The Summer Hikaru Died, S01",
     "episodes": "(1x) EP 6",
     "time": "23 min",
+    "date": "2025-08-11T00:00:00"
+  },
+  {
+    "name": "The Rising of the Shield Hero, S04",
+    "episodes": "(1x) EP 5",
+    "time": "24 min",
     "date": "2025-08-11T00:00:00"
   },
   {
@@ -2352,21 +2340,33 @@
     "date": "2025-08-11T00:00:00"
   },
   {
+    "name": "Higurashi: When They Cry – Cat Killing Chapter",
+    "episodes": "(1x) EP 1",
+    "time": "23 min",
+    "date": "2025-08-11T00:00:00"
+  },
+  {
+    "name": "Higurashi: When They Cry – Kai",
+    "episodes": "(1x) EP 1",
+    "time": "24 min",
+    "date": "2025-08-11T00:00:00"
+  },
+  {
     "name": "Higurashi: When They Cry",
     "episodes": "(14x) EP 13-26",
     "time": "332 min (5,5 hod)",
     "date": "2025-08-10T00:00:00"
   },
   {
-    "name": "Higurashi: When They Cry",
-    "episodes": "(12x) EP 1-12",
-    "time": "284 min (4,7 hod)",
-    "date": "2025-08-09T00:00:00"
-  },
-  {
     "name": "Jin-Roh: The Wolf Brigade",
     "episodes": "(1x) EP 1",
     "time": "102 min (1,7 hod)",
+    "date": "2025-08-09T00:00:00"
+  },
+  {
+    "name": "Higurashi: When They Cry",
+    "episodes": "(12x) EP 1-12",
+    "time": "284 min (4,7 hod)",
     "date": "2025-08-09T00:00:00"
   },
   {
@@ -2424,12 +2424,6 @@
     "date": "2025-08-04T00:00:00"
   },
   {
-    "name": "Takopi's Original Sin",
-    "episodes": "(1x) EP 6",
-    "time": "26 min",
-    "date": "2025-08-03T00:00:00"
-  },
-  {
     "name": "Lord of Mysteries",
     "episodes": "(1x) EP 7",
     "time": "33 min",
@@ -2454,21 +2448,27 @@
     "date": "2025-08-03T00:00:00"
   },
   {
-    "name": "The Rising of the Shield Hero, S04",
-    "episodes": "(1x) EP 4",
-    "time": "24 min",
-    "date": "2025-08-03T00:00:00"
-  },
-  {
     "name": "The Summer Hikaru Died, S01",
     "episodes": "(1x) EP 5",
     "time": "23 min",
     "date": "2025-08-03T00:00:00"
   },
   {
+    "name": "The Rising of the Shield Hero, S04",
+    "episodes": "(1x) EP 4",
+    "time": "24 min",
+    "date": "2025-08-03T00:00:00"
+  },
+  {
     "name": "Rascal Does Not Dream of Santa Claus",
     "episodes": "(1x) EP 5",
     "time": "24 min",
+    "date": "2025-08-03T00:00:00"
+  },
+  {
+    "name": "Takopi's Original Sin",
+    "episodes": "(1x) EP 6",
+    "time": "26 min",
     "date": "2025-08-03T00:00:00"
   },
   {
@@ -2520,28 +2520,16 @@
     "date": "2025-07-29T00:00:00"
   },
   {
-    "name": "Fullmetal Alchemist: Brotherhood OVA Collection",
-    "episodes": "(4x) EP 1-4",
-    "time": "61 min (1,0 hod)",
-    "date": "2025-07-28T00:00:00"
-  },
-  {
     "name": "Fullmetal Alchemist: Brotherhood",
     "episodes": "(12x) EP 21-32",
     "time": "295 min (4,9 hod)",
     "date": "2025-07-28T00:00:00"
   },
   {
-    "name": "Fullmetal Alchemist: The Sacred Star of Milos",
-    "episodes": "(1x) EP 1",
-    "time": "111 min (1,8 hod)",
-    "date": "2025-07-27T00:00:00"
-  },
-  {
-    "name": "Fullmetal Alchemist: Brotherhood",
-    "episodes": "(10x) EP 11-20",
-    "time": "246 min (4,1 hod)",
-    "date": "2025-07-27T00:00:00"
+    "name": "Fullmetal Alchemist: Brotherhood OVA Collection",
+    "episodes": "(4x) EP 1-4",
+    "time": "61 min (1,0 hod)",
+    "date": "2025-07-28T00:00:00"
   },
   {
     "name": "Lord of Mysteries",
@@ -2568,16 +2556,16 @@
     "date": "2025-07-27T00:00:00"
   },
   {
-    "name": "Takopi's Original Sin",
-    "episodes": "(1x) EP 5",
-    "time": "26 min",
-    "date": "2025-07-26T00:00:00"
+    "name": "Fullmetal Alchemist: Brotherhood",
+    "episodes": "(10x) EP 11-20",
+    "time": "246 min (4,1 hod)",
+    "date": "2025-07-27T00:00:00"
   },
   {
-    "name": "Fullmetal Alchemist: Brotherhood",
-    "episodes": "(10x) EP 1-10",
-    "time": "246 min (4,1 hod)",
-    "date": "2025-07-26T00:00:00"
+    "name": "Fullmetal Alchemist: The Sacred Star of Milos",
+    "episodes": "(1x) EP 1",
+    "time": "111 min (1,8 hod)",
+    "date": "2025-07-27T00:00:00"
   },
   {
     "name": "Call of the Night, S02",
@@ -2595,6 +2583,18 @@
     "name": "My Dress-Up Darling, S02",
     "episodes": "(1x) EP 4",
     "time": "24 min",
+    "date": "2025-07-26T00:00:00"
+  },
+  {
+    "name": "Takopi's Original Sin",
+    "episodes": "(1x) EP 5",
+    "time": "26 min",
+    "date": "2025-07-26T00:00:00"
+  },
+  {
+    "name": "Fullmetal Alchemist: Brotherhood",
+    "episodes": "(10x) EP 1-10",
+    "time": "246 min (4,1 hod)",
     "date": "2025-07-26T00:00:00"
   },
   {
@@ -2634,15 +2634,15 @@
     "date": "2025-07-24T00:00:00"
   },
   {
-    "name": "Steins;Gate: Open the Missing Link - Divide By Zero",
-    "episodes": "(1x) EP 1",
-    "time": "24 min",
-    "date": "2025-07-23T00:00:00"
-  },
-  {
     "name": "Steins;Gate",
     "episodes": "(12x) EP 13-24",
     "time": "288 min (4,8 hod)",
+    "date": "2025-07-23T00:00:00"
+  },
+  {
+    "name": "Steins;Gate: Open the Missing Link - Divide By Zero",
+    "episodes": "(1x) EP 1",
+    "time": "24 min",
     "date": "2025-07-23T00:00:00"
   },
   {
@@ -2650,6 +2650,12 @@
     "episodes": "(1x) EP 3",
     "time": "24 min",
     "date": "2025-07-23T00:00:00"
+  },
+  {
+    "name": "Steins;Gate",
+    "episodes": "(12x) EP 1-12",
+    "time": "288 min (4,8 hod)",
+    "date": "2025-07-22T00:00:00"
   },
   {
     "name": "Kaiju No.8: Hoshina's Day Off",
@@ -2661,12 +2667,6 @@
     "name": "Takopi's Original Sin",
     "episodes": "(4x) EP 1-4",
     "time": "104 min (1,7 hod)",
-    "date": "2025-07-22T00:00:00"
-  },
-  {
-    "name": "Steins;Gate",
-    "episodes": "(12x) EP 1-12",
-    "time": "288 min (4,8 hod)",
     "date": "2025-07-22T00:00:00"
   },
   {
@@ -2682,12 +2682,6 @@
     "date": "2025-07-21T00:00:00"
   },
   {
-    "name": "Black Butler: Public School Arc",
-    "episodes": "(5x) EP 7-11",
-    "time": "118 min (2,0 hod)",
-    "date": "2025-07-20T00:00:00"
-  },
-  {
     "name": "My Dress-Up Darling, S02",
     "episodes": "(1x) EP 3",
     "time": "24 min",
@@ -2701,9 +2695,9 @@
   },
   {
     "name": "Black Butler: Public School Arc",
-    "episodes": "(6x) EP 1-6",
-    "time": "142 min (2,4 hod)",
-    "date": "2025-07-19T00:00:00"
+    "episodes": "(5x) EP 7-11",
+    "time": "118 min (2,0 hod)",
+    "date": "2025-07-20T00:00:00"
   },
   {
     "name": "Lord of Mysteries",
@@ -2718,16 +2712,10 @@
     "date": "2025-07-19T00:00:00"
   },
   {
-    "name": "Black Butler: Book of Murder",
-    "episodes": "(1x) EP 2",
-    "time": "62 min (1,0 hod)",
-    "date": "2025-07-18T00:00:00"
-  },
-  {
-    "name": "Black Butler: Book of the Atlantic",
-    "episodes": "(1x) EP 1",
-    "time": "100 min (1,7 hod)",
-    "date": "2025-07-18T00:00:00"
+    "name": "Black Butler: Public School Arc",
+    "episodes": "(6x) EP 1-6",
+    "time": "142 min (2,4 hod)",
+    "date": "2025-07-19T00:00:00"
   },
   {
     "name": "Call of the Night, S02",
@@ -2739,6 +2727,18 @@
     "name": "The Water Magician",
     "episodes": "(1x) EP 3",
     "time": "24 min",
+    "date": "2025-07-18T00:00:00"
+  },
+  {
+    "name": "Black Butler: Book of Murder",
+    "episodes": "(1x) EP 2",
+    "time": "62 min (1,0 hod)",
+    "date": "2025-07-18T00:00:00"
+  },
+  {
+    "name": "Black Butler: Book of the Atlantic",
+    "episodes": "(1x) EP 1",
+    "time": "100 min (1,7 hod)",
     "date": "2025-07-18T00:00:00"
   },
   {
@@ -2754,21 +2754,21 @@
     "date": "2025-07-17T00:00:00"
   },
   {
-    "name": "Black Butler: Book of Circus",
-    "episodes": "(4x) EP 1-4",
-    "time": "97 min (1,6 hod)",
-    "date": "2025-07-16T00:00:00"
-  },
-  {
     "name": "The Rising of the Shield Hero, S04",
     "episodes": "(1x) EP 2",
     "time": "24 min",
     "date": "2025-07-16T00:00:00"
   },
   {
-    "name": "Black Butler, S02 Specials",
-    "episodes": "(6x) EP 1-6",
-    "time": "156 min (2,6 hod)",
+    "name": "Black Butler: Book of Circus",
+    "episodes": "(4x) EP 1-4",
+    "time": "97 min (1,6 hod)",
+    "date": "2025-07-16T00:00:00"
+  },
+  {
+    "name": "My Dress-Up Darling, S02",
+    "episodes": "(1x) EP 2",
+    "time": "24 min",
     "date": "2025-07-15T00:00:00"
   },
   {
@@ -2778,9 +2778,9 @@
     "date": "2025-07-15T00:00:00"
   },
   {
-    "name": "My Dress-Up Darling, S02",
-    "episodes": "(1x) EP 2",
-    "time": "24 min",
+    "name": "Black Butler, S02 Specials",
+    "episodes": "(6x) EP 1-6",
+    "time": "156 min (2,6 hod)",
     "date": "2025-07-15T00:00:00"
   },
   {
@@ -2808,12 +2808,6 @@
     "date": "2025-07-13T00:00:00"
   },
   {
-    "name": "Black Butler, S01",
-    "episodes": "(10x) EP 1-10",
-    "time": "244 min (4,1 hod)",
-    "date": "2025-07-12T00:00:00"
-  },
-  {
     "name": "Lord of Mysteries",
     "episodes": "(1x) EP 4",
     "time": "33 min",
@@ -2836,6 +2830,18 @@
     "episodes": "(1x) EP 2",
     "time": "24 min",
     "date": "2025-07-12T00:00:00"
+  },
+  {
+    "name": "Black Butler, S01",
+    "episodes": "(10x) EP 1-10",
+    "time": "244 min (4,1 hod)",
+    "date": "2025-07-12T00:00:00"
+  },
+  {
+    "name": "The Water Magician",
+    "episodes": "(1x) EP 2",
+    "time": "24 min",
+    "date": "2025-07-11T00:00:00"
   },
   {
     "name": "Rascal Does Not Dream of a Dreaming Girl",
@@ -2862,12 +2868,6 @@
     "date": "2025-07-11T00:00:00"
   },
   {
-    "name": "The Water Magician",
-    "episodes": "(1x) EP 2",
-    "time": "24 min",
-    "date": "2025-07-11T00:00:00"
-  },
-  {
     "name": "Rascal Does Not Dream of Santa Claus",
     "episodes": "(1x) EP 1",
     "time": "24 min",
@@ -2886,15 +2886,15 @@
     "date": "2025-07-09T00:00:00"
   },
   {
-    "name": "The Rising of the Shield Hero, S04",
-    "episodes": "(1x) EP 1",
-    "time": "24 min",
-    "date": "2025-07-09T00:00:00"
-  },
-  {
     "name": "The Summer Hikaru Died, S01",
     "episodes": "(1x) EP 1",
     "time": "23 min",
+    "date": "2025-07-09T00:00:00"
+  },
+  {
+    "name": "The Rising of the Shield Hero, S04",
+    "episodes": "(1x) EP 1",
+    "time": "24 min",
     "date": "2025-07-09T00:00:00"
   },
   {
@@ -2934,15 +2934,15 @@
     "date": "2025-07-05T00:00:00"
   },
   {
-    "name": "Your Name.",
-    "episodes": "(1x) EP 1",
-    "time": "106 min (1,8 hod)",
-    "date": "2025-07-05T00:00:00"
-  },
-  {
     "name": "Lord of Mysteries",
     "episodes": "(1x) EP 3",
     "time": "33 min",
+    "date": "2025-07-05T00:00:00"
+  },
+  {
+    "name": "Your Name.",
+    "episodes": "(1x) EP 1",
+    "time": "106 min (1,8 hod)",
     "date": "2025-07-05T00:00:00"
   },
   {
@@ -3000,6 +3000,12 @@
     "date": "2025-07-01T00:00:00"
   },
   {
+    "name": "Re:Zero -Starting Life in Another World-, S03",
+    "episodes": "(8x) EP 9-16",
+    "time": "228 min (3,8 hod)",
+    "date": "2025-06-30T00:00:00"
+  },
+  {
     "name": "Astra Lost in Space",
     "episodes": "(5x) EP 1-5",
     "time": "139 min (2,3 hod)",
@@ -3007,20 +3013,14 @@
   },
   {
     "name": "Re:Zero -Starting Life in Another World-, S03",
-    "episodes": "(8x) EP 9-16",
+    "episodes": "(8x) EP 1-8",
     "time": "228 min (3,8 hod)",
-    "date": "2025-06-30T00:00:00"
+    "date": "2025-06-29T00:00:00"
   },
   {
     "name": "Lazarus",
     "episodes": "(1x) EP 13",
     "time": "24 min",
-    "date": "2025-06-29T00:00:00"
-  },
-  {
-    "name": "Re:Zero -Starting Life in Another World-, S03",
-    "episodes": "(8x) EP 1-8",
-    "time": "228 min (3,8 hod)",
     "date": "2025-06-29T00:00:00"
   },
   {
@@ -3072,6 +3072,12 @@
     "date": "2025-06-23T00:00:00"
   },
   {
+    "name": "Lazarus",
+    "episodes": "(1x) EP 12",
+    "time": "24 min",
+    "date": "2025-06-22T00:00:00"
+  },
+  {
     "name": "Lord El-Melloi II's Case Files: Rail Zeppelin Grace Note - A Grave Keeper, a Cat, and a Mage",
     "episodes": "(1x) EP 1",
     "time": "25 min",
@@ -3084,16 +3090,16 @@
     "date": "2025-06-22T00:00:00"
   },
   {
-    "name": "Lazarus",
-    "episodes": "(1x) EP 12",
-    "time": "24 min",
-    "date": "2025-06-22T00:00:00"
-  },
-  {
     "name": "Lord El-Melloi II's Case Files: Rail Zeppelin Grace Note - Waver, Reunion, and the Magic Lantern",
     "episodes": "(1x) EP 1",
     "time": "53 min",
     "date": "2025-06-22T00:00:00"
+  },
+  {
+    "name": "From Old Country Bumpkin to Master Swordsman, S01",
+    "episodes": "(1x) EP 12",
+    "time": "24 min",
+    "date": "2025-06-21T00:00:00"
   },
   {
     "name": "Spy x Family, S02",
@@ -3105,12 +3111,6 @@
     "name": "Spy x Family Code: White",
     "episodes": "(1x) EP 1",
     "time": "110 min (1,8 hod)",
-    "date": "2025-06-21T00:00:00"
-  },
-  {
-    "name": "From Old Country Bumpkin to Master Swordsman, S01",
-    "episodes": "(1x) EP 12",
-    "time": "24 min",
     "date": "2025-06-21T00:00:00"
   },
   {
@@ -3132,6 +3132,12 @@
     "date": "2025-06-19T00:00:00"
   },
   {
+    "name": "The Beginning After the End",
+    "episodes": "(2x) EP 11-12",
+    "time": "46 min",
+    "date": "2025-06-18T00:00:00"
+  },
+  {
     "name": "Death Billiards",
     "episodes": "(1x) EP 1",
     "time": "25 min",
@@ -3144,10 +3150,10 @@
     "date": "2025-06-18T00:00:00"
   },
   {
-    "name": "The Beginning After the End",
-    "episodes": "(2x) EP 11-12",
-    "time": "46 min",
-    "date": "2025-06-18T00:00:00"
+    "name": "Lycoris Recoil",
+    "episodes": "(6x) EP 8-13",
+    "time": "144 min (2,4 hod)",
+    "date": "2025-06-17T00:00:00"
   },
   {
     "name": "Lycoris Recoil: Friends Are Thieves of Time.",
@@ -3157,27 +3163,9 @@
   },
   {
     "name": "Lycoris Recoil",
-    "episodes": "(6x) EP 8-13",
-    "time": "144 min (2,4 hod)",
-    "date": "2025-06-17T00:00:00"
-  },
-  {
-    "name": "Lycoris Recoil",
     "episodes": "(7x) EP 1-7",
     "time": "168 min (2,8 hod)",
     "date": "2025-06-16T00:00:00"
-  },
-  {
-    "name": "Noragami Aragoto OVA",
-    "episodes": "(2x) EP 1-2",
-    "time": "48 min",
-    "date": "2025-06-15T00:00:00"
-  },
-  {
-    "name": "Noragami OVA",
-    "episodes": "(2x) EP 1-2",
-    "time": "48 min",
-    "date": "2025-06-15T00:00:00"
   },
   {
     "name": "Lazarus",
@@ -3195,6 +3183,18 @@
     "name": "Noragami Aragoto",
     "episodes": "(7x) EP 7-13",
     "time": "169 min (2,8 hod)",
+    "date": "2025-06-15T00:00:00"
+  },
+  {
+    "name": "Noragami Aragoto OVA",
+    "episodes": "(2x) EP 1-2",
+    "time": "48 min",
+    "date": "2025-06-15T00:00:00"
+  },
+  {
+    "name": "Noragami OVA",
+    "episodes": "(2x) EP 1-2",
+    "time": "48 min",
     "date": "2025-06-15T00:00:00"
   },
   {
@@ -3234,15 +3234,15 @@
     "date": "2025-06-09T00:00:00"
   },
   {
-    "name": "Orange: Mirai",
-    "episodes": "(1x) EP 1",
-    "time": "62 min (1,0 hod)",
-    "date": "2025-06-09T00:00:00"
-  },
-  {
     "name": "From Old Country Bumpkin to Master Swordsman, S01",
     "episodes": "(1x) EP 10",
     "time": "24 min",
+    "date": "2025-06-09T00:00:00"
+  },
+  {
+    "name": "Orange: Mirai",
+    "episodes": "(1x) EP 1",
+    "time": "62 min (1,0 hod)",
     "date": "2025-06-09T00:00:00"
   },
   {
@@ -3258,15 +3258,15 @@
     "date": "2025-06-06T00:00:00"
   },
   {
-    "name": "Plastic Memories",
-    "episodes": "(5x) EP 1-5",
-    "time": "121 min (2,0 hod)",
-    "date": "2025-06-05T00:00:00"
-  },
-  {
     "name": "The Beginning After the End",
     "episodes": "(1x) EP 10",
     "time": "23 min",
+    "date": "2025-06-05T00:00:00"
+  },
+  {
+    "name": "Plastic Memories",
+    "episodes": "(5x) EP 1-5",
+    "time": "121 min (2,0 hod)",
     "date": "2025-06-05T00:00:00"
   },
   {
@@ -3282,27 +3282,27 @@
     "date": "2025-06-03T00:00:00"
   },
   {
-    "name": "Angel Beats! Another Epilogue",
-    "episodes": "(1x) EP 1",
-    "time": "3 min",
-    "date": "2025-06-02T00:00:00"
-  },
-  {
     "name": "Angel Beats!",
     "episodes": "(8x) EP 6-13",
     "time": "205 min (3,4 hod)",
     "date": "2025-06-02T00:00:00"
   },
   {
-    "name": "Angel Beats! Specials",
-    "episodes": "(2x) EP 1-2",
-    "time": "55 min",
-    "date": "2025-06-01T00:00:00"
+    "name": "Angel Beats! Another Epilogue",
+    "episodes": "(1x) EP 1",
+    "time": "3 min",
+    "date": "2025-06-02T00:00:00"
   },
   {
     "name": "Lazarus",
     "episodes": "(1x) EP 9",
     "time": "24 min",
+    "date": "2025-06-01T00:00:00"
+  },
+  {
+    "name": "Angel Beats! Specials",
+    "episodes": "(2x) EP 1-2",
+    "time": "55 min",
     "date": "2025-06-01T00:00:00"
   },
   {
@@ -3312,14 +3312,14 @@
     "date": "2025-06-01T00:00:00"
   },
   {
-    "name": "Your Lie in April: Moments",
-    "episodes": "(1x) EP 1",
-    "time": "23 min",
+    "name": "Lazarus",
+    "episodes": "(1x) EP 8",
+    "time": "24 min",
     "date": "2025-05-31T00:00:00"
   },
   {
-    "name": "Lazarus",
-    "episodes": "(1x) EP 8",
+    "name": "From Old Country Bumpkin to Master Swordsman, S01",
+    "episodes": "(1x) EP 9",
     "time": "24 min",
     "date": "2025-05-31T00:00:00"
   },
@@ -3330,9 +3330,9 @@
     "date": "2025-05-31T00:00:00"
   },
   {
-    "name": "From Old Country Bumpkin to Master Swordsman, S01",
-    "episodes": "(1x) EP 9",
-    "time": "24 min",
+    "name": "Your Lie in April: Moments",
+    "episodes": "(1x) EP 1",
+    "time": "23 min",
     "date": "2025-05-31T00:00:00"
   },
   {
@@ -3372,15 +3372,15 @@
     "date": "2025-05-26T00:00:00"
   },
   {
-    "name": "Goblin Slayer: Goblin's Crown",
-    "episodes": "(1x) EP 1",
-    "time": "85 min (1,4 hod)",
-    "date": "2025-05-25T00:00:00"
-  },
-  {
     "name": "From Old Country Bumpkin to Master Swordsman, S01",
     "episodes": "(1x) EP 8",
     "time": "24 min",
+    "date": "2025-05-25T00:00:00"
+  },
+  {
+    "name": "Goblin Slayer: Goblin's Crown",
+    "episodes": "(1x) EP 1",
+    "time": "85 min (1,4 hod)",
     "date": "2025-05-25T00:00:00"
   },
   {
@@ -3402,15 +3402,15 @@
     "date": "2025-05-22T00:00:00"
   },
   {
-    "name": "Deadman Wonderland",
-    "episodes": "(8x) EP 5-12",
-    "time": "197 min (3,3 hod)",
-    "date": "2025-05-21T00:00:00"
-  },
-  {
     "name": "The Beginning After the End",
     "episodes": "(1x) EP 8",
     "time": "23 min",
+    "date": "2025-05-21T00:00:00"
+  },
+  {
+    "name": "Deadman Wonderland",
+    "episodes": "(8x) EP 5-12",
+    "time": "197 min (3,3 hod)",
     "date": "2025-05-21T00:00:00"
   },
   {
@@ -3420,12 +3420,6 @@
     "date": "2025-05-20T00:00:00"
   },
   {
-    "name": "Chivalry of a Failed Knight",
-    "episodes": "(8x) EP 5-12",
-    "time": "190 min (3,2 hod)",
-    "date": "2025-05-19T00:00:00"
-  },
-  {
     "name": "From Old Country Bumpkin to Master Swordsman, S01",
     "episodes": "(1x) EP 7",
     "time": "24 min",
@@ -3433,14 +3427,20 @@
   },
   {
     "name": "Chivalry of a Failed Knight",
-    "episodes": "(4x) EP 1-4",
-    "time": "95 min (1,6 hod)",
-    "date": "2025-05-18T00:00:00"
+    "episodes": "(8x) EP 5-12",
+    "time": "190 min (3,2 hod)",
+    "date": "2025-05-19T00:00:00"
   },
   {
     "name": "Lazarus",
     "episodes": "(1x) EP 7",
     "time": "24 min",
+    "date": "2025-05-18T00:00:00"
+  },
+  {
+    "name": "Chivalry of a Failed Knight",
+    "episodes": "(4x) EP 1-4",
+    "time": "95 min (1,6 hod)",
     "date": "2025-05-18T00:00:00"
   },
   {
@@ -3504,15 +3504,15 @@
     "date": "2025-05-08T00:00:00"
   },
   {
-    "name": "Made in Abyss",
-    "episodes": "(13x) EP 1-13",
-    "time": "332 min (5,5 hod)",
-    "date": "2025-05-07T00:00:00"
-  },
-  {
     "name": "The Beginning After the End",
     "episodes": "(1x) EP 6",
     "time": "23 min",
+    "date": "2025-05-07T00:00:00"
+  },
+  {
+    "name": "Made in Abyss",
+    "episodes": "(13x) EP 1-13",
+    "time": "332 min (5,5 hod)",
     "date": "2025-05-07T00:00:00"
   },
   {
@@ -3558,15 +3558,15 @@
     "date": "2025-05-01T00:00:00"
   },
   {
-    "name": "Shangri-La Frontier, S01",
-    "episodes": "(12x) EP 1-12",
-    "time": "300 min (5,0 hod)",
-    "date": "2025-04-30T00:00:00"
-  },
-  {
     "name": "The Beginning After the End",
     "episodes": "(1x) EP 5",
     "time": "23 min",
+    "date": "2025-04-30T00:00:00"
+  },
+  {
+    "name": "Shangri-La Frontier, S01",
+    "episodes": "(12x) EP 1-12",
+    "time": "300 min (5,0 hod)",
     "date": "2025-04-30T00:00:00"
   },
   {
@@ -3600,6 +3600,12 @@
     "date": "2025-04-27T00:00:00"
   },
   {
+    "name": "From Old Country Bumpkin to Master Swordsman, S01",
+    "episodes": "(1x) EP 4",
+    "time": "24 min",
+    "date": "2025-04-26T00:00:00"
+  },
+  {
     "name": "Evangelion: 1.0 You Are (Not) Alone",
     "episodes": "(1x) EP 1",
     "time": "101 min (1,7 hod)",
@@ -3615,12 +3621,6 @@
     "name": "Evangelion: 3.0 You Can (Not) Redo",
     "episodes": "(1x) EP 1",
     "time": "97 min (1,6 hod)",
-    "date": "2025-04-26T00:00:00"
-  },
-  {
-    "name": "From Old Country Bumpkin to Master Swordsman, S01",
-    "episodes": "(1x) EP 4",
-    "time": "24 min",
     "date": "2025-04-26T00:00:00"
   },
   {
@@ -3642,15 +3642,15 @@
     "date": "2025-04-24T00:00:00"
   },
   {
-    "name": "Neon Genesis Evangelion",
-    "episodes": "(12x) EP 1-12",
-    "time": "288 min (4,8 hod)",
-    "date": "2025-04-23T00:00:00"
-  },
-  {
     "name": "The Beginning After the End",
     "episodes": "(1x) EP 4",
     "time": "23 min",
+    "date": "2025-04-23T00:00:00"
+  },
+  {
+    "name": "Neon Genesis Evangelion",
+    "episodes": "(12x) EP 1-12",
+    "time": "288 min (4,8 hod)",
     "date": "2025-04-23T00:00:00"
   },
   {
@@ -3672,6 +3672,12 @@
     "date": "2025-04-21T00:00:00"
   },
   {
+    "name": "Lazarus",
+    "episodes": "(1x) EP 3",
+    "time": "24 min",
+    "date": "2025-04-20T00:00:00"
+  },
+  {
     "name": "Attack on Titan: Lost Girls",
     "episodes": "(1x) EP 3",
     "time": "24 min",
@@ -3690,21 +3696,15 @@
     "date": "2025-04-20T00:00:00"
   },
   {
-    "name": "Lazarus",
+    "name": "From Old Country Bumpkin to Master Swordsman, S01",
     "episodes": "(1x) EP 3",
     "time": "24 min",
-    "date": "2025-04-20T00:00:00"
+    "date": "2025-04-19T00:00:00"
   },
   {
     "name": "Attack on Titan, S02",
     "episodes": "(12x) EP 1-12",
     "time": "293 min (4,9 hod)",
-    "date": "2025-04-19T00:00:00"
-  },
-  {
-    "name": "Attack on Titan: Lost Girls",
-    "episodes": "(2x) EP 1-2",
-    "time": "48 min",
     "date": "2025-04-19T00:00:00"
   },
   {
@@ -3714,9 +3714,9 @@
     "date": "2025-04-19T00:00:00"
   },
   {
-    "name": "From Old Country Bumpkin to Master Swordsman, S01",
-    "episodes": "(1x) EP 3",
-    "time": "24 min",
+    "name": "Attack on Titan: Lost Girls",
+    "episodes": "(2x) EP 1-2",
+    "time": "48 min",
     "date": "2025-04-19T00:00:00"
   },
   {
@@ -3774,15 +3774,15 @@
     "date": "2025-04-13T00:00:00"
   },
   {
-    "name": "Moonrise",
-    "episodes": "(6x) EP 7-12",
-    "time": "152 min (2,5 hod)",
-    "date": "2025-04-12T00:00:00"
-  },
-  {
     "name": "From Old Country Bumpkin to Master Swordsman, S01",
     "episodes": "(1x) EP 2",
     "time": "24 min",
+    "date": "2025-04-12T00:00:00"
+  },
+  {
+    "name": "Moonrise",
+    "episodes": "(6x) EP 7-12",
+    "time": "152 min (2,5 hod)",
     "date": "2025-04-12T00:00:00"
   },
   {
@@ -3804,6 +3804,12 @@
     "date": "2025-04-10T00:00:00"
   },
   {
+    "name": "The Beginning After the End",
+    "episodes": "(1x) EP 2",
+    "time": "23 min",
+    "date": "2025-04-09T00:00:00"
+  },
+  {
     "name": "Code Geass: Akito the Exiled 2 - The Wyvern Divided",
     "episodes": "(1x) EP 1",
     "time": "60 min (1,0 hod)",
@@ -3822,21 +3828,15 @@
     "date": "2025-04-09T00:00:00"
   },
   {
-    "name": "The Beginning After the End",
-    "episodes": "(1x) EP 2",
-    "time": "23 min",
-    "date": "2025-04-09T00:00:00"
+    "name": "Code Geass: Lelouch of the Rebellion R2",
+    "episodes": "(6x) EP 20-25",
+    "time": "146 min (2,4 hod)",
+    "date": "2025-04-08T00:00:00"
   },
   {
     "name": "Code Geass: Akito the Exiled 1 - The Wyvern Arrives",
     "episodes": "(1x) EP 1",
     "time": "51 min",
-    "date": "2025-04-08T00:00:00"
-  },
-  {
-    "name": "Code Geass: Lelouch of the Rebellion R2",
-    "episodes": "(6x) EP 20-25",
-    "time": "146 min (2,4 hod)",
     "date": "2025-04-08T00:00:00"
   },
   {
@@ -3876,15 +3876,15 @@
     "date": "2025-04-04T00:00:00"
   },
   {
-    "name": "Code Geass: Lelouch of the Rebellion R1",
-    "episodes": "(9x) EP 1-9",
-    "time": "219 min (3,6 hod)",
-    "date": "2025-04-04T00:00:00"
-  },
-  {
     "name": "The Garden of Sinners: Future Gospel - Extra Chorus",
     "episodes": "(1x) EP 1",
     "time": "32 min",
+    "date": "2025-04-04T00:00:00"
+  },
+  {
+    "name": "Code Geass: Lelouch of the Rebellion R1",
+    "episodes": "(9x) EP 1-9",
+    "time": "219 min (3,6 hod)",
     "date": "2025-04-04T00:00:00"
   },
   {
@@ -3972,15 +3972,15 @@
     "date": "2025-03-29T00:00:00"
   },
   {
-    "name": "Fate/Grand Order: Absolute Demonic Front - Babylonia",
-    "episodes": "(7x) EP 1-7",
-    "time": "166 min (2,8 hod)",
-    "date": "2025-03-28T00:00:00"
-  },
-  {
     "name": "Fate/Grand Order: Absolute Demonic Front - Babylonia Initium Iter",
     "episodes": "(1x) EP 1",
     "time": "27 min",
+    "date": "2025-03-28T00:00:00"
+  },
+  {
+    "name": "Fate/Grand Order: Absolute Demonic Front - Babylonia",
+    "episodes": "(7x) EP 1-7",
+    "time": "166 min (2,8 hod)",
     "date": "2025-03-28T00:00:00"
   },
   {
@@ -3996,9 +3996,9 @@
     "date": "2025-03-27T00:00:00"
   },
   {
-    "name": "Fate/Grand Order: First Order",
-    "episodes": "(1x) EP 1",
-    "time": "72 min (1,2 hod)",
+    "name": "Re:Zero -Starting Life in Another World-, S03",
+    "episodes": "(1x) EP 16",
+    "time": "29 min",
     "date": "2025-03-26T00:00:00"
   },
   {
@@ -4008,9 +4008,9 @@
     "date": "2025-03-26T00:00:00"
   },
   {
-    "name": "Re:Zero -Starting Life in Another World-, S03",
-    "episodes": "(1x) EP 16",
-    "time": "29 min",
+    "name": "Fate/Grand Order: First Order",
+    "episodes": "(1x) EP 1",
+    "time": "72 min (1,2 hod)",
     "date": "2025-03-26T00:00:00"
   },
   {
@@ -4032,15 +4032,15 @@
     "date": "2025-03-23T00:00:00"
   },
   {
-    "name": "Fate/Zero, S02",
-    "episodes": "(6x) EP 7-12",
-    "time": "145 min (2,4 hod)",
-    "date": "2025-03-22T00:00:00"
-  },
-  {
     "name": "No Game, No Life",
     "episodes": "(5x) EP 1-5",
     "time": "115 min (1,9 hod)",
+    "date": "2025-03-22T00:00:00"
+  },
+  {
+    "name": "Fate/Zero, S02",
+    "episodes": "(6x) EP 7-12",
+    "time": "145 min (2,4 hod)",
     "date": "2025-03-22T00:00:00"
   },
   {
@@ -4098,6 +4098,12 @@
     "date": "2025-03-15T00:00:00"
   },
   {
+    "name": "Sword Art Online Alternative: Gun Gale Online, S02",
+    "episodes": "(6x) EP 7-12",
+    "time": "142 min (2,4 hod)",
+    "date": "2025-03-14T00:00:00"
+  },
+  {
     "name": "Fate/stay night [Unlimited Blade Works] - Prologue",
     "episodes": "(1x) EP 1",
     "time": "51 min",
@@ -4111,26 +4117,20 @@
   },
   {
     "name": "Sword Art Online Alternative: Gun Gale Online, S02",
-    "episodes": "(6x) EP 7-12",
-    "time": "142 min (2,4 hod)",
-    "date": "2025-03-14T00:00:00"
-  },
-  {
-    "name": "Sword Art Online Alternative: Gun Gale Online, S02",
     "episodes": "(6x) EP 1-6",
     "time": "142 min (2,4 hod)",
     "date": "2025-03-13T00:00:00"
   },
   {
-    "name": "Sword Art Online Alternative: Gun Gale Online, S01",
-    "episodes": "(12x) EP 1-12",
-    "time": "284 min (4,7 hod)",
-    "date": "2025-03-12T00:00:00"
-  },
-  {
     "name": "Re:Zero -Starting Life in Another World-, S03",
     "episodes": "(1x) EP 14",
     "time": "29 min",
+    "date": "2025-03-12T00:00:00"
+  },
+  {
+    "name": "Sword Art Online Alternative: Gun Gale Online, S01",
+    "episodes": "(12x) EP 1-12",
+    "time": "284 min (4,7 hod)",
     "date": "2025-03-12T00:00:00"
   },
   {
@@ -4164,15 +4164,15 @@
     "date": "2025-03-08T00:00:00"
   },
   {
-    "name": "Sword Art Online: Alicization",
-    "episodes": "(12x) EP 1-12",
-    "time": "296 min (4,9 hod)",
-    "date": "2025-03-07T00:00:00"
-  },
-  {
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S05",
     "episodes": "(1x) EP 15",
     "time": "24 min",
+    "date": "2025-03-07T00:00:00"
+  },
+  {
+    "name": "Sword Art Online: Alicization",
+    "episodes": "(12x) EP 1-12",
+    "time": "296 min (4,9 hod)",
     "date": "2025-03-07T00:00:00"
   },
   {
@@ -4182,12 +4182,6 @@
     "date": "2025-03-06T00:00:00"
   },
   {
-    "name": "Sword Art Online, S02",
-    "episodes": "(12x) EP 13-24",
-    "time": "287 min (4,8 hod)",
-    "date": "2025-03-05T00:00:00"
-  },
-  {
     "name": "Re:Zero -Starting Life in Another World-, S03",
     "episodes": "(1x) EP 13",
     "time": "29 min",
@@ -4195,13 +4189,19 @@
   },
   {
     "name": "Sword Art Online, S02",
-    "episodes": "(12x) EP 1-12",
+    "episodes": "(12x) EP 13-24",
     "time": "287 min (4,8 hod)",
-    "date": "2025-03-04T00:00:00"
+    "date": "2025-03-05T00:00:00"
   },
   {
     "name": "Sword Art Online, S01",
     "episodes": "(12x) EP 14-25",
+    "time": "287 min (4,8 hod)",
+    "date": "2025-03-04T00:00:00"
+  },
+  {
+    "name": "Sword Art Online, S02",
+    "episodes": "(12x) EP 1-12",
     "time": "287 min (4,8 hod)",
     "date": "2025-03-04T00:00:00"
   },
@@ -4236,16 +4236,22 @@
     "date": "2025-03-01T00:00:00"
   },
   {
+    "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S05",
+    "episodes": "(1x) EP 14",
+    "time": "24 min",
+    "date": "2025-02-28T00:00:00"
+  },
+  {
     "name": "Suzume",
     "episodes": "(1x) EP 1",
     "time": "121 min (2,0 hod)",
     "date": "2025-02-28T00:00:00"
   },
   {
-    "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S05",
-    "episodes": "(1x) EP 14",
-    "time": "24 min",
-    "date": "2025-02-28T00:00:00"
+    "name": "Re:Zero -Starting Life in Another World-, S03",
+    "episodes": "(1x) EP 12",
+    "time": "29 min",
+    "date": "2025-02-26T00:00:00"
   },
   {
     "name": "Violet Evergarden: Eternity and the Auto Memory Doll",
@@ -4257,12 +4263,6 @@
     "name": "Violet Evergarden: The Movie",
     "episodes": "(1x) EP 1",
     "time": "140 min (2,3 hod)",
-    "date": "2025-02-26T00:00:00"
-  },
-  {
-    "name": "Re:Zero -Starting Life in Another World-, S03",
-    "episodes": "(1x) EP 12",
-    "time": "29 min",
     "date": "2025-02-26T00:00:00"
   },
   {
@@ -4320,6 +4320,12 @@
     "date": "2025-02-20T00:00:00"
   },
   {
+    "name": "Re:Zero -Starting Life in Another World-, S03",
+    "episodes": "(1x) EP 11",
+    "time": "29 min",
+    "date": "2025-02-19T00:00:00"
+  },
+  {
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S01",
     "episodes": "(6x) EP 8-13",
     "time": "142 min (2,4 hod)",
@@ -4338,21 +4344,15 @@
     "date": "2025-02-19T00:00:00"
   },
   {
-    "name": "Re:Zero -Starting Life in Another World-, S03",
-    "episodes": "(1x) EP 11",
-    "time": "29 min",
-    "date": "2025-02-19T00:00:00"
+    "name": "86 Eighty-Six, S01 Part 2",
+    "episodes": "(6x) EP 7-12",
+    "time": "142 min (2,4 hod)",
+    "date": "2025-02-18T00:00:00"
   },
   {
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S01",
     "episodes": "(7x) EP 1-7",
     "time": "166 min (2,8 hod)",
-    "date": "2025-02-18T00:00:00"
-  },
-  {
-    "name": "86 Eighty-Six, S01 Part 2",
-    "episodes": "(6x) EP 7-12",
-    "time": "142 min (2,4 hod)",
     "date": "2025-02-18T00:00:00"
   },
   {
@@ -4368,15 +4368,15 @@
     "date": "2025-02-17T00:00:00"
   },
   {
-    "name": "No Game, No Life: Zero",
-    "episodes": "(1x) EP 1",
-    "time": "106 min (1,8 hod)",
-    "date": "2025-02-16T00:00:00"
-  },
-  {
     "name": "No Game, No Life",
     "episodes": "(12x) EP 1-12",
     "time": "276 min (4,6 hod)",
+    "date": "2025-02-16T00:00:00"
+  },
+  {
+    "name": "No Game, No Life: Zero",
+    "episodes": "(1x) EP 1",
+    "time": "106 min (1,8 hod)",
     "date": "2025-02-16T00:00:00"
   },
   {
@@ -4404,15 +4404,15 @@
     "date": "2025-02-13T00:00:00"
   },
   {
-    "name": "To Your Eternity, S01",
-    "episodes": "(10x) EP 11-20",
-    "time": "250 min (4,2 hod)",
-    "date": "2025-02-12T00:00:00"
-  },
-  {
     "name": "Re:Zero -Starting Life in Another World-, S03",
     "episodes": "(1x) EP 10",
     "time": "29 min",
+    "date": "2025-02-12T00:00:00"
+  },
+  {
+    "name": "To Your Eternity, S01",
+    "episodes": "(10x) EP 11-20",
+    "time": "250 min (4,2 hod)",
     "date": "2025-02-12T00:00:00"
   },
   {
@@ -4470,15 +4470,15 @@
     "date": "2025-02-06T00:00:00"
   },
   {
-    "name": "Overlord, S01",
-    "episodes": "(6x) EP 8-13",
-    "time": "145 min (2,4 hod)",
-    "date": "2025-02-05T00:00:00"
-  },
-  {
     "name": "Re:Zero -Starting Life in Another World-, S03",
     "episodes": "(1x) EP 9",
     "time": "29 min",
+    "date": "2025-02-05T00:00:00"
+  },
+  {
+    "name": "Overlord, S01",
+    "episodes": "(6x) EP 8-13",
+    "time": "145 min (2,4 hod)",
     "date": "2025-02-05T00:00:00"
   },
   {
@@ -4566,15 +4566,15 @@
     "date": "2025-01-26T00:00:00"
   },
   {
-    "name": "Overlord, S01",
-    "episodes": "(7x) EP 1-7",
-    "time": "170 min (2,8 hod)",
-    "date": "2025-01-25T00:00:00"
-  },
-  {
     "name": "Summer Time Rendering",
     "episodes": "(13x) EP 1-13",
     "time": "310 min (5,2 hod)",
+    "date": "2025-01-25T00:00:00"
+  },
+  {
+    "name": "Overlord, S01",
+    "episodes": "(7x) EP 1-7",
+    "time": "170 min (2,8 hod)",
     "date": "2025-01-25T00:00:00"
   },
   {
@@ -4638,6 +4638,12 @@
     "date": "2025-01-16T00:00:00"
   },
   {
+    "name": "That Time I Got Reincarnated as a Slime, S01",
+    "episodes": "(12x) EP 13-24",
+    "time": "284 min (4,7 hod)",
+    "date": "2025-01-15T00:00:00"
+  },
+  {
     "name": "That Time I Got Reincarnated as a Slime, S02 Part 1",
     "episodes": "(12x) EP 1-12",
     "time": "284 min (4,7 hod)",
@@ -4645,20 +4651,14 @@
   },
   {
     "name": "That Time I Got Reincarnated as a Slime, S01",
-    "episodes": "(12x) EP 13-24",
+    "episodes": "(12x) EP 1-12",
     "time": "284 min (4,7 hod)",
-    "date": "2025-01-15T00:00:00"
+    "date": "2025-01-14T00:00:00"
   },
   {
     "name": "Spy x Family, S01 Part 1",
     "episodes": "(5x) EP 1-5",
     "time": "121 min (2,0 hod)",
-    "date": "2025-01-14T00:00:00"
-  },
-  {
-    "name": "That Time I Got Reincarnated as a Slime, S01",
-    "episodes": "(12x) EP 1-12",
-    "time": "284 min (4,7 hod)",
     "date": "2025-01-14T00:00:00"
   },
   {
@@ -4920,15 +4920,15 @@
     "date": "2024-09-08T00:00:00"
   },
   {
-    "name": "NieR:Automata Ver1.1a Part 2",
-    "episodes": "(1x) EP 6",
-    "time": "24 min",
-    "date": "2024-09-07T00:00:00"
-  },
-  {
     "name": "Chainsaw Man",
     "episodes": "(6x) EP 7-12",
     "time": "145 min (2,4 hod)",
+    "date": "2024-09-07T00:00:00"
+  },
+  {
+    "name": "NieR:Automata Ver1.1a Part 2",
+    "episodes": "(1x) EP 6",
+    "time": "24 min",
     "date": "2024-09-07T00:00:00"
   },
   {
@@ -4956,15 +4956,15 @@
     "date": "2024-08-11T00:00:00"
   },
   {
-    "name": "NieR:Automata Ver1.1a Part 1",
-    "episodes": "(6x) EP 1-6",
-    "time": "142 min (2,4 hod)",
-    "date": "2024-08-10T00:00:00"
-  },
-  {
     "name": "Death Note",
     "episodes": "(6x) EP 32-37",
     "time": "138 min (2,3 hod)",
+    "date": "2024-08-10T00:00:00"
+  },
+  {
+    "name": "NieR:Automata Ver1.1a Part 1",
+    "episodes": "(6x) EP 1-6",
+    "time": "142 min (2,4 hod)",
     "date": "2024-08-10T00:00:00"
   },
   {

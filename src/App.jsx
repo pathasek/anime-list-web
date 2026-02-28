@@ -6,6 +6,7 @@ import AnimeDetail from './pages/AnimeDetail'
 import HistoryLog from './pages/HistoryLog'
 import Favorites from './pages/Favorites'
 import PlanToWatch from './pages/PlanToWatch'
+import TopFavorites from './pages/TopFavorites'
 import './index.css'
 
 // Icons as simple SVG components
@@ -125,6 +126,10 @@ function AppContent({ stats }) {
             <Icons.Bookmark />
             <span>Plan to Watch</span>
           </NavLink>
+          <NavLink to="/top-favorites" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
+            <span style={{ fontSize: '1.2rem', paddingRight: '0.4rem' }}>🏆</span>
+            <span>Top Favorites</span>
+          </NavLink>
         </nav>
 
         {/* Stats in sidebar footer */}
@@ -153,6 +158,7 @@ function AppContent({ stats }) {
           <Route path="/history" element={<HistoryLog />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/plan-to-watch" element={<PlanToWatch />} />
+          <Route path="/top-favorites" element={<TopFavorites />} />
         </Routes>
       </main>
     </div>

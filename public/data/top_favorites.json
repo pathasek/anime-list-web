@@ -1,0 +1,298 @@
+{
+  "top10_anime": [
+    {
+      "shape_name": "Top10_Anime_1",
+      "data": {
+        "NAME": "Code Geass"
+      },
+      "image_file": null
+    },
+    {
+      "shape_name": "Top10_Anime_2",
+      "data": {
+        "NAME": "Attack on Titan"
+      },
+      "image_file": null
+    },
+    {
+      "shape_name": "Top10_Anime_3",
+      "data": {
+        "NAME": "Re:Zero -Starting Life in Another World-"
+      },
+      "image_file": null
+    },
+    {
+      "shape_name": "Top10_Anime_4",
+      "data": {
+        "NAME": "Steins;Gate"
+      },
+      "image_file": null
+    },
+    {
+      "shape_name": "Top10_Anime_5",
+      "data": {
+        "NAME": "Frieren: Beyond Journey's End"
+      },
+      "image_file": null
+    },
+    {
+      "shape_name": "Top10_Anime_6",
+      "data": {
+        "NAME": "Sword Art Online"
+      },
+      "image_file": null
+    },
+    {
+      "shape_name": "Top10_Anime_7",
+      "data": {
+        "NAME": "Violet Evergarden"
+      },
+      "image_file": null
+    },
+    {
+      "shape_name": "Top10_Anime_8",
+      "data": {
+        "NAME": "Fate"
+      },
+      "image_file": null
+    },
+    {
+      "shape_name": "Top10_Anime_9",
+      "data": {
+        "NAME": "Made in Abyss"
+      },
+      "image_file": null
+    },
+    {
+      "shape_name": "Top10_Anime_10",
+      "data": {
+        "NAME": "Tokyo Magnitude 8.0"
+      },
+      "image_file": null
+    }
+  ],
+  "hm_anime": [
+    {
+      "shape_name": "HM_Anime_1",
+      "data": {
+        "NAME": "86 Eighty-Six"
+      },
+      "image_file": "images/top_favorites/HM_Anime_1.jpg"
+    },
+    {
+      "shape_name": "HM_Anime_2",
+      "data": {
+        "NAME": "Cyberpunk Edgerunners"
+      },
+      "image_file": "images/top_favorites/HM_Anime_2.jpg"
+    },
+    {
+      "shape_name": "HM_Anime_3",
+      "data": {
+        "NAME": "Death Parade"
+      },
+      "image_file": "images/top_favorites/HM_Anime_3.jpg"
+    },
+    {
+      "shape_name": "HM_Anime_4",
+      "data": {
+        "NAME": "No Game, No Life"
+      },
+      "image_file": "images/top_favorites/HM_Anime_4.jpg"
+    },
+    {
+      "shape_name": "HM_Anime_5",
+      "data": {
+        "NAME": "Is It Wrong to Try to Pick Up Girls in a Dungeon?"
+      },
+      "image_file": "images/top_favorites/HM_Anime_5.jpg"
+    },
+    {
+      "shape_name": "HM_Anime_6",
+      "data": {
+        "NAME": "Takopi's Original Sin"
+      },
+      "image_file": "images/top_favorites/HM_Anime_6.jpg"
+    },
+    {
+      "shape_name": "HM_Anime_7",
+      "data": {
+        "NAME": "Puella Magi Madoka Magica"
+      },
+      "image_file": "images/top_favorites/HM_Anime_7.jpg"
+    },
+    {
+      "shape_name": "HM_Anime_8",
+      "data": {
+        "NAME": "Higurashi: When They Cry"
+      },
+      "image_file": "images/top_favorites/HM_Anime_8.jpg"
+    },
+    {
+      "shape_name": "HM_Anime_9",
+      "data": {
+        "NAME": "Jujutsu Kaisen"
+      },
+      "image_file": "images/top_favorites/HM_Anime_9.jpg"
+    },
+    {
+      "shape_name": "HM_Anime_10",
+      "data": {
+        "NAME": "Ascendance of a Bookworm"
+      },
+      "image_file": "images/top_favorites/HM_Anime_10.jpg"
+    },
+    {
+      "shape_name": "HM_Anime_11",
+      "data": {
+        "NAME": "Lord of Mysteries"
+      },
+      "image_file": "images/top_favorites/HM_Anime_11.jpg"
+    },
+    {
+      "shape_name": "HM_Anime_12",
+      "data": {
+        "NAME": "Overlord"
+      },
+      "image_file": "images/top_favorites/HM_Anime_12.jpg"
+    },
+    {
+      "shape_name": "HM_Anime_13",
+      "data": {
+        "NAME": "KonoSuba"
+      },
+      "image_file": "images/top_favorites/HM_Anime_13.jpg"
+    },
+    {
+      "shape_name": "HM_Anime_14",
+      "data": {
+        "NAME": "Mushoku Tensei: Jobless Reincarnation"
+      },
+      "image_file": "images/top_favorites/HM_Anime_14.jpg"
+    },
+    {
+      "shape_name": "HM_Anime_15",
+      "data": {
+        "NAME": "Shangri-La Frontier"
+      },
+      "image_file": "images/top_favorites/HM_Anime_15.jpg"
+    },
+    {
+      "shape_name": "HM_Anime_16",
+      "data": {
+        "NAME": "Death Note"
+      },
+      "image_file": "images/top_favorites/HM_Anime_16.jpg"
+    },
+    {
+      "shape_name": "HM_Anime_17",
+      "data": {
+        "NAME": "Evangelion"
+      },
+      "image_file": "images/top_favorites/HM_Anime_17.jpg"
+    },
+    {
+      "shape_name": "HM_Anime_18",
+      "data": {
+        "NAME": "Demon Slayer"
+      },
+      "image_file": "images/top_favorites/HM_Anime_18.jpg"
+    },
+    {
+      "shape_name": "HM_Anime_19",
+      "data": {
+        "NAME": "Spice and Wolf: Merchant Meets the Wise Wolf"
+      },
+      "image_file": "images/top_favorites/HM_Anime_19.jpg"
+    },
+    {
+      "shape_name": "HM_Anime_20",
+      "data": {
+        "NAME": "Fullmetal Alchemist: Brotherhood"
+      },
+      "image_file": "images/top_favorites/HM_Anime_20.jpg"
+    }
+  ],
+  "top10_chars": [
+    {
+      "shape_name": "Top10_Char_1",
+      "data": {
+        "CHAR_ID": "118735",
+        "ANIME_NAME": "Re:Zero -Starting Life in Another World-"
+      },
+      "image_file": "images/top_favorites/Top10_Char_1.jpg"
+    },
+    {
+      "shape_name": "Top10_Char_2",
+      "data": {
+        "CHAR_ID": "1534",
+        "ANIME_NAME": "Higurashi: When They Cry"
+      },
+      "image_file": "images/top_favorites/Top10_Char_2.jpg"
+    },
+    {
+      "shape_name": "Top10_Char_3",
+      "data": {
+        "CHAR_ID": "35252",
+        "ANIME_NAME": "Steins"
+      },
+      "image_file": "images/top_favorites/Top10_Char_3.jpg"
+    },
+    {
+      "shape_name": "Top10_Char_4",
+      "data": {
+        "CHAR_ID": "417",
+        "ANIME_NAME": "Code Geass: Lelouch of the Rebellion"
+      },
+      "image_file": "images/top_favorites/Top10_Char_4.jpg"
+    },
+    {
+      "shape_name": "Top10_Char_5",
+      "data": {
+        "CHAR_ID": "80",
+        "ANIME_NAME": "Death Note"
+      },
+      "image_file": "images/top_favorites/Top10_Char_5.jpg"
+    },
+    {
+      "shape_name": "Top10_Char_6",
+      "data": {
+        "CHAR_ID": "81853",
+        "ANIME_NAME": "Death Parade"
+      },
+      "image_file": "images/top_favorites/Top10_Char_6.jpg"
+    },
+    {
+      "shape_name": "Top10_Char_7",
+      "data": {
+        "CHAR_ID": "213429",
+        "ANIME_NAME": "Shangri-La Frontier"
+      },
+      "image_file": "images/top_favorites/Top10_Char_7.jpg"
+    },
+    {
+      "shape_name": "Top10_Char_8",
+      "data": {
+        "CHAR_ID": "163811",
+        "ANIME_NAME": "Ascendance of a Bookworm"
+      },
+      "image_file": "images/top_favorites/Top10_Char_8.jpg"
+    },
+    {
+      "shape_name": "Top10_Char_9",
+      "data": {
+        "CHAR_ID": "206276",
+        "ANIME_NAME": "Bocchi the Rock!"
+      },
+      "image_file": "images/top_favorites/Top10_Char_9.jpg"
+    },
+    {
+      "shape_name": "Top10_Char_10",
+      "data": {
+        "CHAR_ID": "36828",
+        "ANIME_NAME": "Sword Art Online"
+      },
+      "image_file": "images/top_favorites/Top10_Char_10.jpg"
+    }
+  ]
+}
