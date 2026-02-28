@@ -146,7 +146,7 @@ const TopFavorites = () => {
                                             </div>
                                             <div className="hover-actions-bottom">
                                                 {fhDisplay ? (
-                                                    <span className="hover-fh">FH {fhDisplay}/10</span>
+                                                    <span className="hover-fh">FH {fhDisplay.toString().replace('.', ',')}/10</span>
                                                 ) : null}
                                             </div>
                                         </>
