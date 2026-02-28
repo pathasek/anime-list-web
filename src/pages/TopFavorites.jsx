@@ -145,7 +145,7 @@ const TopFavorites = () => {
                                     ) : (
                                         <>
                                             <div className="hover-char-top" style={{ marginBottom: 'var(--spacing-md)' }}>
-                                                <span className="hover-char-anime" style={{ fontWeight: '600', color: 'var(--accent-primary)', fontSize: '1rem' }}>
+                                                <span className="hover-char-anime" style={{ fontWeight: '600', color: 'white', fontSize: '1rem' }}>
                                                     {item.data.ANIME_NAME || 'Unknown Anime'}
                                                 </span>
                                             </div>

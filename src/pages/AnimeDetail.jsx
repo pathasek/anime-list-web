@@ -245,9 +245,17 @@ function AnimeDetail() {
     return (
         <div className="fade-in">
             <button
-                className="btn btn-secondary"
+                className="btn btn-primary"
                 onClick={() => navigate(-1)}
-                style={{ marginBottom: 'var(--spacing-lg)' }}
+                style={{
+                    marginBottom: 'var(--spacing-lg)',
+                    background: 'var(--accent-primary)',
+                    color: 'white',
+                    fontWeight: 'bold',
+                    border: 'none',
+                    padding: '0.6rem 1.2rem',
+                    borderRadius: 'var(--radius-md)'
+                }}
             >
                 ← Zpět
             </button>
@@ -348,9 +356,9 @@ function AnimeDetail() {
                                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Datum vydání</span>
                                     <div style={{ fontWeight: '500' }}>{anime.release_date ? new Date(anime.release_date).toLocaleDateString('cs-CZ') : 'N/A'}</div>
                                 </div>
-                                <div style={{ minWidth: '150px' }}>
+                                <div style={{ minWidth: '220px' }}>
                                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Sledováno</span>
-                                    <div style={{ fontWeight: '500', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                    <div style={{ fontWeight: '500', whiteSpace: 'nowrap' }}>
                                         {(() => {
                                             const start = anime.start_date && !isNaN(new Date(anime.start_date).getTime()) ? new Date(anime.start_date).toLocaleDateString('cs-CZ') : '?';
                                             const end = anime.end_date && !isNaN(new Date(anime.end_date).getTime()) ? new Date(anime.end_date).toLocaleDateString('cs-CZ') : '?';
@@ -543,7 +551,14 @@ function AnimeDetail() {
                         <tbody>
                             {history.map((h, i) => (
                                 <tr key={i}>
-                                    <td>{h.date ? new Date(h.date).toLocaleDateString('cs-CZ') : 'N/A'}</td>
+                                    <td style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        {h.date ? new Date(h.date).toLocaleDateString('cs-CZ') : 'N/A'}
+                                        {h.rewatch && (
+                                            <span style={{ color: 'var(--text-muted)', fontStyle: 'italic', fontSize: '0.85em' }}>
+                                                {h.rewatch}. Rewatch
+                                            </span>
+                                        )}
+                                    </td>
                                     <td>{h.episodes}</td>
                                     <td>{h.time}</td>
                                 </tr>
