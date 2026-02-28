@@ -454,7 +454,7 @@ function AnimeList() {
                                 </td>
                                 <td>
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', maxWidth: '320px' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <div style={{ lineHeight: '1.4' }}>
                                             <a
                                                 href={getMALUrl(anime)}
                                                 target="_blank"
@@ -478,6 +478,10 @@ function AnimeList() {
                                                     className={`series-badge ${seriesFilter === extractSeriesBaseName(anime) ? 'active' : ''}`}
                                                     style={{
                                                         fontSize: '0.65rem',
+                                                        marginLeft: '8px',
+                                                        display: 'inline-block',
+                                                        verticalAlign: 'text-bottom',
+                                                        marginBottom: '1px',
                                                         padding: '2px 6px',
                                                         borderRadius: '4px',
                                                         background: seriesFilter === extractSeriesBaseName(anime) ? 'var(--accent-primary)' : 'var(--bg-tertiary)',

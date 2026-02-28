@@ -254,7 +254,8 @@ function AnimeDetail() {
                     fontWeight: 'bold',
                     border: 'none',
                     padding: '0.6rem 1.2rem',
-                    borderRadius: 'var(--radius-md)'
+                    borderRadius: 'var(--radius-md)',
+                    cursor: 'pointer'
                 }}
             >
                 ← Zpět
@@ -356,7 +357,7 @@ function AnimeDetail() {
                                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Datum vydání</span>
                                     <div style={{ fontWeight: '500' }}>{anime.release_date ? new Date(anime.release_date).toLocaleDateString('cs-CZ') : 'N/A'}</div>
                                 </div>
-                                <div style={{ minWidth: '150px', flex: '1 1 auto' }}>
+                                <div>
                                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Sledováno</span>
                                     <div style={{ fontWeight: '500', whiteSpace: 'nowrap' }}>
                                         {(() => {
