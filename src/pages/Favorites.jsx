@@ -28,6 +28,7 @@ function Favorites() {
     const [searchTerm, setSearchTerm] = useState('')
     const [typeFilter, setTypeFilter] = useState('all')
     const [ratingFilter, setRatingFilter] = useState('all')
+    const [languageFilter, setLanguageFilter] = useState('all')
     const [sortColumn, setSortColumn] = useState(null)
     const [sortDirection, setSortDirection] = useState('desc')
     const [activeChartSettings, setActiveChartSettings] = useState(null)
@@ -210,6 +211,16 @@ function Favorites() {
             })
         }
 
+        if (languageFilter !== 'all') {
+            result = result.filter(f => {
+                const lang = (f.language || '').toUpperCase()
+                if (languageFilter === 'JAP') return lang.includes('JAP') && !lang.includes('ENG')
+                if (languageFilter === 'ENG') return lang.includes('ENG') && !lang.includes('JAP')
+                if (languageFilter === 'MIX') return lang.includes('JAP') && lang.includes('ENG')
+                return true
+            })
+        }
+
         // Sorting
         if (sortColumn) {
             result.sort((a, b) => {
@@ -231,7 +242,7 @@ function Favorites() {
         }
 
         return result
-    }, [favorites, searchTerm, typeFilter, ratingFilter, sortColumn, sortDirection])
+    }, [favorites, searchTerm, typeFilter, ratingFilter, languageFilter, sortColumn, sortDirection])
 
     // Sort handler
     const handleSort = (column) => {
@@ -496,6 +507,17 @@ function Favorites() {
                         <option value="7+">7+ (Dobré)</option>
                         <option value="rated">Ohodnocené</option>
                         <option value="frisson">Má Frisson</option>
+                    </select>
+                    <select
+                        value={languageFilter}
+                        onChange={(e) => setLanguageFilter(e.target.value)}
+                        className="filter-btn"
+                        style={{ outline: 'none' }}
+                    >
+                        <option value="all">Všechny jazyky</option>
+                        <option value="JAP">Pouze JAP</option>
+                        <option value="ENG">Pouze ENG</option>
+                        <option value="MIX">Kombinace (%)</option>
                     </select>
                 </div>
             </div>
