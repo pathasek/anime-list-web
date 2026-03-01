@@ -224,10 +224,10 @@ function Favorites() {
 
         if (languageFilter !== 'all') {
             result = result.filter(f => {
-                const lang = (f.language || '').toUpperCase()
-                if (languageFilter === 'JAP') return lang.includes('JAP') && !lang.includes('ENG')
-                if (languageFilter === 'ENG') return lang.includes('ENG') && !lang.includes('JAP')
-                if (languageFilter === 'MIX') return lang.includes('JAP') && lang.includes('ENG')
+                const lang = (f.language || '').trim().toUpperCase()
+                if (languageFilter === 'JAP') return lang === 'JAP'
+                if (languageFilter === 'ENG') return lang === 'ENG'
+                if (languageFilter === 'MIX') return lang.includes('%')
                 return true
             })
         }
