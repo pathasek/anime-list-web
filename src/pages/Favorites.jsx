@@ -33,6 +33,8 @@ function Favorites() {
     const [activeChartSettings, setActiveChartSettings] = useState(null)
     const [showAllRatings, setShowAllRatings] = useState(false)
     const [expandedCardIdx, setExpandedCardIdx] = useState(null)
+    const [isTableExpanded, setIsTableExpanded] = useState(false)
+    const [ostTables, setOstTables] = useState(null)
 
     // Czech number formatting: dot → comma
     const toCS = (val) => String(val).replace('.', ',')
@@ -50,10 +52,13 @@ function Favorites() {
     }
 
     useEffect(() => {
-        fetch('data/favorites.json')
-            .then(r => r.json())
-            .then(data => {
-                setFavorites(data)
+        Promise.all([
+            fetch('data/favorites.json').then(r => r.json()),
+            fetch('data/favorites_ost.json').then(r => r.json()).catch(() => null)
+        ])
+            .then(([favData, ostData]) => {
+                setFavorites(favData)
+                if (ostData) setOstTables(ostData)
                 setLoading(false)
             })
             .catch(err => {
@@ -296,7 +301,7 @@ function Favorites() {
     return (
         <div className="fade-in">
             <h2 style={{ marginBottom: 'var(--spacing-xl)' }}>
-                Favorite OP / ED / OST
+                Favourite OP/ED/OST
                 <span style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginLeft: '12px' }}>
                     ({filteredFavorites.length} z {favorites.length})
                 </span>
@@ -519,7 +524,7 @@ function Favorites() {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredFavorites.map((fav, idx) => (
+                        {(isTableExpanded ? filteredFavorites : filteredFavorites.slice(0, 8)).map((fav, idx) => (
                             <tr key={idx}>
                                 <td style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
                                     {idx + 1}
@@ -577,7 +582,7 @@ function Favorites() {
 
             {/* Mobile Cards for Favorites */}
             <div className="mobile-card-list hide-desktop">
-                {filteredFavorites.map((fav, idx) => (
+                {(isTableExpanded ? filteredFavorites : filteredFavorites.slice(0, 8)).map((fav, idx) => (
                     <div key={idx} className="mobile-card">
                         <div className="mobile-card-header">
                             <div style={{ display: 'flex', gap: 'var(--spacing-md)', flex: 1, alignItems: 'flex-start' }}>
@@ -663,6 +668,18 @@ function Favorites() {
                     </div>
                 ))}
             </div>
+
+            {filteredFavorites.length > 8 && (
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: 'var(--spacing-lg)' }}>
+                    <button
+                        className="filter-btn"
+                        onClick={() => setIsTableExpanded(!isTableExpanded)}
+                        style={{ padding: '8px 24px', fontWeight: 'bold' }}
+                    >
+                        {isTableExpanded ? 'SBALIT TABULKU OP/ED ▲' : 'ROZBALIT TABULKU OP/ED ▼'}
+                    </button>
+                </div>
+            )}
 
             {/* OST Section */}
             {stats?.ostItems?.length > 0 && (
@@ -753,6 +770,75 @@ function Favorites() {
                                 </div>
                             </div>
                         ))}
+                    </div>
+                </div>
+            )}
+
+            {/* NEW 3 OST Tables */}
+            {ostTables && (
+                <div style={{ marginTop: 'var(--spacing-2xl)' }}>
+                    <h3 style={{ marginBottom: 'var(--spacing-lg)', color: 'var(--accent-amber)', fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        🎼 Anime Favourite OST
+                    </h3>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: window.innerWidth > 1024 ? 'row' : 'column',
+                        gap: '20px',
+                        alignItems: 'flex-start'
+                    }}>
+                        {/* Table 1: Scenes */}
+                        <div style={{ flex: 1, width: '100%', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', padding: 'var(--spacing-lg)', border: '1px solid var(--border-color)' }}>
+                            <h4 style={{ color: 'var(--text-primary)', marginBottom: '12px', textAlign: 'center' }}>OST + Scenes</h4>
+                            <div className="table-container" style={{ margin: 0, overflow: 'hidden' }}>
+                                <table style={{ fontSize: '0.8rem', width: '100%' }}>
+                                    <thead style={{ background: 'var(--bg-tertiary)' }}><tr><th>Anime</th><th>Epizoda</th><th>Scéna</th></tr></thead>
+                                    <tbody>
+                                        {ostTables.scenes.map((s, i) => (
+                                            <tr key={i}>
+                                                <td>{s.anime_url ? <a href={s.anime_url} target="_blank" rel="noreferrer" style={{ color: 'var(--text-primary)' }}>{s.anime_name}</a> : s.anime_name}</td>
+                                                <td>{s.episode_url ? <a href={s.episode_url} target="_blank" rel="noreferrer" style={{ color: 'var(--text-primary)' }}>{s.episode}</a> : s.episode}</td>
+                                                <td>{s.scene_url ? <a href={s.scene_url} target="_blank" rel="noreferrer" style={{ color: 'var(--accent-primary)' }}>{s.scene}</a> : s.scene}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {/* Table 2: Pieces */}
+                        <div style={{ flex: 1, width: '100%', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', padding: 'var(--spacing-lg)', border: '1px solid var(--border-color)' }}>
+                            <h4 style={{ color: 'var(--text-primary)', marginBottom: '12px', textAlign: 'center' }}>OST Only (The Best)</h4>
+                            <div className="table-container" style={{ margin: 0, overflow: 'hidden' }}>
+                                <table style={{ fontSize: '0.8rem', width: '100%' }}>
+                                    <thead style={{ background: 'var(--bg-tertiary)' }}><tr><th>Anime</th><th>Název OST</th></tr></thead>
+                                    <tbody>
+                                        {ostTables.pieces.map((p, i) => (
+                                            <tr key={i}>
+                                                <td>{p.anime_url ? <a href={p.anime_url} target="_blank" rel="noreferrer" style={{ color: 'var(--text-primary)' }}>{p.anime_name}</a> : p.anime_name}</td>
+                                                <td>{p.ost_url ? <a href={p.ost_url} target="_blank" rel="noreferrer" style={{ color: 'var(--accent-primary)' }}>{p.ost_name}</a> : p.ost_name}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {/* Table 3: Whole */}
+                        <div style={{ flex: 1, width: '100%', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', padding: 'var(--spacing-lg)', border: '1px solid var(--border-color)' }}>
+                            <h4 style={{ color: 'var(--text-primary)', marginBottom: '12px', textAlign: 'center' }}>OST Only (As a Whole)</h4>
+                            <div className="table-container" style={{ margin: 0, overflow: 'hidden' }}>
+                                <table style={{ fontSize: '0.8rem', width: '100%' }}>
+                                    <thead style={{ background: 'var(--bg-tertiary)' }}><tr><th>Anime</th><th>Seznam YT</th><th>Seznam Spotify</th></tr></thead>
+                                    <tbody>
+                                        {ostTables.whole.map((w, i) => (
+                                            <tr key={i}>
+                                                <td>{w.anime_url ? <a href={w.anime_url} target="_blank" rel="noreferrer" style={{ color: 'var(--text-primary)' }}>{w.anime_name}</a> : w.anime_name}</td>
+                                                <td>{w.yt_url ? <a href={w.yt_url} target="_blank" rel="noreferrer" style={{ color: 'var(--accent-primary)' }}>{w.yt_playlist || 'Odkaz'}</a> : w.yt_playlist}</td>
+                                                <td>{w.spotify_url ? <a href={w.spotify_url} target="_blank" rel="noreferrer" style={{ color: '#1DB954' }}>{w.spotify_playlist || 'Odkaz'}</a> : w.spotify_playlist}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}

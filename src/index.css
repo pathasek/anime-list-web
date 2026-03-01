@@ -310,6 +310,7 @@ a:hover {
 .table-container {
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-color);
+  overflow: hidden;
 }
 
 @media (max-width: 1024px) {

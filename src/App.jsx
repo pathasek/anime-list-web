@@ -120,7 +120,7 @@ function AppContent({ stats }) {
           </NavLink>
           <NavLink to="/favorites" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
             <Icons.Music />
-            <span>Favorites OP/ED</span>
+            <span>Favourite OP/ED/OST</span>
           </NavLink>
           <NavLink to="/plan-to-watch" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
             <Icons.Bookmark />
