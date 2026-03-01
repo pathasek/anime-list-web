@@ -35,6 +35,7 @@ function Favorites() {
     const [expandedCardIdx, setExpandedCardIdx] = useState(null)
     const [isTableExpanded, setIsTableExpanded] = useState(false)
     const [ostTables, setOstTables] = useState(null)
+    const [spotifyImages, setSpotifyImages] = useState({})
 
     // Czech number formatting: dot → comma
     const toCS = (val) => String(val).replace('.', ',')
@@ -54,11 +55,13 @@ function Favorites() {
     useEffect(() => {
         Promise.all([
             fetch('data/favorites.json').then(r => r.json()),
-            fetch('data/favorites_ost.json').then(r => r.json()).catch(() => null)
+            fetch('data/favorites_ost.json').then(r => r.json()).catch(() => null),
+            fetch('data/spotify_images.json').then(r => r.json()).catch(() => ({}))
         ])
-            .then(([favData, ostData]) => {
+            .then(([favData, ostData, spotData]) => {
                 setFavorites(favData)
                 if (ostData) setOstTables(ostData)
+                if (spotData) setSpotifyImages(spotData)
                 setLoading(false)
             })
             .catch(err => {
@@ -780,33 +783,64 @@ function Favorites() {
                     <h3 style={{ marginBottom: 'var(--spacing-lg)', color: 'var(--accent-amber)', fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
                         🎼 Anime Favourite OST
                     </h3>
+
                     <div style={{
                         display: 'flex',
                         flexDirection: window.innerWidth > 1024 ? 'row' : 'column',
-                        gap: '20px',
+                        gap: '24px',
                         alignItems: 'flex-start'
                     }}>
-                        {/* Table 1: Scenes */}
-                        <div style={{ flex: 1, width: '100%', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', padding: 'var(--spacing-lg)', border: '1px solid var(--border-color)' }}>
-                            <h4 style={{ color: 'var(--text-primary)', marginBottom: '12px', textAlign: 'center' }}>OST + Scenes</h4>
-                            <div className="table-container" style={{ margin: 0, overflow: 'hidden' }}>
-                                <table style={{ fontSize: '0.8rem', width: '100%' }}>
-                                    <thead style={{ background: 'var(--bg-tertiary)' }}><tr><th>Anime</th><th>Epizoda</th><th>Scéna</th></tr></thead>
-                                    <tbody>
-                                        {ostTables.scenes.map((s, i) => (
-                                            <tr key={i}>
-                                                <td>{s.anime_url ? <a href={s.anime_url} target="_blank" rel="noreferrer" style={{ color: 'var(--text-primary)' }}>{s.anime_name}</a> : s.anime_name}</td>
-                                                <td>{s.episode_url ? <a href={s.episode_url} target="_blank" rel="noreferrer" style={{ color: 'var(--text-primary)' }}>{s.episode}</a> : s.episode}</td>
-                                                <td>{s.scene_url ? <a href={s.scene_url} target="_blank" rel="noreferrer" style={{ color: 'var(--accent-primary)' }}>{s.scene}</a> : s.scene}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                        {/* Table 1 (Formerly 3): OST As a Whole - Tile Layout */}
+                        <div style={{ flex: 1.5, minWidth: '350px', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', padding: 'var(--spacing-lg)', border: '1px solid var(--border-color)' }}>
+                            <h4 style={{ color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                🎧 OST Only (As a Whole)
+                            </h4>
+                            <div style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
+                                gap: '16px'
+                            }}>
+                                {ostTables.whole.map((w, i) => {
+                                    let imgSrc = null;
+                                    if (spotifyImages) {
+                                        const matchKey = Object.keys(spotifyImages).find(k => w.anime_name?.includes(k));
+                                        if (matchKey) imgSrc = spotifyImages[matchKey];
+                                    }
+                                    return (
+                                        <div key={i} title={w.anime_name} style={{ background: 'var(--bg-tertiary)', borderRadius: '8px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '12px', transition: 'all 0.2s', border: '1px solid var(--border-color)' }}
+                                            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.borderColor = w.spotify_url ? '#1DB954' : 'var(--accent-primary)'; }}
+                                            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'var(--border-color)'; }}
+                                        >
+                                            <a href={w.spotify_url || w.yt_url || w.anime_url || '#'} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
+                                                <div style={{ width: '100%', aspectRatio: '1/1', borderRadius: '4px', overflow: 'hidden', background: 'var(--bg-primary)', position: 'relative', boxShadow: '0 4px 12px rgba(0,0,0,0.2)' }}>
+                                                    {imgSrc ? (
+                                                        <img src={imgSrc} alt="cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                    ) : (
+                                                        <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', color: 'var(--text-muted)' }}>♪</div>
+                                                    )}
+                                                </div>
+                                            </a>
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                                <a href={w.anime_url || '#'} target="_blank" rel="noreferrer" style={{ fontWeight: '600', fontSize: '0.85rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--text-primary)', textDecoration: 'none' }}>
+                                                    {w.anime_name}
+                                                </a>
+                                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>od Patrik Macoun</div>
+                                                <div style={{ display: 'flex', gap: '8px', marginTop: '6px' }}>
+                                                    {w.spotify_url && <a href={w.spotify_url} target="_blank" rel="noreferrer" style={{ fontSize: '0.7rem', color: '#1DB954', fontWeight: 'bold', textDecoration: 'none' }}>Spotify</a>}
+                                                    {w.yt_url && <a href={w.yt_url} target="_blank" rel="noreferrer" style={{ fontSize: '0.7rem', color: 'var(--accent-primary)', fontWeight: 'bold', textDecoration: 'none' }}>YouTube</a>}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
                             </div>
                         </div>
-                        {/* Table 2: Pieces */}
-                        <div style={{ flex: 1, width: '100%', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', padding: 'var(--spacing-lg)', border: '1px solid var(--border-color)' }}>
-                            <h4 style={{ color: 'var(--text-primary)', marginBottom: '12px', textAlign: 'center' }}>OST Only (The Best)</h4>
+
+                        {/* Table 2: Pieces (Middle) */}
+                        <div style={{ flex: 1, minWidth: '250px', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', padding: 'var(--spacing-lg)', border: '1px solid var(--border-color)' }}>
+                            <h4 style={{ color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                🎵 OST Only (The Best)
+                            </h4>
                             <div className="table-container" style={{ margin: 0, overflow: 'hidden' }}>
                                 <table style={{ fontSize: '0.8rem', width: '100%' }}>
                                     <thead style={{ background: 'var(--bg-tertiary)' }}><tr><th>Anime</th><th>Název OST</th></tr></thead>
@@ -821,18 +855,24 @@ function Favorites() {
                                 </table>
                             </div>
                         </div>
-                        {/* Table 3: Whole */}
-                        <div style={{ flex: 1, width: '100%', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', padding: 'var(--spacing-lg)', border: '1px solid var(--border-color)' }}>
-                            <h4 style={{ color: 'var(--text-primary)', marginBottom: '12px', textAlign: 'center' }}>OST Only (As a Whole)</h4>
+
+                        {/* Table 3 (Formerly 1): Scenes (Right) */}
+                        <div style={{ flex: 1, minWidth: '280px', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', padding: 'var(--spacing-lg)', border: '1px solid var(--border-color)' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                                <h4 style={{ color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>🎬 OST + Scenes</h4>
+                                <a href="https://savsmb-my.sharepoint.com/:f:/g/personal/xmacoun1_is_savs_cz/IgB4lwcmUIhES67LCrn6UIYHAYtMD7DNKKhq256IvGNUpEs?e=f9QraG" target="_blank" rel="noreferrer" style={{ fontSize: '0.75rem', fontWeight: 'bold', display: 'inline-block', padding: '4px 8px', background: 'rgba(99, 102, 241, 0.1)', borderRadius: 'var(--radius-sm)', color: 'var(--accent-primary)', textDecoration: 'none', border: '1px solid rgba(99, 102, 241, 0.3)' }}>
+                                    Videoklipy ↗
+                                </a>
+                            </div>
                             <div className="table-container" style={{ margin: 0, overflow: 'hidden' }}>
                                 <table style={{ fontSize: '0.8rem', width: '100%' }}>
-                                    <thead style={{ background: 'var(--bg-tertiary)' }}><tr><th>Anime</th><th>Seznam YT</th><th>Seznam Spotify</th></tr></thead>
+                                    <thead style={{ background: 'var(--bg-tertiary)' }}><tr><th>Anime</th><th>Epizoda</th><th>Scéna</th></tr></thead>
                                     <tbody>
-                                        {ostTables.whole.map((w, i) => (
+                                        {ostTables.scenes.map((s, i) => (
                                             <tr key={i}>
-                                                <td>{w.anime_url ? <a href={w.anime_url} target="_blank" rel="noreferrer" style={{ color: 'var(--text-primary)' }}>{w.anime_name}</a> : w.anime_name}</td>
-                                                <td>{w.yt_url ? <a href={w.yt_url} target="_blank" rel="noreferrer" style={{ color: 'var(--accent-primary)' }}>{w.yt_playlist || 'Odkaz'}</a> : w.yt_playlist}</td>
-                                                <td>{w.spotify_url ? <a href={w.spotify_url} target="_blank" rel="noreferrer" style={{ color: '#1DB954' }}>{w.spotify_playlist || 'Odkaz'}</a> : w.spotify_playlist}</td>
+                                                <td style={{ color: 'var(--text-primary)' }}>{s.anime_name}</td>
+                                                <td style={{ color: 'var(--text-primary)' }}>{s.episode}</td>
+                                                <td style={{ color: 'var(--text-muted)' }}>{s.scene}</td>
                                             </tr>
                                         ))}
                                     </tbody>
