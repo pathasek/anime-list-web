@@ -303,12 +303,28 @@ function Favorites() {
 
     return (
         <div className="fade-in">
-            <h2 style={{ marginBottom: 'var(--spacing-xl)' }}>
-                Favourite OP/ED/OST
-                <span style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginLeft: '12px' }}>
-                    ({filteredFavorites.length} z {favorites.length})
-                </span>
-            </h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 'var(--spacing-lg)' }}>
+                <h2 style={{ marginBottom: 'var(--spacing-xl)' }}>
+                    Favourite OP/ED/OST
+                    <span style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginLeft: '12px' }}>
+                        ({filteredFavorites.length} z {favorites.length})
+                    </span>
+                </h2>
+
+                {/* Spotify Radio Widget */}
+                <div style={{ flex: '1 1 300px', maxWidth: '500px', marginBottom: 'var(--spacing-xl)' }}>
+                    <iframe
+                        style={{ borderRadius: '12px' }}
+                        src="https://open.spotify.com/embed/playlist/54wn5N0GSBT7WiY6Ip0wP7?utm_source=generator&theme=0"
+                        width="100%"
+                        height="152"
+                        frameBorder="0"
+                        allowFullScreen=""
+                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                        loading="lazy"
+                    ></iframe>
+                </div>
+            </div>
 
             {/* 1. Average Ratings Section (Moved to top) */}
             {stats?.avgRatings?.final && (
@@ -518,6 +534,7 @@ function Favorites() {
                             <th onClick={() => handleSort('type')}>Typ {getSortIcon('type')}</th>
                             <th onClick={() => handleSort('song')}>Song {getSortIcon('song')}</th>
                             <th onClick={() => handleSort('author')}>Autor {getSortIcon('author')}</th>
+                            <th onClick={() => handleSort('language')}>Jazyk {getSortIcon('language')}</th>
                             <th title="Hodnocení textu" onClick={() => handleSort('rating_lyrics')}>Text {getSortIcon('rating_lyrics')}</th>
                             <th title="Emoce" onClick={() => handleSort('rating_emotion')}>Emoce {getSortIcon('rating_emotion')}</th>
                             <th title="Melodie" onClick={() => handleSort('rating_melody')}>Melodie {getSortIcon('rating_melody')}</th>
@@ -549,6 +566,9 @@ function Favorites() {
                                 </td>
                                 <td style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', maxWidth: '150px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={fav.author}>
                                     {fav.author || '-'}
+                                </td>
+                                <td style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                                    {fav.language || '-'}
                                 </td>
                                 {/* Sub-ratings */}
                                 <td style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
@@ -614,6 +634,11 @@ function Favorites() {
                             <div className="mobile-card-row" style={{ gridColumn: '1 / -1' }}>
                                 <span>Autor:</span>
                                 <span style={{ color: 'var(--text-secondary)', textAlign: 'right' }}>{fav.author || '-'}</span>
+                            </div>
+
+                            <div className="mobile-card-row" style={{ gridColumn: '1 / -1' }}>
+                                <span>Jazyk:</span>
+                                <span style={{ color: 'var(--text-secondary)', textAlign: 'right' }}>{fav.language || '-'}</span>
                             </div>
 
                             <div className="mobile-card-row" style={{ gridColumn: '1 / -1', borderTop: '1px solid var(--border-color)', paddingTop: '8px', marginTop: '4px' }}>
