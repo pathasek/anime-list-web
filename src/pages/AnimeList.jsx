@@ -422,7 +422,7 @@ function AnimeList() {
                                                     height: '45px',
                                                     minWidth: '80px',
                                                     minHeight: '45px',
-                                                    objectFit: 'cover',
+                                                    objectFit: 'contain',
                                                     backgroundColor: 'rgba(0,0,0,0.3)',
                                                     borderRadius: '4px',
                                                     boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
