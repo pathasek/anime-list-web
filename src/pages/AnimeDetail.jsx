@@ -456,7 +456,7 @@ function AnimeDetail() {
                         </span>
                     </h3>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xl)', flexWrap: 'wrap' }}>
+                    <div className="ratings-flex-container">
                         {/* Labels on the Left */}
                         <div style={{ flex: '1', minWidth: '300px' }}>
                             <div style={{
@@ -482,7 +482,7 @@ function AnimeDetail() {
                         </div>
 
                         {/* Chart on the Right - Enlarged */}
-                        <div style={{ height: '550px', flex: '2', minWidth: '400px', display: 'flex', justifyContent: 'center' }}>
+                        <div className="radar-chart-container">
                             <div style={{ width: '100%', height: '100%' }}>
                                 <Radar data={radarData} options={radarOptions} />
                             </div>

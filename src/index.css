@@ -1293,6 +1293,34 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   font-size: 0.875rem;
 }
 
+/* ─── Anime Detail Ratings Responsive ─── */
+.ratings-flex-container {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xl);
+  flex-wrap: wrap;
+}
+
+.radar-chart-container {
+  height: 550px;
+  flex: 2;
+  min-width: 400px;
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .ratings-flex-container {
+    gap: var(--spacing-sm);
+  }
+
+  .radar-chart-container {
+    height: 350px;
+    min-width: 100%;
+    margin-top: -20px;
+  }
+}
+
 .time-filter input[type="date"] {
   color-scheme: dark;
 }
