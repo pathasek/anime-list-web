@@ -1321,6 +1321,47 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   }
 }
 
+/* ─── PC Thumbnail Blurred Background Effect ─── */
+.thumb-zoom-wrapper {
+  width: 80px;
+  height: 45px;
+  position: relative;
+  overflow: visible;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  z-index: 1;
+}
+
+.thumb-zoom-wrapper:hover {
+  z-index: 1000;
+}
+
+.blur-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(4px) brightness(0.6);
+  border-radius: 4px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.thumb-zoom-wrapper:hover .blur-bg {
+  opacity: 1;
+}
+
+.main-img-overlay {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 4px;
+  position: relative;
+  display: block;
+}
+
 .time-filter input[type="date"] {
   color-scheme: dark;
 }
