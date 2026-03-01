@@ -378,13 +378,20 @@ function AnimeList() {
                                 <td style={{ padding: '4px' }}>
                                     {anime.thumbnail ? (
                                         <div
-                                            className="thumb-zoom-wrapper"
+                                            style={{
+                                                width: '80px',
+                                                height: '45px',
+                                                position: 'relative',
+                                                overflow: 'visible'
+                                            }}
                                             onMouseEnter={(e) => {
                                                 const td = e.currentTarget.closest('td');
                                                 if (td) {
                                                     td.style.position = 'relative';
                                                     td.style.zIndex = '1000';
                                                 }
+                                                const img = e.currentTarget.querySelector('img');
+                                                if (!img) return;
                                                 const rect = e.currentTarget.getBoundingClientRect();
                                                 const viewportW = window.innerWidth;
                                                 const viewportH = window.innerHeight;
@@ -392,9 +399,11 @@ function AnimeList() {
                                                 const isRight = rect.left > viewportW * 0.5;
                                                 const originY = isBottom ? 'bottom' : 'top';
                                                 const originX = isRight ? 'right' : 'left';
-                                                e.currentTarget.style.transformOrigin = `${originY} ${originX}`;
-                                                e.currentTarget.style.transform = 'scale(6)';
-                                                e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.8)';
+                                                img.style.transformOrigin = `${originY} ${originX}`;
+                                                img.style.transform = 'scale(6)';
+                                                img.style.zIndex = '1000';
+                                                img.style.boxShadow = '0 8px 24px rgba(0,0,0,0.8)';
+                                                img.style.borderRadius = '2px';
                                             }}
                                             onMouseLeave={(e) => {
                                                 const td = e.currentTarget.closest('td');
@@ -402,22 +411,34 @@ function AnimeList() {
                                                     td.style.position = '';
                                                     td.style.zIndex = '';
                                                 }
-                                                e.currentTarget.style.transform = 'scale(1)';
-                                                e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)';
+                                                const img = e.currentTarget.querySelector('img');
+                                                if (!img) return;
+                                                img.style.transform = 'scale(1)';
+                                                img.style.zIndex = '500';
+                                                img.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)';
+                                                img.style.borderRadius = '4px';
+                                                setTimeout(() => { img.style.zIndex = '1'; }, 350);
                                             }}
                                         >
                                             <img
                                                 src={anime.thumbnail.replace(/#/g, '%23')}
-                                                alt=""
-                                                className="blur-bg"
-                                                aria-hidden="true"
-                                            />
-                                            <img
-                                                src={anime.thumbnail.replace(/#/g, '%23')}
                                                 alt={anime.name}
-                                                className="main-img-overlay"
+                                                style={{
+                                                    width: '80px',
+                                                    height: '45px',
+                                                    minWidth: '80px',
+                                                    minHeight: '45px',
+                                                    objectFit: 'contain',
+                                                    backgroundColor: 'rgba(0,0,0,0.3)',
+                                                    borderRadius: '4px',
+                                                    boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                                                    transition: 'transform 0.35s ease, box-shadow 0.35s ease',
+                                                    cursor: 'zoom-in',
+                                                    pointerEvents: 'none',
+                                                    position: 'relative',
+                                                    display: 'block'
+                                                }}
                                                 loading="lazy"
-                                                style={{ cursor: 'zoom-in' }}
                                             />
                                         </div>
                                     ) : (

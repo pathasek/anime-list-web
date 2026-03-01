@@ -1321,45 +1321,61 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   }
 }
 
-/* ─── PC Thumbnail Blurred Background Effect ─── */
-.thumb-zoom-wrapper {
-  width: 80px;
-  height: 45px;
-  position: relative;
-  overflow: visible;
-  transition: transform 0.35s ease, box-shadow 0.35s ease;
-  z-index: 1;
+/* ─── Anime Detail Refinements ─── */
+.hero-section {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xl);
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.thumb-zoom-wrapper:hover {
-  z-index: 1000;
-}
-
-.blur-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
+.hero-image-container {
+  flex: 0 1 280px;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: blur(4px) brightness(0.6);
-  border-radius: 4px;
-  z-index: -1;
-  opacity: 0;
-  transition: opacity 0.35s ease;
+  max-width: 280px;
+  min-width: 200px;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  margin: 0 auto;
 }
 
-.thumb-zoom-wrapper:hover .blur-bg {
-  opacity: 1;
+.chart-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-md);
+  gap: var(--spacing-md);
 }
 
-.main-img-overlay {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: 4px;
-  position: relative;
-  display: block;
+.chart-legend-container {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: 500px;
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    padding-top: var(--spacing-md);
+  }
+
+  .hero-image-container {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .chart-header-flex {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .chart-legend-container {
+    justify-content: flex-start;
+    max-width: 100%;
+  }
 }
 
 .time-filter input[type="date"] {

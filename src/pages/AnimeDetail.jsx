@@ -164,9 +164,12 @@ function AnimeDetail() {
                 ticks: {
                     stepSize: 1,
                     color: 'rgba(255,255,255,0.85)',
-                    font: { size: 13, weight: '600' },
+                    font: {
+                        size: window.innerWidth < 768 ? 10 : 13,
+                        weight: '600'
+                    },
                     backdropColor: 'rgba(0,0,0,0.5)',
-                    backdropPadding: 3
+                    backdropPadding: 2
                 },
                 grid: {
                     color: 'rgba(255,255,255,0.15)'
@@ -176,7 +179,17 @@ function AnimeDetail() {
                 },
                 pointLabels: {
                     color: 'rgba(255,255,255,0.9)',
-                    font: { size: 13, weight: '500' }
+                    font: {
+                        size: window.innerWidth < 768 ? 10 : 13,
+                        weight: '500'
+                    },
+                    padding: 10,
+                    callback: (label) => {
+                        if (window.innerWidth < 768 && label.length > 10) {
+                            return label.split(' ')
+                        }
+                        return label
+                    }
                 }
             }
         },
@@ -263,20 +276,10 @@ function AnimeDetail() {
 
             <div className="card" style={{ marginBottom: 'var(--spacing-xl)', overflow: 'hidden', padding: 'var(--spacing-md)' }}>
                 {/* Hero Section: Thumbnail + Info */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xl)', flexWrap: 'wrap', justifyContent: 'center' }}>
-                    {/* Left: Thumbnail - Fixed for mobile centering */}
+                <div className="hero-section">
+                    {/* Left: Thumbnail */}
                     {anime.thumbnail && (
-                        <div style={{
-                            flex: '0 1 280px', // Allow shrinking, don't force width
-                            width: '100%',
-                            maxWidth: '280px',
-                            minWidth: '200px',
-                            aspectRatio: '16 / 9',
-                            borderRadius: 'var(--radius-md)',
-                            overflow: 'hidden',
-                            boxShadow: 'var(--shadow-md)',
-                            margin: '0 auto' // Center horizontally when wrapped
-                        }}>
+                        <div className="hero-image-container">
                             <img
                                 src={anime.thumbnail.replace(/#/g, '%23')}
                                 alt={anime.name}
@@ -494,7 +497,7 @@ function AnimeDetail() {
             {/* Episode Ratings */}
             {episodeRatings && episodeChartData && !['movie', 'film', 'music'].includes((anime.type || '').toLowerCase()) && (
                 <div className="card" style={{ marginBottom: 'var(--spacing-xl)' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--spacing-md)' }}>
+                    <div className="chart-header-flex">
                         <h3 style={{ margin: 0 }}>
                             Hodnocení epizod
                             <span style={{ marginLeft: 'var(--spacing-md)', fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
@@ -503,7 +506,7 @@ function AnimeDetail() {
                         </h3>
 
                         {/* Custom Legend */}
-                        <div style={{ display: 'flex', gap: 'var(--spacing-sm)', flexWrap: 'wrap', justifyContent: 'flex-end', maxWidth: '500px' }}>
+                        <div className="chart-legend-container">
                             <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
                                 <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgb(29, 161, 242)' }}></span>
                                 <span>Absolute Cinema</span>
