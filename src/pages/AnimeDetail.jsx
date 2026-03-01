@@ -25,6 +25,7 @@ function AnimeDetail() {
     const [note, setNote] = useState(null)
     const [history, setHistory] = useState([])
     const [loading, setLoading] = useState(true)
+    const [visibleWeights, setVisibleWeights] = useState({}) // State to track visible weights
 
     useEffect(() => {
         const decodedName = decodeURIComponent(name)
@@ -75,8 +76,13 @@ function AnimeDetail() {
         const categories = Object.keys(categoryRatings)
         const labels = categories.map(c => {
             const w = categoryWeights[c] || 1
-            if (window.innerWidth < 768) return c
-            return `${c} (v. ${w})`
+            const weightStr = w.toLocaleString('cs-CZ', { maximumFractionDigits: 1 })
+            const isVisible = visibleWeights[c]
+
+            if (window.innerWidth < 768) {
+                return isVisible ? `${c} (${weightStr})` : `${c}#`
+            }
+            return isVisible ? `${c} (${weightStr})#` : `${c} (v. ${weightStr})#`
         })
         const values = Object.values(categoryRatings)
 
@@ -186,8 +192,15 @@ function AnimeDetail() {
                     },
                     padding: 10,
                     callback: (label) => {
-                        if (window.innerWidth < 768 && label.length > 8 && label.includes(' ')) {
-                            return label.split(' ')
+                        // Handle splitting and Hash icon
+                        let cleanLabel = label
+                        const hasHash = label.endsWith('#')
+                        if (hasHash) cleanLabel = label.slice(0, -1)
+
+                        if (window.innerWidth < 768 && cleanLabel.length > 8 && cleanLabel.includes(' ')) {
+                            const parts = cleanLabel.split(' ')
+                            if (hasHash) parts[parts.length - 1] += '#'
+                            return parts
                         }
                         return label
                     }
@@ -237,7 +250,7 @@ function AnimeDetail() {
     const avgEpisodeRating = useMemo(() => {
         if (!episodeRatings || episodeRatings.length === 0) return null
         const sum = episodeRatings.reduce((a, ep) => a + ep.rating, 0)
-        return (sum / episodeRatings.length).toLocaleString('cs-CZ', { maximumFractionDigits: 2 })
+        return (sum / episodeRatings.length).toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 2 })
     }, [episodeRatings])
 
     if (loading) {
@@ -479,7 +492,9 @@ function AnimeDetail() {
                                         fontSize: '0.8rem'
                                     }}>
                                         <span>{cat}</span>
-                                        <span className={`badge rating-${Math.floor(rating)}`} style={{ fontWeight: 'bold' }}>{rating}</span>
+                                        <span className={`badge rating-${Math.floor(rating)}`} style={{ fontWeight: 'bold' }}>
+                                            {rating.toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
+                                        </span>
                                     </div>
                                 ))}
                             </div>
@@ -488,7 +503,34 @@ function AnimeDetail() {
                         {/* Chart on the Right - Enlarged */}
                         <div className="radar-chart-container">
                             <div style={{ width: '100%', height: '100%' }}>
-                                <Radar data={radarData} options={radarOptions} />
+                                <Radar
+                                    data={radarData}
+                                    options={radarOptions}
+                                    onClick={(event) => {
+                                        const chart = event.chart;
+                                        if (!chart) return;
+
+                                        const points = chart.getElementsAtEventForMode(event.native, 'nearest', { intersect: true }, false);
+                                        // Since clicking on labels isn't a standard 'point', we check for active elements or calculate angle
+                                        // For simplicity and reliability in spider charts, let's use the click angle
+                                        const centerX = chart.scales.r.xCenter;
+                                        const centerY = chart.scales.r.yCenter;
+                                        const dx = event.native.offsetX - centerX;
+                                        const dy = event.native.offsetY - centerY;
+                                        let angle = Math.atan2(dy, dx) + (Math.PI / 2);
+                                        if (angle < 0) angle += 2 * Math.PI;
+
+                                        const categoryCount = Object.keys(categoryRatings).length;
+                                        const slice = (2 * Math.PI) / categoryCount;
+                                        const index = Math.round(angle / slice) % categoryCount;
+                                        const catName = Object.keys(categoryRatings)[index];
+
+                                        setVisibleWeights(prev => ({
+                                            ...prev,
+                                            [catName]: !prev[catName]
+                                        }));
+                                    }}
+                                />
                             </div>
                         </div>
                     </div>
