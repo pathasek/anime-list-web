@@ -75,6 +75,7 @@ function AnimeDetail() {
         const categories = Object.keys(categoryRatings)
         const labels = categories.map(c => {
             const w = categoryWeights[c] || 1
+            if (window.innerWidth < 768) return c
             return `${c} (v. ${w})`
         })
         const values = Object.values(categoryRatings)
@@ -180,12 +181,12 @@ function AnimeDetail() {
                 pointLabels: {
                     color: 'rgba(255,255,255,0.9)',
                     font: {
-                        size: window.innerWidth < 768 ? 10 : 13,
+                        size: window.innerWidth < 768 ? 13 : 13,
                         weight: '500'
                     },
                     padding: 10,
                     callback: (label) => {
-                        if (window.innerWidth < 768 && label.length > 10) {
+                        if (window.innerWidth < 768 && label.length > 8 && label.includes(' ')) {
                             return label.split(' ')
                         }
                         return label
@@ -274,9 +275,9 @@ function AnimeDetail() {
                 ← Zpět
             </button>
 
-            <div className="card" style={{ marginBottom: 'var(--spacing-xl)', overflow: 'hidden', padding: 'var(--spacing-md)' }}>
+            <div className="card" style={{ marginBottom: 'var(--spacing-xl)', overflow: 'hidden', padding: window.innerWidth < 768 ? '0' : 'var(--spacing-md)' }}>
                 {/* Hero Section: Thumbnail + Info */}
-                <div className="hero-section">
+                <div className="hero-section" style={{ padding: window.innerWidth < 768 ? 'var(--spacing-md)' : '0' }}>
                     {/* Left: Thumbnail */}
                     {anime.thumbnail && (
                         <div className="hero-image-container">

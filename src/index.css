@@ -1359,11 +1359,8 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 @media (max-width: 768px) {
-  .hero-section {
-    padding-top: var(--spacing-md);
-  }
-
   .hero-image-container {
+    max-width: 340px;
     margin-bottom: var(--spacing-md);
   }
 
