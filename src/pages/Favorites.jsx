@@ -321,21 +321,18 @@ function Favorites() {
         <div className="fade-in">
             <h2 style={{ marginBottom: 'var(--spacing-md)' }}>
                 Favourite OP/ED/OST
-                <span style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginLeft: '12px' }}>
-                    ({filteredFavorites.length} z {favorites.length})
-                </span>
             </h2>
 
-            {/* Spotify Radio Widget */}
+            {/* YouTube Playlist Widget */}
             <div style={{ marginBottom: 'var(--spacing-xl)' }}>
                 <iframe
                     style={{ borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)' }}
-                    src="https://open.spotify.com/embed/playlist/54wn5N0GSBT7WiY6Ip0wP7?utm_source=generator&theme=0"
+                    src="https://www.youtube.com/embed/videoseries?list=PL4Wf26Zx-o27DF_nFaqgh-9aopqUdNG8F"
                     width="100%"
-                    height="152"
+                    height="350"
                     frameBorder="0"
-                    allowFullScreen=""
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
                     loading="lazy"
                 ></iframe>
             </div>
