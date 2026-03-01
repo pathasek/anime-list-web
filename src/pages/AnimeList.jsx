@@ -189,10 +189,16 @@ function AnimeList() {
 
     const getRatingColor = (rating) => {
         const r = parseFloat(rating)
-        if (r >= 9) return 'var(--accent-emerald)'
-        if (r >= 7.5) return 'var(--accent-cyan)'
-        if (r >= 6) return 'var(--accent-amber)'
-        return 'var(--accent-red)'
+        if (r >= 10) return 'var(--rating-10)'
+        if (r >= 9) return 'var(--rating-9)'
+        if (r >= 8) return 'var(--rating-8)'
+        if (r >= 7) return 'var(--rating-7)'
+        if (r >= 6) return 'var(--rating-6)'
+        if (r >= 5) return 'var(--rating-5)'
+        if (r >= 4) return 'var(--rating-4)'
+        if (r >= 3) return 'var(--rating-3)'
+        if (r >= 2) return 'var(--rating-2)'
+        return 'var(--rating-1)'
     }
 
     const getTypeBadgeClass = (type) => {
@@ -559,7 +565,7 @@ function AnimeList() {
                         <div className="mobile-card-header">
                             <div style={{ display: 'flex', gap: 'var(--spacing-md)', width: '100%', alignItems: 'center' }}>
                                 {/* Image on the left */}
-                                <div style={{ minWidth: '80px', cursor: 'pointer' }} onClick={(e) => { e.stopPropagation(); anime.thumbnail && setExpandedImage(anime.thumbnail); }}>
+                                <div style={{ minWidth: '80px', cursor: 'pointer' }} onClick={(e) => { e.stopPropagation(); anime.thumbnail && setExpandedImage(anime.thumbnail.replace(/#/g, '%23')); }}>
                                     {anime.thumbnail ? (
                                         <img
                                             src={anime.thumbnail.replace(/#/g, '%23')}
