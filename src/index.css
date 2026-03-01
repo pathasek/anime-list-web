@@ -1360,6 +1360,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 @media (max-width: 768px) {
   .hero-image-container {
+    flex: 1 1 100%;
     max-width: 100%;
     margin-bottom: var(--spacing-md);
   }
