@@ -320,8 +320,27 @@ a:hover {
 
 table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 0.9rem;
+}
+
+/* Round top corners */
+.table-container thead th:first-child {
+  border-top-left-radius: var(--radius-lg);
+}
+
+.table-container thead th:last-child {
+  border-top-right-radius: var(--radius-lg);
+}
+
+/* Round bottom corners */
+.table-container tbody tr:last-child td:first-child {
+  border-bottom-left-radius: var(--radius-lg);
+}
+
+.table-container tbody tr:last-child td:last-child {
+  border-bottom-right-radius: var(--radius-lg);
 }
 
 .dashboard-table.pc-view {
