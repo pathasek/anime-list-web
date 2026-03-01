@@ -336,7 +336,7 @@ function Favorites() {
             {stats?.avgRatings?.final && (
                 <div style={{ marginBottom: 'var(--spacing-xl)' }}>
                     <h3 style={{ marginBottom: 'var(--spacing-lg)', color: 'var(--accent-primary)', fontSize: '1.25rem' }}>
-                        📊 Průměrná hodnocení kategorií
+                        📊 Průměrná hodnocení kategorií pro OP/ED
                     </h3>
                     <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))' }}>
                         <div className="stat-card">
@@ -800,39 +800,83 @@ function Favorites() {
                                 gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
                                 gap: '16px'
                             }}>
-                                {ostTables.whole.map((w, i) => {
-                                    let imgSrc = null;
-                                    if (spotifyImages) {
-                                        const matchKey = Object.keys(spotifyImages).find(k => w.anime_name?.includes(k));
-                                        if (matchKey) imgSrc = spotifyImages[matchKey];
-                                    }
-                                    return (
-                                        <div key={i} title={w.anime_name} style={{ background: 'var(--bg-tertiary)', borderRadius: '8px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '12px', transition: 'all 0.2s', border: '1px solid var(--border-color)' }}
-                                            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.borderColor = w.spotify_url ? '#1DB954' : 'var(--accent-primary)'; }}
-                                            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'var(--border-color)'; }}
-                                        >
-                                            <a href={w.spotify_url || w.yt_url || w.anime_url || '#'} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
-                                                <div style={{ width: '100%', aspectRatio: '1/1', borderRadius: '4px', overflow: 'hidden', background: 'var(--bg-primary)', position: 'relative', boxShadow: '0 4px 12px rgba(0,0,0,0.2)' }}>
-                                                    {imgSrc ? (
-                                                        <img src={imgSrc} alt="cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                                    ) : (
-                                                        <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', color: 'var(--text-muted)' }}>♪</div>
-                                                    )}
-                                                </div>
-                                            </a>
-                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                                                <a href={w.anime_url || '#'} target="_blank" rel="noreferrer" style={{ fontWeight: '600', fontSize: '0.85rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--text-primary)', textDecoration: 'none' }}>
-                                                    {w.anime_name}
+                                {(() => {
+                                    // Hardcoded explicit order requested by user
+                                    const explicitOrder = [
+                                        "Made in Abyss",
+                                        "The Rising of the Shield Hero",
+                                        "Attack on Titan",
+                                        "Spice and Wolf: Merchant Meets the Wise Wolf",
+                                        "Demon Slayer",
+                                        "Frieren: Beyond Journey's End",
+                                        "Lord of Mysteries",
+                                        "Jujutsu Kaisen",
+                                        "Tower of God",
+                                        "Steins;Gate",
+                                        "Cross Ange: Rondo of Angel and Dragon",
+                                        "The Apothecary Diaries",
+                                        "Grimgar: Ashes and Illusions",
+                                        "The Ancient Magus' Bride",
+                                        "Re:Zero - Starting Life in Another World",
+                                        "Bâan: The Boundary of Adulthood",
+                                        "Girls' Last Tour",
+                                        "Evangelion",
+                                        "Puella Magi Madoka Magica",
+                                        "The Garden of Sinners",
+                                        "Kabaneri of the Iron Fortress",
+                                        "Spy x Family",
+                                        "Somali and the Forest Spirit",
+                                        "Tsukimichi -Moonlit Fantasy-"
+                                    ];
+
+                                    const sortedWhole = [...ostTables.whole].sort((a, b) => {
+                                        let idxA = explicitOrder.indexOf(a.anime_name);
+                                        let idxB = explicitOrder.indexOf(b.anime_name);
+                                        if (idxA === -1) idxA = 999;
+                                        if (idxB === -1) idxB = 999;
+                                        if (idxA !== idxB) return idxA - idxB;
+                                        // fallback to alphabetical if not in explicit order
+                                        return a.anime_name.localeCompare(b.anime_name);
+                                    });
+
+                                    return sortedWhole.map((w, i) => {
+                                        let imgSrc = null;
+                                        if (spotifyImages) {
+                                            const matchKey = Object.keys(spotifyImages).find(k => {
+                                                const cleanW = w.anime_name?.replace(/[:\/_\-]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase() || "";
+                                                const cleanK = k.replace(/[:\/_\-]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase() || "";
+                                                return cleanW.includes(cleanK) || cleanK.includes(cleanW);
+                                            });
+                                            if (matchKey) imgSrc = spotifyImages[matchKey];
+                                        }
+                                        return (
+                                            <div key={i} title={w.anime_name} style={{ background: 'var(--bg-tertiary)', borderRadius: '8px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '12px', transition: 'all 0.2s', border: '1px solid var(--border-color)' }}
+                                                onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.borderColor = w.spotify_url ? '#1DB954' : 'var(--accent-primary)'; }}
+                                                onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'var(--border-color)'; }}
+                                            >
+                                                <a href={w.spotify_url || w.yt_url || w.anime_url || '#'} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
+                                                    <div style={{ width: '100%', aspectRatio: '1/1', borderRadius: '4px', overflow: 'hidden', background: 'var(--bg-primary)', position: 'relative', boxShadow: '0 4px 12px rgba(0,0,0,0.2)' }}>
+                                                        {imgSrc ? (
+                                                            <img src={imgSrc} alt="cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                        ) : (
+                                                            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', color: 'var(--text-muted)' }}>♪</div>
+                                                        )}
+                                                    </div>
                                                 </a>
-                                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>od Patrik Macoun</div>
-                                                <div style={{ display: 'flex', gap: '8px', marginTop: '6px' }}>
-                                                    {w.spotify_url && <a href={w.spotify_url} target="_blank" rel="noreferrer" style={{ fontSize: '0.7rem', color: '#1DB954', fontWeight: 'bold', textDecoration: 'none' }}>Spotify</a>}
-                                                    {w.yt_url && <a href={w.yt_url} target="_blank" rel="noreferrer" style={{ fontSize: '0.7rem', color: 'var(--accent-primary)', fontWeight: 'bold', textDecoration: 'none' }}>YouTube</a>}
+                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                                    <a href={w.anime_url || '#'} target="_blank" rel="noreferrer" style={{ fontWeight: '600', fontSize: '0.85rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--text-primary)', textDecoration: 'none' }}>
+                                                        {w.anime_name}
+                                                    </a>
+                                                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>od Patrik Macoun</div>
+                                                    <div style={{ display: 'flex', gap: '8px', marginTop: '6px' }}>
+                                                        {w.spotify_url && <a href={w.spotify_url} target="_blank" rel="noreferrer" style={{ fontSize: '0.7rem', color: '#1DB954', fontWeight: 'bold', textDecoration: 'none' }}>Spotify</a>}
+                                                        {w.yt_url && <a href={w.yt_url} target="_blank" rel="noreferrer" style={{ fontSize: '0.7rem', color: 'var(--accent-primary)', fontWeight: 'bold', textDecoration: 'none' }}>YouTube</a>}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    )
-                                })}
+                                        )
+                                    });
+                                })()}
                             </div>
                         </div>
 
