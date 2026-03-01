@@ -37,6 +37,12 @@ function Favorites() {
     const [isTableExpanded, setIsTableExpanded] = useState(false)
     const [ostTables, setOstTables] = useState(null)
     const [spotifyImages, setSpotifyImages] = useState({})
+    const [ytStartIndex, setYtStartIndex] = useState(0)
+
+    // On mount, generate a random starting index for the YouTube playlist (up to ~200 items in this public playlist)
+    useEffect(() => {
+        setYtStartIndex(Math.floor(Math.random() * 200))
+    }, [])
 
     // Czech number formatting: dot → comma
     const toCS = (val) => String(val).replace('.', ',')
@@ -327,7 +333,7 @@ function Favorites() {
             <div style={{ marginBottom: 'var(--spacing-xl)' }}>
                 <iframe
                     style={{ borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)' }}
-                    src="https://www.youtube.com/embed/videoseries?list=PL4Wf26Zx-o27DF_nFaqgh-9aopqUdNG8F"
+                    src={`https://www.youtube.com/embed/videoseries?list=PL4Wf26Zx-o27DF_nFaqgh-9aopqUdNG8F&index=${ytStartIndex}`}
                     width="100%"
                     height="350"
                     frameBorder="0"
