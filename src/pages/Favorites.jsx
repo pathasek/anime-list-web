@@ -314,27 +314,25 @@ function Favorites() {
 
     return (
         <div className="fade-in">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 'var(--spacing-lg)' }}>
-                <h2 style={{ marginBottom: 'var(--spacing-xl)' }}>
-                    Favourite OP/ED/OST
-                    <span style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginLeft: '12px' }}>
-                        ({filteredFavorites.length} z {favorites.length})
-                    </span>
-                </h2>
+            <h2 style={{ marginBottom: 'var(--spacing-md)' }}>
+                Favourite OP/ED/OST
+                <span style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginLeft: '12px' }}>
+                    ({filteredFavorites.length} z {favorites.length})
+                </span>
+            </h2>
 
-                {/* Spotify Radio Widget */}
-                <div style={{ flex: '1 1 300px', maxWidth: '500px', marginBottom: 'var(--spacing-xl)' }}>
-                    <iframe
-                        style={{ borderRadius: '12px' }}
-                        src="https://open.spotify.com/embed/playlist/54wn5N0GSBT7WiY6Ip0wP7?utm_source=generator&theme=0"
-                        width="100%"
-                        height="152"
-                        frameBorder="0"
-                        allowFullScreen=""
-                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                        loading="lazy"
-                    ></iframe>
-                </div>
+            {/* Spotify Radio Widget */}
+            <div style={{ marginBottom: 'var(--spacing-xl)' }}>
+                <iframe
+                    style={{ borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)' }}
+                    src="https://open.spotify.com/embed/playlist/54wn5N0GSBT7WiY6Ip0wP7?utm_source=generator&theme=0"
+                    width="100%"
+                    height="152"
+                    frameBorder="0"
+                    allowFullScreen=""
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                    loading="lazy"
+                ></iframe>
             </div>
 
             {/* 1. Average Ratings Section (Moved to top) */}
