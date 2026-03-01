@@ -178,7 +178,12 @@ function Favorites() {
         // OST items
         const ostItems = favorites.filter(f => f.type?.toUpperCase() === 'OST')
 
-        return { types, topAuthors, topAnime, withRating, total: favorites.length, avgRatings, ostItems, topSeriesByFinal }
+        // Remove OST and Other from types for the chart
+        const chartTypes = { ...types }
+        delete chartTypes['OST']
+        delete chartTypes['Other']
+
+        return { types: chartTypes, topAuthors, topAnime, withRating, total: favorites.length, avgRatings, ostItems, topSeriesByFinal }
     }, [favorites])
 
     // Filter and Sort
