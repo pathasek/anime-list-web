@@ -540,7 +540,7 @@ function Favorites() {
                                     </div>
                                 </td>
                                 <td>
-                                    <span className={`type-badge ${fav.type === 'OP' ? 'tv' : fav.type === 'ED' ? 'movie' : 'special'}`}>
+                                    <span className={`type-badge ${(fav.type || '').trim() === 'OP' ? 'tv' : (fav.type || '').trim() === 'ED' ? 'movie' : 'special'}`}>
                                         {fav.type}
                                     </span>
                                 </td>
@@ -603,7 +603,7 @@ function Favorites() {
                                     </div>
                                 </div>
                                 <div style={{ textAlign: 'right' }}>
-                                    <span className={`type-badge ${fav.type === 'OP' ? 'tv' : fav.type === 'ED' ? 'movie' : 'special'}`} style={{ padding: '2px 6px', fontSize: '0.65rem' }}>
+                                    <span className={`type-badge ${(fav.type || '').trim() === 'OP' ? 'tv' : (fav.type || '').trim() === 'ED' ? 'movie' : 'special'}`} style={{ padding: '2px 6px', fontSize: '0.65rem' }}>
                                         {fav.type}
                                     </span>
                                 </div>
