@@ -308,28 +308,6 @@ function Favorites() {
                 <span style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginLeft: '12px' }}>
                     ({filteredFavorites.length} z {favorites.length})
                 </span>
-                <a
-                    href="https://savsmb-my.sharepoint.com/:f:/g/personal/xmacoun1_is_savs_cz/En5erGeU8O9FlI1bH5JBfaYBrzmbHlnXUmmGMi4jlG-O3g?e=YvHidw"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                        marginLeft: '20px',
-                        fontSize: '0.875rem',
-                        color: 'var(--accent-pink)',
-                        textDecoration: 'underline',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '4px',
-                        padding: '4px 8px',
-                        background: 'rgba(236, 72, 153, 0.1)',
-                        borderRadius: 'var(--radius-sm)',
-                        transition: 'var(--transition-fast)'
-                    }}
-                    title="Klikněte pro otevření složky s videoklipy na SharePointu"
-                >
-                    🎵 Videoklipy OP/ED
-                    <span style={{ fontSize: '0.75rem', opacity: 0.7 }}>→ kliknout</span>
-                </a>
             </h2>
 
             {/* 1. Average Ratings Section (Moved to top) */}
@@ -504,6 +482,30 @@ function Favorites() {
                         <option value="frisson">Má Frisson</option>
                     </select>
                 </div>
+            </div>
+
+            {/* OP/ED Master Link */}
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '12px' }}>
+                <a
+                    href="https://savsmb-my.sharepoint.com/:f:/g/personal/xmacoun1_is_savs_cz/IgA3rwr2qW-5TaoWx69yOo3eAR8jYsioUJVZqJzk9-oao0I?e=Zgw5mo"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                        background: '#095aba',
+                        color: 'white',
+                        padding: '8px 16px',
+                        borderRadius: '4px',
+                        textDecoration: 'none',
+                        fontSize: '0.85rem',
+                        fontWeight: 'bold',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                    }}
+                    title="Klikněte pro otevření složky s videoklipy na SharePointu"
+                >
+                    Videoklipy OP/ED ↗
+                </a>
             </div>
 
             {/* Table */}
