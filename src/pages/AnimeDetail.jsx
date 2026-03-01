@@ -231,14 +231,14 @@ function AnimeDetail() {
             sumProd += rating * w
             sumWeight += w
         })
-        return sumWeight > 0 ? (sumProd / sumWeight).toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 2 }) : 'N/A'
+        return sumWeight > 0 ? (sumProd / sumWeight).toLocaleString('cs-CZ', { maximumFractionDigits: 2 }) : 'N/A'
     }, [categoryRatings, categoryWeights])
 
     // Calculate average episode rating
     const avgEpisodeRating = useMemo(() => {
         if (!episodeRatings || episodeRatings.length === 0) return null
         const sum = episodeRatings.reduce((a, ep) => a + ep.rating, 0)
-        return (sum / episodeRatings.length).toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 2 })
+        return (sum / episodeRatings.length).toLocaleString('cs-CZ', { maximumFractionDigits: 2 })
     }, [episodeRatings])
 
     if (loading) {
@@ -481,7 +481,7 @@ function AnimeDetail() {
                                     }}>
                                         <span>{cat}</span>
                                         <span className={`badge rating-${Math.floor(rating)}`} style={{ fontWeight: 'bold' }}>
-                                            {rating.toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
+                                            {rating.toLocaleString('cs-CZ', { maximumFractionDigits: 1 })}
                                         </span>
                                     </div>
                                 ))}
