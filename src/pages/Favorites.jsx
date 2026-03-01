@@ -221,6 +221,8 @@ function Favorites() {
                 const lang = (f.language || '').trim().toUpperCase()
                 if (languageFilter === 'JAP') return lang === 'JAP'
                 if (languageFilter === 'ENG') return lang === 'ENG'
+                if (languageFilter === 'LAT') return lang.includes('LAT')
+                if (languageFilter === 'GER') return lang.includes('GER')
                 if (languageFilter === 'MIX') return lang.includes('%')
                 return true
             })
@@ -230,7 +232,7 @@ function Favorites() {
         if (sortColumn) {
             result.sort((a, b) => {
                 let aVal, bVal
-                if (sortColumn === 'anime_name' || sortColumn === 'song' || sortColumn === 'author') {
+                if (sortColumn === 'anime_name' || sortColumn === 'song' || sortColumn === 'author' || sortColumn === 'language') {
                     aVal = (a[sortColumn] || '').toLowerCase()
                     bVal = (b[sortColumn] || '').toLowerCase()
                     return sortDirection === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal)
@@ -503,6 +505,8 @@ function Favorites() {
                         <option value="all">Všechny jazyky</option>
                         <option value="JAP">Pouze JAP</option>
                         <option value="ENG">Pouze ENG</option>
+                        <option value="LAT">Latina (LAT)</option>
+                        <option value="GER">Němčina (GER)</option>
                         <option value="MIX">Kombinace (%)</option>
                     </select>
                 </div>
