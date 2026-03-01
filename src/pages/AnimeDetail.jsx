@@ -508,7 +508,7 @@ function AnimeDetail() {
                         <h3 style={{ margin: 0 }}>
                             Hodnocení epizod
                             <span style={{ marginLeft: 'var(--spacing-md)', fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
-                                (WA: <span className="badge badge-primary">{avgEpisodeRating}</span>)
+                                (Průměr: <span className="badge badge-primary">{avgEpisodeRating}</span>)
                             </span>
                         </h3>
 

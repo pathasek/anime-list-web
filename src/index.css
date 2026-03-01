@@ -1312,12 +1312,17 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 @media (max-width: 768px) {
   .ratings-flex-container {
     gap: var(--spacing-sm);
+    justify-content: center;
   }
 
   .radar-chart-container {
     height: 350px;
     min-width: 100%;
-    margin-top: -20px;
+    margin-top: 0;
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 
@@ -1359,10 +1364,14 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 @media (max-width: 768px) {
+  .hero-section {
+    gap: var(--spacing-md);
+  }
+
   .hero-image-container {
     flex: 1 1 100%;
     max-width: 100%;
-    margin-bottom: var(--spacing-md);
+    margin-bottom: 0;
   }
 
   .chart-header-flex {
