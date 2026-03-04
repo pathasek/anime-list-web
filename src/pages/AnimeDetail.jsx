@@ -280,14 +280,14 @@ function AnimeDetail() {
                     dateStr = `${minD}.${minM}.${minY} - ${maxD}.${maxM}.${maxY}`;
                 }
 
-                lines.push(`${rewatchNum}. Rewatch; ${anime.name} (${dateStr})`);
+                lines.push(`${rewatchNum}. Rewatch; ${dateStr}`);
             }
         });
 
         if (lines.length > 0) return lines.join('\n');
 
-        if (anime.rewatches && anime.rewatches.length > 0) return anime.rewatches.join('\n');
-        if (anime.end_date) return `${anime.rewatch_count}. Rewatch; ${anime.name} (${new Date(anime.end_date).toLocaleDateString('cs-CZ', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\s/g, '')})`;
+        if (anime.rewatches && anime.rewatches.length > 0) return anime.rewatches.map(r => r.replace(/;\s.*?\((.*?)\)$/, '; $1')).join('\n');
+        if (anime.end_date) return `${anime.rewatch_count}. Rewatch; ${new Date(anime.end_date).toLocaleDateString('cs-CZ', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\s/g, '')}`;
 
         return '';
     }, [anime, history]);
