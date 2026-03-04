@@ -4,6 +4,21 @@ import { loadData, STORAGE_KEYS } from '../utils/dataStore'
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js'
 import { Bar } from 'react-chartjs-2'
 
+// Heatmap configuration inspired by VBA
+const HEATMAP_COLOR_LEVEL_1 = 2
+const HEATMAP_COLOR_LEVEL_2 = 6
+const HEATMAP_COLOR_LEVEL_3 = 13
+const HEATMAP_COLOR_LEVEL_4 = 19
+// Colors adjusted slightly to fit the dark theme natively better, but based on the VBA green scale
+const getHeatmapColor = (eps) => {
+    if (eps === 0) return 'var(--color-bg-elevated)'; // Empty cell color
+    if (eps <= HEATMAP_COLOR_LEVEL_1) return '#0e4429';
+    if (eps <= HEATMAP_COLOR_LEVEL_2) return '#006d32';
+    if (eps <= HEATMAP_COLOR_LEVEL_3) return '#26a641';
+    if (eps <= HEATMAP_COLOR_LEVEL_4) return '#39d353';
+    return '#52ff73'; // > Level 4
+}
+
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 // Czech declension: 1 epizoda, 2-4 epizody, 5+ epizod
@@ -261,6 +276,45 @@ function HistoryLog() {
         }
     }, [filteredHistory])
 
+    // Generate heatmap data (last 52 weeks = 364 days)
+    const heatmapData = useMemo(() => {
+        const endDate = new Date();
+        endDate.setHours(23, 59, 59, 999);
+        const startDate = new Date(endDate);
+        startDate.setDate(startDate.getDate() - 364);
+
+        // Calculate daily totals from full log
+        const dailyTotals = {};
+        historyLog.forEach(h => {
+            if (!h.date) return;
+            const dStr = h.date.split('T')[0];
+            const epMatch = h.episodes?.match(/\d+/);
+            const eps = epMatch ? parseInt(epMatch[0]) : 0;
+            dailyTotals[dStr] = (dailyTotals[dStr] || 0) + eps;
+        });
+
+        // Generate grid
+        const columns = [];
+        let currDate = new Date(startDate);
+
+        for (let w = 0; w < 52; w++) {
+            const col = [];
+            for (let d = 0; d < 7; d++) {
+                const pad = (n) => n.toString().padStart(2, '0')
+                const dStr = `${currDate.getFullYear()}-${pad(currDate.getMonth() + 1)}-${pad(currDate.getDate())}`
+
+                col.push({
+                    date: new Date(currDate),
+                    dateStr: dStr,
+                    eps: dailyTotals[dStr] || 0
+                });
+                currDate.setDate(currDate.getDate() + 1);
+            }
+            columns.push(col);
+        }
+        return columns;
+    }, [historyLog]);
+
     const chartOptions = {
         responsive: true,
         maintainAspectRatio: false,
@@ -391,14 +445,14 @@ function HistoryLog() {
         <div className="fade-in">
             {/* Header and Streaks */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)', marginBottom: 'var(--spacing-xl)' }}>
-                <h2 style={{ margin: 0, display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--spacing-sm)' }}>
-                    History Log
-                    <span style={{ fontSize: '1rem', color: 'var(--text-secondary)' }}>
-                        ({pluralEpizoda(totalStats.episodes)}, {formatTime(totalStats.time)})
-                    </span>
-                </h2>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 'var(--spacing-lg)' }}>
+                    <h2 style={{ margin: 0, display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--spacing-sm)' }}>
+                        History Log
+                        <span style={{ fontSize: '1rem', color: 'var(--text-secondary)' }}>
+                            ({pluralEpizoda(totalStats.episodes)}, {formatTime(totalStats.time)})
+                        </span>
+                    </h2>
 
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--spacing-lg)', alignItems: 'stretch' }}>
                     <div className="history-streaks-container" style={{
                         display: 'flex',
                         alignItems: 'stretch',
@@ -407,46 +461,41 @@ function HistoryLog() {
                         borderRadius: 'var(--radius-md)',
                         boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
                         overflow: 'hidden',
-                        alignSelf: 'flex-start', // Prevent stretching full width
-                        flexWrap: 'nowrap', // Ensure they stay side-by-side on mobile
-                        maxWidth: '100%', // Prevent overflow
-                        overflowX: 'auto' // Allow scrolling if extremely small
+                        flexWrap: 'nowrap'
                     }}>
                         {/* Current Streak */}
                         <div style={{
                             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                            padding: 'var(--spacing-md) var(--spacing-lg)',
+                            padding: 'var(--spacing-sm) var(--spacing-md)',
                             background: watchStreak.current > 0
                                 ? (watchStreak.current >= watchStreak.longest
                                     ? 'linear-gradient(135deg, rgba(16,185,129,0.15), rgba(16,185,129,0.05))'
                                     : 'linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05))')
                                 : 'transparent',
                             position: 'relative',
-                            minWidth: '140px',
-                            minHeight: '110px',
-                            flex: 1
+                            minWidth: '120px'
                         }}>
-                            <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px', textAlign: 'center', fontWeight: 'bold' }}>
+                            <span style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px', textAlign: 'center', fontWeight: 'bold' }}>
                                 🔥 Aktuální Streak
                             </span>
                             <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
                                 <span style={{
-                                    fontSize: '1.6rem', fontWeight: '800',
+                                    fontSize: '1.4rem', fontWeight: '800',
                                     color: watchStreak.current >= watchStreak.longest ? 'var(--accent-emerald)' : 'var(--accent-amber)'
                                 }}>
                                     {watchStreak.current}
                                 </span>
-                                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                                <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                                     {watchStreak.current === 1 ? 'den' : watchStreak.current >= 2 && watchStreak.current <= 4 ? 'dny' : 'dní'}
                                 </span>
                             </div>
                             {watchStreak.currentStart && (
-                                <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', marginTop: '4px', textAlign: 'center' }}>
+                                <span style={{ fontSize: '0.55rem', color: 'var(--text-muted)', marginTop: '2px', textAlign: 'center' }}>
                                     {watchStreak.currentStart.toLocaleDateString('cs-CZ')} – {watchStreak.currentEnd.toLocaleDateString('cs-CZ')}
                                 </span>
                             )}
                             {/* Progress bar spacer or bar */}
-                            <div style={{ width: '100%', height: '3px', marginTop: '8px', position: 'relative' }}>
+                            <div style={{ width: '100%', height: '2px', marginTop: '6px', position: 'relative' }}>
                                 {watchStreak.longest > 0 && watchStreak.current > 0 && (
                                     <div style={{
                                         width: '100%', height: '100%', background: 'rgba(255,255,255,0.05)',
@@ -468,52 +517,104 @@ function HistoryLog() {
                         {/* Longest Streak */}
                         <div style={{
                             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                            padding: 'var(--spacing-md) var(--spacing-lg)',
-                            minWidth: '140px',
-                            minHeight: '110px',
-                            flex: 1
+                            padding: 'var(--spacing-sm) var(--spacing-md)',
+                            minWidth: '120px'
                         }}>
-                            <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px', textAlign: 'center', fontWeight: 'bold' }}>
+                            <span style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px', textAlign: 'center', fontWeight: 'bold' }}>
                                 🏆 Nejdelší Streak
                             </span>
                             <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                                <span style={{ fontSize: '1.6rem', fontWeight: '800', color: 'var(--text-primary)' }}>
+                                <span style={{ fontSize: '1.4rem', fontWeight: '800', color: 'var(--text-primary)' }}>
                                     {watchStreak.longest}
                                 </span>
-                                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                                <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                                     {watchStreak.longest === 1 ? 'den' : watchStreak.longest >= 2 && watchStreak.longest <= 4 ? 'dny' : 'dní'}
                                 </span>
                             </div>
                             {watchStreak.longestStart && (
-                                <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', marginTop: '4px', textAlign: 'center' }}>
+                                <span style={{ fontSize: '0.55rem', color: 'var(--text-muted)', marginTop: '2px', textAlign: 'center' }}>
                                     {watchStreak.longestStart.toLocaleDateString('cs-CZ')} – {watchStreak.longestEnd.toLocaleDateString('cs-CZ')}
                                 </span>
                             )}
                             {/* Spacer to match height if no bar */}
-                            <div style={{ width: '100%', height: '3px', marginTop: '8px' }} />
+                            <div style={{ width: '100%', height: '2px', marginTop: '6px' }} />
                         </div>
                     </div>
+                </div>
 
-                    {chartData && (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--spacing-lg)', alignItems: 'stretch' }}>
+                    {chartData ? (
                         <div style={{
-                            flex: '1 1 300px',
-                            minWidth: '300px',
                             background: 'var(--bg-secondary)',
                             borderRadius: 'var(--radius-md)',
                             padding: 'var(--spacing-md)',
                             border: '1px solid var(--border-color)',
                             display: 'flex',
                             flexDirection: 'column',
-                            minHeight: '160px'
+                            minHeight: '220px'
                         }}>
                             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '8px', fontWeight: '500' }}>
                                 GRAF ZHLÉDNUTÝCH EPIZOD {dateRange.start || dateRange.end || yearFilter !== 'all' ? '(FILTROVÁNO)' : ''}
                             </div>
-                            <div style={{ flex: 1, position: 'relative' }}>
+                            <div style={{ flex: 1, position: 'relative', minHeight: '180px' }}>
                                 <Bar options={chartOptions} data={chartData} />
                             </div>
                         </div>
+                    ) : (
+                        <div style={{ background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', padding: 'var(--spacing-md)', border: '1px solid var(--border-color)' }}>
+                            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>GRAF ZHLÉDNUTÝCH EPIZOD</div>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '180px', color: 'var(--text-muted)' }}>Méně dat pro zobrazení</div>
+                        </div>
                     )}
+
+                    {/* Heatmap Section */}
+                    <div style={{
+                        background: 'var(--bg-secondary)',
+                        borderRadius: 'var(--radius-md)',
+                        padding: 'var(--spacing-md)',
+                        border: '1px solid var(--border-color)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        minHeight: '220px',
+                        overflowX: 'auto'
+                    }}>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '16px', fontWeight: '500' }}>
+                            HEATMAPA AKTIVITY ZA POSLEDNÍ ROK
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '4px', flex: 1, alignItems: 'center', alignContent: 'center' }}>
+                            {heatmapData.map((col, cIdx) => (
+                                <div key={cIdx} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                    {col.map((cell, rIdx) => (
+                                        <div
+                                            key={rIdx}
+                                            title={`${cell.date.toLocaleDateString('cs-CZ')}: ${cell.eps} epizod`}
+                                            style={{
+                                                width: '12px',
+                                                height: '12px',
+                                                backgroundColor: getHeatmapColor(cell.eps),
+                                                borderRadius: '2px',
+                                                transition: 'opacity 0.2s',
+                                                cursor: 'pointer'
+                                            }}
+                                            onMouseEnter={e => e.target.style.opacity = '0.7'}
+                                            onMouseLeave={e => e.target.style.opacity = '1'}
+                                        />
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
+                        {/* Legend */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', alignSelf: 'flex-end', marginTop: '12px', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                            Méně
+                            {[0, 1, 3, 7, 14, 20].map((val, i) => (
+                                <div key={i} style={{
+                                    width: '12px', height: '12px', borderRadius: '2px', backgroundColor: getHeatmapColor(val)
+                                }} />
+                            ))}
+                            Více
+                        </div>
+                    </div>
                 </div>
             </div>
 
