@@ -283,6 +283,11 @@ function HistoryLog() {
         const startDate = new Date(endDate);
         startDate.setDate(startDate.getDate() - 364);
 
+        // Adjust to nearest previous Monday
+        const dayOfWeek = startDate.getDay(); // 0 is Sun, 1 is Mon...
+        const diff = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+        startDate.setDate(startDate.getDate() - diff);
+
         // Calculate daily totals from full log
         const dailyTotals = {};
         historyLog.forEach(h => {
@@ -297,9 +302,11 @@ function HistoryLog() {
         const columns = [];
         let currDate = new Date(startDate);
 
-        for (let w = 0; w < 52; w++) {
+        while (currDate <= endDate) {
             const col = [];
             for (let d = 0; d < 7; d++) {
+                if (currDate > endDate) break;
+
                 const pad = (n) => n.toString().padStart(2, '0')
                 const dStr = `${currDate.getFullYear()}-${pad(currDate.getMonth() + 1)}-${pad(currDate.getDate())}`
 
@@ -310,7 +317,9 @@ function HistoryLog() {
                 });
                 currDate.setDate(currDate.getDate() + 1);
             }
-            columns.push(col);
+            if (col.length > 0) {
+                columns.push(col);
+            }
         }
         return columns;
     }, [historyLog]);
@@ -445,7 +454,7 @@ function HistoryLog() {
         <div className="fade-in">
             {/* Header and Streaks */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)', marginBottom: 'var(--spacing-xl)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 'var(--spacing-lg)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--spacing-lg)' }}>
                     <h2 style={{ margin: 0, display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--spacing-sm)' }}>
                         History Log
                         <span style={{ fontSize: '1rem', color: 'var(--text-secondary)' }}>
@@ -455,89 +464,53 @@ function HistoryLog() {
 
                     <div className="history-streaks-container" style={{
                         display: 'flex',
-                        alignItems: 'stretch',
-                        gap: '0',
+                        alignItems: 'center',
+                        gap: '16px',
                         background: 'var(--color-bg-elevated)',
                         borderRadius: 'var(--radius-md)',
                         boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-                        overflow: 'hidden',
-                        flexWrap: 'nowrap'
+                        padding: 'var(--spacing-sm) var(--spacing-lg)'
                     }}>
                         {/* Current Streak */}
-                        <div style={{
-                            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                            padding: 'var(--spacing-sm) var(--spacing-md)',
-                            background: watchStreak.current > 0
-                                ? (watchStreak.current >= watchStreak.longest
-                                    ? 'linear-gradient(135deg, rgba(16,185,129,0.15), rgba(16,185,129,0.05))'
-                                    : 'linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05))')
-                                : 'transparent',
-                            position: 'relative',
-                            minWidth: '120px'
-                        }}>
-                            <span style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px', textAlign: 'center', fontWeight: 'bold' }}>
-                                🔥 Aktuální Streak
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span title="Aktuální Streak" style={{ fontSize: '1.2rem' }}>🔥</span>
+                            <span style={{
+                                fontWeight: '800',
+                                color: watchStreak.current >= watchStreak.longest ? 'var(--accent-emerald)' : 'var(--accent-amber)',
+                                fontSize: '1.1rem'
+                            }}>
+                                {watchStreak.current}
                             </span>
-                            <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                                <span style={{
-                                    fontSize: '1.4rem', fontWeight: '800',
-                                    color: watchStreak.current >= watchStreak.longest ? 'var(--accent-emerald)' : 'var(--accent-amber)'
-                                }}>
-                                    {watchStreak.current}
-                                </span>
-                                <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                                    {watchStreak.current === 1 ? 'den' : watchStreak.current >= 2 && watchStreak.current <= 4 ? 'dny' : 'dní'}
-                                </span>
-                            </div>
+                            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                                {watchStreak.current === 1 ? 'den' : watchStreak.current >= 2 && watchStreak.current <= 4 ? 'dny' : 'dní'}
+                            </span>
                             {watchStreak.currentStart && (
-                                <span style={{ fontSize: '0.55rem', color: 'var(--text-muted)', marginTop: '2px', textAlign: 'center' }}>
-                                    {watchStreak.currentStart.toLocaleDateString('cs-CZ')} – {watchStreak.currentEnd.toLocaleDateString('cs-CZ')}
+                                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                                    ({watchStreak.currentStart.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric' })} - {watchStreak.currentEnd.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric' })})
                                 </span>
                             )}
-                            {/* Progress bar spacer or bar */}
-                            <div style={{ width: '100%', height: '2px', marginTop: '6px', position: 'relative' }}>
-                                {watchStreak.longest > 0 && watchStreak.current > 0 && (
-                                    <div style={{
-                                        width: '100%', height: '100%', background: 'rgba(255,255,255,0.05)',
-                                        borderRadius: '2px', overflow: 'hidden'
-                                    }}>
-                                        <div style={{
-                                            width: `${Math.min(100, (watchStreak.current / watchStreak.longest) * 100)}%`,
-                                            height: '100%',
-                                            background: watchStreak.current >= watchStreak.longest
-                                                ? 'var(--accent-emerald)' : 'var(--accent-amber)',
-                                            borderRadius: '2px',
-                                            transition: 'width 0.5s ease'
-                                        }} />
-                                    </div>
-                                )}
-                            </div>
                         </div>
-                        <div style={{ width: '1px', background: 'var(--border-color)', flexShrink: 0 }} />
+
+                        <div style={{ width: '1px', height: '24px', background: 'var(--border-color)' }} />
+
                         {/* Longest Streak */}
-                        <div style={{
-                            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                            padding: 'var(--spacing-sm) var(--spacing-md)',
-                            minWidth: '120px'
-                        }}>
-                            <span style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px', textAlign: 'center', fontWeight: 'bold' }}>
-                                🏆 Nejdelší Streak
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span title="Nejdelší Streak" style={{ fontSize: '1.2rem' }}>🏆</span>
+                            <span style={{
+                                fontWeight: '800',
+                                color: 'var(--text-primary)',
+                                fontSize: '1.1rem'
+                            }}>
+                                {watchStreak.longest}
                             </span>
-                            <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                                <span style={{ fontSize: '1.4rem', fontWeight: '800', color: 'var(--text-primary)' }}>
-                                    {watchStreak.longest}
-                                </span>
-                                <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                                    {watchStreak.longest === 1 ? 'den' : watchStreak.longest >= 2 && watchStreak.longest <= 4 ? 'dny' : 'dní'}
-                                </span>
-                            </div>
+                            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                                {watchStreak.longest === 1 ? 'den' : watchStreak.longest >= 2 && watchStreak.longest <= 4 ? 'dny' : 'dní'}
+                            </span>
                             {watchStreak.longestStart && (
-                                <span style={{ fontSize: '0.55rem', color: 'var(--text-muted)', marginTop: '2px', textAlign: 'center' }}>
-                                    {watchStreak.longestStart.toLocaleDateString('cs-CZ')} – {watchStreak.longestEnd.toLocaleDateString('cs-CZ')}
+                                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                                    ({watchStreak.longestStart.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric', year: '2-digit' })} - {watchStreak.longestEnd.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric', year: '2-digit' })})
                                 </span>
                             )}
-                            {/* Spacer to match height if no bar */}
-                            <div style={{ width: '100%', height: '2px', marginTop: '6px' }} />
                         </div>
                     </div>
                 </div>
@@ -576,43 +549,95 @@ function HistoryLog() {
                         display: 'flex',
                         flexDirection: 'column',
                         minHeight: '220px',
-                        overflowX: 'auto'
+                        overflow: 'hidden' // Prevent full container scroll if possible
                     }}>
-                        <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '16px', fontWeight: '500' }}>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '8px', fontWeight: '500' }}>
                             HEATMAPA AKTIVITY ZA POSLEDNÍ ROK
                         </div>
 
-                        <div style={{ display: 'flex', gap: '4px', flex: 1, alignItems: 'center', alignContent: 'center' }}>
-                            {heatmapData.map((col, cIdx) => (
-                                <div key={cIdx} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                                    {col.map((cell, rIdx) => (
-                                        <div
-                                            key={rIdx}
-                                            title={`${cell.date.toLocaleDateString('cs-CZ')}: ${cell.eps} epizod`}
-                                            style={{
-                                                width: '12px',
-                                                height: '12px',
-                                                backgroundColor: getHeatmapColor(cell.eps),
-                                                borderRadius: '2px',
-                                                transition: 'opacity 0.2s',
-                                                cursor: 'pointer'
-                                            }}
-                                            onMouseEnter={e => e.target.style.opacity = '0.7'}
-                                            onMouseLeave={e => e.target.style.opacity = '1'}
-                                        />
+                        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, overflowX: 'auto', paddingBottom: '4px', paddingTop: '8px' }}>
+                            {/* Months Header */}
+                            <div style={{ display: 'flex', paddingLeft: '24px', marginBottom: '4px', gap: '3px' }}>
+                                {heatmapData.map((col, cIdx) => {
+                                    const currentMonth = col[0].date.getMonth();
+                                    const prevMonth = cIdx > 0 ? heatmapData[cIdx - 1][0].date.getMonth() : -1;
+                                    // Only show month name if it's the first column of that month
+                                    const showMonth = cIdx === 0 || currentMonth !== prevMonth;
+
+                                    return (
+                                        <div key={`m-${cIdx}`} style={{ width: '10px', flexShrink: 0, position: 'relative' }}>
+                                            {showMonth && (
+                                                <span style={{ position: 'absolute', left: 0, fontSize: '0.65rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+                                                    {col[0].date.toLocaleDateString('cs-CZ', { month: 'short' })}
+                                                </span>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            <div style={{ display: 'flex' }}>
+                                {/* Days Sidebar */}
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', marginRight: '8px', marginTop: '2px' }}>
+                                    {['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'].map((day, idx) => (
+                                        <div key={day} style={{ height: '10px', fontSize: '0.6rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', width: '16px', lineHeight: 1 }}>
+                                            {[0, 2, 4].includes(idx) ? day : ''}
+                                        </div>
                                     ))}
                                 </div>
-                            ))}
+
+                                {/* Heatmap Grid */}
+                                <div style={{ display: 'flex', gap: '3px' }}>
+                                    {heatmapData.map((col, cIdx) => (
+                                        <div key={cIdx} style={{ display: 'flex', flexDirection: 'column', gap: '3px', flexShrink: 0 }}>
+                                            {col.map((cell, rIdx) => (
+                                                <div
+                                                    key={rIdx}
+                                                    title={`${cell.date.toLocaleDateString('cs-CZ')}: ${cell.eps} epizod`}
+                                                    style={{
+                                                        width: '10px',
+                                                        height: '10px',
+                                                        backgroundColor: getHeatmapColor(cell.eps),
+                                                        borderRadius: '2px',
+                                                        transition: 'opacity 0.2s',
+                                                        cursor: 'pointer'
+                                                    }}
+                                                    onMouseEnter={e => e.target.style.opacity = '0.7'}
+                                                    onMouseLeave={e => e.target.style.opacity = '1'}
+                                                />
+                                            ))}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
-                        {/* Legend */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', alignSelf: 'flex-end', marginTop: '12px', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                            Méně
-                            {[0, 1, 3, 7, 14, 20].map((val, i) => (
-                                <div key={i} style={{
-                                    width: '12px', height: '12px', borderRadius: '2px', backgroundColor: getHeatmapColor(val)
-                                }} />
-                            ))}
-                            Více
+
+                        {/* Detailed Legend matching VBA */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', alignSelf: 'flex-start', marginTop: '12px', fontSize: '0.7rem', color: 'var(--text-muted)', flexWrap: 'wrap' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                <div style={{ width: '10px', height: '10px', borderRadius: '2px', backgroundColor: getHeatmapColor(0) }} />
+                                0 epizod
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                <div style={{ width: '10px', height: '10px', borderRadius: '2px', backgroundColor: getHeatmapColor(HEATMAP_COLOR_LEVEL_1) }} />
+                                1 až {HEATMAP_COLOR_LEVEL_1} epizody
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                <div style={{ width: '10px', height: '10px', borderRadius: '2px', backgroundColor: getHeatmapColor(HEATMAP_COLOR_LEVEL_2) }} />
+                                {HEATMAP_COLOR_LEVEL_1 + 1} až {HEATMAP_COLOR_LEVEL_2} epizod
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                <div style={{ width: '10px', height: '10px', borderRadius: '2px', backgroundColor: getHeatmapColor(HEATMAP_COLOR_LEVEL_3) }} />
+                                {HEATMAP_COLOR_LEVEL_2 + 1} až {HEATMAP_COLOR_LEVEL_3} epizod
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                <div style={{ width: '10px', height: '10px', borderRadius: '2px', backgroundColor: getHeatmapColor(HEATMAP_COLOR_LEVEL_4) }} />
+                                {HEATMAP_COLOR_LEVEL_3 + 1} až {HEATMAP_COLOR_LEVEL_4} epizod
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                <div style={{ width: '10px', height: '10px', borderRadius: '2px', backgroundColor: getHeatmapColor(HEATMAP_COLOR_LEVEL_4 + 1) }} />
+                                Více než {HEATMAP_COLOR_LEVEL_4}
+                            </div>
                         </div>
                     </div>
                 </div>
