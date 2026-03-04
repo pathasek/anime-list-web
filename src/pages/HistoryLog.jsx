@@ -486,7 +486,7 @@ function HistoryLog() {
                             </span>
                             {watchStreak.currentStart && (
                                 <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                                    ({watchStreak.currentStart.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric' })} - {watchStreak.currentEnd.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric' })})
+                                    ({watchStreak.currentStart.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric', year: '2-digit' })} - {watchStreak.currentEnd.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric', year: '2-digit' })})
                                 </span>
                             )}
                         </div>
