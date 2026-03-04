@@ -557,7 +557,7 @@ function HistoryLog() {
 
                         <div style={{ display: 'flex', flexDirection: 'column', flex: 1, overflowX: 'auto', paddingBottom: '4px', paddingTop: '8px' }}>
                             {/* Months Header */}
-                            <div style={{ display: 'flex', paddingLeft: '24px', marginBottom: '4px', gap: '3px' }}>
+                            <div style={{ display: 'flex', paddingLeft: '24px', marginBottom: '4px', gap: '3px', height: '16px' }}>
                                 {heatmapData.map((col, cIdx) => {
                                     const currentMonth = col[0].date.getMonth();
                                     const prevMonth = cIdx > 0 ? heatmapData[cIdx - 1][0].date.getMonth() : -1;
@@ -565,9 +565,9 @@ function HistoryLog() {
                                     const showMonth = cIdx === 0 || currentMonth !== prevMonth;
 
                                     return (
-                                        <div key={`m-${cIdx}`} style={{ width: '10px', flexShrink: 0, position: 'relative' }}>
+                                        <div key={`m-${cIdx}`} style={{ width: '10px', height: '16px', flexShrink: 0, position: 'relative' }}>
                                             {showMonth && (
-                                                <span style={{ position: 'absolute', left: 0, fontSize: '0.65rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+                                                <span style={{ position: 'absolute', bottom: 0, left: 0, fontSize: '0.65rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', zIndex: 1 }}>
                                                     {col[0].date.toLocaleDateString('cs-CZ', { month: 'short' })}
                                                 </span>
                                             )}
