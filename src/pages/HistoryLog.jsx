@@ -401,98 +401,123 @@ function HistoryLog() {
                 </h2>
 
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--spacing-lg)', alignItems: 'stretch' }}>
-                    <div className="history-streaks-container" style={{
-                        display: 'flex',
-                        alignItems: 'stretch',
-                        gap: '0',
-                        background: 'var(--color-bg-elevated)',
-                        borderRadius: 'var(--radius-md)',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-                        overflow: 'hidden',
-                        alignSelf: 'flex-start', // Prevent stretching full width
-                        flexWrap: 'nowrap', // Ensure they stay side-by-side on mobile
-                        maxWidth: '100%', // Prevent overflow
-                        overflowX: 'auto' // Allow scrolling if extremely small
-                    }}>
-                        {/* Current Streak */}
-                        <div style={{
-                            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                            padding: 'var(--spacing-md) var(--spacing-lg)',
-                            background: watchStreak.current > 0
-                                ? (watchStreak.current >= watchStreak.longest
-                                    ? 'linear-gradient(135deg, rgba(16,185,129,0.15), rgba(16,185,129,0.05))'
-                                    : 'linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05))')
-                                : 'transparent',
-                            position: 'relative',
-                            minWidth: '140px',
-                            minHeight: '110px',
-                            flex: 1
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)', alignSelf: 'flex-start' }}>
+                        <div className="history-streaks-container" style={{
+                            display: 'flex',
+                            alignItems: 'stretch',
+                            gap: '0',
+                            background: 'var(--color-bg-elevated)',
+                            borderRadius: 'var(--radius-md)',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                            overflow: 'hidden',
+                            flexWrap: 'nowrap', // Ensure they stay side-by-side on mobile
+                            maxWidth: '100%', // Prevent overflow
+                            overflowX: 'auto' // Allow scrolling if extremely small
                         }}>
-                            <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px', textAlign: 'center', fontWeight: 'bold' }}>
-                                🔥 Aktuální Streak
-                            </span>
-                            <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                                <span style={{
-                                    fontSize: '1.6rem', fontWeight: '800',
-                                    color: watchStreak.current >= watchStreak.longest ? 'var(--accent-emerald)' : 'var(--accent-amber)'
-                                }}>
-                                    {watchStreak.current}
+                            {/* Current Streak */}
+                            <div style={{
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                                padding: 'var(--spacing-md) var(--spacing-lg)',
+                                background: watchStreak.current > 0
+                                    ? (watchStreak.current >= watchStreak.longest
+                                        ? 'linear-gradient(135deg, rgba(16,185,129,0.15), rgba(16,185,129,0.05))'
+                                        : 'linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05))')
+                                    : 'transparent',
+                                position: 'relative',
+                                minWidth: '140px',
+                                minHeight: '110px',
+                                flex: 1
+                            }}>
+                                <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px', textAlign: 'center', fontWeight: 'bold' }}>
+                                    🔥 Aktuální Streak
                                 </span>
-                                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                                    {watchStreak.current === 1 ? 'den' : watchStreak.current >= 2 && watchStreak.current <= 4 ? 'dny' : 'dní'}
-                                </span>
-                            </div>
-                            {watchStreak.currentStart && (
-                                <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', marginTop: '4px', textAlign: 'center' }}>
-                                    {watchStreak.currentStart.toLocaleDateString('cs-CZ')} – {watchStreak.currentEnd.toLocaleDateString('cs-CZ')}
-                                </span>
-                            )}
-                            {/* Progress bar spacer or bar */}
-                            <div style={{ width: '100%', height: '3px', marginTop: '8px', position: 'relative' }}>
-                                {watchStreak.longest > 0 && watchStreak.current > 0 && (
-                                    <div style={{
-                                        width: '100%', height: '100%', background: 'rgba(255,255,255,0.05)',
-                                        borderRadius: '2px', overflow: 'hidden'
+                                <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
+                                    <span style={{
+                                        fontSize: '1.6rem', fontWeight: '800',
+                                        color: watchStreak.current >= watchStreak.longest ? 'var(--accent-emerald)' : 'var(--accent-amber)'
                                     }}>
-                                        <div style={{
-                                            width: `${Math.min(100, (watchStreak.current / watchStreak.longest) * 100)}%`,
-                                            height: '100%',
-                                            background: watchStreak.current >= watchStreak.longest
-                                                ? 'var(--accent-emerald)' : 'var(--accent-amber)',
-                                            borderRadius: '2px',
-                                            transition: 'width 0.5s ease'
-                                        }} />
-                                    </div>
+                                        {watchStreak.current}
+                                    </span>
+                                    <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                                        {watchStreak.current === 1 ? 'den' : watchStreak.current >= 2 && watchStreak.current <= 4 ? 'dny' : 'dní'}
+                                    </span>
+                                </div>
+                                {watchStreak.currentStart && (
+                                    <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', marginTop: '4px', textAlign: 'center' }}>
+                                        {watchStreak.currentStart.toLocaleDateString('cs-CZ')} – {watchStreak.currentEnd.toLocaleDateString('cs-CZ')}
+                                    </span>
                                 )}
+                                {/* Progress bar spacer or bar */}
+                                <div style={{ width: '100%', height: '3px', marginTop: '8px', position: 'relative' }}>
+                                    {watchStreak.longest > 0 && watchStreak.current > 0 && (
+                                        <div style={{
+                                            width: '100%', height: '100%', background: 'rgba(255,255,255,0.05)',
+                                            borderRadius: '2px', overflow: 'hidden'
+                                        }}>
+                                            <div style={{
+                                                width: `${Math.min(100, (watchStreak.current / watchStreak.longest) * 100)}%`,
+                                                height: '100%',
+                                                background: watchStreak.current >= watchStreak.longest
+                                                    ? 'var(--accent-emerald)' : 'var(--accent-amber)',
+                                                borderRadius: '2px',
+                                                transition: 'width 0.5s ease'
+                                            }} />
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                            <div style={{ width: '1px', background: 'var(--border-color)', flexShrink: 0 }} />
+                            {/* Longest Streak */}
+                            <div style={{
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                                padding: 'var(--spacing-md) var(--spacing-lg)',
+                                minWidth: '140px',
+                                minHeight: '110px',
+                                flex: 1
+                            }}>
+                                <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px', textAlign: 'center', fontWeight: 'bold' }}>
+                                    🏆 Nejdelší Streak
+                                </span>
+                                <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
+                                    <span style={{ fontSize: '1.6rem', fontWeight: '800', color: 'var(--text-primary)' }}>
+                                        {watchStreak.longest}
+                                    </span>
+                                    <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                                        {watchStreak.longest === 1 ? 'den' : watchStreak.longest >= 2 && watchStreak.longest <= 4 ? 'dny' : 'dní'}
+                                    </span>
+                                </div>
+                                {watchStreak.longestStart && (
+                                    <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', marginTop: '4px', textAlign: 'center' }}>
+                                        {watchStreak.longestStart.toLocaleDateString('cs-CZ')} – {watchStreak.longestEnd.toLocaleDateString('cs-CZ')}
+                                    </span>
+                                )}
+                                {/* Spacer to match height if no bar */}
+                                <div style={{ width: '100%', height: '3px', marginTop: '8px' }} />
                             </div>
                         </div>
-                        <div style={{ width: '1px', background: 'var(--border-color)', flexShrink: 0 }} />
-                        {/* Longest Streak */}
-                        <div style={{
-                            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                            padding: 'var(--spacing-md) var(--spacing-lg)',
-                            minWidth: '140px',
-                            minHeight: '110px',
-                            flex: 1
-                        }}>
-                            <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px', textAlign: 'center', fontWeight: 'bold' }}>
-                                🏆 Nejdelší Streak
-                            </span>
-                            <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                                <span style={{ fontSize: '1.6rem', fontWeight: '800', color: 'var(--text-primary)' }}>
-                                    {watchStreak.longest}
-                                </span>
-                                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                                    {watchStreak.longest === 1 ? 'den' : watchStreak.longest >= 2 && watchStreak.longest <= 4 ? 'dny' : 'dní'}
-                                </span>
-                            </div>
-                            {watchStreak.longestStart && (
-                                <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', marginTop: '4px', textAlign: 'center' }}>
-                                    {watchStreak.longestStart.toLocaleDateString('cs-CZ')} – {watchStreak.longestEnd.toLocaleDateString('cs-CZ')}
-                                </span>
-                            )}
-                            {/* Spacer to match height if no bar */}
-                            <div style={{ width: '100%', height: '3px', marginTop: '8px' }} />
+
+                        {/* Tlačítko pro interaktivní časovou osu */}
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                            <button
+                                onClick={() => setShowTimeline(!showTimeline)}
+                                style={{
+                                    background: showTimeline ? 'var(--bg-hover)' : 'rgba(99, 102, 241, 0.1)',
+                                    border: '1px solid var(--border-color)',
+                                    color: showTimeline ? 'var(--text-primary)' : 'var(--accent-primary)',
+                                    padding: '0.6rem 1.5rem',
+                                    borderRadius: 'var(--radius-full)',
+                                    fontSize: '0.9rem',
+                                    fontWeight: '600',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    transition: 'all 0.3s ease',
+                                    boxShadow: showTimeline ? 'none' : '0 2px 4px rgba(0,0,0,0.1)'
+                                }}
+                                className="hover-glow"
+                            >
+                                {showTimeline ? 'Skrýt časovou osu ✕' : 'Otevřít interaktivní časovou osu 🚀'}
+                            </button>
                         </div>
                     </div>
 
@@ -518,29 +543,7 @@ function HistoryLog() {
                     )}
                 </div>
 
-                {/* --- Interaktivní časová osa --- */}
-                <div style={{ display: 'flex', justifyContent: 'center', margin: 'var(--spacing-md) 0' }}>
-                    <button
-                        onClick={() => setShowTimeline(!showTimeline)}
-                        style={{
-                            background: showTimeline ? 'var(--bg-hover)' : 'var(--gradient-card)',
-                            border: '1px solid var(--border-color)',
-                            color: showTimeline ? 'var(--text-primary)' : 'var(--accent-primary)',
-                            padding: 'var(--spacing-sm) var(--spacing-xl)',
-                            borderRadius: 'var(--radius-full)',
-                            fontWeight: '600',
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            transition: 'all 0.3s ease',
-                            boxShadow: showTimeline ? 'none' : 'var(--shadow-sm)'
-                        }}
-                        className="hover-glow"
-                    >
-                        {showTimeline ? 'Skrýt časovou osu ✕' : 'Otevřít interaktivní časovou osu 🚀'}
-                    </button>
-                </div>
-
+                {/* --- Volitelně zobrazená interaktivní časová osa dole pod první sekcí --- */}
                 {showTimeline && (
                     <InteractiveTimeline historyData={historyLog} />
                 )}
