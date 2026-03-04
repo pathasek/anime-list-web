@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { loadData, STORAGE_KEYS } from '../utils/dataStore'
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js'
 import { Bar } from 'react-chartjs-2'
+import InteractiveTimeline from '../components/InteractiveTimeline'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
@@ -20,6 +21,7 @@ function HistoryLog() {
     const [yearFilter, setYearFilter] = useState('all')
     const [sortBy, setSortBy] = useState('date') // 'date', 'animeCount', 'episodes', 'time'
     const [dateRange, setDateRange] = useState({ start: '', end: '' })
+    const [showTimeline, setShowTimeline] = useState(false)
 
     useEffect(() => {
         loadData(STORAGE_KEYS.HISTORY_LOG, 'data/history_log.json')
@@ -515,6 +517,33 @@ function HistoryLog() {
                         </div>
                     )}
                 </div>
+
+                {/* --- Interaktivní časová osa --- */}
+                <div style={{ display: 'flex', justifyContent: 'center', margin: 'var(--spacing-md) 0' }}>
+                    <button
+                        onClick={() => setShowTimeline(!showTimeline)}
+                        style={{
+                            background: showTimeline ? 'var(--bg-hover)' : 'var(--gradient-card)',
+                            border: '1px solid var(--border-color)',
+                            color: showTimeline ? 'var(--text-primary)' : 'var(--accent-primary)',
+                            padding: 'var(--spacing-sm) var(--spacing-xl)',
+                            borderRadius: 'var(--radius-full)',
+                            fontWeight: '600',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            transition: 'all 0.3s ease',
+                            boxShadow: showTimeline ? 'none' : 'var(--shadow-sm)'
+                        }}
+                        className="hover-glow"
+                    >
+                        {showTimeline ? 'Skrýt časovou osu ✕' : 'Otevřít interaktivní časovou osu 🚀'}
+                    </button>
+                </div>
+
+                {showTimeline && (
+                    <InteractiveTimeline historyData={historyLog} />
+                )}
             </div>
 
             {/* Search and Filters */}
