@@ -241,6 +241,57 @@ function AnimeDetail() {
         return (sum / episodeRatings.length).toLocaleString('cs-CZ', { maximumFractionDigits: 2 })
     }, [episodeRatings])
 
+    // Calculate rewatch strings for the tooltip dynamically from history
+    const rewatchTooltipStr = useMemo(() => {
+        if (!anime || !anime.rewatch_count) return '';
+
+        // Group history by rewatch number
+        const rewatchGroups = {};
+        history.forEach(h => {
+            if (h.rewatch) {
+                if (!rewatchGroups[h.rewatch]) rewatchGroups[h.rewatch] = [];
+                if (h.date) rewatchGroups[h.rewatch].push(new Date(h.date).getTime());
+            }
+        });
+
+        const lines = [];
+        Object.keys(rewatchGroups).sort((a, b) => Number(a) - Number(b)).forEach(rewatchNum => {
+            const timestamps = rewatchGroups[rewatchNum];
+            if (timestamps.length > 0) {
+                const minDate = new Date(Math.min(...timestamps));
+                const maxDate = new Date(Math.max(...timestamps));
+
+                const minD = String(minDate.getDate()).padStart(2, '0');
+                const minM = String(minDate.getMonth() + 1).padStart(2, '0');
+                const minY = minDate.getFullYear();
+
+                const maxD = String(maxDate.getDate()).padStart(2, '0');
+                const maxM = String(maxDate.getMonth() + 1).padStart(2, '0');
+                const maxY = maxDate.getFullYear();
+
+                let dateStr = '';
+                if (minDate.getTime() === maxDate.getTime()) {
+                    dateStr = `${minD}.${minM}.${minY}`;
+                } else if (minM === maxM && minY === maxY) {
+                    dateStr = `${minD}. - ${maxD}.${maxM}.${maxY}`;
+                } else if (minY === maxY) {
+                    dateStr = `${minD}.${minM}. - ${maxD}.${maxM}.${maxY}`;
+                } else {
+                    dateStr = `${minD}.${minM}.${minY} - ${maxD}.${maxM}.${maxY}`;
+                }
+
+                lines.push(`${rewatchNum}. Rewatch; ${anime.name} (${dateStr})`);
+            }
+        });
+
+        if (lines.length > 0) return lines.join('\n');
+
+        if (anime.rewatches && anime.rewatches.length > 0) return anime.rewatches.join('\n');
+        if (anime.end_date) return `${anime.rewatch_count}. Rewatch; ${anime.name} (${new Date(anime.end_date).toLocaleDateString('cs-CZ', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\s/g, '')})`;
+
+        return '';
+    }, [anime, history]);
+
     if (loading) {
         return <div className="fade-in"><h2>Načítám...</h2></div>
     }
@@ -381,7 +432,7 @@ function AnimeDetail() {
                                         <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Rewatch</span>
                                         <div
                                             style={{ fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}
-                                            title={anime.rewatches && anime.rewatches.length > 0 ? anime.rewatches.join('\n') : (anime.end_date ? `${anime.rewatch_count}. Rewatch; ${new Date(anime.end_date).toLocaleDateString('cs-CZ', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\s/g, '')}` : '')}
+                                            title={rewatchTooltipStr}
                                         >
                                             {anime.rewatch_count}x
                                             <span style={{
