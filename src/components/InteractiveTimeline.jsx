@@ -15,6 +15,9 @@ const InteractiveTimeline = ({ historyData }) => {
                     if (anime.name) {
                         map[anime.name.toLowerCase()] = anime;
                     }
+                    if (anime.series && !map[anime.series.toLowerCase()]) {
+                        map[anime.series.toLowerCase()] = anime;
+                    }
                 });
                 setAnimeMap(map);
             })
