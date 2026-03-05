@@ -1,5 +1,5 @@
 {
-  "last_update": "2026-03-04T20:21:49",
+  "last_update": "2026-03-05T21:51:07",
   "dashboard_table": [
     [
       "Sledovaná data",
@@ -10,24 +10,24 @@
     ],
     [
       "Čas sledování (hh:mm)",
-      "1861:24",
+      "1862:11",
       "114:01",
       "1473:57",
-      "220:37"
+      "221:24"
     ],
     [
       "Čas sledování (dny a hodiny)",
-      "77 dní 13 hodin",
+      "77 dní 14 hodin",
       "4 dny 18 hodin",
       "61 dní 9 hodin",
-      "9 dní 4 hodiny"
+      "9 dní 5 hodin"
     ],
     [
       "Počet zhlédnutých epizod",
-      "4340",
+      "4342",
       "282",
       "3422",
-      "529"
+      "531"
     ],
     [
       "Průměrná délka epizody (min)",
@@ -59,36 +59,36 @@
     ]
   ],
   "total_time": {
-    "total": "1861:24",
+    "total": "1862:11",
     "2024": "114:01",
     "2025": "1473:57",
-    "2026": "220:37"
+    "2026": "221:24"
   },
   "total_episodes": {
-    "total": 4340,
+    "total": 4342,
     "2024": 282,
     "2025": 3422,
-    "2026": 529
+    "2026": 531
   },
   "avg_episode_duration": {
-    "total": 25.733811719906697,
+    "total": 25.732782787746448,
     "2024": 24.262200673758862,
     "2025": 25.84381579029666,
-    "2026": 25.024116672967867
+    "2026": 25.01837612052731
   },
   "anime_count": {},
   "comments": {
     "total_time": {
-      "total": "Z toho rewatchnuto: 154:11 (hh:mm)\nČas sledování bez rewatchů: 1707:14 (hh:mm)",
+      "total": "Z toho rewatchnuto: 154:11 (hh:mm)\nČas sledování bez rewatchů: 1708:01 (hh:mm)",
       "2024": "Z toho rewatchnuto: 18:59 (hh:mm)\nČas sledování bez rewatchů: 95:03 (hh:mm)",
       "2025": "Z toho rewatchnuto: 67:13 (hh:mm)\nČas sledování bez rewatchů: 1406:45 (hh:mm)",
-      "2026": "Z toho rewatchnuto: 49:46 (hh:mm)\nČas sledování bez rewatchů: 170:52 (hh:mm)"
+      "2026": "Z toho rewatchnuto: 49:46 (hh:mm)\nČas sledování bez rewatchů: 171:39 (hh:mm)"
     },
     "total_episodes": {
-      "total": "Z toho rewatchnuto: 356 epizod\nPočet zhlédnutých originálních epizod: 3984 epizod",
+      "total": "Z toho rewatchnuto: 356 epizod\nPočet zhlédnutých originálních epizod: 3986 epizod",
       "2024": "Z toho rewatchnuto: 49 epizod\nPočet zhlédnutých originálních epizod: 233 epizod",
       "2025": "Z toho rewatchnuto: 149 epizod\nPočet zhlédnutých originálních epizod: 3273 epizod",
-      "2026": "Z toho rewatchnuto: 119 epizod\nPočet zhlédnutých originálních epizod: 410 epizod"
+      "2026": "Z toho rewatchnuto: 119 epizod\nPočet zhlédnutých originálních epizod: 412 epizod"
     },
     "rewatch_count": {
       "total": "1. Rewatch; Chainsaw Man (06. - 07.09.2024)\n1. Rewatch; Chainsaw Man the Movie: Reze Arc (12.12.2025)\n1. Rewatch; Classroom of the Elite, S01 (28.02.2026)\n1. Rewatch; Classroom of the Elite, S02 (01. - 02.03.2026)\n1. Rewatch; Classroom of the Elite, S03 (03. - 04.03.2026)\n1. Rewatch; Death Note (netuším přesně)\n1. Rewatch; Frieren: Beyond Journey's End, S01 (12. - 16.01.2026)\n1. Rewatch; Howl's Moving Castle (netuším přesně)\n1. Rewatch; Jujutsu Kaisen 0 (07.01.2026)\n1. Rewatch; Jujutsu Kaisen, S01 (04. - 05.01.2026)\n1. Rewatch; Jujutsu Kaisen, S02 (06. - 09.01.2026)\n1. Rewatch; KonoSuba: God's Blessing on This Wonderful World! - God's Blessing on This Wonderful Choker! (01.01.2025)\n1. Rewatch; Lord of Mysteries (31.12.2025 - 01.01.2026)\n1. Rewatch; My Dress-Up Darling, S01 (05.07.2025)\n1. Rewatch; No Game, No Life (22. - 23.03.2025)\n1. Rewatch; Overlord: The Sacred Kingdom (25.06.2025)\n1. Rewatch; Re:Zero -Starting Life in Another World-, S01 (22.01.2025)\n1. Rewatch; Re:Zero -Starting Life in Another World-, S02 Part 1 (26.06.2025)\n1. Rewatch; Re:Zero -Starting Life in Another World-, S02 Part 2 (27. - 28.06.2025)\n1. Rewatch; Re:Zero -Starting Life in Another World-, S03 (29. - 30.06.2025)\n1. Rewatch; Spirited Away (netuším přesně)\n1. Rewatch; Steins;Gate (22. - 23.07.2025)\n1. Rewatch; Steins;Gate 0 (24. - 25.07.2025)\n1. Rewatch; Steins;Gate: Open the Missing Link - Divide By Zero (23.07.2025)\n2. Rewatch; Death Note (05. - 10.08.2024)",

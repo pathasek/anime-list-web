@@ -1,58 +1,5 @@
 [
   {
-    "name": "Chainsaw Man",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 6",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 8",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 9",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 9.25
-      }
-    ]
-  },
-  {
     "name": "Jujutsu Kaisen, S01",
     "episodes": [
       {
@@ -251,59 +198,6 @@
     ]
   },
   {
-    "name": "Kaiju No.8, S01",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 11",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 12",
-        "rating": 8.75
-      }
-    ]
-  },
-  {
     "name": "Classroom of the Elite, S01",
     "episodes": [
       {
@@ -353,6 +247,63 @@
       {
         "episode": "EP 12",
         "rating": 8.5
+      }
+    ]
+  },
+  {
+    "name": "Classroom of the Elite, S02",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 13",
+        "rating": 7.75
       }
     ]
   },
@@ -410,123 +361,6 @@
     ]
   },
   {
-    "name": "Frieren: Beyond Journey's End, S01",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 2",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 5",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 6",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 7",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 8",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 9",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 10",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 12",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 13",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 14",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 15",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 16",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 17",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 18",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 19",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 20",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 21",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 22",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 23",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 24",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 25",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 26",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 27",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 28",
-        "rating": 9.75
-      }
-    ]
-  },
-  {
     "name": "Spy x Family, S01 Part 1",
     "episodes": [
       {
@@ -576,107 +410,6 @@
       {
         "episode": "EP 12",
         "rating": 7.25
-      }
-    ]
-  },
-  {
-    "name": "Steins;Gate",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 4",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 5",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 6",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 8",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 9",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 12",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 13",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 14",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 15",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 16",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 17",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 18",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 19",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 20",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 21",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 22",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 23",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 24",
-        "rating": 10.0
       }
     ]
   },
@@ -888,63 +621,6 @@
     ]
   },
   {
-    "name": "Lord of Mysteries",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 5",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 6",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 7",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 8",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 10",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 11",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 12",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 13",
-        "rating": 10.0
-      }
-    ]
-  },
-  {
     "name": "Call of the Night, S01",
     "episodes": [
       {
@@ -998,165 +674,6 @@
       {
         "episode": "EP 13",
         "rating": 8.25
-      }
-    ]
-  },
-  {
-    "name": "Call of the Night, S02",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 8",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 11",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 12",
-        "rating": 7.5
-      }
-    ]
-  },
-  {
-    "name": "The Water Magician",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 8",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 11",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 7.75
-      }
-    ]
-  },
-  {
-    "name": "My Dress-Up Darling, S02",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 8",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 11",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 8.5
       }
     ]
   },
@@ -1376,112 +893,6 @@
     ]
   },
   {
-    "name": "The Summer Hikaru Died, S01",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 5",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 6",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 8",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 9",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 11",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 9.75
-      }
-    ]
-  },
-  {
-    "name": "The Rising of the Shield Hero, S04",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 7.75
-      }
-    ]
-  },
-  {
     "name": "Rascal Does Not Dream of Bunny Girl Senpai",
     "episodes": [
       {
@@ -1535,63 +946,6 @@
       {
         "episode": "EP 13",
         "rating": 9.5
-      }
-    ]
-  },
-  {
-    "name": "Rascal Does Not Dream of Santa Claus",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 8",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 12",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 13",
-        "rating": 8.0
       }
     ]
   },
@@ -1692,59 +1046,6 @@
       },
       {
         "episode": "EP 24",
-        "rating": 7.5
-      }
-    ]
-  },
-  {
-    "name": "Black Butler, S02",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 12",
         "rating": 7.5
       }
     ]
@@ -1886,141 +1187,6 @@
     ]
   },
   {
-    "name": "Black Butler: Emerald Witch Arc",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 13",
-        "rating": 8.25
-      }
-    ]
-  },
-  {
-    "name": "Takopi's Original Sin",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 3",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 4",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 5",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 6",
-        "rating": 9.75
-      }
-    ]
-  },
-  {
-    "name": "Kaiju No.8, S02",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 11",
-        "rating": 8.75
-      }
-    ]
-  },
-  {
     "name": "Steins;Gate: The Sagacious Wisdom of Cognitive Computing",
     "episodes": [
       {
@@ -2042,267 +1208,6 @@
     ]
   },
   {
-    "name": "Fullmetal Alchemist: Brotherhood",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 5",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 8",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 10",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 11",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 12",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 13",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 14",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 15",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 16",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 17",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 18",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 19",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 20",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 21",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 22",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 23",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 24",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 25",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 26",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 27",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 28",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 29",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 30",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 31",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 32",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 33",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 34",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 35",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 36",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 37",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 38",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 39",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 40",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 41",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 42",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 43",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 44",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 45",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 46",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 47",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 48",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 49",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 50",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 51",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 52",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 53",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 54",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 55",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 56",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 57",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 58",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 59",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 60",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 61",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 62",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 63",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 64",
-        "rating": 9.75
-      }
-    ]
-  },
-  {
     "name": "Fullmetal Alchemist: Brotherhood OVA Collection",
     "episodes": [
       {
@@ -2320,112 +1225,6 @@
       {
         "episode": "EP 4",
         "rating": 8.75
-      }
-    ]
-  },
-  {
-    "name": "Tokyo Magnitude 8.0",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 5",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 8",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 10.0
-      }
-    ]
-  },
-  {
-    "name": "Haibane Renmei",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 2",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 8",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 6.0
-      },
-      {
-        "episode": "EP 12",
-        "rating": 6.0
-      },
-      {
-        "episode": "EP 13",
-        "rating": 6.0
       }
     ]
   },
@@ -2573,132 +1372,6 @@
       {
         "episode": "EP 8",
         "rating": 7.0
-      }
-    ]
-  },
-  {
-    "name": "Magia Record: Puella Magi Madoka Magica Side Story Final Season",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 4",
-        "rating": 6.5
-      }
-    ]
-  },
-  {
-    "name": "Cross Ange: Rondo of Angel and Dragon",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 5",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 6",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 8",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 12",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 13",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 14",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 15",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 16",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 17",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 18",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 19",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 20",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 21",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 22",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 23",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 24",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 25",
-        "rating": 7.5
       }
     ]
   },
@@ -2913,31 +1586,6 @@
     ]
   },
   {
-    "name": "Higurashi: When They Cry – Rei",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 6.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 6.75
-      }
-    ]
-  },
-  {
     "name": "Higurashi: When They Cry – Kira",
     "episodes": [
       {
@@ -3060,71 +1708,6 @@
     ]
   },
   {
-    "name": "Higurashi: When They Cry – Sotsu",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 11",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 13",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 14",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 15",
-        "rating": 10.0
-      }
-    ]
-  },
-  {
     "name": "The Future Diary",
     "episodes": [
       {
@@ -3234,331 +1817,6 @@
     ]
   },
   {
-    "name": "Girls' Last Tour",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 10",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 9.5
-      }
-    ]
-  },
-  {
-    "name": "The Melancholy of Haruhi Suzumiya, S01",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 8",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 9",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 12",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 13",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 14",
-        "rating": 7.25
-      }
-    ]
-  },
-  {
-    "name": "From the New World",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 5",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 8",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 13",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 14",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 15",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 16",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 17",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 18",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 19",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 20",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 21",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 22",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 23",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 24",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 25",
-        "rating": 7.5
-      }
-    ]
-  },
-  {
-    "name": "Electromagnetic Girlfriend",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.75
-      }
-    ]
-  },
-  {
-    "name": "Shiki",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 12",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 13",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 14",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 15",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 16",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 17",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 18",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 19",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 20",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 21",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 22",
-        "rating": 9.25
-      }
-    ]
-  },
-  {
     "name": "Shiki Specials",
     "episodes": [
       {
@@ -3568,59 +1826,6 @@
       {
         "episode": "EP 2",
         "rating": 8.5
-      }
-    ]
-  },
-  {
-    "name": "School-Live!",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 6",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 11",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 12",
-        "rating": 9.0
       }
     ]
   },
@@ -4075,67 +2280,6 @@
     ]
   },
   {
-    "name": "Monogatari Series: Off & Monster Season",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 11",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 12",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 13",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 14",
-        "rating": 8.25
-      }
-    ]
-  },
-  {
     "name": "The Melancholy of Haruhi Suzumiya, S02",
     "episodes": [
       {
@@ -4193,172 +2337,6 @@
       {
         "episode": "EP 14",
         "rating": 7.75
-      }
-    ]
-  },
-  {
-    "name": "The Disappearance of Haruhi Suzumiya",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 6",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 7",
-        "rating": 6.25
-      },
-      {
-        "episode": "EP 8",
-        "rating": 6.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 10",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 12",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 13",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 14",
-        "rating": 7.75
-      }
-    ]
-  },
-  {
-    "name": "Spice and Wolf: Merchant Meets the Wise Wolf, S01",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 5",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 8",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 9",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 11",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 13",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 14",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 15",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 16",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 17",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 18",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 19",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 20",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 21",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 22",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 23",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 24",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 25",
-        "rating": 8.75
       }
     ]
   },
@@ -4460,343 +2438,6 @@
       {
         "episode": "EP 24",
         "rating": 8.25
-      }
-    ]
-  },
-  {
-    "name": "The Apothecary Diaries, S02",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 8",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 12",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 13",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 14",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 15",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 16",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 17",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 18",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 19",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 20",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 21",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 22",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 23",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 24",
-        "rating": 8.75
-      }
-    ]
-  },
-  {
-    "name": "May I Ask for One Final Thing?",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 12",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 13",
-        "rating": 8.5
-      }
-    ]
-  },
-  {
-    "name": "Takt Op. Destiny",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 11",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 12",
-        "rating": 8.25
-      }
-    ]
-  },
-  {
-    "name": "Spy x Family, S03",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 12",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 13",
-        "rating": 7.5
-      }
-    ]
-  },
-  {
-    "name": "To Your Eternity, S03",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 11",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 13",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 14",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 15",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 16",
-        "rating": 8.0
       }
     ]
   },
@@ -4915,63 +2556,6 @@
     ]
   },
   {
-    "name": "Tower of God, S02: Workshop Battle",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 6",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 8",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 13",
-        "rating": 7.25
-      }
-    ]
-  },
-  {
     "name": "I've Been Killing Slimes for 300 Years and Maxed Out My Level, S01",
     "episodes": [
       {
@@ -5025,266 +2609,6 @@
     ]
   },
   {
-    "name": "I've Been Killing Slimes for 300 Years and Maxed Out My Level, S02",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 5",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 8",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 9",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 10",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 12",
-        "rating": 6.75
-      }
-    ]
-  },
-  {
-    "name": "Combatants Will Be Dispatched!",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 4",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 5",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 7",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 8",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 9",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 10",
-        "rating": 6.25
-      },
-      {
-        "episode": "EP 11",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 12",
-        "rating": 6.25
-      }
-    ]
-  },
-  {
-    "name": "Cautious Hero: The Hero Is Overpowered but Overly Cautious",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 8",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 11",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 12",
-        "rating": 8.75
-      }
-    ]
-  },
-  {
-    "name": "So I'm a Spider, So What?",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 8",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 12",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 13",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 14",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 15",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 16",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 17",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 18",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 19",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 20",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 21",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 22",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 23",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 24",
-        "rating": 6.75
-      }
-    ]
-  },
-  {
     "name": "Tsukimichi -Moonlit Fantasy-, S01",
     "episodes": [
       {
@@ -5334,164 +2658,6 @@
       {
         "episode": "EP 12",
         "rating": 8.25
-      }
-    ]
-  },
-  {
-    "name": "Tsukimichi -Moonlit Fantasy-, S02",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 8",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 12",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 13",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 14",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 15",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 16",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 17",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 18",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 19",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 20",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 21",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 22",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 23",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 24",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 25",
-        "rating": 7.75
-      }
-    ]
-  },
-  {
-    "name": "The Dungeon of Black Company",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 5",
-        "rating": 6.25
-      },
-      {
-        "episode": "EP 6",
-        "rating": 6.0
-      },
-      {
-        "episode": "EP 7",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 8",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 7.25
       }
     ]
   },
@@ -5610,51 +2776,6 @@
     ]
   },
   {
-    "name": "Ascendance of a Bookworm, S03",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 5",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 6",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 9",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 9.5
-      }
-    ]
-  },
-  {
     "name": "GATE, S01 Part 1",
     "episodes": [
       {
@@ -5700,59 +2821,6 @@
       {
         "episode": "EP 11",
         "rating": 8.0
-      },
-      {
-        "episode": "EP 12",
-        "rating": 8.25
-      }
-    ]
-  },
-  {
-    "name": "GATE, S01 Part 2",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 11",
-        "rating": 8.5
       },
       {
         "episode": "EP 12",
@@ -5810,112 +2878,6 @@
       {
         "episode": "EP 12",
         "rating": 7.5
-      }
-    ]
-  },
-  {
-    "name": "I'm Standing on a Million Lives, S02",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 2",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 8",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 10",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 11",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 12",
-        "rating": 6.75
-      }
-    ]
-  },
-  {
-    "name": "Skeleton Knight in Another World, S01",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 8",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 12",
-        "rating": 8.0
       }
     ]
   },
@@ -6039,128 +3001,6 @@
       {
         "episode": "EP 12",
         "rating": 7.0
-      }
-    ]
-  },
-  {
-    "name": "Arifureta: From Commonplace to World's Strongest, S03",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 6.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 6.25
-      },
-      {
-        "episode": "EP 4",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 5",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 8",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 5.75
-      },
-      {
-        "episode": "EP 10",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 12",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 13",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 14",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 15",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 16",
-        "rating": 7.0
-      }
-    ]
-  },
-  {
-    "name": "Grimgar: Ashes and Illusions",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 11",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 12",
-        "rating": 8.25
       }
     ]
   },
@@ -6428,59 +3268,6 @@
     ]
   },
   {
-    "name": "Log Horizon: Destruction of the Round Table",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 8",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 12",
-        "rating": 7.25
-      }
-    ]
-  },
-  {
     "name": "Chainsaw Man: The Compilation",
     "episodes": [
       {
@@ -6490,43 +3277,6 @@
       {
         "episode": "EP 2",
         "rating": 9.25
-      }
-    ]
-  },
-  {
-    "name": "Tatsuki Fujimoto 17-26",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 5",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 8",
-        "rating": 6.5
       }
     ]
   },
@@ -6544,150 +3294,6 @@
       {
         "episode": "EP 3",
         "rating": 7.5
-      }
-    ]
-  },
-  {
-    "name": "5 Centimeters per Second",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.5
-      }
-    ]
-  },
-  {
-    "name": "She and Her Cat: Everything Flows",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.0
-      }
-    ]
-  },
-  {
-    "name": "A Place Further Than The Universe",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 9",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 10",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 13",
-        "rating": 10.0
-      }
-    ]
-  },
-  {
-    "name": "Anohana: The Flower We Saw That Day",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 5",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 11",
-        "rating": 9.25
       }
     ]
   },
@@ -6741,226 +3347,6 @@
       {
         "episode": "EP 12",
         "rating": 8.5
-      }
-    ]
-  },
-  {
-    "name": "Sound of the Sky Specials",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.5
-      }
-    ]
-  },
-  {
-    "name": "Somali and the Forest Spirit",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 6",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 8",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 10.0
-      }
-    ]
-  },
-  {
-    "name": "Humanity Has Declined",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 5.5
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 8",
-        "rating": 5.75
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 10",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 6.75
-      }
-    ]
-  },
-  {
-    "name": "Casshern Sins",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 8",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 12",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 13",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 14",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 15",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 16",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 17",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 18",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 19",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 20",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 21",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 22",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 23",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 24",
-        "rating": 8.25
       }
     ]
   },
@@ -7295,6 +3681,2792 @@
     ]
   },
   {
+    "name": "Vinland Saga, S01",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 13",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 14",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 15",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 16",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 17",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 18",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 19",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 20",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 21",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 22",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 23",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 24",
+        "rating": 8.25
+      }
+    ]
+  },
+  {
+    "name": "Himouto! Umaru-chan",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 12",
+        "rating": 6.75
+      }
+    ]
+  },
+  {
+    "name": "Himouto! Umaru-chan Specials",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 3",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 5.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 10",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 12",
+        "rating": 5.0
+      }
+    ]
+  },
+  {
+    "name": "Himouto! Umaru-chan R",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 10",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.25
+      }
+    ]
+  },
+  {
+    "name": "Dorohedoro: Bonus Curse or Extra Evil",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 5.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 3",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 5.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 5.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 5.75
+      }
+    ]
+  },
+  {
+    "name": "Hell's Paradise, S01",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 11",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 13",
+        "rating": 8.75
+      }
+    ]
+  },
+  {
+    "name": "The Ancient Magus' Bride: Those Awaiting a Star",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.75
+      }
+    ]
+  },
+  {
+    "name": "The Ancient Magus' Bride, S01",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 11",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 13",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 14",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 15",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 16",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 17",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 18",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 19",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 20",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 21",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 22",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 23",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 24",
+        "rating": 9.25
+      }
+    ]
+  },
+  {
+    "name": "The Ancient Magus' Bride: The Boy from the West and the Knight of the Blue Storm",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.25
+      }
+    ]
+  },
+  {
+    "name": "The Ancient Magus' Bride, S02 Part 1",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 11",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.75
+      }
+    ]
+  },
+  {
+    "name": "Magi: The Labyrinth of Magic",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 13",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 14",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 15",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 16",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 17",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 18",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 19",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 20",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 21",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 22",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 23",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 24",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 25",
+        "rating": 7.75
+      }
+    ]
+  },
+  {
+    "name": "Magi: Adventures of Sinbad",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 7",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 11",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 12",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 13",
+        "rating": 7.25
+      }
+    ]
+  },
+  {
+    "name": "Psycho-Pass, S01",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 11",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 13",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 14",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 15",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 16",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 17",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 18",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 19",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 20",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 21",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 22",
+        "rating": 9.0
+      }
+    ]
+  },
+  {
+    "name": "Psycho-Pass, S02",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.25
+      }
+    ]
+  },
+  {
+    "name": "Psycho-Pass, S03",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.25
+      }
+    ]
+  },
+  {
+    "name": "Girls' Last Tour",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 10",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 9.5
+      }
+    ]
+  },
+  {
+    "name": "Electromagnetic Girlfriend",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.75
+      }
+    ]
+  },
+  {
+    "name": "School-Live!",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 11",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 12",
+        "rating": 9.0
+      }
+    ]
+  },
+  {
+    "name": "Combatants Will Be Dispatched!",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 4",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 7",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 9",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 10",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 11",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 12",
+        "rating": 6.25
+      }
+    ]
+  },
+  {
+    "name": "So I'm a Spider, So What?",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 13",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 14",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 15",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 16",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 17",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 18",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 19",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 20",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 21",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 22",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 23",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 24",
+        "rating": 6.75
+      }
+    ]
+  },
+  {
+    "name": "The Dungeon of Black Company",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 5",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 7",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.25
+      }
+    ]
+  },
+  {
+    "name": "I'm Standing on a Million Lives, S02",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 10",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 11",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 12",
+        "rating": 6.75
+      }
+    ]
+  },
+  {
+    "name": "Grimgar: Ashes and Illusions",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 11",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.25
+      }
+    ]
+  },
+  {
+    "name": "Log Horizon: Destruction of the Round Table",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.25
+      }
+    ]
+  },
+  {
+    "name": "Somali and the Forest Spirit",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 10.0
+      }
+    ]
+  },
+  {
+    "name": "Humanity Has Declined",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 5.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 5.75
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 10",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 6.75
+      }
+    ]
+  },
+  {
+    "name": "Himouto! Umaru-chan OVA",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 6.75
+      }
+    ]
+  },
+  {
+    "name": "Grimoire of Zero",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.0
+      }
+    ]
+  },
+  {
+    "name": "The Dawn of the Witch",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 5.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 5",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 7",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 9",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 10",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 11",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 6.75
+      }
+    ]
+  },
+  {
+    "name": "Magi: The Kingdom of Magic",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 3",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 13",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 14",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 15",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 16",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 17",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 18",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 19",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 20",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 21",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 22",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 23",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 24",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 25",
+        "rating": 8.75
+      }
+    ]
+  },
+  {
+    "name": "Black Butler, S02",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.5
+      }
+    ]
+  },
+  {
+    "name": "Takopi's Original Sin",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 3",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 5",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 9.75
+      }
+    ]
+  },
+  {
+    "name": "Tokyo Magnitude 8.0",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 10.0
+      }
+    ]
+  },
+  {
+    "name": "Haibane Renmei",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 12",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 13",
+        "rating": 6.0
+      }
+    ]
+  },
+  {
+    "name": "Magia Record: Puella Magi Madoka Magica Side Story Final Season",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 4",
+        "rating": 6.5
+      }
+    ]
+  },
+  {
+    "name": "Cross Ange: Rondo of Angel and Dragon",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 13",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 14",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 15",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 16",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 17",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 18",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 19",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 20",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 21",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 22",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 23",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 24",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 25",
+        "rating": 7.5
+      }
+    ]
+  },
+  {
+    "name": "Higurashi: When They Cry – Sotsu",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 11",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 13",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 14",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 15",
+        "rating": 10.0
+      }
+    ]
+  },
+  {
+    "name": "From the New World",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 5",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 13",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 14",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 15",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 16",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 17",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 18",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 19",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 20",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 21",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 22",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 23",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 24",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 25",
+        "rating": 7.5
+      }
+    ]
+  },
+  {
+    "name": "Shiki",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 13",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 14",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 15",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 16",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 17",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 18",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 19",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 20",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 21",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 22",
+        "rating": 9.25
+      }
+    ]
+  },
+  {
+    "name": "The Disappearance of Haruhi Suzumiya",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 7",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 10",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 13",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 14",
+        "rating": 7.75
+      }
+    ]
+  },
+  {
+    "name": "May I Ask for One Final Thing?",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 13",
+        "rating": 8.5
+      }
+    ]
+  },
+  {
+    "name": "Takt Op. Destiny",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 11",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.25
+      }
+    ]
+  },
+  {
+    "name": "Cautious Hero: The Hero Is Overpowered but Overly Cautious",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 11",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.75
+      }
+    ]
+  },
+  {
+    "name": "Tatsuki Fujimoto 17-26",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 6.5
+      }
+    ]
+  },
+  {
+    "name": "5 Centimeters per Second",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.5
+      }
+    ]
+  },
+  {
+    "name": "She and Her Cat: Everything Flows",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.0
+      }
+    ]
+  },
+  {
+    "name": "A Place Further Than The Universe",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 9",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 10",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 13",
+        "rating": 10.0
+      }
+    ]
+  },
+  {
+    "name": "Anohana: The Flower We Saw That Day",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 5",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 11",
+        "rating": 9.25
+      }
+    ]
+  },
+  {
+    "name": "Sound of the Sky Specials",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.5
+      }
+    ]
+  },
+  {
+    "name": "Casshern Sins",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 13",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 14",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 15",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 16",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 17",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 18",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 19",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 20",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 21",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 22",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 23",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 24",
+        "rating": 8.25
+      }
+    ]
+  },
+  {
     "name": "Monster",
     "episodes": [
       {
@@ -7596,7 +6768,617 @@
     ]
   },
   {
-    "name": "Vinland Saga, S01",
+    "name": "Blast of Tempest",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 11",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 13",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 14",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 15",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 16",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 17",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 18",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 19",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 20",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 21",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 22",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 23",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 24",
+        "rating": 7.25
+      }
+    ]
+  },
+  {
+    "name": "Burn the Witch",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 3",
+        "rating": 6.25
+      }
+    ]
+  },
+  {
+    "name": "Dead Dead Demons Dededede Destruction",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 4",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 13",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 14",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 15",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 16",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 17",
+        "rating": 7.25
+      }
+    ]
+  },
+  {
+    "name": "Ergo Proxy",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 11",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 13",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 14",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 15",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 16",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 17",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 18",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 19",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 20",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 21",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 22",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 23",
+        "rating": 8.5
+      }
+    ]
+  },
+  {
+    "name": "Fullmetal Alchemist: Brotherhood",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 10",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 11",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 12",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 13",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 14",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 15",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 16",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 17",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 18",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 19",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 20",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 21",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 22",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 23",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 24",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 25",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 26",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 27",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 28",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 29",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 30",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 31",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 32",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 33",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 34",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 35",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 36",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 37",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 38",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 39",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 40",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 41",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 42",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 43",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 44",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 45",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 46",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 47",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 48",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 49",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 50",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 51",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 52",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 53",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 54",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 55",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 56",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 57",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 58",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 59",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 60",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 61",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 62",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 63",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 64",
+        "rating": 9.75
+      }
+    ]
+  },
+  {
+    "name": "The Melancholy of Haruhi Suzumiya, S01",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 9",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 13",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 14",
+        "rating": 7.25
+      }
+    ]
+  },
+  {
+    "name": "Steins;Gate",
     "episodes": [
       {
         "episode": "EP 1",
@@ -7608,11 +7390,137 @@
       },
       {
         "episode": "EP 3",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 4",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 5",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 9",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 12",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 13",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 14",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 15",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 16",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 17",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 18",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 19",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 20",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 21",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 22",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 23",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 24",
+        "rating": 10.0
+      }
+    ]
+  },
+  {
+    "name": "Higurashi: When They Cry – Rei",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 3",
         "rating": 8.75
       },
       {
         "episode": "EP 4",
-        "rating": 9.5
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 6.75
+      }
+    ]
+  },
+  {
+    "name": "Chainsaw Man",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.25
       },
       {
         "episode": "EP 5",
@@ -7620,23 +7528,466 @@
       },
       {
         "episode": "EP 6",
-        "rating": 8.5
+        "rating": 9.0
       },
       {
         "episode": "EP 7",
-        "rating": 7.25
+        "rating": 8.25
       },
       {
         "episode": "EP 8",
-        "rating": 7.75
+        "rating": 9.5
       },
       {
         "episode": "EP 9",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 9.25
+      }
+    ]
+  },
+  {
+    "name": "Kaiju No.8, S01",
+    "episodes": [
+      {
+        "episode": "EP 1",
         "rating": 7.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 11",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.75
+      }
+    ]
+  },
+  {
+    "name": "Classroom of the Elite, S03",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.0
       },
       {
         "episode": "EP 10",
         "rating": 8.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 13",
+        "rating": 8.0
+      }
+    ]
+  },
+  {
+    "name": "Frieren: Beyond Journey's End, S01",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 5",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 7",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 9",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 10",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 12",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 13",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 14",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 15",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 16",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 17",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 18",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 19",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 20",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 21",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 22",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 23",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 24",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 25",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 26",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 27",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 28",
+        "rating": 9.75
+      }
+    ]
+  },
+  {
+    "name": "Lord of Mysteries",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 7",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 10",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 11",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 12",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 13",
+        "rating": 10.0
+      }
+    ]
+  },
+  {
+    "name": "Call of the Night, S02",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 11",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.5
+      }
+    ]
+  },
+  {
+    "name": "The Water Magician",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 11",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.75
+      }
+    ]
+  },
+  {
+    "name": "My Dress-Up Darling, S02",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.5
       },
       {
         "episode": "EP 11",
@@ -7645,6 +7996,389 @@
       {
         "episode": "EP 12",
         "rating": 8.5
+      }
+    ]
+  },
+  {
+    "name": "The Summer Hikaru Died, S01",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 9",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 11",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 9.75
+      }
+    ]
+  },
+  {
+    "name": "The Rising of the Shield Hero, S04",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.75
+      }
+    ]
+  },
+  {
+    "name": "Rascal Does Not Dream of Santa Claus",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 13",
+        "rating": 8.0
+      }
+    ]
+  },
+  {
+    "name": "Black Butler: Emerald Witch Arc",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 13",
+        "rating": 8.25
+      }
+    ]
+  },
+  {
+    "name": "Kaiju No.8, S02",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 11",
+        "rating": 8.75
+      }
+    ]
+  },
+  {
+    "name": "Monogatari Series: Off & Monster Season",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 11",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 13",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 14",
+        "rating": 8.25
+      }
+    ]
+  },
+  {
+    "name": "Spice and Wolf: Merchant Meets the Wise Wolf, S01",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 9",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 11",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 9.25
       },
       {
         "episode": "EP 13",
@@ -7652,27 +8386,132 @@
       },
       {
         "episode": "EP 14",
-        "rating": 9.25
+        "rating": 8.75
       },
       {
         "episode": "EP 15",
-        "rating": 8.0
+        "rating": 9.0
       },
       {
         "episode": "EP 16",
-        "rating": 7.75
+        "rating": 9.25
       },
       {
         "episode": "EP 17",
-        "rating": 8.0
+        "rating": 9.5
       },
       {
         "episode": "EP 18",
-        "rating": 8.25
+        "rating": 9.25
       },
       {
         "episode": "EP 19",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 20",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 21",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 22",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 23",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 24",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 25",
+        "rating": 8.75
+      }
+    ]
+  },
+  {
+    "name": "The Apothecary Diaries, S02",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 6",
         "rating": 8.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 13",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 14",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 15",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 16",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 17",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 18",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 19",
+        "rating": 8.0
       },
       {
         "episode": "EP 20",
@@ -7680,7 +8519,7 @@
       },
       {
         "episode": "EP 21",
-        "rating": 7.5
+        "rating": 8.75
       },
       {
         "episode": "EP 22",
@@ -7692,7 +8531,499 @@
       },
       {
         "episode": "EP 24",
+        "rating": 8.75
+      }
+    ]
+  },
+  {
+    "name": "Spy x Family, S03",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 2",
         "rating": 8.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 13",
+        "rating": 7.5
+      }
+    ]
+  },
+  {
+    "name": "Tower of God, S02: Workshop Battle",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 13",
+        "rating": 7.25
+      }
+    ]
+  },
+  {
+    "name": "I've Been Killing Slimes for 300 Years and Maxed Out My Level, S02",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 9",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 10",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 12",
+        "rating": 6.75
+      }
+    ]
+  },
+  {
+    "name": "Tsukimichi -Moonlit Fantasy-, S02",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 13",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 14",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 15",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 16",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 17",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 18",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 19",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 20",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 21",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 22",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 23",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 24",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 25",
+        "rating": 7.75
+      }
+    ]
+  },
+  {
+    "name": "Ascendance of a Bookworm, S03",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 5",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 9",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 9.5
+      }
+    ]
+  },
+  {
+    "name": "GATE, S01 Part 2",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 11",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.25
+      }
+    ]
+  },
+  {
+    "name": "Skeleton Knight in Another World, S01",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.0
+      }
+    ]
+  },
+  {
+    "name": "Arifureta: From Commonplace to World's Strongest, S03",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 4",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 5.75
+      },
+      {
+        "episode": "EP 10",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 13",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 14",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 15",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 16",
+        "rating": 7.0
       }
     ]
   },
@@ -7798,314 +9129,6 @@
     ]
   },
   {
-    "name": "Himouto! Umaru-chan",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 5",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 8",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 12",
-        "rating": 6.75
-      }
-    ]
-  },
-  {
-    "name": "Himouto! Umaru-chan Specials",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 6.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 6.0
-      },
-      {
-        "episode": "EP 3",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 4",
-        "rating": 5.5
-      },
-      {
-        "episode": "EP 5",
-        "rating": 6.0
-      },
-      {
-        "episode": "EP 6",
-        "rating": 6.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 6.0
-      },
-      {
-        "episode": "EP 8",
-        "rating": 6.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 10",
-        "rating": 6.25
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 12",
-        "rating": 5.0
-      }
-    ]
-  },
-  {
-    "name": "Himouto! Umaru-chan R",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 6",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 8",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 10",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 7.25
-      }
-    ]
-  },
-  {
-    "name": "Himouto! Umaru-chan OVA",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 6.75
-      }
-    ]
-  },
-  {
-    "name": "Fate/strange Fake",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.0
-      }
-    ]
-  },
-  {
-    "name": "Sentenced to Be a Hero",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 6",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.5
-      }
-    ]
-  },
-  {
-    "name": "Jujutsu Kaisen: The Culling Game Part 1",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.75
-      }
-    ]
-  },
-  {
-    "name": "Dorohedoro: Bonus Curse or Extra Evil",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 5.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 6.0
-      },
-      {
-        "episode": "EP 3",
-        "rating": 6.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 5.5
-      },
-      {
-        "episode": "EP 5",
-        "rating": 5.25
-      },
-      {
-        "episode": "EP 6",
-        "rating": 5.75
-      }
-    ]
-  },
-  {
     "name": "Dorohedoro, S01",
     "episodes": [
       {
@@ -8155,121 +9178,6 @@
       {
         "episode": "EP 12",
         "rating": 6.75
-      }
-    ]
-  },
-  {
-    "name": "Hell's Paradise, S01",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 8",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 11",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 12",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 13",
-        "rating": 8.75
-      }
-    ]
-  },
-  {
-    "name": "Hell's Paradise, S02",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 6",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 7",
-        "rating": 9.0
-      }
-    ]
-  },
-  {
-    "name": "Frieren: Beyond Journey's End, S02",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.5
       }
     ]
   },
@@ -8437,300 +9345,6 @@
     ]
   },
   {
-    "name": "Grimoire of Zero",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 8",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 7.0
-      }
-    ]
-  },
-  {
-    "name": "The Dawn of the Witch",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 6.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 5.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 6.25
-      },
-      {
-        "episode": "EP 5",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 6",
-        "rating": 6.0
-      },
-      {
-        "episode": "EP 7",
-        "rating": 6.25
-      },
-      {
-        "episode": "EP 8",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 9",
-        "rating": 6.0
-      },
-      {
-        "episode": "EP 10",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 11",
-        "rating": 6.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 6.75
-      }
-    ]
-  },
-  {
-    "name": "The Ancient Magus' Bride: Those Awaiting a Star",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.75
-      }
-    ]
-  },
-  {
-    "name": "The Ancient Magus' Bride, S01",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 5",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 8",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 11",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 12",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 13",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 14",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 15",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 16",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 17",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 18",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 19",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 20",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 21",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 22",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 23",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 24",
-        "rating": 9.25
-      }
-    ]
-  },
-  {
-    "name": "The Ancient Magus' Bride: The Boy from the West and the Knight of the Blue Storm",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.25
-      }
-    ]
-  },
-  {
-    "name": "The Ancient Magus' Bride, S02 Part 1",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 11",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 12",
-        "rating": 7.75
-      }
-    ]
-  },
-  {
     "name": "The Ancient Magus' Bride, S02 Part 2",
     "episodes": [
       {
@@ -8784,132 +9398,31 @@
     ]
   },
   {
-    "name": "Blast of Tempest",
+    "name": "To Your Eternity, S03",
     "episodes": [
       {
         "episode": "EP 1",
-        "rating": 7.25
+        "rating": 7.75
       },
       {
         "episode": "EP 2",
-        "rating": 7.75
+        "rating": 7.5
       },
       {
         "episode": "EP 3",
-        "rating": 7.5
+        "rating": 8.5
       },
       {
         "episode": "EP 4",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 6",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 8",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 11",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 12",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 13",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 14",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 15",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 16",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 17",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 18",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 19",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 20",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 21",
         "rating": 8.75
       },
       {
-        "episode": "EP 22",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 23",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 24",
-        "rating": 7.25
-      }
-    ]
-  },
-  {
-    "name": "Magi: The Labyrinth of Magic",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.25
-      },
-      {
         "episode": "EP 5",
         "rating": 8.25
       },
       {
         "episode": "EP 6",
-        "rating": 8.0
+        "rating": 8.25
       },
       {
         "episode": "EP 7",
@@ -8917,128 +9430,23 @@
       },
       {
         "episode": "EP 8",
-        "rating": 7.5
+        "rating": 8.25
       },
       {
         "episode": "EP 9",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 12",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 13",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 14",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 15",
         "rating": 8.0
       },
       {
-        "episode": "EP 16",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 17",
+        "episode": "EP 10",
         "rating": 8.5
       },
       {
-        "episode": "EP 18",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 19",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 20",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 21",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 22",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 23",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 24",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 25",
-        "rating": 7.75
-      }
-    ]
-  },
-  {
-    "name": "Magi: The Kingdom of Magic",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 3",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 6",
+        "episode": "EP 11",
         "rating": 8.25
       },
       {
-        "episode": "EP 7",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 8",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.75
-      },
-      {
         "episode": "EP 12",
-        "rating": 7.75
+        "rating": 8.5
       },
       {
         "episode": "EP 13",
@@ -9046,227 +9454,89 @@
       },
       {
         "episode": "EP 14",
-        "rating": 8.0
+        "rating": 10.0
       },
       {
         "episode": "EP 15",
-        "rating": 8.0
+        "rating": 9.5
       },
       {
         "episode": "EP 16",
-        "rating": 8.25
+        "rating": 8.0
       },
       {
         "episode": "EP 17",
         "rating": 8.5
-      },
-      {
-        "episode": "EP 18",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 19",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 20",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 21",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 22",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 23",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 24",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 25",
-        "rating": 8.75
       }
     ]
   },
   {
-    "name": "Magi: Adventures of Sinbad",
+    "name": "Fate/strange Fake",
     "episodes": [
       {
         "episode": "EP 1",
-        "rating": 7.75
+        "rating": 8.25
       },
       {
         "episode": "EP 2",
-        "rating": 7.25
+        "rating": 8.5
       },
       {
         "episode": "EP 3",
-        "rating": 7.5
+        "rating": 8.5
       },
       {
         "episode": "EP 4",
-        "rating": 7.0
+        "rating": 8.5
       },
       {
         "episode": "EP 5",
-        "rating": 7.25
+        "rating": 8.25
       },
       {
         "episode": "EP 6",
-        "rating": 7.5
+        "rating": 8.75
       },
       {
         "episode": "EP 7",
-        "rating": 6.75
+        "rating": 8.5
       },
       {
         "episode": "EP 8",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 11",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 12",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 13",
-        "rating": 7.25
-      }
-    ]
-  },
-  {
-    "name": "Burn the Witch",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 3",
-        "rating": 6.25
-      }
-    ]
-  },
-  {
-    "name": "Dead Dead Demons Dededede Destruction",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 4",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 6",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 8",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 13",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 14",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 15",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 16",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 17",
-        "rating": 7.25
-      }
-    ]
-  },
-  {
-    "name": "Psycho-Pass, S01",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 4",
         "rating": 8.0
       },
       {
-        "episode": "EP 5",
+        "episode": "EP 9",
+        "rating": 8.75
+      }
+    ]
+  },
+  {
+    "name": "Sentenced to Be a Hero",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 4",
         "rating": 8.25
       },
       {
+        "episode": "EP 5",
+        "rating": 8.75
+      },
+      {
         "episode": "EP 6",
-        "rating": 8.5
+        "rating": 9.25
       },
       {
         "episode": "EP 7",
@@ -9278,154 +9548,16 @@
       },
       {
         "episode": "EP 9",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 11",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 13",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 14",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 15",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 16",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 17",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 18",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 19",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 20",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 21",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 22",
         "rating": 9.0
       }
     ]
   },
   {
-    "name": "Psycho-Pass, S02",
+    "name": "Jujutsu Kaisen: The Culling Game Part 1",
     "episodes": [
       {
         "episode": "EP 1",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 8",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.25
-      }
-    ]
-  },
-  {
-    "name": "Psycho-Pass, S03",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 8",
-        "rating": 7.25
-      }
-    ]
-  },
-  {
-    "name": "Ergo Proxy",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.5
+        "rating": 9.25
       },
       {
         "episode": "EP 2",
@@ -9433,15 +9565,15 @@
       },
       {
         "episode": "EP 3",
-        "rating": 8.75
+        "rating": 7.75
       },
       {
         "episode": "EP 4",
-        "rating": 9.0
+        "rating": 9.25
       },
       {
         "episode": "EP 5",
-        "rating": 8.5
+        "rating": 8.75
       },
       {
         "episode": "EP 6",
@@ -9449,7 +9581,7 @@
       },
       {
         "episode": "EP 7",
-        "rating": 8.75
+        "rating": 9.0
       },
       {
         "episode": "EP 8",
@@ -9457,63 +9589,73 @@
       },
       {
         "episode": "EP 9",
-        "rating": 8.0
-      },
+        "rating": 9.75
+      }
+    ]
+  },
+  {
+    "name": "Hell's Paradise, S02",
+    "episodes": [
       {
-        "episode": "EP 10",
+        "episode": "EP 1",
         "rating": 8.25
       },
       {
-        "episode": "EP 11",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 12",
+        "episode": "EP 2",
         "rating": 8.5
       },
       {
-        "episode": "EP 13",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 14",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 15",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 16",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 17",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 18",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 19",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 20",
+        "episode": "EP 3",
         "rating": 8.75
       },
       {
-        "episode": "EP 21",
-        "rating": 9.25
+        "episode": "EP 4",
+        "rating": 8.5
       },
       {
-        "episode": "EP 22",
+        "episode": "EP 5",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 6",
         "rating": 9.0
       },
       {
-        "episode": "EP 23",
+        "episode": "EP 7",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 9.25
+      }
+    ]
+  },
+  {
+    "name": "Frieren: Beyond Journey's End, S02",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 5",
         "rating": 8.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 9.0
       }
     ]
   }
