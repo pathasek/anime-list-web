@@ -51,28 +51,26 @@ function HistoryLog() {
                 // We are scrolling UP
                 if (!scrollUpStartTime.current) {
                     scrollUpStartTime.current = Date.now()
-                } else if (currentY > 500 && (Date.now() - scrollUpStartTime.current > 3000)) {
-                    // Show button after 3 seconds of continuous upward scrolling
+                } else if (currentY > 400 && (Date.now() - scrollUpStartTime.current > 3000)) {
+                    // Show button after 3 seconds of upward scrolling
                     setShowScrollTop(true)
                 }
-
-                // Clear the pause timeout if we keep scrolling
-                if (scrollPauseTimeout.current) clearTimeout(scrollPauseTimeout.current)
-
-                // If we stop scrolling for 0.5s, reset the continuous up-scroll timer
-                scrollPauseTimeout.current = setTimeout(() => {
-                    scrollUpStartTime.current = null
-                }, 500)
-            } else {
+            } else if (currentY > lastScrollY.current) {
                 // We are scrolling DOWN
                 scrollUpStartTime.current = null
                 setShowScrollTop(false)
             }
 
+            // If scrolling stops, wait 2 seconds before resetting the timer
+            if (scrollPauseTimeout.current) clearTimeout(scrollPauseTimeout.current)
+            scrollPauseTimeout.current = setTimeout(() => {
+                scrollUpStartTime.current = null
+            }, 2000)
+
             lastScrollY.current = currentY
 
-            // Hide if we get near the top purely based on position
-            if (currentY < 500) {
+            // Always hide if near the top
+            if (currentY < 400) {
                 setShowScrollTop(false)
                 scrollUpStartTime.current = null
             }
@@ -498,24 +496,17 @@ function HistoryLog() {
     const scrollToDate = (dateStr) => {
         const group = groupedHistory.find(g => g.date && g.date.startsWith(dateStr));
         if (group) {
-            // We use requestAnimationFrame to guarantee the browser has finished painting current UI
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    const el = document.getElementById(`date-${group.date}`);
-                    if (el) {
-                        // Offset by -180px so it clears fixed headers
-                        const y = el.getBoundingClientRect().top + window.scrollY - 180;
-                        window.scrollTo({ top: y, behavior: 'auto' });
+            const el = document.getElementById(`date-${group.date}`);
+            if (el) {
+                // Instant teleport - clear header offset
+                const y = el.getBoundingClientRect().top + window.scrollY - 80;
+                window.scrollTo({ top: y, behavior: 'instant' });
 
-                        setHighlightedDate(group.date);
-                        setTimeout(() => {
-                            setHighlightedDate(null);
-                        }, 3000);
-                    } else {
-                        console.warn('Scroll target not found in DOM:', `date-${group.date}`);
-                    }
-                });
-            });
+                setHighlightedDate(group.date);
+                setTimeout(() => {
+                    setHighlightedDate(null);
+                }, 3000);
+            }
         }
     }
 
