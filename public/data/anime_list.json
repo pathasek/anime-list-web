@@ -128,8 +128,8 @@
     "rating": 8,
     "start_date": "2024-09-16T00:00:00",
     "end_date": "2024-09-17T00:00:00",
-    "rewatch_count": 0,
-    "total_time": 288,
+    "rewatch_count": 1,
+    "total_time": 576,
     "dub": "ENG",
     "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/35507/Youkoso_Jitsuryoku_Shijou_Shugi_no_Kyoushitsu_e",
@@ -147,12 +147,12 @@
     "themes": "Psychological; School",
     "genres": "Drama; Suspense",
     "episodes": 13,
-    "episode_duration": 23.833,
-    "rating": 10,
+    "episode_duration": 23.685,
+    "rating": 8,
     "start_date": "2024-09-17T00:00:00",
     "end_date": "2024-09-18T00:00:00",
-    "rewatch_count": 0,
-    "total_time": 309.82899999999995,
+    "rewatch_count": 1,
+    "total_time": 615.81,
     "dub": "ENG",
     "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/51096/Youkoso_Jitsuryoku_Shijou_Shugi_no_Kyoushitsu_e_2nd_Season",
@@ -335,8 +335,8 @@
     "rating": 10,
     "start_date": "2025-01-02T00:00:00",
     "end_date": "2025-01-03T00:00:00",
-    "rewatch_count": 1,
-    "total_time": 1308,
+    "rewatch_count": 2,
+    "total_time": 1962,
     "dub": "ENG",
     "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/31240/Re_Zero_kara_Hajimeru_Isekai_Seikatsu",
@@ -358,8 +358,8 @@
     "rating": 8,
     "start_date": "2025-01-03T00:00:00",
     "end_date": "2025-01-03T00:00:00",
-    "rewatch_count": 0,
-    "total_time": 59.5,
+    "rewatch_count": 1,
+    "total_time": 119,
     "dub": "ENG",
     "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/36286/Re_Zero_kara_Hajimeru_Isekai_Seikatsu_-_Memory_Snow",
@@ -381,8 +381,8 @@
     "rating": 9,
     "start_date": "2025-01-03T00:00:00",
     "end_date": "2025-01-03T00:00:00",
-    "rewatch_count": 0,
-    "total_time": 76.37,
+    "rewatch_count": 1,
+    "total_time": 152.74,
     "dub": "ENG",
     "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/38414/Re_Zero_kara_Hajimeru_Isekai_Seikatsu_-_Hyouketsu_no_Kizuna",
@@ -1542,29 +1542,6 @@
   },
   {
     "index": "68.",
-    "thumbnail": "images/anime/Fate_Grand Order_ Absolute Demonic Front - Babylonia.jpg",
-    "name": "Fate/Grand Order: Absolute Demonic Front - Babylonia",
-    "type": "TV",
-    "studio": "CloverWorks",
-    "release_date": "2019-10-05T00:00:00",
-    "themes": "Isekai",
-    "genres": "Action; Fantasy",
-    "episodes": 21,
-    "episode_duration": 23.738,
-    "rating": 9,
-    "start_date": "2025-03-28T00:00:00",
-    "end_date": "2025-03-30T00:00:00",
-    "rewatch_count": 0,
-    "total_time": 498.498,
-    "dub": "ENG",
-    "status": "FINISHED",
-    "mal_url": "https://myanimelist.net/anime/38084/Fate_Grand_Order__Zettai_Majuu_Sensen_Babylonia",
-    "series": "Fate",
-    "rewatches": [],
-    "tags": "Mythology:95;Magic:92;Time Manipulation:89;Gods:88;Historical:83;Spearplay:79;Swordplay:79;Monster Girl:79;Kaiju:79;Anachronism:67;Male Protagonist:64;Kingdom Management:60;Religion:60;Isekai:57;Succubus:50;Kuudere:50;Tanned Skin:50;Dinosaurs:50;CGI:48;Tsundere:40;Agender:34;Meta:30"
-  },
-  {
-    "index": "69.",
     "thumbnail": "images/anime/Fate_Grand Order_ Absolute Demonic Front - Babylonia Initium Iter.jpg",
     "name": "Fate/Grand Order: Absolute Demonic Front - Babylonia Initium Iter",
     "type": "Special",
@@ -1585,6 +1562,29 @@
     "series": "Fate",
     "rewatches": [],
     "tags": "Mythology:72"
+  },
+  {
+    "index": "69.",
+    "thumbnail": "images/anime/Fate_Grand Order_ Absolute Demonic Front - Babylonia.jpg",
+    "name": "Fate/Grand Order: Absolute Demonic Front - Babylonia",
+    "type": "TV",
+    "studio": "CloverWorks",
+    "release_date": "2019-10-05T00:00:00",
+    "themes": "Isekai",
+    "genres": "Action; Fantasy",
+    "episodes": 21,
+    "episode_duration": 23.738,
+    "rating": 9,
+    "start_date": "2025-03-28T00:00:00",
+    "end_date": "2025-03-30T00:00:00",
+    "rewatch_count": 0,
+    "total_time": 498.498,
+    "dub": "ENG",
+    "status": "FINISHED",
+    "mal_url": "https://myanimelist.net/anime/38084/Fate_Grand_Order__Zettai_Majuu_Sensen_Babylonia",
+    "series": "Fate",
+    "rewatches": [],
+    "tags": "Mythology:95;Magic:92;Time Manipulation:89;Gods:88;Historical:83;Spearplay:79;Swordplay:79;Monster Girl:79;Kaiju:79;Anachronism:67;Male Protagonist:64;Kingdom Management:60;Religion:60;Isekai:57;Succubus:50;Kuudere:50;Tanned Skin:50;Dinosaurs:50;CGI:48;Tsundere:40;Agender:34;Meta:30"
   },
   {
     "index": "70.",
@@ -2071,29 +2071,6 @@
   },
   {
     "index": "91.",
-    "thumbnail": "images/anime/Attack on Titan_ Lost Girls.jpg",
-    "name": "Attack on Titan: Lost Girls",
-    "type": "OVA",
-    "studio": "Wit Studio",
-    "release_date": "2017-12-08T00:00:00",
-    "themes": "X",
-    "genres": "Action; Drama",
-    "episodes": 3,
-    "episode_duration": 23.933,
-    "rating": 9,
-    "start_date": "2025-04-19T00:00:00",
-    "end_date": "2025-04-20T00:00:00",
-    "rewatch_count": 0,
-    "total_time": 71.799,
-    "dub": "ENG",
-    "status": "FINISHED",
-    "mal_url": "https://myanimelist.net/anime/36106/Shingeki_no_Kyojin__Lost_Girls",
-    "series": "Attack on Titan",
-    "rewatches": [],
-    "tags": "Female Protagonist:92;Steampunk:80;Alternate Universe:79;Military:77;Coming of Age:73;Anti-Hero:73;Primarily Female Cast:63;Super Power:60;Shounen:60;War:50;CGI:40;Mythology:40"
-  },
-  {
-    "index": "92.",
     "thumbnail": "images/anime/Attack on Titan_ No Regrets.jpg",
     "name": "Attack on Titan: No Regrets",
     "type": "OVA",
@@ -2114,6 +2091,29 @@
     "series": "Attack on Titan",
     "rewatches": [],
     "tags": "Military:91;Male Protagonist:91;Survival:90;Gore:80;Orphan:79;Anti-Hero:76;Steampunk:75;Kaiju:75;Shounen:74;Primarily Adult Cast:67;Primarily Male Cast:60;Class Struggle:60;Swordplay:56;CGI:55"
+  },
+  {
+    "index": "92.",
+    "thumbnail": "images/anime/Attack on Titan_ Lost Girls.jpg",
+    "name": "Attack on Titan: Lost Girls",
+    "type": "OVA",
+    "studio": "Wit Studio",
+    "release_date": "2017-12-08T00:00:00",
+    "themes": "X",
+    "genres": "Action; Drama",
+    "episodes": 3,
+    "episode_duration": 23.933,
+    "rating": 9,
+    "start_date": "2025-04-19T00:00:00",
+    "end_date": "2025-04-20T00:00:00",
+    "rewatch_count": 0,
+    "total_time": 71.799,
+    "dub": "ENG",
+    "status": "FINISHED",
+    "mal_url": "https://myanimelist.net/anime/36106/Shingeki_no_Kyojin__Lost_Girls",
+    "series": "Attack on Titan",
+    "rewatches": [],
+    "tags": "Female Protagonist:92;Steampunk:80;Alternate Universe:79;Military:77;Coming of Age:73;Anti-Hero:73;Primarily Female Cast:63;Super Power:60;Shounen:60;War:50;CGI:40;Mythology:40"
   },
   {
     "index": "93.",
@@ -4716,29 +4716,6 @@
   },
   {
     "index": "206.",
-    "thumbnail": "images/anime/The Ancient Magus' Bride, S01.jpg",
-    "name": "The Ancient Magus' Bride, S01",
-    "type": "TV",
-    "studio": "Wit Studio",
-    "release_date": "2017-10-08T00:00:00",
-    "themes": "Mythology; Urban Fantasy",
-    "genres": "Drama; Fantasy; Romance",
-    "episodes": 24,
-    "episode_duration": 24.325,
-    "rating": 9,
-    "start_date": "2026-01-25T00:00:00",
-    "end_date": "2026-01-28T00:00:00",
-    "rewatch_count": 0,
-    "total_time": 583.8,
-    "dub": "ENG",
-    "status": "FINISHED",
-    "mal_url": "https://myanimelist.net/anime/35062/Mahoutsukai_no_Yome",
-    "series": "The Ancient Magus' Bride",
-    "rewatches": [],
-    "tags": "Magic:94;Female Protagonist:90;Fairy:87;Mythology:82;Monster Boy:80;Found Family:79;Teacher:77;Tragedy:77;Urban Fantasy:77;Skeleton:76;Heterosexual:75;Dragons:72;Foreign:70;Age Gap:68;Philosophy:68;Shapeshifting:66;Primarily Adult Cast:66;Rural:61;Chimera:60;Suicide:57;Travel:50;Shounen:43;Witch:40;Male Harem:35;Chibi:33"
-  },
-  {
-    "index": "207.",
     "thumbnail": "images/anime/The Ancient Magus' Bride_ Those Awaiting a Star.jpg",
     "name": "The Ancient Magus' Bride: Those Awaiting a Star",
     "type": "OVA",
@@ -4759,6 +4736,29 @@
     "series": "The Ancient Magus' Bride",
     "rewatches": [],
     "tags": "Magic:96;Female Protagonist:80;Urban Fantasy:80;Heterosexual:79;Primarily Child Cast:73;Foreign:60;Mythology:60;Rural:60;Skeleton:44"
+  },
+  {
+    "index": "207.",
+    "thumbnail": "images/anime/The Ancient Magus' Bride, S01.jpg",
+    "name": "The Ancient Magus' Bride, S01",
+    "type": "TV",
+    "studio": "Wit Studio",
+    "release_date": "2017-10-08T00:00:00",
+    "themes": "Mythology; Urban Fantasy",
+    "genres": "Drama; Fantasy; Romance",
+    "episodes": 24,
+    "episode_duration": 24.325,
+    "rating": 9,
+    "start_date": "2026-01-25T00:00:00",
+    "end_date": "2026-01-28T00:00:00",
+    "rewatch_count": 0,
+    "total_time": 583.8,
+    "dub": "ENG",
+    "status": "FINISHED",
+    "mal_url": "https://myanimelist.net/anime/35062/Mahoutsukai_no_Yome",
+    "series": "The Ancient Magus' Bride",
+    "rewatches": [],
+    "tags": "Magic:94;Female Protagonist:90;Fairy:87;Mythology:82;Monster Boy:80;Found Family:79;Teacher:77;Tragedy:77;Urban Fantasy:77;Skeleton:76;Heterosexual:75;Dragons:72;Foreign:70;Age Gap:68;Philosophy:68;Shapeshifting:66;Primarily Adult Cast:66;Rural:61;Chimera:60;Suicide:57;Travel:50;Shounen:43;Witch:40;Male Harem:35;Chibi:33"
   },
   {
     "index": "208.",
@@ -7591,6 +7591,29 @@
   },
   {
     "index": "331.",
+    "thumbnail": "images/anime/Ergo Proxy.jpg",
+    "name": "Ergo Proxy",
+    "type": "TV",
+    "studio": "Manglobe",
+    "release_date": "2006-02-25T00:00:00",
+    "themes": "Adult Cast; Psychological",
+    "genres": "Mystery; Sci-Fi; Suspense",
+    "episodes": 23,
+    "episode_duration": 25.961,
+    "rating": 9,
+    "start_date": "2026-02-24T00:00:00",
+    "end_date": "2026-02-27T00:00:00",
+    "rewatch_count": 0,
+    "total_time": 597.103,
+    "dub": "ENG",
+    "status": "FINISHED",
+    "mal_url": "https://myanimelist.net/anime/790/Ergo_Proxy",
+    "series": null,
+    "rewatches": [],
+    "tags": null
+  },
+  {
+    "index": "332.",
     "thumbnail": "images/anime/Death Note.jpg",
     "name": "Death Note",
     "type": "TV",
@@ -7613,7 +7636,7 @@
     "tags": "Crime:96;Detective:95;Anti-Hero:94;Male Protagonist:90;Police:87;Fugitive:86;Philosophy:84;Primarily Adult Cast:81;Gods:77;Urban Fantasy:75;Primarily Male Cast:71;Urban:71;Unrequited Love:70;Yandere:65;Shounen:64;Espionage:64;Acting:50;Time Skip:45;Assassins:42"
   },
   {
-    "index": "332.",
+    "index": "333.",
     "thumbnail": "images/anime/Fullmetal Alchemist_ Brotherhood.jpg",
     "name": "Fullmetal Alchemist: Brotherhood",
     "type": "TV",
@@ -7636,7 +7659,7 @@
     "tags": "Alchemy:97;Military:92;War:90;Shounen:87;Politics:84;Male Protagonist:83;Philosophy:82;Ensemble Cast:79;Coming of Age:78;Super Power:74;Steampunk:71;Disability:71;Cyborg:70;Revenge:70;Necromancy:70;Anachronism:66;Religion:64;Travel:64;Primarily Male Cast:62;Slapstick:57;Body Horror:57;Urban Fantasy:53;Kuudere:52;Shapeshifting:52;Tomboy:52;Guns:51;Chibi:50;Swordplay:49;Trains:49;Adoption:49;Desert:42;Heterosexual:42;Tanned Skin:40;Tsundere:31"
   },
   {
-    "index": "333.",
+    "index": "334.",
     "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark), S04 Part 2.jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S04 Part 2",
     "type": "TV",
@@ -7659,7 +7682,7 @@
     "tags": "Dungeon:96;Elf:87;Ensemble Cast:85;Male Protagonist:81;Gods:71;Gore:69;Mythology:65;Travel:55;Medieval:53;Kemonomimi:53;Female Harem:51;Mermaid:50;CGI:50;Nekomimi:40;Nudity:40;Monster Girl:40;Primarily Female Cast:40;Tanned Skin:40;Female Protagonist:30"
   },
   {
-    "index": "334.",
+    "index": "335.",
     "thumbnail": "images/anime/The Melancholy of Haruhi Suzumiya, S01.jpg",
     "name": "The Melancholy of Haruhi Suzumiya, S01",
     "type": "TV",
@@ -7682,7 +7705,7 @@
     "tags": "School Club:94;Achronological Order:92;Urban Fantasy:92;School:89;Primarily Teen Cast:85;Time Manipulation:83;Meta:82;Aliens:79;Philosophy:74;Parody:71;Male Protagonist:70;Magic:65;Otaku Culture:60;Female Protagonist:60;Tsundere:57;Filmmaking:53;Kuudere:53;Ensemble Cast:50;Episodic:46;Unrequited Love:40;Baseball:35;Maids:33"
   },
   {
-    "index": "335.",
+    "index": "336.",
     "thumbnail": "images/anime/Fate_stay night [Unlimited Blade Works], S02.jpg",
     "name": "Fate/stay night [Unlimited Blade Works], S02",
     "type": "TV",
@@ -7705,7 +7728,7 @@
     "tags": "Magic:91;Battle Royale:91;Death Game:91;Mythology:83;Urban Fantasy:82;Spearplay:79;Philosophy:76;Swordplay:71;Super Power:70;Tsundere:61;Archery:56;Tanned Skin:56;Kuudere:56;CGI:48;Witch:43;Slavery:38"
   },
   {
-    "index": "336.",
+    "index": "337.",
     "thumbnail": "images/anime/Girls und Panzer.jpg",
     "name": "Girls und Panzer",
     "type": "TV",
@@ -7728,7 +7751,7 @@
     "tags": "Tanks:99;Primarily Female Cast:95;Female Protagonist:92;Military:88;School Club:87;Cute Girls Doing Cute Things:85;Primarily Teen Cast:82;Ensemble Cast:79;Historical:79;School:78;Parody:71;CGI:53;Volleyball:30"
   },
   {
-    "index": "337.",
+    "index": "338.",
     "thumbnail": "images/anime/Girls und Panzer Der Film.jpg",
     "name": "Girls und Panzer Der Film",
     "type": "Movie",
@@ -7751,7 +7774,7 @@
     "tags": "Ensemble Cast:98;Tanks:97;Military:93;Female Protagonist:92;School:91;Primarily Female Cast:90;Cute Girls Doing Cute Things:87;School Club:79;CGI:65;Primarily Teen Cast:60"
   },
   {
-    "index": "338.",
+    "index": "339.",
     "thumbnail": "images/anime/Fate_stay night [Unlimited Blade Works], S02_ Sunny Day.jpg",
     "name": "Fate/stay night [Unlimited Blade Works], S02: Sunny Day",
     "type": "Special",
@@ -7774,7 +7797,7 @@
     "tags": "Magic:88;Alternate Universe:60;Bisexual:46;Love Triangle:42;Gender Bending:31"
   },
   {
-    "index": "339.",
+    "index": "340.",
     "thumbnail": "images/anime/That Time I Got Reincarnated as a Slime, S01.jpg",
     "name": "That Time I Got Reincarnated as a Slime, S01",
     "type": "TV",
@@ -7797,7 +7820,7 @@
     "tags": "Isekai:98;Found Family:96;Reincarnation:91;Magic:88;Super Power:82;Shapeshifting:78;Economics:74;Femboy:73;Ensemble Cast:73;Clone:72;Politics:70;Monster Boy:69;Henshin:69;Monster Girl:68;Male Protagonist:68;Fairy:68;Demons:67;Gender Bending:66;Goblin:65;Travel:64;Medieval:60;Creature Taming:60;Swordplay:54;Acting:54;Dragons:52;Shounen:50;Female Harem:46;Elf:32"
   },
   {
-    "index": "340.",
+    "index": "341.",
     "thumbnail": "images/anime/Yukikaze.jpg",
     "name": "Yukikaze",
     "type": "OVA",
@@ -7820,7 +7843,7 @@
     "tags": "Aviation:86;Military:79;Full CGI:79;CGI:73;War:73;Male Protagonist:65;Aliens:60;Artificial Intelligence:60;Primarily Adult Cast:50;Space:46"
   },
   {
-    "index": "341.",
+    "index": "342.",
     "thumbnail": "images/anime/Legend of the Galactic Heroes_ Die Neue These - Collision.jpg",
     "name": "Legend of the Galactic Heroes: Die Neue These - Collision",
     "type": "TV",
@@ -7843,7 +7866,7 @@
     "tags": "Space Opera:91;Politics:85;War:85;Military:80;Primarily Adult Cast:80;Male Protagonist:79;Space:76;Philosophy:76;Ensemble Cast:72;Primarily Male Cast:60;CGI:53"
   },
   {
-    "index": "342.",
+    "index": "343.",
     "thumbnail": "images/anime/Code Geass_ Lelouch of the Re;surrection.jpg",
     "name": "Code Geass: Lelouch of the Re;surrection",
     "type": "Movie",
@@ -7866,7 +7889,7 @@
     "tags": "Anti-Hero:95;Politics:87;Female Protagonist:79;Alternate Universe:77;Military:75;Super Power:74;Male Protagonist:72;Super Robot:71;Foreign:70;Primarily Adult Cast:70;Real Robot:66"
   },
   {
-    "index": "343.",
+    "index": "344.",
     "thumbnail": "images/anime/Fate_stay night_ Heaven's Feel - I. Presage Flower.jpg",
     "name": "Fate/stay night: Heaven's Feel - I. Presage Flower",
     "type": "Movie",
@@ -7889,7 +7912,7 @@
     "tags": "Battle Royale:91;Urban Fantasy:90;Magic:90;Assassins:79;Swordplay:79;Orphan:79;Necromancy:79;Mythology:79;Female Protagonist:68;Demons:66;Male Protagonist:65;School:64;Gore:64;CGI:60;Found Family:60;Archery:60;Super Power:60;War:56;Urban:53;Primarily Teen Cast:50;School Club:46;Kuudere:44;Heterosexual:40;Spearplay:40;Food:40;Witch:40;Religion:30;Tsundere:30"
   },
   {
-    "index": "344.",
+    "index": "345.",
     "thumbnail": "images/anime/Sword Art Online, S01.jpg",
     "name": "Sword Art Online, S01",
     "type": "TV",
@@ -7912,7 +7935,7 @@
     "tags": "Virtual World:98;Isekai:93;Video Games:90;Male Protagonist:88;Swordplay:87;Primarily Teen Cast:83;Heterosexual:81;Primarily Female Cast:71;Time Skip:65;Female Harem:64;Found Family:62;Artificial Intelligence:62;Fairy:61;Travel:56;Prison:53;Fishing:46;Shounen:43;Inseki:36"
   },
   {
-    "index": "345.",
+    "index": "346.",
     "thumbnail": "images/anime/Steins;Gate.jpg",
     "name": "Steins;Gate",
     "type": "TV",
@@ -7935,7 +7958,7 @@
     "tags": "Time Manipulation:98;Time Loop:92;Male Protagonist:80;Urban:79;Primarily Adult Cast:78;Denpa:77;Philosophy:76;Dissociative Identities:75;Chuunibyou:73;Tsundere:68;Otaku Culture:67;Heterosexual:63;Kuudere:62;Ensemble Cast:60;Amnesia:57;Seinen:52;Gender Bending:46;Maids:39;Trains:37;Shrine Maiden:35"
   },
   {
-    "index": "346.",
+    "index": "347.",
     "thumbnail": "images/anime/Higurashi_ When They Cry – Rei.jpg",
     "name": "Higurashi: When They Cry – Rei",
     "type": "OVA",
@@ -7958,7 +7981,7 @@
     "tags": "Denpa:92;Shrine Maiden:90;Twins:90;Rural:86;Primarily Female Cast:77;Tragedy:74;Female Protagonist:73;Urban Fantasy:64;Cute Girls Doing Cute Things:60;Philosophy:60;Gore:46;Slapstick:37"
   },
   {
-    "index": "347.",
+    "index": "348.",
     "thumbnail": "images/anime/Re_Zero - Starting Life in Another World, S02 Part 2.jpg",
     "name": "Re:Zero -Starting Life in Another World-, S02 Part 2",
     "type": "TV",
@@ -7981,7 +8004,7 @@
     "tags": "Isekai:96;Time Manipulation:92;Male Protagonist:87;Witch:85;Magic:84;Ensemble Cast:81;Alternate Universe:80;Elf:73;Gore:70;Heterosexual:70;Maids:62;Monster Girl:61;Monster Boy:60;Hikikomori:60;Primarily Female Cast:60;Time Loop:60;Medieval:60;Assassins:60;Seinen:56;Female Harem:47;Foreign:45"
   },
   {
-    "index": "348.",
+    "index": "349.",
     "thumbnail": "images/anime/Cyberpunk Edgerunners, S01.jpg",
     "name": "Cyberpunk Edgerunners, S01",
     "type": "ONA",
@@ -8004,7 +8027,7 @@
     "tags": "Cyberpunk:99;Crime:92;Dystopian:91;Cyborg:91;Class Struggle:87;Male Protagonist:87;Urban:86;Gangs:86;Orphan:85;Guns:84;Gore:83;Primarily Adult Cast:79;Drugs:75;Heterosexual:75;Coming of Age:69;Nudity:68;Ensemble Cast:61;Artificial Intelligence:58;Time Manipulation:56;Robots:48;Software Development:47;Age Gap:43;Cars:42;Tomboy:40"
   },
   {
-    "index": "349.",
+    "index": "350.",
     "thumbnail": "images/anime/Chainsaw Man.jpg",
     "name": "Chainsaw Man",
     "type": "TV",
@@ -8027,7 +8050,7 @@
     "tags": "Demons:96;Monster Boy:96;Urban Fantasy:93;Male Protagonist:89;Gore:88;Tragedy:86;Shapeshifting:86;Body Horror:85;Urban:81;Henshin:80;Psychosexual:78;Shounen:77;Surreal Comedy:74;Primarily Adult Cast:73;Monster Girl:73;Yakuza:70;Anthropomorphism:70;Heterosexual:69;Found Family:68;Crime:65;CGI:63;Police:57;POV:55;Homeless:55;Nudity:41"
   },
   {
-    "index": "350.",
+    "index": "351.",
     "thumbnail": "images/anime/Kaiju No.8, S01.jpg",
     "name": "Kaiju No.8, S01",
     "type": "TV",
@@ -8050,7 +8073,7 @@
     "tags": "Kaiju:97;Monster Boy:94;Shapeshifting:87;Male Protagonist:85;Super Power:83;Henshin:80;Shounen:80;Urban Fantasy:79;Military:74;Work:68;Primarily Adult Cast:67;Guns:66;Rescue:66;Gore:64;Tokusatsu:62;Kuudere:61;Slapstick:59;Tsundere:58;Ojou-sama:52;Heterosexual:50;Body Horror:40;Swordplay:38"
   },
   {
-    "index": "351.",
+    "index": "352.",
     "thumbnail": "images/anime/Classroom of the Elite, S03.jpg",
     "name": "Classroom of the Elite, S03",
     "type": "TV",
@@ -8063,8 +8086,8 @@
     "rating": 9,
     "start_date": "2024-09-18T00:00:00",
     "end_date": "2024-09-19T00:00:00",
-    "rewatch_count": 0,
-    "total_time": 307.67100000000005,
+    "rewatch_count": 1,
+    "total_time": 615.3420000000001,
     "dub": "ENG",
     "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/51180/Youkoso_Jitsuryoku_Shijou_Shugi_no_Kyoushitsu_e_3rd_Season",
@@ -8073,7 +8096,7 @@
     "tags": "School:97;Male Protagonist:95;Ensemble Cast:88;Primarily Teen Cast:85;Philosophy:84;Coming of Age:80;Revenge:78;Survival:76;Bullying:70;Disability:69;School Club:60;Kuudere:56;Female Harem:56;Boarding School:56;Athletics:56;Tsundere:55;Love Triangle:55;Delinquents:54"
   },
   {
-    "index": "352.",
+    "index": "353.",
     "thumbnail": "images/anime/Frieren_ Beyond Journey's End, S01.jpg",
     "name": "Frieren: Beyond Journey's End, S01",
     "type": "TV",
@@ -8096,7 +8119,7 @@
     "tags": "Travel:96;Magic:94;Elf:91;Philosophy:85;Medieval:83;Female Protagonist:82;Spearplay:79;Found Family:76;Iyashikei:75;Kuudere:74;Demons:70;Foreign:70;Adoption:60;Rural:59;Episodic:56;Heterosexual:55;Aromantic:54;Dungeon:53;Shounen:53;Rotoscoping:45;Religion:44;Snowscape:40;Food:40;Dragons:37;Horticulture:31"
   },
   {
-    "index": "353.",
+    "index": "354.",
     "thumbnail": "images/anime/KonoSuba_ God's Blessing on This Wonderful World!, S03.jpg",
     "name": "KonoSuba: God's Blessing on This Wonderful World!, S03",
     "type": "TV",
@@ -8119,7 +8142,7 @@
     "tags": "Isekai:96;Parody:95;Satire:95;Anti-Hero:93;Slapstick:88;Magic:82;Ensemble Cast:80;Alternate Universe:78;Gods:78;Male Protagonist:77;Primarily Female Cast:75;Chuunibyou:71;Afterlife:67;Demons:63;Primarily Adult Cast:60;Female Harem:60;Medieval:60"
   },
   {
-    "index": "354.",
+    "index": "355.",
     "thumbnail": "images/anime/Re_Zero - Starting Life in Another World, S03.jpg",
     "name": "Re:Zero -Starting Life in Another World-, S03",
     "type": "TV",
@@ -8142,7 +8165,7 @@
     "tags": "Isekai:95;Time Manipulation:92;Time Loop:89;Male Protagonist:85;Cult:85;Magic:84;Witch:81;Royal Affairs:81;Anthropomorphism:80;Gore:80;Elf:79;Heterosexual:78;Politics:78;Tragedy:78;Ensemble Cast:77;Time Skip:74;Super Power:74;Ojou-sama:74;Swordplay:74;Yandere:71;Female Protagonist:65;Medieval:60;Maids:56;Nekomimi:55;Tomboy:54;Dragons:53;Kemonomimi:53;Seinen:52;Primarily Adult Cast:51;Femboy:46;Yuri:35;Transgender:31"
   },
   {
-    "index": "355.",
+    "index": "356.",
     "thumbnail": "images/anime/Mushoku Tensei_ Jobless Reincarnation, S02 Part 2.jpg",
     "name": "Mushoku Tensei: Jobless Reincarnation, S02 Part 2",
     "type": "TV",
@@ -8165,7 +8188,7 @@
     "tags": "Reincarnation:96;Isekai:95;Magic:90;Coming of Age:89;Family Life:88;Male Protagonist:87;Marriage:86;Heterosexual:76;Elf:76;Polyamorous:75;Travel:70;Swordplay:69;Hikikomori:68;Love Triangle:68;College:68;Maids:63;Demons:62;Gods:61;Survival:61;Kemonomimi:57;Medieval:53;School:46;Super Power:42;Language Barrier:41;Curses:40;Delinquents:36;Boarding School:30"
   },
   {
-    "index": "356.",
+    "index": "357.",
     "thumbnail": "images/anime/That Time I Got Reincarnated as a Slime, S03.jpg",
     "name": "That Time I Got Reincarnated as a Slime, S03",
     "type": "TV",
@@ -8188,7 +8211,7 @@
     "tags": "Kingdom Management:98;Reincarnation:90;Isekai:90;Politics:87;Magic:86;Office:81;Creature Taming:79;Super Power:78;Ensemble Cast:70;Demons:67;Dragons:61;Male Protagonist:61;Food:60;Femboy:60;Medieval:60;Agender:56;Shapeshifting:56;Monster Boy:55;Vampire:53;Goblin:52;Religion:50;Fairy:40;Youkai:32"
   },
   {
-    "index": "357.",
+    "index": "358.",
     "thumbnail": "images/anime/The Eminence in Shadow, S02.jpg",
     "name": "The Eminence in Shadow, S02",
     "type": "TV",
@@ -8211,7 +8234,7 @@
     "tags": "Isekai:93;Magic:89;Chuunibyou:87;Cult:83;Parody:82;Male Protagonist:78;Anti-Hero:75;Swordplay:74;Assassins:72;Satire:70;Female Harem:65;Trains:60;Elf:59;Kemonomimi:54;Meta:50;Nudity:50;Seinen:50;Zombie:49"
   },
   {
-    "index": "358.",
+    "index": "359.",
     "thumbnail": "images/anime/Legend of the Galactic Heroes_ Die Neue These - Intrigue.jpg",
     "name": "Legend of the Galactic Heroes: Die Neue These - Intrigue",
     "type": "TV",
@@ -8234,7 +8257,7 @@
     "tags": "Space Opera:100;Politics:96;Military:96;War:93;Space:92;Ensemble Cast:85;Male Protagonist:79;Primarily Adult Cast:76;Primarily Male Cast:71;CGI:60"
   },
   {
-    "index": "359.",
+    "index": "360.",
     "thumbnail": "images/anime/Black Lagoon_ Roberta's Blood Trail.jpg",
     "name": "Black Lagoon: Roberta's Blood Trail",
     "type": "OVA",
@@ -8257,7 +8280,7 @@
     "tags": "Guns:96;Gore:94;Noir:90;Revenge:88;Seinen:86;Crime:85;Primarily Adult Cast:83;Anti-Hero:82;Mafia:80;Ensemble Cast:79;Tomboy:79;Military:75;War:73;Maids:71;Foreign:71;Male Protagonist:66;Female Protagonist:66;Gangs:62;Pirates:60;Orphan:60;Nudity:55;Politics:50;Triads:50;Rape:40"
   },
   {
-    "index": "360.",
+    "index": "361.",
     "thumbnail": "images/anime/Overlord, S04.jpg",
     "name": "Overlord, S04",
     "type": "TV",
@@ -8280,7 +8303,7 @@
     "tags": "Anti-Hero:92;Magic:91;Skeleton:87;Isekai:82;Virtual World:80;Kingdom Management:79;Male Protagonist:75;Demons:71;Politics:70;Female Harem:60;Primarily Adult Cast:60;Ensemble Cast:60;Tomboy:60;Maids:57;Gore:56;Succubus:56;Monster Girl:53;Yandere:50;CGI:50;Monster Boy:48;Femboy:46;Vampire:43;Male Harem:36;Zombie:30"
   },
   {
-    "index": "361.",
+    "index": "362.",
     "thumbnail": "images/anime/To Your Eternity, S02.jpg",
     "name": "To Your Eternity, S02",
     "type": "TV",
@@ -8303,7 +8326,7 @@
     "tags": "Shapeshifting:97;War:93;Ensemble Cast:81;Philosophy:81;Cult:80;Ghost:80;Religion:77;Body Horror:76;Yandere:75;Gore:73;Medieval:73;Shounen:65;Animals:61;Historical:52;Agender:51;Indigenous Cultures:40"
   },
   {
-    "index": "362.",
+    "index": "363.",
     "thumbnail": "images/anime/86 Eighty-Six, S01 Part 2.jpg",
     "name": "86 Eighty-Six, S01 Part 2",
     "type": "TV",
@@ -8326,7 +8349,7 @@
     "tags": "Dystopian:97;Military:96;War:95;Class Struggle:86;CGI:81;Politics:81;Male Protagonist:81;Robots:80;Primarily Teen Cast:76;Survival:75;Female Protagonist:73;Kuudere:70;Guns:70;Ensemble Cast:67;Seinen:66;Real Robot:63;Philosophy:63;Super Power:58;POV:46;Unrequited Love:32"
   },
   {
-    "index": "363.",
+    "index": "364.",
     "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark) III_ Is It Wrong to Try to Find a Hot Spring in Orario (question mark).jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon? III: Is It Wrong to Try to Find a Hot Spring in Orario?",
     "type": "OVA",
@@ -8349,7 +8372,7 @@
     "tags": "Male Protagonist:80;Primarily Female Cast:80;Gods:76;Slapstick:75;Female Harem:74;Nudity:72;Kemonomimi:64;Ensemble Cast:60;Elf:50;Kuudere:50;Tomboy:40;Tanned Skin:40"
   },
   {
-    "index": "364.",
+    "index": "365.",
     "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark), S05.jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S05",
     "type": "TV",
@@ -8372,7 +8395,7 @@
     "tags": "Gods:95;Mythology:88;Male Protagonist:84;Dungeon:81;Medieval:79;Ensemble Cast:73;Love Triangle:73;Magic:68;Female Harem:67;Yandere:60;Kemonomimi:60;Primarily Female Cast:60;Elf:53;Swordplay:40;Gore:40;Chuunibyou:35"
   },
   {
-    "index": "365.",
+    "index": "366.",
     "thumbnail": "images/anime/Sword Art Online_ Alicization - War of Underworld, Part 2.jpg",
     "name": "Sword Art Online: Alicization - War of Underworld, Part 2",
     "type": "TV",
@@ -8395,7 +8418,7 @@
     "tags": "Virtual World:98;Female Protagonist:96;Heterosexual:95;War:92;Artificial Intelligence:92;Video Games:90;Swordplay:85;Isekai:80;Primarily Female Cast:80;Primarily Teen Cast:77;Female Harem:75;Male Protagonist:70;Military:66;Medieval:60;Gore:55;Cult:50;Gods:50"
   },
   {
-    "index": "366.",
+    "index": "367.",
     "thumbnail": "images/anime/Sword Art Online the Movie_ Progressive - Scherzo of Deep Night.jpg",
     "name": "Sword Art Online the Movie: Progressive - Scherzo of Deep Night",
     "type": "Movie",
@@ -8418,7 +8441,7 @@
     "tags": "Virtual World:91;Isekai:80;Female Protagonist:79;Swordplay:70;Survival:63;Dungeon:60;Video Games:60;Male Protagonist:56"
   },
   {
-    "index": "367.",
+    "index": "368.",
     "thumbnail": "images/anime/Sword Art Online Alternative_ Gun Gale Online, S02.jpg",
     "name": "Sword Art Online Alternative: Gun Gale Online, S02",
     "type": "TV",
@@ -8441,9 +8464,9 @@
     "tags": "Guns:97;Video Games:93;Female Protagonist:88;Battle Royale:88;Virtual World:65;Military:46;Cute Girls Doing Cute Things:40;Tomboy:40"
   },
   {
-    "index": "368.",
-    "thumbnail": null,
-    "name": "The Beginning After the End",
+    "index": "369.",
+    "thumbnail": "images/anime/The Beginning After the End, S01.jpg",
+    "name": "The Beginning After the End, S01",
     "type": "TV",
     "studio": "Studio A-CAT",
     "release_date": "2025-04-02T00:00:00",
@@ -8461,10 +8484,10 @@
     "mal_url": "https://myanimelist.net/anime/60146/Saikyou_no_Ousama_Nidome_no_Jinsei_wa_Nani_wo_Suru",
     "series": "The Beginning After the End",
     "rewatches": [],
-    "tags": "Magic:93;Reincarnation:89;Isekai:88;Male Protagonist:80;Medieval:80;Cultivation:72;CGI:70;Heterosexual:60"
+    "tags": null
   },
   {
-    "index": "369.",
+    "index": "370.",
     "thumbnail": "images/anime/From Old Country Bumpkin to Master Swordsman, S01.jpg",
     "name": "From Old Country Bumpkin to Master Swordsman, S01",
     "type": "TV",
@@ -8487,7 +8510,7 @@
     "tags": "Medieval:91;Teacher:87;Swordplay:84;Seinen:80;Male Protagonist:76;Family Life:75;Female Harem:73;Age Gap:70;CGI:61;Magic:60;Coming of Age:60;Primarily Female Cast:60;Primarily Adult Cast:60;Found Family:50;Parenthood:40;School:40"
   },
   {
-    "index": "370.",
+    "index": "371.",
     "thumbnail": "images/anime/Solo Leveling, S02_ Arise from the Shadow.jpg",
     "name": "Solo Leveling, S02: Arise from the Shadow",
     "type": "TV",
@@ -8510,7 +8533,7 @@
     "tags": "Urban Fantasy:98;Dungeon:93;Male Protagonist:92;Necromancy:90;Magic:88;Super Power:80;Shounen:79;Cultivation:78;Swordplay:73;Gore:73;Martial Arts:45;Elf:40;Cosmic Horror:40;Snowscape:35"
   },
   {
-    "index": "371.",
+    "index": "372.",
     "thumbnail": "images/anime/KonoSuba_ God's Blessing on This Wonderful World! 3 OVA.jpg",
     "name": "KonoSuba: God's Blessing on This Wonderful World! 3 OVA",
     "type": "OVA",
@@ -8533,7 +8556,7 @@
     "tags": "Chuunibyou:90;Isekai:82;Gods:80;Ensemble Cast:79;Primarily Female Cast:79;Slapstick:79;Satire:79;Parody:79;Medieval:66;Male Protagonist:60"
   },
   {
-    "index": "372.",
+    "index": "373.",
     "thumbnail": "images/anime/Shangri-La Frontier, S02.jpg",
     "name": "Shangri-La Frontier, S02",
     "type": "TV",
@@ -8556,7 +8579,7 @@
     "tags": "Video Games:96;Virtual World:93;Shounen:87;Male Protagonist:77;Swordplay:70;Anthropomorphism:70;Magic:67;Martial Arts:66;Kemonomimi:60;Travel:57;Hikikomori:56;Curses:45;Gender Bending:40;Unrequited Love:40"
   },
   {
-    "index": "373.",
+    "index": "374.",
     "thumbnail": "images/anime/Heavenly Delusion.jpg",
     "name": "Heavenly Delusion",
     "type": "TV",
@@ -8579,7 +8602,7 @@
     "tags": "Dystopian:98;Post-Apocalyptic:97;Survival:93;Seinen:87;Travel:87;Conspiracy:80;Male Protagonist:76;Orphan:74;Gore:71;Denpa:67;Coming of Age:66;Demons:66;Body Horror:66;Unrequited Love:65;Guns:60;Nudity:57;Cyberpunk:50;Female Protagonist:45"
   },
   {
-    "index": "374.",
+    "index": "375.",
     "thumbnail": "images/anime/Made in Abyss_ The Golden City of the Scorching Sun.jpg",
     "name": "Made in Abyss: The Golden City of the Scorching Sun",
     "type": "TV",
@@ -8602,7 +8625,7 @@
     "tags": "Survival:96;Primarily Child Cast:94;Curses:90;Lost Civilization:88;Ensemble Cast:88;Gore:87;Seinen:86;Travel:85;Female Protagonist:83;Environmental:79;Philosophy:76;Monster Girl:74;Robots:73;Male Protagonist:70;Amputation:65;Orphan:64;Language Barrier:63;Chibi:63;Dungeon:60;Food:54;Nudity:46;CGI:43;Outdoor Activities:32"
   },
   {
-    "index": "375.",
+    "index": "376.",
     "thumbnail": "images/anime/Goblin Slayer, S02.jpg",
     "name": "Goblin Slayer, S02",
     "type": "TV",
@@ -8625,7 +8648,7 @@
     "tags": "Goblin:100;Primarily Adult Cast:80;Spearplay:79;Magic:79;Gore:75;Body Horror:75;Elf:70;Swordplay:69;Medieval:60;Anti-Hero:60;Female Harem:53;Survival:46"
   },
   {
-    "index": "376.",
+    "index": "377.",
     "thumbnail": "images/anime/Bocchi the Rock!.jpg",
     "name": "Bocchi the Rock!",
     "type": "TV",
@@ -8648,7 +8671,7 @@
     "tags": "Band:98;Female Protagonist:94;Primarily Female Cast:93;Primarily Teen Cast:91;Rock Music:90;Cute Girls Doing Cute Things:86;Coming of Age:86;Rehabilitation:85;Hikikomori:85;Surreal Comedy:80;Seinen:71;Mixed Media:69;Meta:68;Slapstick:64;LGBTQ+ Themes:60;Work:58;School:56;Yuri:54;Rotoscoping:47;Chibi:43"
   },
   {
-    "index": "377.",
+    "index": "378.",
     "thumbnail": "images/anime/Noragami Aragoto.jpg",
     "name": "Noragami Aragoto",
     "type": "TV",
@@ -8671,7 +8694,7 @@
     "tags": "Gods:96;Mythology:91;Female Protagonist:90;Shounen:86;Urban Fantasy:84;Youkai:82;Urban:79;Found Family:79;Male Protagonist:78;Swordplay:74;Shapeshifting:68;Anti-Hero:62;Revenge:60;Reincarnation:57;Nekomimi:52;Nudity:45"
   },
   {
-    "index": "378.",
+    "index": "379.",
     "thumbnail": "images/anime/Lycoris Recoil.jpg",
     "name": "Lycoris Recoil",
     "type": "TV",
@@ -8694,7 +8717,7 @@
     "tags": "Primarily Female Cast:95;Female Protagonist:95;Guns:90;Urban:84;Found Family:80;Work:78;Yuri:78;Kuudere:75;Orphan:72;Restaurant:67;Cute Girls Doing Cute Things:63;Ensemble Cast:62;Politics:53"
   },
   {
-    "index": "379.",
+    "index": "380.",
     "thumbnail": "images/anime/Ragna Crimson.jpg",
     "name": "Ragna Crimson",
     "type": "TV",
@@ -8717,7 +8740,7 @@
     "tags": "Dragons:95;Revenge:92;Shounen:90;Magic:84;Male Protagonist:84;Swordplay:82;Super Power:72;Gore:67;Clone:60;Gender Bending:49;Orphan:40"
   },
   {
-    "index": "380.",
+    "index": "381.",
     "thumbnail": "images/anime/Lord of Mysteries.jpg",
     "name": "Lord of Mysteries",
     "type": "Donghua",
@@ -8740,7 +8763,7 @@
     "tags": "Conspiracy:93;Male Protagonist:91;Magic:91;Religion:90;Gore:86;Steampunk:81;Primarily Adult Cast:80;Isekai:72;Alchemy:72;Cultivation:70;Astronomy:65;CGI:65;Espionage:55;Guns:52;Episodic:44"
   },
   {
-    "index": "381.",
+    "index": "382.",
     "thumbnail": "images/anime/Call of the Night, S02.jpg",
     "name": "Call of the Night, S02",
     "type": "TV",
@@ -8763,7 +8786,7 @@
     "tags": "Vampire:97;Urban Fantasy:93;Urban:84;Female Protagonist:82;Heterosexual:81;Male Protagonist:81;Aromantic:77;Coming of Age:75;Shounen:73;Age Gap:70;Detective:66;Hikikomori:61;Ensemble Cast:60;Primarily Female Cast:60;Gyaru:40;Crossdressing:30"
   },
   {
-    "index": "382.",
+    "index": "383.",
     "thumbnail": "images/anime/The Water Magician.jpg",
     "name": "The Water Magician",
     "type": "TV",
@@ -8786,7 +8809,7 @@
     "tags": "Isekai:93;Male Protagonist:92;Magic:90;Reincarnation:71;Dungeon:69;Snowscape:65;Travel:64;Demons:60;Elf:56;Survival:53;Dragons:41;Kuudere:40;Coastal:36"
   },
   {
-    "index": "383.",
+    "index": "384.",
     "thumbnail": "images/anime/My Dress-Up Darling, S02.jpg",
     "name": "My Dress-Up Darling, S02",
     "type": "TV",
@@ -8807,29 +8830,6 @@
     "series": "My Dress-Up Darling",
     "rewatches": [],
     "tags": "Cosplay:99;Otaku Culture:91;Gyaru:83;Fashion:82;Female Protagonist:78;Male Protagonist:78;Makeup:78;Heterosexual:75;Crossdressing:74;Unrequited Love:73;Photography:71;Body Image:71;Educational:67;Slapstick:60;Gender Bending:52;School:50;Seinen:47;Nudity:45;Femboy:45;Chibi:45;Urban:40"
-  },
-  {
-    "index": "384.",
-    "thumbnail": "images/anime/The Rising of the Shield Hero, S04.jpg",
-    "name": "The Rising of the Shield Hero, S04",
-    "type": "TV",
-    "studio": "Kinema Citrus",
-    "release_date": "2025-07-09T00:00:00",
-    "themes": "Isekai",
-    "genres": "Action; Adventure; Drama; Fantasy",
-    "episodes": 12,
-    "episode_duration": 23.668,
-    "rating": 8,
-    "start_date": "2025-07-09T00:00:00",
-    "end_date": "2025-10-01T00:00:00",
-    "rewatch_count": 0,
-    "total_time": 284.01599999999996,
-    "dub": "JAP; ENG",
-    "status": "FINISHED",
-    "mal_url": "https://myanimelist.net/anime/57907/Tate_no_Yuusha_no_Nariagari_Season_4",
-    "series": "The Rising of the Shield Hero",
-    "rewatches": [],
-    "tags": "Male Protagonist:79;Anti-Hero:79;Medieval:79;Isekai:73;Magic:66;Ships:60;Travel:60;Dragons:56;Tomboy:40"
   },
   {
     "index": "385.",
@@ -8856,6 +8856,29 @@
   },
   {
     "index": "386.",
+    "thumbnail": "images/anime/The Rising of the Shield Hero, S04.jpg",
+    "name": "The Rising of the Shield Hero, S04",
+    "type": "TV",
+    "studio": "Kinema Citrus",
+    "release_date": "2025-07-09T00:00:00",
+    "themes": "Isekai",
+    "genres": "Action; Adventure; Drama; Fantasy",
+    "episodes": 12,
+    "episode_duration": 23.668,
+    "rating": 8,
+    "start_date": "2025-07-09T00:00:00",
+    "end_date": "2025-10-01T00:00:00",
+    "rewatch_count": 0,
+    "total_time": 284.01599999999996,
+    "dub": "JAP; ENG",
+    "status": "FINISHED",
+    "mal_url": "https://myanimelist.net/anime/57907/Tate_no_Yuusha_no_Nariagari_Season_4",
+    "series": "The Rising of the Shield Hero",
+    "rewatches": [],
+    "tags": "Male Protagonist:79;Anti-Hero:79;Medieval:79;Isekai:73;Magic:66;Ships:60;Travel:60;Dragons:56;Tomboy:40"
+  },
+  {
+    "index": "387.",
     "thumbnail": "images/anime/Rascal Does Not Dream of Santa Claus.jpg",
     "name": "Rascal Does Not Dream of Santa Claus",
     "type": "TV",
@@ -8878,7 +8901,7 @@
     "tags": "College:92;Urban Fantasy:89;Heterosexual:82;Male Protagonist:79;Primarily Adult Cast:72;Female Protagonist:50;Acting:50;Idol:48;Time Skip:48;CGI:46;POV:33"
   },
   {
-    "index": "387.",
+    "index": "388.",
     "thumbnail": "images/anime/Black Butler_ Emerald Witch Arc.jpg",
     "name": "Black Butler: Emerald Witch Arc",
     "type": "TV",
@@ -8901,7 +8924,7 @@
     "tags": "Butler:100;Demons:100;Crime:96;Historical:95;Witch:83;Anti-Hero:80;Orphan:80;Ojou-sama:79;Foreign:79;Kuudere:79;Male Protagonist:76;Werewolf:73;Shounen:60;Language Barrier:60;Rural:60"
   },
   {
-    "index": "388.",
+    "index": "389.",
     "thumbnail": "images/anime/Kaiju No.8, S02.jpg",
     "name": "Kaiju No.8, S02",
     "type": "TV",
@@ -8924,7 +8947,7 @@
     "tags": "Urban:96;Kaiju:96;Monster Boy:92;Male Protagonist:88;Shounen:88;Shapeshifting:82;Military:82;Rescue:79;Guns:77;Primarily Adult Cast:77;Gore:75;Body Horror:66;Super Power:63;Henshin:60;Tokusatsu:56;Work:54;Swordplay:50;Slapstick:48;Urban Fantasy:46;Spearplay:40;Tsundere:35;Heterosexual:30;Ojou-sama:30"
   },
   {
-    "index": "389.",
+    "index": "390.",
     "thumbnail": "images/anime/Puella Magi Madoka Magica the Movie_ Rebellion.jpg",
     "name": "Puella Magi Madoka Magica the Movie: Rebellion",
     "type": "Movie",
@@ -8947,7 +8970,7 @@
     "tags": "Anti-Hero:94;Magic:93;Female Protagonist:85;Philosophy:82;Primarily Female Cast:81;Henshin:75;Urban Fantasy:69;Yuri:68;Urban:54;Guns:54;Mixed Media:53;Kuudere:52;School:31"
   },
   {
-    "index": "390.",
+    "index": "391.",
     "thumbnail": "images/anime/Monogatari Series_ Off & Monster Season.jpg",
     "name": "Monogatari Series: Off & Monster Season",
     "type": "ONA",
@@ -8970,7 +8993,7 @@
     "tags": "Philosophy:94;Urban Fantasy:94;Youkai:85;Primarily Female Cast:84;Vampire:83;Female Protagonist:82;Urban:79;Meta:79;Coming of Age:75;Gods:69;Drawing:66;College:60;Detective:60;Gore:53;Rakugo:53;Fishing:52;Hikikomori:50;Crossdressing:46;Fairy Tale:44;Zombie:44"
   },
   {
-    "index": "391.",
+    "index": "392.",
     "thumbnail": "images/anime/Spice and Wolf_ Merchant Meets the Wise Wolf, S01.jpg",
     "name": "Spice and Wolf: Merchant Meets the Wise Wolf, S01",
     "type": "TV",
@@ -8993,7 +9016,7 @@
     "tags": "Economics:95;Travel:90;Rural:89;Work:88;Kemonomimi:88;Female Protagonist:88;Heterosexual:87;Primarily Adult Cast:84;Male Protagonist:83;Medieval:79;Mythology:79;Agriculture:79;Gods:74;Religion:74;Historical:72;Age Gap:70;Foreign:68;Politics:65;Nudity:45;Cultivation:40;Seinen:40;Tsundere:40;CGI:38"
   },
   {
-    "index": "392.",
+    "index": "393.",
     "thumbnail": "images/anime/The Apothecary Diaries, S02.jpg",
     "name": "The Apothecary Diaries, S02",
     "type": "TV",
@@ -9016,7 +9039,7 @@
     "tags": "Medicine:96;Female Protagonist:95;Royal Affairs:94;Detective:93;Politics:90;Historical:89;Ancient China:88;Work:87;Primarily Adult Cast:83;Foreign:82;Asexual:81;Class Struggle:80;Aromantic:77;Seinen:70;Educational:65;Primarily Female Cast:65;Pregnancy:64;Heterosexual:60;Maids:57;Male Protagonist:52;Chibi:49;Animals:40"
   },
   {
-    "index": "393.",
+    "index": "394.",
     "thumbnail": "images/anime/Spy x Family, S03.jpg",
     "name": "Spy x Family, S03",
     "type": "TV",
@@ -9039,7 +9062,7 @@
     "tags": "Urban:100;Espionage:100;Female Protagonist:95;Assassins:95;Urban Fantasy:94;Male Protagonist:92;Super Power:90;Parenthood:88;Martial Arts:85;Found Family:84;Shounen:82;Family Life:82;School:80;Ensemble Cast:79;Military:79;Politics:78;Fake Relationship:73;Cohabitation:68;Guns:67;Food:40"
   },
   {
-    "index": "394.",
+    "index": "395.",
     "thumbnail": "images/anime/Tower of God, S02_ Workshop Battle.jpg",
     "name": "Tower of God, S02: Workshop Battle",
     "type": "TV",
@@ -9062,7 +9085,7 @@
     "tags": "[[BLACKLIST]]"
   },
   {
-    "index": "395.",
+    "index": "396.",
     "thumbnail": "images/anime/I've Been Killing Slimes for 300 Years and Maxed Out My Level, S02.jpg",
     "name": "I've Been Killing Slimes for 300 Years and Maxed Out My Level, S02",
     "type": "TV",
@@ -9085,7 +9108,7 @@
     "tags": "Female Protagonist:91;Primarily Female Cast:88;Cute Girls Doing Cute Things:88;Witch:87;Iyashikei:84;Isekai:82;Found Family:80;Yuri:79;Female Harem:79;Episodic:73;Reincarnation:72;Dragons:60;Demons:60;Ghost:60;Elf:60;Medieval:55"
   },
   {
-    "index": "396.",
+    "index": "397.",
     "thumbnail": "images/anime/Tsukimichi -Moonlit Fantasy-, S02.jpg",
     "name": "Tsukimichi -Moonlit Fantasy-, S02",
     "type": "TV",
@@ -9108,7 +9131,7 @@
     "tags": "Isekai:93;Magic:91;Male Protagonist:80;Creature Taming:79;Shounen:79;Medieval:79;Language Barrier:77;Teacher:72;Economics:71;Monster Girl:70;Gods:70;Dragons:62;Demons:60;Anthropomorphism:55;Female Harem:55;Meta:42;Samurai:30"
   },
   {
-    "index": "397.",
+    "index": "398.",
     "thumbnail": "images/anime/Ascendance of a Bookworm, S03.jpg",
     "name": "Ascendance of a Bookworm, S03",
     "type": "TV",
@@ -9131,7 +9154,7 @@
     "tags": "Isekai:95;Female Protagonist:94;Class Struggle:90;Work:83;Economics:81;Historical:79;Reincarnation:78;Magic:73;Politics:70;Religion:68;Orphan:60;Medieval:60;Josei:50;Time Skip:45;Gods:45"
   },
   {
-    "index": "398.",
+    "index": "399.",
     "thumbnail": "images/anime/GATE, S01 Part 2.jpg",
     "name": "GATE, S01 Part 2",
     "type": "TV",
@@ -9154,7 +9177,7 @@
     "tags": "Military:98;Alternate Universe:96;Isekai:93;Politics:81;Male Protagonist:75;War:74;Primarily Adult Cast:72;Primarily Female Cast:66;Dragons:62;Elf:60;Kemonomimi:55;Tanks:52;Female Harem:51;Villainess:42;Slavery:37;Aviation:33;Fairy:30"
   },
   {
-    "index": "399.",
+    "index": "400.",
     "thumbnail": "images/anime/Skeleton Knight in Another World, S01.jpg",
     "name": "Skeleton Knight in Another World, S01",
     "type": "TV",
@@ -9177,7 +9200,7 @@
     "tags": "Skeleton:95;Isekai:91;Male Protagonist:88;Magic:83;Swordplay:78;Elf:73;Conspiracy:71;Ninja:67;Kemonomimi:65;Politics:65;CGI:61;Curses:60;Gore:52;Tsundere:51;Slapstick:40;Nekomimi:40;Demons:40;Dragons:33;Medieval:30"
   },
   {
-    "index": "400.",
+    "index": "401.",
     "thumbnail": "images/anime/Arifureta_ From Commonplace to World's Strongest, S03.jpg",
     "name": "Arifureta: From Commonplace to World's Strongest, S03",
     "type": "TV",
@@ -9200,7 +9223,7 @@
     "tags": "Anti-Hero:94;Male Protagonist:91;Magic:82;Isekai:81;Polyamorous:79;Kemonomimi:79;Female Harem:76;Heterosexual:74;Guns:72;Monster Girl:66;Vampire:63;Slapstick:60;Demons:60;Snowscape:60;Dragons:40;Swordplay:40;Slavery:30"
   },
   {
-    "index": "401.",
+    "index": "402.",
     "thumbnail": "images/anime/Saga of Tanya the Evil_ The Movie.jpg",
     "name": "Saga of Tanya the Evil: The Movie",
     "type": "Movie",
@@ -9223,7 +9246,7 @@
     "tags": "Military:98;Foreign:93;War:92;Anti-Hero:92;Revenge:88;Historical:85;Magic:80;Female Protagonist:80;Politics:79;Gods:76;Guns:76;Reincarnation:73;Primarily Adult Cast:72;Isekai:69;Gender Bending:62;Primarily Male Cast:60;Tragedy:40;CGI:33"
   },
   {
-    "index": "402.",
+    "index": "403.",
     "thumbnail": "images/anime/Chainsaw Man the Movie_ Reze Arc.jpg",
     "name": "Chainsaw Man the Movie: Reze Arc",
     "type": "Movie",
@@ -9246,7 +9269,7 @@
     "tags": "Demons:98;Monster Boy:96;Male Protagonist:95;Urban Fantasy:94;Urban:91;Heterosexual:86;Henshin:83;Gore:82;Body Horror:81;Shapeshifting:79;Anti-Hero:78;Psychosexual:77;Philosophy:76;POV:73;Coming of Age:71;Work:70;Shounen:68;Female Protagonist:60;Love Triangle:58;Nudity:58;Surreal Comedy:56;School:55;Swimming:54;Angels:50;Coastal:50;CGI:41"
   },
   {
-    "index": "403.",
+    "index": "404.",
     "thumbnail": "images/anime/Demon Slayer_ The Movie_ Infinity Castle - Part 1_ Akaza Returns.jpg",
     "name": "Demon Slayer: The Movie: Infinity Castle - Part 1: Akaza Returns",
     "type": "Movie",
@@ -9269,7 +9292,7 @@
     "tags": "Demons:95;Male Protagonist:92;Swordplay:91;War:88;Revenge:88;Shounen:86;Martial Arts:84;Super Power:83;Gore:80;Afterlife:73;Dungeon:71;Ensemble Cast:65;Curses:60;Body Horror:56;CGI:52;Historical:36"
   },
   {
-    "index": "404.",
+    "index": "405.",
     "thumbnail": "images/anime/Vinland Saga, S02.jpg",
     "name": "Vinland Saga, S02",
     "type": "TV",
@@ -9292,7 +9315,7 @@
     "tags": "Seinen:94;Vikings:92;Male Protagonist:88;Philosophy:88;Coming of Age:86;Primarily Adult Cast:86;Historical:86;Agriculture:85;War:85;Primarily Male Cast:84;Foreign:84;Rural:83;Medieval:80;Religion:73;Swordplay:69;Class Struggle:68;Gore:67;Politics:67;Heterosexual:53;Travel:48;Mythology:42;Wrestling:34"
   },
   {
-    "index": "405.",
+    "index": "406.",
     "thumbnail": "images/anime/Dorohedoro, S01.jpg",
     "name": "Dorohedoro, S01",
     "type": "TV",
@@ -9315,7 +9338,7 @@
     "tags": "Dystopian:93;Monster Boy:93;Magic:89;Amnesia:87;CGI:87;Full CGI:86;Gore:85;Surreal Comedy:81;Seinen:80;Body Horror:80;Ensemble Cast:80;Urban Fantasy:79;Anti-Hero:79;Anthropomorphism:79;Primarily Adult Cast:77;Curses:73;Male Protagonist:70;Demons:68;Revenge:66;Found Family:65;Restaurant:60;Henshin:60;Food:57;Vore:56;Female Protagonist:50;Post-Apocalyptic:45;Drugs:43;Zombie:36;Nudity:30"
   },
   {
-    "index": "406.",
+    "index": "407.",
     "thumbnail": "images/anime/Wandering Witch_ The Journey of Elaina.jpg",
     "name": "Wandering Witch: The Journey of Elaina",
     "type": "TV",
@@ -9338,7 +9361,7 @@
     "tags": "Witch:96;Episodic:96;Magic:95;Female Protagonist:91;Travel:90;Cute Girls Doing Cute Things:82;Primarily Female Cast:81;Achronological Order:80;Medieval:73;LGBTQ+ Themes:65;Anti-Hero:58;Foreign:57;Yuri:55;Philosophy:53;Dragons:53;Gangs:36"
   },
   {
-    "index": "407.",
+    "index": "408.",
     "thumbnail": "images/anime/Secrets of the Silent Witch.jpg",
     "name": "Secrets of the Silent Witch",
     "type": "TV",
@@ -9361,7 +9384,7 @@
     "tags": "Female Protagonist:95;Magic:93;School:93;Witch:92;Primarily Teen Cast:90;Royal Affairs:89;Hikikomori:85;Coming of Age:80;Politics:80;Ojou-sama:67;Class Struggle:66;Bullying:64;Medieval:60;Shoujo:55;Dragons:53;Spearplay:50;Rehabilitation:33"
   },
   {
-    "index": "408.",
+    "index": "409.",
     "thumbnail": "images/anime/Once Upon a Witch's Death.jpg",
     "name": "Once Upon a Witch's Death",
     "type": "TV",
@@ -9384,7 +9407,7 @@
     "tags": "Female Protagonist:98;Curses:93;Primarily Female Cast:89;Witch:89;Magic:87;Urban Fantasy:81;Coming of Age:80;Iyashikei:77;Found Family:75;Foreign:73;Orphan:72;Bisexual:68;Environmental:60;LGBTQ+ Themes:47;Episodic:46;Yuri:45"
   },
   {
-    "index": "409.",
+    "index": "410.",
     "thumbnail": "images/anime/The Ancient Magus' Bride, S02 Part 2.jpg",
     "name": "The Ancient Magus' Bride, S02 Part 2",
     "type": "TV",
@@ -9407,7 +9430,7 @@
     "tags": "Female Protagonist:84;Urban Fantasy:80;College:79;Primarily Teen Cast:79;Magic:73;Animals:70;Mythology:66;Urban:66;Ensemble Cast:60;Kuudere:46;Werewolf:40;Age Gap:40;Chibi:40;Monster Boy:40;CGI:40;Bullying:40;Heterosexual:33;School:30;Teacher:30"
   },
   {
-    "index": "410.",
+    "index": "411.",
     "thumbnail": "images/anime/Psycho-Pass, S03_ First Inspector.jpg",
     "name": "Psycho-Pass, S03: First Inspector",
     "type": "ONA",
@@ -9430,7 +9453,7 @@
     "tags": "Police:88;Crime:88;Cyberpunk:80;Dystopian:80;Detective:79;Artificial Intelligence:70;Philosophy:68;Politics:60;Guns:60"
   },
   {
-    "index": "411.",
+    "index": "412.",
     "thumbnail": "images/anime/To Your Eternity, S03.jpg",
     "name": "To Your Eternity, S03",
     "type": "TV",
@@ -9438,13 +9461,13 @@
     "release_date": "2025-10-04T00:00:00",
     "themes": "X",
     "genres": "Adventure; Drama; Supernatural",
-    "episodes": 16,
+    "episodes": 18,
     "episode_duration": 25,
     "rating": "Zatím 8/10",
     "start_date": "2025-10-05T00:00:00",
     "end_date": "X",
     "rewatch_count": 0,
-    "total_time": 400,
+    "total_time": 450,
     "dub": "ENG",
     "status": "AIRING!",
     "mal_url": "https://myanimelist.net/anime/54703/Fumetsu_no_Anata_e_Season_3",
@@ -9453,7 +9476,7 @@
     "tags": "Urban Fantasy:92;Shapeshifting:87;Time Skip:85;Philosophy:80;Urban:79;Shounen:68;School:40;Bullying:40;Denpa:35"
   },
   {
-    "index": "412.",
+    "index": "413.",
     "thumbnail": "images/anime/Fate strange Fake.jpg",
     "name": "Fate/strange Fake",
     "type": "TV",
@@ -9461,13 +9484,13 @@
     "release_date": "2026-01-03T00:00:00",
     "themes": "Urban Fantasy",
     "genres": "Action; Fantasy",
-    "episodes": 8,
+    "episodes": 10,
     "episode_duration": 23,
     "rating": "X",
     "start_date": "2026-01-03T00:00:00",
     "end_date": "X",
     "rewatch_count": 0,
-    "total_time": 184,
+    "total_time": 230,
     "dub": "ENG",
     "status": "AIRING!",
     "mal_url": "https://myanimelist.net/anime/55830/Fate_strange_Fake",
@@ -9476,7 +9499,7 @@
     "tags": "Urban:100;Mythology:95;Magic:94;Urban Fantasy:92;Conspiracy:91;Battle Royale:86;War:84;Guns:79;Vampire:79;Archery:79;Assassins:79;Cyborg:79;Religion:79;Chimera:79;Swordplay:79;Police:79;Ensemble Cast:79;Foreign:79;Death Game:70;Gambling:70;Nun:60"
   },
   {
-    "index": "413.",
+    "index": "414.",
     "thumbnail": "images/anime/Sentenced to Be a Hero.jpg",
     "name": "Sentenced to Be a Hero",
     "type": "TV",
@@ -9484,13 +9507,13 @@
     "release_date": "2026-01-03T00:00:00",
     "themes": "X",
     "genres": "Action; Adventure; Fantasy",
-    "episodes": 7,
+    "episodes": 9,
     "episode_duration": 24,
     "rating": "X",
     "start_date": "2026-01-03T00:00:00",
     "end_date": "X",
     "rewatch_count": 0,
-    "total_time": 168,
+    "total_time": 216,
     "dub": "ENG",
     "status": "AIRING!",
     "mal_url": "https://myanimelist.net/anime/56009/Yuusha-kei_ni_Shosu__Choubatsu_Yuusha_9004-tai_Keimu_Kiroku",
@@ -9499,7 +9522,7 @@
     "tags": "Anti-Hero:88;Demons:85;Male Protagonist:84;Gore:83;Medieval:79;Gods:78;Military:72;Crime:70;Swordplay:51;Prison:35;CGI:35"
   },
   {
-    "index": "414.",
+    "index": "415.",
     "thumbnail": "images/anime/Jujutsu Kaisen_ The Culling Game Part 1.jpg",
     "name": "Jujutsu Kaisen: The Culling Game Part 1",
     "type": "TV",
@@ -9507,13 +9530,13 @@
     "release_date": "2026-01-09T00:00:00",
     "themes": "School",
     "genres": "Action; Supernatural",
-    "episodes": 7,
+    "episodes": 9,
     "episode_duration": 23,
     "rating": "X",
     "start_date": "2026-01-09T00:00:00",
     "end_date": "X",
     "rewatch_count": 0,
-    "total_time": 161,
+    "total_time": 207,
     "dub": "JAP",
     "status": "AIRING!",
     "mal_url": "https://myanimelist.net/anime/57658/Jujutsu_Kaisen__Shimetsu_Kaiyuu_-_Zenpen",
@@ -9522,7 +9545,7 @@
     "tags": "Urban Fantasy:96;Curses:95;Shounen:92;Battle Royale:92;Urban:90;Exorcism:89;Super Power:88;Death Game:87;Primarily Teen Cast:82;Survival:81;Male Protagonist:80;Gore:75;Ensemble Cast:68;Martial Arts:64;Demons:63;Gambling:57;Swordplay:56;Cute Boys Doing Cute Things:55;Philosophy:50;Femboy:45;LGBTQ+ Themes:36;Rotoscoping:35"
   },
   {
-    "index": "415.",
+    "index": "416.",
     "thumbnail": "images/anime/Hell's Paradise, S02.jpg",
     "name": "Hell's Paradise, S02",
     "type": "TV",
@@ -9530,13 +9553,13 @@
     "release_date": "2026-01-11T00:00:00",
     "themes": "Gore; Historical; Samurai",
     "genres": "Action; Adventure; Supernatural",
-    "episodes": 7,
+    "episodes": 9,
     "episode_duration": 23,
     "rating": "X",
     "start_date": "2026-01-11T00:00:00",
     "end_date": "X",
     "rewatch_count": 0,
-    "total_time": 161,
+    "total_time": 207,
     "dub": "JAP",
     "status": "AIRING!",
     "mal_url": "https://myanimelist.net/anime/55825/Jigokuraku_2nd_Season",
@@ -9545,7 +9568,7 @@
     "tags": "Body Horror:95;Ninja:84;Survival:75;Samurai:75;Swordplay:73;Gender Bending:72;Gore:70;Ensemble Cast:66;Super Power:60;Battle Royale:60;Heterosexual:60;Nudity:60;Shounen:46;Amnesia:45;LGBTQ+ Themes:40"
   },
   {
-    "index": "416.",
+    "index": "417.",
     "thumbnail": "images/anime/Frieren_ Beyond Journey's End, S02.jpg",
     "name": "Frieren: Beyond Journey's End, S02",
     "type": "TV",
@@ -9553,41 +9576,18 @@
     "release_date": "2026-01-16T00:00:00",
     "themes": "X",
     "genres": "Adventure; Drama; Fantasy",
-    "episodes": 5,
+    "episodes": 7,
     "episode_duration": 24,
     "rating": "X",
     "start_date": "2026-01-16T00:00:00",
     "end_date": "X",
     "rewatch_count": 0,
-    "total_time": 120,
+    "total_time": 168,
     "dub": "JAP",
     "status": "AIRING!",
     "mal_url": "https://myanimelist.net/anime/59978/Sousou_no_Frieren_2nd_Season",
     "series": "Frieren: Beyond Journey's End",
     "rewatches": [],
     "tags": "Travel:97;Elf:95;Magic:92;Iyashikei:90;Female Protagonist:87;Found Family:86;Philosophy:80;Time Skip:80;Medieval:80;Swordplay:79;Heterosexual:74;Shounen:65;Episodic:64;Dragons:60;Aromantic:46;Fishing:46;Asexual:35"
-  },
-  {
-    "index": "417.",
-    "thumbnail": "images/anime/Ergo Proxy.jpg",
-    "name": "Ergo Proxy",
-    "type": "TV",
-    "studio": null,
-    "release_date": null,
-    "themes": null,
-    "genres": null,
-    "episodes": 10,
-    "episode_duration": 25.961,
-    "rating": null,
-    "start_date": "2026-02-24T00:00:00",
-    "end_date": null,
-    "rewatch_count": 0,
-    "total_time": 259.61,
-    "dub": "ENG",
-    "status": "PENDING",
-    "mal_url": "https://myanimelist.net/anime/790/Ergo_Proxy",
-    "series": null,
-    "rewatches": [],
-    "tags": null
   }
 ]
