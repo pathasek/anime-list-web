@@ -453,7 +453,7 @@ function HistoryLog() {
             if (el) {
                 // 80px offset for top padding/navigation
                 const y = el.getBoundingClientRect().top + window.scrollY - 80;
-                window.scrollTo({ top: y, behavior: 'smooth' });
+                window.scrollTo({ top: y, behavior: 'instant' });
             }
         }
     }

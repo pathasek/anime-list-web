@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { loadData, STORAGE_KEYS } from '../utils/dataStore'
 
-const FilterDropdown = ({ label, options, currentFilters, onFilterChange, type }) => {
+const FilterDropdown = ({ label, options, currentFilters, onFilterChange, type, alignRight, descriptions }) => {
     const [isOpen, setIsOpen] = useState(false)
     const [localSearch, setLocalSearch] = useState('')
 
@@ -50,7 +50,7 @@ const FilterDropdown = ({ label, options, currentFilters, onFilterChange, type }
                 <span style={{ marginLeft: '6px', fontSize: '0.7rem' }}>▼</span>
             </button>
             {isOpen && (
-                <div className="filter-dropdown-menu">
+                <div className={`filter-dropdown-menu ${alignRight ? 'right-aligned' : ''}`}>
                     <input
                         type="text"
                         placeholder="Hledat..."
@@ -70,6 +70,7 @@ const FilterDropdown = ({ label, options, currentFilters, onFilterChange, type }
                                 key={opt}
                                 className={`filter-dropdown-item ${statusClass}`}
                                 onClick={(e) => handleCycle(opt, e)}
+                                title={descriptions && descriptions[opt] ? descriptions[opt] : undefined}
                             >
                                 <span>{opt}</span>
                                 {status === 1 && <span style={{ fontSize: '0.8rem' }}>+</span>}
@@ -148,6 +149,7 @@ function AnimeList() {
         const genres = new Set()
         const themes = new Set()
         const tags = new Set()
+        const tagDescriptions = {}
 
         animeList.forEach(a => {
             if (a.type) types.add(a.type)
@@ -160,14 +162,19 @@ function AnimeList() {
             if (a.themes) {
                 a.themes.split(';').forEach(t => {
                     const clean = t.trim()
-                    if (clean) themes.add(clean)
+                    if (clean && clean !== 'X') themes.add(clean)
                 })
             }
             if (a.tags) {
                 a.tags.split(';').forEach(t => {
                     const parts = t.split(':')
                     const clean = parts[0].trim()
-                    if (clean) tags.add(clean)
+                    if (clean) {
+                        tags.add(clean)
+                        if (parts[1]) {
+                            tagDescriptions[clean] = parts[1].trim()
+                        }
+                    }
                 })
             }
         })
@@ -177,6 +184,7 @@ function AnimeList() {
             genres: Array.from(genres).sort(),
             themes: Array.from(themes).sort(),
             tags: Array.from(tags).sort(),
+            tagDescriptions,
             statuses: ['PENDING', 'AIRING!', 'FINISHED']
         }
     }, [animeList])
@@ -491,8 +499,8 @@ function AnimeList() {
                     <FilterDropdown label="Status" options={filterOptions.statuses} currentFilters={filters.status} onFilterChange={handleFilterChange} type="status" />
                     <FilterDropdown label="Typ" options={filterOptions.types} currentFilters={filters.type} onFilterChange={handleFilterChange} type="type" />
                     <FilterDropdown label="Žánry" options={filterOptions.genres} currentFilters={filters.genre} onFilterChange={handleFilterChange} type="genre" />
-                    <FilterDropdown label="Témata" options={filterOptions.themes} currentFilters={filters.theme} onFilterChange={handleFilterChange} type="theme" />
-                    <FilterDropdown label="Tagy" options={filterOptions.tags} currentFilters={filters.tag} onFilterChange={handleFilterChange} type="tag" />
+                    <FilterDropdown label="Témata" options={filterOptions.themes} currentFilters={filters.theme} onFilterChange={handleFilterChange} type="theme" alignRight={true} />
+                    <FilterDropdown label="Tagy" options={filterOptions.tags} currentFilters={filters.tag} onFilterChange={handleFilterChange} type="tag" alignRight={true} descriptions={filterOptions.tagDescriptions} />
 
                     {Object.values(filters).some(cat => Object.values(cat).some(v => v !== 0)) && (
                         <button className="clear-filter-btn" style={{ width: 'auto', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '6px 12px', marginTop: 0 }} onClick={clearAllFilters}>
