@@ -46,25 +46,32 @@ function HistoryLog() {
     useEffect(() => {
         const handleScroll = () => {
             const currentY = window.scrollY
+
             if (currentY < lastScrollY.current) {
-                // Scrolling up
+                // We are scrolling UP
                 if (!scrollUpStartTime.current) {
                     scrollUpStartTime.current = Date.now()
-                } else if (Date.now() - scrollUpStartTime.current > 3000) {
+                } else if (currentY > 500 && (Date.now() - scrollUpStartTime.current > 3000)) {
+                    // Show button after 3 seconds of continuous upward scrolling
                     setShowScrollTop(true)
                 }
 
+                // Clear the pause timeout if we keep scrolling
                 if (scrollPauseTimeout.current) clearTimeout(scrollPauseTimeout.current)
+
+                // If we stop scrolling for 0.5s, reset the continuous up-scroll timer
                 scrollPauseTimeout.current = setTimeout(() => {
                     scrollUpStartTime.current = null
                 }, 500)
             } else {
-                // Scrolling down
+                // We are scrolling DOWN
                 scrollUpStartTime.current = null
                 setShowScrollTop(false)
             }
+
             lastScrollY.current = currentY
 
+            // Hide if we get near the top purely based on position
             if (currentY < 500) {
                 setShowScrollTop(false)
                 scrollUpStartTime.current = null
@@ -493,9 +500,12 @@ function HistoryLog() {
         if (group) {
             const el = document.getElementById(`date-${group.date}`);
             if (el) {
-                // 140px offset for top padding/navigation + breathing room
-                const y = el.getBoundingClientRect().top + window.scrollY - 140;
-                window.scrollTo({ top: y, behavior: 'instant' });
+                // Adding a tiny delay allows the browser to compute the correct layout 
+                // geometry before executing the instant jump. Also increased offset to clear headers.
+                setTimeout(() => {
+                    const y = el.getBoundingClientRect().top + window.scrollY - 180;
+                    window.scrollTo({ top: y, behavior: 'instant' });
+                }, 10);
 
                 setHighlightedDate(group.date);
                 setTimeout(() => {
@@ -915,18 +925,17 @@ function HistoryLog() {
                 <button
                     onClick={() => {
                         window.scrollTo({ top: 0, behavior: 'smooth' });
-                        setShowScrollTop(false);
                     }}
                     style={{
                         position: 'fixed',
-                        top: '100px',
+                        bottom: '30px', /* Posunuto dolů pro lepší ergonomii na telefonu/desktopu */
                         right: '30px',
                         background: 'var(--accent-primary)',
                         color: 'white',
                         border: 'none',
                         borderRadius: '50%',
-                        width: '45px',
-                        height: '45px',
+                        width: '50px',
+                        height: '50px',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
