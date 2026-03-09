@@ -498,20 +498,24 @@ function HistoryLog() {
     const scrollToDate = (dateStr) => {
         const group = groupedHistory.find(g => g.date && g.date.startsWith(dateStr));
         if (group) {
-            const el = document.getElementById(`date-${group.date}`);
-            if (el) {
-                // Adding a tiny delay allows the browser to compute the correct layout 
-                // geometry before executing the instant jump. Also increased offset to clear headers.
-                setTimeout(() => {
-                    const y = el.getBoundingClientRect().top + window.scrollY - 180;
-                    window.scrollTo({ top: y, behavior: 'instant' });
-                }, 10);
+            // We use requestAnimationFrame to guarantee the browser has finished painting current UI
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    const el = document.getElementById(`date-${group.date}`);
+                    if (el) {
+                        // Offset by -180px so it clears fixed headers
+                        const y = el.getBoundingClientRect().top + window.scrollY - 180;
+                        window.scrollTo({ top: y, behavior: 'auto' });
 
-                setHighlightedDate(group.date);
-                setTimeout(() => {
-                    setHighlightedDate(null);
-                }, 3000);
-            }
+                        setHighlightedDate(group.date);
+                        setTimeout(() => {
+                            setHighlightedDate(null);
+                        }, 3000);
+                    } else {
+                        console.warn('Scroll target not found in DOM:', `date-${group.date}`);
+                    }
+                });
+            });
         }
     }
 

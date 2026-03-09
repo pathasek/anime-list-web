@@ -1512,25 +1512,25 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     width: calc(100vw - 32px);
     left: 16px !important;
   }
+}
 
-  /* ─── Custom Animations ─── */
-  @keyframes pulseHighlight {
-    0% {
-      background-color: rgba(99, 102, 241, 0.4);
-      border-color: var(--accent-primary);
-    }
-
-    80% {
-      background-color: rgba(99, 102, 241, 0.1);
-    }
-
-    100% {
-      background-color: var(--bg-card);
-      border-color: var(--border-color);
-    }
+/* ─── Custom Animations ─── */
+@keyframes pulseHighlight {
+  0% {
+    background-color: rgba(99, 102, 241, 0.4) !important;
+    border-color: var(--accent-primary) !important;
   }
 
-  .highlight-pulse {
-    animation: pulseHighlight 3s ease-out forwards;
+  80% {
+    background-color: rgba(99, 102, 241, 0.1) !important;
   }
+
+  100% {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+  }
+}
+
+.highlight-pulse {
+  animation: pulseHighlight 3s ease-out forwards;
 }
