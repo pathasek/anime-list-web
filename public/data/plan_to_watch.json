@@ -332,7 +332,7 @@
     "type": "Multiple",
     "episodes": 25,
     "total_time": 575.0,
-    "source": "Via AniList - má \"rotoscoping\" fluidní animace, začal jsem vyhledávat Anime s tímto stylem animací po zhlédnutí Eye-Candy animací, které má trilogie Kizumonogatari",
+    "source": "Via AniList - má \"rotoscoping\" fluidní animace, začal jsem vyhledávat Anime s tímto stylem animací po zhlédnutí Eye-Candy animací, které má trilogie Kizumonogatari, první EP je velmi interesting (plane falls and city turns to ruins)",
     "notes": "Vydáno"
   },
   {
@@ -918,5 +918,21 @@
     "total_time": 1200.0,
     "source": "\"Beautiful fantasy about little beast tamer with great world building.\"",
     "notes": "Vydáno"
+  },
+  {
+    "name": "Terra Formars",
+    "type": "Multiple",
+    "episodes": 30,
+    "total_time": 720.0,
+    "source": "Weird ass looking bug",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun",
+    "type": "TV",
+    "episodes": 1,
+    "total_time": 24.0,
+    "source": "KEVIN PENKIN OST KEVIN PENKIN OST KEVIN PENKIN OST KEVIN PENKIN OST KEVIN PENKIN OST KEVIN PENKIN OST KEVIN PENKIN OST KEVIN PENKIN OST KEVIN PENKIN OST",
+    "notes": "Nadcházející"
   }
 ]

@@ -198,6 +198,116 @@
     ]
   },
   {
+    "name": "Classroom of the Elite, S01",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 11",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.5
+      }
+    ]
+  },
+  {
+    "name": "Classroom of the Elite, S02",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 13",
+        "rating": 7.75
+      }
+    ]
+  },
+  {
     "name": "My Dress-Up Darling, S01",
     "episodes": [
       {
@@ -3917,6 +4027,23 @@
     ]
   },
   {
+    "name": "The Ancient Magus' Bride: Those Awaiting a Star",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.75
+      }
+    ]
+  },
+  {
     "name": "The Ancient Magus' Bride, S01",
     "episodes": [
       {
@@ -4014,23 +4141,6 @@
       {
         "episode": "EP 24",
         "rating": 9.25
-      }
-    ]
-  },
-  {
-    "name": "The Ancient Magus' Bride: Those Awaiting a Star",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.75
       }
     ]
   },
@@ -4262,6 +4372,185 @@
       },
       {
         "episode": "EP 13",
+        "rating": 7.25
+      }
+    ]
+  },
+  {
+    "name": "Psycho-Pass, S01",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 11",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 13",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 14",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 15",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 16",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 17",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 18",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 19",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 20",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 21",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 22",
+        "rating": 9.0
+      }
+    ]
+  },
+  {
+    "name": "Psycho-Pass, S02",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.25
+      }
+    ]
+  },
+  {
+    "name": "Psycho-Pass, S03",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 8",
         "rating": 7.25
       }
     ]
@@ -6670,6 +6959,103 @@
     ]
   },
   {
+    "name": "Ergo Proxy",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 11",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 13",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 14",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 15",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 16",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 17",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 18",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 19",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 20",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 21",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 22",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 23",
+        "rating": 8.5
+      }
+    ]
+  },
+  {
     "name": "Fullmetal Alchemist: Brotherhood",
     "episodes": [
       {
@@ -7224,6 +7610,63 @@
     ]
   },
   {
+    "name": "Classroom of the Elite, S03",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 13",
+        "rating": 8.0
+      }
+    ]
+  },
+  {
     "name": "Frieren: Beyond Journey's End, S01",
     "episodes": [
       {
@@ -7557,59 +8000,6 @@
     ]
   },
   {
-    "name": "The Rising of the Shield Hero, S04",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 7.75
-      }
-    ]
-  },
-  {
     "name": "The Summer Hikaru Died, S01",
     "episodes": [
       {
@@ -7659,6 +8049,59 @@
       {
         "episode": "EP 12",
         "rating": 9.75
+      }
+    ]
+  },
+  {
+    "name": "The Rising of the Shield Hero, S04",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.75
       }
     ]
   },
@@ -9020,6 +9463,10 @@
       {
         "episode": "EP 16",
         "rating": 8.0
+      },
+      {
+        "episode": "EP 17",
+        "rating": 8.5
       }
     ]
   },
@@ -9057,6 +9504,10 @@
       {
         "episode": "EP 8",
         "rating": 8.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.75
       }
     ]
   },
@@ -9090,6 +9541,14 @@
       {
         "episode": "EP 7",
         "rating": 8.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 9",
+        "rating": 9.0
       }
     ]
   },
@@ -9123,6 +9582,14 @@
       {
         "episode": "EP 7",
         "rating": 9.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 9.75
       }
     ]
   },
@@ -9156,6 +9623,10 @@
       {
         "episode": "EP 7",
         "rating": 9.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 9.25
       }
     ]
   },
@@ -9181,185 +9652,10 @@
       {
         "episode": "EP 5",
         "rating": 8.5
-      }
-    ]
-  },
-  {
-    "name": "Psycho-Pass, S01",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.25
       },
       {
         "episode": "EP 6",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 11",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 13",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 14",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 15",
         "rating": 9.0
-      },
-      {
-        "episode": "EP 16",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 17",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 18",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 19",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 20",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 21",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 22",
-        "rating": 9.0
-      }
-    ]
-  },
-  {
-    "name": "Psycho-Pass, S02",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 8",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.25
-      }
-    ]
-  },
-  {
-    "name": "Psycho-Pass, S03",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 8",
-        "rating": 7.25
       }
     ]
   }

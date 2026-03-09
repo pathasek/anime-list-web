@@ -128,8 +128,8 @@
     "rating": 8,
     "start_date": "2024-09-16T00:00:00",
     "end_date": "2024-09-17T00:00:00",
-    "rewatch_count": 0,
-    "total_time": 288,
+    "rewatch_count": 1,
+    "total_time": 576,
     "dub": "ENG",
     "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/35507/Youkoso_Jitsuryoku_Shijou_Shugi_no_Kyoushitsu_e",
@@ -147,12 +147,12 @@
     "themes": "Psychological; School",
     "genres": "Drama; Suspense",
     "episodes": 13,
-    "episode_duration": 23.833,
-    "rating": 10,
+    "episode_duration": 23.685,
+    "rating": 8,
     "start_date": "2024-09-17T00:00:00",
     "end_date": "2024-09-18T00:00:00",
-    "rewatch_count": 0,
-    "total_time": 309.82899999999995,
+    "rewatch_count": 1,
+    "total_time": 615.81,
     "dub": "ENG",
     "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/51096/Youkoso_Jitsuryoku_Shijou_Shugi_no_Kyoushitsu_e_2nd_Season",
@@ -335,8 +335,8 @@
     "rating": 10,
     "start_date": "2025-01-02T00:00:00",
     "end_date": "2025-01-03T00:00:00",
-    "rewatch_count": 1,
-    "total_time": 1308,
+    "rewatch_count": 2,
+    "total_time": 1962,
     "dub": "ENG",
     "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/31240/Re_Zero_kara_Hajimeru_Isekai_Seikatsu",
@@ -358,8 +358,8 @@
     "rating": 8,
     "start_date": "2025-01-03T00:00:00",
     "end_date": "2025-01-03T00:00:00",
-    "rewatch_count": 0,
-    "total_time": 59.5,
+    "rewatch_count": 1,
+    "total_time": 119,
     "dub": "ENG",
     "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/36286/Re_Zero_kara_Hajimeru_Isekai_Seikatsu_-_Memory_Snow",
@@ -381,8 +381,8 @@
     "rating": 9,
     "start_date": "2025-01-03T00:00:00",
     "end_date": "2025-01-03T00:00:00",
-    "rewatch_count": 0,
-    "total_time": 76.37,
+    "rewatch_count": 1,
+    "total_time": 152.74,
     "dub": "ENG",
     "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/38414/Re_Zero_kara_Hajimeru_Isekai_Seikatsu_-_Hyouketsu_no_Kizuna",
@@ -1542,29 +1542,6 @@
   },
   {
     "index": "68.",
-    "thumbnail": "images/anime/Fate_Grand Order_ Absolute Demonic Front - Babylonia.jpg",
-    "name": "Fate/Grand Order: Absolute Demonic Front - Babylonia",
-    "type": "TV",
-    "studio": "CloverWorks",
-    "release_date": "2019-10-05T00:00:00",
-    "themes": "Isekai",
-    "genres": "Action; Fantasy",
-    "episodes": 21,
-    "episode_duration": 23.738,
-    "rating": 9,
-    "start_date": "2025-03-28T00:00:00",
-    "end_date": "2025-03-30T00:00:00",
-    "rewatch_count": 0,
-    "total_time": 498.498,
-    "dub": "ENG",
-    "status": "FINISHED",
-    "mal_url": "https://myanimelist.net/anime/38084/Fate_Grand_Order__Zettai_Majuu_Sensen_Babylonia",
-    "series": "Fate",
-    "rewatches": [],
-    "tags": "Mythology:Prominently features mythological elements, especially those from religious or cultural tradition.;Magic:Prominently features magical elements or the use of magic.;Time Manipulation:Prominently features time-traveling or other time-warping phenomena.;Gods:Prominently features a character of divine or religious nature.;Historical:Partly or completely set during a real period of world history.;Spearplay:Prominently features the use of spears in combat.;Swordplay:Prominently features the use of swords in combat.;Monster Girl:Prominently features a female character who is part-monster.;Kaiju:Prominently features giant monsters.;Anachronism:Prominently features elements that are out of place in the historical period the work takes place in, particularly modern elements in a historical setting.;Male Protagonist:Main character is male.;Kingdom Management:Characters in these series take on the responsibility of running a town or kingdom, whether they take control of an existing one, or build their own from the ground up.;Religion:Centers on the belief that humanity is related to supernatural, transcendental, and spiritual elements.;Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Succubus:Prominently features a character who is a succubus, a creature in medieval folklore that typically uses their sexual prowess to trap and seduce people to feed off them.;Kuudere:Prominently features a character who generally retains a cold, blunt and cynical exterior, but once one gets to know them, they have a very warm and loving interior.;Tanned Skin:Prominently features characters with tanned skin.;Dinosaurs:Prominently features Dinosaurs, prehistoric reptiles that went extinct millions of years ago.;CGI:Prominently features scenes created with computer-generated imagery.;Tsundere:Prominently features a character who acts cold and hostile in order to mask warmer emotions.;Agender:Prominently features agender characters.;Meta:Features fourth wall-breaking references to itself or genre tropes."
-  },
-  {
-    "index": "69.",
     "thumbnail": "images/anime/Fate_Grand Order_ Absolute Demonic Front - Babylonia Initium Iter.jpg",
     "name": "Fate/Grand Order: Absolute Demonic Front - Babylonia Initium Iter",
     "type": "Special",
@@ -1585,6 +1562,29 @@
     "series": "Fate",
     "rewatches": [],
     "tags": "Mythology:Prominently features mythological elements, especially those from religious or cultural tradition."
+  },
+  {
+    "index": "69.",
+    "thumbnail": "images/anime/Fate_Grand Order_ Absolute Demonic Front - Babylonia.jpg",
+    "name": "Fate/Grand Order: Absolute Demonic Front - Babylonia",
+    "type": "TV",
+    "studio": "CloverWorks",
+    "release_date": "2019-10-05T00:00:00",
+    "themes": "Isekai",
+    "genres": "Action; Fantasy",
+    "episodes": 21,
+    "episode_duration": 23.738,
+    "rating": 9,
+    "start_date": "2025-03-28T00:00:00",
+    "end_date": "2025-03-30T00:00:00",
+    "rewatch_count": 0,
+    "total_time": 498.498,
+    "dub": "ENG",
+    "status": "FINISHED",
+    "mal_url": "https://myanimelist.net/anime/38084/Fate_Grand_Order__Zettai_Majuu_Sensen_Babylonia",
+    "series": "Fate",
+    "rewatches": [],
+    "tags": "Mythology:Prominently features mythological elements, especially those from religious or cultural tradition.;Magic:Prominently features magical elements or the use of magic.;Time Manipulation:Prominently features time-traveling or other time-warping phenomena.;Gods:Prominently features a character of divine or religious nature.;Historical:Partly or completely set during a real period of world history.;Spearplay:Prominently features the use of spears in combat.;Swordplay:Prominently features the use of swords in combat.;Monster Girl:Prominently features a female character who is part-monster.;Kaiju:Prominently features giant monsters.;Anachronism:Prominently features elements that are out of place in the historical period the work takes place in, particularly modern elements in a historical setting.;Male Protagonist:Main character is male.;Kingdom Management:Characters in these series take on the responsibility of running a town or kingdom, whether they take control of an existing one, or build their own from the ground up.;Religion:Centers on the belief that humanity is related to supernatural, transcendental, and spiritual elements.;Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Succubus:Prominently features a character who is a succubus, a creature in medieval folklore that typically uses their sexual prowess to trap and seduce people to feed off them.;Kuudere:Prominently features a character who generally retains a cold, blunt and cynical exterior, but once one gets to know them, they have a very warm and loving interior.;Tanned Skin:Prominently features characters with tanned skin.;Dinosaurs:Prominently features Dinosaurs, prehistoric reptiles that went extinct millions of years ago.;CGI:Prominently features scenes created with computer-generated imagery.;Tsundere:Prominently features a character who acts cold and hostile in order to mask warmer emotions.;Agender:Prominently features agender characters.;Meta:Features fourth wall-breaking references to itself or genre tropes."
   },
   {
     "index": "70.",
@@ -2071,29 +2071,6 @@
   },
   {
     "index": "91.",
-    "thumbnail": "images/anime/Attack on Titan_ Lost Girls.jpg",
-    "name": "Attack on Titan: Lost Girls",
-    "type": "OVA",
-    "studio": "Wit Studio",
-    "release_date": "2017-12-08T00:00:00",
-    "themes": "X",
-    "genres": "Action; Drama",
-    "episodes": 3,
-    "episode_duration": 23.933,
-    "rating": 9,
-    "start_date": "2025-04-19T00:00:00",
-    "end_date": "2025-04-20T00:00:00",
-    "rewatch_count": 0,
-    "total_time": 71.799,
-    "dub": "ENG",
-    "status": "FINISHED",
-    "mal_url": "https://myanimelist.net/anime/36106/Shingeki_no_Kyojin__Lost_Girls",
-    "series": "Attack on Titan",
-    "rewatches": [],
-    "tags": "Female Protagonist:Main character is female.;Steampunk:Prominently features technology and designs inspired by 19th-century industrial steam-powered machinery.;Alternate Universe:Features multiple alternate universes in the same series.;Military:Centered around the life and activities of military personnel.;Coming of Age:Centers around a character's transition from childhood to adulthood.;Anti-Hero:Features a protagonist who lacks conventional heroic attributes and may be considered a borderline villain.;Primarily Female Cast:Main cast is mostly composed of female characters.;Super Power:Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible.;Shounen:Target demographic is teenage and young adult males.;War:Partly or completely set during wartime.;CGI:Prominently features scenes created with computer-generated imagery.;Mythology:Prominently features mythological elements, especially those from religious or cultural tradition."
-  },
-  {
-    "index": "92.",
     "thumbnail": "images/anime/Attack on Titan_ No Regrets.jpg",
     "name": "Attack on Titan: No Regrets",
     "type": "OVA",
@@ -2114,6 +2091,29 @@
     "series": "Attack on Titan",
     "rewatches": [],
     "tags": "Military:Centered around the life and activities of military personnel.;Male Protagonist:Main character is male.;Survival:Centers around the struggle to live in spite of extreme obstacles.;Gore:Prominently features graphic bloodshed and violence.;Orphan:Prominently features a character that is an orphan.;Anti-Hero:Features a protagonist who lacks conventional heroic attributes and may be considered a borderline villain.;Steampunk:Prominently features technology and designs inspired by 19th-century industrial steam-powered machinery.;Kaiju:Prominently features giant monsters.;Shounen:Target demographic is teenage and young adult males.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Primarily Male Cast:Main cast is mostly composed of male characters.;Class Struggle:Contains conflict born between the different social classes. Generally between an dominant elite and a suffering oppressed group.;Swordplay:Prominently features the use of swords in combat.;CGI:Prominently features scenes created with computer-generated imagery."
+  },
+  {
+    "index": "92.",
+    "thumbnail": "images/anime/Attack on Titan_ Lost Girls.jpg",
+    "name": "Attack on Titan: Lost Girls",
+    "type": "OVA",
+    "studio": "Wit Studio",
+    "release_date": "2017-12-08T00:00:00",
+    "themes": "X",
+    "genres": "Action; Drama",
+    "episodes": 3,
+    "episode_duration": 23.933,
+    "rating": 9,
+    "start_date": "2025-04-19T00:00:00",
+    "end_date": "2025-04-20T00:00:00",
+    "rewatch_count": 0,
+    "total_time": 71.799,
+    "dub": "ENG",
+    "status": "FINISHED",
+    "mal_url": "https://myanimelist.net/anime/36106/Shingeki_no_Kyojin__Lost_Girls",
+    "series": "Attack on Titan",
+    "rewatches": [],
+    "tags": "Female Protagonist:Main character is female.;Steampunk:Prominently features technology and designs inspired by 19th-century industrial steam-powered machinery.;Alternate Universe:Features multiple alternate universes in the same series.;Military:Centered around the life and activities of military personnel.;Coming of Age:Centers around a character's transition from childhood to adulthood.;Anti-Hero:Features a protagonist who lacks conventional heroic attributes and may be considered a borderline villain.;Primarily Female Cast:Main cast is mostly composed of female characters.;Super Power:Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible.;Shounen:Target demographic is teenage and young adult males.;War:Partly or completely set during wartime.;CGI:Prominently features scenes created with computer-generated imagery.;Mythology:Prominently features mythological elements, especially those from religious or cultural tradition."
   },
   {
     "index": "93.",
@@ -4716,29 +4716,6 @@
   },
   {
     "index": "206.",
-    "thumbnail": "images/anime/The Ancient Magus' Bride, S01.jpg",
-    "name": "The Ancient Magus' Bride, S01",
-    "type": "TV",
-    "studio": "Wit Studio",
-    "release_date": "2017-10-08T00:00:00",
-    "themes": "Mythology; Urban Fantasy",
-    "genres": "Drama; Fantasy; Romance",
-    "episodes": 24,
-    "episode_duration": 24.325,
-    "rating": 9,
-    "start_date": "2026-01-25T00:00:00",
-    "end_date": "2026-01-28T00:00:00",
-    "rewatch_count": 0,
-    "total_time": 583.8,
-    "dub": "ENG",
-    "status": "FINISHED",
-    "mal_url": "https://myanimelist.net/anime/35062/Mahoutsukai_no_Yome",
-    "series": "The Ancient Magus' Bride",
-    "rewatches": [],
-    "tags": "Magic:Prominently features magical elements or the use of magic.;Female Protagonist:Main character is female.;Fairy:Prominently features a character who is a fairy.;Mythology:Prominently features mythological elements, especially those from religious or cultural tradition.;Monster Boy:Prominently features a male character who is a part-monster.;Found Family:Features a group of characters with no biological relations that are united in a group providing social support.;Teacher:Protagonist is an educator, usually in a school setting.;Tragedy:Centers around tragic events and unhappy endings.;Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;Skeleton:Prominently features skeleton(s) as a character.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;Dragons:Prominently features mythical reptiles which generally have wings and can breathe fire.;Foreign:Partly or completely set in a country outside the country of origin.;Age Gap:Prominently features romantic relations between people with a significant age difference.;Philosophy:Relating or devoted to the study of the fundamental nature of knowledge, reality, and existence.;Shapeshifting:Features character(s) who changes one's appearance or form.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Rural:Partly or completely set in the countryside.;Chimera:Features a beast made by combining animals, usually with humans.;Suicide:The act or an instance of taking or attempting to take one's own life voluntarily and intentionally.;Travel:Centers around character(s) moving between places a significant distance apart.;Shounen:Target demographic is teenage and young adult males.;Witch:Prominently features a character who is a witch.;Male Harem:Main cast features the protagonist plus several male characters who are romantically interested in them.;Chibi:Features \"super deformed\" character designs with smaller, rounder proportions and a cute look."
-  },
-  {
-    "index": "207.",
     "thumbnail": "images/anime/The Ancient Magus' Bride_ Those Awaiting a Star.jpg",
     "name": "The Ancient Magus' Bride: Those Awaiting a Star",
     "type": "OVA",
@@ -4759,6 +4736,29 @@
     "series": "The Ancient Magus' Bride",
     "rewatches": [],
     "tags": "Magic:Prominently features magical elements or the use of magic.;Female Protagonist:Main character is female.;Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;Primarily Child Cast:Main cast is mostly composed of characters below a high school age.;Foreign:Partly or completely set in a country outside the country of origin.;Mythology:Prominently features mythological elements, especially those from religious or cultural tradition.;Rural:Partly or completely set in the countryside.;Skeleton:Prominently features skeleton(s) as a character."
+  },
+  {
+    "index": "207.",
+    "thumbnail": "images/anime/The Ancient Magus' Bride, S01.jpg",
+    "name": "The Ancient Magus' Bride, S01",
+    "type": "TV",
+    "studio": "Wit Studio",
+    "release_date": "2017-10-08T00:00:00",
+    "themes": "Mythology; Urban Fantasy",
+    "genres": "Drama; Fantasy; Romance",
+    "episodes": 24,
+    "episode_duration": 24.325,
+    "rating": 9,
+    "start_date": "2026-01-25T00:00:00",
+    "end_date": "2026-01-28T00:00:00",
+    "rewatch_count": 0,
+    "total_time": 583.8,
+    "dub": "ENG",
+    "status": "FINISHED",
+    "mal_url": "https://myanimelist.net/anime/35062/Mahoutsukai_no_Yome",
+    "series": "The Ancient Magus' Bride",
+    "rewatches": [],
+    "tags": "Magic:Prominently features magical elements or the use of magic.;Female Protagonist:Main character is female.;Fairy:Prominently features a character who is a fairy.;Mythology:Prominently features mythological elements, especially those from religious or cultural tradition.;Monster Boy:Prominently features a male character who is a part-monster.;Found Family:Features a group of characters with no biological relations that are united in a group providing social support.;Teacher:Protagonist is an educator, usually in a school setting.;Tragedy:Centers around tragic events and unhappy endings.;Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;Skeleton:Prominently features skeleton(s) as a character.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;Dragons:Prominently features mythical reptiles which generally have wings and can breathe fire.;Foreign:Partly or completely set in a country outside the country of origin.;Age Gap:Prominently features romantic relations between people with a significant age difference.;Philosophy:Relating or devoted to the study of the fundamental nature of knowledge, reality, and existence.;Shapeshifting:Features character(s) who changes one's appearance or form.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Rural:Partly or completely set in the countryside.;Chimera:Features a beast made by combining animals, usually with humans.;Suicide:The act or an instance of taking or attempting to take one's own life voluntarily and intentionally.;Travel:Centers around character(s) moving between places a significant distance apart.;Shounen:Target demographic is teenage and young adult males.;Witch:Prominently features a character who is a witch.;Male Harem:Main cast features the protagonist plus several male characters who are romantically interested in them.;Chibi:Features \"super deformed\" character designs with smaller, rounder proportions and a cute look."
   },
   {
     "index": "208.",
@@ -7591,6 +7591,29 @@
   },
   {
     "index": "331.",
+    "thumbnail": "images/anime/Ergo Proxy.jpg",
+    "name": "Ergo Proxy",
+    "type": "TV",
+    "studio": "Manglobe",
+    "release_date": "2006-02-25T00:00:00",
+    "themes": "Adult Cast; Psychological",
+    "genres": "Mystery; Sci-Fi; Suspense",
+    "episodes": 23,
+    "episode_duration": 25.961,
+    "rating": 9,
+    "start_date": "2026-02-24T00:00:00",
+    "end_date": "2026-02-27T00:00:00",
+    "rewatch_count": 0,
+    "total_time": 597.103,
+    "dub": "ENG",
+    "status": "FINISHED",
+    "mal_url": "https://myanimelist.net/anime/790/Ergo_Proxy",
+    "series": null,
+    "rewatches": [],
+    "tags": null
+  },
+  {
+    "index": "332.",
     "thumbnail": "images/anime/Death Note.jpg",
     "name": "Death Note",
     "type": "TV",
@@ -7613,7 +7636,7 @@
     "tags": "Crime:Centers around unlawful activities punishable by the state or other authority.;Detective:Features a character who investigates and solves crimes.;Anti-Hero:Features a protagonist who lacks conventional heroic attributes and may be considered a borderline villain.;Male Protagonist:Main character is male.;Police:Centers around the life and activities of law enforcement officers.;Fugitive:Prominently features a character evading capture by an individual or organization.;Philosophy:Relating or devoted to the study of the fundamental nature of knowledge, reality, and existence.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Gods:Prominently features a character of divine or religious nature.;Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;Primarily Male Cast:Main cast is mostly composed of male characters.;Urban:Partly or completely set in a city.;Unrequited Love:One or more characters are experiencing an unrequited love that may or may not be reciprocated.;Yandere:Prominently features a character who is obsessively in love with another, to the point of acting deranged or violent.;Shounen:Target demographic is teenage and young adult males.;Espionage:Prominently features characters infiltrating an organization in order to steal sensitive information.;Acting:Centers around actors or the acting industry.;Time Skip:Features a gap in time used to advance the story.;Assassins:Centers around characters who murder people as a profession."
   },
   {
-    "index": "332.",
+    "index": "333.",
     "thumbnail": "images/anime/Fullmetal Alchemist_ Brotherhood.jpg",
     "name": "Fullmetal Alchemist: Brotherhood",
     "type": "TV",
@@ -7636,7 +7659,7 @@
     "tags": "Alchemy:Features character(s) who practice alchemy.;Military:Centered around the life and activities of military personnel.;War:Partly or completely set during wartime.;Shounen:Target demographic is teenage and young adult males.;Politics:Centers around politics, politicians, or government activities.;Male Protagonist:Main character is male.;Philosophy:Relating or devoted to the study of the fundamental nature of knowledge, reality, and existence.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Coming of Age:Centers around a character's transition from childhood to adulthood.;Super Power:Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible.;Steampunk:Prominently features technology and designs inspired by 19th-century industrial steam-powered machinery.;Disability:A work that features one or more characters with a physical, mental, cognitive, or developmental condition that impairs, interferes with, or limits the person's ability to engage in certain tasks or actions.;Cyborg:Prominently features a human character whose physiological functions are aided or enhanced by artificial means.;Revenge:Prominently features a character who aims to exact punishment in a resentful or vindictive manner.;Necromancy:When the dead are summoned as spirits, skeletons, or the undead, usually for the purpose of gaining information or to be used as a weapon.;Anachronism:Prominently features elements that are out of place in the historical period the work takes place in, particularly modern elements in a historical setting.;Religion:Centers on the belief that humanity is related to supernatural, transcendental, and spiritual elements.;Travel:Centers around character(s) moving between places a significant distance apart.;Primarily Male Cast:Main cast is mostly composed of male characters.;Slapstick:Prominently features comedy based on deliberately clumsy actions or embarrassing events.;Body Horror:Features characters who undergo horrific transformations or disfigurement, often to their own detriment.;Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;Kuudere:Prominently features a character who generally retains a cold, blunt and cynical exterior, but once one gets to know them, they have a very warm and loving interior.;Shapeshifting:Features character(s) who changes one's appearance or form.;Tomboy:Features a girl who exhibits characteristics or behaviors considered in many cultures to be typical of boys.;Guns:Prominently features the use of guns in combat.;Chibi:Features \"super deformed\" character designs with smaller, rounder proportions and a cute look.;Swordplay:Prominently features the use of swords in combat.;Trains:Prominently features trains.;Adoption:Features a character who has been adopted by someone who is neither of their biological parents.;Desert:Prominently features a desert environment.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;Tanned Skin:Prominently features characters with tanned skin.;Tsundere:Prominently features a character who acts cold and hostile in order to mask warmer emotions."
   },
   {
-    "index": "333.",
+    "index": "334.",
     "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark), S04 Part 2.jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S04 Part 2",
     "type": "TV",
@@ -7659,7 +7682,7 @@
     "tags": "Dungeon:Prominently features a dungeon environment.;Elf:Prominently features a character who is an elf.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Male Protagonist:Main character is male.;Gods:Prominently features a character of divine or religious nature.;Gore:Prominently features graphic bloodshed and violence.;Mythology:Prominently features mythological elements, especially those from religious or cultural tradition.;Travel:Centers around character(s) moving between places a significant distance apart.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Kemonomimi:Prominently features humanoid characters with animal ears.;Female Harem:Main cast features the protagonist plus several female characters who are romantically interested in them.;Mermaid:A mythological creature with the body of a human and the tail of a fish.;CGI:Prominently features scenes created with computer-generated imagery.;Nekomimi:Humanoid characters with cat-like features such as cat ears and a tail.;Nudity:Features a character wearing no clothing or exposing intimate body parts.;Monster Girl:Prominently features a female character who is part-monster.;Primarily Female Cast:Main cast is mostly composed of female characters.;Tanned Skin:Prominently features characters with tanned skin.;Female Protagonist:Main character is female."
   },
   {
-    "index": "334.",
+    "index": "335.",
     "thumbnail": "images/anime/The Melancholy of Haruhi Suzumiya, S01.jpg",
     "name": "The Melancholy of Haruhi Suzumiya, S01",
     "type": "TV",
@@ -7682,7 +7705,7 @@
     "tags": "School Club:Partly or completely set in a school club scene.;Achronological Order:Chapters or episodes do not occur in chronological order.;Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;School:Partly or completely set in a primary or secondary educational institution.;Primarily Teen Cast:Main cast is mostly composed of teen characters.;Time Manipulation:Prominently features time-traveling or other time-warping phenomena.;Meta:Features fourth wall-breaking references to itself or genre tropes.;Aliens:Prominently features extraterrestrial lifeforms.;Philosophy:Relating or devoted to the study of the fundamental nature of knowledge, reality, and existence.;Parody:Features deliberate exaggeration of popular tropes or a particular genre to comedic effect.;Male Protagonist:Main character is male.;Magic:Prominently features magical elements or the use of magic.;Otaku Culture:Centers around the culture of a fanatical fan-base.;Female Protagonist:Main character is female.;Tsundere:Prominently features a character who acts cold and hostile in order to mask warmer emotions.;Filmmaking:Centers around the art of filmmaking.;Kuudere:Prominently features a character who generally retains a cold, blunt and cynical exterior, but once one gets to know them, they have a very warm and loving interior.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Episodic:Features story arcs that are loosely tied or lack an overarching plot.;Unrequited Love:One or more characters are experiencing an unrequited love that may or may not be reciprocated.;Baseball:Centers around the sport of baseball.;Maids:Prominently features a character who is a maid."
   },
   {
-    "index": "335.",
+    "index": "336.",
     "thumbnail": "images/anime/Fate_stay night [Unlimited Blade Works], S02.jpg",
     "name": "Fate/stay night [Unlimited Blade Works], S02",
     "type": "TV",
@@ -7705,7 +7728,7 @@
     "tags": "Magic:Prominently features magical elements or the use of magic.;Battle Royale:Centers around a fierce group competition, often violent and with only one winner.;Death Game:Features characters participating in a game, where failure results in death.;Mythology:Prominently features mythological elements, especially those from religious or cultural tradition.;Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;Spearplay:Prominently features the use of spears in combat.;Philosophy:Relating or devoted to the study of the fundamental nature of knowledge, reality, and existence.;Swordplay:Prominently features the use of swords in combat.;Super Power:Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible.;Tsundere:Prominently features a character who acts cold and hostile in order to mask warmer emotions.;Archery:Centers around the sport of archery, or prominently features the use of archery in combat.;Tanned Skin:Prominently features characters with tanned skin.;Kuudere:Prominently features a character who generally retains a cold, blunt and cynical exterior, but once one gets to know them, they have a very warm and loving interior.;CGI:Prominently features scenes created with computer-generated imagery.;Witch:Prominently features a character who is a witch.;Slavery:Prominently features slaves, slavery, or slave trade."
   },
   {
-    "index": "336.",
+    "index": "337.",
     "thumbnail": "images/anime/Girls und Panzer.jpg",
     "name": "Girls und Panzer",
     "type": "TV",
@@ -7728,7 +7751,7 @@
     "tags": "Tanks:Prominently features the use of tanks or other armoured vehicles.;Primarily Female Cast:Main cast is mostly composed of female characters.;Female Protagonist:Main character is female.;Military:Centered around the life and activities of military personnel.;School Club:Partly or completely set in a school club scene.;Cute Girls Doing Cute Things:Centers around female characters doing cute activities, usually with little to no emphasis on drama and conflict._x000D_;Primarily Teen Cast:Main cast is mostly composed of teen characters.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Historical:Partly or completely set during a real period of world history.;School:Partly or completely set in a primary or secondary educational institution.;Parody:Features deliberate exaggeration of popular tropes or a particular genre to comedic effect.;CGI:Prominently features scenes created with computer-generated imagery.;Volleyball:Centers around the sport of volleyball."
   },
   {
-    "index": "337.",
+    "index": "338.",
     "thumbnail": "images/anime/Girls und Panzer Der Film.jpg",
     "name": "Girls und Panzer Der Film",
     "type": "Movie",
@@ -7751,7 +7774,7 @@
     "tags": "Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Tanks:Prominently features the use of tanks or other armoured vehicles.;Military:Centered around the life and activities of military personnel.;Female Protagonist:Main character is female.;School:Partly or completely set in a primary or secondary educational institution.;Primarily Female Cast:Main cast is mostly composed of female characters.;Cute Girls Doing Cute Things:Centers around female characters doing cute activities, usually with little to no emphasis on drama and conflict._x000D_;School Club:Partly or completely set in a school club scene.;CGI:Prominently features scenes created with computer-generated imagery.;Primarily Teen Cast:Main cast is mostly composed of teen characters."
   },
   {
-    "index": "338.",
+    "index": "339.",
     "thumbnail": "images/anime/Fate_stay night [Unlimited Blade Works], S02_ Sunny Day.jpg",
     "name": "Fate/stay night [Unlimited Blade Works], S02: Sunny Day",
     "type": "Special",
@@ -7774,7 +7797,7 @@
     "tags": "Magic:Prominently features magical elements or the use of magic.;Alternate Universe:Features multiple alternate universes in the same series.;Bisexual:Features a character who is romantically or sexually attracted to people of more than one sex or gender.;Love Triangle:Centered around romantic feelings between more than two people. Includes all love polygons.;Gender Bending:Prominently features a character who dresses and behaves in a way characteristic of another gender, or has been transformed into a person of another gender."
   },
   {
-    "index": "339.",
+    "index": "340.",
     "thumbnail": "images/anime/That Time I Got Reincarnated as a Slime, S01.jpg",
     "name": "That Time I Got Reincarnated as a Slime, S01",
     "type": "TV",
@@ -7797,7 +7820,7 @@
     "tags": "Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Found Family:Features a group of characters with no biological relations that are united in a group providing social support.;Reincarnation:Features a character being born again after death, typically as another person or in another world.;Magic:Prominently features magical elements or the use of magic.;Super Power:Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible.;Shapeshifting:Features character(s) who changes one's appearance or form.;Economics:Centers around the field of economics.;Femboy:Features a boy who exhibits characteristics or behaviors considered in many cultures to be typical of girls.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Clone:Prominently features a character who is an artificial exact copy of another organism.;Politics:Centers around politics, politicians, or government activities.;Monster Boy:Prominently features a male character who is a part-monster.;Henshin:Prominently features character or costume transformations which often grant special abilities.;Monster Girl:Prominently features a female character who is part-monster.;Male Protagonist:Main character is male.;Fairy:Prominently features a character who is a fairy.;Demons:Prominently features malevolent otherworldly creatures.;Gender Bending:Prominently features a character who dresses and behaves in a way characteristic of another gender, or has been transformed into a person of another gender.;Goblin:A goblin is a monstrous creature from European folklore. They are almost always small and grotesque, mischievous or outright malicious, and greedy. Sometimes with magical abilities.;Travel:Centers around character(s) moving between places a significant distance apart.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Creature Taming:Features the taming of animals, monsters, or other creatures.;Swordplay:Prominently features the use of swords in combat.;Acting:Centers around actors or the acting industry.;Dragons:Prominently features mythical reptiles which generally have wings and can breathe fire.;Shounen:Target demographic is teenage and young adult males.;Female Harem:Main cast features the protagonist plus several female characters who are romantically interested in them.;Elf:Prominently features a character who is an elf."
   },
   {
-    "index": "340.",
+    "index": "341.",
     "thumbnail": "images/anime/Yukikaze.jpg",
     "name": "Yukikaze",
     "type": "OVA",
@@ -7820,7 +7843,7 @@
     "tags": "Aviation:Regarding the flying or operation of aircraft.;Military:Centered around the life and activities of military personnel.;Full CGI:Almost entirely created with computer-generated imagery.;CGI:Prominently features scenes created with computer-generated imagery.;War:Partly or completely set during wartime.;Male Protagonist:Main character is male.;Aliens:Prominently features extraterrestrial lifeforms.;Artificial Intelligence:Intelligent non-organic machines that work and react similarly to humans.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Space:Partly or completely set in outer space."
   },
   {
-    "index": "341.",
+    "index": "342.",
     "thumbnail": "images/anime/Legend of the Galactic Heroes_ Die Neue These - Collision.jpg",
     "name": "Legend of the Galactic Heroes: Die Neue These - Collision",
     "type": "TV",
@@ -7843,7 +7866,7 @@
     "tags": "Space Opera:Centers around space warfare, advanced technology, chivalric romance and adventure.;Politics:Centers around politics, politicians, or government activities.;War:Partly or completely set during wartime.;Military:Centered around the life and activities of military personnel.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Male Protagonist:Main character is male.;Space:Partly or completely set in outer space.;Philosophy:Relating or devoted to the study of the fundamental nature of knowledge, reality, and existence.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Primarily Male Cast:Main cast is mostly composed of male characters.;CGI:Prominently features scenes created with computer-generated imagery."
   },
   {
-    "index": "342.",
+    "index": "343.",
     "thumbnail": "images/anime/Code Geass_ Lelouch of the Re;surrection.jpg",
     "name": "Code Geass: Lelouch of the Re;surrection",
     "type": "Movie",
@@ -7866,7 +7889,7 @@
     "tags": "Anti-Hero:Features a protagonist who lacks conventional heroic attributes and may be considered a borderline villain.;Politics:Centers around politics, politicians, or government activities.;Female Protagonist:Main character is female.;Alternate Universe:Features multiple alternate universes in the same series.;Military:Centered around the life and activities of military personnel.;Super Power:Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible.;Male Protagonist:Main character is male.;Super Robot:Prominently features large robots often piloted by hot-blooded protagonists.;Foreign:Partly or completely set in a country outside the country of origin.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Real Robot:Prominently features mechanical designs loosely influenced by real-world robotics."
   },
   {
-    "index": "343.",
+    "index": "344.",
     "thumbnail": "images/anime/Fate_stay night_ Heaven's Feel - I. Presage Flower.jpg",
     "name": "Fate/stay night: Heaven's Feel - I. Presage Flower",
     "type": "Movie",
@@ -7889,7 +7912,7 @@
     "tags": "Battle Royale:Centers around a fierce group competition, often violent and with only one winner.;Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;Magic:Prominently features magical elements or the use of magic.;Assassins:Centers around characters who murder people as a profession.;Swordplay:Prominently features the use of swords in combat.;Orphan:Prominently features a character that is an orphan.;Necromancy:When the dead are summoned as spirits, skeletons, or the undead, usually for the purpose of gaining information or to be used as a weapon.;Mythology:Prominently features mythological elements, especially those from religious or cultural tradition.;Female Protagonist:Main character is female.;Demons:Prominently features malevolent otherworldly creatures.;Male Protagonist:Main character is male.;School:Partly or completely set in a primary or secondary educational institution.;Gore:Prominently features graphic bloodshed and violence.;CGI:Prominently features scenes created with computer-generated imagery.;Found Family:Features a group of characters with no biological relations that are united in a group providing social support.;Archery:Centers around the sport of archery, or prominently features the use of archery in combat.;Super Power:Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible.;War:Partly or completely set during wartime.;Urban:Partly or completely set in a city.;Primarily Teen Cast:Main cast is mostly composed of teen characters.;School Club:Partly or completely set in a school club scene.;Kuudere:Prominently features a character who generally retains a cold, blunt and cynical exterior, but once one gets to know them, they have a very warm and loving interior.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;Spearplay:Prominently features the use of spears in combat.;Food:Centers around cooking or food appraisal.;Witch:Prominently features a character who is a witch.;Religion:Centers on the belief that humanity is related to supernatural, transcendental, and spiritual elements.;Tsundere:Prominently features a character who acts cold and hostile in order to mask warmer emotions."
   },
   {
-    "index": "344.",
+    "index": "345.",
     "thumbnail": "images/anime/Sword Art Online, S01.jpg",
     "name": "Sword Art Online, S01",
     "type": "TV",
@@ -7912,7 +7935,7 @@
     "tags": "Virtual World:Partly or completely set in the world inside a video game.;Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Video Games:Centers around characters playing video games.;Male Protagonist:Main character is male.;Swordplay:Prominently features the use of swords in combat.;Primarily Teen Cast:Main cast is mostly composed of teen characters.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;Primarily Female Cast:Main cast is mostly composed of female characters.;Time Skip:Features a gap in time used to advance the story.;Female Harem:Main cast features the protagonist plus several female characters who are romantically interested in them.;Found Family:Features a group of characters with no biological relations that are united in a group providing social support.;Artificial Intelligence:Intelligent non-organic machines that work and react similarly to humans.;Fairy:Prominently features a character who is a fairy.;Travel:Centers around character(s) moving between places a significant distance apart.;Prison:Partly or completely set in a prison.;Fishing:Centers around the sport of fishing.;Shounen:Target demographic is teenage and young adult males.;Inseki:Features sexual or romantic relations among step, adopted, and other non-blood related family members."
   },
   {
-    "index": "345.",
+    "index": "346.",
     "thumbnail": "images/anime/Steins;Gate.jpg",
     "name": "Steins;Gate",
     "type": "TV",
@@ -7935,7 +7958,7 @@
     "tags": "Time Manipulation:Prominently features time-traveling or other time-warping phenomena.;Time Loop:A character is stuck in a repetitive cycle that they are attempting to break out of. This is distinct from a manipulating time of their own choice.;Male Protagonist:Main character is male.;Urban:Partly or completely set in a city.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Denpa:Works that feature themes of social dissociation, delusions, and other issues like suicide, bullying, self-isolation, paranoia, and technological necessity in daily lives. Classic iconography: telephone poles, rooftops, and trains.;Philosophy:Relating or devoted to the study of the fundamental nature of knowledge, reality, and existence.;Dissociative Identities:A case where one or more people share the same body.;Chuunibyou:Prominently features a character with \"Middle School 2nd Year Syndrome\", who either acts like a know-it-all adult or falsely believes they have special powers.;Tsundere:Prominently features a character who acts cold and hostile in order to mask warmer emotions.;Otaku Culture:Centers around the culture of a fanatical fan-base.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;Kuudere:Prominently features a character who generally retains a cold, blunt and cynical exterior, but once one gets to know them, they have a very warm and loving interior.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Amnesia:Prominently features a character(s) with memory loss.;Seinen:Target demographic is adult males.;Gender Bending:Prominently features a character who dresses and behaves in a way characteristic of another gender, or has been transformed into a person of another gender.;Maids:Prominently features a character who is a maid.;Trains:Prominently features trains.;Shrine Maiden:Prominently features a character who is a shrine maiden."
   },
   {
-    "index": "346.",
+    "index": "347.",
     "thumbnail": "images/anime/Higurashi_ When They Cry – Rei.jpg",
     "name": "Higurashi: When They Cry – Rei",
     "type": "OVA",
@@ -7958,7 +7981,7 @@
     "tags": "Denpa:Works that feature themes of social dissociation, delusions, and other issues like suicide, bullying, self-isolation, paranoia, and technological necessity in daily lives. Classic iconography: telephone poles, rooftops, and trains.;Shrine Maiden:Prominently features a character who is a shrine maiden.;Twins:Prominently features two or more siblings that were born at one birth.;Rural:Partly or completely set in the countryside.;Primarily Female Cast:Main cast is mostly composed of female characters.;Tragedy:Centers around tragic events and unhappy endings.;Female Protagonist:Main character is female.;Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;Cute Girls Doing Cute Things:Centers around female characters doing cute activities, usually with little to no emphasis on drama and conflict._x000D_;Philosophy:Relating or devoted to the study of the fundamental nature of knowledge, reality, and existence.;Gore:Prominently features graphic bloodshed and violence.;Slapstick:Prominently features comedy based on deliberately clumsy actions or embarrassing events."
   },
   {
-    "index": "347.",
+    "index": "348.",
     "thumbnail": "images/anime/Re_Zero - Starting Life in Another World, S02 Part 2.jpg",
     "name": "Re:Zero -Starting Life in Another World-, S02 Part 2",
     "type": "TV",
@@ -7981,7 +8004,7 @@
     "tags": "Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Time Manipulation:Prominently features time-traveling or other time-warping phenomena.;Male Protagonist:Main character is male.;Witch:Prominently features a character who is a witch.;Magic:Prominently features magical elements or the use of magic.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Alternate Universe:Features multiple alternate universes in the same series.;Elf:Prominently features a character who is an elf.;Gore:Prominently features graphic bloodshed and violence.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;Maids:Prominently features a character who is a maid.;Monster Girl:Prominently features a female character who is part-monster.;Monster Boy:Prominently features a male character who is a part-monster.;Hikikomori:Prominently features a character who withdraws from social life, often seeking extreme isolation.;Primarily Female Cast:Main cast is mostly composed of female characters.;Time Loop:A character is stuck in a repetitive cycle that they are attempting to break out of. This is distinct from a manipulating time of their own choice.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Assassins:Centers around characters who murder people as a profession.;Seinen:Target demographic is adult males.;Female Harem:Main cast features the protagonist plus several female characters who are romantically interested in them.;Foreign:Partly or completely set in a country outside the country of origin."
   },
   {
-    "index": "348.",
+    "index": "349.",
     "thumbnail": "images/anime/Cyberpunk Edgerunners, S01.jpg",
     "name": "Cyberpunk Edgerunners, S01",
     "type": "ONA",
@@ -8004,7 +8027,7 @@
     "tags": "Cyberpunk:Set in a future of advanced technological and scientific achievements that have resulted in social disorder.;Crime:Centers around unlawful activities punishable by the state or other authority.;Dystopian:Partly or completely set in a society characterized by poverty, squalor or oppression.;Cyborg:Prominently features a human character whose physiological functions are aided or enhanced by artificial means.;Class Struggle:Contains conflict born between the different social classes. Generally between an dominant elite and a suffering oppressed group.;Male Protagonist:Main character is male.;Urban:Partly or completely set in a city.;Gangs:Centers around gang organizations.;Orphan:Prominently features a character that is an orphan.;Guns:Prominently features the use of guns in combat.;Gore:Prominently features graphic bloodshed and violence.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Drugs:Prominently features the usage of drugs such as opioids, stimulants, hallucinogens etc.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;Coming of Age:Centers around a character's transition from childhood to adulthood.;Nudity:Features a character wearing no clothing or exposing intimate body parts.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Artificial Intelligence:Intelligent non-organic machines that work and react similarly to humans.;Time Manipulation:Prominently features time-traveling or other time-warping phenomena.;Robots:Prominently features humanoid machines.;Software Development:Centers around characters developing or programming a piece of technology, software, gaming, etc.;Age Gap:Prominently features romantic relations between people with a significant age difference.;Cars:Centers around the use of automotive vehicles.;Tomboy:Features a girl who exhibits characteristics or behaviors considered in many cultures to be typical of boys."
   },
   {
-    "index": "349.",
+    "index": "350.",
     "thumbnail": "images/anime/Chainsaw Man.jpg",
     "name": "Chainsaw Man",
     "type": "TV",
@@ -8027,7 +8050,7 @@
     "tags": "Demons:Prominently features malevolent otherworldly creatures.;Monster Boy:Prominently features a male character who is a part-monster.;Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;Male Protagonist:Main character is male.;Gore:Prominently features graphic bloodshed and violence.;Tragedy:Centers around tragic events and unhappy endings.;Shapeshifting:Features character(s) who changes one's appearance or form.;Body Horror:Features characters who undergo horrific transformations or disfigurement, often to their own detriment.;Urban:Partly or completely set in a city.;Henshin:Prominently features character or costume transformations which often grant special abilities.;Psychosexual:Work that involves the psychological aspects of sexual impulses.;Shounen:Target demographic is teenage and young adult males.;Surreal Comedy:Prominently features comedic moments that defy casual reasoning, resulting in illogical events.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Monster Girl:Prominently features a female character who is part-monster.;Yakuza:Centered around Japanese organised crime syndicates.;Anthropomorphism:Contains non-human character(s) that have attributes or characteristics of a human being.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;Found Family:Features a group of characters with no biological relations that are united in a group providing social support.;Crime:Centers around unlawful activities punishable by the state or other authority.;CGI:Prominently features scenes created with computer-generated imagery.;Police:Centers around the life and activities of law enforcement officers.;POV:Point of View; features scenes shown from the perspective of the series protagonist.;Homeless:Prominently features a character that is homeless.;Nudity:Features a character wearing no clothing or exposing intimate body parts."
   },
   {
-    "index": "350.",
+    "index": "351.",
     "thumbnail": "images/anime/Kaiju No.8, S01.jpg",
     "name": "Kaiju No.8, S01",
     "type": "TV",
@@ -8050,7 +8073,7 @@
     "tags": "Kaiju:Prominently features giant monsters.;Monster Boy:Prominently features a male character who is a part-monster.;Shapeshifting:Features character(s) who changes one's appearance or form.;Male Protagonist:Main character is male.;Super Power:Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible.;Henshin:Prominently features character or costume transformations which often grant special abilities.;Shounen:Target demographic is teenage and young adult males.;Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;Military:Centered around the life and activities of military personnel.;Work:Centers around the activities of a certain occupation.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Guns:Prominently features the use of guns in combat.;Rescue:Centers around operations that carry out urgent treatment of injuries, remove people from danger, or save lives. This includes series that are about search-and-rescue teams, trauma surgeons, firefighters, and more.;Gore:Prominently features graphic bloodshed and violence.;Tokusatsu:Prominently features elements that resemble special effects in Japanese live-action shows;Kuudere:Prominently features a character who generally retains a cold, blunt and cynical exterior, but once one gets to know them, they have a very warm and loving interior.;Slapstick:Prominently features comedy based on deliberately clumsy actions or embarrassing events.;Tsundere:Prominently features a character who acts cold and hostile in order to mask warmer emotions.;Ojou-sama:Features a wealthy, high-class, oftentimes stuck up and demanding female character.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;Body Horror:Features characters who undergo horrific transformations or disfigurement, often to their own detriment.;Swordplay:Prominently features the use of swords in combat."
   },
   {
-    "index": "351.",
+    "index": "352.",
     "thumbnail": "images/anime/Classroom of the Elite, S03.jpg",
     "name": "Classroom of the Elite, S03",
     "type": "TV",
@@ -8063,8 +8086,8 @@
     "rating": 9,
     "start_date": "2024-09-18T00:00:00",
     "end_date": "2024-09-19T00:00:00",
-    "rewatch_count": 0,
-    "total_time": 307.67100000000005,
+    "rewatch_count": 1,
+    "total_time": 615.3420000000001,
     "dub": "ENG",
     "status": "FINISHED",
     "mal_url": "https://myanimelist.net/anime/51180/Youkoso_Jitsuryoku_Shijou_Shugi_no_Kyoushitsu_e_3rd_Season",
@@ -8073,7 +8096,7 @@
     "tags": "School:Partly or completely set in a primary or secondary educational institution.;Male Protagonist:Main character is male.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Primarily Teen Cast:Main cast is mostly composed of teen characters.;Philosophy:Relating or devoted to the study of the fundamental nature of knowledge, reality, and existence.;Coming of Age:Centers around a character's transition from childhood to adulthood.;Revenge:Prominently features a character who aims to exact punishment in a resentful or vindictive manner.;Survival:Centers around the struggle to live in spite of extreme obstacles.;Bullying:Prominently features the use of force for intimidation, often in a school setting.;Disability:A work that features one or more characters with a physical, mental, cognitive, or developmental condition that impairs, interferes with, or limits the person's ability to engage in certain tasks or actions.;School Club:Partly or completely set in a school club scene.;Kuudere:Prominently features a character who generally retains a cold, blunt and cynical exterior, but once one gets to know them, they have a very warm and loving interior.;Female Harem:Main cast features the protagonist plus several female characters who are romantically interested in them.;Boarding School:Features characters attending a boarding school.;Athletics:Centers around sporting events that involve competitive running, jumping, throwing, or walking.;Tsundere:Prominently features a character who acts cold and hostile in order to mask warmer emotions.;Love Triangle:Centered around romantic feelings between more than two people. Includes all love polygons.;Delinquents:Features characters with a notorious image and attitude, sometimes referred to as \"yankees\"."
   },
   {
-    "index": "352.",
+    "index": "353.",
     "thumbnail": "images/anime/Frieren_ Beyond Journey's End, S01.jpg",
     "name": "Frieren: Beyond Journey's End, S01",
     "type": "TV",
@@ -8096,7 +8119,7 @@
     "tags": "Travel:Centers around character(s) moving between places a significant distance apart.;Magic:Prominently features magical elements or the use of magic.;Elf:Prominently features a character who is an elf.;Philosophy:Relating or devoted to the study of the fundamental nature of knowledge, reality, and existence.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Female Protagonist:Main character is female.;Spearplay:Prominently features the use of spears in combat.;Found Family:Features a group of characters with no biological relations that are united in a group providing social support.;Iyashikei:Primary aim is to heal the audience through serene depictions of characters' daily lives.;Kuudere:Prominently features a character who generally retains a cold, blunt and cynical exterior, but once one gets to know them, they have a very warm and loving interior.;Demons:Prominently features malevolent otherworldly creatures.;Foreign:Partly or completely set in a country outside the country of origin.;Adoption:Features a character who has been adopted by someone who is neither of their biological parents.;Rural:Partly or completely set in the countryside.;Episodic:Features story arcs that are loosely tied or lack an overarching plot.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;Aromantic:Features a character who experiences little to no romantic attraction.;Dungeon:Prominently features a dungeon environment.;Shounen:Target demographic is teenage and young adult males.;Rotoscoping:Animation technique that animators use to trace over motion picture footage, frame by frame, to produce realistic action.;Religion:Centers on the belief that humanity is related to supernatural, transcendental, and spiritual elements.;Snowscape:Prominently or partially set in a snowy environment.;Food:Centers around cooking or food appraisal.;Dragons:Prominently features mythical reptiles which generally have wings and can breathe fire.;Horticulture:The story prominently features plant care and gardening."
   },
   {
-    "index": "353.",
+    "index": "354.",
     "thumbnail": "images/anime/KonoSuba_ God's Blessing on This Wonderful World!, S03.jpg",
     "name": "KonoSuba: God's Blessing on This Wonderful World!, S03",
     "type": "TV",
@@ -8119,7 +8142,7 @@
     "tags": "Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Parody:Features deliberate exaggeration of popular tropes or a particular genre to comedic effect.;Satire:Prominently features the use of comedy or ridicule to expose and criticise social phenomena.;Anti-Hero:Features a protagonist who lacks conventional heroic attributes and may be considered a borderline villain.;Slapstick:Prominently features comedy based on deliberately clumsy actions or embarrassing events.;Magic:Prominently features magical elements or the use of magic.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Alternate Universe:Features multiple alternate universes in the same series.;Gods:Prominently features a character of divine or religious nature.;Male Protagonist:Main character is male.;Primarily Female Cast:Main cast is mostly composed of female characters.;Chuunibyou:Prominently features a character with \"Middle School 2nd Year Syndrome\", who either acts like a know-it-all adult or falsely believes they have special powers.;Afterlife:Partly or completely set in the afterlife.;Demons:Prominently features malevolent otherworldly creatures.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Female Harem:Main cast features the protagonist plus several female characters who are romantically interested in them.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights."
   },
   {
-    "index": "354.",
+    "index": "355.",
     "thumbnail": "images/anime/Re_Zero - Starting Life in Another World, S03.jpg",
     "name": "Re:Zero -Starting Life in Another World-, S03",
     "type": "TV",
@@ -8142,7 +8165,7 @@
     "tags": "Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Time Manipulation:Prominently features time-traveling or other time-warping phenomena.;Time Loop:A character is stuck in a repetitive cycle that they are attempting to break out of. This is distinct from a manipulating time of their own choice.;Male Protagonist:Main character is male.;Cult:Features a social group with unorthodox religious, spiritual, or philosophical beliefs and practices.;Magic:Prominently features magical elements or the use of magic.;Witch:Prominently features a character who is a witch.;Royal Affairs:Features nobility, alliances, arranged marriage, succession disputes, religious orders and other elements of royal politics.;Anthropomorphism:Contains non-human character(s) that have attributes or characteristics of a human being.;Gore:Prominently features graphic bloodshed and violence.;Elf:Prominently features a character who is an elf.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;Politics:Centers around politics, politicians, or government activities.;Tragedy:Centers around tragic events and unhappy endings.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Time Skip:Features a gap in time used to advance the story.;Super Power:Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible.;Ojou-sama:Features a wealthy, high-class, oftentimes stuck up and demanding female character.;Swordplay:Prominently features the use of swords in combat.;Yandere:Prominently features a character who is obsessively in love with another, to the point of acting deranged or violent.;Female Protagonist:Main character is female.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Maids:Prominently features a character who is a maid.;Nekomimi:Humanoid characters with cat-like features such as cat ears and a tail.;Tomboy:Features a girl who exhibits characteristics or behaviors considered in many cultures to be typical of boys.;Dragons:Prominently features mythical reptiles which generally have wings and can breathe fire.;Kemonomimi:Prominently features humanoid characters with animal ears.;Seinen:Target demographic is adult males.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Femboy:Features a boy who exhibits characteristics or behaviors considered in many cultures to be typical of girls.;Yuri:Prominently features romance between two females, not inherently sexual. Also known as Girls' Love.;Transgender:Features a character whose gender identity differs from the sex they were assigned at birth."
   },
   {
-    "index": "355.",
+    "index": "356.",
     "thumbnail": "images/anime/Mushoku Tensei_ Jobless Reincarnation, S02 Part 2.jpg",
     "name": "Mushoku Tensei: Jobless Reincarnation, S02 Part 2",
     "type": "TV",
@@ -8165,7 +8188,7 @@
     "tags": "Reincarnation:Features a character being born again after death, typically as another person or in another world.;Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Magic:Prominently features magical elements or the use of magic.;Coming of Age:Centers around a character's transition from childhood to adulthood.;Family Life:Centers around the activities of a family unit.;Male Protagonist:Main character is male.;Marriage:Centers around marriage between two or more characters.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;Elf:Prominently features a character who is an elf.;Polyamorous:Features a character who is in a consenting relationship with multiple people at one time.;Travel:Centers around character(s) moving between places a significant distance apart.;Swordplay:Prominently features the use of swords in combat.;Hikikomori:Prominently features a character who withdraws from social life, often seeking extreme isolation.;Love Triangle:Centered around romantic feelings between more than two people. Includes all love polygons.;College:Partly or completely set in a college or university.;Maids:Prominently features a character who is a maid.;Demons:Prominently features malevolent otherworldly creatures.;Gods:Prominently features a character of divine or religious nature.;Survival:Centers around the struggle to live in spite of extreme obstacles.;Kemonomimi:Prominently features humanoid characters with animal ears.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;School:Partly or completely set in a primary or secondary educational institution.;Super Power:Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible.;Language Barrier:A barrier to communication between people who are unable to speak a common language.;Curses:Features a character, object or area that has been cursed, usually by a malevolent supernatural force.;Delinquents:Features characters with a notorious image and attitude, sometimes referred to as \"yankees\".;Boarding School:Features characters attending a boarding school."
   },
   {
-    "index": "356.",
+    "index": "357.",
     "thumbnail": "images/anime/That Time I Got Reincarnated as a Slime, S03.jpg",
     "name": "That Time I Got Reincarnated as a Slime, S03",
     "type": "TV",
@@ -8188,7 +8211,7 @@
     "tags": "Kingdom Management:Characters in these series take on the responsibility of running a town or kingdom, whether they take control of an existing one, or build their own from the ground up.;Reincarnation:Features a character being born again after death, typically as another person or in another world.;Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Politics:Centers around politics, politicians, or government activities.;Magic:Prominently features magical elements or the use of magic.;Office:Features people who work in a business office.;Creature Taming:Features the taming of animals, monsters, or other creatures.;Super Power:Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Demons:Prominently features malevolent otherworldly creatures.;Dragons:Prominently features mythical reptiles which generally have wings and can breathe fire.;Male Protagonist:Main character is male.;Food:Centers around cooking or food appraisal.;Femboy:Features a boy who exhibits characteristics or behaviors considered in many cultures to be typical of girls.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Agender:Prominently features agender characters.;Shapeshifting:Features character(s) who changes one's appearance or form.;Monster Boy:Prominently features a male character who is a part-monster.;Vampire:Prominently features a character who is a vampire.;Goblin:A goblin is a monstrous creature from European folklore. They are almost always small and grotesque, mischievous or outright malicious, and greedy. Sometimes with magical abilities.;Religion:Centers on the belief that humanity is related to supernatural, transcendental, and spiritual elements.;Fairy:Prominently features a character who is a fairy.;Youkai:Prominently features supernatural creatures from Japanese folklore."
   },
   {
-    "index": "357.",
+    "index": "358.",
     "thumbnail": "images/anime/The Eminence in Shadow, S02.jpg",
     "name": "The Eminence in Shadow, S02",
     "type": "TV",
@@ -8211,7 +8234,7 @@
     "tags": "Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Magic:Prominently features magical elements or the use of magic.;Chuunibyou:Prominently features a character with \"Middle School 2nd Year Syndrome\", who either acts like a know-it-all adult or falsely believes they have special powers.;Cult:Features a social group with unorthodox religious, spiritual, or philosophical beliefs and practices.;Parody:Features deliberate exaggeration of popular tropes or a particular genre to comedic effect.;Male Protagonist:Main character is male.;Anti-Hero:Features a protagonist who lacks conventional heroic attributes and may be considered a borderline villain.;Swordplay:Prominently features the use of swords in combat.;Assassins:Centers around characters who murder people as a profession.;Satire:Prominently features the use of comedy or ridicule to expose and criticise social phenomena.;Female Harem:Main cast features the protagonist plus several female characters who are romantically interested in them.;Trains:Prominently features trains.;Elf:Prominently features a character who is an elf.;Kemonomimi:Prominently features humanoid characters with animal ears.;Meta:Features fourth wall-breaking references to itself or genre tropes.;Nudity:Features a character wearing no clothing or exposing intimate body parts.;Seinen:Target demographic is adult males.;Zombie:Prominently features reanimated corpses which often prey on live humans and turn them into zombies."
   },
   {
-    "index": "358.",
+    "index": "359.",
     "thumbnail": "images/anime/Legend of the Galactic Heroes_ Die Neue These - Intrigue.jpg",
     "name": "Legend of the Galactic Heroes: Die Neue These - Intrigue",
     "type": "TV",
@@ -8234,7 +8257,7 @@
     "tags": "Space Opera:Centers around space warfare, advanced technology, chivalric romance and adventure.;Politics:Centers around politics, politicians, or government activities.;Military:Centered around the life and activities of military personnel.;War:Partly or completely set during wartime.;Space:Partly or completely set in outer space.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Male Protagonist:Main character is male.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Primarily Male Cast:Main cast is mostly composed of male characters.;CGI:Prominently features scenes created with computer-generated imagery."
   },
   {
-    "index": "359.",
+    "index": "360.",
     "thumbnail": "images/anime/Black Lagoon_ Roberta's Blood Trail.jpg",
     "name": "Black Lagoon: Roberta's Blood Trail",
     "type": "OVA",
@@ -8257,7 +8280,7 @@
     "tags": "Guns:Prominently features the use of guns in combat.;Gore:Prominently features graphic bloodshed and violence.;Noir:Stylized as a cynical crime drama with low-key visuals.;Revenge:Prominently features a character who aims to exact punishment in a resentful or vindictive manner.;Seinen:Target demographic is adult males.;Crime:Centers around unlawful activities punishable by the state or other authority.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Anti-Hero:Features a protagonist who lacks conventional heroic attributes and may be considered a borderline villain.;Mafia:Centered around Italian organised crime syndicates.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Tomboy:Features a girl who exhibits characteristics or behaviors considered in many cultures to be typical of boys.;Military:Centered around the life and activities of military personnel.;War:Partly or completely set during wartime.;Maids:Prominently features a character who is a maid.;Foreign:Partly or completely set in a country outside the country of origin.;Male Protagonist:Main character is male.;Female Protagonist:Main character is female.;Gangs:Centers around gang organizations.;Pirates:Prominently features sea-faring adventurers branded as criminals by the law.;Orphan:Prominently features a character that is an orphan.;Nudity:Features a character wearing no clothing or exposing intimate body parts.;Politics:Centers around politics, politicians, or government activities.;Triads:Centered around Chinese organised crime syndicates.;Rape:Features non-consensual sexual penetration."
   },
   {
-    "index": "360.",
+    "index": "361.",
     "thumbnail": "images/anime/Overlord, S04.jpg",
     "name": "Overlord, S04",
     "type": "TV",
@@ -8280,7 +8303,7 @@
     "tags": "Anti-Hero:Features a protagonist who lacks conventional heroic attributes and may be considered a borderline villain.;Magic:Prominently features magical elements or the use of magic.;Skeleton:Prominently features skeleton(s) as a character.;Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Virtual World:Partly or completely set in the world inside a video game.;Kingdom Management:Characters in these series take on the responsibility of running a town or kingdom, whether they take control of an existing one, or build their own from the ground up.;Male Protagonist:Main character is male.;Demons:Prominently features malevolent otherworldly creatures.;Politics:Centers around politics, politicians, or government activities.;Female Harem:Main cast features the protagonist plus several female characters who are romantically interested in them.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Tomboy:Features a girl who exhibits characteristics or behaviors considered in many cultures to be typical of boys.;Maids:Prominently features a character who is a maid.;Gore:Prominently features graphic bloodshed and violence.;Succubus:Prominently features a character who is a succubus, a creature in medieval folklore that typically uses their sexual prowess to trap and seduce people to feed off them.;Monster Girl:Prominently features a female character who is part-monster.;Yandere:Prominently features a character who is obsessively in love with another, to the point of acting deranged or violent.;CGI:Prominently features scenes created with computer-generated imagery.;Monster Boy:Prominently features a male character who is a part-monster.;Femboy:Features a boy who exhibits characteristics or behaviors considered in many cultures to be typical of girls.;Vampire:Prominently features a character who is a vampire.;Male Harem:Main cast features the protagonist plus several male characters who are romantically interested in them.;Zombie:Prominently features reanimated corpses which often prey on live humans and turn them into zombies."
   },
   {
-    "index": "361.",
+    "index": "362.",
     "thumbnail": "images/anime/To Your Eternity, S02.jpg",
     "name": "To Your Eternity, S02",
     "type": "TV",
@@ -8303,7 +8326,7 @@
     "tags": "Shapeshifting:Features character(s) who changes one's appearance or form.;War:Partly or completely set during wartime.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Philosophy:Relating or devoted to the study of the fundamental nature of knowledge, reality, and existence.;Cult:Features a social group with unorthodox religious, spiritual, or philosophical beliefs and practices.;Ghost:Prominently features a character who is a ghost.;Religion:Centers on the belief that humanity is related to supernatural, transcendental, and spiritual elements.;Body Horror:Features characters who undergo horrific transformations or disfigurement, often to their own detriment.;Yandere:Prominently features a character who is obsessively in love with another, to the point of acting deranged or violent.;Gore:Prominently features graphic bloodshed and violence.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Shounen:Target demographic is teenage and young adult males.;Animals:Prominently features animal characters in a leading role.;Historical:Partly or completely set during a real period of world history.;Agender:Prominently features agender characters.;Indigenous Cultures:Prominently features real-life indigenous cultures."
   },
   {
-    "index": "362.",
+    "index": "363.",
     "thumbnail": "images/anime/86 Eighty-Six, S01 Part 2.jpg",
     "name": "86 Eighty-Six, S01 Part 2",
     "type": "TV",
@@ -8326,7 +8349,7 @@
     "tags": "Dystopian:Partly or completely set in a society characterized by poverty, squalor or oppression.;Military:Centered around the life and activities of military personnel.;War:Partly or completely set during wartime.;Class Struggle:Contains conflict born between the different social classes. Generally between an dominant elite and a suffering oppressed group.;CGI:Prominently features scenes created with computer-generated imagery.;Politics:Centers around politics, politicians, or government activities.;Male Protagonist:Main character is male.;Robots:Prominently features humanoid machines.;Primarily Teen Cast:Main cast is mostly composed of teen characters.;Survival:Centers around the struggle to live in spite of extreme obstacles.;Female Protagonist:Main character is female.;Kuudere:Prominently features a character who generally retains a cold, blunt and cynical exterior, but once one gets to know them, they have a very warm and loving interior.;Guns:Prominently features the use of guns in combat.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Seinen:Target demographic is adult males.;Real Robot:Prominently features mechanical designs loosely influenced by real-world robotics.;Philosophy:Relating or devoted to the study of the fundamental nature of knowledge, reality, and existence.;Super Power:Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible.;POV:Point of View; features scenes shown from the perspective of the series protagonist.;Unrequited Love:One or more characters are experiencing an unrequited love that may or may not be reciprocated."
   },
   {
-    "index": "363.",
+    "index": "364.",
     "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark) III_ Is It Wrong to Try to Find a Hot Spring in Orario (question mark).jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon? III: Is It Wrong to Try to Find a Hot Spring in Orario?",
     "type": "OVA",
@@ -8349,7 +8372,7 @@
     "tags": "Male Protagonist:Main character is male.;Primarily Female Cast:Main cast is mostly composed of female characters.;Gods:Prominently features a character of divine or religious nature.;Slapstick:Prominently features comedy based on deliberately clumsy actions or embarrassing events.;Female Harem:Main cast features the protagonist plus several female characters who are romantically interested in them.;Nudity:Features a character wearing no clothing or exposing intimate body parts.;Kemonomimi:Prominently features humanoid characters with animal ears.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Elf:Prominently features a character who is an elf.;Kuudere:Prominently features a character who generally retains a cold, blunt and cynical exterior, but once one gets to know them, they have a very warm and loving interior.;Tomboy:Features a girl who exhibits characteristics or behaviors considered in many cultures to be typical of boys.;Tanned Skin:Prominently features characters with tanned skin."
   },
   {
-    "index": "364.",
+    "index": "365.",
     "thumbnail": "images/anime/Is It Wrong to Try to Pick Up Girls in a Dungeon (question mark), S05.jpg",
     "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S05",
     "type": "TV",
@@ -8372,7 +8395,7 @@
     "tags": "Gods:Prominently features a character of divine or religious nature.;Mythology:Prominently features mythological elements, especially those from religious or cultural tradition.;Male Protagonist:Main character is male.;Dungeon:Prominently features a dungeon environment.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Love Triangle:Centered around romantic feelings between more than two people. Includes all love polygons.;Magic:Prominently features magical elements or the use of magic.;Female Harem:Main cast features the protagonist plus several female characters who are romantically interested in them.;Yandere:Prominently features a character who is obsessively in love with another, to the point of acting deranged or violent.;Kemonomimi:Prominently features humanoid characters with animal ears.;Primarily Female Cast:Main cast is mostly composed of female characters.;Elf:Prominently features a character who is an elf.;Swordplay:Prominently features the use of swords in combat.;Gore:Prominently features graphic bloodshed and violence.;Chuunibyou:Prominently features a character with \"Middle School 2nd Year Syndrome\", who either acts like a know-it-all adult or falsely believes they have special powers."
   },
   {
-    "index": "365.",
+    "index": "366.",
     "thumbnail": "images/anime/Sword Art Online_ Alicization - War of Underworld, Part 2.jpg",
     "name": "Sword Art Online: Alicization - War of Underworld, Part 2",
     "type": "TV",
@@ -8395,7 +8418,7 @@
     "tags": "Virtual World:Partly or completely set in the world inside a video game.;Female Protagonist:Main character is female.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;War:Partly or completely set during wartime.;Artificial Intelligence:Intelligent non-organic machines that work and react similarly to humans.;Video Games:Centers around characters playing video games.;Swordplay:Prominently features the use of swords in combat.;Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Primarily Female Cast:Main cast is mostly composed of female characters.;Primarily Teen Cast:Main cast is mostly composed of teen characters.;Female Harem:Main cast features the protagonist plus several female characters who are romantically interested in them.;Male Protagonist:Main character is male.;Military:Centered around the life and activities of military personnel.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Gore:Prominently features graphic bloodshed and violence.;Cult:Features a social group with unorthodox religious, spiritual, or philosophical beliefs and practices.;Gods:Prominently features a character of divine or religious nature."
   },
   {
-    "index": "366.",
+    "index": "367.",
     "thumbnail": "images/anime/Sword Art Online the Movie_ Progressive - Scherzo of Deep Night.jpg",
     "name": "Sword Art Online the Movie: Progressive - Scherzo of Deep Night",
     "type": "Movie",
@@ -8418,7 +8441,7 @@
     "tags": "Virtual World:Partly or completely set in the world inside a video game.;Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Female Protagonist:Main character is female.;Swordplay:Prominently features the use of swords in combat.;Survival:Centers around the struggle to live in spite of extreme obstacles.;Dungeon:Prominently features a dungeon environment.;Video Games:Centers around characters playing video games.;Male Protagonist:Main character is male."
   },
   {
-    "index": "367.",
+    "index": "368.",
     "thumbnail": "images/anime/Sword Art Online Alternative_ Gun Gale Online, S02.jpg",
     "name": "Sword Art Online Alternative: Gun Gale Online, S02",
     "type": "TV",
@@ -8441,9 +8464,9 @@
     "tags": "Guns:Prominently features the use of guns in combat.;Video Games:Centers around characters playing video games.;Female Protagonist:Main character is female.;Battle Royale:Centers around a fierce group competition, often violent and with only one winner.;Virtual World:Partly or completely set in the world inside a video game.;Military:Centered around the life and activities of military personnel.;Cute Girls Doing Cute Things:Centers around female characters doing cute activities, usually with little to no emphasis on drama and conflict._x000D_;Tomboy:Features a girl who exhibits characteristics or behaviors considered in many cultures to be typical of boys."
   },
   {
-    "index": "368.",
-    "thumbnail": null,
-    "name": "The Beginning After the End",
+    "index": "369.",
+    "thumbnail": "images/anime/The Beginning After the End, S01.jpg",
+    "name": "The Beginning After the End, S01",
     "type": "TV",
     "studio": "Studio A-CAT",
     "release_date": "2025-04-02T00:00:00",
@@ -8461,10 +8484,10 @@
     "mal_url": "https://myanimelist.net/anime/60146/Saikyou_no_Ousama_Nidome_no_Jinsei_wa_Nani_wo_Suru",
     "series": "The Beginning After the End",
     "rewatches": [],
-    "tags": "Magic:Prominently features magical elements or the use of magic.;Reincarnation:Features a character being born again after death, typically as another person or in another world.;Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Male Protagonist:Main character is male.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Cultivation:Features characters using training, often martial arts-related, and other special methods to cultivate qi (a component of traditional Chinese philosophy, described as \"life force\") and gain strength or immortality.;CGI:Prominently features scenes created with computer-generated imagery.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual."
+    "tags": null
   },
   {
-    "index": "369.",
+    "index": "370.",
     "thumbnail": "images/anime/From Old Country Bumpkin to Master Swordsman, S01.jpg",
     "name": "From Old Country Bumpkin to Master Swordsman, S01",
     "type": "TV",
@@ -8487,7 +8510,7 @@
     "tags": "Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Teacher:Protagonist is an educator, usually in a school setting.;Swordplay:Prominently features the use of swords in combat.;Seinen:Target demographic is adult males.;Male Protagonist:Main character is male.;Family Life:Centers around the activities of a family unit.;Female Harem:Main cast features the protagonist plus several female characters who are romantically interested in them.;Age Gap:Prominently features romantic relations between people with a significant age difference.;CGI:Prominently features scenes created with computer-generated imagery.;Magic:Prominently features magical elements or the use of magic.;Coming of Age:Centers around a character's transition from childhood to adulthood.;Primarily Female Cast:Main cast is mostly composed of female characters.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Found Family:Features a group of characters with no biological relations that are united in a group providing social support.;Parenthood:Centers around the experience of raising a child.;School:Partly or completely set in a primary or secondary educational institution."
   },
   {
-    "index": "370.",
+    "index": "371.",
     "thumbnail": "images/anime/Solo Leveling, S02_ Arise from the Shadow.jpg",
     "name": "Solo Leveling, S02: Arise from the Shadow",
     "type": "TV",
@@ -8510,7 +8533,7 @@
     "tags": "Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;Dungeon:Prominently features a dungeon environment.;Male Protagonist:Main character is male.;Necromancy:When the dead are summoned as spirits, skeletons, or the undead, usually for the purpose of gaining information or to be used as a weapon.;Magic:Prominently features magical elements or the use of magic.;Super Power:Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible.;Shounen:Target demographic is teenage and young adult males.;Cultivation:Features characters using training, often martial arts-related, and other special methods to cultivate qi (a component of traditional Chinese philosophy, described as \"life force\") and gain strength or immortality.;Swordplay:Prominently features the use of swords in combat.;Gore:Prominently features graphic bloodshed and violence.;Martial Arts:Centers around the use of traditional hand-to-hand combat.;Elf:Prominently features a character who is an elf.;Cosmic Horror:A type of horror that emphasizes human insignificance in the grand scope of cosmic reality; fearing the unknown and being powerless to fight it.;Snowscape:Prominently or partially set in a snowy environment."
   },
   {
-    "index": "371.",
+    "index": "372.",
     "thumbnail": "images/anime/KonoSuba_ God's Blessing on This Wonderful World! 3 OVA.jpg",
     "name": "KonoSuba: God's Blessing on This Wonderful World! 3 OVA",
     "type": "OVA",
@@ -8533,7 +8556,7 @@
     "tags": "Chuunibyou:Prominently features a character with \"Middle School 2nd Year Syndrome\", who either acts like a know-it-all adult or falsely believes they have special powers.;Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Gods:Prominently features a character of divine or religious nature.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Primarily Female Cast:Main cast is mostly composed of female characters.;Slapstick:Prominently features comedy based on deliberately clumsy actions or embarrassing events.;Satire:Prominently features the use of comedy or ridicule to expose and criticise social phenomena.;Parody:Features deliberate exaggeration of popular tropes or a particular genre to comedic effect.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Male Protagonist:Main character is male."
   },
   {
-    "index": "372.",
+    "index": "373.",
     "thumbnail": "images/anime/Shangri-La Frontier, S02.jpg",
     "name": "Shangri-La Frontier, S02",
     "type": "TV",
@@ -8556,7 +8579,7 @@
     "tags": "Video Games:Centers around characters playing video games.;Virtual World:Partly or completely set in the world inside a video game.;Shounen:Target demographic is teenage and young adult males.;Male Protagonist:Main character is male.;Swordplay:Prominently features the use of swords in combat.;Anthropomorphism:Contains non-human character(s) that have attributes or characteristics of a human being.;Magic:Prominently features magical elements or the use of magic.;Martial Arts:Centers around the use of traditional hand-to-hand combat.;Kemonomimi:Prominently features humanoid characters with animal ears.;Travel:Centers around character(s) moving between places a significant distance apart.;Hikikomori:Prominently features a character who withdraws from social life, often seeking extreme isolation.;Curses:Features a character, object or area that has been cursed, usually by a malevolent supernatural force.;Gender Bending:Prominently features a character who dresses and behaves in a way characteristic of another gender, or has been transformed into a person of another gender.;Unrequited Love:One or more characters are experiencing an unrequited love that may or may not be reciprocated."
   },
   {
-    "index": "373.",
+    "index": "374.",
     "thumbnail": "images/anime/Heavenly Delusion.jpg",
     "name": "Heavenly Delusion",
     "type": "TV",
@@ -8579,7 +8602,7 @@
     "tags": "Dystopian:Partly or completely set in a society characterized by poverty, squalor or oppression.;Post-Apocalyptic:Partly or completely set in a world or civilization after a global disaster.;Survival:Centers around the struggle to live in spite of extreme obstacles.;Seinen:Target demographic is adult males.;Travel:Centers around character(s) moving between places a significant distance apart.;Conspiracy:Contains one or more factions controlling or attempting to control the world from the shadows.;Male Protagonist:Main character is male.;Orphan:Prominently features a character that is an orphan.;Gore:Prominently features graphic bloodshed and violence.;Denpa:Works that feature themes of social dissociation, delusions, and other issues like suicide, bullying, self-isolation, paranoia, and technological necessity in daily lives. Classic iconography: telephone poles, rooftops, and trains.;Coming of Age:Centers around a character's transition from childhood to adulthood.;Demons:Prominently features malevolent otherworldly creatures.;Body Horror:Features characters who undergo horrific transformations or disfigurement, often to their own detriment.;Unrequited Love:One or more characters are experiencing an unrequited love that may or may not be reciprocated.;Guns:Prominently features the use of guns in combat.;Nudity:Features a character wearing no clothing or exposing intimate body parts.;Cyberpunk:Set in a future of advanced technological and scientific achievements that have resulted in social disorder.;Female Protagonist:Main character is female."
   },
   {
-    "index": "374.",
+    "index": "375.",
     "thumbnail": "images/anime/Made in Abyss_ The Golden City of the Scorching Sun.jpg",
     "name": "Made in Abyss: The Golden City of the Scorching Sun",
     "type": "TV",
@@ -8602,7 +8625,7 @@
     "tags": "Survival:Centers around the struggle to live in spite of extreme obstacles.;Primarily Child Cast:Main cast is mostly composed of characters below a high school age.;Curses:Features a character, object or area that has been cursed, usually by a malevolent supernatural force.;Lost Civilization:Featuring a civilization with few ruins or records that exist in present day knowledge.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Gore:Prominently features graphic bloodshed and violence.;Seinen:Target demographic is adult males.;Travel:Centers around character(s) moving between places a significant distance apart.;Female Protagonist:Main character is female.;Environmental:Concern with the state of the natural world and how humans interact with it.;Philosophy:Relating or devoted to the study of the fundamental nature of knowledge, reality, and existence.;Monster Girl:Prominently features a female character who is part-monster.;Robots:Prominently features humanoid machines.;Male Protagonist:Main character is male.;Amputation:Features amputation or amputees.;Orphan:Prominently features a character that is an orphan.;Language Barrier:A barrier to communication between people who are unable to speak a common language.;Chibi:Features \"super deformed\" character designs with smaller, rounder proportions and a cute look.;Dungeon:Prominently features a dungeon environment.;Food:Centers around cooking or food appraisal.;Nudity:Features a character wearing no clothing or exposing intimate body parts.;CGI:Prominently features scenes created with computer-generated imagery.;Outdoor Activities:Centers around hiking, camping or other outdoor activities."
   },
   {
-    "index": "375.",
+    "index": "376.",
     "thumbnail": "images/anime/Goblin Slayer, S02.jpg",
     "name": "Goblin Slayer, S02",
     "type": "TV",
@@ -8625,7 +8648,7 @@
     "tags": "Goblin:A goblin is a monstrous creature from European folklore. They are almost always small and grotesque, mischievous or outright malicious, and greedy. Sometimes with magical abilities.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Spearplay:Prominently features the use of spears in combat.;Magic:Prominently features magical elements or the use of magic.;Gore:Prominently features graphic bloodshed and violence.;Body Horror:Features characters who undergo horrific transformations or disfigurement, often to their own detriment.;Elf:Prominently features a character who is an elf.;Swordplay:Prominently features the use of swords in combat.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Anti-Hero:Features a protagonist who lacks conventional heroic attributes and may be considered a borderline villain.;Female Harem:Main cast features the protagonist plus several female characters who are romantically interested in them.;Survival:Centers around the struggle to live in spite of extreme obstacles."
   },
   {
-    "index": "376.",
+    "index": "377.",
     "thumbnail": "images/anime/Bocchi the Rock!.jpg",
     "name": "Bocchi the Rock!",
     "type": "TV",
@@ -8648,7 +8671,7 @@
     "tags": "Band:Main cast is a group of musicians.;Female Protagonist:Main character is female.;Primarily Female Cast:Main cast is mostly composed of female characters.;Primarily Teen Cast:Main cast is mostly composed of teen characters.;Rock Music:Centers on the musical style of rock, not to be applied to anime that use rock in its soundtrack.;Cute Girls Doing Cute Things:Centers around female characters doing cute activities, usually with little to no emphasis on drama and conflict._x000D_;Coming of Age:Centers around a character's transition from childhood to adulthood.;Rehabilitation:Prominently features the recovery of a character who became incapable of social life or work.;Hikikomori:Prominently features a character who withdraws from social life, often seeking extreme isolation.;Surreal Comedy:Prominently features comedic moments that defy casual reasoning, resulting in illogical events.;Seinen:Target demographic is adult males.;Mixed Media:Features a combination of different media and animation techniques. Often seen with puppetry, textiles, live action footage, stop motion, and more. This does not include works with normal usage of CGI in their production.;Meta:Features fourth wall-breaking references to itself or genre tropes.;Slapstick:Prominently features comedy based on deliberately clumsy actions or embarrassing events.;LGBTQ+ Themes:Prominently features characters or themes associated with the LGBTQ+ community, such as sexuality or gender identity.;Work:Centers around the activities of a certain occupation.;School:Partly or completely set in a primary or secondary educational institution.;Yuri:Prominently features romance between two females, not inherently sexual. Also known as Girls' Love.;Rotoscoping:Animation technique that animators use to trace over motion picture footage, frame by frame, to produce realistic action.;Chibi:Features \"super deformed\" character designs with smaller, rounder proportions and a cute look."
   },
   {
-    "index": "377.",
+    "index": "378.",
     "thumbnail": "images/anime/Noragami Aragoto.jpg",
     "name": "Noragami Aragoto",
     "type": "TV",
@@ -8671,7 +8694,7 @@
     "tags": "Gods:Prominently features a character of divine or religious nature.;Mythology:Prominently features mythological elements, especially those from religious or cultural tradition.;Female Protagonist:Main character is female.;Shounen:Target demographic is teenage and young adult males.;Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;Youkai:Prominently features supernatural creatures from Japanese folklore.;Urban:Partly or completely set in a city.;Found Family:Features a group of characters with no biological relations that are united in a group providing social support.;Male Protagonist:Main character is male.;Swordplay:Prominently features the use of swords in combat.;Shapeshifting:Features character(s) who changes one's appearance or form.;Anti-Hero:Features a protagonist who lacks conventional heroic attributes and may be considered a borderline villain.;Revenge:Prominently features a character who aims to exact punishment in a resentful or vindictive manner.;Reincarnation:Features a character being born again after death, typically as another person or in another world.;Nekomimi:Humanoid characters with cat-like features such as cat ears and a tail.;Nudity:Features a character wearing no clothing or exposing intimate body parts."
   },
   {
-    "index": "378.",
+    "index": "379.",
     "thumbnail": "images/anime/Lycoris Recoil.jpg",
     "name": "Lycoris Recoil",
     "type": "TV",
@@ -8694,7 +8717,7 @@
     "tags": "Primarily Female Cast:Main cast is mostly composed of female characters.;Female Protagonist:Main character is female.;Guns:Prominently features the use of guns in combat.;Urban:Partly or completely set in a city.;Found Family:Features a group of characters with no biological relations that are united in a group providing social support.;Work:Centers around the activities of a certain occupation.;Yuri:Prominently features romance between two females, not inherently sexual. Also known as Girls' Love.;Kuudere:Prominently features a character who generally retains a cold, blunt and cynical exterior, but once one gets to know them, they have a very warm and loving interior.;Orphan:Prominently features a character that is an orphan.;Restaurant:Features a business that prepares and serves food and drinks to customers. Also encompasses cafes and bistros.;Cute Girls Doing Cute Things:Centers around female characters doing cute activities, usually with little to no emphasis on drama and conflict._x000D_;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Politics:Centers around politics, politicians, or government activities."
   },
   {
-    "index": "379.",
+    "index": "380.",
     "thumbnail": "images/anime/Ragna Crimson.jpg",
     "name": "Ragna Crimson",
     "type": "TV",
@@ -8717,7 +8740,7 @@
     "tags": "Dragons:Prominently features mythical reptiles which generally have wings and can breathe fire.;Revenge:Prominently features a character who aims to exact punishment in a resentful or vindictive manner.;Shounen:Target demographic is teenage and young adult males.;Magic:Prominently features magical elements or the use of magic.;Male Protagonist:Main character is male.;Swordplay:Prominently features the use of swords in combat.;Super Power:Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible.;Gore:Prominently features graphic bloodshed and violence.;Clone:Prominently features a character who is an artificial exact copy of another organism.;Gender Bending:Prominently features a character who dresses and behaves in a way characteristic of another gender, or has been transformed into a person of another gender.;Orphan:Prominently features a character that is an orphan."
   },
   {
-    "index": "380.",
+    "index": "381.",
     "thumbnail": "images/anime/Lord of Mysteries.jpg",
     "name": "Lord of Mysteries",
     "type": "Donghua",
@@ -8740,7 +8763,7 @@
     "tags": "Conspiracy:Contains one or more factions controlling or attempting to control the world from the shadows.;Male Protagonist:Main character is male.;Magic:Prominently features magical elements or the use of magic.;Religion:Centers on the belief that humanity is related to supernatural, transcendental, and spiritual elements.;Gore:Prominently features graphic bloodshed and violence.;Steampunk:Prominently features technology and designs inspired by 19th-century industrial steam-powered machinery.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Alchemy:Features character(s) who practice alchemy.;Cultivation:Features characters using training, often martial arts-related, and other special methods to cultivate qi (a component of traditional Chinese philosophy, described as \"life force\") and gain strength or immortality.;Astronomy:Relating or centered around the study of celestial objects and phenomena, space, or the universe.;CGI:Prominently features scenes created with computer-generated imagery.;Espionage:Prominently features characters infiltrating an organization in order to steal sensitive information.;Guns:Prominently features the use of guns in combat.;Episodic:Features story arcs that are loosely tied or lack an overarching plot."
   },
   {
-    "index": "381.",
+    "index": "382.",
     "thumbnail": "images/anime/Call of the Night, S02.jpg",
     "name": "Call of the Night, S02",
     "type": "TV",
@@ -8763,7 +8786,7 @@
     "tags": "Vampire:Prominently features a character who is a vampire.;Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;Urban:Partly or completely set in a city.;Female Protagonist:Main character is female.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;Male Protagonist:Main character is male.;Aromantic:Features a character who experiences little to no romantic attraction.;Coming of Age:Centers around a character's transition from childhood to adulthood.;Shounen:Target demographic is teenage and young adult males.;Age Gap:Prominently features romantic relations between people with a significant age difference.;Detective:Features a character who investigates and solves crimes.;Hikikomori:Prominently features a character who withdraws from social life, often seeking extreme isolation.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Primarily Female Cast:Main cast is mostly composed of female characters.;Gyaru:Prominently features a female character who has a distinct American-emulated fashion style, such as tanned skin, bleached hair, and excessive makeup. Also known as gal.;Crossdressing:Prominently features a character dressing up as the opposite sex."
   },
   {
-    "index": "382.",
+    "index": "383.",
     "thumbnail": "images/anime/The Water Magician.jpg",
     "name": "The Water Magician",
     "type": "TV",
@@ -8786,7 +8809,7 @@
     "tags": "Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Male Protagonist:Main character is male.;Magic:Prominently features magical elements or the use of magic.;Reincarnation:Features a character being born again after death, typically as another person or in another world.;Dungeon:Prominently features a dungeon environment.;Snowscape:Prominently or partially set in a snowy environment.;Travel:Centers around character(s) moving between places a significant distance apart.;Demons:Prominently features malevolent otherworldly creatures.;Elf:Prominently features a character who is an elf.;Survival:Centers around the struggle to live in spite of extreme obstacles.;Dragons:Prominently features mythical reptiles which generally have wings and can breathe fire.;Kuudere:Prominently features a character who generally retains a cold, blunt and cynical exterior, but once one gets to know them, they have a very warm and loving interior.;Coastal:Story prominently takes place near the beach or around a coastal area/town. Setting is near the ocean."
   },
   {
-    "index": "383.",
+    "index": "384.",
     "thumbnail": "images/anime/My Dress-Up Darling, S02.jpg",
     "name": "My Dress-Up Darling, S02",
     "type": "TV",
@@ -8807,29 +8830,6 @@
     "series": "My Dress-Up Darling",
     "rewatches": [],
     "tags": "Cosplay:Features dressing up as a different character or profession.;Otaku Culture:Centers around the culture of a fanatical fan-base.;Gyaru:Prominently features a female character who has a distinct American-emulated fashion style, such as tanned skin, bleached hair, and excessive makeup. Also known as gal.;Fashion:Centers around the fashion industry.;Female Protagonist:Main character is female.;Male Protagonist:Main character is male.;Makeup:Centers around the makeup industry.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;Crossdressing:Prominently features a character dressing up as the opposite sex.;Unrequited Love:One or more characters are experiencing an unrequited love that may or may not be reciprocated.;Photography:Centers around the use of cameras to capture photos.;Body Image:Features themes of self-esteem concerning perceived defects or flaws in appearance, such as body weight or disfigurement, and may discuss topics such as eating disorders, fatphobia, and body dysmorphia.;Educational:Primary aim is to educate the audience.;Slapstick:Prominently features comedy based on deliberately clumsy actions or embarrassing events.;Gender Bending:Prominently features a character who dresses and behaves in a way characteristic of another gender, or has been transformed into a person of another gender.;School:Partly or completely set in a primary or secondary educational institution.;Seinen:Target demographic is adult males.;Nudity:Features a character wearing no clothing or exposing intimate body parts.;Femboy:Features a boy who exhibits characteristics or behaviors considered in many cultures to be typical of girls.;Chibi:Features \"super deformed\" character designs with smaller, rounder proportions and a cute look.;Urban:Partly or completely set in a city."
-  },
-  {
-    "index": "384.",
-    "thumbnail": "images/anime/The Rising of the Shield Hero, S04.jpg",
-    "name": "The Rising of the Shield Hero, S04",
-    "type": "TV",
-    "studio": "Kinema Citrus",
-    "release_date": "2025-07-09T00:00:00",
-    "themes": "Isekai",
-    "genres": "Action; Adventure; Drama; Fantasy",
-    "episodes": 12,
-    "episode_duration": 23.668,
-    "rating": 8,
-    "start_date": "2025-07-09T00:00:00",
-    "end_date": "2025-10-01T00:00:00",
-    "rewatch_count": 0,
-    "total_time": 284.01599999999996,
-    "dub": "JAP; ENG",
-    "status": "FINISHED",
-    "mal_url": "https://myanimelist.net/anime/57907/Tate_no_Yuusha_no_Nariagari_Season_4",
-    "series": "The Rising of the Shield Hero",
-    "rewatches": [],
-    "tags": "Male Protagonist:Main character is male.;Anti-Hero:Features a protagonist who lacks conventional heroic attributes and may be considered a borderline villain.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Magic:Prominently features magical elements or the use of magic.;Ships:Prominently features the use of sea-based transportation vessels.;Travel:Centers around character(s) moving between places a significant distance apart.;Dragons:Prominently features mythical reptiles which generally have wings and can breathe fire.;Tomboy:Features a girl who exhibits characteristics or behaviors considered in many cultures to be typical of boys."
   },
   {
     "index": "385.",
@@ -8856,6 +8856,29 @@
   },
   {
     "index": "386.",
+    "thumbnail": "images/anime/The Rising of the Shield Hero, S04.jpg",
+    "name": "The Rising of the Shield Hero, S04",
+    "type": "TV",
+    "studio": "Kinema Citrus",
+    "release_date": "2025-07-09T00:00:00",
+    "themes": "Isekai",
+    "genres": "Action; Adventure; Drama; Fantasy",
+    "episodes": 12,
+    "episode_duration": 23.668,
+    "rating": 8,
+    "start_date": "2025-07-09T00:00:00",
+    "end_date": "2025-10-01T00:00:00",
+    "rewatch_count": 0,
+    "total_time": 284.01599999999996,
+    "dub": "JAP; ENG",
+    "status": "FINISHED",
+    "mal_url": "https://myanimelist.net/anime/57907/Tate_no_Yuusha_no_Nariagari_Season_4",
+    "series": "The Rising of the Shield Hero",
+    "rewatches": [],
+    "tags": "Male Protagonist:Main character is male.;Anti-Hero:Features a protagonist who lacks conventional heroic attributes and may be considered a borderline villain.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Magic:Prominently features magical elements or the use of magic.;Ships:Prominently features the use of sea-based transportation vessels.;Travel:Centers around character(s) moving between places a significant distance apart.;Dragons:Prominently features mythical reptiles which generally have wings and can breathe fire.;Tomboy:Features a girl who exhibits characteristics or behaviors considered in many cultures to be typical of boys."
+  },
+  {
+    "index": "387.",
     "thumbnail": "images/anime/Rascal Does Not Dream of Santa Claus.jpg",
     "name": "Rascal Does Not Dream of Santa Claus",
     "type": "TV",
@@ -8878,7 +8901,7 @@
     "tags": "College:Partly or completely set in a college or university.;Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;Male Protagonist:Main character is male.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Female Protagonist:Main character is female.;Acting:Centers around actors or the acting industry.;Idol:Centers around the life and activities of an idol.;Time Skip:Features a gap in time used to advance the story.;CGI:Prominently features scenes created with computer-generated imagery.;POV:Point of View; features scenes shown from the perspective of the series protagonist."
   },
   {
-    "index": "387.",
+    "index": "388.",
     "thumbnail": "images/anime/Black Butler_ Emerald Witch Arc.jpg",
     "name": "Black Butler: Emerald Witch Arc",
     "type": "TV",
@@ -8901,7 +8924,7 @@
     "tags": "Butler:Prominently features a character who is a butler.;Demons:Prominently features malevolent otherworldly creatures.;Crime:Centers around unlawful activities punishable by the state or other authority.;Historical:Partly or completely set during a real period of world history.;Witch:Prominently features a character who is a witch.;Anti-Hero:Features a protagonist who lacks conventional heroic attributes and may be considered a borderline villain.;Orphan:Prominently features a character that is an orphan.;Ojou-sama:Features a wealthy, high-class, oftentimes stuck up and demanding female character.;Foreign:Partly or completely set in a country outside the country of origin.;Kuudere:Prominently features a character who generally retains a cold, blunt and cynical exterior, but once one gets to know them, they have a very warm and loving interior.;Male Protagonist:Main character is male.;Werewolf:Prominently features a character who is a werewolf.;Shounen:Target demographic is teenage and young adult males.;Language Barrier:A barrier to communication between people who are unable to speak a common language.;Rural:Partly or completely set in the countryside."
   },
   {
-    "index": "388.",
+    "index": "389.",
     "thumbnail": "images/anime/Kaiju No.8, S02.jpg",
     "name": "Kaiju No.8, S02",
     "type": "TV",
@@ -8924,7 +8947,7 @@
     "tags": "Urban:Partly or completely set in a city.;Kaiju:Prominently features giant monsters.;Monster Boy:Prominently features a male character who is a part-monster.;Male Protagonist:Main character is male.;Shounen:Target demographic is teenage and young adult males.;Shapeshifting:Features character(s) who changes one's appearance or form.;Military:Centered around the life and activities of military personnel.;Rescue:Centers around operations that carry out urgent treatment of injuries, remove people from danger, or save lives. This includes series that are about search-and-rescue teams, trauma surgeons, firefighters, and more.;Guns:Prominently features the use of guns in combat.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Gore:Prominently features graphic bloodshed and violence.;Body Horror:Features characters who undergo horrific transformations or disfigurement, often to their own detriment.;Super Power:Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible.;Henshin:Prominently features character or costume transformations which often grant special abilities.;Tokusatsu:Prominently features elements that resemble special effects in Japanese live-action shows;Work:Centers around the activities of a certain occupation.;Swordplay:Prominently features the use of swords in combat.;Slapstick:Prominently features comedy based on deliberately clumsy actions or embarrassing events.;Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;Spearplay:Prominently features the use of spears in combat.;Tsundere:Prominently features a character who acts cold and hostile in order to mask warmer emotions.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;Ojou-sama:Features a wealthy, high-class, oftentimes stuck up and demanding female character."
   },
   {
-    "index": "389.",
+    "index": "390.",
     "thumbnail": "images/anime/Puella Magi Madoka Magica the Movie_ Rebellion.jpg",
     "name": "Puella Magi Madoka Magica the Movie: Rebellion",
     "type": "Movie",
@@ -8947,7 +8970,7 @@
     "tags": "Anti-Hero:Features a protagonist who lacks conventional heroic attributes and may be considered a borderline villain.;Magic:Prominently features magical elements or the use of magic.;Female Protagonist:Main character is female.;Philosophy:Relating or devoted to the study of the fundamental nature of knowledge, reality, and existence.;Primarily Female Cast:Main cast is mostly composed of female characters.;Henshin:Prominently features character or costume transformations which often grant special abilities.;Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;Yuri:Prominently features romance between two females, not inherently sexual. Also known as Girls' Love.;Urban:Partly or completely set in a city.;Guns:Prominently features the use of guns in combat.;Mixed Media:Features a combination of different media and animation techniques. Often seen with puppetry, textiles, live action footage, stop motion, and more. This does not include works with normal usage of CGI in their production.;Kuudere:Prominently features a character who generally retains a cold, blunt and cynical exterior, but once one gets to know them, they have a very warm and loving interior.;School:Partly or completely set in a primary or secondary educational institution."
   },
   {
-    "index": "390.",
+    "index": "391.",
     "thumbnail": "images/anime/Monogatari Series_ Off & Monster Season.jpg",
     "name": "Monogatari Series: Off & Monster Season",
     "type": "ONA",
@@ -8970,7 +8993,7 @@
     "tags": "Philosophy:Relating or devoted to the study of the fundamental nature of knowledge, reality, and existence.;Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;Youkai:Prominently features supernatural creatures from Japanese folklore.;Primarily Female Cast:Main cast is mostly composed of female characters.;Vampire:Prominently features a character who is a vampire.;Female Protagonist:Main character is female.;Urban:Partly or completely set in a city.;Meta:Features fourth wall-breaking references to itself or genre tropes.;Coming of Age:Centers around a character's transition from childhood to adulthood.;Gods:Prominently features a character of divine or religious nature.;Drawing:Centers around the art of drawing, including manga and doujinshi.;College:Partly or completely set in a college or university.;Detective:Features a character who investigates and solves crimes.;Gore:Prominently features graphic bloodshed and violence.;Rakugo:Rakugo is the traditional Japanese performance art of comic storytelling.;Fishing:Centers around the sport of fishing.;Hikikomori:Prominently features a character who withdraws from social life, often seeking extreme isolation.;Crossdressing:Prominently features a character dressing up as the opposite sex.;Fairy Tale:This work tells a fairy tale, centers around fairy tales, or is based on a classic fairy tale.;Zombie:Prominently features reanimated corpses which often prey on live humans and turn them into zombies."
   },
   {
-    "index": "391.",
+    "index": "392.",
     "thumbnail": "images/anime/Spice and Wolf_ Merchant Meets the Wise Wolf, S01.jpg",
     "name": "Spice and Wolf: Merchant Meets the Wise Wolf, S01",
     "type": "TV",
@@ -8993,7 +9016,7 @@
     "tags": "Economics:Centers around the field of economics.;Travel:Centers around character(s) moving between places a significant distance apart.;Rural:Partly or completely set in the countryside.;Work:Centers around the activities of a certain occupation.;Kemonomimi:Prominently features humanoid characters with animal ears.;Female Protagonist:Main character is female.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Male Protagonist:Main character is male.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Mythology:Prominently features mythological elements, especially those from religious or cultural tradition.;Agriculture:Prominently features agriculture practices.;Gods:Prominently features a character of divine or religious nature.;Religion:Centers on the belief that humanity is related to supernatural, transcendental, and spiritual elements.;Historical:Partly or completely set during a real period of world history.;Age Gap:Prominently features romantic relations between people with a significant age difference.;Foreign:Partly or completely set in a country outside the country of origin.;Politics:Centers around politics, politicians, or government activities.;Nudity:Features a character wearing no clothing or exposing intimate body parts.;Cultivation:Features characters using training, often martial arts-related, and other special methods to cultivate qi (a component of traditional Chinese philosophy, described as \"life force\") and gain strength or immortality.;Seinen:Target demographic is adult males.;Tsundere:Prominently features a character who acts cold and hostile in order to mask warmer emotions.;CGI:Prominently features scenes created with computer-generated imagery."
   },
   {
-    "index": "392.",
+    "index": "393.",
     "thumbnail": "images/anime/The Apothecary Diaries, S02.jpg",
     "name": "The Apothecary Diaries, S02",
     "type": "TV",
@@ -9016,7 +9039,7 @@
     "tags": "Medicine:Centered around the activities of people working in the field of medicine.;Female Protagonist:Main character is female.;Royal Affairs:Features nobility, alliances, arranged marriage, succession disputes, religious orders and other elements of royal politics.;Detective:Features a character who investigates and solves crimes.;Politics:Centers around politics, politicians, or government activities.;Historical:Partly or completely set during a real period of world history.;Ancient China:Setting in ancient china, does not apply to fantasy settings.;Work:Centers around the activities of a certain occupation.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Foreign:Partly or completely set in a country outside the country of origin.;Asexual:Features a character who isn't sexually attracted to people of any sex or gender.;Class Struggle:Contains conflict born between the different social classes. Generally between an dominant elite and a suffering oppressed group.;Aromantic:Features a character who experiences little to no romantic attraction.;Seinen:Target demographic is adult males.;Educational:Primary aim is to educate the audience.;Primarily Female Cast:Main cast is mostly composed of female characters.;Pregnancy:Features pregnant female characters or discusses the topic of pregnancy.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;Maids:Prominently features a character who is a maid.;Male Protagonist:Main character is male.;Chibi:Features \"super deformed\" character designs with smaller, rounder proportions and a cute look.;Animals:Prominently features animal characters in a leading role."
   },
   {
-    "index": "393.",
+    "index": "394.",
     "thumbnail": "images/anime/Spy x Family, S03.jpg",
     "name": "Spy x Family, S03",
     "type": "TV",
@@ -9039,7 +9062,7 @@
     "tags": "Urban:Partly or completely set in a city.;Espionage:Prominently features characters infiltrating an organization in order to steal sensitive information.;Female Protagonist:Main character is female.;Assassins:Centers around characters who murder people as a profession.;Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;Male Protagonist:Main character is male.;Super Power:Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible.;Parenthood:Centers around the experience of raising a child.;Martial Arts:Centers around the use of traditional hand-to-hand combat.;Found Family:Features a group of characters with no biological relations that are united in a group providing social support.;Shounen:Target demographic is teenage and young adult males.;Family Life:Centers around the activities of a family unit.;School:Partly or completely set in a primary or secondary educational institution.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Military:Centered around the life and activities of military personnel.;Politics:Centers around politics, politicians, or government activities.;Fake Relationship:When two characters enter a fake relationship that mutually benefits one or both involved.;Cohabitation:Features two or more people who live in the same household and develop a romantic or sexual relationship.;Guns:Prominently features the use of guns in combat.;Food:Centers around cooking or food appraisal."
   },
   {
-    "index": "394.",
+    "index": "395.",
     "thumbnail": "images/anime/Tower of God, S02_ Workshop Battle.jpg",
     "name": "Tower of God, S02: Workshop Battle",
     "type": "TV",
@@ -9062,7 +9085,7 @@
     "tags": "[[BLACKLIST]]:"
   },
   {
-    "index": "395.",
+    "index": "396.",
     "thumbnail": "images/anime/I've Been Killing Slimes for 300 Years and Maxed Out My Level, S02.jpg",
     "name": "I've Been Killing Slimes for 300 Years and Maxed Out My Level, S02",
     "type": "TV",
@@ -9085,7 +9108,7 @@
     "tags": "Female Protagonist:Main character is female.;Primarily Female Cast:Main cast is mostly composed of female characters.;Cute Girls Doing Cute Things:Centers around female characters doing cute activities, usually with little to no emphasis on drama and conflict._x000D_;Witch:Prominently features a character who is a witch.;Iyashikei:Primary aim is to heal the audience through serene depictions of characters' daily lives.;Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Found Family:Features a group of characters with no biological relations that are united in a group providing social support.;Yuri:Prominently features romance between two females, not inherently sexual. Also known as Girls' Love.;Female Harem:Main cast features the protagonist plus several female characters who are romantically interested in them.;Episodic:Features story arcs that are loosely tied or lack an overarching plot.;Reincarnation:Features a character being born again after death, typically as another person or in another world.;Dragons:Prominently features mythical reptiles which generally have wings and can breathe fire.;Demons:Prominently features malevolent otherworldly creatures.;Ghost:Prominently features a character who is a ghost.;Elf:Prominently features a character who is an elf.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights."
   },
   {
-    "index": "396.",
+    "index": "397.",
     "thumbnail": "images/anime/Tsukimichi -Moonlit Fantasy-, S02.jpg",
     "name": "Tsukimichi -Moonlit Fantasy-, S02",
     "type": "TV",
@@ -9108,7 +9131,7 @@
     "tags": "Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Magic:Prominently features magical elements or the use of magic.;Male Protagonist:Main character is male.;Creature Taming:Features the taming of animals, monsters, or other creatures.;Shounen:Target demographic is teenage and young adult males.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Language Barrier:A barrier to communication between people who are unable to speak a common language.;Teacher:Protagonist is an educator, usually in a school setting.;Economics:Centers around the field of economics.;Monster Girl:Prominently features a female character who is part-monster.;Gods:Prominently features a character of divine or religious nature.;Dragons:Prominently features mythical reptiles which generally have wings and can breathe fire.;Demons:Prominently features malevolent otherworldly creatures.;Anthropomorphism:Contains non-human character(s) that have attributes or characteristics of a human being.;Female Harem:Main cast features the protagonist plus several female characters who are romantically interested in them.;Meta:Features fourth wall-breaking references to itself or genre tropes.;Samurai:Prominently features warriors of medieval Japanese nobility bound by a code of honor."
   },
   {
-    "index": "397.",
+    "index": "398.",
     "thumbnail": "images/anime/Ascendance of a Bookworm, S03.jpg",
     "name": "Ascendance of a Bookworm, S03",
     "type": "TV",
@@ -9131,7 +9154,7 @@
     "tags": "Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Female Protagonist:Main character is female.;Class Struggle:Contains conflict born between the different social classes. Generally between an dominant elite and a suffering oppressed group.;Work:Centers around the activities of a certain occupation.;Economics:Centers around the field of economics.;Historical:Partly or completely set during a real period of world history.;Reincarnation:Features a character being born again after death, typically as another person or in another world.;Magic:Prominently features magical elements or the use of magic.;Politics:Centers around politics, politicians, or government activities.;Religion:Centers on the belief that humanity is related to supernatural, transcendental, and spiritual elements.;Orphan:Prominently features a character that is an orphan.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Josei:Target demographic is adult females.;Time Skip:Features a gap in time used to advance the story.;Gods:Prominently features a character of divine or religious nature."
   },
   {
-    "index": "398.",
+    "index": "399.",
     "thumbnail": "images/anime/GATE, S01 Part 2.jpg",
     "name": "GATE, S01 Part 2",
     "type": "TV",
@@ -9154,7 +9177,7 @@
     "tags": "Military:Centered around the life and activities of military personnel.;Alternate Universe:Features multiple alternate universes in the same series.;Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Politics:Centers around politics, politicians, or government activities.;Male Protagonist:Main character is male.;War:Partly or completely set during wartime.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Primarily Female Cast:Main cast is mostly composed of female characters.;Dragons:Prominently features mythical reptiles which generally have wings and can breathe fire.;Elf:Prominently features a character who is an elf.;Kemonomimi:Prominently features humanoid characters with animal ears.;Tanks:Prominently features the use of tanks or other armoured vehicles.;Female Harem:Main cast features the protagonist plus several female characters who are romantically interested in them.;Villainess:Centers around or prominently features a villainous noble lady.;Slavery:Prominently features slaves, slavery, or slave trade.;Aviation:Regarding the flying or operation of aircraft.;Fairy:Prominently features a character who is a fairy."
   },
   {
-    "index": "399.",
+    "index": "400.",
     "thumbnail": "images/anime/Skeleton Knight in Another World, S01.jpg",
     "name": "Skeleton Knight in Another World, S01",
     "type": "TV",
@@ -9177,7 +9200,7 @@
     "tags": "Skeleton:Prominently features skeleton(s) as a character.;Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Male Protagonist:Main character is male.;Magic:Prominently features magical elements or the use of magic.;Swordplay:Prominently features the use of swords in combat.;Elf:Prominently features a character who is an elf.;Conspiracy:Contains one or more factions controlling or attempting to control the world from the shadows.;Ninja:Prominently features Japanese warriors traditionally trained in espionage, sabotage and assasination.;Kemonomimi:Prominently features humanoid characters with animal ears.;Politics:Centers around politics, politicians, or government activities.;CGI:Prominently features scenes created with computer-generated imagery.;Curses:Features a character, object or area that has been cursed, usually by a malevolent supernatural force.;Gore:Prominently features graphic bloodshed and violence.;Tsundere:Prominently features a character who acts cold and hostile in order to mask warmer emotions.;Slapstick:Prominently features comedy based on deliberately clumsy actions or embarrassing events.;Nekomimi:Humanoid characters with cat-like features such as cat ears and a tail.;Demons:Prominently features malevolent otherworldly creatures.;Dragons:Prominently features mythical reptiles which generally have wings and can breathe fire.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights."
   },
   {
-    "index": "400.",
+    "index": "401.",
     "thumbnail": "images/anime/Arifureta_ From Commonplace to World's Strongest, S03.jpg",
     "name": "Arifureta: From Commonplace to World's Strongest, S03",
     "type": "TV",
@@ -9200,7 +9223,7 @@
     "tags": "Anti-Hero:Features a protagonist who lacks conventional heroic attributes and may be considered a borderline villain.;Male Protagonist:Main character is male.;Magic:Prominently features magical elements or the use of magic.;Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Polyamorous:Features a character who is in a consenting relationship with multiple people at one time.;Kemonomimi:Prominently features humanoid characters with animal ears.;Female Harem:Main cast features the protagonist plus several female characters who are romantically interested in them.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;Guns:Prominently features the use of guns in combat.;Monster Girl:Prominently features a female character who is part-monster.;Vampire:Prominently features a character who is a vampire.;Slapstick:Prominently features comedy based on deliberately clumsy actions or embarrassing events.;Demons:Prominently features malevolent otherworldly creatures.;Snowscape:Prominently or partially set in a snowy environment.;Dragons:Prominently features mythical reptiles which generally have wings and can breathe fire.;Swordplay:Prominently features the use of swords in combat.;Slavery:Prominently features slaves, slavery, or slave trade."
   },
   {
-    "index": "401.",
+    "index": "402.",
     "thumbnail": "images/anime/Saga of Tanya the Evil_ The Movie.jpg",
     "name": "Saga of Tanya the Evil: The Movie",
     "type": "Movie",
@@ -9223,7 +9246,7 @@
     "tags": "Military:Centered around the life and activities of military personnel.;Foreign:Partly or completely set in a country outside the country of origin.;War:Partly or completely set during wartime.;Anti-Hero:Features a protagonist who lacks conventional heroic attributes and may be considered a borderline villain.;Revenge:Prominently features a character who aims to exact punishment in a resentful or vindictive manner.;Historical:Partly or completely set during a real period of world history.;Magic:Prominently features magical elements or the use of magic.;Female Protagonist:Main character is female.;Politics:Centers around politics, politicians, or government activities.;Gods:Prominently features a character of divine or religious nature.;Guns:Prominently features the use of guns in combat.;Reincarnation:Features a character being born again after death, typically as another person or in another world.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Isekai:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Gender Bending:Prominently features a character who dresses and behaves in a way characteristic of another gender, or has been transformed into a person of another gender.;Primarily Male Cast:Main cast is mostly composed of male characters.;Tragedy:Centers around tragic events and unhappy endings.;CGI:Prominently features scenes created with computer-generated imagery."
   },
   {
-    "index": "402.",
+    "index": "403.",
     "thumbnail": "images/anime/Chainsaw Man the Movie_ Reze Arc.jpg",
     "name": "Chainsaw Man the Movie: Reze Arc",
     "type": "Movie",
@@ -9246,7 +9269,7 @@
     "tags": "Demons:Prominently features malevolent otherworldly creatures.;Monster Boy:Prominently features a male character who is a part-monster.;Male Protagonist:Main character is male.;Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;Urban:Partly or completely set in a city.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;Henshin:Prominently features character or costume transformations which often grant special abilities.;Gore:Prominently features graphic bloodshed and violence.;Body Horror:Features characters who undergo horrific transformations or disfigurement, often to their own detriment.;Shapeshifting:Features character(s) who changes one's appearance or form.;Anti-Hero:Features a protagonist who lacks conventional heroic attributes and may be considered a borderline villain.;Psychosexual:Work that involves the psychological aspects of sexual impulses.;Philosophy:Relating or devoted to the study of the fundamental nature of knowledge, reality, and existence.;POV:Point of View; features scenes shown from the perspective of the series protagonist.;Coming of Age:Centers around a character's transition from childhood to adulthood.;Work:Centers around the activities of a certain occupation.;Shounen:Target demographic is teenage and young adult males.;Female Protagonist:Main character is female.;Love Triangle:Centered around romantic feelings between more than two people. Includes all love polygons.;Nudity:Features a character wearing no clothing or exposing intimate body parts.;Surreal Comedy:Prominently features comedic moments that defy casual reasoning, resulting in illogical events.;School:Partly or completely set in a primary or secondary educational institution.;Swimming:Centers around the sport of swimming.;Angels:Prominently features spiritual beings usually represented with wings and halos and believed to be attendants of God.;Coastal:Story prominently takes place near the beach or around a coastal area/town. Setting is near the ocean.;CGI:Prominently features scenes created with computer-generated imagery."
   },
   {
-    "index": "403.",
+    "index": "404.",
     "thumbnail": "images/anime/Demon Slayer_ The Movie_ Infinity Castle - Part 1_ Akaza Returns.jpg",
     "name": "Demon Slayer: The Movie: Infinity Castle - Part 1: Akaza Returns",
     "type": "Movie",
@@ -9269,7 +9292,7 @@
     "tags": "Demons:Prominently features malevolent otherworldly creatures.;Male Protagonist:Main character is male.;Swordplay:Prominently features the use of swords in combat.;War:Partly or completely set during wartime.;Revenge:Prominently features a character who aims to exact punishment in a resentful or vindictive manner.;Shounen:Target demographic is teenage and young adult males.;Martial Arts:Centers around the use of traditional hand-to-hand combat.;Super Power:Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible.;Gore:Prominently features graphic bloodshed and violence.;Afterlife:Partly or completely set in the afterlife.;Dungeon:Prominently features a dungeon environment.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Curses:Features a character, object or area that has been cursed, usually by a malevolent supernatural force.;Body Horror:Features characters who undergo horrific transformations or disfigurement, often to their own detriment.;CGI:Prominently features scenes created with computer-generated imagery.;Historical:Partly or completely set during a real period of world history."
   },
   {
-    "index": "404.",
+    "index": "405.",
     "thumbnail": "images/anime/Vinland Saga, S02.jpg",
     "name": "Vinland Saga, S02",
     "type": "TV",
@@ -9292,7 +9315,7 @@
     "tags": "Seinen:Target demographic is adult males.;Vikings:Prominently features Scandinavian seafaring pirates and warriors.;Male Protagonist:Main character is male.;Philosophy:Relating or devoted to the study of the fundamental nature of knowledge, reality, and existence.;Coming of Age:Centers around a character's transition from childhood to adulthood.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Historical:Partly or completely set during a real period of world history.;Agriculture:Prominently features agriculture practices.;War:Partly or completely set during wartime.;Primarily Male Cast:Main cast is mostly composed of male characters.;Foreign:Partly or completely set in a country outside the country of origin.;Rural:Partly or completely set in the countryside.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Religion:Centers on the belief that humanity is related to supernatural, transcendental, and spiritual elements.;Swordplay:Prominently features the use of swords in combat.;Class Struggle:Contains conflict born between the different social classes. Generally between an dominant elite and a suffering oppressed group.;Gore:Prominently features graphic bloodshed and violence.;Politics:Centers around politics, politicians, or government activities.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;Travel:Centers around character(s) moving between places a significant distance apart.;Mythology:Prominently features mythological elements, especially those from religious or cultural tradition.;Wrestling:Centers around the sport of wrestling."
   },
   {
-    "index": "405.",
+    "index": "406.",
     "thumbnail": "images/anime/Dorohedoro, S01.jpg",
     "name": "Dorohedoro, S01",
     "type": "TV",
@@ -9315,7 +9338,7 @@
     "tags": "Dystopian:Partly or completely set in a society characterized by poverty, squalor or oppression.;Monster Boy:Prominently features a male character who is a part-monster.;Magic:Prominently features magical elements or the use of magic.;Amnesia:Prominently features a character(s) with memory loss.;CGI:Prominently features scenes created with computer-generated imagery.;Full CGI:Almost entirely created with computer-generated imagery.;Gore:Prominently features graphic bloodshed and violence.;Surreal Comedy:Prominently features comedic moments that defy casual reasoning, resulting in illogical events.;Seinen:Target demographic is adult males.;Body Horror:Features characters who undergo horrific transformations or disfigurement, often to their own detriment.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;Anti-Hero:Features a protagonist who lacks conventional heroic attributes and may be considered a borderline villain.;Anthropomorphism:Contains non-human character(s) that have attributes or characteristics of a human being.;Primarily Adult Cast:Main cast is mostly composed of characters above a high school age.;Curses:Features a character, object or area that has been cursed, usually by a malevolent supernatural force.;Male Protagonist:Main character is male.;Demons:Prominently features malevolent otherworldly creatures.;Revenge:Prominently features a character who aims to exact punishment in a resentful or vindictive manner.;Found Family:Features a group of characters with no biological relations that are united in a group providing social support.;Restaurant:Features a business that prepares and serves food and drinks to customers. Also encompasses cafes and bistros.;Henshin:Prominently features character or costume transformations which often grant special abilities.;Food:Centers around cooking or food appraisal.;Vore:Features a character being swallowed or swallowing another creature whole.;Female Protagonist:Main character is female.;Post-Apocalyptic:Partly or completely set in a world or civilization after a global disaster.;Drugs:Prominently features the usage of drugs such as opioids, stimulants, hallucinogens etc.;Zombie:Prominently features reanimated corpses which often prey on live humans and turn them into zombies.;Nudity:Features a character wearing no clothing or exposing intimate body parts."
   },
   {
-    "index": "406.",
+    "index": "407.",
     "thumbnail": "images/anime/Wandering Witch_ The Journey of Elaina.jpg",
     "name": "Wandering Witch: The Journey of Elaina",
     "type": "TV",
@@ -9338,7 +9361,7 @@
     "tags": "Witch:Prominently features a character who is a witch.;Episodic:Features story arcs that are loosely tied or lack an overarching plot.;Magic:Prominently features magical elements or the use of magic.;Female Protagonist:Main character is female.;Travel:Centers around character(s) moving between places a significant distance apart.;Cute Girls Doing Cute Things:Centers around female characters doing cute activities, usually with little to no emphasis on drama and conflict._x000D_;Primarily Female Cast:Main cast is mostly composed of female characters.;Achronological Order:Chapters or episodes do not occur in chronological order.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;LGBTQ+ Themes:Prominently features characters or themes associated with the LGBTQ+ community, such as sexuality or gender identity.;Anti-Hero:Features a protagonist who lacks conventional heroic attributes and may be considered a borderline villain.;Foreign:Partly or completely set in a country outside the country of origin.;Yuri:Prominently features romance between two females, not inherently sexual. Also known as Girls' Love.;Philosophy:Relating or devoted to the study of the fundamental nature of knowledge, reality, and existence.;Dragons:Prominently features mythical reptiles which generally have wings and can breathe fire.;Gangs:Centers around gang organizations."
   },
   {
-    "index": "407.",
+    "index": "408.",
     "thumbnail": "images/anime/Secrets of the Silent Witch.jpg",
     "name": "Secrets of the Silent Witch",
     "type": "TV",
@@ -9361,7 +9384,7 @@
     "tags": "Female Protagonist:Main character is female.;Magic:Prominently features magical elements or the use of magic.;School:Partly or completely set in a primary or secondary educational institution.;Witch:Prominently features a character who is a witch.;Primarily Teen Cast:Main cast is mostly composed of teen characters.;Royal Affairs:Features nobility, alliances, arranged marriage, succession disputes, religious orders and other elements of royal politics.;Hikikomori:Prominently features a character who withdraws from social life, often seeking extreme isolation.;Coming of Age:Centers around a character's transition from childhood to adulthood.;Politics:Centers around politics, politicians, or government activities.;Ojou-sama:Features a wealthy, high-class, oftentimes stuck up and demanding female character.;Class Struggle:Contains conflict born between the different social classes. Generally between an dominant elite and a suffering oppressed group.;Bullying:Prominently features the use of force for intimidation, often in a school setting.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Shoujo:Target demographic is teenage and young adult females.;Dragons:Prominently features mythical reptiles which generally have wings and can breathe fire.;Spearplay:Prominently features the use of spears in combat.;Rehabilitation:Prominently features the recovery of a character who became incapable of social life or work."
   },
   {
-    "index": "408.",
+    "index": "409.",
     "thumbnail": "images/anime/Once Upon a Witch's Death.jpg",
     "name": "Once Upon a Witch's Death",
     "type": "TV",
@@ -9384,7 +9407,7 @@
     "tags": "Female Protagonist:Main character is female.;Curses:Features a character, object or area that has been cursed, usually by a malevolent supernatural force.;Primarily Female Cast:Main cast is mostly composed of female characters.;Witch:Prominently features a character who is a witch.;Magic:Prominently features magical elements or the use of magic.;Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;Coming of Age:Centers around a character's transition from childhood to adulthood.;Iyashikei:Primary aim is to heal the audience through serene depictions of characters' daily lives.;Found Family:Features a group of characters with no biological relations that are united in a group providing social support.;Foreign:Partly or completely set in a country outside the country of origin.;Orphan:Prominently features a character that is an orphan.;Bisexual:Features a character who is romantically or sexually attracted to people of more than one sex or gender.;Environmental:Concern with the state of the natural world and how humans interact with it.;LGBTQ+ Themes:Prominently features characters or themes associated with the LGBTQ+ community, such as sexuality or gender identity.;Episodic:Features story arcs that are loosely tied or lack an overarching plot.;Yuri:Prominently features romance between two females, not inherently sexual. Also known as Girls' Love."
   },
   {
-    "index": "409.",
+    "index": "410.",
     "thumbnail": "images/anime/The Ancient Magus' Bride, S02 Part 2.jpg",
     "name": "The Ancient Magus' Bride, S02 Part 2",
     "type": "TV",
@@ -9407,7 +9430,7 @@
     "tags": "Female Protagonist:Main character is female.;Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;College:Partly or completely set in a college or university.;Primarily Teen Cast:Main cast is mostly composed of teen characters.;Magic:Prominently features magical elements or the use of magic.;Animals:Prominently features animal characters in a leading role.;Mythology:Prominently features mythological elements, especially those from religious or cultural tradition.;Urban:Partly or completely set in a city.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Kuudere:Prominently features a character who generally retains a cold, blunt and cynical exterior, but once one gets to know them, they have a very warm and loving interior.;Werewolf:Prominently features a character who is a werewolf.;Age Gap:Prominently features romantic relations between people with a significant age difference.;Chibi:Features \"super deformed\" character designs with smaller, rounder proportions and a cute look.;Monster Boy:Prominently features a male character who is a part-monster.;CGI:Prominently features scenes created with computer-generated imagery.;Bullying:Prominently features the use of force for intimidation, often in a school setting.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;School:Partly or completely set in a primary or secondary educational institution.;Teacher:Protagonist is an educator, usually in a school setting."
   },
   {
-    "index": "410.",
+    "index": "411.",
     "thumbnail": "images/anime/Psycho-Pass, S03_ First Inspector.jpg",
     "name": "Psycho-Pass, S03: First Inspector",
     "type": "ONA",
@@ -9430,7 +9453,7 @@
     "tags": "Police:Centers around the life and activities of law enforcement officers.;Crime:Centers around unlawful activities punishable by the state or other authority.;Cyberpunk:Set in a future of advanced technological and scientific achievements that have resulted in social disorder.;Dystopian:Partly or completely set in a society characterized by poverty, squalor or oppression.;Detective:Features a character who investigates and solves crimes.;Artificial Intelligence:Intelligent non-organic machines that work and react similarly to humans.;Philosophy:Relating or devoted to the study of the fundamental nature of knowledge, reality, and existence.;Politics:Centers around politics, politicians, or government activities.;Guns:Prominently features the use of guns in combat."
   },
   {
-    "index": "411.",
+    "index": "412.",
     "thumbnail": "images/anime/To Your Eternity, S03.jpg",
     "name": "To Your Eternity, S03",
     "type": "TV",
@@ -9438,13 +9461,13 @@
     "release_date": "2025-10-04T00:00:00",
     "themes": "X",
     "genres": "Adventure; Drama; Supernatural",
-    "episodes": 16,
+    "episodes": 18,
     "episode_duration": 25,
     "rating": "Zatím 8/10",
     "start_date": "2025-10-05T00:00:00",
     "end_date": "X",
     "rewatch_count": 0,
-    "total_time": 400,
+    "total_time": 450,
     "dub": "ENG",
     "status": "AIRING!",
     "mal_url": "https://myanimelist.net/anime/54703/Fumetsu_no_Anata_e_Season_3",
@@ -9453,7 +9476,7 @@
     "tags": "Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;Shapeshifting:Features character(s) who changes one's appearance or form.;Time Skip:Features a gap in time used to advance the story.;Philosophy:Relating or devoted to the study of the fundamental nature of knowledge, reality, and existence.;Urban:Partly or completely set in a city.;Shounen:Target demographic is teenage and young adult males.;School:Partly or completely set in a primary or secondary educational institution.;Bullying:Prominently features the use of force for intimidation, often in a school setting.;Denpa:Works that feature themes of social dissociation, delusions, and other issues like suicide, bullying, self-isolation, paranoia, and technological necessity in daily lives. Classic iconography: telephone poles, rooftops, and trains."
   },
   {
-    "index": "412.",
+    "index": "413.",
     "thumbnail": "images/anime/Fate strange Fake.jpg",
     "name": "Fate/strange Fake",
     "type": "TV",
@@ -9461,13 +9484,13 @@
     "release_date": "2026-01-03T00:00:00",
     "themes": "Urban Fantasy",
     "genres": "Action; Fantasy",
-    "episodes": 8,
+    "episodes": 10,
     "episode_duration": 23,
     "rating": "X",
     "start_date": "2026-01-03T00:00:00",
     "end_date": "X",
     "rewatch_count": 0,
-    "total_time": 184,
+    "total_time": 230,
     "dub": "ENG",
     "status": "AIRING!",
     "mal_url": "https://myanimelist.net/anime/55830/Fate_strange_Fake",
@@ -9476,7 +9499,7 @@
     "tags": "Urban:Partly or completely set in a city.;Mythology:Prominently features mythological elements, especially those from religious or cultural tradition.;Magic:Prominently features magical elements or the use of magic.;Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;Conspiracy:Contains one or more factions controlling or attempting to control the world from the shadows.;Battle Royale:Centers around a fierce group competition, often violent and with only one winner.;War:Partly or completely set during wartime.;Guns:Prominently features the use of guns in combat.;Vampire:Prominently features a character who is a vampire.;Archery:Centers around the sport of archery, or prominently features the use of archery in combat.;Assassins:Centers around characters who murder people as a profession.;Cyborg:Prominently features a human character whose physiological functions are aided or enhanced by artificial means.;Religion:Centers on the belief that humanity is related to supernatural, transcendental, and spiritual elements.;Chimera:Features a beast made by combining animals, usually with humans.;Swordplay:Prominently features the use of swords in combat.;Police:Centers around the life and activities of law enforcement officers.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Foreign:Partly or completely set in a country outside the country of origin.;Death Game:Features characters participating in a game, where failure results in death.;Gambling:Centers around the act of gambling.;Nun:Prominently features a character who is a nun."
   },
   {
-    "index": "413.",
+    "index": "414.",
     "thumbnail": "images/anime/Sentenced to Be a Hero.jpg",
     "name": "Sentenced to Be a Hero",
     "type": "TV",
@@ -9484,13 +9507,13 @@
     "release_date": "2026-01-03T00:00:00",
     "themes": "X",
     "genres": "Action; Adventure; Fantasy",
-    "episodes": 7,
+    "episodes": 9,
     "episode_duration": 24,
     "rating": "X",
     "start_date": "2026-01-03T00:00:00",
     "end_date": "X",
     "rewatch_count": 0,
-    "total_time": 168,
+    "total_time": 216,
     "dub": "ENG",
     "status": "AIRING!",
     "mal_url": "https://myanimelist.net/anime/56009/Yuusha-kei_ni_Shosu__Choubatsu_Yuusha_9004-tai_Keimu_Kiroku",
@@ -9499,7 +9522,7 @@
     "tags": "Anti-Hero:Features a protagonist who lacks conventional heroic attributes and may be considered a borderline villain.;Demons:Prominently features malevolent otherworldly creatures.;Male Protagonist:Main character is male.;Gore:Prominently features graphic bloodshed and violence.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Gods:Prominently features a character of divine or religious nature.;Military:Centered around the life and activities of military personnel.;Crime:Centers around unlawful activities punishable by the state or other authority.;Swordplay:Prominently features the use of swords in combat.;Prison:Partly or completely set in a prison.;CGI:Prominently features scenes created with computer-generated imagery."
   },
   {
-    "index": "414.",
+    "index": "415.",
     "thumbnail": "images/anime/Jujutsu Kaisen_ The Culling Game Part 1.jpg",
     "name": "Jujutsu Kaisen: The Culling Game Part 1",
     "type": "TV",
@@ -9507,13 +9530,13 @@
     "release_date": "2026-01-09T00:00:00",
     "themes": "School",
     "genres": "Action; Supernatural",
-    "episodes": 7,
+    "episodes": 9,
     "episode_duration": 23,
     "rating": "X",
     "start_date": "2026-01-09T00:00:00",
     "end_date": "X",
     "rewatch_count": 0,
-    "total_time": 161,
+    "total_time": 207,
     "dub": "JAP",
     "status": "AIRING!",
     "mal_url": "https://myanimelist.net/anime/57658/Jujutsu_Kaisen__Shimetsu_Kaiyuu_-_Zenpen",
@@ -9522,7 +9545,7 @@
     "tags": "Urban Fantasy:Set in a world similar to the real world, but with the existence of magic or other supernatural elements.;Curses:Features a character, object or area that has been cursed, usually by a malevolent supernatural force.;Shounen:Target demographic is teenage and young adult males.;Battle Royale:Centers around a fierce group competition, often violent and with only one winner.;Urban:Partly or completely set in a city.;Exorcism:Involving religious methods of vanquishing youkai, demons, or other supernatural entities.;Super Power:Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible.;Death Game:Features characters participating in a game, where failure results in death.;Primarily Teen Cast:Main cast is mostly composed of teen characters.;Survival:Centers around the struggle to live in spite of extreme obstacles.;Male Protagonist:Main character is male.;Gore:Prominently features graphic bloodshed and violence.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Martial Arts:Centers around the use of traditional hand-to-hand combat.;Demons:Prominently features malevolent otherworldly creatures.;Gambling:Centers around the act of gambling.;Swordplay:Prominently features the use of swords in combat.;Cute Boys Doing Cute Things:Centers around male characters doing cute activities, usually with little to no emphasis on drama and conflict.;Philosophy:Relating or devoted to the study of the fundamental nature of knowledge, reality, and existence.;Femboy:Features a boy who exhibits characteristics or behaviors considered in many cultures to be typical of girls.;LGBTQ+ Themes:Prominently features characters or themes associated with the LGBTQ+ community, such as sexuality or gender identity.;Rotoscoping:Animation technique that animators use to trace over motion picture footage, frame by frame, to produce realistic action."
   },
   {
-    "index": "415.",
+    "index": "416.",
     "thumbnail": "images/anime/Hell's Paradise, S02.jpg",
     "name": "Hell's Paradise, S02",
     "type": "TV",
@@ -9530,13 +9553,13 @@
     "release_date": "2026-01-11T00:00:00",
     "themes": "Gore; Historical; Samurai",
     "genres": "Action; Adventure; Supernatural",
-    "episodes": 7,
+    "episodes": 9,
     "episode_duration": 23,
     "rating": "X",
     "start_date": "2026-01-11T00:00:00",
     "end_date": "X",
     "rewatch_count": 0,
-    "total_time": 161,
+    "total_time": 207,
     "dub": "JAP",
     "status": "AIRING!",
     "mal_url": "https://myanimelist.net/anime/55825/Jigokuraku_2nd_Season",
@@ -9545,7 +9568,7 @@
     "tags": "Body Horror:Features characters who undergo horrific transformations or disfigurement, often to their own detriment.;Ninja:Prominently features Japanese warriors traditionally trained in espionage, sabotage and assasination.;Survival:Centers around the struggle to live in spite of extreme obstacles.;Samurai:Prominently features warriors of medieval Japanese nobility bound by a code of honor.;Swordplay:Prominently features the use of swords in combat.;Gender Bending:Prominently features a character who dresses and behaves in a way characteristic of another gender, or has been transformed into a person of another gender.;Gore:Prominently features graphic bloodshed and violence.;Ensemble Cast:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Super Power:Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible.;Battle Royale:Centers around a fierce group competition, often violent and with only one winner.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;Nudity:Features a character wearing no clothing or exposing intimate body parts.;Shounen:Target demographic is teenage and young adult males.;Amnesia:Prominently features a character(s) with memory loss.;LGBTQ+ Themes:Prominently features characters or themes associated with the LGBTQ+ community, such as sexuality or gender identity."
   },
   {
-    "index": "416.",
+    "index": "417.",
     "thumbnail": "images/anime/Frieren_ Beyond Journey's End, S02.jpg",
     "name": "Frieren: Beyond Journey's End, S02",
     "type": "TV",
@@ -9553,41 +9576,18 @@
     "release_date": "2026-01-16T00:00:00",
     "themes": "X",
     "genres": "Adventure; Drama; Fantasy",
-    "episodes": 5,
+    "episodes": 7,
     "episode_duration": 24,
     "rating": "X",
     "start_date": "2026-01-16T00:00:00",
     "end_date": "X",
     "rewatch_count": 0,
-    "total_time": 120,
+    "total_time": 168,
     "dub": "JAP",
     "status": "AIRING!",
     "mal_url": "https://myanimelist.net/anime/59978/Sousou_no_Frieren_2nd_Season",
     "series": "Frieren: Beyond Journey's End",
     "rewatches": [],
     "tags": "Travel:Centers around character(s) moving between places a significant distance apart.;Elf:Prominently features a character who is an elf.;Magic:Prominently features magical elements or the use of magic.;Iyashikei:Primary aim is to heal the audience through serene depictions of characters' daily lives.;Female Protagonist:Main character is female.;Found Family:Features a group of characters with no biological relations that are united in a group providing social support.;Philosophy:Relating or devoted to the study of the fundamental nature of knowledge, reality, and existence.;Time Skip:Features a gap in time used to advance the story.;Medieval:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Swordplay:Prominently features the use of swords in combat.;Heterosexual:Prominently features a romance between a man and a woman, not inherently sexual.;Shounen:Target demographic is teenage and young adult males.;Episodic:Features story arcs that are loosely tied or lack an overarching plot.;Dragons:Prominently features mythical reptiles which generally have wings and can breathe fire.;Aromantic:Features a character who experiences little to no romantic attraction.;Fishing:Centers around the sport of fishing.;Asexual:Features a character who isn't sexually attracted to people of any sex or gender."
-  },
-  {
-    "index": "417.",
-    "thumbnail": "images/anime/Ergo Proxy.jpg",
-    "name": "Ergo Proxy",
-    "type": "TV",
-    "studio": null,
-    "release_date": null,
-    "themes": null,
-    "genres": null,
-    "episodes": 10,
-    "episode_duration": 25.961,
-    "rating": null,
-    "start_date": "2026-02-24T00:00:00",
-    "end_date": null,
-    "rewatch_count": 0,
-    "total_time": 259.61,
-    "dub": "ENG",
-    "status": "PENDING",
-    "mal_url": "https://myanimelist.net/anime/790/Ergo_Proxy",
-    "series": null,
-    "rewatches": [],
-    "tags": null
   }
 ]
