@@ -10,9 +10,8 @@ export default function InteractionPath({
     colorClass = 'primary'
 }) {
     // The nodes are rendered with top-left origins normally.
-    // If the node width is, say, 220px and height is 80px:
-    const nodeWidth = 220;
-    const nodeHeight = 84; // Box height approximation
+    const nodeWidth = 160; // Matches physical CSS width
+    const nodeHeight = 68; // Box base height approximation
 
     // Connect right side of start to left side of end
     // Or if it's a vertical drop, bottom of start to top of end.
@@ -43,10 +42,7 @@ export default function InteractionPath({
     if (isMaxed) strokeClass = `path-maxed path-${colorClass}`;
 
     return (
-        <svg
-            className="tree-connection-layer"
-            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', overflow: 'visible', pointerEvents: 'none' }}
-        >
+        <g className="tree-connection-layer">
             {/* Background shadow path for depth */}
             {isActive && (
                 <path
@@ -67,6 +63,6 @@ export default function InteractionPath({
                 strokeLinecap="round"
                 strokeDasharray={(!isActive) ? "5,5" : "none"}
             />
-        </svg>
+        </g>
     );
 }

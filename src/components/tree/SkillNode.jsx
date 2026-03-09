@@ -18,16 +18,18 @@ export default function SkillNode({ nodeData, onHover, onClick }) {
     const isMaxed = level >= maxLevel;
     const progressPercent = Math.min(100, Math.max(0, (xp / maxXp) * 100));
 
-    // Domain styling dynamic classes
+    // Domain and Tier styling dynamic classes
     const colorClass = `node-${domainColor}`;
     const statusClass = isMaxed ? 'status-maxed' : (isUnlocked ? 'status-unlocked' : 'status-locked');
     const hoverClass = isHovered ? 'node-hovered' : '';
+    const tierClass = `tier-${maxLevel >= 7 ? 'apex' : maxLevel >= 5 ? 'master' : maxLevel >= 3 ? 'adept' : 'novice'}`;
 
     return (
         <div
-            className={`skill-node ${colorClass} ${statusClass} ${hoverClass}`}
+            className={`skill-node ${colorClass} ${statusClass} ${hoverClass} ${tierClass}`}
             style={{
-                transform: `translate(${x}px, ${y}px)`,
+                top: `${y}px`,
+                left: `${x}px`,
                 // CSS custom properties for dynamic theming
                 '--node-progress': `${progressPercent}%`,
             }}

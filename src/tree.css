@@ -7,15 +7,11 @@
 .stats-tree-container {
     position: relative;
     border-radius: var(--radius-lg);
-    border: 1px solid var(--border-color);
-    background-color: #050A15;
-    /* Absolute Void Dark */
-    background-image:
-        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    background-color: #11141E;
+    /* Extracted from screenshot background */
     overflow: hidden;
-    box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.8);
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
 }
 
 .tree-canvas-container {
@@ -47,15 +43,14 @@
 /* ─── The Skill Node Block ─── */
 .skill-node {
     position: absolute;
-    width: 220px;
-    padding: 12px;
-    border-radius: 12px;
-    background: rgba(15, 20, 35, 0.85);
-    backdrop-filter: blur(8px);
-    border: 2px solid rgba(255, 255, 255, 0.05);
+    width: 160px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: #1e293b;
+    border: 1.5px solid #334155;
     display: flex;
     flex-direction: column;
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease, border-color 0.2s ease;
+    transition: scale 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease, border-color 0.2s ease;
     user-select: none;
     cursor: pointer;
     z-index: 10;
@@ -63,15 +58,60 @@
 }
 
 .skill-node.node-hovered {
-    transform: translate(var(--node-x), var(--node-y)) scale(1.05) !important;
+    scale: 1.05;
     z-index: 20;
 }
 
-/* LOCKED STATE */
+/* LOCKED STATE (FOG OF WAR) */
 .skill-node.status-locked {
-    background: rgba(10, 10, 15, 0.6);
-    border: 2px dashed #334;
-    opacity: 0.6;
+    background: rgba(10, 10, 15, 0.4);
+    border: 2px dashed rgba(51, 65, 85, 0.5);
+    opacity: 0.25;
+    filter: grayscale(100%);
+}
+
+.skill-node.status-locked:hover {
+    opacity: 0.8;
+    filter: grayscale(50%);
+}
+
+/* ─── NODE TIERS (GDD TITAN CLASSES) ─── */
+.skill-node.tier-novice {
+    /* Standard Box */
+}
+
+.skill-node.tier-adept {
+    border-color: rgba(168, 85, 247, 0.6);
+    box-shadow: inset 0 0 10px rgba(168, 85, 247, 0.1), 0 0 10px rgba(168, 85, 247, 0.1);
+}
+
+.skill-node.tier-master {
+    /* Glowing Gold Hexagon-ish Chamfered Box */
+    border-color: #fbbf24;
+    box-shadow: inset 0 0 15px rgba(251, 191, 36, 0.2), 0 0 15px rgba(251, 191, 36, 0.2);
+    clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+}
+
+.skill-node.tier-apex {
+    /* True APEX Nodes */
+    border-color: #ef4444;
+    box-shadow: inset 0 0 20px rgba(239, 68, 68, 0.3), 0 0 20px rgba(239, 68, 68, 0.3);
+    animation: apexPulse 3s infinite ease-in-out;
+    clip-path: polygon(15px 0, calc(100% - 15px) 0, 100% 15px, 100% calc(100% - 15px), calc(100% - 15px) 100%, 15px 100%, 0 calc(100% - 15px), 0 15px);
+}
+
+@keyframes apexPulse {
+    0% {
+        box-shadow: inset 0 0 10px rgba(239, 68, 68, 0.2), 0 0 10px rgba(239, 68, 68, 0.2);
+    }
+
+    50% {
+        box-shadow: inset 0 0 35px rgba(239, 68, 68, 0.6), 0 0 35px rgba(239, 68, 68, 0.6);
+    }
+
+    100% {
+        box-shadow: inset 0 0 10px rgba(239, 68, 68, 0.2), 0 0 10px rgba(239, 68, 68, 0.2);
+    }
 }
 
 .skill-node.status-locked .node-title {
@@ -153,18 +193,18 @@
 }
 
 .node-title {
-    font-weight: 700;
-    font-size: 0.95rem;
-    letter-spacing: 0.02em;
-    color: #fff;
+    font-weight: 800;
+    font-size: 0.85rem;
+    letter-spacing: 0.01em;
+    color: #f8fafc;
 }
 
 .node-level {
-    font-size: 0.75rem;
+    font-size: 0.70rem;
     font-weight: 800;
-    color: #a1a1aa;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 2px 6px;
+    color: #fca5a5;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2px 5px;
     border-radius: 4px;
 }
 
@@ -175,16 +215,17 @@
 
 .node-progress-track {
     width: 100%;
-    height: 6px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
+    height: 8px;
+    background: #11141E;
+    /* Very dark background for track */
+    border-radius: 4px;
     overflow: hidden;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 }
 
 .node-progress-fill {
     height: 100%;
-    border-radius: 3px;
+    border-radius: 4px;
     transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -210,10 +251,11 @@
 }
 
 .node-xp-text {
-    font-size: 0.7rem;
-    color: var(--text-secondary);
+    font-size: 0.65rem;
+    color: #94a3b8;
     text-align: center;
     font-weight: 500;
+    margin-top: 4px;
 }
 
 /* ─── SVG Spline Connections ─── */
@@ -227,9 +269,14 @@
 }
 
 .path-active {
-    stroke-dasharray: 1000;
-    stroke-dashoffset: 0;
-    animation: pathDraw 1.5s ease forwards;
+    stroke-dasharray: 20 15;
+    animation: energyFlow 2s linear infinite;
+}
+
+@keyframes energyFlow {
+    to {
+        stroke-dashoffset: -35;
+    }
 }
 
 /* Glow lines based on domain */

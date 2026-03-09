@@ -97,7 +97,8 @@ body {
   line-height: 1.6;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  overflow: hidden;
+  /* Prevent page-level scrollbars for the app interface */
   position: relative;
 }
 

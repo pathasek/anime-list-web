@@ -1,62 +1,82 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useMemo, useRef, useState, useLayoutEffect, useCallback } from 'react';
 
 /**
- * TreeCanvas implements an infinite draggable/zoomable canvas.
+ * TreeCanvas implements an infinite pan and zoom canvas.
  */
-export default function TreeCanvas({ children, width = '100%', height = 'calc(100vh - 80px)' }) {
+export default function TreeCanvas({ connections, skillNodes, nodes = [] }) {
     const containerRef = useRef(null);
-
-    // Transform state: position (x, y) and zoom (scale)
     const [transform, setTransform] = useState({ x: 0, y: 0, scale: 1 });
     const [isDragging, setIsDragging] = useState(false);
-    const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+    const [hasDragged, setHasDragged] = useState(false);
+    const dragStart = useRef({ x: 0, y: 0 });
 
-    // Handle zooming via scroll wheel
-    const handleWheel = (e) => {
-        // Prevent default scroll behavior
-        e.preventDefault();
+    const { minX, minY, worldW, worldH } = useMemo(() => {
+        if (!nodes || nodes.length === 0) return { minX: 0, minY: 0, worldW: '100%', worldH: '100%' };
 
-        const zoomSensitivity = 0.001;
-        const delta = -e.deltaY * zoomSensitivity;
+        let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+        const NODE_W = 160;
+        const NODE_H = 68;
 
-        setTransform(prev => {
-            let newScale = prev.scale + delta;
-            // Clamp zoom between 0.1 and 3
-            newScale = Math.min(Math.max(0.1, newScale), 3);
-
-            // Calculate cursor position relative to container
-            const rect = containerRef.current.getBoundingClientRect();
-            const mouseX = e.clientX - rect.left;
-            const mouseY = e.clientY - rect.top;
-
-            // Calculate how much the scale changed
-            const scaleChange = newScale - prev.scale;
-
-            // Shift the (x,y) so that we zoom "into" the cursor
-            // This logic might need tweaking for perfect UX, but works as a baseline
-            const newX = prev.x - (mouseX - prev.x) * (scaleChange / prev.scale);
-            const newY = prev.y - (mouseY - prev.y) * (scaleChange / prev.scale);
-
-            return { x: newX, y: newY, scale: newScale };
+        nodes.forEach(n => {
+            if (n.x < minX) minX = n.x;
+            if (n.x > maxX) maxX = n.x;
+            if (n.y < minY) minY = n.y;
+            if (n.y > maxY) maxY = n.y;
         });
-    };
 
-    // Dragging logic
-    const handlePointerDown = (e) => {
-        if (e.button !== 0) return; // Only left click grabs
-        setIsDragging(true);
-        setDragStart({ x: e.clientX, y: e.clientY });
+        const PADDING_X = 300;
+        const PADDING_Y = 300;
 
-        if (containerRef.current) {
-            containerRef.current.setPointerCapture(e.pointerId);
+        return {
+            minX: minX - PADDING_X,
+            minY: minY - PADDING_Y,
+            worldW: (maxX - minX) + NODE_W + PADDING_X * 2,
+            worldH: (maxY - minY) + NODE_H + PADDING_Y * 2
+        };
+    }, [nodes]);
+
+    // Auto-scroll to center (the root node) on first load
+    useLayoutEffect(() => {
+        if (containerRef.current && nodes.length > 0) {
+            const root = nodes.find(n => n.id === 'singularity') || nodes[0];
+            if (root) {
+                // Determine ideal initial transform so the root node is centered
+                const containerW = containerRef.current.clientWidth;
+                const containerH = containerRef.current.clientHeight;
+
+                // Content coordinates of the root node
+                const contentX = root.x - minX + 80; // center of node
+                const contentY = root.y - minY + 34; // center of node
+
+                const initialScale = 1;
+                const offsetX = (containerW / 2) - (contentX * initialScale);
+                const offsetY = (containerH / 2) - (contentY * initialScale);
+
+                setTransform({ x: offsetX, y: offsetY, scale: initialScale });
+            }
         }
-    };
+    }, [minX, minY, nodes]);
 
-    const handlePointerMove = (e) => {
+    // Interaction Handlers
+    const handleMouseDown = useCallback((e) => {
+        // Only trigger on left or middle click, ignore right clicks
+        if (e.button !== 0 && e.button !== 1) return;
+
+        e.preventDefault();
+        setIsDragging(true);
+        setHasDragged(false);
+        dragStart.current = { x: e.clientX, y: e.clientY };
+    }, []);
+
+    const handleMouseMove = useCallback((e) => {
         if (!isDragging) return;
 
-        const dx = e.clientX - dragStart.x;
-        const dy = e.clientY - dragStart.y;
+        const dx = e.clientX - dragStart.current.x;
+        const dy = e.clientY - dragStart.current.y;
+
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+            setHasDragged(true);
+        }
 
         setTransform(prev => ({
             ...prev,
@@ -64,43 +84,84 @@ export default function TreeCanvas({ children, width = '100%', height = 'calc(10
             y: prev.y + dy
         }));
 
-        setDragStart({ x: e.clientX, y: e.clientY });
-    };
+        dragStart.current = { x: e.clientX, y: e.clientY };
+    }, [isDragging]);
 
-    const handlePointerUp = (e) => {
+    const handleMouseUpOrLeave = useCallback(() => {
         setIsDragging(false);
-        if (containerRef.current && containerRef.current.hasPointerCapture(e.pointerId)) {
-            containerRef.current.releasePointerCapture(e.pointerId);
-        }
-    };
-
-    // Need a global passive event listener for wheel to prevent default body scrolling
-    useEffect(() => {
-        const element = containerRef.current;
-        if (element) {
-            element.addEventListener('wheel', handleWheel, { passive: false });
-            // Prevent generic context menu on right click maybe, or dragging images
-            return () => {
-                element.removeEventListener('wheel', handleWheel);
-            }
-        }
+        // Do not reset hasDragged here so clickCapture can use it
     }, []);
+
+    const handleClickCapture = useCallback((e) => {
+        if (hasDragged) {
+            e.stopPropagation();
+            setHasDragged(false);
+        }
+    }, [hasDragged]);
+
+    const handleWheel = useCallback((e) => {
+        e.preventDefault();
+
+        const zoomSensitivity = 0.001;
+        const deltaScale = e.deltaY * -zoomSensitivity;
+
+        setTransform(prev => {
+            const newScale = Math.min(Math.max(0.1, prev.scale + prev.scale * deltaScale), 3);
+
+            // To zoom towards cursor:
+            // The point on the content under the cursor shouldn't change its screen coordinate
+            if (!containerRef.current) return prev;
+
+            const rect = containerRef.current.getBoundingClientRect();
+            // Cursor position relative to the container
+            const cursorX = e.clientX - rect.left;
+            const cursorY = e.clientY - rect.top;
+
+            // Cursor position relative to the content (unscaled)
+            const contentCursorX = (cursorX - prev.x) / prev.scale;
+            const contentCursorY = (cursorY - prev.y) / prev.scale;
+
+            // New transform positions to lock the cursor to its content coordinate
+            const newX = cursorX - (contentCursorX * newScale);
+            const newY = cursorY - (contentCursorY * newScale);
+
+            return { x: newX, y: newY, scale: newScale };
+        });
+    }, []);
+
+    // Because React onWheel passive limitations, attach native event handler for wheel to prevent default page scrolling
+    useLayoutEffect(() => {
+        const currentContainer = containerRef.current;
+        if (!currentContainer) return;
+
+        const onWheel = (e) => handleWheel(e);
+        currentContainer.addEventListener('wheel', onWheel, { passive: false });
+
+        return () => {
+            currentContainer.removeEventListener('wheel', onWheel);
+        };
+    }, [handleWheel]);
 
     return (
         <div
             ref={containerRef}
-            className={`tree-canvas-container ${isDragging ? 'dragging' : ''}`}
-            style={{ width, height, overflow: 'hidden', position: 'relative', cursor: isDragging ? 'grabbing' : 'grab' }}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-            onPointerCancel={handlePointerUp}
-            onPointerLeave={handlePointerUp}
+            className="tree-canvas-container"
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUpOrLeave}
+            onMouseLeave={handleMouseUpOrLeave}
+            onClickCapture={handleClickCapture}
+            style={{
+                width: '100%',
+                height: '100%',
+                overflow: 'hidden', // Disable native scrolling
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                backgroundColor: 'var(--bg-primary)',
+                cursor: isDragging ? 'grabbing' : 'grab'
+            }}
         >
-            {/* 
-        The world wrapper translates and scales based on state.
-        All nodes and SVG lines inside this will move together.
-      */}
             <div
                 className="tree-canvas-world"
                 style={{
@@ -109,21 +170,20 @@ export default function TreeCanvas({ children, width = '100%', height = 'calc(10
                     position: 'absolute',
                     top: 0,
                     left: 0,
-                    width: 0,
-                    height: 0,
-                    willChange: 'transform' // performance optimization
+                    width: worldW,
+                    height: worldH,
+                    pointerEvents: 'auto', // Always allow events, clickCapture intercepts if dragging 
+                    transition: isDragging ? 'none' : 'transform 0.1s ease-out' // Smooth zoom
                 }}
             >
-                {children}
-            </div>
+                <div style={{ position: 'absolute', transform: `translate(${-minX}px, ${-minY}px)` }}>
+                    <svg style={{ position: 'absolute', left: 0, top: 0, width: worldW, height: worldH, overflow: 'visible', pointerEvents: 'none' }}>
+                        {connections}
+                    </svg>
 
-            {/* Minimap or Recenter UI could go here (outside the scaled world) */}
-            <button
-                className="recenter-btn fade-in"
-                onClick={() => setTransform({ x: 0, y: 0, scale: 1 })}
-            >
-                Origin
-            </button>
+                    {skillNodes}
+                </div>
+            </div>
         </div>
     );
 }

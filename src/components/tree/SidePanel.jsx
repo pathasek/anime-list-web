@@ -51,6 +51,23 @@ export default function SidePanel({ nodeData, onClose }) {
                     </p>
                 </div>
 
+                {nodeData.topContributors && nodeData.topContributors.length > 0 && (
+                    <div className="panel-contributors">
+                        <h3>Top 3 Anime Contributors</h3>
+                        <ul className="contributors-list">
+                            {nodeData.topContributors.map((c, idx) => (
+                                <li key={idx}>
+                                    <span className="contrib-rank">#{idx + 1}</span>
+                                    <div className="contrib-info">
+                                        <div className="contrib-name">{c.name}</div>
+                                        <div className="contrib-xp">+{c.xp.toLocaleString()} XP</div>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+
                 {thresholds.length > 0 && (
                     <div className="panel-thresholds">
                         <h3>Level Milestones</h3>

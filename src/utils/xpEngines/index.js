@@ -16,36 +16,46 @@ export function calculateTreeState(data) {
 
     const baseNodes = NODE_DICTIONARY.map(nodeDef => {
         let xp = 0;
+        let contributors = [];
+
+        const processEngine = (res) => {
+            if (typeof res === 'object' && res !== null && 'xp' in res) {
+                xp = res.xp;
+                contributors = res.contributors || [];
+            } else {
+                xp = res || 0;
+            }
+        };
 
         switch (nodeDef.domain) {
             case 'singularity':
                 xp = data.animeList ? data.animeList.length * 100 : 0;
                 break;
             case 'chronos':
-                xp = calculateChronosXP(nodeDef, totalWatchHours, data);
+                processEngine(calculateChronosXP(nodeDef, totalWatchHours, data));
                 break;
             case 'purple': // Generes are defined as 'purple' domain in dictionary
             case 'genre':
-                xp = calculateGenreXP(nodeDef, data);
+                processEngine(calculateGenreXP(nodeDef, data));
                 break;
             case 'orange': // Studios are orange domain
             case 'studio':
-                xp = calculateStudioXP(nodeDef, data);
+                processEngine(calculateStudioXP(nodeDef, data));
                 break;
             case 'emerald': // Audio is emerald domain
             case 'audio':
-                xp = calculateAudioXP(nodeDef, data);
+                processEngine(calculateAudioXP(nodeDef, data));
                 break;
             case 'cyan': // Eras and Misc
             case 'era':
-                xp = calculateErasXP(nodeDef, data);
+                processEngine(calculateErasXP(nodeDef, data));
                 break;
             case 'red': // Critic ratings
             case 'rating':
-                xp = calculateRatingsXP(nodeDef, data);
+                processEngine(calculateRatingsXP(nodeDef, data));
                 break;
             case 'misc':
-                xp = calculateMiscXP(nodeDef, data);
+                processEngine(calculateMiscXP(nodeDef, data));
                 break;
             default:
                 xp = 0;
@@ -69,13 +79,31 @@ export function calculateTreeState(data) {
             maxXp = nodeDef.thresholds[level - 1];
         }
 
+        // Sort contributors and get top 3
+        let topContributors = [];
+        if (contributors.length > 0) {
+            // Group duplicates by anime ID just in case
+            const uniqueMap = new Map();
+            contributors.forEach(c => {
+                if (!uniqueMap.has(c.id)) uniqueMap.set(c.id, c);
+                else {
+                    const existing = uniqueMap.get(c.id);
+                    existing.xp += c.xp;
+                }
+            });
+            const merged = Array.from(uniqueMap.values());
+            merged.sort((a, b) => b.xp - a.xp);
+            topContributors = merged.slice(0, 3);
+        }
+
         return {
             ...nodeDef,
             xp,
             maxXp,
             level,
             maxLevel: nodeDef.thresholds.length,
-            isUnlocked: false
+            isUnlocked: false,
+            topContributors
         };
     });
 

@@ -3,14 +3,24 @@
  */
 export function calculateChronosXP(nodeDef, totalWatchHours, data) {
     let xp = 0;
+    let contributors = [];
+
+    const addAnime = (a, gained) => {
+        xp += gained;
+        contributors.push({ id: a.anime_id, name: a.name, xp: gained });
+    };
 
     if (nodeDef.id === 'chronos_novice') {
-        // Simple 1 hour = 10 XP scaling for total time
-        // E.g. 100 hrs = 1000 XP (Level 1 threshold)
-        xp = totalWatchHours * 10;
+        if (data.animeList) {
+            data.animeList.forEach(a => {
+                const totalDays = parseFloat(a.total_time);
+                if (!isNaN(totalDays)) {
+                    addAnime(a, Math.floor(totalDays * 24 * 10)); // 1 hour = 10 XP
+                }
+            });
+        }
     }
     else if (nodeDef.id === 'chronos_binge') {
-        // Calculate the highest density of episodes in a single day from history_log
         let maxEpsInDay = 0;
         const dateMap = {};
 
@@ -23,21 +33,18 @@ export function calculateChronosXP(nodeDef, totalWatchHours, data) {
             });
             maxEpsInDay = Math.max(0, ...Object.values(dateMap));
         }
-
-        // Suppose 1 ep in a single day = 100 XP
-        // Weekend Warrior needs 5 eps = 500 XP
         xp = maxEpsInDay * 100;
+        // Skip specific contributors for Binge since it's date-based, not anime-based
     }
     else if (nodeDef.id === 'chronos_completionist') {
-        // Count finished anime
-        let finishedCount = 0;
         if (data.animeList) {
-            finishedCount = data.animeList.filter(a => String(a.status).toUpperCase() === 'FINISHED').length;
+            data.animeList.forEach(a => {
+                if (String(a.status).toUpperCase() === 'FINISHED') {
+                    addAnime(a, 100);
+                }
+            });
         }
-        // 1 finished = 100 XP
-        // Novice (10 finishes = 1000 XP)
-        xp = finishedCount * 100;
     }
 
-    return xp;
+    return { xp, contributors };
 }

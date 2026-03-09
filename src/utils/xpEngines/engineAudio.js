@@ -3,41 +3,44 @@
  */
 export function calculateAudioXP(nodeDef, data) {
     let xp = 0;
+    let contributors = [];
 
     const favs = data.favorites || [];
 
+    const addFavs = (filterFn, multiplier) => {
+        favs.forEach(f => {
+            if (filterFn(f)) {
+                const gained = multiplier;
+                xp += gained;
+                // favs.name might contain "Song Name - Anime Name", extracting just anime name if possible, or using the whole string
+                contributors.push({ id: f.name, name: f.name, xp: gained });
+            }
+        });
+    };
+
     if (nodeDef.id === 'audio_listener') {
         // Total songs saved (1000 XP per song to scale fast)
-        xp = favs.length * 1000;
+        addFavs(() => true, 1000);
     }
     // ─── 5A: FRISSON PATH ───
     else if (nodeDef.id === 'audio_frisson') {
-        const frissonCount = favs.filter(f => f.has_frisson === true || String(f.has_frisson).toLowerCase() === 'ano').length;
-        // 1 song = 5000 XP
-        // Level 1 = 1 song, Level 2 = 5 songs etc.
-        xp = frissonCount * 5000;
+        addFavs(f => f.has_frisson === true || String(f.has_frisson).toLowerCase() === 'ano', 5000);
     }
     // ─── 5B: VOCAL PATH ───
     else if (nodeDef.id === 'audio_karaoke') {
-        // High sing-along score counts
-        const singCount = favs.filter(f => parseFloat(f.sing_along || 0) >= 8).length;
-        xp = singCount * 1000;
+        addFavs(f => parseFloat(f.sing_along || 0) >= 8, 1000);
     }
     else if (nodeDef.id === 'audio_seiyuu') {
-        // High Voice quality
-        const voiceCount = favs.filter(f => parseFloat(f.rating_voice || 0) >= 9).length;
-        xp = voiceCount * 1000;
+        addFavs(f => parseFloat(f.rating_voice || 0) >= 9, 1000);
     }
     // ─── 5C: COMPOSITION PATH ───
     else if (nodeDef.id === 'audio_melody') {
-        const perfectMelody = favs.filter(f => parseFloat(f.rating_melody || 0) === 10).length;
-        xp = perfectMelody * 2500;
+        addFavs(f => parseFloat(f.rating_melody || 0) === 10, 2500);
     }
     // ─── 5D: VISUAL OP/ED ───
     else if (nodeDef.id === 'audio_visual') {
-        const perfectVideo = favs.filter(f => parseFloat(f.rating_video || 0) >= 9.5).length;
-        xp = perfectVideo * 2500;
+        addFavs(f => parseFloat(f.rating_video || 0) >= 9.5, 2500);
     }
 
-    return xp;
+    return { xp, contributors };
 }

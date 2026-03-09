@@ -55,9 +55,10 @@ function StatsTreeContent() {
 
     return (
         <div className="stats-tree-container" style={{ flex: 1, borderRadius: 'var(--radius-lg)', position: 'relative' }}>
-            <TreeCanvas>
-                {paths}
-                {nodes.map(node => (
+            <TreeCanvas
+                nodes={nodes}
+                connections={paths}
+                skillNodes={nodes.map(node => (
                     <SkillNode
                         key={node.id}
                         nodeData={node}
@@ -65,7 +66,7 @@ function StatsTreeContent() {
                         onHover={(data) => { }}
                     />
                 ))}
-            </TreeCanvas>
+            />
 
             <SidePanel
                 nodeData={selectedNode}
@@ -78,11 +79,6 @@ function StatsTreeContent() {
 export default function StatsTree() {
     return (
         <div className="page-container" style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
-            <header className="page-header" style={{ flexShrink: 0, paddingBottom: 0, marginBottom: '1rem' }}>
-                <h1 className="page-title">Stats Research Tree</h1>
-                <p className="page-subtitle" style={{ color: 'var(--text-muted)' }}>The Complete Atlas of Your Anime Journey</p>
-            </header>
-
             <StatsTreeProvider>
                 <StatsTreeContent />
             </StatsTreeProvider>
