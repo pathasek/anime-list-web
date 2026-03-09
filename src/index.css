@@ -587,10 +587,8 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   max-height: 400px;
   overflow-y: auto;
   z-index: 50;
-  padding: var(--spacing-xs);
   display: flex;
   flex-direction: column;
-  gap: 2px;
   animation: fadeIn 0.15s ease-out forwards;
 }
 
@@ -659,12 +657,10 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   background: transparent;
   color: var(--accent-red);
   border: none;
-  border-top: 1px solid var(--border-color);
   cursor: pointer;
   font-size: 0.8rem;
-  margin-top: 4px;
   transition: background var(--transition-fast);
-  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  border-radius: var(--radius-sm);
 }
 
 .clear-filter-btn:hover {

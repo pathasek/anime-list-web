@@ -51,38 +51,46 @@ const FilterDropdown = ({ label, options, currentFilters, onFilterChange, type, 
             </button>
             {isOpen && (
                 <div className={`filter-dropdown-menu ${alignRight ? 'right-aligned' : ''}`}>
-                    <input
-                        type="text"
-                        placeholder="Hledat..."
-                        value={localSearch}
-                        onChange={e => setLocalSearch(e.target.value)}
-                        style={{
-                            background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '4px',
-                            padding: '4px 8px', color: 'var(--text-primary)', marginBottom: '4px', fontSize: '0.8rem'
-                        }}
-                        onClick={e => e.stopPropagation()}
-                    />
-                    {filteredOptions.length > 0 ? filteredOptions.map(opt => {
-                        const status = currentFilters[opt] || 0
-                        const statusClass = status === 1 ? 'included' : status === -1 ? 'excluded' : ''
-                        return (
-                            <div
-                                key={opt}
-                                className={`filter-dropdown-item ${statusClass}`}
-                                onClick={(e) => handleCycle(opt, e)}
-                                title={descriptions && descriptions[opt] ? descriptions[opt] : undefined}
-                            >
-                                <span>{opt}</span>
-                                {status === 1 && <span style={{ fontSize: '0.8rem' }}>+</span>}
-                                {status === -1 && <span style={{ fontSize: '0.8rem' }}>−</span>}
-                            </div>
-                        )
-                    }) : <div style={{ padding: '8px', color: 'var(--text-muted)', fontSize: '0.8rem', textAlign: 'center' }}>Nenalezeno</div>}
+                    <div style={{ padding: 'var(--spacing-xs)', position: 'sticky', top: 0, background: 'var(--bg-tertiary)', borderBottom: '1px solid var(--border-color)', zIndex: 10, borderRadius: 'var(--radius-md) var(--radius-md) 0 0' }}>
+                        <input
+                            type="text"
+                            placeholder="Hledat..."
+                            value={localSearch}
+                            onChange={e => setLocalSearch(e.target.value)}
+                            style={{
+                                width: '100%', boxSizing: 'border-box',
+                                background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '4px',
+                                padding: '6px 8px', color: 'var(--text-primary)', fontSize: '0.8rem'
+                            }}
+                            onClick={e => e.stopPropagation()}
+                        />
+                    </div>
+
+                    <div style={{ padding: 'var(--spacing-xs)', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                        {filteredOptions.length > 0 ? filteredOptions.map(opt => {
+                            const status = currentFilters[opt] || 0
+                            const statusClass = status === 1 ? 'included' : status === -1 ? 'excluded' : ''
+                            return (
+                                <div
+                                    key={opt}
+                                    className={`filter-dropdown-item ${statusClass}`}
+                                    onClick={(e) => handleCycle(opt, e)}
+                                    title={descriptions && descriptions[opt] ? descriptions[opt] : undefined}
+                                >
+                                    <span>{opt}</span>
+                                    {status === 1 && <span style={{ fontSize: '0.8rem' }}>+</span>}
+                                    {status === -1 && <span style={{ fontSize: '0.8rem' }}>−</span>}
+                                </div>
+                            )
+                        }) : <div style={{ padding: '8px', color: 'var(--text-muted)', fontSize: '0.8rem', textAlign: 'center' }}>Nenalezeno</div>}
+                    </div>
 
                     {activeCount > 0 && (
-                        <button className="clear-filter-btn" onClick={clearThisFilter}>
-                            Vymazat výběr
-                        </button>
+                        <div style={{ padding: 'var(--spacing-xs)', position: 'sticky', bottom: 0, background: 'var(--bg-tertiary)', borderTop: '1px solid var(--border-color)', zIndex: 10, borderRadius: '0 0 var(--radius-md) var(--radius-md)' }}>
+                            <button className="clear-filter-btn" onClick={clearThisFilter}>
+                                Vymazat výběr
+                            </button>
+                        </div>
                     )}
                 </div>
             )}
