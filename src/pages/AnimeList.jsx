@@ -179,8 +179,8 @@ function AnimeList() {
                     const clean = parts[0].trim()
                     if (clean) {
                         tags.add(clean)
-                        if (parts[1]) {
-                            tagDescriptions[clean] = parts[1].trim()
+                        if (parts.length > 1) {
+                            tagDescriptions[clean] = parts.slice(1).join(':').trim()
                         }
                     }
                 })

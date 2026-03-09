@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { loadData, STORAGE_KEYS } from '../utils/dataStore'
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js'
@@ -35,6 +35,48 @@ function HistoryLog() {
     const [yearFilter, setYearFilter] = useState('all')
     const [sortBy, setSortBy] = useState('date') // 'date', 'animeCount', 'episodes', 'time'
     const [dateRange, setDateRange] = useState({ start: '', end: '' })
+
+    // UI enhancements
+    const [highlightedDate, setHighlightedDate] = useState(null)
+    const [showScrollTop, setShowScrollTop] = useState(false)
+    const scrollUpStartTime = useRef(null)
+    const lastScrollY = useRef(0)
+    const scrollPauseTimeout = useRef(null)
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const currentY = window.scrollY
+            if (currentY < lastScrollY.current) {
+                // Scrolling up
+                if (!scrollUpStartTime.current) {
+                    scrollUpStartTime.current = Date.now()
+                } else if (Date.now() - scrollUpStartTime.current > 3000) {
+                    setShowScrollTop(true)
+                }
+
+                if (scrollPauseTimeout.current) clearTimeout(scrollPauseTimeout.current)
+                scrollPauseTimeout.current = setTimeout(() => {
+                    scrollUpStartTime.current = null
+                }, 500)
+            } else {
+                // Scrolling down
+                scrollUpStartTime.current = null
+                setShowScrollTop(false)
+            }
+            lastScrollY.current = currentY
+
+            if (currentY < 500) {
+                setShowScrollTop(false)
+                scrollUpStartTime.current = null
+            }
+        }
+
+        window.addEventListener('scroll', handleScroll, { passive: true })
+        return () => {
+            window.removeEventListener('scroll', handleScroll)
+            if (scrollPauseTimeout.current) clearTimeout(scrollPauseTimeout.current)
+        }
+    }, [])
 
     useEffect(() => {
         loadData(STORAGE_KEYS.HISTORY_LOG, 'data/history_log.json')
@@ -451,9 +493,14 @@ function HistoryLog() {
         if (group) {
             const el = document.getElementById(`date-${group.date}`);
             if (el) {
-                // 80px offset for top padding/navigation
-                const y = el.getBoundingClientRect().top + window.scrollY - 80;
+                // 140px offset for top padding/navigation + breathing room
+                const y = el.getBoundingClientRect().top + window.scrollY - 140;
                 window.scrollTo({ top: y, behavior: 'instant' });
+
+                setHighlightedDate(group.date);
+                setTimeout(() => {
+                    setHighlightedDate(null);
+                }, 3000);
             }
         }
     }
@@ -763,7 +810,11 @@ function HistoryLog() {
             {/* History Groups */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)' }}>
                 {groupedHistory.map((group, idx) => (
-                    <div key={idx} className="card" id={`date-${group.date}`}>
+                    <div
+                        key={idx}
+                        className={`card ${highlightedDate === group.date ? 'highlight-pulse' : ''}`}
+                        id={`date-${group.date}`}
+                    >
                         <div className="card-header">
                             <div className="card-title">
                                 <span style={{
@@ -859,6 +910,37 @@ function HistoryLog() {
                     </div>
                 )}
             </div>
+
+            {showScrollTop && (
+                <button
+                    onClick={() => {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        setShowScrollTop(false);
+                    }}
+                    style={{
+                        position: 'fixed',
+                        top: '100px',
+                        right: '30px',
+                        background: 'var(--accent-primary)',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '50%',
+                        width: '45px',
+                        height: '45px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        boxShadow: 'var(--shadow-lg)',
+                        zIndex: 100,
+                        fontSize: '1.5rem',
+                        animation: 'fadeIn 0.3s ease-out'
+                    }}
+                    title="Zpět nahoru"
+                >
+                    ↑
+                </button>
+            )}
         </div>
     )
 }

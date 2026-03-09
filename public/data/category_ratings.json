@@ -55,44 +55,6 @@
     }
   },
   {
-    "name": "Classroom of the Elite, S01",
-    "categories": {
-      "Animace": 7.0,
-      "CGI": 8.0,
-      "MC": 9.0,
-      "Vedlejší postavy": 7.5,
-      "Waifu": 8.5,
-      "Plot": 7.5,
-      "Pacing": 7.0,
-      "Story Conclusion": 9.0,
-      "Originalita": 7.5,
-      "Emoce": 6.5,
-      "Enjoyment": 7.5,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Classroom of the Elite, S02",
-    "categories": {
-      "Animace": 7.0,
-      "CGI": 8.0,
-      "MC": 9.5,
-      "Vedlejší postavy": 8.5,
-      "Waifu": 8.0,
-      "Plot": 8.0,
-      "Pacing": 8.0,
-      "Story Conclusion": 8.0,
-      "Originalita": 8.0,
-      "Emoce": 7.5,
-      "Enjoyment": 8.5,
-      "OP": 7.0,
-      "ED": 8.0,
-      "OST": 9.0
-    }
-  },
-  {
     "name": "My Dress-Up Darling, S01",
     "categories": {
       "Animace": 10.0,
@@ -1795,24 +1757,6 @@
     }
   },
   {
-    "name": "The Ancient Magus' Bride: Those Awaiting a Star",
-    "categories": {
-      "Animace": 7.5,
-      "CGI": 7.0,
-      "MC": 9.0,
-      "Vedlejší postavy": 8.5,
-      "Waifu": 8.5,
-      "Plot": 8.5,
-      "Pacing": 9.0,
-      "Story Conclusion": 9.0,
-      "Originalita": 9.5,
-      "Emoce": 9.0,
-      "Enjoyment": 9.0,
-      "ED": 7.0,
-      "OST": 10.0
-    }
-  },
-  {
     "name": "The Ancient Magus' Bride, S01",
     "categories": {
       "Animace": 7.5,
@@ -1828,6 +1772,24 @@
       "Enjoyment": 9.0,
       "OP": 9.0,
       "ED": 9.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "The Ancient Magus' Bride: Those Awaiting a Star",
+    "categories": {
+      "Animace": 7.5,
+      "CGI": 7.0,
+      "MC": 9.0,
+      "Vedlejší postavy": 8.5,
+      "Waifu": 8.5,
+      "Plot": 8.5,
+      "Pacing": 9.0,
+      "Story Conclusion": 9.0,
+      "Originalita": 9.5,
+      "Emoce": 9.0,
+      "Enjoyment": 9.0,
+      "ED": 7.0,
       "OST": 10.0
     }
   },
@@ -1938,158 +1900,6 @@
       "Originalita": 8.5,
       "Emoce": 7.5,
       "Enjoyment": 8.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Psycho-Pass, S01",
-    "categories": {
-      "Animace": 7.5,
-      "CGI": 7.5,
-      "MC": 9.5,
-      "Vedlejší postavy": 8.5,
-      "Waifu": 8.0,
-      "Plot": 9.0,
-      "Pacing": 8.5,
-      "Story Conclusion": 9.0,
-      "Originalita": 9.5,
-      "Emoce": 8.0,
-      "Enjoyment": 9.0,
-      "OP": 9.0,
-      "ED": 9.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Psycho-Pass, S02",
-    "categories": {
-      "Animace": 7.5,
-      "CGI": 7.5,
-      "MC": 8.0,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 8.0,
-      "Plot": 7.5,
-      "Pacing": 7.5,
-      "Story Conclusion": 7.0,
-      "Originalita": 9.0,
-      "Emoce": 7.0,
-      "Enjoyment": 8.0,
-      "OP": 9.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Psycho-Pass: The Movie",
-    "categories": {
-      "Animace": 8.0,
-      "CGI": 8.0,
-      "MC": 8.5,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 8.0,
-      "Plot": 7.0,
-      "Pacing": 8.5,
-      "Story Conclusion": 8.0,
-      "Originalita": 8.5,
-      "Emoce": 7.0,
-      "Enjoyment": 8.5,
-      "OP": 7.0,
-      "ED": 6.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Psycho-Pass: Sinners of the System Case.1 - Crime and Punishment",
-    "categories": {
-      "Animace": 7.5,
-      "CGI": 8.0,
-      "MC": 7.5,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 8.0,
-      "Plot": 6.5,
-      "Pacing": 8.0,
-      "Story Conclusion": 7.5,
-      "Originalita": 8.0,
-      "Emoce": 6.5,
-      "Enjoyment": 7.5,
-      "OP": 6.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Psycho-Pass: Sinners of the System Case.2 - First Guardian",
-    "categories": {
-      "Animace": 7.5,
-      "CGI": 8.5,
-      "MC": 7.5,
-      "Vedlejší postavy": 8.5,
-      "Waifu": 7.5,
-      "Plot": 7.5,
-      "Pacing": 8.0,
-      "Story Conclusion": 8.0,
-      "Originalita": 8.5,
-      "Emoce": 7.5,
-      "Enjoyment": 8.0,
-      "OP": 6.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Psycho-Pass: Sinners of the System Case.3 - On the Other Side of Love and Hate",
-    "categories": {
-      "Animace": 7.5,
-      "CGI": 8.5,
-      "MC": 8.0,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 7.5,
-      "Plot": 7.0,
-      "Pacing": 7.5,
-      "Story Conclusion": 7.0,
-      "Originalita": 8.0,
-      "Emoce": 7.5,
-      "Enjoyment": 7.5,
-      "OP": 6.0,
-      "ED": 6.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Psycho-Pass, S03",
-    "categories": {
-      "Animace": 7.5,
-      "CGI": 9.0,
-      "MC": 7.0,
-      "Vedlejší postavy": 7.5,
-      "Waifu": 7.0,
-      "Plot": 7.5,
-      "Pacing": 7.0,
-      "Story Conclusion": 7.0,
-      "Originalita": 8.0,
-      "Emoce": 6.5,
-      "Enjoyment": 7.5,
-      "OP": 7.0,
-      "ED": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Psycho-Pass: Providence",
-    "categories": {
-      "Animace": 7.5,
-      "CGI": 9.0,
-      "MC": 8.5,
-      "Vedlejší postavy": 8.5,
-      "Waifu": 8.0,
-      "Plot": 8.5,
-      "Pacing": 8.5,
-      "Story Conclusion": 9.0,
-      "Originalita": 8.5,
-      "Emoce": 8.0,
-      "Enjoyment": 8.5,
-      "OP": 7.0,
       "ED": 7.0,
       "OST": 8.0
     }
@@ -2809,7 +2619,7 @@
       "Originalita": 8.0,
       "Emoce": 7.0,
       "Enjoyment": 6.5,
-      "OST": 9.0
+      "OST": 8.0
     }
   },
   {
@@ -3252,25 +3062,6 @@
     }
   },
   {
-    "name": "Ergo Proxy",
-    "categories": {
-      "Animace": 7.5,
-      "CGI": 8.0,
-      "MC": 9.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 7.5,
-      "Plot": 8.5,
-      "Pacing": 8.0,
-      "Story Conclusion": 9.0,
-      "Originalita": 10.0,
-      "Emoce": 8.0,
-      "Enjoyment": 9.0,
-      "OP": 9.0,
-      "ED": 7.0,
-      "OST": 9.0
-    }
-  },
-  {
     "name": "Fullmetal Alchemist: Brotherhood",
     "categories": {
       "Animace": 8.5,
@@ -3385,25 +3176,6 @@
     }
   },
   {
-    "name": "Classroom of the Elite, S03",
-    "categories": {
-      "Animace": 7.0,
-      "CGI": 8.0,
-      "MC": 9.0,
-      "Vedlejší postavy": 8.5,
-      "Waifu": 8.5,
-      "Plot": 8.0,
-      "Pacing": 7.5,
-      "Story Conclusion": 8.0,
-      "Originalita": 8.0,
-      "Emoce": 7.0,
-      "Enjoyment": 8.0,
-      "OP": 9.0,
-      "ED": 7.0,
-      "OST": 9.0
-    }
-  },
-  {
     "name": "Frieren: Beyond Journey's End, S01",
     "categories": {
       "Animace": 10.0,
@@ -3498,25 +3270,6 @@
     }
   },
   {
-    "name": "The Summer Hikaru Died, S01",
-    "categories": {
-      "Animace": 9.0,
-      "CGI": 8.5,
-      "MC": 9.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 7.0,
-      "Plot": 9.0,
-      "Pacing": 9.0,
-      "Story Conclusion": 10.0,
-      "Originalita": 9.0,
-      "Emoce": 9.0,
-      "Enjoyment": 9.0,
-      "OP": 7.0,
-      "ED": 9.0,
-      "OST": 8.0
-    }
-  },
-  {
     "name": "The Rising of the Shield Hero, S04",
     "categories": {
       "Animace": 8.0,
@@ -3533,6 +3286,25 @@
       "OP": 7.0,
       "ED": 9.0,
       "OST": 10.0
+    }
+  },
+  {
+    "name": "The Summer Hikaru Died, S01",
+    "categories": {
+      "Animace": 9.0,
+      "CGI": 8.5,
+      "MC": 9.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 7.0,
+      "Plot": 9.0,
+      "Pacing": 9.0,
+      "Story Conclusion": 10.0,
+      "Originalita": 9.0,
+      "Emoce": 9.0,
+      "Enjoyment": 9.0,
+      "OP": 7.0,
+      "ED": 9.0,
+      "OST": 8.0
     }
   },
   {
@@ -3985,6 +3757,139 @@
     }
   },
   {
+    "name": "Psycho-Pass, S01",
+    "categories": {
+      "Animace": 7.5,
+      "CGI": 7.5,
+      "MC": 9.5,
+      "Vedlejší postavy": 8.5,
+      "Waifu": 8.0,
+      "Plot": 9.0,
+      "Pacing": 8.5,
+      "Story Conclusion": 9.0,
+      "Originalita": 9.5,
+      "Emoce": 8.0,
+      "Enjoyment": 9.0,
+      "OP": 9.0,
+      "ED": 9.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Psycho-Pass, S02",
+    "categories": {
+      "Animace": 7.5,
+      "CGI": 7.5,
+      "MC": 8.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 8.0,
+      "Plot": 7.5,
+      "Pacing": 7.5,
+      "Story Conclusion": 7.0,
+      "Originalita": 9.0,
+      "Emoce": 7.0,
+      "Enjoyment": 8.0,
+      "OP": 9.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Psycho-Pass: The Movie",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 8.0,
+      "MC": 8.5,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 8.0,
+      "Plot": 7.0,
+      "Pacing": 8.5,
+      "Story Conclusion": 8.0,
+      "Originalita": 8.5,
+      "Emoce": 7.0,
+      "Enjoyment": 8.5,
+      "OP": 7.0,
+      "ED": 6.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Psycho-Pass: Sinners of the System Case.1 - Crime and Punishment",
+    "categories": {
+      "Animace": 7.5,
+      "CGI": 8.0,
+      "MC": 7.5,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 8.0,
+      "Plot": 6.5,
+      "Pacing": 8.0,
+      "Story Conclusion": 7.5,
+      "Originalita": 8.0,
+      "Emoce": 6.5,
+      "Enjoyment": 7.5,
+      "OP": 6.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Psycho-Pass: Sinners of the System Case.2 - First Guardian",
+    "categories": {
+      "Animace": 7.5,
+      "CGI": 8.5,
+      "MC": 7.5,
+      "Vedlejší postavy": 8.5,
+      "Waifu": 7.5,
+      "Plot": 7.5,
+      "Pacing": 8.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 8.5,
+      "Emoce": 7.5,
+      "Enjoyment": 8.0,
+      "OP": 6.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Psycho-Pass: Sinners of the System Case.3 - On the Other Side of Love and Hate",
+    "categories": {
+      "Animace": 7.5,
+      "CGI": 8.5,
+      "MC": 8.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 7.5,
+      "Plot": 7.0,
+      "Pacing": 7.5,
+      "Story Conclusion": 7.0,
+      "Originalita": 8.0,
+      "Emoce": 7.5,
+      "Enjoyment": 7.5,
+      "OP": 6.0,
+      "ED": 6.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Psycho-Pass, S03",
+    "categories": {
+      "Animace": 7.5,
+      "CGI": 9.0,
+      "MC": 7.0,
+      "Vedlejší postavy": 7.5,
+      "Waifu": 7.0,
+      "Plot": 7.5,
+      "Pacing": 7.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 8.0,
+      "Emoce": 6.5,
+      "Enjoyment": 7.5,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
     "name": "Psycho-Pass, S03: First Inspector",
     "categories": {
       "Animace": 7.5,
@@ -3998,6 +3903,25 @@
       "Originalita": 8.0,
       "Emoce": 7.0,
       "Enjoyment": 7.5,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Psycho-Pass: Providence",
+    "categories": {
+      "Animace": 7.5,
+      "CGI": 8.5,
+      "MC": 8.5,
+      "Vedlejší postavy": 8.5,
+      "Waifu": 8.0,
+      "Plot": 8.5,
+      "Pacing": 8.5,
+      "Story Conclusion": 9.0,
+      "Originalita": 8.5,
+      "Emoce": 8.0,
+      "Enjoyment": 8.5,
       "OP": 7.0,
       "ED": 7.0,
       "OST": 8.0
