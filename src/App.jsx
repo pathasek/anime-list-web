@@ -7,6 +7,7 @@ import HistoryLog from './pages/HistoryLog'
 import Favorites from './pages/Favorites'
 import PlanToWatch from './pages/PlanToWatch'
 import TopFavorites from './pages/TopFavorites'
+import StatsTree from './pages/StatsTree'
 import './index.css'
 
 // Icons as simple SVG components
@@ -34,6 +35,11 @@ const Icons = {
   Bookmark: () => (
     <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+    </svg>
+  ),
+  Tree: () => (
+    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14v4h-2v-4a2 2 0 0 1-2-2h-3v-2h3v-2H6V8h3a2 2 0 0 1 2-2v-2h2v2a2 2 0 0 1 2 2h3v2h-3v2h3v2h-3a2 2 0 0 1-2 2z" />
     </svg>
   ),
   Logo: () => (
@@ -130,6 +136,10 @@ function AppContent({ stats }) {
             <span style={{ fontSize: '1.2rem', paddingRight: '0.4rem' }}>🏆</span>
             <span>Top Favorites</span>
           </NavLink>
+          <NavLink to="/stats-tree" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
+            <Icons.Tree />
+            <span>Research Tree</span>
+          </NavLink>
         </nav>
 
         {/* Stats in sidebar footer */}
@@ -159,6 +169,7 @@ function AppContent({ stats }) {
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/plan-to-watch" element={<PlanToWatch />} />
           <Route path="/top-favorites" element={<TopFavorites />} />
+          <Route path="/stats-tree" element={<StatsTree />} />
         </Routes>
       </main>
     </div>
