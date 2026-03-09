@@ -2161,7 +2161,7 @@
   {
     "index": "128.",
     "anime_name": "Shiki",
-    "type": "OP",
+    "type": "OP ",
     "song": "Calendula Requiem",
     "author": "Kanon X Kanon",
     "language": "JAP",
@@ -3585,39 +3585,5 @@
     "has_frisson": true,
     "rating_avg": 8.5,
     "rating_final": 9
-  },
-  {
-    "index": "212.",
-    "anime_name": "Ergo Proxy",
-    "type": "OP",
-    "song": "Kiri",
-    "author": "MONORAL",
-    "language": "ENG",
-    "rating_lyrics": 8,
-    "rating_emotion": 8.25,
-    "rating_melody": 8.75,
-    "rating_video": 9.5,
-    "rating_voice": 9.25,
-    "sing_along": 10,
-    "has_frisson": false,
-    "rating_avg": 8.75,
-    "rating_final": 9
-  },
-  {
-    "index": "213.",
-    "anime_name": "Classroom of the Elite, S02",
-    "type": "ED",
-    "song": "Hito Shibai",
-    "author": "Mai Fuchigami",
-    "language": "JAP",
-    "rating_lyrics": 7.75,
-    "rating_emotion": 7.25,
-    "rating_melody": 9.25,
-    "rating_video": 7.5,
-    "rating_voice": 9,
-    "sing_along": 2,
-    "has_frisson": false,
-    "rating_avg": 8.15,
-    "rating_final": 8
   }
 ]

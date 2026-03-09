@@ -3,6 +3,92 @@ import { createPortal } from 'react-dom'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { loadData, STORAGE_KEYS } from '../utils/dataStore'
 
+const FilterDropdown = ({ label, options, currentFilters, onFilterChange, type }) => {
+    const [isOpen, setIsOpen] = useState(false)
+    const [localSearch, setLocalSearch] = useState('')
+
+    // Close on click outside
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (!e.target.closest(`.dropdown-${type}`)) {
+                setIsOpen(false)
+            }
+        }
+        if (isOpen) document.addEventListener('click', handleClickOutside)
+        return () => document.removeEventListener('click', handleClickOutside)
+    }, [isOpen, type])
+
+    const filteredOptions = options.filter(o => o.toLowerCase().includes(localSearch.toLowerCase()))
+
+    // Count active filters (included or excluded)
+    const activeCount = Object.values(currentFilters || {}).filter(v => v !== 0).length
+
+    const handleCycle = (option, e) => {
+        e.stopPropagation()
+        const current = currentFilters[option] || 0
+        let next = 0
+        if (current === 0) next = 1
+        else if (current === 1) next = -1
+        else next = 0
+        onFilterChange(type, option, next)
+    }
+
+    const clearThisFilter = (e) => {
+        e.stopPropagation()
+        onFilterChange(type, null, 'clear')
+        setIsOpen(false)
+    }
+
+    return (
+        <div className={`filter-dropdown-container dropdown-${type}`}>
+            <button
+                className={`filter-btn ${activeCount > 0 ? 'active' : ''}`}
+                onClick={() => setIsOpen(!isOpen)}
+                style={{ display: 'flex', alignItems: 'center' }}
+            >
+                {label} {activeCount > 0 && <span className="filter-badge-count">{activeCount}</span>}
+                <span style={{ marginLeft: '6px', fontSize: '0.7rem' }}>▼</span>
+            </button>
+            {isOpen && (
+                <div className="filter-dropdown-menu">
+                    <input
+                        type="text"
+                        placeholder="Hledat..."
+                        value={localSearch}
+                        onChange={e => setLocalSearch(e.target.value)}
+                        style={{
+                            background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '4px',
+                            padding: '4px 8px', color: 'var(--text-primary)', marginBottom: '4px', fontSize: '0.8rem'
+                        }}
+                        onClick={e => e.stopPropagation()}
+                    />
+                    {filteredOptions.length > 0 ? filteredOptions.map(opt => {
+                        const status = currentFilters[opt] || 0
+                        const statusClass = status === 1 ? 'included' : status === -1 ? 'excluded' : ''
+                        return (
+                            <div
+                                key={opt}
+                                className={`filter-dropdown-item ${statusClass}`}
+                                onClick={(e) => handleCycle(opt, e)}
+                            >
+                                <span>{opt}</span>
+                                {status === 1 && <span style={{ fontSize: '0.8rem' }}>+</span>}
+                                {status === -1 && <span style={{ fontSize: '0.8rem' }}>−</span>}
+                            </div>
+                        )
+                    }) : <div style={{ padding: '8px', color: 'var(--text-muted)', fontSize: '0.8rem', textAlign: 'center' }}>Nenalezeno</div>}
+
+                    {activeCount > 0 && (
+                        <button className="clear-filter-btn" onClick={clearThisFilter}>
+                            Vymazat výběr
+                        </button>
+                    )}
+                </div>
+            )}
+        </div>
+    )
+}
+
 function AnimeList() {
     const navigate = useNavigate()
     const location = useLocation()
@@ -10,9 +96,18 @@ function AnimeList() {
     const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
     const [sortConfig, setSortConfig] = useState({ key: 'default', direction: 'asc' })
-    const [typeFilter, setTypeFilter] = useState('all')
-    const [statusFilter, setStatusFilter] = useState(() => {
-        return localStorage.getItem('statusFilter') || 'AIRING!'
+    const [filters, setFilters] = useState(() => {
+        const saved = localStorage.getItem('animeFiltersObj')
+        if (saved) {
+            try { return JSON.parse(saved) } catch (e) { }
+        }
+        return {
+            status: { 'AIRING!': 1 },
+            type: {},
+            genre: {},
+            theme: {},
+            tag: {}
+        }
     })
     const [seriesFilter, setSeriesFilter] = useState(null)
     const [expandedImage, setExpandedImage] = useState(null)
@@ -29,8 +124,7 @@ function AnimeList() {
                 const seriesQ = searchParams.get('series')
                 if (seriesQ) {
                     setSeriesFilter(seriesQ)
-                    setStatusFilter('all')
-                    setTypeFilter('all')
+                    setFilters({ status: {}, type: {}, genre: {}, theme: {}, tag: {} })
                 }
 
                 // Skok na uloženou pozici (Scroll restoration)
@@ -48,23 +142,68 @@ function AnimeList() {
             })
     }, [])
 
-    // Get unique statuses for filter
-    const statuses = useMemo(() => {
-        // Enforce specific order: Pending -> Airing -> Finished
-        return ['all', 'PENDING', 'AIRING!', 'FINISHED']
-    }, [])
+    // Extract unique properties for filters
+    const filterOptions = useMemo(() => {
+        const types = new Set()
+        const genres = new Set()
+        const themes = new Set()
+        const tags = new Set()
 
-    // Sync status filter to localStorage
-    useEffect(() => {
-        localStorage.setItem('statusFilter', statusFilter)
-    }, [statusFilter])
+        animeList.forEach(a => {
+            if (a.type) types.add(a.type)
+            if (a.genres) {
+                a.genres.split(';').forEach(g => {
+                    const clean = g.trim()
+                    if (clean) genres.add(clean)
+                })
+            }
+            if (a.themes) {
+                a.themes.split(';').forEach(t => {
+                    const clean = t.trim()
+                    if (clean) themes.add(clean)
+                })
+            }
+            if (a.tags) {
+                a.tags.split(';').forEach(t => {
+                    const parts = t.split(':')
+                    const clean = parts[0].trim()
+                    if (clean) tags.add(clean)
+                })
+            }
+        })
 
-    // Get unique types for filter
-    const types = useMemo(() => {
-        const t = new Set()
-        animeList.forEach(a => a.type && t.add(a.type))
-        return ['all', ...Array.from(t)]
+        return {
+            types: Array.from(types).sort(),
+            genres: Array.from(genres).sort(),
+            themes: Array.from(themes).sort(),
+            tags: Array.from(tags).sort(),
+            statuses: ['PENDING', 'AIRING!', 'FINISHED']
+        }
     }, [animeList])
+
+    useEffect(() => {
+        localStorage.setItem('animeFiltersObj', JSON.stringify(filters))
+    }, [filters])
+
+    const handleFilterChange = (category, option, nextState) => {
+        setFilters(prev => {
+            const newCat = { ...prev[category] }
+            if (nextState === 'clear') {
+                return { ...prev, [category]: {} }
+            }
+            if (nextState === 0) {
+                delete newCat[option]
+            } else {
+                newCat[option] = nextState
+            }
+            return { ...prev, [category]: newCat }
+        })
+    }
+
+    const clearAllFilters = () => {
+        setFilters({ status: {}, type: {}, genre: {}, theme: {}, tag: {} })
+        setSearchTerm('')
+    }
 
     // Filter and sort
     const filteredList = useMemo(() => {
@@ -86,15 +225,55 @@ function AnimeList() {
             )
         }
 
-        // Type filter
-        if (typeFilter !== 'all') {
-            result = result.filter(a => a.type === typeFilter)
+        // Advanced Filtering
+        const checkArrayFilter = (itemArray, filterMap) => {
+            const included = Object.entries(filterMap).filter(([_, v]) => v === 1).map(([k]) => k)
+            const excluded = Object.entries(filterMap).filter(([_, v]) => v === -1).map(([k]) => k)
+
+            // If it matches ANY excluded word, IMMEDIATELY fail
+            if (excluded.some(ex => itemArray.includes(ex))) return false
+
+            // AND logic: it must contain ALL included words
+            if (included.length > 0) {
+                if (!included.every(inc => itemArray.includes(inc))) return false
+            }
+            return true
         }
 
-        // Status filter
-        if (statusFilter !== 'all') {
-            result = result.filter(a => a.status === statusFilter)
+        const checkSingleFilter = (itemVal, filterMap) => {
+            const included = Object.entries(filterMap).filter(([_, v]) => v === 1).map(([k]) => k)
+            const excluded = Object.entries(filterMap).filter(([_, v]) => v === -1).map(([k]) => k)
+
+            // Fail if excluded
+            if (excluded.includes(itemVal)) return false
+
+            // OR logic for single fields: must match ONE of the included
+            if (included.length > 0) {
+                if (!included.includes(itemVal)) return false
+            }
+            return true
         }
+
+        result = result.filter(a => {
+            // Apply Status (OR logic)
+            if (!checkSingleFilter(a.status || 'FINISHED', filters.status)) return false
+            // Apply Type (OR logic)
+            if (!checkSingleFilter(a.type, filters.type)) return false
+
+            // Apply Genres (AND logic)
+            const gArray = (a.genres || '').split(';').map(x => x.trim()).filter(Boolean)
+            if (!checkArrayFilter(gArray, filters.genre)) return false
+
+            // Apply Themes (AND logic)
+            const tArray = (a.themes || '').split(';').map(x => x.trim()).filter(Boolean)
+            if (!checkArrayFilter(tArray, filters.theme)) return false
+
+            // Apply Tags (AND logic)
+            const tagArray = (a.tags || '').split(';').map(x => x.split(':')[0].trim()).filter(Boolean)
+            if (!checkArrayFilter(tagArray, filters.tag)) return false
+
+            return true
+        })
 
         // Sort
         if (sortConfig.key) {
@@ -153,7 +332,7 @@ function AnimeList() {
         }
 
         return result
-    }, [animeList, searchTerm, typeFilter, statusFilter, sortConfig, seriesFilter])
+    }, [animeList, searchTerm, filters, sortConfig, seriesFilter])
 
     const handleSort = (key) => {
         if (key === sortConfig.key && sortConfig.key !== 'default') {
@@ -246,9 +425,7 @@ function AnimeList() {
 
             setSeriesFilter(baseName)
             // Reset other filters to show the FULL series as requested
-            setStatusFilter('all')
-            setTypeFilter('all')
-            setSearchTerm('')
+            clearAllFilters()
         }
     }
 
@@ -310,27 +487,18 @@ function AnimeList() {
                         </button>
                     )}
                 </div>
-                <div className="filter-group">
-                    <select
-                        value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
-                        className="select"
-                        style={{ padding: '0.4rem 0.8rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', fontSize: '0.9rem' }}
-                    >
-                        <option value="all">Všechny statusy</option>
-                        <option value="PENDING">Pending</option>
-                        <option value="AIRING!">Airing</option>
-                        <option value="FINISHED">Finished</option>
-                    </select>
-                    {types.map(t => (
-                        <button
-                            key={t}
-                            className={`filter-btn ${typeFilter === t ? 'active' : ''}`}
-                            onClick={() => setTypeFilter(t)}
-                        >
-                            {t === 'all' ? 'Vše' : t}
+                <div className="filter-group" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
+                    <FilterDropdown label="Status" options={filterOptions.statuses} currentFilters={filters.status} onFilterChange={handleFilterChange} type="status" />
+                    <FilterDropdown label="Typ" options={filterOptions.types} currentFilters={filters.type} onFilterChange={handleFilterChange} type="type" />
+                    <FilterDropdown label="Žánry" options={filterOptions.genres} currentFilters={filters.genre} onFilterChange={handleFilterChange} type="genre" />
+                    <FilterDropdown label="Témata" options={filterOptions.themes} currentFilters={filters.theme} onFilterChange={handleFilterChange} type="theme" />
+                    <FilterDropdown label="Tagy" options={filterOptions.tags} currentFilters={filters.tag} onFilterChange={handleFilterChange} type="tag" />
+
+                    {Object.values(filters).some(cat => Object.values(cat).some(v => v !== 0)) && (
+                        <button className="clear-filter-btn" style={{ width: 'auto', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '6px 12px', marginTop: 0 }} onClick={clearAllFilters}>
+                            Zrušit filtry
                         </button>
-                    ))}
+                    )}
                 </div>
             </div>
 

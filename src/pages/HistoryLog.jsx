@@ -446,6 +446,18 @@ function HistoryLog() {
         return { episodes, time }
     }, [groupedHistory])
 
+    const scrollToDate = (dateStr) => {
+        const group = groupedHistory.find(g => g.date && g.date.startsWith(dateStr));
+        if (group) {
+            const el = document.getElementById(`date-${group.date}`);
+            if (el) {
+                // 80px offset for top padding/navigation
+                const y = el.getBoundingClientRect().top + window.scrollY - 80;
+                window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+        }
+    }
+
     if (loading) {
         return <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)' }}>Načítání...</div>
     }
@@ -599,11 +611,18 @@ function HistoryLog() {
                                                         height: '10px',
                                                         backgroundColor: getHeatmapColor(cell.eps),
                                                         borderRadius: '2px',
-                                                        transition: 'opacity 0.2s',
-                                                        cursor: 'pointer'
+                                                        transition: 'opacity 0.2s, transform 0.1s',
+                                                        cursor: cell.eps > 0 ? 'pointer' : 'default'
                                                     }}
-                                                    onMouseEnter={e => e.target.style.opacity = '0.7'}
-                                                    onMouseLeave={e => e.target.style.opacity = '1'}
+                                                    onClick={() => cell.eps > 0 && scrollToDate(cell.dateStr)}
+                                                    onMouseEnter={e => {
+                                                        e.target.style.opacity = '0.7';
+                                                        if (cell.eps > 0) e.target.style.transform = 'scale(1.2)';
+                                                    }}
+                                                    onMouseLeave={e => {
+                                                        e.target.style.opacity = '1';
+                                                        e.target.style.transform = 'scale(1)';
+                                                    }}
                                                 />
                                             ))}
                                         </div>
@@ -744,7 +763,7 @@ function HistoryLog() {
             {/* History Groups */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)' }}>
                 {groupedHistory.map((group, idx) => (
-                    <div key={idx} className="card">
+                    <div key={idx} className="card" id={`date-${group.date}`}>
                         <div className="card-header">
                             <div className="card-title">
                                 <span style={{
