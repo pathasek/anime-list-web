@@ -1,5 +1,5 @@
 /**
- * Computes XP for Release Eras and Critic Ratings domains.
+ * Computes XP for Release Eras, Release Format and Critic Ratings domains.
  */
 
 export function calculateErasXP(nodeDef, data) {
@@ -25,6 +25,37 @@ export function calculateErasXP(nodeDef, data) {
     else if (nodeDef.id === 'era_2000s') addEra(2000, 2009);
     else if (nodeDef.id === 'era_2010s') addEra(2010, 2019);
     else if (nodeDef.id === 'era_2020s') addEra(2020, 2030);
+
+    // ─── TITAN V2: FORMAT MATRICES ───
+    else if (nodeDef.id === 'fmt_tv') {
+        animeList.forEach(a => {
+            if (String(a.type).toUpperCase() === 'TV') {
+                const eps = parseInt(a.episodes) || (!isNaN(a.total_time) ? Math.max(1, Math.floor(a.total_time / 24)) : 12);
+                const gained = eps * 100;
+                xp += gained;
+                contributors.push({ id: a.anime_id, name: a.name, xp: gained });
+            }
+        });
+    }
+    else if (nodeDef.id === 'fmt_movie') {
+        animeList.forEach(a => {
+            if (String(a.type).toUpperCase() === 'MOVIE') {
+                const gained = 1500;
+                xp += gained;
+                contributors.push({ id: a.anime_id, name: a.name, xp: gained });
+            }
+        });
+    }
+    else if (nodeDef.id === 'fmt_ova') {
+        animeList.forEach(a => {
+            if (String(a.type).toUpperCase() === 'OVA' || String(a.type).toUpperCase() === 'ONA' || String(a.type).toUpperCase() === 'SPECIAL') {
+                const eps = parseInt(a.episodes) || 1;
+                const gained = eps * 300;
+                xp += gained;
+                contributors.push({ id: a.anime_id, name: a.name, xp: gained });
+            }
+        });
+    }
 
     return { xp, contributors };
 }

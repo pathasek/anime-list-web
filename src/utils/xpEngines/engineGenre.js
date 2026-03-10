@@ -11,7 +11,7 @@ export function calculateGenreXP(nodeDef, data) {
         let localContribs = [];
         if (data.animeList) {
             data.animeList.forEach(anime => {
-                const tagsField = isTheme ? anime.themes : anime.genres;
+                const tagsField = isTheme ? anime.tags : anime.genres; // Use tags instead of themes for Titan V2
                 if (tagsField && String(tagsField).toLowerCase().includes(targetTag.toLowerCase())) {
                     // add 100 XP per episode
                     const eps = parseInt(anime.episodes) || (!isNaN(anime.total_time) ? Math.max(1, Math.floor(anime.total_time / 24)) : 12);
@@ -35,6 +35,7 @@ export function calculateGenreXP(nodeDef, data) {
     // ─── 3A: ACTION PATH ───
     if (nodeDef.id === 'genre_action') addTag('Action');
     else if (nodeDef.id === 'genre_shounen') { addTag('Shounen', true); addTag('Super Power', true); }
+    else if (nodeDef.id === 'genre_shounen_master') { addTag('Shounen', true); addTag('Super Power', true); }
     else if (nodeDef.id === 'genre_isekai') addTag('Isekai', true);
     else if (nodeDef.id === 'genre_mecha') { addTag('Mecha', true); addTag('Sci-Fi'); }
 
@@ -50,13 +51,23 @@ export function calculateGenreXP(nodeDef, data) {
     // ─── 3D: SPORTS ───
     else if (nodeDef.id === 'genre_sports') addTag('Sports');
 
+    // ─── TITAN V2: DEMOGRAPHICS ───
+    else if (nodeDef.id === 'demo_shounen') addTag('Shounen', true);
+    else if (nodeDef.id === 'demo_seinen') addTag('Seinen', true);
+    else if (nodeDef.id === 'demo_shoujo') addTag('Shoujo', true);
+
+    // ─── TITAN V2: TROPES ───
+    else if (nodeDef.id === 'trope_iyashikei') { addTag('Iyashikei', true); addTag('Cute Girls Doing Cute Things', true); addTag('Rural', true); }
+    else if (nodeDef.id === 'trope_edgelord') { addTag('Gore', true); addTag('Psychological', true); addTag('Dark Fantasy', true); addTag('Death Game', true); }
+    else if (nodeDef.id === 'trope_idol') { addTag('Idol', true); addTag('Music', true); }
+
     // Generic fallback for the root explorer
     else if (nodeDef.id === 'genre_explorer') {
         const uniqueGenres = new Set();
         if (data.animeList) {
             data.animeList.forEach(a => {
                 if (a.genres) {
-                    a.genres.split(',').forEach(g => {
+                    a.genres.split(';').forEach(g => { // changed comma to semicolon
                         uniqueGenres.add(g.trim());
                     });
                 }

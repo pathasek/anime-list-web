@@ -45,6 +45,40 @@ export function calculateChronosXP(nodeDef, totalWatchHours, data) {
             });
         }
     }
+    // ─── TITAN V2: HABIT DOMAIN ───
+    else if (nodeDef.id === 'habit_turtle') {
+        if (data.animeList) {
+            data.animeList.forEach(a => {
+                if (a.start_date && a.end_date && String(a.status).toUpperCase() === 'FINISHED') {
+                    const start = new Date(a.start_date);
+                    const end = new Date(a.end_date);
+                    const diffTime = Math.abs(end - start);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    if (diffDays >= 180) { // More than 6 months
+                        addAnime(a, 1); // 1 point per anime
+                    }
+                }
+            });
+        }
+    }
+    else if (nodeDef.id === 'habit_sleep_deficit') {
+        if (data.animeList) {
+            data.animeList.forEach(a => {
+                if (a.start_date && a.end_date && String(a.status).toUpperCase() === 'FINISHED') {
+                    const eps = parseInt(a.episodes) || 0;
+                    if (eps >= 12) {
+                        const start = new Date(a.start_date);
+                        const end = new Date(a.end_date);
+                        const diffTime = Math.abs(end - start);
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        if (diffDays <= 2) { // 12+ eps in 48 hours or less
+                            addAnime(a, 1); // 1 point per anime
+                        }
+                    }
+                }
+            });
+        }
+    }
 
     return { xp, contributors };
 }
