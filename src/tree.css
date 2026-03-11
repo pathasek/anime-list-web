@@ -40,291 +40,155 @@
     background: var(--bg-hover);
 }
 
-/* ─── The Skill Node Block ─── */
-.skill-node {
+/* ─── V2 UI Skill Node Block ─── */
+.skill-node-v2 {
     position: absolute;
-    width: 160px;
-    padding: 10px 14px;
-    border-radius: 8px;
-    background: #1e293b;
-    border: 1.5px solid #334155;
+    width: 200px; /* Wider to accommodate text and progress */
+    padding: 12px 16px;
+    border-radius: 12px; /* Smoother rounded corners */
+    background: #11141E; /* Very dark background */
+    border: 2px solid #2a2a35; /* Clean solid border */
     display: flex;
     flex-direction: column;
-    transition: scale 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease, border-color 0.2s ease;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease, border-color 0.2s ease;
     user-select: none;
     cursor: pointer;
     z-index: 10;
     color: white;
 }
 
-.skill-node.node-hovered {
-    scale: 1.05;
+.skill-node-v2.node-hovered {
+    transform: scale(1.05);
     z-index: 20;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
 }
 
-/* LOCKED STATE (FOG OF WAR) */
-.skill-node.status-locked {
-    background: rgba(10, 10, 15, 0.4);
-    border: 2px dashed rgba(51, 65, 85, 0.5);
-    opacity: 0.25;
-    filter: grayscale(100%);
+/* LOCKED STATE */
+.skill-node-v2.status-locked {
+    background: rgba(17, 20, 30, 0.6);
+    border: 2px dashed rgba(82, 82, 102, 0.4);
+    opacity: 0.4;
+    filter: grayscale(80%);
 }
 
-.skill-node.status-locked:hover {
-    opacity: 0.8;
-    filter: grayscale(50%);
+.skill-node-v2.status-locked:hover {
+    opacity: 0.9;
+    filter: grayscale(40%);
 }
 
-/* ─── NODE TIERS (GDD TITAN CLASSES) ─── */
-.skill-node.tier-novice {
-    /* Standard Box */
-}
+/* UNLOCKED (In Progress) STATE BORDERS */
+.node-primary.status-unlocked { border-color: #6366f1; }
+.node-purple.status-unlocked { border-color: #a855f7; }
+.node-orange.status-unlocked { border-color: #f97316; }
+.node-emerald.status-unlocked { border-color: #10b981; }
 
-.skill-node.tier-adept {
-    border-color: rgba(168, 85, 247, 0.6);
-    box-shadow: inset 0 0 10px rgba(168, 85, 247, 0.1), 0 0 10px rgba(168, 85, 247, 0.1);
-}
-
-.skill-node.tier-master {
-    /* Glowing Gold Hexagon-ish Chamfered Box */
-    border-color: #fbbf24;
-    box-shadow: inset 0 0 15px rgba(251, 191, 36, 0.2), 0 0 15px rgba(251, 191, 36, 0.2);
-    clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
-}
-
-.skill-node.tier-apex {
-    /* True APEX Nodes */
-    border-color: #ef4444;
-    box-shadow: inset 0 0 20px rgba(239, 68, 68, 0.3), 0 0 20px rgba(239, 68, 68, 0.3);
-    animation: apexPulse 3s infinite ease-in-out;
-    clip-path: polygon(15px 0, calc(100% - 15px) 0, 100% 15px, 100% calc(100% - 15px), calc(100% - 15px) 100%, 15px 100%, 0 calc(100% - 15px), 0 15px);
-}
-
-@keyframes apexPulse {
-    0% {
-        box-shadow: inset 0 0 10px rgba(239, 68, 68, 0.2), 0 0 10px rgba(239, 68, 68, 0.2);
-    }
-
-    50% {
-        box-shadow: inset 0 0 35px rgba(239, 68, 68, 0.6), 0 0 35px rgba(239, 68, 68, 0.6);
-    }
-
-    100% {
-        box-shadow: inset 0 0 10px rgba(239, 68, 68, 0.2), 0 0 10px rgba(239, 68, 68, 0.2);
-    }
-}
-
-.skill-node.status-locked .node-title {
-    color: var(--text-muted);
-}
-
-.node-lock-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #334;
-    opacity: 0.5;
-}
-
-/* UNLOCKED (In Progress) STATE */
-.node-primary.status-unlocked {
-    border-color: rgba(99, 102, 241, 0.5);
-    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.15);
-}
-
-.node-primary.node-hovered {
-    border-color: var(--accent-primary);
-    box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
-}
-
-.node-purple.status-unlocked {
-    border-color: rgba(168, 85, 247, 0.5);
-    box-shadow: 0 4px 15px rgba(168, 85, 247, 0.15);
-}
-
-.node-purple.node-hovered {
-    border-color: #a855f7;
-    box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
-}
-
-.node-orange.status-unlocked {
-    border-color: rgba(249, 115, 22, 0.5);
-    box-shadow: 0 4px 15px rgba(249, 115, 22, 0.15);
-}
-
-.node-orange.node-hovered {
-    border-color: #f97316;
-    box-shadow: 0 0 20px rgba(249, 115, 22, 0.4);
-}
-
-.node-emerald.status-unlocked {
-    border-color: rgba(16, 185, 129, 0.5);
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.15);
-}
-
-.node-emerald.node-hovered {
-    border-color: #10b981;
-    box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
-}
+.node-primary.node-hovered { border-color: #818cf8; box-shadow: 0 0 15px rgba(99, 102, 241, 0.3); }
+.node-purple.node-hovered { border-color: #c084fc; box-shadow: 0 0 15px rgba(168, 85, 247, 0.3); }
+.node-orange.node-hovered { border-color: #fb923c; box-shadow: 0 0 15px rgba(249, 115, 22, 0.3); }
+.node-emerald.node-hovered { border-color: #34d399; box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
 
 /* MAXED STATE */
-.skill-node.status-maxed {
+.skill-node-v2.status-maxed {
     border-color: #eab308;
-    box-shadow: 0 0 20px rgba(234, 179, 8, 0.3), inset 0 0 10px rgba(234, 179, 8, 0.1);
-    background: rgba(30, 25, 15, 0.9);
+    box-shadow: 0 0 15px rgba(234, 179, 8, 0.2);
+    background: #1a1705;
 }
 
-.skill-node.status-maxed.node-hovered {
-    box-shadow: 0 0 30px rgba(234, 179, 8, 0.6), inset 0 0 15px rgba(234, 179, 8, 0.2);
+.skill-node-v2.status-maxed.node-hovered {
+    box-shadow: 0 0 25px rgba(234, 179, 8, 0.4);
+    border-color: #fde047;
 }
 
 /* Node Internal Elements */
-.node-content {
-    position: relative;
-    z-index: 2;
-}
-
-.node-header {
+.node-v2-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
-.node-title {
+.node-v2-title {
     font-weight: 800;
-    font-size: 0.85rem;
-    letter-spacing: 0.01em;
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
     color: #f8fafc;
 }
 
-.node-level {
-    font-size: 0.70rem;
+.node-v2-level {
+    font-size: 0.75rem;
     font-weight: 800;
-    color: #fca5a5;
-    background: rgba(0, 0, 0, 0.3);
-    padding: 2px 5px;
-    border-radius: 4px;
+    color: #fde047; /* Yellow badge text */
 }
 
-.node-level.text-maxed {
-    color: #fde047;
-    background: rgba(234, 179, 8, 0.2);
+.node-v2-body {
+    display: flex;
+    flex-direction: column;
 }
 
-.node-progress-track {
+.node-v2-progress-track {
     width: 100%;
-    height: 8px;
-    background: #11141E;
-    /* Very dark background for track */
-    border-radius: 4px;
+    height: 6px;
+    background: #2a2a35; /* Dark track */
+    border-radius: 3px;
     overflow: hidden;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
-.node-progress-fill {
+.node-v2-progress-fill {
     height: 100%;
-    border-radius: 4px;
+    border-radius: 3px;
     transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Domain specific progress bar colors */
-.node-primary .node-progress-fill {
-    background: linear-gradient(90deg, #4f46e5, #818cf8);
-}
+.node-primary .node-v2-progress-fill { background: #6366f1; }
+.node-purple .node-v2-progress-fill { background: #a855f7; }
+.node-orange .node-v2-progress-fill { background: #f97316; }
+.node-emerald .node-v2-progress-fill { background: #10b981; }
+.status-maxed .node-v2-progress-fill { background: #eab308; }
 
-.node-purple .node-progress-fill {
-    background: linear-gradient(90deg, #9333ea, #c084fc);
-}
-
-.node-orange .node-progress-fill {
-    background: linear-gradient(90deg, #ea580c, #fb923c);
-}
-
-.node-emerald .node-progress-fill {
-    background: linear-gradient(90deg, #059669, #34d399);
-}
-
-.status-maxed .node-progress-fill {
-    background: linear-gradient(90deg, #ca8a04, #fde047);
-}
-
-.node-xp-text {
-    font-size: 0.65rem;
+.node-v2-xp-text {
+    font-size: 0.70rem;
     color: #94a3b8;
     text-align: center;
-    font-weight: 500;
-    margin-top: 4px;
+    font-weight: 600;
 }
 
-/* ─── SVG Spline Connections ─── */
+.node-v2-lock-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #94a3b8;
+    opacity: 0.8;
+}
+
+/* ─── V2 SVG Spline Connections ─── */
 .tree-connection-layer {
     position: absolute !important;
     pointer-events: none;
 }
 
-.path-locked {
+.path-v2-locked {
     stroke: #2a2a35;
 }
 
-.path-active {
-    stroke-dasharray: 20 15;
-    animation: energyFlow 2s linear infinite;
+.path-v2-active {
+    animation: flowV2 20s linear infinite;
 }
 
-@keyframes energyFlow {
-    to {
-        stroke-dashoffset: -35;
-    }
+@keyframes flowV2 {
+    to { stroke-dashoffset: -200; }
 }
 
-/* Glow lines based on domain */
-.path-primary {
-    stroke: #6366f1;
-}
-
-.glow-primary {
-    stroke: rgba(99, 102, 241, 0.3);
-}
-
-.path-purple {
-    stroke: #a855f7;
-}
-
-.glow-purple {
-    stroke: rgba(168, 85, 247, 0.3);
-}
-
-.path-orange {
-    stroke: #f97316;
-}
-
-.glow-orange {
-    stroke: rgba(249, 115, 22, 0.3);
-}
-
-.path-emerald {
-    stroke: #10b981;
-}
-
-.glow-emerald {
-    stroke: rgba(16, 185, 129, 0.3);
-}
-
-.path-maxed {
-    stroke: #eab308;
-    filter: drop-shadow(0 0 5px rgba(234, 179, 8, 0.5));
-}
-
-@keyframes pathDraw {
-    from {
-        stroke-dashoffset: 1000;
-    }
-
-    to {
-        stroke-dashoffset: 0;
-    }
+/* Elegant thin colored lines */
+.path-v2-primary { stroke: #6366f1; }
+.path-v2-purple { stroke: #a855f7; }
+.path-v2-orange { stroke: #f97316; }
+.path-v2-emerald { stroke: #10b981; }
+.path-v2-maxed { 
+    stroke: #eab308; 
+    filter: drop-shadow(0 0 3px rgba(234, 179, 8, 0.4));
 }
 
 /* ─── Side Panel (Detailed view) ─── */
@@ -364,6 +228,7 @@
     font-family: var(--font-primary);
     background: linear-gradient(90deg, #fff, #a1a1aa);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 

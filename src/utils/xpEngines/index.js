@@ -61,23 +61,37 @@ export function calculateTreeState(data) {
                 xp = 0;
         }
 
-        let level = 0;
+        // Generate dynamic thresholds or use hardcoded if provided
+        let calculatedThresholds = [];
         if (nodeDef.thresholds) {
-            for (let i = 0; i < nodeDef.thresholds.length; i++) {
-                if (xp >= nodeDef.thresholds[i]) {
-                    level = i + 1;
-                } else {
-                    break;
-                }
+            calculatedThresholds = nodeDef.thresholds;
+        } else if (nodeDef.reqBase && nodeDef.maxLevel) {
+            const multiplier = nodeDef.reqMultiplier || 1.5;
+            for (let i = 0; i < nodeDef.maxLevel; i++) {
+                calculatedThresholds.push(Math.round(nodeDef.reqBase * Math.pow(multiplier, i)));
+            }
+        } else {
+            calculatedThresholds = [100]; // Fallback
+        }
+
+        let level = 0;
+        for (let i = 0; i < calculatedThresholds.length; i++) {
+            if (xp >= calculatedThresholds[i]) {
+                level = i + 1;
+            } else {
+                break;
             }
         }
 
-        let maxXp = nodeDef.thresholds[0] || 100;
-        if (level > 0 && level < nodeDef.thresholds.length) {
-            maxXp = nodeDef.thresholds[level];
-        } else if (level === nodeDef.thresholds.length) {
-            maxXp = nodeDef.thresholds[level - 1];
+        let maxXp = calculatedThresholds[0] || 100;
+        if (level > 0 && level < calculatedThresholds.length) {
+            maxXp = calculatedThresholds[level];
+        } else if (level === calculatedThresholds.length) {
+            maxXp = calculatedThresholds[level - 1];
         }
+
+        // Attach calculated thresholds so UI can access them
+        nodeDef.calculatedThresholds = calculatedThresholds;
 
         // Sort contributors and get top 3
         let topContributors = [];
@@ -101,7 +115,7 @@ export function calculateTreeState(data) {
             xp,
             maxXp,
             level,
-            maxLevel: nodeDef.thresholds.length,
+            maxLevel: calculatedThresholds.length,
             isUnlocked: false,
             topContributors
         };

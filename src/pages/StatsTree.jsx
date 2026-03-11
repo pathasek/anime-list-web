@@ -4,6 +4,7 @@ import TreeCanvas from '../components/tree/TreeCanvas';
 import SkillNode from '../components/tree/SkillNode';
 import InteractionPath from '../components/tree/InteractionPath';
 import SidePanel from '../components/tree/SidePanel';
+import ProfileHUD from '../components/tree/ProfileHUD';
 import { StatsTreeProvider, useStatsTree } from '../components/tree/StatsTreeContext';
 
 function StatsTreeContent() {
@@ -67,6 +68,8 @@ function StatsTreeContent() {
                     />
                 ))}
             />
+
+            <ProfileHUD />
 
             <SidePanel
                 nodeData={selectedNode}

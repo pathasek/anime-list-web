@@ -4,94 +4,91 @@
  * X-axis spacing is generous, Y-axis branches out logical themes.
  * Titan V2 (Yggdrasil): Massive horizontal expansion with Demographics, Formats, Tropes, Habits and Omegas.
  */
+/**
+ * NODE_DICTIONARY
+ * Redesigned to represent chronologically-flowing "Firsts" as requested.
+ * Titan V3 (Yggdrasil): Massive horizontal expansion, dynamic math thresholds, and deep Lore descriptions.
+ */
 export const NODE_DICTIONARY = [
     // ─── L0: Genesis (x = 0) ───
-    { id: 'singularity', label: 'První Anime', domain: 'primary', x: 0, y: 0, dependencies: [], thresholds: [100, 5000, 10000, 25000, 50000] },
+    { 
+        id: 'singularity', label: 'První Anime', domain: 'primary', x: 0, y: 0, dependencies: [], 
+        reqBase: 100, reqMultiplier: 1.8, maxLevel: 5,
+        description: "Vaše cesta právě začíná. Zkoukne-li člověk alespoň jedno anime, už z tohoto kolotoče nelze vysednout. Každá série, kterou uvidíte, přidává kapku zkušeností do tohoto jádra."
+    },
 
-    // ─── L1: First Steps (x = 400) ───
-    { id: 'genre_explorer', label: 'První Žánr', domain: 'purple', x: 400, y: -600, dependencies: ['singularity'], thresholds: [500, 2500, 5000] },
-    { id: 'studio_connoisseur', label: 'První Studio', domain: 'orange', x: 400, y: -200, dependencies: ['singularity'], thresholds: [5000, 15000, 25000] },
-    { id: 'chronos_novice', label: 'První Hodiny', domain: 'chronos', x: 400, y: 200, dependencies: ['singularity'], thresholds: [1000, 5000, 25000, 100000] },
-    { id: 'audio_listener', label: 'První Soundtrack', domain: 'emerald', x: 400, y: 600, dependencies: ['singularity'], thresholds: [10000, 50000, 100000] },
+    // ─── L1: First Steps (x = 500) ───
+    { 
+        id: 'genre_explorer', label: 'Cestovatel Žánry', domain: 'purple', x: 500, y: -600, dependencies: ['singularity'], 
+        reqBase: 500, reqMultiplier: 2.0, maxLevel: 5,
+        description: "Objevování nových světů. Získáváte XP za každý unikátní žánr, který si připíšete do svého listu."
+    },
+    { 
+        id: 'studio_connoisseur', label: 'Lovec Studií', domain: 'orange', x: 500, y: -200, dependencies: ['singularity'], 
+        reqBase: 2000, reqMultiplier: 2.2, maxLevel: 5,
+        description: "Rozpoznáte styl animace od prvního framu. Každé nové animační studio vám dává zkušenosti."
+    },
+    { 
+        id: 'chronos_novice', label: 'Strážce Času', domain: 'emerald', x: 500, y: 200, dependencies: ['singularity'], 
+        reqBase: 1000, reqMultiplier: 3.5, maxLevel: 5,
+        description: "Čas plyne a vy ho měníte ve zhlédnuté epizody. XP rostou s každou minutou, kterou strávíte u obrazovky."
+    },
+    { 
+        id: 'audio_listener', label: 'První Soundtrack', domain: 'cyan', x: 500, y: 600, dependencies: ['singularity'], 
+        reqBase: 5000, reqMultiplier: 2.5, maxLevel: 5,
+        description: "Hudba dokáže anime povýsit na umění. Tento uzel sleduje vaši lásku k originálním soundtrackům a znělkám."
+    },
+    { 
+        id: 'rating_reviewer', label: 'První Hodnocení', domain: 'red', x: 500, y: 1000, dependencies: ['singularity'], 
+        reqBase: 1000, reqMultiplier: 2.0, maxLevel: 5,
+        description: "Nejsi jen pasivní konzument, chceš promluvit do světa. Hodnoť a kritizuj, abys zvyšoval úroveň tohoto uzlu."
+    },
 
-    // Other early mechanics
-    { id: 'lang_interpreter', label: 'První Titulky/Dabing', domain: 'misc', x: 400, y: -1000, dependencies: ['singularity'], thresholds: [1000, 5000] },
-    { id: 'era_time_skipper', label: 'Cestovatel Časem', domain: 'cyan', x: 400, y: 1000, dependencies: ['singularity'], thresholds: [1000, 5000] },
-    { id: 'rating_reviewer', label: 'První Hodnocení', domain: 'red', x: 400, y: 1400, dependencies: ['singularity'], thresholds: [1000, 5000, 10000] },
-    { id: 'len_pacer', label: 'První Maraton', domain: 'misc', x: 400, y: 1800, dependencies: ['singularity'], thresholds: [1000, 5000] },
-
-    // ─── L2: Specialization (x = 800) ───
-    // Genre Branch
-    { id: 'genre_action', label: 'První Akce', domain: 'purple', x: 800, y: -800, dependencies: ['genre_explorer'], thresholds: [1000, 5000, 10000, 20000] },
-    { id: 'genre_romance', label: 'První Romantika', domain: 'purple', x: 800, y: -650, dependencies: ['genre_explorer'], thresholds: [1000, 3000, 10000] },
-    { id: 'genre_mystery', label: 'První Mystery', domain: 'purple', x: 800, y: -500, dependencies: ['genre_explorer'], thresholds: [1000, 3000, 8000] },
-    { id: 'genre_sports', label: 'První Sportovní', domain: 'purple', x: 800, y: -350, dependencies: ['genre_explorer'], thresholds: [1000, 5000, 10000] },
+    // ─── L2: Specialization (x = 1000) ───
+    // Genre Branch - Expanded Horizontally
+    { id: 'genre_action', label: 'Nával Adrenalinu', domain: 'purple', x: 1000, y: -1000, dependencies: ['genre_explorer'], reqBase: 1000, reqMultiplier: 2.0, maxLevel: 5, description: "Ať už jde o pěstní souboje nebo obří meče, čistokrevná akce vám doplňuje XP." },
+    { id: 'genre_romance', label: 'Červená Nit', domain: 'purple', x: 1000, y: -800, dependencies: ['genre_explorer'], reqBase: 1000, reqMultiplier: 2.1, maxLevel: 5, description: "Sledování rozmazaných vztahů a školních románků. Kdo z nás by netlačil lodičky postav?" },
+    { id: 'genre_mystery', label: 'Hledač Pravdy', domain: 'purple', x: 1000, y: -600, dependencies: ['genre_explorer'], reqBase: 1000, reqMultiplier: 2.2, maxLevel: 5, description: "Kdo je vrah? Kde je pravda? Detektivky a záhady sytí vaši touhu po poznání." },
+    { id: 'genre_sports', label: 'Do Posledního Dechu', domain: 'purple', x: 1000, y: -400, dependencies: ['genre_explorer'], reqBase: 1500, reqMultiplier: 2.0, maxLevel: 5, description: "I pro ty, co reálně nesportují. Krev, pot a síla přátelství na hřišti." },
+    { id: 'genre_scifi', label: 'Sci-fi Technologie', domain: 'purple', x: 1000, y: -200, dependencies: ['genre_explorer'], reqBase: 1000, reqMultiplier: 2.5, maxLevel: 5, description: "Lasery, vesmírné lety a dystopická budoucnost. Budoucnost se stává přítomností." },
 
     // Studio Branch
-    { id: 'studio_kyoani', label: 'KyoAni Objevitel', domain: 'orange', x: 800, y: -200, dependencies: ['studio_connoisseur'], thresholds: [1500, 5000, 10000] },
-    { id: 'studio_mappa', label: 'MAPPA Objevitel', domain: 'orange', x: 800, y: -50, dependencies: ['studio_connoisseur'], thresholds: [2000, 6000, 12000] },
-    { id: 'studio_madhouse', label: 'Madhouse Objevitel', domain: 'orange', x: 800, y: 100, dependencies: ['studio_connoisseur'], thresholds: [2500, 8000, 15000] },
-    { id: 'studio_ufotable', label: 'Ufotable Objevitel', domain: 'orange', x: 800, y: 250, dependencies: ['studio_connoisseur'], thresholds: [1000, 4000, 8000] },
+    { id: 'studio_kyoani', label: 'KyoAni Estét', domain: 'orange', x: 1000, y: 0, dependencies: ['studio_connoisseur'], reqBase: 1500, reqMultiplier: 2.2, maxLevel: 5, description: "Kyoto Animation ztělesňuje jemnost, detail a neuvěřitelnou emoci." },
+    { id: 'studio_mappa', label: 'MAPPA Továrna', domain: 'orange', x: 1000, y: 200, dependencies: ['studio_connoisseur'], reqBase: 2000, reqMultiplier: 1.8, maxLevel: 5, description: "Tvrdá, filmově zpracovaná akce za cenu krve a potu animátorů." },
+    { id: 'studio_madhouse', label: 'Šílencův Dům', domain: 'orange', x: 1000, y: 400, dependencies: ['studio_connoisseur'], reqBase: 2500, reqMultiplier: 1.5, maxLevel: 5, description: "Madhouse, legenda, která neztratí svůj divoký, neomluvitelný styl." },
+    { id: 'studio_bones', label: 'Z Kostí a Krve', domain: 'orange', x: 1000, y: 600, dependencies: ['studio_connoisseur'], reqBase: 1500, reqMultiplier: 2.0, maxLevel: 5, description: "Studio Bones, známé pro plynulou a fantastickou bojovou choreografii." },
 
-    // Chronos & Habit Branch
-    { id: 'chronos_binge', label: 'Závislák (Binge)', domain: 'chronos', x: 800, y: 400, dependencies: ['chronos_novice'], thresholds: [500, 1200, 2400, 3600] },
-    { id: 'chronos_completionist', label: 'Komplecionista', domain: 'chronos', x: 800, y: 550, dependencies: ['chronos_novice'], thresholds: [1000, 5000, 10000, 25000] },
+    // Demographics & Rating
+    { id: 'demo_shounen', label: 'Shounen Odvaha', domain: 'primary', x: 1000, y: 800, dependencies: ['rating_reviewer'], reqBase: 5000, reqMultiplier: 1.8, maxLevel: 5, description: "Zaměřeno primárně na dospívající publikum, s důrazem na akci a hodnotu přátelství." },
+    { id: 'rating_strict', label: 'Neoblomný Kritik', domain: 'red', x: 1000, y: 1000, dependencies: ['rating_reviewer'], reqBase: 5000, reqMultiplier: 2.0, maxLevel: 5, description: "Nebojíš se stisknout známku nižší než 5. Za tuto odvahu ješ odměněn těmito zkušenostmi." },
+    
+    // ─── L3: Deep Dive & Niches (x = 1500) ───
+    // Finer genre progression
+    { id: 'genre_isekai', label: 'Převtělený Hrdina', domain: 'purple', x: 1500, y: -1000, dependencies: ['genre_action'], reqBase: 1500, reqMultiplier: 2.0, maxLevel: 5, description: "Srazil vás náklaďák (Truck-kun)? Výborně, dostáváte XP za každý nový pofidérní fantasy svět, který zachráníte." },
+    { id: 'genre_mecha', label: 'Robotický Pilot', domain: 'purple', x: 1500, y: -200, dependencies: ['genre_scifi', 'genre_action'], reqBase: 2000, reqMultiplier: 2.5, maxLevel: 5, description: "Obří roboti. Víc není třeba dodávat. Naskočte do Evangeliu!" },
+    { id: 'genre_slice', label: 'Kavárny a Pohoda', domain: 'emerald', x: 1500, y: -700, dependencies: ['genre_romance'], reqBase: 1200, reqMultiplier: 1.8, maxLevel: 5, description: "Pohodové 'Slice of Life' anime, které pohladí na duši po těžkém dni v práci." },
+    { id: 'genre_psycho', label: 'Psychologický Pád', domain: 'red', x: 1500, y: -500, dependencies: ['genre_mystery'], reqBase: 2000, reqMultiplier: 2.0, maxLevel: 5, description: "Když díla pronikají do nejhlubších zákoutí temné lidské psychiky." },
 
-    // Audio Branch
-    { id: 'audio_frisson', label: 'První Husí Kůže', domain: 'emerald', x: 800, y: 700, dependencies: ['audio_listener'], thresholds: [5000, 25000, 75000] },
-    { id: 'audio_karaoke', label: 'Zpěvák OP', domain: 'emerald', x: 800, y: 850, dependencies: ['audio_listener'], thresholds: [5000, 20000, 50000] },
+    // Habits breakdown
+    { id: 'chronos_binge', label: 'Noční Jízda', domain: 'emerald', x: 1500, y: -100, dependencies: ['chronos_novice'], reqBase: 500, reqMultiplier: 2.0, maxLevel: 5, description: "Proč spát, když má série ještě pět epizod? Za bingování dáváme XP, ale pozor na zdraví!" },
+    { id: 'chronos_turtle', label: 'Želví Poutník', domain: 'emerald', x: 1500, y: 100, dependencies: ['chronos_novice'], reqBase: 5, reqMultiplier: 2.0, maxLevel: 5, description: "Pomalý a rozvážný divák, který si vychutnává anime pekne díl po dílu, beze spěchu." },
 
-    // Format & Era
-    { id: 'fmt_tv', label: 'Gaučový Povalovač', domain: 'era', x: 800, y: 1000, dependencies: ['era_time_skipper'], thresholds: [10000, 50000, 100000] },
-    { id: 'fmt_movie', label: 'Kinofil (Snob)', domain: 'era', x: 800, y: 1150, dependencies: ['era_time_skipper'], thresholds: [1000, 5000, 15000] },
-    { id: 'fmt_ova', label: 'OVA Zlatokop', domain: 'era', x: 800, y: 1300, dependencies: ['era_time_skipper'], thresholds: [1000, 3000, 10000] },
+    // Formats
+    { id: 'fmt_retro', label: 'VHS Kazeta (90s)', domain: 'cyan', x: 1500, y: 500, dependencies: ['audio_listener'], reqBase: 1000, reqMultiplier: 3.0, maxLevel: 5, description: "Klasický cell shading a starý zvukový formát. Sledování všeho, co vyšlo před rokem 2000." },
+    { id: 'fmt_ova', label: 'Sběratel VHS', domain: 'cyan', x: 1500, y: 700, dependencies: ['audio_listener'], reqBase: 1000, reqMultiplier: 2.5, maxLevel: 5, description: "Obscurní formáty Original Video Animation a bonusové epizody rozšiřující svět série." },
 
-    // Rating
-    { id: 'rating_strict', label: 'Kritik', domain: 'red', x: 800, y: 1500, dependencies: ['rating_reviewer'], thresholds: [5000, 25000, 50000] },
-    { id: 'rating_optimist', label: 'Optimista', domain: 'red', x: 800, y: 1650, dependencies: ['rating_reviewer'], thresholds: [5000, 25000, 50000] },
+    // ─── L4: Mastering and Synergy (x = 2000) ───
+    { id: 'rewatch_lane', label: 'Kruh se Uzavírá', domain: 'primary', x: 2000, y: -100, dependencies: ['chronos_binge'], reqBase: 2000, reqMultiplier: 2.0, maxLevel: 5, description: "Někdy jedno zhlédnutí zkrátka nestačí. Kolikrát dokážete vidět tu samou sérii a stále plakat?" },
+    { id: 'trope_iyashikei', label: 'Léčitel Duše', domain: 'emerald', x: 2000, y: -700, dependencies: ['genre_slice'], reqBase: 3000, reqMultiplier: 2.0, maxLevel: 4, description: "Dosáhli jste stavu vnitřního klidu, Iyashikei anime vás kompletně zbavilo stresu." },
+    { id: 'demo_seinen', label: 'Seinen Filozof', domain: 'cyan', x: 2000, y: 800, dependencies: ['demo_shounen'], reqBase: 2000, reqMultiplier: 2.5, maxLevel: 5, description: "Přejití od akčních rvaček k dospělým traumatům, morálním ambiguitám a hlubším tématům." },
+    { id: 'demo_shoujo', label: 'Shoujo Estét', domain: 'purple', x: 2000, y: -800, dependencies: ['genre_romance'], reqBase: 1000, reqMultiplier: 2.5, maxLevel: 5, description: "Oči velké přes půlku obličeje, všudevyhlížející třpytky a spletitá pavučina lidských vztahů." },
 
-    // Length
-    { id: 'len_sprinter', label: 'První 12-Ep', domain: 'misc', x: 800, y: 1800, dependencies: ['len_pacer'], thresholds: [15000, 45000] },
-    { id: 'len_marathon', label: 'První Shounen (100+)', domain: 'misc', x: 800, y: 1950, dependencies: ['len_pacer'], thresholds: [25000, 75000] },
-
-    // TITAN V2: Demographics Level 2
-    { id: 'demo_shounen', label: 'Srdce Chlapce (Shounen)', domain: 'orange', x: 800, y: -1300, dependencies: ['genre_explorer'], thresholds: [5000, 15000, 30000] },
-    { id: 'demo_seinen', label: 'Seinen Filozof', domain: 'cyan', x: 800, y: -1450, dependencies: ['genre_explorer'], thresholds: [2000, 8000, 20000] },
-    { id: 'demo_shoujo', label: 'Shoujo Estét', domain: 'purple', x: 800, y: -1600, dependencies: ['genre_explorer'], thresholds: [1000, 5000, 15000] },
-
-
-    // ─── L3: Deep Dive & Specific Tropes (x = 1200) ───
-    { id: 'genre_shounen_master', label: 'Shounen Král', domain: 'purple', x: 1200, y: -800, dependencies: ['genre_action'], thresholds: [2500, 10000, 25000] },
-    { id: 'genre_isekai', label: 'Isekai Přeživší', domain: 'purple', x: 1200, y: -650, dependencies: ['genre_action'], thresholds: [1500, 5000, 15000] },
-    { id: 'genre_drama', label: 'Slzy Zoufalců', domain: 'purple', x: 1200, y: -500, dependencies: ['genre_romance'], thresholds: [1500, 5000, 12000] },
-
-    // Tropes
-    { id: 'trope_iyashikei', label: 'Iyashikei Healer', domain: 'emerald', x: 1200, y: -950, dependencies: ['genre_romance'], thresholds: [1000, 5000] },
-    { id: 'trope_edgelord', label: 'Krvavý Baron', domain: 'red', x: 1200, y: -1100, dependencies: ['genre_action'], thresholds: [2000, 10000] },
-    { id: 'trope_idol', label: 'Idol Producent', domain: 'purple', x: 1200, y: -1250, dependencies: ['audio_karaoke'], thresholds: [1000, 5000] },
-
-    // Habits
-    { id: 'habit_turtle', label: 'Želví Poutník', domain: 'chronos', x: 1200, y: 700, dependencies: ['chronos_novice'], thresholds: [1, 5, 10] }, // Count of animes
-    { id: 'rewatch_lane', label: 'První Rewatch', domain: 'misc', x: 1200, y: 400, dependencies: ['chronos_binge'], thresholds: [2000, 5000, 15000] },
-    { id: 'habit_sleep_deficit', label: 'Spánkový Deficit', domain: 'purple', x: 1200, y: 250, dependencies: ['chronos_binge'], thresholds: [1, 5, 20] }, // Count of animes
-
-    // Status
-    { id: 'status_airing', label: 'Sběratel Sezón', domain: 'misc', x: 1200, y: 1800, dependencies: ['len_sprinter'], thresholds: [5000, 15000, 50000] },
-
-    // ─── L4: Mastering (x = 1600) ───
-    { id: 'rewatch_endless', label: 'Endless Eight', domain: 'misc', x: 1600, y: 400, dependencies: ['rewatch_lane'], thresholds: [10000, 25000] },
-
-    // ─── L5: Ultimate Goals (x = 2200) ───
-    { id: 'omega_shounen', label: 'ULTIMATE: Protagonista', domain: 'primary', x: 2200, y: -800, dependencies: ['genre_shounen_master', 'len_marathon'], thresholds: [20000, 50000] },
-    { id: 'omega_feels', label: 'ULTIMATE: Emoce', domain: 'purple', x: 2200, y: -300, dependencies: ['genre_drama', 'studio_kyoani', 'audio_frisson'], thresholds: [15000, 30000] },
-    { id: 'omega_elitist', label: 'ULTIMATE: Elitista', domain: 'red', x: 2200, y: 1500, dependencies: ['rating_strict', 'fmt_ova'], thresholds: [20000, 50000] },
-
-    // ─── L6: Prestige Classes & Crossovers (x = 2800) ───
-    { id: 'omega_degenerate_lord', label: 'ULTIMÁTNÍ: Pán Temnot', domain: 'red', x: 2800, y: -650, dependencies: ['genre_isekai', 'habit_sleep_deficit'], thresholds: [10000, 30000] },
-    { id: 'omega_corporate_slave', label: 'ULTIMÁTNÍ: Korporátní Útěk', domain: 'cyan', x: 2800, y: -1450, dependencies: ['demo_seinen', 'trope_iyashikei'], thresholds: [10000, 25000] },
-    { id: 'omega_schizophrenia', label: 'ULTIMÁTNÍ: Osobnostní Rozkol', domain: 'orange', x: 2800, y: -1150, dependencies: ['trope_edgelord', 'trope_idol', 'demo_shoujo'], thresholds: [15000, 35000] },
-
-    // ─── L7: Zenith (x = 3400) ───
-    { id: 'omega_zenith', label: 'THE OTAKU ZENITH', domain: 'primary', x: 3400, y: 0, dependencies: ['chronos_completionist', 'fmt_tv', 'studio_connoisseur', 'audio_listener'], thresholds: [100000, 500000, 1000000] },
+    // ─── L5: Omegas (x = 2600) ───
+    { id: 'omega_shounen', label: 'ULTIMATE: Protagonista', domain: 'orange', x: 2600, y: 0, dependencies: ['demo_shounen', 'genre_isekai'], reqBase: 20000, reqMultiplier: 2.5, maxLevel: 5, description: "Máte neomezenou zásobu chaker, reiatsu a nen. Jste samotným vtělením nakama power." },
+    { id: 'omega_elitist', label: 'ULTIMATE: Elitista', domain: 'red', x: 2600, y: 1000, dependencies: ['rating_strict', 'fmt_retro'], reqBase: 20000, reqMultiplier: 2.5, maxLevel: 5, description: 'Nic co vyšlo po roce 2011 "neprodává esenci pravého media".' },
+    { id: 'omega_corporate_slave', label: 'ULTIMATE: Oáza', domain: 'emerald', x: 2600, y: -700, dependencies: ['demo_seinen', 'trope_iyashikei'], reqBase: 15000, reqMultiplier: 2.0, maxLevel: 5, description: "Níčí-li vás tvrdá realita korporátu, tyto uzly jsou vaším dokonalým, jemným, animovaným bezpečným přístavem." },
+    
+    // ─── L6: Zenith (x = 3200) ───
+    { id: 'omega_zenith', label: 'YGGDRASIL ZENITH', domain: 'primary', x: 3200, y: 0, dependencies: ['omega_shounen', 'omega_elitist', 'omega_corporate_slave'], reqBase: 100000, reqMultiplier: 2.0, maxLevel: 5, description: "Osvícený stav čistého pozorovatele. Pravý O-T-A-K-U, se kterým se rojí legendy samotného Akihabara." }
 ];
 

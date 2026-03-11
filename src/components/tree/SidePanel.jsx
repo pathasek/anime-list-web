@@ -3,11 +3,11 @@ import React from 'react';
 export default function SidePanel({ nodeData, onClose }) {
     if (!nodeData) return null;
 
-    const { id, label, xp = 0, level = 0, maxLevel = 5, isUnlocked = false, thresholds = [], domain, dependencies = [] } = nodeData;
+    const { id, label, xp = 0, level = 0, maxLevel = 5, isUnlocked = false, calculatedThresholds = [], domain, description, dependencies = [] } = nodeData;
     const isMaxed = level >= maxLevel;
 
     // Calculate next threshold distance
-    const nextThreshold = isMaxed ? thresholds[thresholds.length - 1] : thresholds[level];
+    const nextThreshold = isMaxed ? calculatedThresholds[calculatedThresholds.length - 1] : calculatedThresholds[level];
     const progressPercent = Math.min(100, Math.max(0, (xp / nextThreshold) * 100));
 
     return (
@@ -32,7 +32,7 @@ export default function SidePanel({ nodeData, onClose }) {
                             <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ marginRight: '8px' }}>
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                             </svg>
-                            NODE LOCKED - Requirements not met
+                            NODE LOCKED - Prereqs not met
                         </div>
                     )}
 
@@ -47,7 +47,7 @@ export default function SidePanel({ nodeData, onClose }) {
                 <div className="panel-lore-section">
                     <h3>Domain: {String(domain).toUpperCase()}</h3>
                     <p className="panel-description">
-                        {getLoreDescription(id)}
+                        {description || "Odemktknutí dalších dat je skryto pod zámkem paměti. Pokračujte ve studiu animesů a sledujte jak se vaše statistiky formují."}
                     </p>
                 </div>
 
@@ -68,11 +68,11 @@ export default function SidePanel({ nodeData, onClose }) {
                     </div>
                 )}
 
-                {thresholds.length > 0 && (
+                {calculatedThresholds.length > 0 && (
                     <div className="panel-thresholds">
                         <h3>Level Milestones</h3>
                         <ul>
-                            {thresholds.map((t, idx) => (
+                            {calculatedThresholds.map((t, idx) => (
                                 <li key={idx} className={level > idx ? 'milestone-reached' : ''}>
                                     <span className="milestone-level">Lvl {idx + 1}</span>
                                     <span className="milestone-xp">{t.toLocaleString()} XP</span>
@@ -81,18 +81,7 @@ export default function SidePanel({ nodeData, onClose }) {
                         </ul>
                     </div>
                 )}
-
             </div>
         </div>
     );
-}
-
-// Helper to provide some RPG flavor text depending on the node
-function getLoreDescription(id) {
-    if (id.startsWith('omega')) return "An ULTIMATE node crossing the boundaries of space and time. Requires absolute mastery across multiple domains to unlock.";
-    if (id.includes('shounen')) return "The power of friendship alone cannot save you. Only raw dedication to the Shounen genre provides this much energy.";
-    if (id.includes('binge')) return "Sleep is a myth. The Weekend Warrior thrives on consecutive hours of non-stop animation consumption.";
-    if (id.includes('connoisseur')) return "You observe animation not as moving pictures, but as a deliberate craft sculpted by human hands.";
-    if (id.includes('frisson')) return "That shiver down your spine during the climax? That's your soul resonating with the soundtrack.";
-    return "A specific node tracking your behavior in the infinite expanses of the anime database.";
 }
