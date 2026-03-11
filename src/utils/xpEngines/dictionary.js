@@ -13,7 +13,7 @@ export const NODE_DICTIONARY = [
     // ─── L0: Genesis (x = 0) ───
     { 
         id: 'singularity', label: 'První Anime', domain: 'primary', x: 0, y: 0, dependencies: [], 
-        reqBase: 100, reqMultiplier: 1.8, maxLevel: 5,
+        reqBase: 100, reqMultiplier: 1.0, maxLevel: 1,
         description: "Vaše cesta právě začíná. Zkoukne-li člověk alespoň jedno anime, už z tohoto kolotoče nelze vysednout. Každá série, kterou uvidíte, přidává kapku zkušeností do tohoto jádra."
     },
 
