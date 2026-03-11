@@ -68,8 +68,26 @@ export default function ProfileHUD() {
                     }}
                 />
                 <div>
-                    <div style={{ fontWeight: '800', fontSize: '1.2rem', letterSpacing: '0.02em', color: '#f8fafc' }}>
-                        Macou
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div style={{ fontWeight: '800', fontSize: '1.2rem', letterSpacing: '0.02em', color: '#f8fafc' }}>
+                            patrekingcz
+                        </div>
+                        <a 
+                            href="https://myanimelist.net/profile/patrekingcz" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            style={{ 
+                                color: '#3b82f6', 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                textDecoration: 'none' 
+                            }}
+                            title="MyAnimeList Profile"
+                        >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 1.97c-.989-.989-2.613-.989-3.602 0l-1.97-1.97c1.978-1.978 5.185-1.978 7.542 0zM8.894 11.221l1.97 1.97c-.989.989-2.613.989-3.602 0l-1.97-1.97c1.978-1.978 5.185-1.978 7.542 0z"/>
+                            </svg>
+                        </a>
                     </div>
                     <div style={{ fontSize: '0.8rem', color: '#fde047', fontWeight: '600', marginTop: '2px' }}>
                         {title}
