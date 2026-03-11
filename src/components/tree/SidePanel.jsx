@@ -24,7 +24,7 @@ export default function SidePanel({ nodeData, onClose }) {
             <div className="panel-content">
                 <div className={`panel-status-card node-${domain} ${isMaxed ? 'status-maxed' : ''}`}>
                     <div className="panel-level-badge">
-                        {maxLevel === 1 ? 'MAX LEVEL' : (isMaxed ? 'MAX LEVEL' : `LEVEL ${level} / ${maxLevel}`)}
+                        {isMaxed ? 'MAX LEVEL' : `LEVEL ${level} / ${maxLevel}`}
                     </div>
 
                     {!isUnlocked && (
@@ -54,7 +54,7 @@ export default function SidePanel({ nodeData, onClose }) {
                 {nodeData.topContributors && nodeData.topContributors.length > 0 && (
                     <div className="panel-contributors">
                         <h3>Největší Původci (Contributors)</h3>
-                        <div className={`contributors-posters ${nodeData.topContributors.length === 1 ? 'single' : ''}`}>
+                        <div className="contributors-posters">
                             {nodeData.topContributors.map((c, idx) => (
                                 <div key={idx} className="contrib-poster-wrapper" title={c.name}>
                                     <img 
@@ -64,7 +64,6 @@ export default function SidePanel({ nodeData, onClose }) {
                                         onError={(e) => { e.target.src = 'avatar.jpg' }}
                                     />
                                     <div className="contrib-poster-overlay">
-                                        <div className="contrib-poster-title">{c.name}</div>
                                         <div className="contrib-poster-xp">+{c.xp.toLocaleString()} XP</div>
                                         <div className="contrib-poster-links">
                                             <a href={`#/anime/${encodeURIComponent(c.name)}`} className="contrib-link local-link">Můj List</a>
@@ -80,7 +79,7 @@ export default function SidePanel({ nodeData, onClose }) {
                     </div>
                 )}
 
-                {maxLevel > 1 && calculatedThresholds.length > 0 && (
+                {calculatedThresholds.length > 0 && (
                     <div className="panel-thresholds">
                         <h3>Level Milestones</h3>
                         <ul>

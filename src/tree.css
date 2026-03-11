@@ -407,11 +407,6 @@
     margin-top: 12px;
 }
 
-.contributors-posters.single {
-    grid-template-columns: 110px;
-    justify-content: center;
-}
-
 .contrib-poster-wrapper {
     position: relative;
     border-radius: 8px;

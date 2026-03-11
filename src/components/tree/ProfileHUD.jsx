@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { useStatsTree } from './StatsTreeContext';
-import avatarImg from '../../assets/avatar.jpg';
 
 export default function ProfileHUD() {
     const { nodes, isLoading, error } = useStatsTree();
@@ -58,8 +57,8 @@ export default function ProfileHUD() {
         }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                 <img 
-                    src={avatarImg} 
-                    alt="Patrekingcz Profile"
+                    src="avatar.jpg" 
+                    alt="Macou Profile"
                     style={{
                         width: '50px',
                         height: '50px',
