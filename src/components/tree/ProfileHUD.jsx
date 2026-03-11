@@ -56,20 +56,17 @@ export default function ProfileHUD() {
             userSelect: 'none'
         }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <div style={{
-                    width: '50px',
-                    height: '50px',
-                    borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #6366f1, #a855f7)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '1.5rem',
-                    fontWeight: 'bold',
-                    boxShadow: '0 0 15px rgba(168, 85, 247, 0.4)'
-                }}>
-                    M
-                </div>
+                <img 
+                    src="/avatar.jpg" 
+                    alt="Macou Profile"
+                    style={{
+                        width: '50px',
+                        height: '50px',
+                        borderRadius: '50%',
+                        objectFit: 'cover',
+                        boxShadow: '0 0 15px rgba(168, 85, 247, 0.4)'
+                    }}
+                />
                 <div>
                     <div style={{ fontWeight: '800', fontSize: '1.2rem', letterSpacing: '0.02em', color: '#f8fafc' }}>
                         Macou
