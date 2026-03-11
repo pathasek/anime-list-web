@@ -45,8 +45,8 @@ export default function TreeCanvas({ connections, skillNodes, nodes = [] }) {
         }
     }, []);
 
-    // Auto-scroll to center (the root node) on first load
-    useLayoutEffect(() => {
+    // Extract center view logic so it can be called on demand
+    const centerView = useCallback(() => {
         if (containerRef.current && nodes.length > 0) {
             const root = nodes.find(n => n.id === 'singularity') || nodes[0];
             if (root) {
@@ -66,6 +66,11 @@ export default function TreeCanvas({ connections, skillNodes, nodes = [] }) {
             }
         }
     }, [minX, minY, nodes, applyTransform]);
+
+    // Auto-scroll to center (the root node) on first load
+    useLayoutEffect(() => {
+        centerView();
+    }, [centerView]);
 
     // Interaction Handlers
     const handleMouseDown = useCallback((e) => {
@@ -174,12 +179,50 @@ export default function TreeCanvas({ connections, skillNodes, nodes = [] }) {
             >
                 <div style={{ position: 'absolute', transform: `translate(${-minX}px, ${-minY}px)` }}>
                     <svg style={{ position: 'absolute', left: 0, top: 0, width: worldW, height: worldH, overflow: 'visible', pointerEvents: 'none' }}>
+                        <defs>
+                            <pattern id="bgGrid" width="60" height="60" patternUnits="userSpaceOnUse">
+                                <path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(255, 255, 255, 0.05)" strokeWidth="1" />
+                            </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#bgGrid)" />
                         {connections}
                     </svg>
 
                     {skillNodes}
                 </div>
             </div>
+
+            {/* Reset View Button */}
+            <button 
+                onClick={(e) => { e.stopPropagation(); centerView(); }}
+                title="Zpět na střed"
+                style={{
+                    position: 'absolute',
+                    bottom: '30px',
+                    right: '30px',
+                    padding: '12px',
+                    borderRadius: '50%',
+                    background: 'rgba(99, 102, 241, 0.2)',
+                    backdropFilter: 'blur(5px)',
+                    border: '1px solid rgba(99, 102, 241, 0.4)',
+                    color: '#818cf8',
+                    cursor: 'pointer',
+                    zIndex: 100,
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'all 0.2s',
+                    outline: 'none'
+                }}
+                onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(99, 102, 241, 0.5)'; e.currentTarget.style.color = '#ffffff'; }}
+                onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(99, 102, 241, 0.2)'; e.currentTarget.style.color = '#818cf8'; }}
+            >
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19 12h2M3 12h2M12 3v2M12 19v2M12 5a7 7 0 0 0-7 7 7 7 0 0 0 7 7 7 7 0 0 0 7-7 7 7 0 0 0-7-7z"></path>
+                </svg>
+            </button>
         </div>
     );
 }
