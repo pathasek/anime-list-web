@@ -28,8 +28,21 @@ export function calculateTreeState(data) {
         };
 
         switch (nodeDef.domain) {
-            case 'singularity':
-                xp = data.animeList ? data.animeList.length * 100 : 0;
+            case 'primary':
+                if (nodeDef.id === 'singularity') {
+                    if (data.animeList && data.animeList.length > 0) {
+                        // Find oldest based on start_date
+                        const oldest = [...data.animeList].sort((a, b) => new Date(a.start_date) - new Date(b.start_date))[0];
+                        xp = 100;
+                        contributors = [{
+                            id: oldest.name,
+                            name: oldest.name,
+                            xp: 100
+                        }];
+                    } else {
+                        xp = 0;
+                    }
+                }
                 break;
             case 'chronos':
                 processEngine(calculateChronosXP(nodeDef, totalWatchHours, data));
@@ -107,7 +120,14 @@ export function calculateTreeState(data) {
             });
             const merged = Array.from(uniqueMap.values());
             merged.sort((a, b) => b.xp - a.xp);
-            topContributors = merged.slice(0, 3);
+            topContributors = merged.slice(0, 3).map(contrib => {
+                const animeInfo = data.animeList?.find(a => a.name === contrib.id || a.name === contrib.name);
+                return {
+                    ...contrib,
+                    thumbnail: animeInfo ? animeInfo.thumbnail : null,
+                    mal_url: animeInfo ? animeInfo.mal_url : null
+                };
+            });
         }
 
         return {

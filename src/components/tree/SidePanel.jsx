@@ -53,18 +53,29 @@ export default function SidePanel({ nodeData, onClose }) {
 
                 {nodeData.topContributors && nodeData.topContributors.length > 0 && (
                     <div className="panel-contributors">
-                        <h3>Top 3 Anime Contributors</h3>
-                        <ul className="contributors-list">
+                        <h3>Největší Původci (Contributors)</h3>
+                        <div className="contributors-posters">
                             {nodeData.topContributors.map((c, idx) => (
-                                <li key={idx}>
-                                    <span className="contrib-rank">#{idx + 1}</span>
-                                    <div className="contrib-info">
-                                        <div className="contrib-name">{c.name}</div>
-                                        <div className="contrib-xp">+{c.xp.toLocaleString()} XP</div>
+                                <div key={idx} className="contrib-poster-wrapper" title={c.name}>
+                                    <img 
+                                        src={c.thumbnail || 'avatar.jpg'} 
+                                        alt={c.name} 
+                                        className="contrib-poster-img"
+                                        onError={(e) => { e.target.src = 'avatar.jpg' }}
+                                    />
+                                    <div className="contrib-poster-overlay">
+                                        <div className="contrib-poster-xp">+{c.xp.toLocaleString()} XP</div>
+                                        <div className="contrib-poster-links">
+                                            <a href={`#/anime/${encodeURIComponent(c.name)}`} className="contrib-link local-link">Můj List</a>
+                                            {c.mal_url && (
+                                                <a href={c.mal_url} target="_blank" rel="noopener noreferrer" className="contrib-link mal-link">MAL</a>
+                                            )}
+                                        </div>
                                     </div>
-                                </li>
+                                    <div className="contrib-rank-badge">#{idx + 1}</div>
+                                </div>
                             ))}
-                        </ul>
+                        </div>
                     </div>
                 )}
 

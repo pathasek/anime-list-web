@@ -396,3 +396,128 @@
 .panel-thresholds li:last-child {
     border-bottom: none;
 }
+
+/* ─────────────────────────────────────────────────────────
+ * Contributor Posters Grid & Hover Effects
+ * ───────────────────────────────────────────────────────── */
+.contributors-posters {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.contrib-poster-wrapper {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 2 / 3;
+    background-color: var(--bg-tertiary);
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.contrib-poster-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    display: block;
+}
+
+.contrib-poster-wrapper:hover .contrib-poster-img {
+    transform: scale(1.05);
+}
+
+.contrib-poster-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.85); /* Slightly transparent slate */
+    backdrop-filter: blur(2px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    padding: 10px;
+}
+
+.contrib-poster-wrapper:hover .contrib-poster-overlay {
+    opacity: 1;
+}
+
+.contrib-poster-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #f8fafc;
+    text-align: center;
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.contrib-poster-xp {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--accent-primary);
+    margin-bottom: 12px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.contrib-poster-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.contrib-link {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    padding: 4px 0;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.contrib-link.local-link {
+    background-color: rgba(59, 130, 246, 0.2);
+    color: #93c5fd;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.contrib-link.local-link:hover {
+    background-color: rgba(59, 130, 246, 0.4);
+}
+
+.contrib-link.mal-link {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.contrib-link.mal-link:hover {
+    background-color: rgba(239, 68, 68, 0.4);
+}
+
+.contrib-rank-badge {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    z-index: 10;
+}
