@@ -78,7 +78,7 @@ function StatsTreeContent() {
 
 export default function StatsTree() {
     return (
-        <div className="page-container" style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
+        <div className="page-container" style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - var(--spacing-xl) * 2)', overflow: 'hidden' }}>
             <StatsTreeProvider>
                 <StatsTreeContent />
             </StatsTreeProvider>
