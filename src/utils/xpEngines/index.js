@@ -3,8 +3,12 @@ import { calculateChronosXP } from './engineChronos';
 import { calculateGenreXP } from './engineGenre';
 import { calculateStudioXP } from './engineStudio';
 import { calculateAudioXP } from './engineAudio';
-import { calculateErasXP, calculateRatingsXP } from './engineEras';
+import { calculateErasXP } from './engineEras';
 import { calculateMiscXP } from './engineMisc';
+// --- Titan V2 New Engines ---
+import { calculateRatingsXP } from './engineRatings';
+import { calculateNotesXP } from './engineNotes';
+import { calculateFavoritesXP } from './engineFavorites';
 
 /**
  * calculateTreeState orchestrates the O(N) calculation of all skill nodes.
@@ -27,54 +31,58 @@ export function calculateTreeState(data) {
             }
         };
 
-        switch (nodeDef.domain) {
-            case 'primary':
-                if (nodeDef.id === 'singularity') {
-                    if (data.animeList && data.animeList.length > 0) {
-                        // Find oldest based on start_date
-                        const oldest = [...data.animeList].sort((a, b) => new Date(a.start_date) - new Date(b.start_date))[0];
-                        xp = 100;
-                        contributors = [{
-                            id: oldest.name,
-                            name: oldest.name,
-                            xp: 100
-                        }];
-                    } else {
-                        xp = 0;
-                    }
-                }
-                break;
-            case 'chronos':
-                processEngine(calculateChronosXP(nodeDef, totalWatchHours, data));
-                break;
-            case 'purple': // Generes are defined as 'purple' domain in dictionary
-            case 'genre':
-                processEngine(calculateGenreXP(nodeDef, data));
-                break;
-            case 'orange': // Studios are orange domain
-            case 'studio':
-                processEngine(calculateStudioXP(nodeDef, data));
-                break;
-            case 'emerald': // Audio is emerald domain
-            case 'audio':
-                processEngine(calculateAudioXP(nodeDef, data));
-                break;
-            case 'cyan': // Eras and Misc
-            case 'era':
-                processEngine(calculateErasXP(nodeDef, data));
-                break;
-            case 'red': // Critic ratings
-            case 'rating':
-                processEngine(calculateRatingsXP(nodeDef, data));
-                break;
-            case 'misc':
-                processEngine(calculateMiscXP(nodeDef, data));
-                break;
-            default:
-                xp = 0;
+        const id = nodeDef.id;
+
+        if (id === 'singularity') {
+            // Genesis node
+            if (data.animeList && data.animeList.length > 0) {
+                const oldest = [...data.animeList].sort((a, b) => new Date(a.start_date) - new Date(b.start_date))[0];
+                xp = 100;
+                contributors = [{ id: oldest.name, name: oldest.name, xp: 100 }];
+            }
+        }
+        // ─── CHRONOS ENGINE ───
+        else if (id.startsWith('chronos_') || id.startsWith('habit_')) {
+            processEngine(calculateChronosXP(nodeDef, totalWatchHours, data));
+        }
+        // ─── GENRE ENGINE ───
+        else if (id.startsWith('genre_') || id.startsWith('demo_') || id.startsWith('trope_')) {
+            processEngine(calculateGenreXP(nodeDef, data));
+        }
+        // ─── STUDIO ENGINE ───
+        else if (id.startsWith('studio_')) {
+            processEngine(calculateStudioXP(nodeDef, data));
+        }
+        // ─── AUDIO ENGINE ───
+        else if (id.startsWith('audio_') || id === 'omega_composer' || id === 'omega_audiophile') {
+            processEngine(calculateAudioXP(nodeDef, data));
+        }
+        // ─── ERAS ENGINE ───
+        else if (id.startsWith('era_') || id.startsWith('fmt_')) {
+            processEngine(calculateErasXP(nodeDef, data));
+        }
+        // ─── RATINGS ENGINE (V2) ───
+        else if (id.startsWith('rating_')) {
+            processEngine(calculateRatingsXP(nodeDef, 0, data));
+        }
+        // ─── NOTES ENGINE (V2) ───
+        else if (id.startsWith('notes_') || id === 'backlog_dreamer') {
+            processEngine(calculateNotesXP(nodeDef, 0, data));
+        }
+        // ─── FAVORITES ENGINE (V2) ───
+        else if (id.startsWith('fav_')) {
+            processEngine(calculateFavoritesXP(nodeDef, 0, data));
+        }
+        // ─── MISC ENGINE ───
+        else if (id.startsWith('omega_') || id.startsWith('rewatch_') || id.startsWith('lang_') || id.startsWith('len_') || id.startsWith('status_') || id.startsWith('misc_')) {
+            processEngine(calculateMiscXP(nodeDef, data));
+        }
+        // ─── Fallback ───
+        else {
+            xp = 0;
         }
 
-        // Generate dynamic thresholds or use hardcoded if provided
+        // Generate dynamic thresholds
         let calculatedThresholds = [];
         if (nodeDef.thresholds) {
             calculatedThresholds = nodeDef.thresholds;
@@ -84,7 +92,7 @@ export function calculateTreeState(data) {
                 calculatedThresholds.push(Math.round(nodeDef.reqBase * Math.pow(multiplier, i)));
             }
         } else {
-            calculatedThresholds = [100]; // Fallback
+            calculatedThresholds = [100];
         }
 
         let level = 0;
@@ -103,25 +111,25 @@ export function calculateTreeState(data) {
             maxXp = calculatedThresholds[level - 1];
         }
 
-        // Attach calculated thresholds so UI can access them
         nodeDef.calculatedThresholds = calculatedThresholds;
 
-        // Sort contributors and get top 3
+        // Top 3 for side panel preview
         let topContributors = [];
         if (contributors.length > 0) {
-            // Group duplicates by anime ID just in case
             const uniqueMap = new Map();
             contributors.forEach(c => {
-                if (!uniqueMap.has(c.id)) uniqueMap.set(c.id, c);
+                const uniqueId = typeof c.id === 'string' ? c.id.split('-')[0] : c.id; // handle fav_characters format {name}-{animeName}
+                if (!uniqueMap.has(uniqueId)) uniqueMap.set(uniqueId, c);
                 else {
-                    const existing = uniqueMap.get(c.id);
+                    const existing = uniqueMap.get(uniqueId);
                     existing.xp += c.xp;
                 }
             });
             const merged = Array.from(uniqueMap.values());
             merged.sort((a, b) => b.xp - a.xp);
             topContributors = merged.slice(0, 3).map(contrib => {
-                const animeInfo = data.animeList?.find(a => a.name === contrib.id || a.name === contrib.name);
+                const searchId = typeof contrib.id === 'string' ? contrib.id.split('-')[1] || contrib.id : contrib.id;
+                const animeInfo = data.animeList?.find(a => a.name === searchId || a.name === contrib.name);
                 return {
                     ...contrib,
                     thumbnail: animeInfo ? animeInfo.thumbnail : null,
@@ -151,6 +159,7 @@ export function calculateTreeState(data) {
         } else {
             const allReqsMet = node.dependencies.every(depId => {
                 const parentNode = computedStateMap.get(depId);
+                // Parent must be level >= 1 to unlock children
                 return parentNode && parentNode.level >= 1;
             });
             node.isUnlocked = allReqsMet;

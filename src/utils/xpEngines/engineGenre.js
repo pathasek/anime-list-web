@@ -1,22 +1,23 @@
 /**
- * Computes XP for Genre and Theme specific nodes based on anime_list genres and themes.
+ * Computes XP for Genre and Theme specific nodes based on anime_list genres and tags.
  */
 export function calculateGenreXP(nodeDef, data) {
     let xp = 0;
-    let contributors = [];
+    const contributors = [];
 
-    // Helper to count episodes watched for a specific tag
-    const getTagXP = (targetTag, isTheme = false) => {
+    // Helper to count episodes watched for a specific genre or tag
+    // Returns { xp: Number, list: Array }
+    const getTagXP = (targetTag, isTag = false) => {
         let epsWatchTime = 0;
         let localContribs = [];
         if (data.animeList) {
             data.animeList.forEach(anime => {
-                const tagsField = isTheme ? anime.tags : anime.genres; // Use tags instead of themes for Titan V2
-                if (tagsField && String(tagsField).toLowerCase().includes(targetTag.toLowerCase())) {
+                const tagsField = isTag ? anime.tags : anime.genres;
+                if (tagsField != null && String(tagsField).toLowerCase().includes(targetTag.toLowerCase())) {
                     // add 100 XP per episode
-                    const eps = parseInt(anime.episodes) || (!isNaN(anime.total_time) ? Math.max(1, Math.floor(anime.total_time / 24)) : 12);
+                    const eps = parseInt(anime.episodes) || (anime.total_time != null && !isNaN(anime.total_time) ? Math.max(1, Math.floor(anime.total_time / 24)) : 12);
                     let gained = eps * 100;
-                    if (String(anime.status).toUpperCase() === 'FINISHED') gained += 500; // completion bonus
+                    if (anime.status != null && String(anime.status).toUpperCase() === 'FINISHED') gained += 500; // completion bonus
 
                     epsWatchTime += gained;
                     localContribs.push({ id: anime.anime_id, name: anime.name, xp: gained });
@@ -26,49 +27,21 @@ export function calculateGenreXP(nodeDef, data) {
         return { xp: epsWatchTime, list: localContribs };
     };
 
-    const addTag = (targetTag, isTheme = false) => {
-        const res = getTagXP(targetTag, isTheme);
+    const addTag = (targetTag, isTag = false) => {
+        const res = getTagXP(targetTag, isTag);
         xp += res.xp;
         contributors.push(...res.list);
     };
 
-    // ─── 3A: ACTION PATH ───
-    if (nodeDef.id === 'genre_action') addTag('Action');
-    else if (nodeDef.id === 'genre_shounen') { addTag('Shounen', true); addTag('Super Power', true); }
-    else if (nodeDef.id === 'genre_shounen_master') { addTag('Shounen', true); addTag('Super Power', true); }
-    else if (nodeDef.id === 'genre_isekai') addTag('Isekai', true);
-    else if (nodeDef.id === 'genre_mecha') { addTag('Mecha', true); addTag('Sci-Fi'); }
-
-    // ─── 3B: ROMANCE & DRAMA ───
-    else if (nodeDef.id === 'genre_romance') addTag('Romance');
-    else if (nodeDef.id === 'genre_drama') addTag('Drama');
-    else if (nodeDef.id === 'genre_sol') addTag('Slice of Life');
-
-    // ─── 3C: THRILLER ───
-    else if (nodeDef.id === 'genre_mystery') addTag('Mystery');
-    else if (nodeDef.id === 'genre_psychological') addTag('Psychological', true);
-
-    // ─── 3D: SPORTS ───
-    else if (nodeDef.id === 'genre_sports') addTag('Sports');
-
-    // ─── TITAN V2: DEMOGRAPHICS ───
-    else if (nodeDef.id === 'demo_shounen') addTag('Shounen', true);
-    else if (nodeDef.id === 'demo_seinen') addTag('Seinen', true);
-    else if (nodeDef.id === 'demo_shoujo') addTag('Shoujo', true);
-
-    // ─── TITAN V2: TROPES ───
-    else if (nodeDef.id === 'trope_iyashikei') { addTag('Iyashikei', true); addTag('Cute Girls Doing Cute Things', true); addTag('Rural', true); }
-    else if (nodeDef.id === 'trope_edgelord') { addTag('Gore', true); addTag('Psychological', true); addTag('Dark Fantasy', true); addTag('Death Game', true); }
-    else if (nodeDef.id === 'trope_idol') { addTag('Idol', true); addTag('Music', true); }
-
-    // Generic fallback for the root explorer
-    else if (nodeDef.id === 'genre_explorer') {
+    // ─── ROOT EXPLORER ───
+    if (nodeDef.id === 'genre_explorer') {
         const uniqueGenres = new Set();
         if (data.animeList) {
             data.animeList.forEach(a => {
-                if (a.genres) {
-                    a.genres.split(';').forEach(g => { // changed comma to semicolon
-                        uniqueGenres.add(g.trim());
+                if (a.genres != null) {
+                    String(a.genres).split(';').forEach(g => {
+                        const trimmed = g.trim();
+                        if (trimmed) uniqueGenres.add(trimmed);
                     });
                 }
             });
@@ -76,5 +49,42 @@ export function calculateGenreXP(nodeDef, data) {
         xp = uniqueGenres.size * 500; // 500 XP per unique genre found
     }
 
-    return { xp, contributors };
+    // ─── NEW GENRE BRANCH ───
+    else if (nodeDef.id === 'genre_action') addTag('Action');
+    else if (nodeDef.id === 'genre_horror') Object.values([getTagXP('Horror'), getTagXP('Thriller')]).forEach(r => { xp += r.xp; contributors.push(...r.list); });
+    else if (nodeDef.id === 'genre_romance') addTag('Romance');
+    else if (nodeDef.id === 'genre_drama') addTag('Drama');
+    else if (nodeDef.id === 'genre_mystery') addTag('Mystery');
+    else if (nodeDef.id === 'genre_sports') addTag('Sports');
+    else if (nodeDef.id === 'genre_scifi') addTag('Sci-Fi');
+    else if (nodeDef.id === 'genre_comedy') addTag('Comedy');
+    else if (nodeDef.id === 'genre_fantasy') addTag('Fantasy');
+
+    // ─── TROPES & DEEP NICHE (Tags/Themes) ───
+    else if (nodeDef.id === 'trope_gore') addTag('Gore', true);
+    else if (nodeDef.id === 'trope_psychological') addTag('Psychological', true);
+    else if (nodeDef.id === 'trope_darkfantasy') { addTag('Dark Fantasy', true); addTag('Dark', true); }
+    else if (nodeDef.id === 'trope_op_mc') { addTag('Overpowered MC', true); addTag('Strong Lead', true); }
+    else if (nodeDef.id === 'trope_timeloop') { addTag('Time Loop', true); addTag('Time Manipulation', true); addTag('Time Travel', true); }
+    else if (nodeDef.id === 'trope_school') { addTag('School', true); addTag('School Life', true); }
+    else if (nodeDef.id === 'trope_music') { addTag('Music', true); addTag('Performing Arts', true); }
+    else if (nodeDef.id === 'trope_parody') { addTag('Parody', true); addTag('Gag Humor', true); }
+    else if (nodeDef.id === 'trope_magic') { addTag('Magic', true); addTag('Magical Girl', true); }
+    else if (nodeDef.id === 'trope_dystopia') { addTag('Dystopia', true); addTag('Post-Apocalyptic', true); }
+    else if (nodeDef.id === 'trope_survival') { addTag('Survival', true); addTag('Death Game', true); }
+    else if (nodeDef.id === 'trope_found_family') { addTag('Found Family', true); addTag('Childcare', true); }
+    else if (nodeDef.id === 'genre_isekai') addTag('Isekai', true);
+    else if (nodeDef.id === 'genre_mecha') addTag('Mecha', true);
+    else if (nodeDef.id === 'genre_slice') addTag('Slice of Life');
+    else if (nodeDef.id === 'genre_psycho') addTag('Psychological', true);
+    else if (nodeDef.id === 'genre_tragedy') addTag('Tragedy', true);
+    else if (nodeDef.id === 'trope_iyashikei') addTag('Iyashikei', true);
+
+    // Sort contributors descending
+    contributors.sort((a, b) => b.xp - a.xp);
+
+    // Remove duplicates based on ID
+    const uniqueContributors = Array.from(new Map(contributors.map(item => [item.id, item])).values());
+
+    return { xp, contributors: uniqueContributors.slice(0, 50) };
 }
