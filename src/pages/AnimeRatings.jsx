@@ -8,13 +8,15 @@ import {
     Tooltip,
     CategoryScale,
     LinearScale,
-    BarElement
+    BarElement,
+    ScatterController,
+    BubbleController
 } from 'chart.js'
-import { Radar, Bar } from 'react-chartjs-2'
+import { Radar, Bar, Chart } from 'react-chartjs-2'
 import regression from 'regression'
 import './AnimeRatings.css'
 
-ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, CategoryScale, LinearScale, BarElement)
+ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, CategoryScale, LinearScale, BarElement, ScatterController, BubbleController)
 
 const categoryWeights = {
     "Animace": 2.0, "CGI": 1.8, "MC": 3.0, "Vedlejší postavy": 2.5, "Waifu": 1.5,
@@ -611,7 +613,7 @@ function AnimeRatings() {
                 <div className="ratings-panel center-panel">
                     <h3 className="ratings-panel-title">Korelace: {slicerPolozka} vs FH {correlationChartData?.r2 ? `(R² = ${correlationChartData.r2})` : ''}</h3>
                     <div style={{ flex: 1, position: 'relative' }}>
-                        {correlationChartData ? <ChartJS type='scatter' data={correlationChartData.data} options={correlationChartOptions} /> : <div style={{ color: 'var(--text-muted)' }}>Mälo dat pro korelaci</div>}
+                        {correlationChartData ? <Chart type='scatter' data={correlationChartData.data} options={correlationChartOptions} /> : <div style={{ color: 'var(--text-muted)' }}>Mälo dat pro korelaci</div>}
                     </div>
                 </div>
 
@@ -651,7 +653,7 @@ function AnimeRatings() {
                 <div className="ratings-panel center-panel">
                     <h3 className="ratings-panel-title">Kvalita (technika) vs. Hloubka (narativ)</h3>
                     <div style={{ flex: 1, position: 'relative' }}>
-                        <ChartJS type='bubble' data={hypeChartData} options={hypeChartOptions} />
+                        <Chart type='bubble' data={hypeChartData} options={hypeChartOptions} />
                     </div>
                 </div>
 
