@@ -1,0 +1,177 @@
+/* AnimeRatings.css */
+.ratings-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-grid);
+  animation: fadeIn 0.4s ease-out;
+  padding: var(--spacing-md);
+  height: 100vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.ratings-row {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-grid);
+  width: 100%;
+}
+
+.ratings-panel {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  padding: var(--spacing-md);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+}
+
+.ratings-panel-title {
+  margin-top: 0;
+  margin-bottom: var(--spacing-md);
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Row 1 layouts */
+.row-1 .left-panel { flex: 0 0 300px; height: 400px; overflow-y: hidden; }
+.row-1 .center-panel { flex: 0 0 400px; height: 400px; }
+.row-1 .right-panel { flex: 1; display: flex; flex-direction: column; gap: var(--spacing-grid); height: 400px; }
+.row-1 .right-panel-top { flex: 0 0 150px; overflow-y: auto; }
+.row-1 .right-panel-bottom { flex: 1; min-height: 0; }
+
+/* Row 2 layouts */
+.row-2 .left-panel { flex: 0 0 300px; height: 400px; display: flex; flex-direction: column; }
+.row-2 .center-panel { flex: 1; height: 400px; }
+.row-2 .right-panel { flex: 0 0 450px; height: 400px; }
+
+/* Row 3 layouts */
+.row-3 .left-panel { flex: 0 0 350px; height: 500px; }
+.row-3 .center-panel { flex: 1; height: 500px; }
+.row-3 .right-panel { flex: 0 0 350px; height: 500px; }
+
+/* Selector Styles */
+.anime-selector-search {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+  outline: none;
+}
+
+.anime-selector-search:focus {
+  border-color: var(--accent-primary);
+}
+
+.anime-selector-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.anime-selector-item {
+  padding: 8px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid transparent;
+}
+
+.anime-selector-item:hover {
+  background: var(--bg-tertiary);
+}
+
+.anime-selector-item.active {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.selector-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.selector-item-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.selector-item-rating {
+  font-weight: bold;
+  font-size: 0.85rem;
+  color: var(--accent-primary);
+}
+
+/* Scrollbar styling for panels */
+.ratings-panel ::-webkit-scrollbar {
+  width: 6px;
+}
+.ratings-panel ::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+}
+.ratings-panel ::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+.ratings-panel ::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Slicer styles */
+.slicer-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: var(--spacing-md);
+}
+
+.slicer-select {
+    width: 100%;
+    padding: 8px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    outline: none;
+}
+
+.slicer-select:focus {
+    border-color: var(--accent-primary);
+}
+
+/* Media Queries for responsive */
+@media (max-width: 1400px) {
+  .ratings-row {
+    flex-wrap: wrap;
+  }
+  .row-1 .left-panel, .row-2 .left-panel, .row-3 .left-panel { flex: 0 0 250px; }
+}
+
+@media (max-width: 1024px) {
+  .ratings-row { flex-direction: column; }
+  .row-1 .left-panel, .row-1 .center-panel, .row-1 .right-panel,
+  .row-2 .left-panel, .row-2 .center-panel, .row-2 .right-panel,
+  .row-3 .left-panel, .row-3 .center-panel, .row-3 .right-panel {
+    flex: 1 1 auto;
+    width: 100%;
+    height: 400px;
+  }
+}

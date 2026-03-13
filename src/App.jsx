@@ -6,6 +6,7 @@ import AnimeDetail from './pages/AnimeDetail'
 import HistoryLog from './pages/HistoryLog'
 import Favorites from './pages/Favorites'
 import PlanToWatch from './pages/PlanToWatch'
+import AnimeRatings from './pages/AnimeRatings'
 import TopFavorites from './pages/TopFavorites'
 import StatsTree from './pages/StatsTree'
 import './index.css'
@@ -35,6 +36,11 @@ const Icons = {
   Bookmark: () => (
     <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+    </svg>
+  ),
+  Chart: () => (
+    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
     </svg>
   ),
   Tree: () => (
@@ -120,6 +126,14 @@ function AppContent({ stats }) {
             <Icons.List />
             <span>Anime List</span>
           </NavLink>
+          <NavLink to="/ratings" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
+            <Icons.Chart />
+            <span>Anime hodnocení</span>
+          </NavLink>
+          <NavLink to="/top-favorites" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
+            <span style={{ fontSize: '1.2rem', paddingRight: '0.4rem' }}>🏆</span>
+            <span>Top Favorites</span>
+          </NavLink>
           <NavLink to="/history" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
             <Icons.History />
             <span>History Log</span>
@@ -131,10 +145,6 @@ function AppContent({ stats }) {
           <NavLink to="/plan-to-watch" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
             <Icons.Bookmark />
             <span>Plan to Watch</span>
-          </NavLink>
-          <NavLink to="/top-favorites" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
-            <span style={{ fontSize: '1.2rem', paddingRight: '0.4rem' }}>🏆</span>
-            <span>Top Favorites</span>
           </NavLink>
           <NavLink to="/stats-tree" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
             <Icons.Tree />
@@ -165,10 +175,11 @@ function AppContent({ stats }) {
           <Route path="/" element={<Dashboard />} />
           <Route path="/anime" element={<AnimeList />} />
           <Route path="/anime/:name" element={<AnimeDetail />} />
+          <Route path="/ratings" element={<AnimeRatings />} />
+          <Route path="/top-favorites" element={<TopFavorites />} />
           <Route path="/history" element={<HistoryLog />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/plan-to-watch" element={<PlanToWatch />} />
-          <Route path="/top-favorites" element={<TopFavorites />} />
           <Route path="/stats-tree" element={<StatsTree />} />
         </Routes>
       </main>
