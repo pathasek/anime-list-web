@@ -3619,5 +3619,22 @@
     "has_frisson": false,
     "rating_avg": 8.15,
     "rating_final": 8
+  },
+  {
+    "index": "214.",
+    "anime_name": "Fate/Grand Order: Absolute Demonic Front - Babylonia",
+    "type": "ED",
+    "song": "Tell me",
+    "author": "milet",
+    "language": "ENG (59%) JAP (41%)",
+    "rating_lyrics": 9,
+    "rating_emotion": 9,
+    "rating_melody": 9,
+    "rating_video": 9.25,
+    "rating_voice": 10,
+    "sing_along": 7,
+    "has_frisson": true,
+    "rating_avg": 9.25,
+    "rating_final": 9
   }
 ]
