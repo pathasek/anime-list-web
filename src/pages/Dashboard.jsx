@@ -733,7 +733,6 @@ function Dashboard() {
 
     // Shared options
     const baseOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } };
-    const pieOptionsExcel = { ...baseOptions, plugins: { legend: { position: 'right' } } };
     const barOptionsExcel = { ...baseOptions };
     const horizontalBarOptionsExcel = { ...baseOptions, indexAxis: 'y' };
     const stackedBarOptions = { ...barOptionsExcel, scales: { x: { stacked: true }, y: { stacked: true } } };
@@ -756,27 +755,37 @@ function Dashboard() {
         }
     };
 
+    // Helper pro zaokrouhlování min hodnot na násobek 0.25 (mínus čtvrtina pod nejmenší hodnotou pro osy)
+    const floorTo025 = (val) => Math.floor((val - 0.25) * 4) / 4;
+
     // Helper functions for options
-    const getOptions = (base, chartId, bgImage = null) => {
+    const getOptions = (base, chartId, bgImage = null, overrides = {}) => {
         const s = getChartSettings(chartId);
+        // buildChartOptions adds unwanted scales for pie charts, so we bypass it for pure standard options if overrides request it
         const opt = buildChartOptions(base, s);
         opt.plugins = opt.plugins || {};
         if (bgImage) {
             opt.plugins.excelImageBackground = { imagePath: bgImage };
         }
+        
+        if (overrides.scales) {
+            opt.scales = {
+                ...opt.scales,
+                x: { ...opt.scales?.x, ...overrides.scales.x },
+                y: { ...opt.scales?.y, ...overrides.scales.y }
+            };
+        }
         return opt;
     };
 
-    const pieOptions = {
+    // Striktně čisté options pro Koláčové grafy, aby se ignoroval buildChartOptions který tam vnucuje mřížku
+    const getPieOptions = () => ({
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-            legend: {
-                position: 'right',
-                labels: { boxWidth: 12, padding: 8 }
-            }
+            legend: { position: 'right' }
         }
-    }
+    });
 
 
 
@@ -1120,68 +1129,92 @@ function Dashboard() {
             <div className="charts-grid">
                 {chartOrder.map(id => {
                     if (id === 'GrafTypuPop') return (
-                        <ChartWrapper key={id} id={id} defaultTitle="Graf Typů (Populace)">
-                            <Pie data={typesPieData} options={getOptions(pieOptionsExcel, id)} />
+                        <ChartWrapper key={id} id={id} defaultTitle="Rozdělení podle Typu">
+                            <Pie data={typesPieData} options={getPieOptions()} />
                         </ChartWrapper>
                     )
                     if (id === 'GrafTypuKombi') return (
                         <ChartWrapper key={id} id={id} defaultTitle="Kombinovaný graf Typů (Hodiny vs Hodnocení)" defaultGridColumn="span 2">
-                            <Bar data={typesKombiData} options={getOptions(doubleAxisOptions, id, '/assets/excel_charts_media/image41.jpg')} />
+                            <Bar data={typesKombiData} options={getOptions(doubleAxisOptions, id, './assets/excel_charts_media/image41.jpg')} />
                         </ChartWrapper>
                     )
                     if (id === 'GrafTypuDist') return (
                         <ChartWrapper key={id} id={id} defaultTitle="Rozdělení Typů (Distributivní Skóre)" defaultGridColumn="span 2">
-                            <Bar data={typesDistData} options={getOptions(stackedBarOptions, id, '/assets/excel_charts_media/image47.jpg')} />
+                            <Bar data={typesDistData} options={getOptions(stackedBarOptions, id, './assets/excel_charts_media/image47.jpg')} />
                         </ChartWrapper>
                     )
                     if (id === 'GrafStudiiPop') return (
                         <ChartWrapper key={id} id={id} defaultTitle="Graf Studií (Populace)">
-                            <Pie data={studiosPieData} options={getOptions(pieOptionsExcel, id)} />
+                            <Pie data={studiosPieData} options={getPieOptions()} />
                         </ChartWrapper>
                     )
                     if (id === 'GrafStudiiBest') return (
                         <ChartWrapper key={id} id={id} defaultTitle="Nejlepší Studia (TOP 10)">
-                            <Bar data={studiosBestData} options={getOptions(horizontalBarOptionsExcel, id, '/assets/excel_charts_media/image4.jpg')} />
+                            <Bar data={studiosBestData} options={getOptions(horizontalBarOptionsExcel, id, './assets/excel_charts_media/image4.jpg', {
+                                scales: { x: { min: floorTo025(Math.min(...excelData.studiosBest.map(s => s.avg))), ticks: { stepSize: 0.25 } } }
+                            })} />
                         </ChartWrapper>
                     )
+                    
+                    // Merged season/age block
                     if (id === 'GrafAnimeSezony') return (
-                        <ChartWrapper key={id} id={id} defaultTitle="Anime Podle Sezóny (Výdej)">
-                            <Bar data={seasonsData} options={getOptions(barOptionsExcel, id, '/assets/excel_charts_media/image6.jpg')} />
+                        <ChartWrapper key={id} id={id} defaultTitle="Statistiky Sezón a Věku Anime" defaultGridColumn="span 1">
+                            {/* Force height so the 3 charts can be stacked comfortably inside */}
+                            <div style={{ display: 'flex', flexDirection: 'column', height: '600px', gap: 'var(--spacing-md)' }}>
+                                <div style={{ flex: 1, minHeight: 0, position: 'relative' }}>
+                                    <h4 style={{ position: 'absolute', top: 5, left: 10, zIndex: 10, fontSize: '0.9rem', background: 'rgba(0,0,0,0.6)', padding: '2px 8px', borderRadius: '4px' }}>Počet Anime podle sezóny</h4>
+                                    <Bar data={{
+                                        labels: seasonsData.labels,
+                                        datasets: [{ ...seasonsData.datasets[0], datalabels: { display: true, formatter: (val, ctx) => `${val} (${Math.round(val / excelData.comboRatingByYear.reduce((s, y) => s + y.count, 0) * 100)}%)`, color: '#000', anchor: 'center', align: 'center' } }]
+                                    }} options={getOptions(horizontalBarOptionsExcel, id, './assets/excel_charts_media/image6.jpg', { scales: { x: { display: false } } })} />
+                                </div>
+                                <div style={{ flex: 1, minHeight: 0, position: 'relative' }}>
+                                    <h4 style={{ position: 'absolute', top: 5, left: 10, zIndex: 10, fontSize: '0.9rem', background: 'rgba(0,0,0,0.6)', padding: '2px 8px', borderRadius: '4px' }}>Počet Anime podle stáří věkových skupin</h4>
+                                    <Bar data={{
+                                        labels: ageVekuData.labels,
+                                        datasets: [{ ...ageVekuData.datasets[0], datalabels: { display: true, formatter: (val) => `${val}`, color: '#000', anchor: 'center', align: 'center' } }]
+                                    }} options={getOptions(horizontalBarOptionsExcel, id, './assets/excel_charts_media/image5.jpg', { scales: { x: { display: false } } })} />
+                                </div>
+                                <div style={{ flex: 1, minHeight: 0, position: 'relative' }}>
+                                    <h4 style={{ position: 'absolute', top: 5, left: 10, zIndex: 10, fontSize: '0.9rem', background: 'rgba(0,0,0,0.6)', padding: '2px 8px', borderRadius: '4px' }}>Průměrné hodnocení věkových skupin</h4>
+                                    <Bar data={{
+                                        labels: avgAgeData.labels,
+                                        datasets: [{ ...avgAgeData.datasets[0], datalabels: { display: true, formatter: (val) => `${parseFloat(val).toFixed(2)}`, color: '#000', anchor: 'center', align: 'center' } }]
+                                    }} options={getOptions(horizontalBarOptionsExcel, id, './assets/excel_charts_media/image45.jpg', {
+                                        scales: { x: { min: floorTo025(Math.min(...Object.values(excelData.ageAvg).filter(v => v > 0))), ticks: { stepSize: 0.25 }, display: false } }
+                                    })} />
+                                </div>
+                            </div>
                         </ChartWrapper>
                     )
-                    if (id === 'GrafAnimeVeku') return (
-                        <ChartWrapper key={id} id={id} defaultTitle="Rozdělení podle Věku Anime (Stáří)">
-                            <Bar data={ageVekuData} options={getOptions(barOptionsExcel, id, '/assets/excel_charts_media/image5.jpg')} />
-                        </ChartWrapper>
-                    )
-                    if (id === 'GrafPrumerVeku') return (
-                        <ChartWrapper key={id} id={id} defaultTitle="Průměrné hodnocení dle Věku Anime">
-                            <Bar data={avgAgeData} options={getOptions(barOptionsExcel, id, '/assets/excel_charts_media/image45.jpg')} />
-                        </ChartWrapper>
-                    )
+
                     if (id === 'AnimeHodnoceniVCaseGraf') return (
                         <ChartWrapper key={id} id={id} defaultTitle="Hodnocení v čase & Vývoj kvality" defaultGridColumn="span 2">
-                            <Line data={hoverTimeComboData} options={getOptions(doubleAxisRatingOptions, id, '/assets/excel_charts_media/image35.jpg')} />
+                            <Line data={hoverTimeComboData} options={getOptions(doubleAxisRatingOptions, id, './assets/excel_charts_media/image35.jpg')} />
                         </ChartWrapper>
                     )
                     if (id === 'GrafTematPop') return (
                         <ChartWrapper key={id} id={id} defaultTitle="Graf Témat (Populace)">
-                            <Pie data={tematPopData} options={getOptions(pieOptionsExcel, id)} />
+                            <Pie data={tematPopData} options={getPieOptions()} />
                         </ChartWrapper>
                     )
                     if (id === 'GrafTematBest') return (
                         <ChartWrapper key={id} id={id} defaultTitle="Nejlepší Témata (TOP 10)">
-                            <Bar data={tematBestData} options={getOptions(horizontalBarOptionsExcel, id, '/assets/excel_charts_media/image7.jpg')} />
+                            <Bar data={tematBestData} options={getOptions(horizontalBarOptionsExcel, id, './assets/excel_charts_media/image7.jpg', {
+                                scales: { x: { min: floorTo025(Math.min(...excelData.themesBest.map(h => h.avg))), ticks: { stepSize: 0.25 } } }
+                            })} />
                         </ChartWrapper>
                     )
                     if (id === 'GrafZanru') return (
                         <ChartWrapper key={id} id={id} defaultTitle="Graf Žánrů (Populace)">
-                            <Pie data={zanruData} options={getOptions(pieOptionsExcel, id)} />
+                            <Pie data={zanruData} options={getPieOptions()} />
                         </ChartWrapper>
                     )
                     if (id === 'GrafZanruBest') return (
                         <ChartWrapper key={id} id={id} defaultTitle="Nejlepší Žánry (TOP 10)">
-                            <Bar data={zanruBestData} options={getOptions(horizontalBarOptionsExcel, id, '/assets/excel_charts_media/image8.jpg')} />
+                            <Bar data={zanruBestData} options={getOptions(horizontalBarOptionsExcel, id, './assets/excel_charts_media/image8.jpg', {
+                                scales: { x: { min: floorTo025(Math.min(...excelData.genresBest.map(h => h.avg))), ticks: { stepSize: 0.25 } } }
+                            })} />
                         </ChartWrapper>
                     )
                     if (id === 'AnimeGenreChordChart') return (

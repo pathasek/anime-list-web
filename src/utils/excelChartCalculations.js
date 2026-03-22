@@ -16,7 +16,8 @@ export function calculateExcelChartsData(animeList, historyLog) {
     const scoreMatrix = {}; // For Stacked Dist
 
     animeList.forEach(a => {
-        const t = a.type || 'Neznámý';
+        if (!a.type) return;
+        const t = a.type;
         typesDist[t] = (typesDist[t] || 0) + 1;
 
         if (!typeRatingStats[t]) {
