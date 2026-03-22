@@ -14,8 +14,7 @@ import {
 import { Bar, Pie, Doughnut, Line } from 'react-chartjs-2'
 
 import ChartContainer from '../components/ChartContainer'
-import ChartSettingsModal from '../components/ChartSettingsModal'
-import { getChartSettings, colorPalettes, applyPalette, buildChartOptions } from '../utils/chartSettings'
+import { buildChartOptions } from '../utils/chartSettings'
 import { excelPalettes, excelImageBackgroundPlugin, decadeFloatingLabelsPlugin } from '../utils/excelStyles'
 import AnimeGenreChordChart from '../components/charts/AnimeGenreChordChart'
 import { calculateExcelChartsData } from '../utils/excelChartCalculations'
@@ -61,7 +60,7 @@ function Dashboard() {
         ]
     })
 
-    const [activeChartSettings, setActiveChartSettings] = useState(null)
+
     const [draggedChart, setDraggedChart] = useState(null)
 
     const handleDragStart = (e, id) => {
@@ -99,7 +98,7 @@ function Dashboard() {
     const handleDragEnd = (e) => {
         e.currentTarget.classList.remove('dragging')
     }
-    const [settingsRefresh, setSettingsRefresh] = useState(0)
+
     const [statsData, setStatsData] = useState(null) // Stats from stats.json (with comments)
     const [expandedNote, setExpandedNote] = useState(null)
     const [showAllCharts, setShowAllCharts] = useState(false)
@@ -122,10 +121,7 @@ function Dashboard() {
         }
     }
 
-    const openChartSettings = (e, id, title) => {
-        const r = e.currentTarget.getBoundingClientRect()
-        setActiveChartSettings({ id, title, anchorPosition: { top: r.bottom + window.scrollY, left: r.left + window.scrollX } })
-    }
+
 
     useEffect(() => {
         Promise.all([
@@ -760,9 +756,8 @@ function Dashboard() {
 
     // Helper functions for options
     const getOptions = (base, chartId, bgImage = null, overrides = {}) => {
-        const s = getChartSettings(chartId);
-        // buildChartOptions adds unwanted scales for pie charts, so we bypass it for pure standard options if overrides request it
-        const opt = buildChartOptions(base, s);
+        // Obcházíme uložená uživatelská nastavení
+        const opt = buildChartOptions(base, {});
         opt.plugins = opt.plugins || {};
         if (bgImage) {
             opt.plugins.excelImageBackground = { imagePath: bgImage };
@@ -790,18 +785,8 @@ function Dashboard() {
 
 
     const ChartWrapper = ({ id, defaultTitle, defaultGridColumn = 'span 1', children }) => {
-        const settings = getChartSettings(id)
-        const customTitle = settings.customTitle || defaultTitle
         const index = chartOrder.indexOf(id)
         const isHiddenMobile = !showAllCharts && index > 0
-
-        const handleMouseUp = (e) => {
-            const el = e.currentTarget
-            if (el.offsetWidth !== settings.customWidth || el.offsetHeight !== settings.customHeight) {
-                saveChartSettings(id, { ...settings, customWidth: el.offsetWidth, customHeight: el.offsetHeight })
-                setSettingsRefresh(prev => prev + 1)
-            }
-        }
 
         return (
             <div
@@ -813,15 +798,11 @@ function Dashboard() {
                 onDragEnd={handleDragEnd}
                 style={{
                     gridColumn: defaultGridColumn,
-                    width: settings.customWidth ? `${settings.customWidth}px` : 'auto',
-                    height: settings.customHeight ? `${settings.customHeight}px` : 'auto',
                     cursor: 'grab'
                 }}
-                onMouseUp={handleMouseUp}
             >
                 <div className="chart-header">
-                    <div className="chart-title" style={{ cursor: 'grab' }}>{customTitle}</div>
-                    <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, id, defaultTitle)} title="Nastavení">⚙️</button>
+                    <div className="chart-title" style={{ cursor: 'grab' }}>{defaultTitle}</div>
                 </div>
                 <div style={{ flex: 1, minHeight: 0, position: 'relative' }}>
                     {children}
@@ -1236,18 +1217,6 @@ function Dashboard() {
                 >
                     {showAllCharts ? 'SKRÝT DALŠÍ GRAFY ▲' : 'ZOBRAZIT DALŠÍ GRAFY ▼'}
                 </button>
-            )}
-
-            {/* Chart Settings Modal */}
-            {activeChartSettings && (
-                <ChartSettingsModal
-                    isOpen={true}
-                    onClose={() => setActiveChartSettings(null)}
-                    chartId={activeChartSettings.id}
-                    chartTitle={activeChartSettings.title}
-                    onSettingsChange={() => setSettingsRefresh(prev => prev + 1)}
-                    anchorPosition={activeChartSettings.anchorPosition}
-                />
             )}
         </div>
     )
