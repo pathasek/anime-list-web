@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import { loadData, STORAGE_KEYS } from '../utils/dataStore'
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js'
@@ -907,7 +908,7 @@ function HistoryLog() {
                 )}
             </div>
 
-            {showScrollTop && (
+            {showScrollTop && createPortal(
                 <button
                     onClick={() => {
                         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -931,14 +932,15 @@ function HistoryLog() {
                         justifyContent: 'center',
                         cursor: 'pointer',
                         boxShadow: 'var(--shadow-lg)',
-                        zIndex: 100,
+                        zIndex: 9999, // Extremely high z-index to be over everything
                         fontSize: '1.5rem',
                         animation: 'fadeIn 0.3s ease-out'
                     }}
                     title="Zpět nahoru"
                 >
                     ↑
-                </button>
+                </button>,
+                document.body
             )}
         </div>
     )
