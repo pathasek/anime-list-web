@@ -41,17 +41,28 @@ function HistoryLog() {
     const [showScrollTop, setShowScrollTop] = useState(false)
 
     useEffect(() => {
-        const handleScroll = () => {
-            if (window.scrollY > 400) {
+        const handleScroll = (e) => {
+            // Určení aktuální pozice z jakéhokoliv možného scrollujícího elementu
+            const target = e.target;
+            let currentY = window.scrollY;
+            
+            if (target && target.scrollTop !== undefined) {
+                currentY = target.scrollTop;
+            } else if (document.documentElement && document.documentElement.scrollTop) {
+                currentY = document.documentElement.scrollTop;
+            }
+
+            if (currentY > 200) {
                 setShowScrollTop(true)
             } else {
                 setShowScrollTop(false)
             }
         }
 
-        window.addEventListener('scroll', handleScroll, { passive: true })
+        // UseCapture = true zajistí, že chytíme scroll z jakéhokoliv elementu
+        window.addEventListener('scroll', handleScroll, true)
         return () => {
-            window.removeEventListener('scroll', handleScroll)
+            window.removeEventListener('scroll', handleScroll, true)
         }
     }, [])
 
@@ -471,8 +482,16 @@ function HistoryLog() {
             const el = document.getElementById(`date-${group.date}`);
             if (el) {
                 // Instant teleport - clear header offset
-                const y = el.getBoundingClientRect().top + window.scrollY - 80;
-                window.scrollTo({ top: y, behavior: 'instant' });
+                const mainContent = document.querySelector('.main-content');
+                if (mainContent && mainContent.scrollHeight > mainContent.clientHeight) {
+                    // Pokud scrolluje .main-content
+                    const y = el.offsetTop - 80;
+                    mainContent.scrollTo({ top: y, behavior: 'instant' });
+                } else {
+                    // Pokud scrolluje okno/html
+                    const y = el.getBoundingClientRect().top + window.scrollY - 80;
+                    window.scrollTo({ top: y, behavior: 'instant' });
+                }
 
                 setHighlightedDate(group.date);
                 setTimeout(() => {
@@ -892,6 +911,10 @@ function HistoryLog() {
                 <button
                     onClick={() => {
                         window.scrollTo({ top: 0, behavior: 'smooth' });
+                        const mainContent = document.querySelector('.main-content');
+                        if (mainContent) {
+                            mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
                     }}
                     style={{
                         position: 'fixed',
