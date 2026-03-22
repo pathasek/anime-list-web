@@ -39,47 +39,19 @@ function HistoryLog() {
     // UI enhancements
     const [highlightedDate, setHighlightedDate] = useState(null)
     const [showScrollTop, setShowScrollTop] = useState(false)
-    const scrollUpStartTime = useRef(null)
-    const lastScrollY = useRef(0)
-    const scrollPauseTimeout = useRef(null)
 
     useEffect(() => {
         const handleScroll = () => {
-            const currentY = window.scrollY
-
-            if (currentY < lastScrollY.current) {
-                // We are scrolling UP
-                if (!scrollUpStartTime.current) {
-                    scrollUpStartTime.current = Date.now()
-                } else if (currentY > 400 && (Date.now() - scrollUpStartTime.current > 3000)) {
-                    // Show button after 3 seconds of upward scrolling
-                    setShowScrollTop(true)
-                }
-            } else if (currentY > lastScrollY.current) {
-                // We are scrolling DOWN
-                scrollUpStartTime.current = null
+            if (window.scrollY > 400) {
+                setShowScrollTop(true)
+            } else {
                 setShowScrollTop(false)
-            }
-
-            // If scrolling stops, wait 2 seconds before resetting the timer
-            if (scrollPauseTimeout.current) clearTimeout(scrollPauseTimeout.current)
-            scrollPauseTimeout.current = setTimeout(() => {
-                scrollUpStartTime.current = null
-            }, 2000)
-
-            lastScrollY.current = currentY
-
-            // Always hide if near the top
-            if (currentY < 400) {
-                setShowScrollTop(false)
-                scrollUpStartTime.current = null
             }
         }
 
         window.addEventListener('scroll', handleScroll, { passive: true })
         return () => {
             window.removeEventListener('scroll', handleScroll)
-            if (scrollPauseTimeout.current) clearTimeout(scrollPauseTimeout.current)
         }
     }, [])
 
