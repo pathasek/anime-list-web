@@ -544,9 +544,9 @@ function HistoryLog() {
             {/* Header and Streaks */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)', marginBottom: 'var(--spacing-xl)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--spacing-lg)' }}>
-                    <h2 style={{ margin: 0, display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: 'var(--spacing-sm)' }}>
+                    <h2 style={{ margin: 0, display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--spacing-sm)', lineHeight: '1' }}>
                         History Log
-                        <span style={{ fontSize: '1rem', color: 'var(--text-secondary)' }}>
+                        <span style={{ fontSize: '1rem', color: 'var(--text-secondary)', fontWeight: 'normal', opacity: 0.8 }}>
                             ({pluralEpizoda(totalStats.episodes)}, {formatTime(totalStats.time)})
                         </span>
                     </h2>
