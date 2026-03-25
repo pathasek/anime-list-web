@@ -53,7 +53,7 @@ function HistoryLog() {
                 currentY = document.documentElement.scrollTop;
             }
 
-            if (currentY > 200) {
+            if (currentY > 1000) {
                 setShowScrollTop(true)
             } else {
                 setShowScrollTop(false)
@@ -224,13 +224,9 @@ function HistoryLog() {
 
         // Date Range filter
         if (dateRange.start || dateRange.end) {
-            const startStr = dateRange.start ? new Date(dateRange.start) : null;
-            const endStr = dateRange.end ? new Date(dateRange.end) : null;
-
-            // normalize end date to end of day
-            if (endStr) {
-                endStr.setHours(23, 59, 59, 999);
-            }
+            // Použijeme lokální datum místo UTC parsování, pokud nezadáme čas
+            const startStr = dateRange.start ? new Date(dateRange.start + 'T00:00:00') : null;
+            const endStr = dateRange.end ? new Date(dateRange.end + 'T23:59:59.999') : null;
 
             result = result.filter(h => {
                 if (!h.date) return false;
@@ -270,6 +266,8 @@ function HistoryLog() {
         const end = new Date(maxDate)
 
         const diffDays = (end - start) / (1000 * 60 * 60 * 24)
+        const rawKeys = [] // Stores original date/month key for filtering later
+
         if (diffDays > 90) {
             const monthlyEps = {}
             filteredHistory.forEach(item => {
@@ -284,6 +282,7 @@ function HistoryLog() {
                 const [y, mo] = m.split('-')
                 labels.push(`${mo}/${y.slice(-2)}`)
                 data.push(monthlyEps[m])
+                rawKeys.push(m) // YYYY-MM
             })
         } else {
             for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
@@ -291,11 +290,13 @@ function HistoryLog() {
                 const dStr = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
                 labels.push(`${d.getDate()}.${d.getMonth() + 1}.`)
                 data.push(dailyEps[dStr] || 0)
+                rawKeys.push(dStr) // YYYY-MM-DD
             }
         }
 
         return {
             labels,
+            rawKeys,
             datasets: [
                 {
                     label: 'Zhlédnuté epizody',
@@ -355,9 +356,41 @@ function HistoryLog() {
         return columns;
     }, [historyLog]);
 
+    const chartRef = useRef(null)
+
+    const handleChartClick = (event) => {
+        if (!chartRef.current || !chartData) return
+        
+        const elements = chartRef.current.getElementsAtEventForMode(event, 'nearest', { intersect: true }, true)
+        if (elements.length > 0) {
+            const index = elements[0].index
+            const rawKey = chartData.rawKeys[index]
+            
+            if (rawKey.length === 7) {
+                // It's a month (YYYY-MM)
+                const [y, m] = rawKey.split('-')
+                // Start of month
+                const start = `${y}-${m}-01`
+                // End of month
+                const endStr = new Date(y, parseInt(m, 10), 0)
+                const pad = (n) => n.toString().padStart(2, '0')
+                const end = `${endStr.getFullYear()}-${pad(endStr.getMonth() + 1)}-${pad(endStr.getDate())}`
+                
+                setDateRange({ start, end })
+            } else {
+                // It's a day (YYYY-MM-DD)
+                setDateRange({ start: rawKey, end: rawKey })
+            }
+        }
+    }
+
     const chartOptions = {
         responsive: true,
         maintainAspectRatio: false,
+        onClick: handleChartClick,
+        onHover: (event, chartElement) => {
+            event.native.target.style.cursor = chartElement.length ? 'pointer' : 'default';
+        },
         plugins: {
             legend: { display: false },
             title: {
@@ -511,7 +544,7 @@ function HistoryLog() {
             {/* Header and Streaks */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)', marginBottom: 'var(--spacing-xl)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--spacing-lg)' }}>
-                    <h2 style={{ margin: 0, display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--spacing-sm)' }}>
+                    <h2 style={{ margin: 0, display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: 'var(--spacing-sm)' }}>
                         History Log
                         <span style={{ fontSize: '1rem', color: 'var(--text-secondary)' }}>
                             ({pluralEpizoda(totalStats.episodes)}, {formatTime(totalStats.time)})
@@ -586,7 +619,7 @@ function HistoryLog() {
                                 GRAF ZHLÉDNUTÝCH EPIZOD {dateRange.start || dateRange.end || yearFilter !== 'all' ? '(FILTROVÁNO)' : ''}
                             </div>
                             <div style={{ flex: 1, position: 'relative', minHeight: '180px' }}>
-                                <Bar options={chartOptions} data={chartData} />
+                                <Bar ref={chartRef} options={chartOptions} data={chartData} />
                             </div>
                         </div>
                     ) : (
