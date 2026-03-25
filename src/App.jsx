@@ -9,6 +9,7 @@ import PlanToWatch from './pages/PlanToWatch'
 import AnimeRatings from './pages/AnimeRatings'
 import TopFavorites from './pages/TopFavorites'
 import StatsTree from './pages/StatsTree'
+import Recommendations from './pages/Recommendations'
 import './index.css'
 
 // Icons as simple SVG components
@@ -46,6 +47,11 @@ const Icons = {
   Tree: () => (
     <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14v4h-2v-4a2 2 0 0 1-2-2h-3v-2h3v-2H6V8h3a2 2 0 0 1 2-2v-2h2v2a2 2 0 0 1 2 2h3v2h-3v2h3v2h-3a2 2 0 0 1-2 2z" />
+    </svg>
+  ),
+  Star: () => (
+    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.382-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
     </svg>
   ),
   Logo: () => (
@@ -146,6 +152,10 @@ function AppContent({ stats }) {
             <Icons.Bookmark />
             <span>Plan to Watch</span>
           </NavLink>
+          <NavLink to="/recommendations" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
+            <Icons.Star />
+            <span>Recommendations</span>
+          </NavLink>
           <NavLink to="/stats-tree" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
             <Icons.Tree />
             <span>Research Tree</span>
@@ -180,6 +190,7 @@ function AppContent({ stats }) {
           <Route path="/history" element={<HistoryLog />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/plan-to-watch" element={<PlanToWatch />} />
+          <Route path="/recommendations" element={<Recommendations />} />
           <Route path="/stats-tree" element={<StatsTree />} />
         </Routes>
       </main>

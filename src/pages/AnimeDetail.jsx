@@ -344,22 +344,46 @@ function AnimeDetail() {
                     {/* Right: Info */}
                     <div style={{ flex: '1 1 300px', minWidth: 0, width: '100%' }}>
                         {/* Title Row */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)', flexWrap: 'wrap', marginBottom: 'var(--spacing-md)', justifyContent: 'center' }}>
-                            <h2 style={{ margin: 0, fontSize: '1.75rem' }}>{anime.name}</h2>
-                            <span className={`type-badge ${(anime.type || '').toLowerCase().replace(' ', '-')}`} style={{ fontSize: '0.8rem' }}>
-                                {anime.type}
-                            </span>
-                            {anime.status && (
-                                <span className={`status-badge ${anime.status.toLowerCase().replace('!', '')}`}>
-                                    {anime.status}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)', flexWrap: 'wrap', marginBottom: 'var(--spacing-md)', justifyContent: 'space-between' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)', flexWrap: 'wrap' }}>
+                                <h2 style={{ margin: 0, fontSize: '1.75rem' }}>{anime.name}</h2>
+                                <span className={`type-badge ${(anime.type || '').toLowerCase().replace(' ', '-')}`} style={{ fontSize: '0.8rem' }}>
+                                    {anime.type}
                                 </span>
-                            )}
-                            {anime.mal_url && (
-                                <a href={anime.mal_url} target="_blank" rel="noopener noreferrer"
-                                    style={{ fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                                    🔗 MAL
-                                </a>
-                            )}
+                                {anime.status && (
+                                    <span className={`status-badge ${anime.status.toLowerCase().replace('!', '')}`}>
+                                        {anime.status}
+                                    </span>
+                                )}
+                                {anime.mal_url && (
+                                    <a href={anime.mal_url} target="_blank" rel="noopener noreferrer"
+                                        style={{ fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                        🔗 MAL
+                                    </a>
+                                )}
+                            </div>
+                            {/* PREMIUM RECOMMENDATION BUTTON */}
+                            <button
+                                className="btn"
+                                style={{
+                                    display: 'inline-flex', alignItems: 'center', gap: '0.6rem', 
+                                    padding: '0.6rem 1.2rem', fontSize: '0.9rem', fontWeight: 'bold',
+                                    background: 'linear-gradient(135deg, var(--accent-primary), #4f46e5)',
+                                    color: 'white', border: 'none', borderRadius: 'var(--radius-md)',
+                                    boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
+                                    cursor: 'pointer', transition: 'all 0.2s ease',
+                                    marginLeft: 'auto'
+                                }}
+                                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(99, 102, 241, 0.6)'; }}
+                                onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(99, 102, 241, 0.4)'; }}
+                                onClick={() => navigate('/recommendations', { state: { presetAnime: anime } })}
+                            >
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                                Najít doporučení
+                            </button>
                         </div>
 
                         {/* Rating + Key Info Row */}
@@ -457,36 +481,66 @@ function AnimeDetail() {
                             </div>
                         </div>
 
-                        {/* Tags: Genres + Themes */}
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)' }}>
-                            {anime.genres && (
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)', flexWrap: 'wrap' }}>
-                                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginRight: '4px' }}>Žánry</span>
-                                    {anime.genres.split(';').map((g, i) => (
-                                        <span key={i} style={{
-                                            padding: '2px 10px', borderRadius: 'var(--radius-full)',
-                                            fontSize: '0.75rem', fontWeight: '500',
-                                            background: 'rgba(6,182,212,0.15)', color: 'var(--accent-cyan)',
-                                            border: '1px solid rgba(6,182,212,0.3)'
-                                        }}>
-                                            {g.trim()}
-                                        </span>
-                                    ))}
-                                </div>
-                            )}
-                            {anime.themes && anime.themes !== 'X' && (
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)', flexWrap: 'wrap' }}>
-                                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginRight: '4px' }}>Témata</span>
-                                    {anime.themes.split(';').map((t, i) => (
-                                        <span key={i} style={{
-                                            padding: '2px 10px', borderRadius: 'var(--radius-full)',
-                                            fontSize: '0.75rem', fontWeight: '500',
-                                            background: 'rgba(139,92,246,0.15)', color: 'var(--accent-secondary)',
-                                            border: '1px solid rgba(139,92,246,0.3)'
-                                        }}>
-                                            {t.trim()}
-                                        </span>
-                                    ))}
+                        {/* TAGS ROW (Žánry, Témata, AniList Tagy inline) */}
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', alignItems: 'flex-start', background: 'var(--bg-secondary)', padding: 'var(--spacing-md)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)' }}>
+                                {anime.genres && (
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)', flexWrap: 'wrap' }}>
+                                        <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginRight: '4px', width: '60px' }}>Žánry</span>
+                                        {anime.genres.split(';').map((g, i) => (
+                                            <span key={`g-${i}`} style={{
+                                                padding: '2px 10px', borderRadius: 'var(--radius-full)',
+                                                fontSize: '0.75rem', fontWeight: '500',
+                                                background: 'rgba(6,182,212,0.15)', color: 'var(--accent-cyan)',
+                                                border: '1px solid rgba(6,182,212,0.3)'
+                                            }}>{g.trim()}</span>
+                                        ))}
+                                    </div>
+                                )}
+                                {anime.themes && anime.themes !== 'X' && (
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)', flexWrap: 'wrap' }}>
+                                        <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginRight: '4px', width: '60px' }}>Témata</span>
+                                        {anime.themes.split(';').map((t, i) => (
+                                            <span key={`t-${i}`} style={{
+                                                padding: '2px 10px', borderRadius: 'var(--radius-full)',
+                                                fontSize: '0.75rem', fontWeight: '500',
+                                                background: 'rgba(139,92,246,0.15)', color: 'var(--accent-secondary)',
+                                                border: '1px solid rgba(139,92,246,0.3)'
+                                            }}>{t.trim()}</span>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* AniList Tags - RED BOX */}
+                            {anime.tags && (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-xs)', flex: 1, minWidth: '300px', borderLeft: '1px solid var(--border-color)', paddingLeft: '1rem' }}>
+                                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>AniList Tagy</span>
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                                        {anime.tags.split(';').map((t, i) => {
+                                            const parts = t.split(':');
+                                            if (parts.length < 2) return null;
+                                            const name = parts[0];
+                                            const rank = parseInt(parts[1]) || 0;
+                                            const desc = parts[2] || '';
+                                            let bg = 'rgba(255, 255, 255, 0.05)', color = 'var(--text-secondary)', border = 'var(--border-color)';
+                                            if (rank >= 80) { bg = 'rgba(255, 215, 0, 0.15)'; color = '#ffd700'; border = 'rgba(255, 215, 0, 0.4)'; }
+                                            else if (rank >= 60) { bg = 'rgba(0, 255, 255, 0.1)'; color = '#00ffff'; border = 'rgba(0, 255, 255, 0.3)'; }
+                                            
+                                            return (
+                                                <span key={`a-${i}`} title={desc} style={{
+                                                    padding: '2px 8px', borderRadius: '4px',
+                                                    fontSize: '0.7rem', fontWeight: rank >= 80 ? 'bold' : 'normal',
+                                                    cursor: desc ? 'help' : 'default',
+                                                    background: bg, color: color,
+                                                    border: `1px solid ${border}`,
+                                                    boxShadow: rank >= 80 ? '0 0 8px rgba(255, 215, 0, 0.2)' : 'none'
+                                                }}>
+                                                    {name} {rank}%
+                                                </span>
+                                            );
+                                        })}
+                                    </div>
                                 </div>
                             )}
                         </div>
