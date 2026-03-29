@@ -523,10 +523,13 @@ function ScoreDistributionTooltip({ malId }) {
         const maxVotesArray = stats.scores.map(s => Number(s.votes) || 0)
         const maxVotes = Math.max(...maxVotesArray, 1)
         
-        const formatNumber = (num) => {
+        const formatNumber = (num, noSpaceBehindTis) => {
             if (num == null) return "0"
-            if (num >= 1000) return (num / 1000).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + ' tis.'
-            return num.toLocaleString('cs-CZ')
+            if (num >= 1000) {
+                const fNum = (num / 1000).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1}).replace(/[\s\u202F\xA0]+$/g, '')
+                return fNum + (noSpaceBehindTis ? ' tis.' : ' tis.')
+            }
+            return num.toLocaleString('cs-CZ').replace(/[\s\u202F\xA0]+$/g, '')
         }
 
         const MAX_BAR_WIDTH = 25
@@ -550,7 +553,7 @@ function ScoreDistributionTooltip({ malId }) {
                 }}
             >
                 <div style={{ paddingBottom: '8px', marginBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                    Statistiky hodnocení: <span style={{ color: 'var(--text-secondary)', fontWeight: 'normal' }}>({formatNumber(stats.total)} uživatelů)</span>
+                    Statistika hodnocení: <span style={{ color: 'var(--text-secondary)', fontWeight: 'normal' }}>({formatNumber(stats.total)} uživatelů)</span>
                 </div>
                 
                 <div style={{ whiteSpace: 'pre', display: 'flex', flexDirection: 'column' }}>
@@ -565,7 +568,7 @@ function ScoreDistributionTooltip({ malId }) {
                         const bar = barChar.repeat(barWidth)
                         
                         const valPercent = (totalVotes > 0) ? (row.votes / totalVotes) * 100 : 0
-                        const statsPart = `${valPercent.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})} % (${formatNumber(row.votes)})`
+                        const statsPart = `${valPercent.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1}).replace(/[\s\u202F\xA0]+$/g, '')} % (${formatNumber(row.votes, true)})`
                         
                         let padCount = Math.max(MAX_BAR_WIDTH - barWidth + 2, 0)
                         if (isNaN(padCount)) padCount = 0
@@ -576,7 +579,7 @@ function ScoreDistributionTooltip({ malId }) {
                                 {`${scoreVal.toString().padStart(2, ' ')}: `}
                                 <span style={{ color: '#fbbf24', backgroundColor: '#fbbf24', height: '0.8rem', display: 'inline-block', lineHeight: '0.8' }}>{bar}</span>
                                 <span style={{ opacity: 0 }}>{padding}</span>
-                                <span style={{ color: 'var(--text-secondary)', marginLeft: '4px' }}>{statsPart}</span>
+                                <span style={{ color: 'var(--text-secondary)', marginLeft: '4px', fontFamily: 'system-ui, -apple-system, sans-serif', fontSize: '0.85rem' }}>{statsPart}</span>
                             </div>
                         )
                     })}
@@ -586,7 +589,7 @@ function ScoreDistributionTooltip({ malId }) {
     } catch (renderError) {
         console.error("Score rendering error", renderError)
         return (
-            <div className="rec-breakdown-tooltip rec-stats-tooltip" style={{ width: '250px', zIndex: 1001, padding: '12px', textAlign: 'center', pointerEvents: 'none', background: '#ffffe0', color: 'red' }}>
+            <div className="rec-breakdown-tooltip rec-stats-tooltip" style={{ width: '250px', zIndex: 1001, padding: '12px', textAlign: 'center', pointerEvents: 'none', background: 'rgba(20, 20, 25, 0.98)', border: '1px solid var(--border-color)', color: 'var(--accent-red)' }}>
                 Chyba při vykreslování
             </div>
         )
