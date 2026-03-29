@@ -538,14 +538,14 @@ function ScoreDistributionTooltip({ malId }) {
                 className="rec-breakdown-tooltip rec-stats-tooltip" 
                 style={{ 
                     width: 'max-content', zIndex: 1001, padding: '12px', 
-                    border: '1px solid var(--border-color)', background: '#ffffe0', 
-                    color: '#000', fontFamily: 'Consolas, monospace',
+                    border: '1px solid var(--border-color)', background: 'var(--bg-tertiary)', 
+                    color: 'var(--text-primary)', fontFamily: 'Consolas, monospace',
                     fontSize: '0.9rem', lineHeight: '1.4',
                     pointerEvents: 'none', 
                     ...positionStyle 
                 }}
             >
-                <div style={{ paddingBottom: '6px', marginBottom: '6px', borderBottom: '1px dashed #000' }}>
+                <div style={{ paddingBottom: '6px', marginBottom: '6px', borderBottom: '1px dashed var(--border-color)' }}>
                     Statistiky hodnocení: <span style={{ fontWeight: 'normal' }}>({formatNumber(stats.total)} uživatelů)</span>
                 </div>
                 
@@ -570,9 +570,9 @@ function ScoreDistributionTooltip({ malId }) {
                         return (
                             <div key={scoreVal}>
                                 {`${scoreVal.toString().padStart(2, ' ')}: `}
-                                <span style={{ color: '#000', backgroundColor: '#000' }}>{bar}</span>
+                                <span style={{ color: 'var(--text-primary)', backgroundColor: 'var(--text-primary)' }}>{bar}</span>
                                 {padding}
-                                <span style={{ color: '#000' }}>{statsPart}</span>
+                                <span style={{ color: 'var(--text-secondary)' }}>{statsPart}</span>
                             </div>
                         )
                     })}
@@ -618,11 +618,11 @@ function RelevanceBreakdown({ data, settings, sourceScore }) {
     const lengthStr = data.length_s_val ? data.length_s_val.replace('.', ',').replace('h', ' h ') : 'Neznámá'
     
     const Row = ({ label, status, mult, weight, result }) => (
-        <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '12px' }}>
-            <span style={{ fontSize: '0.85rem', color: '#000', marginBottom: '2px' }}>
-                {label}: <i style={{ color: '#000' }}>({status})</i>
+        <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '8px', paddingBottom: '4px' }}>
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '2px' }}>
+                <strong style={{ color: status === 'Ano' || status.includes('vyšší') ? 'var(--rating-10)' : 'var(--text-muted)' }}>{status}</strong> • {label}
             </span>
-            <span style={{ fontSize: '0.85rem', color: '#000' }}>
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-primary)' }}>
                 ({(mult || 0).toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})} * {weight}) = <strong>{(result || 0).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})} b.</strong>
             </span>
         </div>
@@ -636,14 +636,14 @@ function RelevanceBreakdown({ data, settings, sourceScore }) {
                 width: '320px', 
                 padding: '12px', 
                 textAlign: 'left', 
-                background: '#ffffe0', // Kept Excel color for consistency with the text tooltips, as in VBA
-                border: '1px solid #000', 
-                color: '#000', 
-                pointerEvents: 'none', // Prevents hover flip-flop loop
+                background: 'var(--bg-tertiary)', 
+                border: '1px solid var(--border-color)', 
+                color: 'var(--text-primary)', 
+                pointerEvents: 'none', 
                 ...positionStyle 
             }}
         >
-            <div style={{ marginBottom: '8px', paddingBottom: '4px', borderBottom: '1px dashed #000', fontSize: '0.95rem' }}>
+            <div style={{ marginBottom: '8px', paddingBottom: '4px', borderBottom: '1px dashed var(--border-color)', fontSize: '0.95rem' }}>
                 Celková Relevance: <strong>{data.total.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})} / 110</strong>
             </div>
 
