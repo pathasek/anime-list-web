@@ -445,13 +445,14 @@ function ScoreDistributionTooltip({ malId }) {
 
     useEffect(() => {
         let isMounted = true
-        setLoading(true)
+
         if (jikanStatsCache[malId]) {
             setStats(jikanStatsCache[malId])
             setLoading(false)
             return
         }
 
+        setLoading(true)
         fetch(`https://api.jikan.moe/v4/anime/${malId}/statistics`)
             .then(r => {
                 if (!r.ok) throw new Error('API Error')
@@ -470,8 +471,31 @@ function ScoreDistributionTooltip({ malId }) {
                     setLoading(false)
                 }
             })
+
         return () => { isMounted = false }
     }, [malId])
+
+    useEffect(() => {
+        // Prevent calculating position until data is 100% loaded and rendered into the ref
+        if (loading || error || !stats || !tooltipRef.current) return
+        
+        try {
+            const rect = tooltipRef.current.getBoundingClientRect()
+            let newStyle = { visibility: 'visible' }
+            
+            if (rect.left < 10) {
+                newStyle.right = 'auto'
+                newStyle.left = '0'
+            }
+            if (rect.bottom > window.innerHeight - 10) {
+                newStyle.top = 'auto'
+                newStyle.bottom = 'calc(100% + 8px)'
+            }
+            setPositionStyle(newStyle)
+        } catch (e) {
+            console.error("Position calculation error", e)
+        }
+    }, [stats, loading, error])
 
     if (loading) {
         return (
@@ -489,92 +513,80 @@ function ScoreDistributionTooltip({ malId }) {
         )
     }
 
-    // Process scores array, order 10 to 1
-    const scoresMap = {}
-    stats.scores.forEach(s => {
-        scoresMap[s.score] = s
-    })
+    try {
+        const scoresMap = {}
+        stats.scores.forEach(s => {
+            scoresMap[s.score] = s
+        })
 
-    const totalVotes = stats.total || 1
-    const maxVotesArray = stats.scores.map(s => Number(s.votes) || 0)
-    const maxVotes = Math.max(...maxVotesArray, 1)
-    
-    const formatNumber = (num) => {
-        if (num == null) return "0"
-        if (num >= 1000) return (num / 1000).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + ' tis.'
-        return num.toLocaleString('cs-CZ')
+        const totalVotes = stats.total || 1
+        const maxVotesArray = stats.scores.map(s => Number(s.votes) || 0)
+        const maxVotes = Math.max(...maxVotesArray, 1)
+        
+        const formatNumber = (num) => {
+            if (num == null) return "0"
+            if (num >= 1000) return (num / 1000).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + ' tis.'
+            return num.toLocaleString('cs-CZ')
+        }
+
+        const MAX_BAR_WIDTH = 25
+        const barChar = '█'
+
+        return (
+            <div 
+                ref={tooltipRef} 
+                className="rec-breakdown-tooltip rec-stats-tooltip" 
+                style={{ 
+                    width: 'max-content', zIndex: 1001, padding: '12px', 
+                    border: '1px solid var(--border-color)', background: '#ffffe0', 
+                    color: '#000', fontFamily: 'Consolas, monospace',
+                    fontSize: '0.9rem', lineHeight: '1.4',
+                    pointerEvents: 'none', 
+                    ...positionStyle 
+                }}
+            >
+                <div style={{ paddingBottom: '6px', marginBottom: '6px', borderBottom: '1px dashed #000' }}>
+                    Statistiky hodnocení: <span style={{ fontWeight: 'normal' }}>({formatNumber(stats.total)} uživatelů)</span>
+                </div>
+                
+                <div style={{ whiteSpace: 'pre', display: 'flex', flexDirection: 'column' }}>
+                    {[10, 9, 8, 7, 6, 5, 4, 3, 2, 1].map(scoreVal => {
+                        const row = scoresMap[scoreVal] || { votes: 0, percentage: 0 }
+                        
+                        let barWidth = 0
+                        if (row.votes > 0 && maxVotes > 0) {
+                            barWidth = Math.round((row.votes / maxVotes) * (MAX_BAR_WIDTH - 1)) + 1
+                        }
+                        if (isNaN(barWidth) || barWidth < 0) barWidth = 0
+                        const bar = barChar.repeat(barWidth)
+                        
+                        const valPercent = (totalVotes > 0) ? (row.votes / totalVotes) * 100 : 0
+                        const statsPart = `${valPercent.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})}% (${formatNumber(row.votes)})`
+                        
+                        let padCount = Math.max(MAX_BAR_WIDTH - barWidth + 2, 0)
+                        if (isNaN(padCount)) padCount = 0
+                        const padding = " ".repeat(padCount)
+
+                        return (
+                            <div key={scoreVal}>
+                                {`${scoreVal.toString().padStart(2, ' ')}: `}
+                                <span style={{ color: '#000' }}>{bar}</span>
+                                {padding}
+                                <span style={{ color: '#000' }}>{statsPart}</span>
+                            </div>
+                        )
+                    })}
+                </div>
+            </div>
+        )
+    } catch (renderError) {
+        console.error("Score rendering error", renderError)
+        return (
+            <div className="rec-breakdown-tooltip rec-stats-tooltip" style={{ width: '250px', zIndex: 1001, padding: '12px', textAlign: 'center', pointerEvents: 'none', background: '#ffffe0', color: 'red' }}>
+                Chyba při vykreslování
+            </div>
+        )
     }
-
-    useLayoutEffect(() => {
-        if (loading || error || !stats || !tooltipRef.current) return
-        const rect = tooltipRef.current.getBoundingClientRect()
-        let newStyle = { visibility: 'visible' }
-        if (rect.left < 10) {
-            newStyle.right = 'auto'
-            newStyle.left = '0'
-        }
-        if (rect.bottom > window.innerHeight - 10) {
-            newStyle.top = 'auto'
-            newStyle.bottom = 'calc(100% + 8px)'
-        }
-        setPositionStyle(newStyle)
-    }, [stats, loading, error])
-
-    const MAX_BAR_WIDTH = 25
-    const barChar = '█'
-
-    return (
-        <div 
-            ref={tooltipRef} 
-            className="rec-breakdown-tooltip rec-stats-tooltip" 
-            style={{ 
-                width: 'max-content', 
-                zIndex: 1001, 
-                padding: '12px', 
-                border: '1px solid var(--border-color)', 
-                background: '#ffffe0', // Use Excel color as requested by user in text layout
-                color: '#000', 
-                fontFamily: 'Consolas, monospace',
-                fontSize: '0.9rem',
-                lineHeight: '1.4',
-                pointerEvents: 'none', // Crucial: prevents hover flip-flop infinite loop that causes black screen
-                ...positionStyle 
-            }}
-        >
-            <div style={{ paddingBottom: '6px', marginBottom: '6px', borderBottom: '1px dashed #000' }}>
-                Statistiky hodnocení: <span style={{ fontWeight: 'normal' }}>({formatNumber(stats.total)} uživatelů)</span>
-            </div>
-            
-            <div style={{ whiteSpace: 'pre', display: 'flex', flexDirection: 'column' }}>
-                {[10, 9, 8, 7, 6, 5, 4, 3, 2, 1].map(scoreVal => {
-                    const row = scoresMap[scoreVal] || { votes: 0, percentage: 0 }
-                    
-                    let barWidth = 0
-                    if (row.votes > 0 && maxVotes > 0) {
-                        barWidth = Math.round((row.votes / maxVotes) * (MAX_BAR_WIDTH - 1)) + 1
-                    }
-                    if (isNaN(barWidth) || barWidth < 0) barWidth = 0
-                    const bar = barChar.repeat(barWidth)
-                    
-                    const valPercent = (totalVotes > 0) ? (row.votes / totalVotes) * 100 : 0
-                    const statsPart = `${valPercent.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})}% (${formatNumber(row.votes)})`
-                    
-                    let padCount = Math.max(MAX_BAR_WIDTH - barWidth + 2, 0)
-                    if (isNaN(padCount)) padCount = 0
-                    const padding = " ".repeat(padCount)
-
-                    return (
-                        <div key={scoreVal}>
-                            {`${scoreVal.toString().padStart(2, ' ')}: `}
-                            <span style={{ color: '#000' }}>{bar}</span>
-                            {padding}
-                            <span style={{ color: '#000' }}>{statsPart}</span>
-                        </div>
-                    )
-                })}
-            </div>
-        </div>
-    )
 }
 
 // ============================================================
