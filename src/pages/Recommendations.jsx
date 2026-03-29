@@ -561,7 +561,7 @@ function ScoreDistributionTooltip({ malId }) {
                         const bar = barChar.repeat(barWidth)
                         
                         const valPercent = (totalVotes > 0) ? (row.votes / totalVotes) * 100 : 0
-                        const statsPart = `${valPercent.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})}% (${formatNumber(row.votes)})`
+                        const statsPart = `${valPercent.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})} % (${formatNumber(row.votes)})`
                         
                         let padCount = Math.max(MAX_BAR_WIDTH - barWidth + 2, 0)
                         if (isNaN(padCount)) padCount = 0
@@ -570,7 +570,7 @@ function ScoreDistributionTooltip({ malId }) {
                         return (
                             <div key={scoreVal}>
                                 {`${scoreVal.toString().padStart(2, ' ')}: `}
-                                <span style={{ color: '#000' }}>{bar}</span>
+                                <span style={{ color: '#000', backgroundColor: '#000' }}>{bar}</span>
                                 {padding}
                                 <span style={{ color: '#000' }}>{statsPart}</span>
                             </div>
