@@ -475,7 +475,7 @@ function ScoreDistributionTooltip({ malId }) {
 
     if (loading) {
         return (
-            <div className="rec-breakdown-tooltip rec-stats-tooltip" style={{ width: '250px', zIndex: 1001, padding: '12px', textAlign: 'center' }}>
+            <div className="rec-breakdown-tooltip rec-stats-tooltip" style={{ width: '250px', zIndex: 1001, padding: '12px', textAlign: 'center', pointerEvents: 'none' }}>
                 <span style={{ color: 'var(--text-muted)' }}>Načítám statistiky...</span>
             </div>
         )
@@ -483,7 +483,7 @@ function ScoreDistributionTooltip({ malId }) {
 
     if (error || !stats || !stats.scores) {
         return (
-            <div className="rec-breakdown-tooltip rec-stats-tooltip" style={{ width: '250px', zIndex: 1001, padding: '12px', textAlign: 'center' }}>
+            <div className="rec-breakdown-tooltip rec-stats-tooltip" style={{ width: '250px', zIndex: 1001, padding: '12px', textAlign: 'center', pointerEvents: 'none' }}>
                 <span style={{ color: 'var(--accent-red)' }}>Statistiky nedostupné</span>
             </div>
         )
