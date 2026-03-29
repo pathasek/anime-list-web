@@ -1160,7 +1160,7 @@ function Dashboard() {
                                     <h4 style={{ position: 'absolute', top: 5, left: 10, zIndex: 10, fontSize: '0.9rem', background: 'rgba(0,0,0,0.6)', padding: '2px 8px', borderRadius: '4px' }}>Průměrné hodnocení věkových skupin</h4>
                                     <Bar data={{
                                         labels: avgAgeData.labels,
-                                        datasets: [{ ...avgAgeData.datasets[0], datalabels: { display: true, formatter: (val) => `${parseFloat(val).toFixed(2)}`, color: '#000', anchor: 'center', align: 'center' } }]
+                                        datasets: [{ ...avgAgeData.datasets[0], datalabels: { display: true, formatter: (val) => `${parseFloat(val).toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, color: '#000', anchor: 'center', align: 'center' } }]
                                     }} options={getOptions(horizontalBarOptionsExcel, id, './assets/excel_charts_media/image45.jpg', {
                                         scales: { x: { min: floorTo025(Math.min(...Object.values(excelData.ageAvg).filter(v => v > 0))), ticks: { stepSize: 0.25 }, display: false } }
                                     })} />

@@ -16,6 +16,28 @@
     flex-wrap: wrap;
 }
 
+.rec-clear-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 50%;
+    line-height: 1;
+    transition: color 0.15s, background 0.15s;
+    z-index: 5;
+}
+
+.rec-clear-btn:hover {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.15);
+}
+
 .rec-selector-container .search-results-dropdown {
     position: absolute;
     top: 100%;
@@ -272,7 +294,7 @@
     padding: 4px 10px;
     border-radius: var(--radius-sm);
     font-weight: 800;
-    font-size: 1rem;
+    font-size: 1.15rem;
     white-space: nowrap;
     min-width: 55px;
     text-align: center;
@@ -373,32 +395,30 @@
     color: var(--text-muted);
 }
 
-/* Relevance Breakdown Tooltip */
+/* Relevance Breakdown Tooltip - base */
 .rec-breakdown-tooltip {
     position: absolute;
-    bottom: calc(100% + 8px);
-    left: 50%;
-    transform: translateX(-50%);
     background: var(--bg-primary);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     padding: var(--spacing-sm) var(--spacing-md);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-    white-space: nowrap;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
     font-size: 0.75rem;
-    /* Critical fix: make sure it overlaps cards below */
     z-index: 1000;
     min-width: 220px;
 }
 
-.rec-breakdown-tooltip::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 6px solid transparent;
-    border-top-color: var(--border-color);
+/* Relevance breakdown: appears above ring, aligned to left edge */
+.rec-relevance-tooltip {
+    bottom: calc(100% + 8px);
+    left: 0;
+}
+
+/* Score stats: appears below score badge, aligned to right edge */
+.rec-stats-tooltip {
+    top: calc(100% + 8px);
+    right: 0;
 }
 
 .rec-breakdown-row {
@@ -443,7 +463,9 @@
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
     width: min(520px, 95vw);
-    max-height: none;
+    max-height: calc(100vh - 80px);
+    display: flex;
+    flex-direction: column;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
 
@@ -453,6 +475,7 @@
     align-items: center;
     padding: var(--spacing-md) var(--spacing-lg);
     border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
 }
 
 .rec-settings-header h3 {
@@ -465,6 +488,9 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
 }
 
 .rec-settings-section-title {
@@ -617,6 +643,41 @@
 
     .rec-breakdown-tooltip {
         min-width: 180px;
+        white-space: normal;
+    }
+
+    .rec-relevance-tooltip {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .rec-relevance-tooltip::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .rec-stats-tooltip {
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .rec-stats-tooltip::after {
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .rec-search-row {
+        flex-direction: column;
+    }
+
+    .rec-selector-container .search-results-dropdown {
+        max-height: 250px;
+    }
+
+    .rec-dropdown-item div[style*="flex-wrap"] {
+        font-size: 0.75rem !important;
     }
 }
 

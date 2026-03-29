@@ -712,7 +712,7 @@ function AnimeList() {
                                             }}
                                             title="Zobrazit detailní hodnocení"
                                         >
-                                            {Number(anime.rating) % 1 === 0 ? parseInt(anime.rating) : parseFloat(anime.rating).toFixed(1)}/10
+                                            {Number(anime.rating) % 1 === 0 ? parseInt(anime.rating) : parseFloat(anime.rating).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})}/10
                                         </span>
                                     ) : (
                                         <span
@@ -818,7 +818,7 @@ function AnimeList() {
                                         }}
                                     >
                                         <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: getRatingColor(anime.rating) }}>
-                                            {Number(anime.rating) % 1 === 0 ? parseInt(anime.rating) : parseFloat(anime.rating).toFixed(1)}
+                                            {Number(anime.rating) % 1 === 0 ? parseInt(anime.rating) : parseFloat(anime.rating).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})}
                                         </span>
                                         <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>/10</span>
                                     </div>

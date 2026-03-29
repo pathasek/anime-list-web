@@ -286,7 +286,7 @@ function AnimeRatings() {
         return {
             data: {
                 datasets: [
-                    { type: 'line', label: `Regrese (R² = ${r2})`, data: lineData, borderColor: 'rgba(255, 0, 0, 0.8)', borderWidth: 2, fill: false, pointRadius: 0 },
+                    { type: 'line', label: `Regrese (R² = ${r2.toLocaleString('cs-CZ')})`, data: lineData, borderColor: 'rgba(255, 0, 0, 0.8)', borderWidth: 2, fill: false, pointRadius: 0 },
                     { type: 'scatter', label: 'Anime', data: scatterData, backgroundColor: 'rgba(239, 68, 68, 0.8)', pointRadius: 4, pointHoverRadius: 6 }
                 ]
             },
@@ -337,8 +337,8 @@ function AnimeRatings() {
             counts[bin.toFixed(1)]++
         })
 
-        const labels = Object.keys(counts).sort((a,b) => Number(a) - Number(b))
-        const data = labels.map(l => counts[l])
+        const labels = Object.keys(counts).sort((a,b) => Number(a) - Number(b)).map(l => l.replace('.', ','))
+        const data = labels.map(l => counts[l.replace(',', '.')])
 
         return {
             labels,
@@ -346,7 +346,7 @@ function AnimeRatings() {
                 label: 'Počet anime',
                 data,
                 backgroundColor: labels.map(l => {
-                    const r = Number(l)
+                    const r = Number(l.replace(',', '.'))
                     if (r >= 9.5) return 'rgb(29, 161, 242)'
                     if (r >= 8.5) return 'rgb(24, 106, 59)'
                     if (r >= 7.5) return 'rgb(40, 180, 99)'
@@ -363,7 +363,7 @@ function AnimeRatings() {
         responsive: true, maintainAspectRatio: false,
         scales: {
             y: { ticks: { beginAtZero: true, color: 'rgba(255,255,255,0.6)', stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.1)' } },
-            x: { title: { display: true, text: 'Hodnocení (Intervaly po 0.5)', color: 'rgba(255,255,255,0.6)' }, ticks: { color: 'rgba(255,255,255,0.6)' }, grid: { display: false } }
+            x: { title: { display: true, text: 'Hodnocení (Intervaly po 0,5)', color: 'rgba(255,255,255,0.6)' }, ticks: { color: 'rgba(255,255,255,0.6)' }, grid: { display: false } }
         },
         plugins: { legend: { display: false } }
     }
@@ -596,14 +596,14 @@ function AnimeRatings() {
                     <div className="slicer-group">
                         <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Hodnocení</label>
                         <select className="slicer-select" value={slicerHodnoceni} onChange={e => setSlicerHodnoceni(e.target.value)}>
-                            {hodnoceniOptions.map(h => <option key={h} value={h}>{h === 'Všechna' ? h : Number(h).toFixed(2)}</option>)}
+                            {hodnoceniOptions.map(h => <option key={h} value={h}>{h === 'Všechna' ? h : Number(h).toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</option>)}
                         </select>
                     </div>
                     <div className="anime-selector-list" style={{ marginTop: 'var(--spacing-sm)' }}>
                         {row2FilteredAnime.map(a => (
                             <div key={a.name} className="anime-selector-item" onClick={() => setSelectedAnimeTitle(a.name)}>
                                 <span className="selector-item-name">{a.name}</span>
-                                <span className="selector-item-rating">{Number(a.hodnoceni).toFixed(2)}</span>
+                                <span className="selector-item-rating">{Number(a.hodnoceni).toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                             </div>
                         ))}
                         {row2FilteredAnime.length === 0 && <div style={{ color:'var(--text-muted)', padding:'8px' }}>Žádná data</div>}
@@ -611,7 +611,7 @@ function AnimeRatings() {
                 </div>
 
                 <div className="ratings-panel center-panel">
-                    <h3 className="ratings-panel-title">Korelace: {slicerPolozka} vs FH {correlationChartData?.r2 ? `(R² = ${correlationChartData.r2})` : ''}</h3>
+                    <h3 className="ratings-panel-title">Korelace: {slicerPolozka} vs FH {correlationChartData?.r2 ? `(R² = ${correlationChartData.r2.toLocaleString('cs-CZ')})` : ''}</h3>
                     <div style={{ flex: 1, position: 'relative' }}>
                         {correlationChartData ? <Chart type='scatter' data={correlationChartData.data} options={correlationChartOptions} /> : <div style={{ color: 'var(--text-muted)' }}>Mälo dat pro korelaci</div>}
                     </div>

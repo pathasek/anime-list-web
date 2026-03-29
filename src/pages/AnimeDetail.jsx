@@ -409,7 +409,7 @@ function AnimeDetail() {
                                             Number(anime.rating) >= 7 ? 'var(--accent-cyan)' :
                                                 Number(anime.rating) >= 5 ? 'var(--accent-amber)' : 'var(--accent-red)'
                                     }}>
-                                        {Number(anime.rating) % 1 === 0 ? parseInt(anime.rating) : parseFloat(anime.rating).toFixed(1)}
+                                        {Number(anime.rating) % 1 === 0 ? parseInt(anime.rating) : parseFloat(anime.rating).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})}
                                     </span>
                                     <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', lineHeight: 1 }}>/10</span>
                                 </div>

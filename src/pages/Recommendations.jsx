@@ -438,6 +438,8 @@ function ScoreDistributionTooltip({ malId }) {
     const [stats, setStats] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
+    const tooltipRef = useRef(null)
+    const [positionStyle, setPositionStyle] = useState({})
 
     useEffect(() => {
         let isMounted = true
@@ -470,7 +472,7 @@ function ScoreDistributionTooltip({ malId }) {
 
     if (loading) {
         return (
-            <div className="rec-breakdown-tooltip" style={{ width: '250px', zIndex: 1001, top: '40px', left: 0, padding: '12px', textAlign: 'center' }}>
+            <div className="rec-breakdown-tooltip rec-stats-tooltip" style={{ width: '250px', zIndex: 1001, padding: '12px', textAlign: 'center' }}>
                 <span style={{ color: 'var(--text-muted)' }}>Načítám statistiky...</span>
             </div>
         )
@@ -478,7 +480,7 @@ function ScoreDistributionTooltip({ malId }) {
 
     if (error || !stats || !stats.scores) {
         return (
-            <div className="rec-breakdown-tooltip" style={{ width: '250px', zIndex: 1001, top: '40px', left: 0, padding: '12px', textAlign: 'center' }}>
+            <div className="rec-breakdown-tooltip rec-stats-tooltip" style={{ width: '250px', zIndex: 1001, padding: '12px', textAlign: 'center' }}>
                 <span style={{ color: 'var(--accent-red)' }}>Statistiky nedostupné</span>
             </div>
         )
@@ -498,9 +500,24 @@ function ScoreDistributionTooltip({ malId }) {
         return num.toLocaleString('cs-CZ')
     }
 
+    useEffect(() => {
+        if (loading || error || !stats || !tooltipRef.current) return
+        const rect = tooltipRef.current.getBoundingClientRect()
+        let newStyle = {}
+        if (rect.left < 10) {
+            newStyle.right = 'auto'
+            newStyle.left = '0'
+        }
+        if (rect.bottom > window.innerHeight - 10) {
+            newStyle.top = 'auto'
+            newStyle.bottom = 'calc(100% + 8px)'
+        }
+        if (Object.keys(newStyle).length > 0) setPositionStyle(newStyle)
+    }, [stats, loading, error])
+
     return (
-        <div className="rec-breakdown-tooltip" style={{ width: '320px', zIndex: 1001, top: '40px', left: 0, padding: '12px', border: '1px solid var(--border-color)', background: '#ffffe0' }}>
-            <h4 style={{ margin: '0 0 8px 0', fontSize: '0.9rem', color: '#000', borderBottom: '1px dashed #ccc', paddingBottom: '6px' }}>
+        <div ref={tooltipRef} className="rec-breakdown-tooltip rec-stats-tooltip" style={{ width: '380px', zIndex: 1001, padding: '12px', border: '1px solid #000', background: '#ffffe0', color: '#000', ...positionStyle }}>
+            <h4 style={{ margin: '0 0 8px 0', fontSize: '0.9rem', color: '#000', borderBottom: '1px dashed #000', paddingBottom: '6px' }}>
                 Statistika hodnocení: <span style={{ fontWeight: 'normal' }}>{formatNumber(stats.total)} uživatelů</span>
             </h4>
             
@@ -518,7 +535,7 @@ function ScoreDistributionTooltip({ malId }) {
                             <div style={{ flex: 1, height: '14px', background: 'transparent', borderRadius: '0', overflow: 'hidden', marginRight: '8px' }}>
                                 <div style={{ height: '100%', width: `${widthPercent}%`, background: '#000', borderRadius: '0' }} />
                             </div>
-                            <div style={{ width: '110px', textAlign: 'right', color: '#000' }}>
+                            <div style={{ width: '130px', textAlign: 'right', color: '#000' }}>
                                 {valPercent.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})}% <span style={{ color: '#555' }}>({formatNumber(row.votes)})</span>
                             </div>
                         </div>
@@ -533,59 +550,88 @@ function ScoreDistributionTooltip({ malId }) {
 // RELEVANCE BREAKDOWN TOOLTIP
 // ============================================================
 function RelevanceBreakdown({ data, settings, sourceScore }) {
-    const malCompare = data.mal_s_val > sourceScore ? `Má vyšší hodnocení než ${sourceScore.toFixed(1)}` : `Nemá vyšší hodnocení než ${sourceScore.toFixed(1)}`
+    const tooltipRef = useRef(null)
+    const [positionStyle, setPositionStyle] = useState({})
+
+    useEffect(() => {
+        if (!tooltipRef.current) return
+        const rect = tooltipRef.current.getBoundingClientRect()
+        let newStyle = {}
+        if (rect.right > window.innerWidth - 10) {
+            newStyle.left = 'auto'
+            newStyle.right = '0'
+        }
+        if (rect.top < 10) {
+            newStyle.bottom = 'auto'
+            newStyle.top = 'calc(100% + 8px)'
+        }
+        if (Object.keys(newStyle).length > 0) setPositionStyle(newStyle)
+    }, [])
+
+    const malCompare = data.mal_s_val > sourceScore ? `Má vyšší hodnocení` : `Nemá vyšší hodnocení`
     
-    const Row = ({ label, mult, weight, result }) => (
-        <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '8px', paddingBottom: '4px' }}>
-            <span style={{ fontSize: '0.8rem', color: '#e0e0e0', marginBottom: '2px' }}>{label}</span>
-            <span style={{ fontSize: '0.85rem', color: '#a0a0a0', fontFamily: 'monospace' }}>
-                ({(mult || 0).toFixed(2)} * {weight}) = {(result || 0).toFixed(1)} b.
+    // Convert e.g. "4.6h" to "4,6 h" if it exists. Sometimes length_s_val is a string like "4.6h"
+    const lengthStr = data.length_s_val ? data.length_s_val.replace('.', ',').replace('h', ' h ') : 'Neznámá'
+    
+    const Row = ({ label, status, mult, weight, result }) => (
+        <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '12px' }}>
+            <span style={{ fontSize: '0.85rem', color: '#000', marginBottom: '2px' }}>
+                {label}: <i style={{ color: '#000' }}>({status})</i>
+            </span>
+            <span style={{ fontSize: '0.85rem', color: '#000' }}>
+                ({(mult || 0).toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})} * {weight}) = <strong>{(result || 0).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})} b.</strong>
             </span>
         </div>
     )
 
     return (
-        <div className="rec-breakdown-tooltip" onClick={e => e.stopPropagation()} style={{ width: '320px', padding: '14px', textAlign: 'left' }}>
+        <div ref={tooltipRef} className="rec-breakdown-tooltip rec-relevance-tooltip" onClick={e => e.stopPropagation()} style={{ width: '320px', padding: '12px', textAlign: 'left', background: '#ffffe0', border: '1px solid #000', color: '#000', ...positionStyle }}>
+            <div style={{ marginBottom: '8px', paddingBottom: '4px', borderBottom: '1px dashed #000', fontSize: '0.95rem' }}>
+                Celková Relevance: <strong>{data.total.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})} / 110</strong>
+            </div>
+
             <Row 
-                label={`Hlasy (${data.votes_c} doporučení)`} 
-                mult={data.votes_p / settings.RELEVANCE_W_VOTES} 
-                weight={settings.RELEVANCE_W_VOTES} 
-                result={data.votes_p} 
+                label={`V plánu (Plan to Watch)`}
+                status={data.plan_s ? 'Ano' : 'Ne'}
+                mult={data.plan_p / settings.RELEVANCE_W_IN_PLAN} 
+                weight={settings.RELEVANCE_W_IN_PLAN} 
+                result={data.plan_p} 
             />
             <Row 
-                label={`MAL Hodnocení (${data.mal_s_val.toFixed(2)}/10) — ${malCompare}`} 
+                label={`MAL Skóre (${data.mal_s_val.toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})}/10)`}
+                status={malCompare}
                 mult={data.mal_p / settings.RELEVANCE_W_MAL_SCORE} 
                 weight={settings.RELEVANCE_W_MAL_SCORE} 
                 result={data.mal_p} 
             />
             <Row 
-                label={`Žánry a Témata`} 
+                label={`Žánry a Témata`}
+                status={data.genre_p >= settings.RELEVANCE_W_GENRE_THEME/2 ? 'Nadprůměrná shoda' : 'Podprůměrná shoda'}
                 mult={data.genre_p / settings.RELEVANCE_W_GENRE_THEME} 
                 weight={settings.RELEVANCE_W_GENRE_THEME} 
                 result={data.genre_p} 
             />
             <Row 
-                label={`Délka (${data.length_s_val || 'Neznámá'})`} 
+                label={`Délka Anime`}
+                status={lengthStr}
                 mult={data.length_p / settings.RELEVANCE_W_LENGTH} 
                 weight={settings.RELEVANCE_W_LENGTH} 
                 result={data.length_p} 
             />
             <Row 
-                label={`Popularita (${getPopularityTierName(data.members_c, settings)})`} 
+                label={`Hlasy doporučení`}
+                status={`${data.votes_c}x doporučeno`}
+                mult={data.votes_p / settings.RELEVANCE_W_VOTES} 
+                weight={settings.RELEVANCE_W_VOTES} 
+                result={data.votes_p} 
+            />
+            <Row 
+                label={`Popularita`}
+                status={getPopularityTierName(data.members_c, settings)}
                 mult={data.pop_p / settings.RELEVANCE_W_POPULARITY} 
                 weight={settings.RELEVANCE_W_POPULARITY} 
                 result={data.pop_p} 
             />
-            <Row 
-                label={`V plánu (Plan to Watch): (${data.plan_s ? 'Ano' : 'Ne'})`} 
-                mult={data.plan_p / settings.RELEVANCE_W_IN_PLAN} 
-                weight={settings.RELEVANCE_W_IN_PLAN} 
-                result={data.plan_p} 
-            />
-            <div style={{ marginTop: '4px', paddingTop: '10px', borderTop: '1px solid rgba(255,255,255,0.2)', display: 'flex', justifyContent: 'space-between', fontFamily: 'monospace', fontSize: '0.9rem', color: '#fff' }}>
-                <span>Celková Relevance:</span>
-                <span>{data.total.toFixed(1)} / 110</span>
-            </div>
         </div>
     )
 }
@@ -607,9 +653,6 @@ function RecCard({ rec, sourceAnimeId, sourceScore, settings }) {
     const ringColor = getColorGradient(score, 0, 100)
 
     const malScoreColor = details.score ? getColorGradient(details.score, 6, 9.31) : 'var(--bg-tertiary)'
-    const malScoreRatio = details.score ? Math.max(0, Math.min(1, (details.score - 6) / (9.31 - 6))) : 0
-    const malScoreTextColor = details.score && malScoreRatio > 0.45 ? '#000' : '#fff'
-    const malScoreTextShadow = malScoreTextColor === '#fff' ? '0 1px 3px rgba(0,0,0,0.8), 0 0 2px rgba(0,0,0,0.6)' : 'none'
 
     const title = details.title_english || details.title || 'Unknown'
     const synopsis = cleanSynopsis(details.synopsis)
@@ -681,8 +724,8 @@ function RecCard({ rec, sourceAnimeId, sourceScore, settings }) {
                         onMouseLeave={() => setShowStats(false)}
                         style={{ position: 'relative' }}
                     >
-                        <div className="rec-mal-score" style={{ background: malScoreColor, color: malScoreTextColor, textShadow: malScoreTextShadow, cursor: 'help' }}>
-                            {details.score ? `${details.score.toFixed(2)}` : 'N/A'}
+                        <div className="rec-mal-score" style={{ background: malScoreColor, color: '#000', textShadow: 'none', cursor: 'help', fontFamily: "'Aptos Narrow', 'Arial Narrow', sans-serif" }}>
+                            {details.score ? `${details.score.toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})}/10` : 'N/A'}
                         </div>
                         {showStats && <ScoreDistributionTooltip malId={details.mal_id} />}
                     </div>
@@ -729,7 +772,7 @@ function RecCard({ rec, sourceAnimeId, sourceScore, settings }) {
                         {rel.cnt_seq_pre > 0 && <span>{rel.cnt_seq_pre}× Sequel/Prequel</span>}
                         {rel.cnt_side > 0 && <span>{rel.cnt_side}× Side Story</span>}
                         {rel.cnt_spin > 0 && <span>{rel.cnt_spin}× Spin-off</span>}
-                        <span>Série: {rel.franchise_ep} EP ({(rel.franchise_min / 60).toFixed(1)} h)</span>
+                        <span>Série: {rel.franchise_ep} EP ({(rel.franchise_min / 60).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})} h)</span>
                     </div>
                 )}
 
@@ -834,11 +877,17 @@ function Recommendations() {
 
     // Search filter — shows all anime on empty input (like Excel dropdown), or filters as you type
     const filteredAnime = useMemo(() => {
-        if (!searchTerm || searchTerm.length < 1) {
-            return animeList
+        let list = animeList
+        if (searchTerm && searchTerm.length >= 1) {
+            const term = searchTerm.toLowerCase()
+            list = animeList.filter(a => a.name && a.name.toLowerCase().includes(term))
         }
-        const term = searchTerm.toLowerCase()
-        return animeList.filter(a => a.name && a.name.toLowerCase().includes(term))
+        // Sort by end_date descending (most recently watched first), "X" at the end
+        return [...list].sort((a, b) => {
+            const aDate = a.end_date && a.end_date !== 'X' ? new Date(a.end_date).getTime() : 0
+            const bDate = b.end_date && b.end_date !== 'X' ? new Date(b.end_date).getTime() : 0
+            return bDate - aDate
+        })
     }, [searchTerm, animeList])
 
     // User ratings precalculation
@@ -861,6 +910,14 @@ function Recommendations() {
         setSelectedAnime(anime)
         setSearchTerm(anime.name)
         setShowDropdown(false)
+    }, [])
+
+    const handleClearSelection = useCallback(() => {
+        setSelectedAnime(null)
+        setSearchTerm('')
+        setRecommendations([])
+        localStorage.removeItem('lastRecAnime')
+        localStorage.removeItem('lastRecResults')
     }, [])
 
     // Save settings
@@ -994,32 +1051,13 @@ function Recommendations() {
                 }
             }
 
-            // 7. Jikan Score Statistics Batch
-            if (results.length > 0) {
-                setProgress(prev => ({ ...prev, text: `Stahuji detailní statistiky pro TOP ${results.length} anime...` }))
-                for (let i = 0; i < results.length; i++) {
-                    if (signal.aborted) throw new DOMException('Aborted', 'AbortError')
-                    const malId = results[i].details.mal_id
-                    try {
-                        if (!jikanStatsCache[malId]) {
-                            setProgress(prev => ({ ...prev, text: `Stahuji statistiky hodnocení ${i + 1}/${results.length}...` }))
-                            const statResp = await fetchWithRetry(`https://api.jikan.moe/v4/anime/${malId}/statistics`, settings, signal)
-                            if (statResp?.data) {
-                                jikanStatsCache[malId] = statResp.data
-                            }
-                            await sleep(settings.API_DELAY_MS)
-                        }
-                    } catch (e) {
-                        console.warn(`Stat error ${malId}:`, e)
-                    }
-                }
-            }
+            // 7. Score statistics are now lazy-loaded on hover (ScoreDistributionTooltip)
 
             setRecommendations(results)
             setProgress({
                 current: totalRecs, total: totalRecs,
                 text: `Hotovo! Nalezeno ${results.length} doporučení.`,
-                eta: `Celkový čas: ${((Date.now() - startTime) / 1000).toFixed(1)}s`,
+                eta: `Celkový čas: ${((Date.now() - startTime) / 1000).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})}s`,
             })
         } catch (err) {
             if (err.name === 'AbortError') {
@@ -1085,9 +1123,18 @@ function Recommendations() {
                             }
                         }}
                         onFocus={() => setShowDropdown(true)}
-                        style={{ width: '100%' }}
+                        style={{ width: '100%', paddingRight: selectedAnime ? '36px' : undefined }}
                         disabled={isProcessing}
                     />
+                    {selectedAnime && !isProcessing && (
+                        <button
+                            className="rec-clear-btn"
+                            onClick={handleClearSelection}
+                            title="Zrušit výběr"
+                        >
+                            ×
+                        </button>
+                    )}
                     {showDropdown && filteredAnime.length > 0 && (
                         <div className="search-results-dropdown">
                             {filteredAnime.map((anime, idx) => {
@@ -1095,22 +1142,24 @@ function Recommendations() {
                                 const genres = anime.genres || ''
                                 const themes = anime.themes && anime.themes !== 'X' ? anime.themes : ''
                                 const ep = anime.episodes ? `EP: ${anime.episodes}` : ''
-                                const durationNum = anime.duration_total ? Math.round((anime.duration_total / 60) * 10) / 10 : 0
-                                const duration = anime.duration_total ? `${Math.round(anime.duration_total)} min (${durationNum.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})} h)` : ''
-                                
-                                const traits = [genres, themes].filter(Boolean).join('; ')
-                                const bottomLine = [traits, ep].filter(Boolean).join(' ‧ ')
+                                const totalMin = anime.total_time ? Math.round(anime.total_time) : 0
+                                const totalH = anime.total_time ? (anime.total_time / 60) : 0
+                                const duration = totalMin > 0 ? `Délka: ${totalMin} min (${totalH.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})} h)` : ''
 
                                 return (
                                     <div key={idx} className="rec-dropdown-item" onClick={() => handleSelectAnime(anime)} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '10px 14px', borderBottom: '1px solid var(--border-color)', cursor: 'pointer' }}>
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxWidth: '85%' }}>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', minWidth: 0, flex: 1 }}>
                                             <span style={{ fontWeight: '600', color: '#e0e0e0', fontSize: '0.95rem' }}>{anime.name}</span>
-                                            {(bottomLine || duration) && (
-                                                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
-                                                    {bottomLine && <span>{bottomLine}</span>}
-                                                    {duration && <span>Délka: {duration}</span>}
-                                                </div>
-                                            )}
+                                            <div style={{ display: 'flex', flexWrap: 'wrap', fontSize: '0.82rem', color: 'var(--text-secondary)', gap: '0' }}>
+                                                {genres && <span>{genres}</span>}
+                                                {genres && themes && <span style={{ margin: '0 6px', color: 'var(--text-muted)' }}>·</span>}
+                                                {themes && <span style={{ color: 'var(--accent-primary)', opacity: 0.8 }}>{themes}</span>}
+                                                {(genres || themes) && ep && <span style={{ margin: '0 6px', color: 'var(--text-muted)' }}>·</span>}
+                                                {ep && <span>{ep}</span>}
+                                                {ep && duration && <span style={{ margin: '0 6px', color: 'var(--text-muted)' }}>·</span>}
+                                                {!ep && (genres || themes) && duration && <span style={{ margin: '0 6px', color: 'var(--text-muted)' }}>·</span>}
+                                                {duration && <span>{duration}</span>}
+                                            </div>
                                         </div>
                                         {rating !== null && (
                                             <div style={{ color: 'var(--text-primary)', whiteSpace: 'nowrap', marginLeft: '12px', fontSize: '0.9rem', paddingTop: '2px', fontWeight: '500' }}>
