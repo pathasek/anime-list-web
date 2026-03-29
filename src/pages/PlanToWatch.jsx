@@ -199,7 +199,7 @@ function PlanToWatch() {
                     <div className="stat-label">Celkem epizod</div>
                 </div>
                 <div className="stat-card cyan">
-                    <div className="stat-value">{stats?.estimatedDays || 0} dní</div>
+                    <div className="stat-value">{(stats?.estimatedDays || 0).toLocaleString('cs-CZ')} dní</div>
                     <div className="stat-label">Odhadovaný čas</div>
                 </div>
                 <div className="stat-card emerald">

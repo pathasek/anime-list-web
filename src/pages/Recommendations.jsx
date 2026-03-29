@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
+import { useState, useEffect, useLayoutEffect, useMemo, useCallback, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import './recommendations.css'
 
@@ -439,10 +439,11 @@ function ScoreDistributionTooltip({ malId }) {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
     const tooltipRef = useRef(null)
-    const [positionStyle, setPositionStyle] = useState({})
+    const [positionStyle, setPositionStyle] = useState({ visibility: 'hidden' })
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         let isMounted = true
+        setLoading(true)
         if (jikanStatsCache[malId]) {
             setStats(jikanStatsCache[malId])
             setLoading(false)
@@ -500,10 +501,10 @@ function ScoreDistributionTooltip({ malId }) {
         return num.toLocaleString('cs-CZ')
     }
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (loading || error || !stats || !tooltipRef.current) return
         const rect = tooltipRef.current.getBoundingClientRect()
-        let newStyle = {}
+        let newStyle = { visibility: 'visible' }
         if (rect.left < 10) {
             newStyle.right = 'auto'
             newStyle.left = '0'
@@ -512,12 +513,12 @@ function ScoreDistributionTooltip({ malId }) {
             newStyle.top = 'auto'
             newStyle.bottom = 'calc(100% + 8px)'
         }
-        if (Object.keys(newStyle).length > 0) setPositionStyle(newStyle)
+        setPositionStyle(newStyle)
     }, [stats, loading, error])
 
     return (
-        <div ref={tooltipRef} className="rec-breakdown-tooltip rec-stats-tooltip" style={{ width: '380px', zIndex: 1001, padding: '12px', border: '1px solid #000', background: '#ffffe0', color: '#000', ...positionStyle }}>
-            <h4 style={{ margin: '0 0 8px 0', fontSize: '0.9rem', color: '#000', borderBottom: '1px dashed #000', paddingBottom: '6px' }}>
+        <div ref={tooltipRef} className="rec-breakdown-tooltip rec-stats-tooltip" style={{ width: '380px', zIndex: 1001, padding: '12px', border: '1px solid var(--border-color)', background: 'var(--bg-secondary)', color: 'var(--text-primary)', ...positionStyle }}>
+            <h4 style={{ margin: '0 0 8px 0', fontSize: '0.9rem', color: 'var(--text-primary)', borderBottom: '1px dashed var(--border-color)', paddingBottom: '6px' }}>
                 Statistika hodnocení: <span style={{ fontWeight: 'normal' }}>{formatNumber(stats.total)} uživatelů</span>
             </h4>
             
@@ -529,14 +530,14 @@ function ScoreDistributionTooltip({ malId }) {
                     
                     return (
                         <div key={scoreVal} style={{ display: 'flex', alignItems: 'center', fontSize: '0.85rem' }}>
-                            <div style={{ width: '24px', textAlign: 'right', marginRight: '6px', color: '#000' }}>
+                            <div style={{ width: '24px', textAlign: 'right', marginRight: '6px', color: 'var(--text-secondary)' }}>
                                 {scoreVal}:
                             </div>
-                            <div style={{ flex: 1, height: '14px', background: 'transparent', borderRadius: '0', overflow: 'hidden', marginRight: '8px' }}>
-                                <div style={{ height: '100%', width: `${widthPercent}%`, background: '#000', borderRadius: '0' }} />
+                            <div style={{ flex: 1, height: '14px', background: 'var(--bg-tertiary)', borderRadius: '4px', overflow: 'hidden', marginRight: '8px' }}>
+                                <div style={{ height: '100%', width: `${widthPercent}%`, background: 'var(--accent-primary)', borderRadius: '4px' }} />
                             </div>
-                            <div style={{ width: '130px', textAlign: 'right', color: '#000' }}>
-                                {valPercent.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})}% <span style={{ color: '#555' }}>({formatNumber(row.votes)})</span>
+                            <div style={{ width: '130px', textAlign: 'right', color: 'var(--text-primary)' }}>
+                                {valPercent.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})}% <span style={{ color: 'var(--text-muted)' }}>({formatNumber(row.votes)})</span>
                             </div>
                         </div>
                     )
@@ -551,12 +552,12 @@ function ScoreDistributionTooltip({ malId }) {
 // ============================================================
 function RelevanceBreakdown({ data, settings, sourceScore }) {
     const tooltipRef = useRef(null)
-    const [positionStyle, setPositionStyle] = useState({})
+    const [positionStyle, setPositionStyle] = useState({ visibility: 'hidden' })
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (!tooltipRef.current) return
         const rect = tooltipRef.current.getBoundingClientRect()
-        let newStyle = {}
+        let newStyle = { visibility: 'visible' }
         if (rect.right > window.innerWidth - 10) {
             newStyle.left = 'auto'
             newStyle.right = '0'
@@ -565,28 +566,29 @@ function RelevanceBreakdown({ data, settings, sourceScore }) {
             newStyle.bottom = 'auto'
             newStyle.top = 'calc(100% + 8px)'
         }
-        if (Object.keys(newStyle).length > 0) setPositionStyle(newStyle)
+        setPositionStyle(newStyle)
     }, [])
 
-    const malCompare = data.mal_s_val > sourceScore ? `Má vyšší hodnocení` : `Nemá vyšší hodnocení`
+    const fmtScore = sourceScore ? sourceScore.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1}) : 'N/A'
+    const malCompare = (sourceScore && data.mal_s_val > sourceScore) ? `Má vyšší hodnocení` : `Nemá vyšší hodnocení`
     
     // Convert e.g. "4.6h" to "4,6 h" if it exists. Sometimes length_s_val is a string like "4.6h"
     const lengthStr = data.length_s_val ? data.length_s_val.replace('.', ',').replace('h', ' h ') : 'Neznámá'
     
     const Row = ({ label, status, mult, weight, result }) => (
         <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '12px' }}>
-            <span style={{ fontSize: '0.85rem', color: '#000', marginBottom: '2px' }}>
-                {label}: <i style={{ color: '#000' }}>({status})</i>
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '2px' }}>
+                {label}: <i style={{ color: 'var(--text-primary)' }}>({status})</i>
             </span>
-            <span style={{ fontSize: '0.85rem', color: '#000' }}>
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-primary)' }}>
                 ({(mult || 0).toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})} * {weight}) = <strong>{(result || 0).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})} b.</strong>
             </span>
         </div>
     )
 
     return (
-        <div ref={tooltipRef} className="rec-breakdown-tooltip rec-relevance-tooltip" onClick={e => e.stopPropagation()} style={{ width: '320px', padding: '12px', textAlign: 'left', background: '#ffffe0', border: '1px solid #000', color: '#000', ...positionStyle }}>
-            <div style={{ marginBottom: '8px', paddingBottom: '4px', borderBottom: '1px dashed #000', fontSize: '0.95rem' }}>
+        <div ref={tooltipRef} className="rec-breakdown-tooltip rec-relevance-tooltip" onClick={e => e.stopPropagation()} style={{ width: '320px', padding: '12px', textAlign: 'left', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)', ...positionStyle }}>
+            <div style={{ marginBottom: '8px', paddingBottom: '4px', borderBottom: '1px dashed var(--border-color)', fontSize: '0.95rem' }}>
                 Celková Relevance: <strong>{data.total.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})} / 110</strong>
             </div>
 
@@ -648,7 +650,7 @@ function RecCard({ rec, sourceAnimeId, sourceScore, settings }) {
 
     const { relevance, details, anilistData } = rec
     const score = Math.min(100, Math.max(0, relevance.total))
-    const circumference = 2 * Math.PI * 20
+    const circumference = 2 * Math.PI * 28 // Updated from 20 to 28
     const offset = circumference - (score / 100) * circumference
     const ringColor = getColorGradient(score, 0, 100)
 
@@ -683,9 +685,9 @@ function RecCard({ rec, sourceAnimeId, sourceScore, settings }) {
                     onClick={() => setShowBreakdown(!showBreakdown)}
                     style={{ cursor: 'pointer' }}
                 >
-                    <svg viewBox="0 0 48 48">
-                        <circle className="ring-bg" cx="24" cy="24" r="20" />
-                        <circle className="ring-fill" cx="24" cy="24" r="20"
+                    <svg viewBox="0 0 64 64">
+                        <circle className="ring-bg" cx="32" cy="32" r="28" />
+                        <circle className="ring-fill" cx="32" cy="32" r="28"
                             stroke={ringColor}
                             strokeDasharray={circumference}
                             strokeDashoffset={offset}

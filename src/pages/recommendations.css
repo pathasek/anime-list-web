@@ -190,13 +190,13 @@
 
 .rec-relevance-ring {
     position: relative;
-    width: 52px;
-    height: 52px;
+    width: 64px;
+    height: 64px;
 }
 
 .rec-relevance-ring svg {
-    width: 52px;
-    height: 52px;
+    width: 64px;
+    height: 64px;
     transform: rotate(-90deg);
 }
 
@@ -219,14 +219,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.75rem;
+    font-size: 0.95rem;
     font-weight: 700;
     color: var(--text-primary);
     transform: rotate(0deg);
 }
 
 .rec-relevance-label {
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.03em;
