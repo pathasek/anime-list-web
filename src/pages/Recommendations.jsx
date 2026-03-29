@@ -443,7 +443,7 @@ function ScoreDistributionTooltip({ malId }) {
     const tooltipRef = useRef(null)
     const [positionStyle, setPositionStyle] = useState({ visibility: 'hidden' })
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         let isMounted = true
         setLoading(true)
         if (jikanStatsCache[malId]) {
@@ -496,7 +496,8 @@ function ScoreDistributionTooltip({ malId }) {
     })
 
     const totalVotes = stats.total || 1
-    const maxVotes = Math.max(...(stats.scores.map(s => s.votes)), 1)
+    const maxVotesArray = stats.scores.map(s => Number(s.votes) || 0)
+    const maxVotes = Math.max(...maxVotesArray, 1)
     
     const formatNumber = (num) => {
         if (num == null) return "0"
@@ -549,14 +550,18 @@ function ScoreDistributionTooltip({ malId }) {
                     const row = scoresMap[scoreVal] || { votes: 0, percentage: 0 }
                     
                     let barWidth = 0
-                    if (row.votes > 0) {
+                    if (row.votes > 0 && maxVotes > 0) {
                         barWidth = Math.round((row.votes / maxVotes) * (MAX_BAR_WIDTH - 1)) + 1
                     }
+                    if (isNaN(barWidth) || barWidth < 0) barWidth = 0
                     const bar = barChar.repeat(barWidth)
                     
                     const valPercent = (totalVotes > 0) ? (row.votes / totalVotes) * 100 : 0
                     const statsPart = `${valPercent.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})}% (${formatNumber(row.votes)})`
-                    const padding = " ".repeat(Math.max(MAX_BAR_WIDTH - barWidth + 2, 0))
+                    
+                    let padCount = Math.max(MAX_BAR_WIDTH - barWidth + 2, 0)
+                    if (isNaN(padCount)) padCount = 0
+                    const padding = " ".repeat(padCount)
 
                     return (
                         <div key={scoreVal}>
