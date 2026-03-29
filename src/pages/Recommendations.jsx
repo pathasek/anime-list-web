@@ -1,4 +1,5 @@
 import { useState, useEffect, useLayoutEffect, useMemo, useCallback, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { useLocation, useNavigate } from 'react-router-dom'
 import './recommendations.css'
 
@@ -371,7 +372,7 @@ function SettingsModal({ isOpen, onClose, settings, onSave }) {
         </div>
     )
 
-    return (
+    return createPortal(
         <div className="rec-settings-overlay" onClick={e => { if (e.target === e.currentTarget) onClose() }}>
             <div className="rec-settings-modal">
                 <div className="rec-settings-header">
@@ -424,7 +425,8 @@ function SettingsModal({ isOpen, onClose, settings, onSave }) {
                     </div>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     )
 }
 
@@ -497,6 +499,7 @@ function ScoreDistributionTooltip({ malId }) {
     const maxVotes = Math.max(...(stats.scores.map(s => s.votes)), 1)
     
     const formatNumber = (num) => {
+        if (num == null) return "0"
         if (num >= 1000) return (num / 1000).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + ' tis.'
         return num.toLocaleString('cs-CZ')
     }
@@ -516,29 +519,51 @@ function ScoreDistributionTooltip({ malId }) {
         setPositionStyle(newStyle)
     }, [stats, loading, error])
 
+    const MAX_BAR_WIDTH = 25
+    const barChar = '█'
+
     return (
-        <div ref={tooltipRef} className="rec-breakdown-tooltip rec-stats-tooltip" style={{ width: '380px', zIndex: 1001, padding: '12px', border: '1px solid var(--border-color)', background: 'var(--bg-secondary)', color: 'var(--text-primary)', ...positionStyle }}>
-            <h4 style={{ margin: '0 0 8px 0', fontSize: '0.9rem', color: 'var(--text-primary)', borderBottom: '1px dashed var(--border-color)', paddingBottom: '6px' }}>
-                Statistika hodnocení: <span style={{ fontWeight: 'normal' }}>{formatNumber(stats.total)} uživatelů</span>
-            </h4>
+        <div 
+            ref={tooltipRef} 
+            className="rec-breakdown-tooltip rec-stats-tooltip" 
+            style={{ 
+                width: 'max-content', 
+                zIndex: 1001, 
+                padding: '12px', 
+                border: '1px solid var(--border-color)', 
+                background: '#ffffe0', // Use Excel color as requested by user in text layout
+                color: '#000', 
+                fontFamily: 'Consolas, monospace',
+                fontSize: '0.9rem',
+                lineHeight: '1.4',
+                pointerEvents: 'none', // Crucial: prevents hover flip-flop infinite loop that causes black screen
+                ...positionStyle 
+            }}
+        >
+            <div style={{ paddingBottom: '6px', marginBottom: '6px', borderBottom: '1px dashed #000' }}>
+                Statistiky hodnocení: <span style={{ fontWeight: 'normal' }}>({formatNumber(stats.total)} uživatelů)</span>
+            </div>
             
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+            <div style={{ whiteSpace: 'pre', display: 'flex', flexDirection: 'column' }}>
                 {[10, 9, 8, 7, 6, 5, 4, 3, 2, 1].map(scoreVal => {
                     const row = scoresMap[scoreVal] || { votes: 0, percentage: 0 }
-                    const widthPercent = (row.votes / maxVotes) * 100
-                    const valPercent = (row.votes / totalVotes) * 100
                     
+                    let barWidth = 0
+                    if (row.votes > 0) {
+                        barWidth = Math.round((row.votes / maxVotes) * (MAX_BAR_WIDTH - 1)) + 1
+                    }
+                    const bar = barChar.repeat(barWidth)
+                    
+                    const valPercent = (totalVotes > 0) ? (row.votes / totalVotes) * 100 : 0
+                    const statsPart = `${valPercent.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})}% (${formatNumber(row.votes)})`
+                    const padding = " ".repeat(Math.max(MAX_BAR_WIDTH - barWidth + 2, 0))
+
                     return (
-                        <div key={scoreVal} style={{ display: 'flex', alignItems: 'center', fontSize: '0.85rem' }}>
-                            <div style={{ width: '24px', textAlign: 'right', marginRight: '6px', color: 'var(--text-secondary)' }}>
-                                {scoreVal}:
-                            </div>
-                            <div style={{ flex: 1, height: '14px', background: 'var(--bg-tertiary)', borderRadius: '4px', overflow: 'hidden', marginRight: '8px' }}>
-                                <div style={{ height: '100%', width: `${widthPercent}%`, background: 'var(--accent-primary)', borderRadius: '4px' }} />
-                            </div>
-                            <div style={{ width: '130px', textAlign: 'right', color: 'var(--text-primary)' }}>
-                                {valPercent.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})}% <span style={{ color: 'var(--text-muted)' }}>({formatNumber(row.votes)})</span>
-                            </div>
+                        <div key={scoreVal}>
+                            {`${scoreVal.toString().padStart(2, ' ')}: `}
+                            <span style={{ color: '#000' }}>{bar}</span>
+                            {padding}
+                            <span style={{ color: '#000' }}>{statsPart}</span>
                         </div>
                     )
                 })}
@@ -577,18 +602,31 @@ function RelevanceBreakdown({ data, settings, sourceScore }) {
     
     const Row = ({ label, status, mult, weight, result }) => (
         <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '12px' }}>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '2px' }}>
-                {label}: <i style={{ color: 'var(--text-primary)' }}>({status})</i>
+            <span style={{ fontSize: '0.85rem', color: '#000', marginBottom: '2px' }}>
+                {label}: <i style={{ color: '#000' }}>({status})</i>
             </span>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-primary)' }}>
+            <span style={{ fontSize: '0.85rem', color: '#000' }}>
                 ({(mult || 0).toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})} * {weight}) = <strong>{(result || 0).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})} b.</strong>
             </span>
         </div>
     )
 
     return (
-        <div ref={tooltipRef} className="rec-breakdown-tooltip rec-relevance-tooltip" onClick={e => e.stopPropagation()} style={{ width: '320px', padding: '12px', textAlign: 'left', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)', ...positionStyle }}>
-            <div style={{ marginBottom: '8px', paddingBottom: '4px', borderBottom: '1px dashed var(--border-color)', fontSize: '0.95rem' }}>
+        <div 
+            ref={tooltipRef} 
+            className="rec-breakdown-tooltip rec-relevance-tooltip" 
+            style={{ 
+                width: '320px', 
+                padding: '12px', 
+                textAlign: 'left', 
+                background: '#ffffe0', // Kept Excel color for consistency with the text tooltips, as in VBA
+                border: '1px solid #000', 
+                color: '#000', 
+                pointerEvents: 'none', // Prevents hover flip-flop loop
+                ...positionStyle 
+            }}
+        >
+            <div style={{ marginBottom: '8px', paddingBottom: '4px', borderBottom: '1px dashed #000', fontSize: '0.95rem' }}>
                 Celková Relevance: <strong>{data.total.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})} / 110</strong>
             </div>
 
