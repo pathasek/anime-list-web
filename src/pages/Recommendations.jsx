@@ -537,16 +537,20 @@ function ScoreDistributionTooltip({ malId }) {
                 ref={tooltipRef} 
                 className="rec-breakdown-tooltip rec-stats-tooltip" 
                 style={{ 
-                    width: 'max-content', zIndex: 1001, padding: '12px', 
-                    border: '1px solid var(--border-color)', background: 'var(--bg-tertiary)', 
-                    color: 'var(--text-primary)', fontFamily: 'Consolas, monospace',
+                    width: 'max-content', zIndex: 1001, padding: '16px', 
+                    border: '1px solid var(--border-color)', 
+                    background: 'rgba(20, 20, 25, 0.98)', 
+                    color: 'var(--text-primary)', 
+                    fontFamily: 'Consolas, monospace',
                     fontSize: '0.9rem', lineHeight: '1.4',
                     pointerEvents: 'none', 
+                    borderRadius: 'var(--radius-md)',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.5)',
                     ...positionStyle 
                 }}
             >
-                <div style={{ paddingBottom: '6px', marginBottom: '6px', borderBottom: '1px dashed var(--border-color)' }}>
-                    Statistiky hodnocení: <span style={{ fontWeight: 'normal' }}>({formatNumber(stats.total)} uživatelů)</span>
+                <div style={{ paddingBottom: '8px', marginBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                    Statistiky hodnocení: <span style={{ color: 'var(--text-secondary)', fontWeight: 'normal' }}>({formatNumber(stats.total)} uživatelů)</span>
                 </div>
                 
                 <div style={{ whiteSpace: 'pre', display: 'flex', flexDirection: 'column' }}>
@@ -568,11 +572,11 @@ function ScoreDistributionTooltip({ malId }) {
                         const padding = " ".repeat(padCount)
 
                         return (
-                            <div key={scoreVal}>
+                            <div key={scoreVal} style={{ display: 'flex', alignItems: 'baseline' }}>
                                 {`${scoreVal.toString().padStart(2, ' ')}: `}
-                                <span style={{ color: 'var(--text-primary)', backgroundColor: 'var(--text-primary)' }}>{bar}</span>
-                                {padding}
-                                <span style={{ color: 'var(--text-secondary)' }}>{statsPart}</span>
+                                <span style={{ color: '#fbbf24', backgroundColor: '#fbbf24', height: '0.8rem', display: 'inline-block', lineHeight: '0.8' }}>{bar}</span>
+                                <span style={{ opacity: 0 }}>{padding}</span>
+                                <span style={{ color: 'var(--text-secondary)', marginLeft: '4px' }}>{statsPart}</span>
                             </div>
                         )
                     })}
@@ -618,12 +622,12 @@ function RelevanceBreakdown({ data, settings, sourceScore }) {
     const lengthStr = data.length_s_val ? data.length_s_val.replace('.', ',').replace('h', ' h ') : 'Neznámá'
     
     const Row = ({ label, status, mult, weight, result }) => (
-        <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '8px', paddingBottom: '4px' }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '2px' }}>
-                <strong style={{ color: status === 'Ano' || status.includes('vyšší') ? 'var(--rating-10)' : 'var(--text-muted)' }}>{status}</strong> • {label}
+        <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '12px' }}>
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '2px' }}>
+                {label}: <i style={{ color: 'var(--text-muted)' }}>({status})</i>
             </span>
             <span style={{ fontSize: '0.85rem', color: 'var(--text-primary)' }}>
-                ({(mult || 0).toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})} * {weight}) = <strong>{(result || 0).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})} b.</strong>
+                ({(mult || 0).toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})} * {weight}) = <strong style={{ color: '#fbbf24' }}>{(result || 0).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})} b.</strong>
             </span>
         </div>
     )
@@ -634,16 +638,18 @@ function RelevanceBreakdown({ data, settings, sourceScore }) {
             className="rec-breakdown-tooltip rec-relevance-tooltip" 
             style={{ 
                 width: '320px', 
-                padding: '12px', 
+                padding: '16px', 
                 textAlign: 'left', 
-                background: 'var(--bg-tertiary)', 
+                background: 'rgba(20, 20, 25, 0.98)', 
                 border: '1px solid var(--border-color)', 
                 color: 'var(--text-primary)', 
+                borderRadius: 'var(--radius-md)',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.5)',
                 pointerEvents: 'none', 
                 ...positionStyle 
             }}
         >
-            <div style={{ marginBottom: '8px', paddingBottom: '4px', borderBottom: '1px dashed var(--border-color)', fontSize: '0.95rem' }}>
+            <div style={{ marginBottom: '8px', paddingBottom: '4px', borderBottom: '1px dashed #000', fontSize: '0.95rem' }}>
                 Celková Relevance: <strong>{data.total.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})} / 110</strong>
             </div>
 
@@ -738,7 +744,7 @@ function RecCard({ rec, sourceAnimeId, sourceScore, settings }) {
                     onMouseEnter={() => setShowBreakdown(true)}
                     onMouseLeave={() => setShowBreakdown(false)}
                     onClick={() => setShowBreakdown(!showBreakdown)}
-                    style={{ cursor: 'pointer' }}
+                    style={{ cursor: 'pointer', filter: 'brightness(0.85) saturate(1.2)' }}
                 >
                     <svg viewBox="0 0 64 64">
                         <circle className="ring-bg" cx="32" cy="32" r="28" />
@@ -779,7 +785,7 @@ function RecCard({ rec, sourceAnimeId, sourceScore, settings }) {
                         className="rec-mal-score-wrapper" 
                         onMouseEnter={() => setShowStats(true)} 
                         onMouseLeave={() => setShowStats(false)}
-                        style={{ position: 'relative' }}
+                        style={{ position: 'relative', filter: 'brightness(0.85) contrast(1.1)' }}
                     >
                         <div className="rec-mal-score" style={{ background: malScoreColor, color: '#000', textShadow: 'none', cursor: 'help', fontFamily: "'Aptos Narrow', 'Arial Narrow', sans-serif" }}>
                             {details.score ? `${details.score.toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})}/10` : 'N/A'}
