@@ -203,6 +203,38 @@
     }
   },
   {
+    "name": "That Time I Got Reincarnated as a Slime, S02 Part 1",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 8.0,
+      "MC": 9.0,
+      "Vedlejší postavy": 9.0,
+      "Waifu": 8.5,
+      "Plot": 9.5,
+      "Pacing": 8.5,
+      "Story Conclusion": 9.0,
+      "Originalita": 9.0,
+      "Emoce": 7.5,
+      "Enjoyment": 9.0
+    }
+  },
+  {
+    "name": "That Time I Got Reincarnated as a Slime, S02 Part 2",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 8.0,
+      "MC": 9.0,
+      "Vedlejší postavy": 9.0,
+      "Waifu": 8.0,
+      "Plot": 9.0,
+      "Pacing": 8.0,
+      "Story Conclusion": 9.0,
+      "Originalita": 9.0,
+      "Emoce": 6.5,
+      "Enjoyment": 8.0
+    }
+  },
+  {
     "name": "Steins;Gate 0",
     "categories": {
       "Animace": 8.0,
@@ -3381,6 +3413,22 @@
     }
   },
   {
+    "name": "That Time I Got Reincarnated as a Slime, S01",
+    "categories": {
+      "Animace": 6.5,
+      "CGI": 8.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 9.0,
+      "Waifu": 8.0,
+      "Plot": 8.5,
+      "Pacing": 7.5,
+      "Story Conclusion": 8.0,
+      "Originalita": 9.0,
+      "Emoce": 8.0,
+      "Enjoyment": 8.0
+    }
+  },
+  {
     "name": "Steins;Gate",
     "categories": {
       "Animace": 8.0,
@@ -4111,6 +4159,54 @@
       "OP": 7.0,
       "ED": 7.0,
       "OST": 8.0
+    }
+  },
+  {
+    "name": "The Slime Diaries",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 7.5,
+      "MC": 7.0,
+      "Vedlejší postavy": 9.0,
+      "Waifu": 7.5,
+      "Plot": 6.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 6.0,
+      "Originalita": 7.0,
+      "Emoce": 7.0,
+      "Enjoyment": 7.0
+    }
+  },
+  {
+    "name": "That Time I Got Reincarnated as a Slime OAD",
+    "categories": {
+      "Animace": 6.5,
+      "CGI": 7.5,
+      "MC": 7.5,
+      "Vedlejší postavy": 7.5,
+      "Waifu": 7.0,
+      "Plot": 6.5,
+      "Pacing": 7.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 7.0,
+      "Emoce": 6.5,
+      "Enjoyment": 7.0
+    }
+  },
+  {
+    "name": "That Time I Got Reincarnated as a Slime: Visions of Coleus",
+    "categories": {
+      "Animace": 6.5,
+      "CGI": 7.5,
+      "MC": 7.5,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 8.5,
+      "Plot": 7.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 8.0,
+      "Emoce": 7.0,
+      "Enjoyment": 7.5
     }
   }
 ]
