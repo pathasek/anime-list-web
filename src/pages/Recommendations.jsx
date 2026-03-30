@@ -303,9 +303,27 @@ function calculateRelevance(details, userRatings, votes, ptwList, settings) {
 
     const total = plan_p + mal_p + genre_p + length_p + votes_p + pop_p
 
+    // Compute human-readable length string like VBA: "5,0 h / 12 EP" or "1 hr 53 min"
+    let lengthVal = null
+    const episodes = details.episodes || 0
+    const durationStr = details.duration || ''
+    if (episodes > 0 && /per ep/i.test(durationStr)) {
+        const durMatch = String(durationStr).match(/(\d+)/)
+        if (durMatch) {
+            const durationPerEp = parseInt(durMatch[1])
+            const totalMinutes = episodes * durationPerEp
+            const hours = (totalMinutes / 60).toFixed(1).replace('.', ',')
+            lengthVal = `${hours} h / ${episodes} EP`
+        }
+    } else if (durationStr && episodes <= 1) {
+        // Movie or single-episode — use raw duration text (e.g. "1 hr 53 min")
+        lengthVal = durationStr
+    }
+
     return {
         total, plan_s: planScore, mal_s_val: malScoreVal, mal_s_norm: malScoreNorm,
-        genre_s: genreThemeScore, length_s: lengthScore, votes_s: votesScore, pop_s: popScore,
+        genre_s: genreThemeScore, length_s: lengthScore, length_s_val: lengthVal,
+        votes_s: votesScore, pop_s: popScore,
         plan_p, mal_p, genre_p, length_p, votes_p, pop_p,
         votes_c: votes, members_c: details.members || 0,
     }
@@ -621,8 +639,8 @@ function RelevanceBreakdown({ data, settings, sourceScore }) {
     const fmtScore = sourceScore ? sourceScore.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1}) : 'N/A'
     const malCompare = (sourceScore && data.mal_s_val > sourceScore) ? `Má vyšší hodnocení` : `Nemá vyšší hodnocení`
     
-    // Convert e.g. "4.6h" to "4,6 h" if it exists. Sometimes length_s_val is a string like "4.6h"
-    const lengthStr = data.length_s_val ? data.length_s_val.replace('.', ',').replace('h', ' h ') : 'Neznámá'
+    // Use pre-computed length string from calculateRelevance (e.g. "5,0 h / 12 EP")
+    const lengthStr = data.length_s_val || 'Neznámá'
     
     const Row = ({ label, status, mult, weight, result }) => (
         <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '12px' }}>
