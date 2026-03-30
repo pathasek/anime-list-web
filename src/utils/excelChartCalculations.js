@@ -211,6 +211,63 @@ export function calculateExcelChartsData(animeList, historyLog) {
     })).sort((a,b)=>b.avg - a.avg).slice(0, 10);
 
 
+    // 14. GrafPrubehHodnoceni (Chronological rating timeline)
+    // We sort anime by their finish date (default order usually is chronological or we can sort by date_finished if available, or just use the log)
+    // We will just use the index if it's already chronological, but let's look at `log` or just reverse `animeList` (assuming newest is at top).
+    // The user's list usually prepends. Let's sort by release_year or id to be safe, but a timeline is best with an index.
+    const validRatingsList = [...animeList].filter(a => !isNaN(parseFloat(a.rating))).reverse();
+    
+    const ratingTimeline = validRatingsList.map((a, i) => {
+        return {
+            x: i + 1,
+            title: a.name_cz || a.name_en,
+            rating: parseFloat(a.rating)
+        };
+    });
+    
+    // Calculate moving average for timeline
+    const movingAvgPeriod = 10;
+    const timelineWithAvg = ratingTimeline.map((item, i, arr) => {
+        let sum = 0;
+        let count = 0;
+        for (let j = Math.max(0, i - movingAvgPeriod + 1); j <= i; j++) {
+            sum += arr[j].rating;
+            count++;
+        }
+        return {
+            ...item,
+            movingAvg: count > 0 ? parseFloat((sum / count).toFixed(2)) : item.rating
+        };
+    });
+
+    // 15. GrafHodnoceniVsEpizody
+    const epBuckets = [
+        { label: '1', min: 1, max: 1, count: 0, sum: 0 },
+        { label: '2-13', min: 2, max: 13, count: 0, sum: 0 },
+        { label: '14-26', min: 14, max: 26, count: 0, sum: 0 },
+        { label: '27-39', min: 27, max: 39, count: 0, sum: 0 },
+        { label: '40-52', min: 40, max: 52, count: 0, sum: 0 },
+        { label: '53+', min: 53, max: 99999, count: 0, sum: 0 }
+    ];
+    
+    animeList.forEach(a => {
+        const rating = parseFloat(a.rating);
+        const eps = parseInt(String(a.episodes).replace(/[^\d]/g, ''));
+        if (!isNaN(rating) && !isNaN(eps) && eps > 0) {
+            const bucket = epBuckets.find(b => eps >= b.min && eps <= b.max);
+            if (bucket) {
+                bucket.count++;
+                bucket.sum += rating;
+            }
+        }
+    });
+    
+    const ratingByEpisodes = epBuckets.map(b => ({
+        label: b.label,
+        avg: b.count > 0 ? parseFloat((b.sum / b.count).toFixed(2)) : 0,
+        count: b.count
+    }));
+
     return {
         typesPie: typesOrder.map(k => ({ label: k, count: typesDist[k] })),
         typesKombi: typesOrder.map(k => ({ label: k, hours: typeRatingStats[k].totalHours, rating: typeRatingStats[k].count ? typeRatingStats[k].sumRating/typeRatingStats[k].count : 0 })),
@@ -224,6 +281,8 @@ export function calculateExcelChartsData(animeList, historyLog) {
         topThemes: topThemes.map(t => ({ label: t, count: themes[t].count })),
         themesBest,
         topGenres: topGenres.map(g => ({ label: g, count: genres[g].count })),
-        genresBest
+        genresBest,
+        ratingTimeline: timelineWithAvg,
+        ratingByEpisodes
     };
 }

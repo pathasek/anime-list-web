@@ -11,13 +11,14 @@ import {
     Tooltip,
     Legend
 } from 'chart.js'
-import { Bar, Pie, Doughnut, Line } from 'react-chartjs-2'
+import { Chart, Bar, Pie, Doughnut, Line } from 'react-chartjs-2'
 
 import ChartContainer from '../components/ChartContainer'
 import { buildChartOptions } from '../utils/chartSettings'
 import { excelPalettes, excelImageBackgroundPlugin, decadeFloatingLabelsPlugin } from '../utils/excelStyles'
 import AnimeGenreChordChart from '../components/charts/AnimeGenreChordChart'
 import { calculateExcelChartsData } from '../utils/excelChartCalculations'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 
 // Register Chart.js components
 ChartJS.register(
@@ -31,7 +32,8 @@ ChartJS.register(
     Tooltip,
     Legend,
     excelImageBackgroundPlugin,
-    decadeFloatingLabelsPlugin
+    decadeFloatingLabelsPlugin,
+    ChartDataLabels
 )
 
 // Chart.js default options for dark theme
@@ -48,16 +50,27 @@ function Dashboard() {
     const [timeFilter, setTimeFilter] = useState('all')
     const [customRange, setCustomRange] = useState({ start: '', end: '' })
     const [chartOrder, setChartOrder] = useState(() => {
-        const savedOrder = localStorage.getItem('dashboardChartOrder_v2')
-        if (savedOrder) return JSON.parse(savedOrder)
-        return [
+        const defaultOrder = [
             'GrafTypuPop', 'GrafTypuKombi', 'GrafTypuDist', 
             'GrafStudiiPop', 'GrafStudiiBest', 
             'GrafAnimeSezony', 'GrafAnimeVeku', 'GrafPrumerVeku', 
             'AnimeHodnoceniVCaseGraf', 
+            'GrafPrubehHodnoceni', 'GrafHodnoceniVsEpizody',
             'GrafTematPop', 'GrafTematBest', 
-            'GrafZanru', 'GrafZanruBest', 'AnimeGenreChordChart'
+            'GrafZanru', 'GrafZanruBest', 'GrafHodnoceniDist', 'GrafStatusu', 
+            'GrafSledDenne', 'GrafSledMesicne', 'AnimeGenreChordChart'
         ]
+        const savedOrder = localStorage.getItem('dashboardChartOrder_v2')
+        if (savedOrder) {
+            const parsed = JSON.parse(savedOrder)
+            defaultOrder.forEach(id => {
+                if (!parsed.includes(id)) {
+                    parsed.push(id)
+                }
+            })
+            return parsed
+        }
+        return defaultOrder
     })
 
 
@@ -618,6 +631,59 @@ function Dashboard() {
         }]
     };
     
+    // 4b. GrafHodnoceniDist (Pie)
+    const ratingPieData = {
+        labels: ['10', '9', '8', '7', '6', '5 a méně'],
+        datasets: [{
+            data: [stats.ratingDist['10'], stats.ratingDist['9'], stats.ratingDist['8'], stats.ratingDist['7'], stats.ratingDist['6'], stats.ratingDist['5-']],
+            backgroundColor: excelPalettes.ratingPie,
+            borderColor: '#000',
+            borderWidth: 1
+        }]
+    };
+    
+    // 4c. GrafStatusu (Pie)
+    const statusPieLabels = Object.keys(stats.statuses).sort((a,b) => stats.statuses[b] - stats.statuses[a]);
+    const statusPieData = {
+        labels: statusPieLabels,
+        datasets: [{
+            data: statusPieLabels.map(l => stats.statuses[l]),
+            backgroundColor: statusPieLabels.map((_, i) => excelPalettes.statusPie[i % excelPalettes.statusPie.length]),
+            borderColor: '#000',
+            borderWidth: 1
+        }]
+    };
+
+    // 4d. GrafSledDenne (Line)
+    const latestYearDailyKeys = Object.keys(stats.dailyWatching)
+        .filter(k => k.startsWith(String(stats.latestYear)))
+        .sort((a,b) => new Date(a) - new Date(b));
+    const dailyWatchingData = {
+        labels: latestYearDailyKeys,
+        datasets: [{
+            label: `Sledování (minuty)`,
+            data: latestYearDailyKeys.map(k => stats.dailyWatching[k]),
+            borderColor: '#5B9BD5',
+            backgroundColor: 'rgba(91, 155, 213, 0.2)',
+            fill: true,
+            tension: 0.1,
+            pointRadius: 0
+        }]
+    };
+    
+    // 4e. GrafSledMesicne (Bar)
+    const latestYearMonthlyKeys = Object.keys(stats.monthlyWatching)
+        .filter(k => k.startsWith(String(stats.latestYear)))
+        .sort((a,b) => new Date(a) - new Date(b));
+    const monthlyWatchingData = {
+        labels: latestYearMonthlyKeys.map(k => new Date(k + '-01').toLocaleString('cs-CZ', { month: 'short' })),
+        datasets: [{
+            label: `Sledování (hodiny)`,
+            data: latestYearMonthlyKeys.map(k => Math.round(stats.monthlyWatching[k] / 60)),
+            backgroundColor: '#ED7D31'
+        }]
+    };
+    
     // 5. GrafStudiiBest (Bar)
     const studiosBestData = {
         labels: excelData.studiosBest.map(s => s.name),
@@ -727,6 +793,42 @@ function Dashboard() {
         }]
     };
 
+    // 14. GrafPrubehHodnoceni
+    const ratingTimelineData = {
+        labels: excelData.ratingTimeline.map(t => t.x),
+        datasets: [
+            {
+                type: 'line',
+                label: 'Klouzavý průměr (10)',
+                yAxisID: 'y',
+                data: excelData.ratingTimeline.map(t => t.movingAvg),
+                borderColor: '#ED7D31',
+                backgroundColor: 'transparent',
+                borderWidth: 2,
+                pointRadius: 0,
+                tension: 0.4
+            },
+            {
+                type: 'scatter',
+                label: 'Hodnocení',
+                yAxisID: 'y',
+                data: excelData.ratingTimeline.map(t => ({x: t.x, y: t.rating})),
+                backgroundColor: 'rgba(91, 155, 213, 0.5)',
+                pointRadius: 3
+            }
+        ]
+    };
+
+    // 15. GrafHodnoceniVsEpizody
+    const epBucketsData = {
+        labels: excelData.ratingByEpisodes.map(b => b.label),
+        datasets: [{
+            label: 'Průměrné hodnocení',
+            data: excelData.ratingByEpisodes.map(b => b.avg),
+            backgroundColor: '#A5A5A5'
+        }]
+    };
+
     // Shared options
     const baseOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } };
     const barOptionsExcel = { ...baseOptions };
@@ -773,12 +875,31 @@ function Dashboard() {
         return opt;
     };
 
-    // Striktně čisté options pro Koláčové grafy, aby se ignoroval buildChartOptions který tam vnucuje mřížku
+    // Striktně čisté options pro Koláčové grafy, aby se renderovaly jako v Excelu (text přímo v grafu)
     const getPieOptions = () => ({
         responsive: true,
         maintainAspectRatio: false,
+        layout: {
+            padding: 30 // Zamezení odříznutí popisků
+        },
         plugins: {
-            legend: { position: 'right' }
+            legend: { display: false },
+            excelImageBackground: { color: '#B3B3B3' }, // Šedé pozadí odpovídající Excelu
+            datalabels: {
+                color: '#000',
+                display: true,
+                formatter: (value, context) => {
+                    const label = context.chart.data.labels[context.dataIndex];
+                    const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                    const percentage = ((value / total) * 100).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1});
+                    if (value === 0) return null; // Schovat nulové hodnoty
+                    return `${label}:\n${value} (${percentage}%)`;
+                },
+                font: { weight: 'bold', size: 11, family: 'sans-serif' },
+                textAlign: 'center',
+                anchor: 'center',
+                align: 'center'
+            }
         }
     });
 
@@ -1119,11 +1240,59 @@ function Dashboard() {
                             <Bar data={typesKombiData} options={getOptions(doubleAxisOptions, id, './assets/excel_charts_media/image41.jpg')} />
                         </ChartWrapper>
                     )
-                    if (id === 'GrafTypuDist') return (
+                    if (id === 'GrafTypuDist') {
+                        const allScoresDesc = [...distScoreLabels].reverse();
+                        const scoresWithData = allScoresDesc.filter(s => 
+                            activeTypes.some(type => excelData.typesDistScoreMatrix[s] && excelData.typesDistScoreMatrix[s][type])
+                        );
+                        // Make sure we show at least 10 down to 5
+                        const displayScores = [...new Set([...allScoresDesc.filter(s => s >= 5), ...scoresWithData])].sort((a,b)=>b-a);
+                        
+                        return (
                         <ChartWrapper key={id} id={id} defaultTitle="Rozdělení Typů (Distributivní Skóre)" defaultGridColumn="span 2">
-                            <Bar data={typesDistData} options={getOptions(stackedBarOptions, id, './assets/excel_charts_media/image47.jpg')} />
+                            <div style={{ display: 'flex', flexDirection: 'column', height: '700px' }}>
+                                <div style={{ flex: 1, minHeight: 0 }}>
+                                    <Bar data={{...typesDistData, datasets: typesDistData.datasets.map(ds => ({...ds, datalabels: { display: false }}))}} 
+                                         options={getOptions({
+                                             ...stackedBarOptions, 
+                                             plugins: { ...stackedBarOptions.plugins, legend: { display: false } },
+                                             scales: { 
+                                                ...stackedBarOptions.scales, 
+                                                x: { ...stackedBarOptions.scales.x, ticks: { display: false }, grid: { display: false } },
+                                                y: { ...stackedBarOptions.scales.y, max: 250 }
+                                             }
+                                         }, id, './assets/excel_charts_media/image47.jpg')} />
+                                </div>
+                                <div style={{ overflowX: 'auto', marginTop: '-1px' }}>
+                                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'center', fontSize: '0.9rem', background: '#D9D9D9', color: '#000', border: '1px solid #000' }}>
+                                        <thead>
+                                            <tr>
+                                                <th style={{ border: '1px solid #000', width: '50px' }}></th>
+                                                {activeTypes.map(t => <th key={t} style={{ border: '1px solid #000', padding: '6px' }}>{t}</th>)}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {displayScores.map(score => {
+                                                const dataset = typesDistData.datasets.find(ds => ds.label === `Skóre ${score}`);
+                                                return (
+                                                <tr key={score}>
+                                                    <td style={{ border: '1px solid #000', padding: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                        <span style={{ width: '12px', height: '12px', background: dataset?.backgroundColor, display: 'inline-block', border: '1px solid #000' }}></span>
+                                                        {score}
+                                                    </td>
+                                                    {activeTypes.map(type => (
+                                                        <td key={type} style={{ border: '1px solid #000' }}>
+                                                            {(excelData.typesDistScoreMatrix[score] && excelData.typesDistScoreMatrix[score][type]) || 0}
+                                                        </td>
+                                                    ))}
+                                                </tr>
+                                            )})}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </ChartWrapper>
-                    )
+                    )}
                     if (id === 'GrafStudiiPop') return (
                         <ChartWrapper key={id} id={id} defaultTitle="Graf Studií (Populace)">
                             <Pie data={studiosPieData} options={getPieOptions()} />
@@ -1189,6 +1358,39 @@ function Dashboard() {
                     if (id === 'GrafZanru') return (
                         <ChartWrapper key={id} id={id} defaultTitle="Graf Žánrů (Populace)">
                             <Pie data={zanruData} options={getPieOptions()} />
+                        </ChartWrapper>
+                    )
+                    if (id === 'GrafHodnoceniDist') return (
+                        <ChartWrapper key={id} id={id} defaultTitle="Rozdělení hodnocení (Populace)">
+                            <Pie data={ratingPieData} options={getPieOptions()} />
+                        </ChartWrapper>
+                    )
+                    if (id === 'GrafStatusu') return (
+                        <ChartWrapper key={id} id={id} defaultTitle="Rozdělení statusů (Populace)">
+                            <Pie data={statusPieData} options={getPieOptions()} />
+                        </ChartWrapper>
+                    )
+                    if (id === 'GrafPrubehHodnoceni') return (
+                        <ChartWrapper key={id} id={id} defaultTitle="Průběh hodnocení v čase" defaultGridColumn="span 2">
+                            <Chart type="line" data={ratingTimelineData} options={buildChartOptions(lineOptionsBase, { 
+                                scales: { x: { display: false }, y: { min: 0, max: 10 } },
+                                plugins: { tooltip: { callbacks: { label: (ctx) => `${excelData.ratingTimeline[ctx.dataIndex].title}: ${ctx.raw.y || ctx.raw}` } } }
+                            })} />
+                        </ChartWrapper>
+                    )
+                    if (id === 'GrafHodnoceniVsEpizody') return (
+                        <ChartWrapper key={id} id={id} defaultTitle="Hodnocení vs počet epizod">
+                            <Bar data={epBucketsData} options={buildChartOptions({ ...barOptionsExcel }, { scales: { y: { min: 6 } } })} />
+                        </ChartWrapper>
+                    )
+                    if (id === 'GrafSledDenne') return (
+                        <ChartWrapper key={id} id={id} defaultTitle={`Sledování Anime v roce ${stats.latestYear} (minuty denně)`} defaultGridColumn="span 2">
+                            <Line data={dailyWatchingData} options={buildChartOptions(lineOptionsBase, {})} />
+                        </ChartWrapper>
+                    )
+                    if (id === 'GrafSledMesicne') return (
+                        <ChartWrapper key={id} id={id} defaultTitle={`Sledování Anime v roce ${stats.latestYear} (hodiny měsíčně)`}>
+                            <Bar data={monthlyWatchingData} options={buildChartOptions(barOptionsBase, {})} />
                         </ChartWrapper>
                     )
                     if (id === 'GrafZanruBest') return (

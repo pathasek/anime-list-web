@@ -9,6 +9,10 @@ export const excelPalettes = {
     ],
     // GrafTypuPop
     typesPie: ['#4D93D9', '#7030A0', '#F1A983', '#FFFF00', '#A6A6A6', '#FFC000', '#C00000'],
+    // GrafHodnoceniDist
+    ratingPie: ['#63BE7B', '#B1D580', '#C9E082', '#FFEB84', '#FCBF7B', '#F8696B'],
+    // GrafStatusu
+    statusPie: ['#798DE7', '#9393D1', '#911EB4', '#FCBF7B', '#A6A6A6'],
     // GrafAnimeSezony
     seasons: {
         'Winter': '#A6C9EC',
