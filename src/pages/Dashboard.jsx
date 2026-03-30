@@ -32,8 +32,7 @@ ChartJS.register(
     Tooltip,
     Legend,
     excelImageBackgroundPlugin,
-    decadeFloatingLabelsPlugin,
-    ChartDataLabels
+    decadeFloatingLabelsPlugin
 )
 
 // Chart.js default options for dark theme
@@ -1232,7 +1231,7 @@ function Dashboard() {
                 {chartOrder.map(id => {
                     if (id === 'GrafTypuPop') return (
                         <ChartWrapper key={id} id={id} defaultTitle="Rozdělení podle Typu">
-                            <Pie data={typesPieData} options={getPieOptions()} />
+                            <Pie data={typesPieData} options={getPieOptions()} plugins={[ChartDataLabels]} />
                         </ChartWrapper>
                     )
                     if (id === 'GrafTypuKombi') return (
@@ -1295,7 +1294,7 @@ function Dashboard() {
                     )}
                     if (id === 'GrafStudiiPop') return (
                         <ChartWrapper key={id} id={id} defaultTitle="Graf Studií (Populace)">
-                            <Pie data={studiosPieData} options={getPieOptions()} />
+                            <Pie data={studiosPieData} options={getPieOptions()} plugins={[ChartDataLabels]} />
                         </ChartWrapper>
                     )
                     if (id === 'GrafStudiiBest') return (
@@ -1345,7 +1344,7 @@ function Dashboard() {
                     )
                     if (id === 'GrafTematPop') return (
                         <ChartWrapper key={id} id={id} defaultTitle="Graf Témat (Populace)">
-                            <Pie data={tematPopData} options={getPieOptions()} />
+                            <Pie data={tematPopData} options={getPieOptions()} plugins={[ChartDataLabels]} />
                         </ChartWrapper>
                     )
                     if (id === 'GrafTematBest') return (
@@ -1357,17 +1356,17 @@ function Dashboard() {
                     )
                     if (id === 'GrafZanru') return (
                         <ChartWrapper key={id} id={id} defaultTitle="Graf Žánrů (Populace)">
-                            <Pie data={zanruData} options={getPieOptions()} />
+                            <Pie data={zanruData} options={getPieOptions()} plugins={[ChartDataLabels]} />
                         </ChartWrapper>
                     )
                     if (id === 'GrafHodnoceniDist') return (
                         <ChartWrapper key={id} id={id} defaultTitle="Rozdělení hodnocení (Populace)">
-                            <Pie data={ratingPieData} options={getPieOptions()} />
+                            <Pie data={ratingPieData} options={getPieOptions()} plugins={[ChartDataLabels]} />
                         </ChartWrapper>
                     )
                     if (id === 'GrafStatusu') return (
                         <ChartWrapper key={id} id={id} defaultTitle="Rozdělení statusů (Populace)">
-                            <Pie data={statusPieData} options={getPieOptions()} />
+                            <Pie data={statusPieData} options={getPieOptions()} plugins={[ChartDataLabels]} />
                         </ChartWrapper>
                     )
                     if (id === 'GrafPrubehHodnoceni') return (
