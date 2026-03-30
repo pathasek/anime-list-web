@@ -1372,7 +1372,7 @@ function Dashboard() {
                     )
                     if (id === 'GrafPrubehHodnoceni') return (
                         <ChartWrapper key={id} id={id} defaultTitle="Průběh hodnocení v čase" defaultGridColumn="span 2">
-                            <Chart type="line" data={ratingTimelineData} options={buildChartOptions(lineOptionsBase, { 
+                            <Chart type="line" data={ratingTimelineData} options={buildChartOptions(baseOptions, { 
                                 scales: { x: { display: false }, y: { min: 0, max: 10 } },
                                 plugins: { tooltip: { callbacks: { label: (ctx) => `${excelData.ratingTimeline[ctx.dataIndex].title}: ${ctx.raw.y || ctx.raw}` } } }
                             })} />
@@ -1385,12 +1385,12 @@ function Dashboard() {
                     )
                     if (id === 'GrafSledDenne') return (
                         <ChartWrapper key={id} id={id} defaultTitle={`Sledování Anime v roce ${stats.latestYear} (minuty denně)`} defaultGridColumn="span 2">
-                            <Line data={dailyWatchingData} options={buildChartOptions(lineOptionsBase, {})} />
+                            <Line data={dailyWatchingData} options={buildChartOptions(baseOptions, {})} />
                         </ChartWrapper>
                     )
                     if (id === 'GrafSledMesicne') return (
                         <ChartWrapper key={id} id={id} defaultTitle={`Sledování Anime v roce ${stats.latestYear} (hodiny měsíčně)`}>
-                            <Bar data={monthlyWatchingData} options={buildChartOptions(barOptionsBase, {})} />
+                            <Bar data={monthlyWatchingData} options={buildChartOptions(baseOptions, {})} />
                         </ChartWrapper>
                     )
                     if (id === 'GrafZanruBest') return (
