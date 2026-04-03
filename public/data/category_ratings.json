@@ -215,7 +215,10 @@
       "Story Conclusion": 9.0,
       "Originalita": 9.0,
       "Emoce": 7.5,
-      "Enjoyment": 9.0
+      "Enjoyment": 9.0,
+      "OP": 7.0,
+      "ED": 9.0,
+      "OST": 9.0
     }
   },
   {
@@ -231,7 +234,10 @@
       "Story Conclusion": 9.0,
       "Originalita": 9.0,
       "Emoce": 6.5,
-      "Enjoyment": 8.0
+      "Enjoyment": 8.0,
+      "OP": 9.0,
+      "ED": 7.0,
+      "OST": 9.0
     }
   },
   {
@@ -3425,7 +3431,10 @@
       "Story Conclusion": 8.0,
       "Originalita": 9.0,
       "Emoce": 8.0,
-      "Enjoyment": 8.0
+      "Enjoyment": 8.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 9.0
     }
   },
   {
@@ -3578,6 +3587,25 @@
       "OP": 9.0,
       "ED": 9.0,
       "OST": 10.0
+    }
+  },
+  {
+    "name": "That Time I Got Reincarnated as a Slime, S03",
+    "categories": {
+      "Animace": 6.5,
+      "CGI": 8.0,
+      "MC": 8.5,
+      "Vedlejší postavy": 9.0,
+      "Waifu": 8.0,
+      "Plot": 8.0,
+      "Pacing": 7.5,
+      "Story Conclusion": 7.5,
+      "Originalita": 8.5,
+      "Emoce": 6.5,
+      "Enjoyment": 7.5,
+      "OP": 7.0,
+      "ED": 8.0,
+      "OST": 8.0
     }
   },
   {
@@ -4174,7 +4202,10 @@
       "Story Conclusion": 6.0,
       "Originalita": 7.0,
       "Emoce": 7.0,
-      "Enjoyment": 7.0
+      "Enjoyment": 7.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
     }
   },
   {
@@ -4190,7 +4221,10 @@
       "Story Conclusion": 8.0,
       "Originalita": 7.0,
       "Emoce": 6.5,
-      "Enjoyment": 7.0
+      "Enjoyment": 7.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
     }
   },
   {
@@ -4206,7 +4240,27 @@
       "Story Conclusion": 8.0,
       "Originalita": 8.0,
       "Emoce": 7.0,
-      "Enjoyment": 7.5
+      "Enjoyment": 7.5,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "That Time I Got Reincarnated as a Slime: The Movie - Scarlet Bond",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 8.5,
+      "MC": 8.5,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 8.0,
+      "Plot": 7.5,
+      "Pacing": 8.0,
+      "Story Conclusion": 7.5,
+      "Originalita": 8.0,
+      "Emoce": 7.5,
+      "Enjoyment": 8.5,
+      "OST": 9.0
     }
   }
 ]
