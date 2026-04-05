@@ -10439,11 +10439,85 @@
     ]
   },
   {
-    "name": "That Time I Got Reincarnated as a Slime, S04",
+    "name": "Agents of the Four Seasons: Dance of Spring",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.0
+      }
+    ]
+  },
+  {
+    "name": "Classroom of the Elite, S04: Second Year, First Semester",
     "episodes": [
       {
         "episode": "EP 1",
         "rating": 7.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.5
+      }
+    ]
+  },
+  {
+    "name": "Dorohedoro, S02",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 5.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 6.5
+      }
+    ]
+  },
+  {
+    "name": "The Beginning After the End, S02",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 6.0
+      }
+    ]
+  },
+  {
+    "name": "Petals of Reincarnation",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 6.75
+      }
+    ]
+  },
+  {
+    "name": "Ascendance of a Bookworm: Adopted Daughter of an Archduke",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 9.0
+      }
+    ]
+  },
+  {
+    "name": "Daemons of the Shadow Realm",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.75
       }
     ]
   }

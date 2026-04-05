@@ -4262,5 +4262,39 @@
       "Enjoyment": 8.5,
       "OST": 9.0
     }
+  },
+  {
+    "name": "Patema Inverted",
+    "categories": {
+      "Animace": 7.5,
+      "CGI": 8.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 7.5,
+      "Waifu": 7.0,
+      "Plot": 8.0,
+      "Pacing": 8.0,
+      "Story Conclusion": 8.5,
+      "Originalita": 10.0,
+      "Emoce": 9.0,
+      "Enjoyment": 8.5,
+      "OST": 9.0
+    }
+  },
+  {
+    "name": "Colorful: The Motion Picture",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 7.5,
+      "MC": 7.5,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 6.5,
+      "Plot": 8.5,
+      "Pacing": 7.5,
+      "Story Conclusion": 8.0,
+      "Originalita": 9.0,
+      "Emoce": 8.0,
+      "Enjoyment": 7.5,
+      "OST": 8.0
+    }
   }
 ]
