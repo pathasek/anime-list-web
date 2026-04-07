@@ -590,19 +590,41 @@ function Dashboard() {
             {
                 type: 'line',
                 label: 'Průměrné hodnocení',
-                data: excelData.typesKombi.map(t => t.rating),
+                data: excelData.typesKombi.map(t => parseFloat(t.rating.toFixed(2))),
                 borderColor: excelPalettes.kombiLine,
                 backgroundColor: excelPalettes.kombiLine,
                 yAxisID: 'y1',
                 tension: 0.2,
-                pointRadius: 5
+                pointRadius: 6,
+                pointBackgroundColor: excelPalettes.kombiLine,
+                datalabels: {
+                    display: true,
+                    color: '#C8A632',
+                    font: { weight: 'bold', size: 12 },
+                    anchor: 'end',
+                    align: 'top',
+                    offset: 4,
+                    formatter: (val) => val != null ? val.toFixed(2).replace('.', ',') : ''
+                }
             },
             {
                 type: 'bar',
                 label: 'Čas sledování (h)',
-                data: excelData.typesKombi.map(t => Math.round(t.hours)),
+                data: excelData.typesKombi.map(t => t.hours),
                 backgroundColor: excelPalettes.kombiBar,
-                yAxisID: 'y'
+                yAxisID: 'y',
+                datalabels: {
+                    display: true,
+                    color: '#fff',
+                    font: { weight: 'bold', size: 10 },
+                    anchor: 'center',
+                    align: 'center',
+                    formatter: (val) => {
+                        const h = val.toFixed(1).replace('.', ',');
+                        const days = (val / 24).toFixed(1).replace('.', ',');
+                        return `${h} h\n(${days} dní)`;
+                    }
+                }
             }
         ]
     };
@@ -829,14 +851,14 @@ function Dashboard() {
     };
 
     // Shared options
-    const baseOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } };
+    const baseOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { display: false } } };
     const barOptionsExcel = { ...baseOptions };
     const horizontalBarOptionsExcel = { ...baseOptions, indexAxis: 'y' };
     const stackedBarOptions = { ...barOptionsExcel, scales: { x: { stacked: true }, y: { stacked: true } } };
     
     const doubleAxisOptions = {
         ...baseOptions,
-        plugins: { legend: { position: 'top' } },
+        plugins: { legend: { display: false }, datalabels: { display: false } },
         scales: {
             y: { type: 'linear', position: 'left', min: 0 },
             y1: { type: 'linear', position: 'right', min: 0, grid: { drawOnChartArea: false } }
@@ -844,7 +866,7 @@ function Dashboard() {
     };
     const doubleAxisRatingOptions = {
         ...baseOptions,
-        plugins: { legend: { position: 'top' }, decadeFloatingLabels: { enabled: true } },
+        plugins: { legend: { display: false }, datalabels: { display: false }, decadeFloatingLabels: { enabled: true } },
         scales: {
             x: { type: 'category', position: 'bottom' },
             y: { type: 'linear', position: 'left', id: 'y-rating', min: 0, max: 10 },
@@ -857,9 +879,10 @@ function Dashboard() {
 
     // Helper functions for options
     const getOptions = (base, chartId, bgImage = null, overrides = {}) => {
-        // Obcházíme uložená uživatelská nastavení
-        const opt = buildChartOptions(base, {});
+        const opt = buildChartOptions(base, { legendPosition: 'hidden' });
         opt.plugins = opt.plugins || {};
+        opt.plugins.legend = { display: false };
+        opt.plugins.datalabels = opt.plugins.datalabels || { display: false };
         if (bgImage) {
             opt.plugins.excelImageBackground = { imagePath: bgImage };
         }
@@ -879,22 +902,35 @@ function Dashboard() {
         responsive: true,
         maintainAspectRatio: false,
         layout: {
-            padding: 30 // Zamezení odříznutí popisků
+            padding: 40
         },
         plugins: {
             legend: { display: false },
-            excelImageBackground: { color: '#B3B3B3' }, // Šedé pozadí odpovídající Excelu
+            excelImageBackground: { color: '#B3B3B3' },
+            tooltip: {
+                callbacks: {
+                    label: (context) => {
+                        const label = context.label || '';
+                        const value = context.raw;
+                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                        const pct = ((value / total) * 100).toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+                        return `${label}: ${value} (${pct}%)`;
+                    }
+                }
+            },
             datalabels: {
                 color: '#000',
-                display: true,
+                display: (context) => {
+                    const value = context.dataset.data[context.dataIndex];
+                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                    return (value / total) > 0.03;
+                },
                 formatter: (value, context) => {
                     const label = context.chart.data.labels[context.dataIndex];
-                    const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-                    const percentage = ((value / total) * 100).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1});
-                    if (value === 0) return null; // Schovat nulové hodnoty
-                    return `${label}:\n${value} (${percentage}%)`;
+                    if (value === 0) return null;
+                    return `${label}:\n${value}`;
                 },
-                font: { weight: 'bold', size: 11, family: 'sans-serif' },
+                font: { weight: 'bold', size: 12, family: 'sans-serif' },
                 textAlign: 'center',
                 anchor: 'center',
                 align: 'center'
@@ -1236,7 +1272,7 @@ function Dashboard() {
                     )
                     if (id === 'GrafTypuKombi') return (
                         <ChartWrapper key={id} id={id} defaultTitle="Kombinovaný graf Typů (Hodiny vs Hodnocení)" defaultGridColumn="span 2">
-                            <Bar data={typesKombiData} options={getOptions(doubleAxisOptions, id, './assets/excel_charts_media/image41.jpg')} />
+                            <Bar data={typesKombiData} options={getOptions(doubleAxisOptions, id, './assets/excel_charts_media/image41.jpg')} plugins={[ChartDataLabels]} />
                         </ChartWrapper>
                     )
                     if (id === 'GrafTypuDist') {
@@ -1263,11 +1299,11 @@ function Dashboard() {
                                          }, id, './assets/excel_charts_media/image47.jpg')} />
                                 </div>
                                 <div style={{ overflowX: 'auto', marginTop: '-1px' }}>
-                                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'center', fontSize: '0.9rem', background: '#D9D9D9', color: '#000', border: '1px solid #000' }}>
+                                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'center', fontSize: '0.9rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)' }}>
                                         <thead>
                                             <tr>
-                                                <th style={{ border: '1px solid #000', width: '50px' }}></th>
-                                                {activeTypes.map(t => <th key={t} style={{ border: '1px solid #000', padding: '6px' }}>{t}</th>)}
+                                                <th style={{ border: '1px solid var(--border-color)', width: '50px' }}></th>
+                                                {activeTypes.map(t => <th key={t} style={{ border: '1px solid var(--border-color)', padding: '6px', fontSize: '0.8rem' }}>{t}</th>)}
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -1275,12 +1311,12 @@ function Dashboard() {
                                                 const dataset = typesDistData.datasets.find(ds => ds.label === `Skóre ${score}`);
                                                 return (
                                                 <tr key={score}>
-                                                    <td style={{ border: '1px solid #000', padding: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                                        <span style={{ width: '12px', height: '12px', background: dataset?.backgroundColor, display: 'inline-block', border: '1px solid #000' }}></span>
+                                                    <td style={{ border: '1px solid var(--border-color)', padding: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                        <span style={{ width: '12px', height: '12px', background: dataset?.backgroundColor, display: 'inline-block', borderRadius: '2px' }}></span>
                                                         {score}
                                                     </td>
                                                     {activeTypes.map(type => (
-                                                        <td key={type} style={{ border: '1px solid #000' }}>
+                                                        <td key={type} style={{ border: '1px solid var(--border-color)' }}>
                                                             {(excelData.typesDistScoreMatrix[score] && excelData.typesDistScoreMatrix[score][type]) || 0}
                                                         </td>
                                                     ))}
@@ -1314,7 +1350,7 @@ function Dashboard() {
                                     <h4 style={{ position: 'absolute', top: 5, left: 10, zIndex: 10, fontSize: '0.9rem', background: 'rgba(0,0,0,0.6)', padding: '2px 8px', borderRadius: '4px' }}>Počet Anime podle sezóny</h4>
                                     <Bar data={{
                                         labels: seasonsData.labels,
-                                        datasets: [{ ...seasonsData.datasets[0], datalabels: { display: true, formatter: (val, ctx) => `${val} (${Math.round(val / excelData.comboRatingByYear.reduce((s, y) => s + y.count, 0) * 100)}%)`, color: '#000', anchor: 'center', align: 'center' } }]
+                                        datasets: [{ ...seasonsData.datasets[0], datalabels: { display: true, formatter: (val) => val, color: '#000', anchor: 'center', align: 'center', font: { weight: 'bold' } } }]
                                     }} options={getOptions(horizontalBarOptionsExcel, id, './assets/excel_charts_media/image6.jpg', { scales: { x: { display: false } } })} />
                                 </div>
                                 <div style={{ flex: 1, minHeight: 0, position: 'relative' }}>
@@ -1372,6 +1408,7 @@ function Dashboard() {
                     if (id === 'GrafPrubehHodnoceni') return (
                         <ChartWrapper key={id} id={id} defaultTitle="Průběh hodnocení v čase" defaultGridColumn="span 2">
                             <Chart type="line" data={ratingTimelineData} options={buildChartOptions(baseOptions, { 
+                                legendPosition: 'hidden',
                                 scales: { x: { display: false }, y: { min: 0, max: 10 } },
                                 plugins: { tooltip: { callbacks: { label: (ctx) => `${excelData.ratingTimeline[ctx.dataIndex].title}: ${ctx.raw.y || ctx.raw}` } } }
                             })} />
@@ -1379,17 +1416,17 @@ function Dashboard() {
                     )
                     if (id === 'GrafHodnoceniVsEpizody') return (
                         <ChartWrapper key={id} id={id} defaultTitle="Hodnocení vs počet epizod">
-                            <Bar data={epBucketsData} options={buildChartOptions({ ...barOptionsExcel }, { scales: { y: { min: 6 } } })} />
+                            <Bar data={epBucketsData} options={buildChartOptions({ ...barOptionsExcel }, { legendPosition: 'hidden', scales: { y: { min: 6 } } })} />
                         </ChartWrapper>
                     )
                     if (id === 'GrafSledDenne') return (
                         <ChartWrapper key={id} id={id} defaultTitle={`Sledování Anime v roce ${stats.latestYear} (minuty denně)`} defaultGridColumn="span 2">
-                            <Line data={dailyWatchingData} options={buildChartOptions(baseOptions, {})} />
+                            <Line data={dailyWatchingData} options={buildChartOptions(baseOptions, { legendPosition: 'hidden' })} />
                         </ChartWrapper>
                     )
                     if (id === 'GrafSledMesicne') return (
                         <ChartWrapper key={id} id={id} defaultTitle={`Sledování Anime v roce ${stats.latestYear} (hodiny měsíčně)`}>
-                            <Bar data={monthlyWatchingData} options={buildChartOptions(baseOptions, {})} />
+                            <Bar data={monthlyWatchingData} options={buildChartOptions(baseOptions, { legendPosition: 'hidden' })} />
                         </ChartWrapper>
                     )
                     if (id === 'GrafZanruBest') return (
