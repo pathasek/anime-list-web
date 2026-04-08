@@ -3670,5 +3670,39 @@
     "has_frisson": false,
     "rating_avg": 8.45,
     "rating_final": 8
+  },
+  {
+    "index": "217.",
+    "anime_name": "Erased",
+    "type": "OP",
+    "song": "Re:Re",
+    "author": "Asian Kung-Fu Generation",
+    "language": "JAP",
+    "rating_lyrics": 9.25,
+    "rating_emotion": 8.75,
+    "rating_melody": 8.5,
+    "rating_video": 9.25,
+    "rating_voice": 8.75,
+    "sing_along": 1,
+    "has_frisson": false,
+    "rating_avg": 8.9,
+    "rating_final": 9
+  },
+  {
+    "index": "218.",
+    "anime_name": "Erased",
+    "type": "ED",
+    "song": "Sore wa Chiisana Hikari no Youna",
+    "author": "Sayuri",
+    "language": "JAP",
+    "rating_lyrics": 9.25,
+    "rating_emotion": 9.25,
+    "rating_melody": 9.5,
+    "rating_video": 8.75,
+    "rating_voice": 9.75,
+    "sing_along": 1,
+    "has_frisson": true,
+    "rating_avg": 9.3,
+    "rating_final": 9
   }
 ]
