@@ -1,5 +1,40 @@
 [
   {
+    "name": "Noein: To Your Other Self",
+    "episodes": "(6x) EP 1-6",
+    "time": "151 min (2,5 hod)",
+    "date": "2026-04-10T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "Classroom of the Elite, S04: Second Year, First Semester",
+    "episodes": "(1x) EP 5",
+    "time": "23 min",
+    "date": "2026-04-09T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "Dorohedoro, S02",
+    "episodes": "(1x) EP 4",
+    "time": "26 min",
+    "date": "2026-04-09T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "The Beginning After the End, S02",
+    "episodes": "(1x) EP 2",
+    "time": "22 min",
+    "date": "2026-04-09T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "Petals of Reincarnation",
+    "episodes": "(1x) EP 2",
+    "time": "23 min",
+    "date": "2026-04-09T00:00:00",
+    "rewatch": null
+  },
+  {
     "name": "When Marnie Was There",
     "episodes": "(1x) EP 1",
     "time": "103 min (1,7 hod)",
@@ -42,13 +77,6 @@
     "rewatch": null
   },
   {
-    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun",
-    "episodes": "(1x) EP 1",
-    "time": "24 min",
-    "date": "2026-04-05T00:00:00",
-    "rewatch": null
-  },
-  {
     "name": "Patema Inverted",
     "episodes": "(1x) EP 1",
     "time": "99 min (1,6 hod)",
@@ -59,6 +87,13 @@
     "name": "Colorful: The Motion Picture",
     "episodes": "(1x) EP 1",
     "time": "126 min (2,1 hod)",
+    "date": "2026-04-05T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun",
+    "episodes": "(1x) EP 1",
+    "time": "24 min",
     "date": "2026-04-05T00:00:00",
     "rewatch": null
   },
@@ -259,6 +294,20 @@
     "rewatch": "1"
   },
   {
+    "name": "That Time I Got Reincarnated as a Slime OAD",
+    "episodes": "(3x) EP 3-5",
+    "time": "71 min (1,2 hod)",
+    "date": "2026-03-22T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "That Time I Got Reincarnated as a Slime: Visions of Coleus",
+    "episodes": "(3x) EP 1-3",
+    "time": "74 min (1,2 hod)",
+    "date": "2026-03-22T00:00:00",
+    "rewatch": null
+  },
+  {
     "name": "To Your Eternity, S03",
     "episodes": "(1x) EP 20",
     "time": "25 min",
@@ -290,20 +339,6 @@
     "name": "Frieren: Beyond Journey's End, S02",
     "episodes": "(1x) EP 9",
     "time": "24 min",
-    "date": "2026-03-22T00:00:00",
-    "rewatch": null
-  },
-  {
-    "name": "That Time I Got Reincarnated as a Slime OAD",
-    "episodes": "(3x) EP 3-5",
-    "time": "71 min (1,2 hod)",
-    "date": "2026-03-22T00:00:00",
-    "rewatch": null
-  },
-  {
-    "name": "That Time I Got Reincarnated as a Slime: Visions of Coleus",
-    "episodes": "(3x) EP 1-3",
-    "time": "74 min (1,2 hod)",
     "date": "2026-03-22T00:00:00",
     "rewatch": null
   },
