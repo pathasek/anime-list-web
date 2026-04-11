@@ -3704,5 +3704,22 @@
     "has_frisson": true,
     "rating_avg": 9.3,
     "rating_final": 9
+  },
+  {
+    "index": "219.",
+    "anime_name": "Sentenced to Be a Hero, S01",
+    "type": "OP",
+    "song": "Kill the Noise",
+    "author": "SPYAIR",
+    "language": "JAP (64%) ENG (36%)",
+    "rating_lyrics": "NEMÁM SUBS",
+    "rating_emotion": 9.25,
+    "rating_melody": 8.5,
+    "rating_video": 9.5,
+    "rating_voice": 8.25,
+    "sing_along": 3,
+    "has_frisson": true,
+    "rating_avg": 8.875,
+    "rating_final": 9
   }
 ]

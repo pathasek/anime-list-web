@@ -4824,6 +4824,202 @@
     ]
   },
   {
+    "name": "That Time I Got Reincarnated as a Slime, S01",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 13",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 14",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 15",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 16",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 17",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 18",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 19",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 20",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 21",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 22",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 23",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 24",
+        "rating": 8.25
+      }
+    ]
+  },
+  {
+    "name": "The Slime Diaries",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 9",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 10",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 11",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 12",
+        "rating": 6.25
+      }
+    ]
+  },
+  {
+    "name": "That Time I Got Reincarnated as a Slime OAD",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 5.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.75
+      }
+    ]
+  },
+  {
+    "name": "That Time I Got Reincarnated as a Slime: Visions of Coleus",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.75
+      }
+    ]
+  },
+  {
     "name": "Girls' Last Tour",
     "episodes": [
       {
@@ -7324,6 +7520,59 @@
     ]
   },
   {
+    "name": "Erased",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 3",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 11",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.75
+      }
+    ]
+  },
+  {
     "name": "Fullmetal Alchemist: Brotherhood",
     "episodes": [
       {
@@ -7642,107 +7891,6 @@
       {
         "episode": "EP 14",
         "rating": 7.25
-      }
-    ]
-  },
-  {
-    "name": "That Time I Got Reincarnated as a Slime, S01",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 13",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 14",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 15",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 16",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 17",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 18",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 19",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 20",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 21",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 22",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 23",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 24",
-        "rating": 8.25
       }
     ]
   },
@@ -9990,6 +10138,136 @@
     ]
   },
   {
+    "name": "Agents of the Four Seasons: Dance of Spring",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.0
+      }
+    ]
+  },
+  {
+    "name": "Classroom of the Elite, S04: Second Year, First Semester",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.25
+      }
+    ]
+  },
+  {
+    "name": "Dorohedoro, S02",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 5.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 5.5
+      }
+    ]
+  },
+  {
+    "name": "The Beginning After the End, S02",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 5.75
+      }
+    ]
+  },
+  {
+    "name": "Petals of Reincarnation",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 6.75
+      }
+    ]
+  },
+  {
+    "name": "Ascendance of a Bookworm: Adopted Daughter of an Archduke",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 9.0
+      }
+    ]
+  },
+  {
+    "name": "Daemons of the Shadow Realm",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.75
+      }
+    ]
+  },
+  {
+    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.75
+      }
+    ]
+  },
+  {
+    "name": "Witch Hat Atelier",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.0
+      }
+    ]
+  },
+  {
+    "name": "Re:Zero -Starting Life in Another World-, S04",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.75
+      }
+    ]
+  },
+  {
     "name": "To Your Eternity, S03",
     "episodes": [
       {
@@ -10148,47 +10426,47 @@
       },
       {
         "episode": "EP 2",
-        "rating": 8.5
+        "rating": 8.25
       },
       {
         "episode": "EP 3",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 6",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 7",
         "rating": 8.5
       },
       {
-        "episode": "EP 8",
-        "rating": 8.75
+        "episode": "EP 4",
+        "rating": 8.0
       },
       {
-        "episode": "EP 9",
+        "episode": "EP 5",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 6",
         "rating": 9.0
       },
       {
-        "episode": "EP 10",
+        "episode": "EP 7",
         "rating": 8.25
       },
       {
+        "episode": "EP 8",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.0
+      },
+      {
         "episode": "EP 11",
-        "rating": 9.0
+        "rating": 8.75
       },
       {
         "episode": "EP 12",
-        "rating": 9.75
+        "rating": 9.5
       }
     ]
   },
@@ -10344,68 +10622,15 @@
     ]
   },
   {
-    "name": "The Slime Diaries",
+    "name": "Noein: To Your Other Self",
     "episodes": [
       {
         "episode": "EP 1",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 4",
-        "rating": 6.0
-      },
-      {
-        "episode": "EP 5",
         "rating": 7.0
       },
       {
-        "episode": "EP 6",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 8",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 9",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 10",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 11",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 12",
-        "rating": 6.25
-      }
-    ]
-  },
-  {
-    "name": "That Time I Got Reincarnated as a Slime OAD",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 5.75
-      },
-      {
         "episode": "EP 2",
-        "rating": 6.0
+        "rating": 7.25
       },
       {
         "episode": "EP 3",
@@ -10413,185 +10638,14 @@
       },
       {
         "episode": "EP 4",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.75
-      }
-    ]
-  },
-  {
-    "name": "That Time I Got Reincarnated as a Slime: Visions of Coleus",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.75
-      }
-    ]
-  },
-  {
-    "name": "Agents of the Four Seasons: Dance of Spring",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.0
-      }
-    ]
-  },
-  {
-    "name": "Classroom of the Elite, S04: Second Year, First Semester",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.5
-      }
-    ]
-  },
-  {
-    "name": "Dorohedoro, S02",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 6.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 5.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 6.5
-      }
-    ]
-  },
-  {
-    "name": "The Beginning After the End, S02",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 6.0
-      }
-    ]
-  },
-  {
-    "name": "Petals of Reincarnation",
-    "episodes": [
-      {
-        "episode": "EP 1",
         "rating": 6.75
-      }
-    ]
-  },
-  {
-    "name": "Ascendance of a Bookworm: Adopted Daughter of an Archduke",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 9.0
-      }
-    ]
-  },
-  {
-    "name": "Daemons of the Shadow Realm",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.75
-      }
-    ]
-  },
-  {
-    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.75
-      }
-    ]
-  },
-  {
-    "name": "Erased",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 3",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.25
       },
       {
         "episode": "EP 5",
-        "rating": 8.25
+        "rating": 7.5
       },
       {
         "episode": "EP 6",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 8",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 11",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 12",
-        "rating": 7.75
-      }
-    ]
-  },
-  {
-    "name": "Witch Hat Atelier",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 2",
         "rating": 8.0
       }
     ]
