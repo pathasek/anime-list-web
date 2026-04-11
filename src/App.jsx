@@ -132,6 +132,10 @@ function AppContent({ stats }) {
             <Icons.List />
             <span>Anime List</span>
           </NavLink>
+          <NavLink to="/history" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
+            <Icons.History />
+            <span>History Log</span>
+          </NavLink>
           <NavLink to="/ratings" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
             <Icons.Chart />
             <span>Anime hodnocení</span>
@@ -139,10 +143,6 @@ function AppContent({ stats }) {
           <NavLink to="/top-favorites" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
             <span style={{ fontSize: '1.2rem', paddingRight: '0.4rem' }}>🏆</span>
             <span>Top Favorites</span>
-          </NavLink>
-          <NavLink to="/history" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
-            <Icons.History />
-            <span>History Log</span>
           </NavLink>
           <NavLink to="/favorites" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
             <Icons.Music />
