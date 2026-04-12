@@ -1,6 +1,41 @@
 [
   {
     "name": "Noein: To Your Other Self",
+    "episodes": "(6x) EP 19-24",
+    "time": "151 min (2,5 hod)",
+    "date": "2026-04-12T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "That Time I Got Reincarnated as a Slime, S04",
+    "episodes": "(1x) EP 2",
+    "time": "24 min",
+    "date": "2026-04-12T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "Agents of the Four Seasons: Dance of Spring",
+    "episodes": "(2x) EP 2-3",
+    "time": "46 min",
+    "date": "2026-04-12T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "Ascendance of a Bookworm: Adopted Daughter of an Archduke",
+    "episodes": "(1x) EP 2",
+    "time": "23 min",
+    "date": "2026-04-12T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "Daemons of the Shadow Realm",
+    "episodes": "(1x) EP 2",
+    "time": "24 min",
+    "date": "2026-04-12T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "Noein: To Your Other Self",
     "episodes": "(12x) EP 7-18",
     "time": "303 min (5,0 hod)",
     "date": "2026-04-11T00:00:00",
