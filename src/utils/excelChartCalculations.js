@@ -268,6 +268,174 @@ export function calculateExcelChartsData(animeList, historyLog) {
         count: b.count
     }));
 
+    // ── Dubbing Charts Data ──
+    const dubStats = {};
+    animeList.forEach(a => {
+        const dubs = a.dub ? a.dub.split(';').map(d => d.trim()).filter(Boolean) : ['Neznámý'];
+        const rating = parseFloat(a.rating) || 0;
+        const totalTime = parseFloat(a.total_time) || 0;
+        dubs.forEach(dub => {
+            if (!dubStats[dub]) dubStats[dub] = { count: 0, sumRating: 0, ratedCount: 0, totalMinutes: 0 };
+            dubStats[dub].count++;
+            dubStats[dub].totalMinutes += totalTime;
+            if (rating > 0) {
+                dubStats[dub].sumRating += rating;
+                dubStats[dub].ratedCount++;
+            }
+        });
+    });
+
+    const dubCount = Object.entries(dubStats)
+        .map(([label, s]) => ({ label, count: s.count }))
+        .sort((a, b) => b.count - a.count);
+
+    const dubAvgRating = Object.entries(dubStats)
+        .filter(([, s]) => s.ratedCount >= 2)
+        .map(([label, s]) => ({ label, avg: parseFloat((s.sumRating / s.ratedCount).toFixed(2)) }))
+        .sort((a, b) => b.avg - a.avg);
+
+    const dubTotalTime = Object.entries(dubStats)
+        .map(([label, s]) => ({ label, hours: parseFloat((s.totalMinutes / 60).toFixed(1)) }))
+        .sort((a, b) => b.hours - a.hours);
+
+    // ── AniList Tags Data (Weighted Average Rating per VBA) ──
+    // VBA: weight = rank/100; score = Σ(rating × weight) / Σ(weight); filter: sumWeights >= 3.0
+    const tagWeighted = {};
+    const tagRelevance = {}; // For word cloud — total rank sum
+    const tagDescriptions = {}; // tag name → description text
+    const tagAnimeMap = {}; // tag name → [{name, rank}]
+    animeList.forEach(a => {
+        if (!a.tags) return;
+        const rating = parseFloat(a.rating);
+        const isFinished = a.end_date && a.end_date !== 'X' && a.end_date !== '';
+        a.tags.split(';').forEach(tagEntry => {
+            const parts = tagEntry.split(':');
+            if (parts.length >= 2) {
+                const tagName = parts[0].trim();
+                const rank = parseInt(parts[1]) || 0;
+                const description = parts.length >= 3 ? parts.slice(2).join(':').trim() : '';
+                if (!tagName || rank <= 0) return;
+                // Store description and anime mapping for tag selector UI
+                if (description && !tagDescriptions[tagName]) tagDescriptions[tagName] = description;
+                if (!tagAnimeMap[tagName]) tagAnimeMap[tagName] = [];
+                tagAnimeMap[tagName].push({ name: a.name_cz || a.name || a.name_en, rank });
+                // Word cloud: sum all ranks regardless of rating
+                if (!tagRelevance[tagName]) tagRelevance[tagName] = 0;
+                tagRelevance[tagName] += rank;
+                // Weighted avg: only finished anime with valid rating
+                if (isFinished && !isNaN(rating) && rating >= 1 && rating <= 10) {
+                    const weight = rank / 100;
+                    if (!tagWeighted[tagName]) tagWeighted[tagName] = { sumWeights: 0, sumWeightedRatings: 0 };
+                    tagWeighted[tagName].sumWeights += weight;
+                    tagWeighted[tagName].sumWeightedRatings += rating * weight;
+                }
+            }
+        });
+    });
+
+    const anilistTags = Object.entries(tagWeighted)
+        .filter(([, s]) => s.sumWeights >= 3.0)
+        .map(([label, s]) => ({ label, score: parseFloat((s.sumWeightedRatings / s.sumWeights).toFixed(2)) }))
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 20);
+
+    // Word cloud data — relevance score (total rank sum), min 100
+    const tagCloud = Object.entries(tagRelevance)
+        .filter(([, score]) => score >= 100)
+        .map(([label, score]) => ({ label, score }))
+        .sort((a, b) => b.score - a.score);
+
+    // All tags with descriptions for tag selector UI
+    const allTags = Object.keys(tagRelevance)
+        .sort((a, b) => a.localeCompare(b, 'cs'))
+        .map(label => ({
+            label,
+            description: tagDescriptions[label] || '',
+            animeList: (tagAnimeMap[label] || []).sort((a, b) => b.rank - a.rank),
+            relevance: tagRelevance[label]
+        }));
+
+    // ── Latest Watched (all anime with valid end_date, sorted by end_date desc) ──
+    // VBA: filter IsDate(end), sort by end desc, show start/end/totalTime/rating
+    const latestWatched = [...animeList]
+        .filter(a => a.end_date && a.end_date !== 'X' && a.end_date !== '' && !isNaN(new Date(a.end_date).getTime()))
+        .sort((a, b) => new Date(b.end_date) - new Date(a.end_date))
+        .map(a => ({
+            name: a.name,
+            startDate: a.start_date || null,
+            endDate: a.end_date,
+            totalTime: parseFloat(a.total_time) || 0, // minutes
+            rating: parseFloat(a.rating) || null
+        }));
+
+    // ── Longest Series (aggregated by series field) ──
+    // VBA: group by series name (from comment), aggregate: totalMinutes, totalEps, sumRating, countRated, parts
+    const seriesAgg = {};
+    animeList.forEach(a => {
+        const series = a.series || a.name;
+        const eps = parseInt(a.episodes) || 0;
+        const epDur = parseFloat(a.episode_duration) || 0;
+        const totalMin = eps * epDur;
+        const rating = parseFloat(a.rating);
+        if (!seriesAgg[series]) seriesAgg[series] = { totalMinutes: 0, totalEps: 0, sumRating: 0, countRated: 0, parts: 0 };
+        seriesAgg[series].totalMinutes += totalMin;
+        seriesAgg[series].totalEps += eps;
+        seriesAgg[series].parts++;
+        if (!isNaN(rating) && rating > 0) {
+            seriesAgg[series].sumRating += rating;
+            seriesAgg[series].countRated++;
+        }
+    });
+    const longestSeries = Object.entries(seriesAgg)
+        .map(([name, s]) => ({
+            name,
+            hours: parseFloat((s.totalMinutes / 60).toFixed(1)),
+            days: parseFloat((s.totalMinutes / 60 / 24).toFixed(1)),
+            totalEps: s.totalEps,
+            parts: s.parts,
+            avgRating: s.countRated > 0 ? parseFloat((s.sumRating / s.countRated).toFixed(1)) : null
+        }))
+        .sort((a, b) => b.hours - a.hours);
+
+    // ── Fastest Binge ──
+    // VBA: totalMin = eps * epDuration; must be > 180; days = DateDiff("d",start,end)+1; tempo >= 77 min/day
+    const fastestBinge = animeList
+        .map(a => {
+            const eps = parseInt(a.episodes) || 0;
+            const epDur = parseFloat(a.episode_duration) || 0;
+            const totalMin = eps * epDur;
+            if (totalMin <= 180) return null;
+            const start = a.start_date ? new Date(a.start_date) : null;
+            const end = a.end_date && a.end_date !== 'X' ? new Date(a.end_date) : null;
+            if (!start || !end || isNaN(start.getTime()) || isNaN(end.getTime())) return null;
+            // VBA: DateDiff("d", start, end) + 1 — includes both endpoints
+            const days = Math.max(1, Math.round((end - start) / (1000 * 60 * 60 * 24)) + 1);
+            const minPerDay = totalMin / days;
+            if (minPerDay < 77) return null;
+            return {
+                name: a.name,
+                days,
+                episodes: eps,
+                totalHours: parseFloat((totalMin / 60).toFixed(1)),
+                minPerDay: Math.round(minPerDay)
+            };
+        })
+        .filter(Boolean)
+        .sort((a, b) => b.minPerDay - a.minPerDay);
+
+    // ── Airing Anime (for Status group) ──
+    const airingAnime = animeList
+        .filter(a => a.status === 'AIRING!')
+        .map(a => ({
+            name: a.name,
+            watchedEps: parseInt(a.watched_episodes) || parseInt(a.episodes) || 0,
+            startDate: a.start_date || null
+        }))
+        .sort((a, b) => {
+            if (!a.startDate || !b.startDate) return 0;
+            return new Date(b.startDate) - new Date(a.startDate);
+        });
+
     return {
         typesPie: typesOrder.map(k => ({ label: k, count: typesDist[k] })),
         typesKombi: typesOrder.map(k => ({ label: k, hours: typeRatingStats[k].totalHours, rating: typeRatingStats[k].count ? typeRatingStats[k].sumRating/typeRatingStats[k].count : 0 })),
@@ -283,6 +451,19 @@ export function calculateExcelChartsData(animeList, historyLog) {
         topGenres: topGenres.map(g => ({ label: g, count: genres[g].count })),
         genresBest,
         ratingTimeline: timelineWithAvg,
-        ratingByEpisodes
+        ratingByEpisodes,
+        // New groups data
+        dubCount,
+        dubAvgRating,
+        dubTotalTime,
+        anilistTags,
+        tagCloud,
+        allTags,
+        tagDescriptions,
+        latestWatched,
+        longestSeries,
+        fastestBinge,
+        airingAnime
     };
 }
+
