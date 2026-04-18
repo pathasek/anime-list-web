@@ -1021,7 +1021,7 @@
   },
   {
     "index": "61.",
-    "anime_name": "Frieren: Beyond Journey's End",
+    "anime_name": "Frieren: Beyond Journey's End, S01",
     "type": "OP",
     "song": "Yuusha",
     "author": "YOASOBI",
@@ -1038,7 +1038,7 @@
   },
   {
     "index": "62.",
-    "anime_name": "Frieren: Beyond Journey's End",
+    "anime_name": "Frieren: Beyond Journey's End, S01",
     "type": "ED",
     "song": "Anytime Anywhere",
     "author": "milet",
@@ -1055,7 +1055,7 @@
   },
   {
     "index": "63.",
-    "anime_name": "Frieren: Beyond Journey's End",
+    "anime_name": "Frieren: Beyond Journey's End, S01",
     "type": "ED",
     "song": "Anytime Anywhere",
     "author": "milet",
@@ -3738,5 +3738,39 @@
     "has_frisson": true,
     "rating_avg": 9,
     "rating_final": 9
+  },
+  {
+    "index": "221.",
+    "anime_name": "Frieren: Beyond Journey's End, S02",
+    "type": "OP",
+    "song": "lulu.",
+    "author": "Mrs. GREEN APPLE",
+    "language": "JAP",
+    "rating_lyrics": "NEMÁM SUBS",
+    "rating_emotion": 9.5,
+    "rating_melody": 9,
+    "rating_video": 10,
+    "rating_voice": 9.25,
+    "sing_along": 1,
+    "has_frisson": true,
+    "rating_avg": 9.4375,
+    "rating_final": 9
+  },
+  {
+    "index": "222.",
+    "anime_name": "Frieren: Beyond Journey's End, S02",
+    "type": "ED",
+    "song": "milet",
+    "author": "The Story of Us",
+    "language": "JAP (73%) ENG (27%)",
+    "rating_lyrics": "NEMÁM SUBS",
+    "rating_emotion": 9.25,
+    "rating_melody": 9.25,
+    "rating_video": 10,
+    "rating_voice": 9.75,
+    "sing_along": 4,
+    "has_frisson": true,
+    "rating_avg": 9.5625,
+    "rating_final": 10
   }
 ]

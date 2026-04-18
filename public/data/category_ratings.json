@@ -2298,6 +2298,23 @@
     }
   },
   {
+    "name": "To Me, The One Who Loved You",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 7.0,
+      "MC": 7.5,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 7.0,
+      "Plot": 6.5,
+      "Pacing": 6.0,
+      "Story Conclusion": 6.0,
+      "Originalita": 8.5,
+      "Emoce": 7.0,
+      "Enjoyment": 6.5,
+      "OST": 9.0
+    }
+  },
+  {
     "name": "Girls' Last Tour",
     "categories": {
       "Animace": 7.0,
@@ -3579,6 +3596,23 @@
     }
   },
   {
+    "name": "To Every You I've Loved Before",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 7.0,
+      "MC": 7.5,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 7.5,
+      "Plot": 7.0,
+      "Pacing": 7.5,
+      "Story Conclusion": 8.0,
+      "Originalita": 8.5,
+      "Emoce": 7.5,
+      "Enjoyment": 7.5,
+      "OST": 9.0
+    }
+  },
+  {
     "name": "Fullmetal Alchemist: Brotherhood",
     "categories": {
       "Animace": 8.5,
@@ -4406,37 +4440,47 @@
     }
   },
   {
-    "name": "To Me, The One Who Loved You",
+    "name": "Frieren: Beyond Journey's End, S02",
     "categories": {
-      "Animace": 7.0,
-      "CGI": 7.0,
+      "Animace": 9.5,
+      "CGI": 9.5,
+      "MC": 10.0,
+      "Vedlejší postavy": 10.0,
+      "Waifu": 8.5,
+      "Plot": 9.0,
+      "Pacing": 9.0,
+      "Story Conclusion": 10.0,
+      "Originalita": 10.0,
+      "Emoce": 9.0,
+      "Enjoyment": 9.5,
+      "OP": 9.0,
+      "ED": 10.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "Sonny Boy",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 7.5,
       "MC": 7.5,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 7.0,
-      "Plot": 6.5,
-      "Pacing": 6.0,
-      "Story Conclusion": 6.0,
-      "Originalita": 8.5,
-      "Emoce": 7.0,
-      "Enjoyment": 6.5,
+      "Vedlejší postavy": 8.5,
+      "Waifu": 8.5,
+      "Plot": 7.0,
+      "Pacing": 6.5,
+      "Story Conclusion": 7.5,
+      "Originalita": 10.0,
+      "Emoce": 6.5,
+      "Enjoyment": 7.5,
+      "ED": 7.0,
       "OST": 9.0
     }
   },
   {
-    "name": "To Every You I've Loved Before",
+    "name": "Penguindrum",
     "categories": {
       "Animace": 7.0,
-      "CGI": 7.0,
-      "MC": 7.5,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 7.5,
-      "Plot": 7.0,
-      "Pacing": 7.5,
-      "Story Conclusion": 8.0,
-      "Originalita": 8.5,
-      "Emoce": 7.5,
-      "Enjoyment": 7.5,
-      "OST": 9.0
+      "CGI": 7.5
     }
   }
 ]
