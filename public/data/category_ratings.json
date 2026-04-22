@@ -3613,6 +3613,24 @@
     }
   },
   {
+    "name": "Sonny Boy",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 7.5,
+      "MC": 7.5,
+      "Vedlejší postavy": 8.5,
+      "Waifu": 8.5,
+      "Plot": 7.0,
+      "Pacing": 6.5,
+      "Story Conclusion": 7.5,
+      "Originalita": 10.0,
+      "Emoce": 6.5,
+      "Enjoyment": 7.5,
+      "ED": 7.0,
+      "OST": 9.0
+    }
+  },
+  {
     "name": "Fullmetal Alchemist: Brotherhood",
     "categories": {
       "Animace": 8.5,
@@ -4459,28 +4477,22 @@
     }
   },
   {
-    "name": "Sonny Boy",
-    "categories": {
-      "Animace": 8.0,
-      "CGI": 7.5,
-      "MC": 7.5,
-      "Vedlejší postavy": 8.5,
-      "Waifu": 8.5,
-      "Plot": 7.0,
-      "Pacing": 6.5,
-      "Story Conclusion": 7.5,
-      "Originalita": 10.0,
-      "Emoce": 6.5,
-      "Enjoyment": 7.5,
-      "ED": 7.0,
-      "OST": 9.0
-    }
-  },
-  {
     "name": "Penguindrum",
     "categories": {
       "Animace": 7.0,
-      "CGI": 7.5
+      "CGI": 8.0,
+      "MC": 7.0,
+      "Vedlejší postavy": 6.5,
+      "Waifu": 7.0,
+      "Plot": 6.5,
+      "Pacing": 6.5,
+      "Story Conclusion": 8.0,
+      "Originalita": 8.0,
+      "Emoce": 7.0,
+      "Enjoyment": 6.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
     }
   }
 ]
