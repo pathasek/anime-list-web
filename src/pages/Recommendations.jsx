@@ -883,6 +883,16 @@ function Recommendations() {
     const navigate = useNavigate()
 
     const [animeList, setAnimeList] = useState([])
+    const [showScrollTop, setShowScrollTop] = useState(false)
+
+    useEffect(() => {
+        const handleScroll = (e) => {
+            const currentY = window.scrollY || document.documentElement.scrollTop;
+            setShowScrollTop(currentY > 1000);
+        };
+        window.addEventListener('scroll', handleScroll, true);
+        return () => window.removeEventListener('scroll', handleScroll, true);
+    }, []);
     const [ptwList, setPtwList] = useState([])
     const [loading, setLoading] = useState(true)
 
@@ -1328,6 +1338,41 @@ function Recommendations() {
                 settings={settings}
                 onSave={handleSaveSettings}
             />
+
+            {showScrollTop && createPortal(
+                <button
+                    onClick={() => {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        const mainContent = document.querySelector('.main-content');
+                        if (mainContent) {
+                            mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
+                    }}
+                    style={{
+                        position: 'fixed',
+                        bottom: '30px', /* Posunuto dolů pro lepší ergonomii na telefonu/desktopu */
+                        right: '30px',
+                        background: 'var(--accent-primary)',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '50%',
+                        width: '50px',
+                        height: '50px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        boxShadow: 'var(--shadow-lg)',
+                        zIndex: 9999, // Extremely high z-index to be over everything
+                        fontSize: '1.5rem',
+                        animation: 'fadeIn 0.3s ease-out'
+                    }}
+                    title="Zpět nahoru"
+                >
+                    ↑
+                </button>,
+                document.body
+            )}
         </div>
     )
 }
