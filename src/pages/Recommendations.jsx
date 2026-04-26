@@ -103,7 +103,7 @@ async function fetchAnilistTagsBatch(malIds, settings, signal) {
     if (!malIds.length) return {}
 
     let queryParts = malIds.map((id, i) =>
-        `m${i}: Media(idMal: ${id}, type: ANIME) { idMal format episodes duration season seasonYear tags { name rank isMediaSpoiler } relations { edges { relationType node { format episodes duration } } } }`
+        `m${i}: Media(idMal: ${id}, type: ANIME) { idMal format episodes duration season seasonYear tags { name rank description isMediaSpoiler } relations { edges { relationType node { format episodes duration } } } }`
     )
     const query = `query { ${queryParts.join(' ')} }`
 
@@ -132,7 +132,7 @@ async function fetchAnilistTagsBatch(malIds, settings, signal) {
             const tags = (media.tags || [])
                 .filter(t => t.rank >= settings.ANILIST_MIN_RANK && !t.isMediaSpoiler)
                 .sort((a, b) => b.rank - a.rank)
-                .map(t => ({ name: t.name, rank: t.rank }))
+                .map(t => ({ name: t.name, rank: t.rank, description: t.description || '' }))
 
             // Relations
             const rel = {
@@ -838,7 +838,7 @@ function RecCard({ rec, sourceAnimeId, sourceScore, settings }) {
                 {tags.length > 0 && (
                     <div className="rec-tags-section">
                         {tagsToShow.map((tag, i) => (
-                            <span key={i} className={`rec-tag ${tag.rank >= 80 ? 'tier-1' : tag.rank >= 60 ? 'tier-2' : 'tier-3'}`}>
+                            <span key={i} title={tag.description} style={{ cursor: tag.description ? 'help' : 'default' }} className={`rec-tag ${tag.rank >= 80 ? 'tier-1' : tag.rank >= 60 ? 'tier-2' : 'tier-3'}`}>
                                 {tag.name} {tag.rank}%
                             </span>
                         ))}
