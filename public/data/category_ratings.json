@@ -3669,6 +3669,25 @@
     }
   },
   {
+    "name": "Penguindrum",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 8.0,
+      "MC": 7.0,
+      "Vedlejší postavy": 6.5,
+      "Waifu": 7.0,
+      "Plot": 6.5,
+      "Pacing": 6.5,
+      "Story Conclusion": 8.0,
+      "Originalita": 8.0,
+      "Emoce": 7.0,
+      "Enjoyment": 6.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
     "name": "Steins;Gate",
     "categories": {
       "Animace": 8.0,
@@ -4477,22 +4496,60 @@
     }
   },
   {
-    "name": "Penguindrum",
+    "name": "Id:Invaded",
     "categories": {
-      "Animace": 7.0,
+      "Animace": 7.5,
+      "CGI": 7.5,
+      "MC": 8.5,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 8.0,
+      "Plot": 7.5,
+      "Pacing": 7.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 8.5,
+      "Emoce": 7.5,
+      "Enjoyment": 8.0,
+      "OP": 9.0,
+      "ED": 7.0,
+      "OST": 9.0
+    }
+  },
+  {
+    "name": "Wonder Egg Priority",
+    "categories": {
+      "Animace": 9.0,
       "CGI": 8.0,
-      "MC": 7.0,
-      "Vedlejší postavy": 6.5,
-      "Waifu": 7.0,
-      "Plot": 6.5,
-      "Pacing": 6.5,
-      "Story Conclusion": 8.0,
-      "Originalita": 8.0,
+      "MC": 7.5,
+      "Vedlejší postavy": 7.5,
+      "Waifu": 7.5,
+      "Plot": 7.0,
+      "Pacing": 8.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 7.5,
       "Emoce": 7.0,
-      "Enjoyment": 6.0,
+      "Enjoyment": 7.5,
       "OP": 7.0,
       "ED": 7.0,
       "OST": 8.0
+    }
+  },
+  {
+    "name": "Wonder Egg Priority: My Priority",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 7.5,
+      "MC": 6.0,
+      "Vedlejší postavy": 5.0,
+      "Waifu": 5.5,
+      "Plot": 5.0,
+      "Pacing": 5.0,
+      "Story Conclusion": 5.5,
+      "Originalita": 5.5,
+      "Emoce": 6.0,
+      "Enjoyment": 5.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 7.0
     }
   }
 ]
