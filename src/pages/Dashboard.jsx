@@ -85,15 +85,15 @@ const miniBarHorizontalOptions = {
 // GROUPS CONFIG (fixed order)
 // ==========================================
 const GROUPS_CONFIG = [
-    { id: 'lists', title: 'Poslední & Binge & Nejdelší', icon: '🏆' },
-    { id: 'status', title: 'Status', icon: '📋' },
-    { id: 'types', title: 'Typy', icon: '📊' },
-    { id: 'studios', title: 'Studia', icon: '🏢' },
-    { id: 'seasons', title: 'Sezóny & Stáří', icon: '🌸' },
-    { id: 'themes', title: 'Témata', icon: '🎭' },
-    { id: 'genres', title: 'Žánry', icon: '🎬' },
-    { id: 'tags', title: 'AniList Tagy', icon: '🏷️' },
-    { id: 'ratings', title: 'Hodnocení', icon: '⭐' },
+    { id: 'lists', title: 'Poslední & Binge & Nejdelší', icon: '🏆', fullWidth: true, customPreview: true },
+    { id: 'status', title: 'Status', icon: '📋', customPreview: true },
+    { id: 'tags', title: 'AniList Tagy', icon: '🏷️', customPreview: true },
+    { id: 'ratings', title: 'Hodnocení', icon: '⭐', customPreview: true },
+    { id: 'types', title: 'Typy', icon: '📊', customPreview: true },
+    { id: 'studios', title: 'Studia', icon: '🏢', customPreview: true },
+    { id: 'seasons', title: 'Sezóny & Stáří', icon: '🌸', customPreview: true },
+    { id: 'themes', title: 'Témata', icon: '🎭', customPreview: true },
+    { id: 'genres', title: 'Žánry', icon: '🎬', customPreview: true },
     { id: 'dub', title: 'Dabing', icon: '🎙️', alwaysExpanded: true },
 ]
 
@@ -1105,19 +1105,28 @@ function Dashboard() {
             // ─── DUB (always expanded) ───
             case 'dub':
                 return (
-                    <>
-                        <FullChart title="Počet Anime podle Dabingu" className="standard dark-gradient">
-                            <Bar data={dubCountData} options={getOptions(horizontalBarOptionsExcel, 'GrafDabingu')} />
-                        </FullChart>
-                        <FullChart title="Průměrné hodnocení podle Dabingu" className="standard dark-gradient">
-                            <Bar data={dubAvgRatingData} options={getOptions(horizontalBarOptionsExcel, 'GrafDabingAvg', null, {
-                                scales: { x: { min: excelData.dubAvgRating.length ? floorTo025(Math.min(...excelData.dubAvgRating.map(d => d.avg))) : 0 } }
-                            })} />
-                        </FullChart>
-                        <FullChart title="Celkový čas podle Dabingu (hodiny)" className="standard dark-gradient">
-                            <Bar data={dubTotalTimeData} options={getOptions(horizontalBarOptionsExcel, 'GrafCasDabing')} />
-                        </FullChart>
-                    </>
+                    <div className="dub-charts-row">
+                        <div className="dub-chart-card">
+                            <div className="dub-chart-title">Počet Anime</div>
+                            <div className="dub-chart-body">
+                                <Bar data={dubCountData} options={getOptions(horizontalBarOptionsExcel, 'GrafDabingu')} />
+                            </div>
+                        </div>
+                        <div className="dub-chart-card">
+                            <div className="dub-chart-title">Průměrné hodnocení</div>
+                            <div className="dub-chart-body">
+                                <Bar data={dubAvgRatingData} options={getOptions(horizontalBarOptionsExcel, 'GrafDabingAvg', null, {
+                                    scales: { x: { min: excelData.dubAvgRating.length ? floorTo025(Math.min(...excelData.dubAvgRating.map(d => d.avg))) : 0 } }
+                                })} />
+                            </div>
+                        </div>
+                        <div className="dub-chart-card">
+                            <div className="dub-chart-title">Celkový čas (hodiny)</div>
+                            <div className="dub-chart-body">
+                                <Bar data={dubTotalTimeData} options={getOptions(horizontalBarOptionsExcel, 'GrafCasDabing')} />
+                            </div>
+                        </div>
+                    </div>
                 )
 
             // ─── STATUS ───
@@ -1213,79 +1222,210 @@ function Dashboard() {
     }
 
     const renderGroupPreview = (groupId) => {
+        // Helper for progress bar
+        const getBarFill = (val, max) => ({ width: `${Math.min(100, (val / max) * 100)}%` });
+
         switch (groupId) {
-            case 'types':
+            case 'types': {
+                const data = Object.entries(stats.types).sort((a,b) => b[1] - a[1]).slice(0, 4);
+                const max = data[0]?.[1] || 1;
                 return (
-                    <>
-                        <MiniChart label="Populace"><Pie data={typesPieData} options={miniPieOptions} /></MiniChart>
-                        <MiniChart label="Hodiny vs Hodnocení"><Bar data={typesKombiData} options={miniChartOptions} /></MiniChart>
-                        <MiniChart label="Distribuce"><Bar data={{...typesDistData, datasets: typesDistData.datasets.map(ds => ({...ds, datalabels: { display: false }}))}} options={{...miniChartOptions, scales: { x: { display: false, stacked: true }, y: { display: false, stacked: true } }}} /></MiniChart>
-                    </>
+                    <div className="preview-premium-grid">
+                        <div className="preview-data-title">📊 Typy</div>
+                        {data.map(([type, count], i) => (
+                            <div key={i} className="preview-data-item">
+                                <div className="preview-item-info">
+                                    <span className="name">{type}</span>
+                                    <span className="meta">{count} ks</span>
+                                </div>
+                                <div className="preview-item-bar-bg">
+                                    <div className="preview-item-bar-fill bar-types" style={getBarFill(count, max)} />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 )
-            case 'studios':
+            }
+            case 'studios': {
+                const data = Object.entries(excelData.studiosPie).sort((a,b) => b[1] - a[1]).slice(0, 4);
+                const max = data[0]?.[1] || 1;
                 return (
-                    <>
-                        <MiniChart label="Populace"><Pie data={studiosPieData} options={miniPieOptions} /></MiniChart>
-                        <MiniChart label="TOP 10"><Bar data={studiosBestData} options={miniBarHorizontalOptions} /></MiniChart>
-                    </>
+                    <div className="preview-premium-grid">
+                        <div className="preview-data-title">🏢 Top Studia</div>
+                        {data.map(([name, count], i) => (
+                            <div key={i} className="preview-data-item">
+                                <div className="preview-item-info">
+                                    <span className="name">{name}</span>
+                                    <span className="meta">{count} ks</span>
+                                </div>
+                                <div className="preview-item-bar-bg">
+                                    <div className="preview-item-bar-fill bar-studios" style={getBarFill(count, max)} />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 )
+            }
             case 'seasons':
                 return (
-                    <>
-                        <MiniChart label="Sezóny"><Bar data={seasonsData} options={miniBarHorizontalOptions} /></MiniChart>
-                        <MiniChart label="Věk"><Bar data={ageVekuData} options={miniBarHorizontalOptions} /></MiniChart>
-                        <MiniChart label="Prům. hodnocení"><Bar data={avgAgeData} options={miniBarHorizontalOptions} /></MiniChart>
-                    </>
+                    <div className="preview-premium-grid row">
+                        <div className="preview-data-column">
+                            <div className="preview-data-title">🌸 Sezóny</div>
+                            {Object.entries(excelData.seasons).sort((a,b) => b[1] - a[1]).map(([season, count], i) => (
+                                <div key={i} className="preview-list-item">
+                                    <span className="rank" style={{color: `var(--season-${season.toLowerCase()})`}}>•</span>
+                                    <span className="name">{season}</span>
+                                    <span className="meta">{count}</span>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="preview-data-column">
+                            <div className="preview-data-title">⏳ Věk</div>
+                            {Object.entries(excelData.ageGroups).slice(0, 4).map(([group, d], i) => (
+                                <div key={i} className="preview-list-item">
+                                    <span className="rank">{i+1}.</span>
+                                    <span className="name">{group}</span>
+                                    <span className="meta">{d.count}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 )
-            case 'themes':
+            case 'themes': {
+                const data = excelData.topThemes.slice(0, 4);
+                const max = data[0]?.count || 1;
                 return (
-                    <>
-                        <MiniChart label="Populace"><Pie data={tematPopData} options={miniPieOptions} /></MiniChart>
-                        <MiniChart label="TOP 10"><Bar data={tematBestData} options={miniBarHorizontalOptions} /></MiniChart>
-                    </>
+                    <div className="preview-premium-grid">
+                        <div className="preview-data-title">🎭 Top Témata</div>
+                        {data.map((t, i) => (
+                            <div key={i} className="preview-data-item">
+                                <div className="preview-item-info">
+                                    <span className="name">{t.label}</span>
+                                    <span className="meta">{t.count} ks</span>
+                                </div>
+                                <div className="preview-item-bar-bg">
+                                    <div className="preview-item-bar-fill bar-themes" style={getBarFill(t.count, max)} />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 )
-            case 'genres':
+            }
+            case 'genres': {
+                const data = excelData.topGenres.slice(0, 4);
+                const max = data[0]?.count || 1;
                 return (
-                    <>
-                        <MiniChart label="Populace"><Pie data={zanruData} options={miniPieOptions} /></MiniChart>
-                        <MiniChart label="TOP 10"><Bar data={zanruBestData} options={miniBarHorizontalOptions} /></MiniChart>
-                        <MiniChart label="Chord"><div style={{ width: '100%', height: '100%', overflow: 'hidden' }}><AnimeGenreChordChart data={animeList} /></div></MiniChart>
-                    </>
+                    <div className="preview-premium-grid">
+                        <div className="preview-data-title">🎬 Top Žánry</div>
+                        {data.map((g, i) => (
+                            <div key={i} className="preview-data-item">
+                                <div className="preview-item-info">
+                                    <span className="name">{g.label}</span>
+                                    <span className="meta">{g.count} ks</span>
+                                </div>
+                                <div className="preview-item-bar-bg">
+                                    <div className="preview-item-bar-fill bar-genres" style={getBarFill(g.count, max)} />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 )
+            }
             case 'tags':
                 return (
-                    <MiniChart label="Top 20 Tagů"><Bar data={tagsData} options={miniBarHorizontalOptions} /></MiniChart>
+                    <div className="preview-premium-grid">
+                        <div className="preview-data-title">🏷️ AniList Tagy</div>
+                        <div className="preview-tags-cloud-lite">
+                            {excelData.allTags.slice(0, 15).map((tag, i) => (
+                                <span key={i} className="preview-tag-badge">
+                                    {tag.label} <small>({tag.animeList.length})</small>
+                                </span>
+                            ))}
+                        </div>
+                        <div className="preview-more-indicator" style={{ border: 'none', textAlign: 'left', padding: 0 }}>
+                            z celkem {excelData.allTags.length} tagů…
+                        </div>
+                    </div>
                 )
-            case 'ratings':
+            case 'ratings': {
+                const ratingEntries = [10, 9, 8, 7, 6].map(r => ({ label: r, count: stats.ratingDist[r] || 0 }));
+                const max = Math.max(...ratingEntries.map(e => e.count)) || 1;
                 return (
-                    <>
-                        <MiniChart label="Distribuce"><Pie data={ratingPieData} options={miniPieOptions} /></MiniChart>
-                        <MiniChart label="Průběh"><Chart type="line" data={ratingTimelineData} options={miniChartOptions} /></MiniChart>
-                        <MiniChart label="Vs Ep."><Bar data={epBucketsData} options={miniChartOptions} /></MiniChart>
-                    </>
+                    <div className="preview-premium-grid">
+                        <div className="preview-data-title">⭐ Hodnocení (Top distribuce)</div>
+                        {ratingEntries.map((e, i) => (
+                            <div key={i} className="preview-rating-row">
+                                <span className="preview-rating-label">{e.label}</span>
+                                <div className="preview-rating-bar-container">
+                                    <div className="preview-rating-bar-fill" style={getBarFill(e.count, max)} />
+                                </div>
+                                <span className="preview-rating-count">{e.count} ks</span>
+                            </div>
+                        ))}
+                        <div className="preview-more-indicator" style={{ border: 'none', textAlign: 'left', padding: 4 }}>
+                            Průměr: <strong style={{color: 'var(--accent-amber)'}}>{toCS(stats.avgRating)}</strong>
+                        </div>
+                    </div>
                 )
+            }
             case 'status':
                 return (
-                    <>
-                        <MiniChart label="Statusy"><Pie data={statusPieData} options={miniPieOptions} /></MiniChart>
-                        <MiniChart label="Airing"><div style={{ padding: '6px', fontSize: '0.6rem', color: 'var(--text-muted)', lineHeight: 1.5, overflow: 'hidden' }}>
-                            {excelData.airingAnime.slice(0, 5).map((a, i) => <div key={i} style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{i+1}. {a.name}</div>)}
-                        </div></MiniChart>
-                    </>
+                    <div className="preview-status-grid">
+                        <div className="preview-status-airing">
+                            <div className="preview-status-airing-title">
+                                📺 Airing
+                            </div>
+                            {excelData.airingAnime.slice(0, 5).map((a, i) => (
+                                <div key={i} className="preview-airing-item">
+                                    <span className="rank">{i + 1}.</span>
+                                    <span className="name">{a.name}</span>
+                                    <span className="ep-badge">EP {a.watchedEps}</span>
+                                </div>
+                            ))}
+                            {excelData.airingAnime.length > 5 && <div className="preview-more-indicator">a dalších {excelData.airingAnime.length - 5}…</div>}
+                        </div>
+                        <div className="preview-status-pie">
+                            <Pie data={statusPieData} options={miniPieOptions} />
+                        </div>
+                    </div>
                 )
             case 'lists':
                 return (
-                    <>
-                        <MiniChart label="Poslední"><div style={{ padding: '8px', fontSize: '0.65rem', color: 'var(--text-muted)', lineHeight: 1.4 }}>
-                            {excelData.latestWatched.slice(0, 3).map((a, i) => <div key={i}>{i+1}. {a.name.substring(0, 20)}...</div>)}
-                        </div></MiniChart>
-                        <MiniChart label="Binge"><div style={{ padding: '8px', fontSize: '0.65rem', color: 'var(--text-muted)', lineHeight: 1.4 }}>
-                            {excelData.fastestBinge.slice(0, 3).map((a, i) => <div key={i}>{i+1}. {a.name.substring(0, 20)}...</div>)}
-                        </div></MiniChart>
-                        <MiniChart label="Nejdelší"><div style={{ padding: '8px', fontSize: '0.65rem', color: 'var(--text-muted)', lineHeight: 1.4 }}>
-                            {excelData.longestSeries.slice(0, 3).map((s, i) => <div key={i}>{i+1}. {s.name.substring(0, 20)}...</div>)}
-                        </div></MiniChart>
-                    </>
+                    <div className="preview-lists-grid">
+                        <div className="preview-list-column">
+                            <div className="preview-list-column-title latest">🕐 Poslední</div>
+                            {excelData.latestWatched.slice(0, 5).map((a, i) => (
+                                <div key={i} className="preview-list-item">
+                                    <span className="rank">{i + 1}.</span>
+                                    <span className="name">{a.name}</span>
+                                    {a.rating && <span className="meta">⭐{toCS(a.rating)}</span>}
+                                </div>
+                            ))}
+                            {excelData.latestWatched.length > 5 && <div className="preview-more-indicator">a dalších {excelData.latestWatched.length - 5}…</div>}
+                        </div>
+                        <div className="preview-list-column">
+                            <div className="preview-list-column-title binge">🔥 Binge</div>
+                            {excelData.fastestBinge.slice(0, 5).map((a, i) => (
+                                <div key={i} className="preview-list-item">
+                                    <span className="rank">{i + 1}.</span>
+                                    <span className="name">{a.name}</span>
+                                    <span className="meta">{a.days}d</span>
+                                </div>
+                            ))}
+                            {excelData.fastestBinge.length > 5 && <div className="preview-more-indicator">a dalších {excelData.fastestBinge.length - 5}…</div>}
+                        </div>
+                        <div className="preview-list-column">
+                            <div className="preview-list-column-title longest">⏱️ Nejdelší</div>
+                            {excelData.longestSeries.slice(0, 5).map((s, i) => (
+                                <div key={i} className="preview-list-item">
+                                    <span className="rank">{i + 1}.</span>
+                                    <span className="name">{s.name}</span>
+                                    <span className="meta">{toCS(s.hours)}h</span>
+                                </div>
+                            ))}
+                            {excelData.longestSeries.length > 5 && <div className="preview-more-indicator">a dalších {excelData.longestSeries.length - 5}…</div>}
+                        </div>
+                    </div>
                 )
             default:
                 return null
@@ -1594,6 +1734,8 @@ function Dashboard() {
                         isExpanded={expandedGroups.has(group.id)}
                         onToggle={() => toggleGroup(group.id)}
                         alwaysExpanded={group.alwaysExpanded || false}
+                        fullWidth={group.fullWidth || false}
+                        customPreview={group.customPreview || false}
                         previewContent={renderGroupPreview(group.id)}
                     >
                         {renderGroupContent(group.id)}

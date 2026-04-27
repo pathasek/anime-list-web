@@ -10,10 +10,12 @@ import { useRef, useEffect, useState } from 'react'
  *   isExpanded    — controlled expansion state
  *   onToggle      — callback to toggle expand/collapse
  *   alwaysExpanded — if true, group is always open (no toggle button)
+ *   fullWidth     — if true and expanded, spans full grid width
+ *   customPreview — if true, previewContent is rendered without the default wrapper
  *   previewContent — React node rendered in collapsed state (mini charts)
  *   children      — React nodes rendered in expanded state (full charts)
  */
-function DashboardGroup({ id, title, icon, isExpanded, onToggle, alwaysExpanded = false, previewContent, children }) {
+function DashboardGroup({ id, title, icon, isExpanded, onToggle, alwaysExpanded = false, fullWidth = false, customPreview = false, previewContent, children }) {
     const contentRef = useRef(null)
     const [contentHeight, setContentHeight] = useState(0)
 
@@ -28,7 +30,7 @@ function DashboardGroup({ id, title, icon, isExpanded, onToggle, alwaysExpanded 
 
     return (
         <div 
-            className={`dashboard-group ${showExpanded ? 'expanded' : ''}`}
+            className={`dashboard-group ${showExpanded ? 'expanded' : ''}${fullWidth && showExpanded ? ' expanded-full-width' : ''}`}
             id={`group-${id}`}
         >
             <div 
@@ -70,11 +72,13 @@ function DashboardGroup({ id, title, icon, isExpanded, onToggle, alwaysExpanded 
                 )}
             </div>
 
-            {/* Collapsed preview — mini charts */}
+            {/* Collapsed preview — mini charts or custom layout */}
             {!showExpanded && previewContent && (
-                <div className="dashboard-group-preview">
-                    {previewContent}
-                </div>
+                customPreview ? previewContent : (
+                    <div className="dashboard-group-preview">
+                        {previewContent}
+                    </div>
+                )
             )}
 
             {/* Expanded content — full charts */}
