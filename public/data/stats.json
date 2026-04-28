@@ -1,5 +1,5 @@
 {
-  "last_update": "2026-04-26T19:08:15",
+  "last_update": "2026-04-28T21:27:08",
   "dashboard_table": [
     [
       "Sledovaná data",
@@ -10,31 +10,31 @@
     ],
     [
       "Čas sledování (hh:mm)",
-      "2013:14",
+      "2019:18",
       "114:01",
       "1473:36",
-      "372:24"
+      "378:28"
     ],
     [
       "Čas sledování (dny a hodiny)",
-      "83 dní 21 hodin",
+      "84 dní 3 hodiny",
       "4 dny 18 hodin",
       "61 dní 9 hodin",
-      "15 dní 12 hodin"
+      "15 dní 18 hodin"
     ],
     [
       "Počet zhlédnutých epizod",
-      "4678",
+      "4693",
       "282",
       "3422",
-      "867"
+      "882"
     ],
     [
       "Průměrná délka epizody (min)",
       "25,82",
       "24,26",
       "25,84",
-      "25,77"
+      "25,75"
     ],
     [
       "Počet Rewatchů (v poznámce název Anime)",
@@ -45,50 +45,50 @@
     ],
     [
       "Celkový počet zhlédnutých Anime",
-      "444",
+      "446",
       "20",
       "345",
-      "57"
+      "59"
     ],
     [
       "Počet zhlédnutých seriálů - TV",
-      "251",
+      "252",
       "15",
       "192",
-      "42"
+      "43"
     ]
   ],
   "total_time": {
-    "total": "2013:14",
+    "total": "2019:18",
     "2024": "114:01",
     "2025": "1473:36",
-    "2026": "372:24"
+    "2026": "378:28"
   },
   "total_episodes": {
-    "total": 4678,
+    "total": 4693,
     "2024": 282,
     "2025": 3422,
-    "2026": 867
+    "2026": 882
   },
   "avg_episode_duration": {
-    "total": 25.821721454552165,
+    "total": 25.816829099594084,
     "2024": 24.262200673758862,
     "2025": 25.837792217337324,
-    "2026": 25.771796793540926
+    "2026": 25.74661430839
   },
   "anime_count": {},
   "comments": {
     "total_time": {
-      "total": "Z toho rewatchnuto: 215:18 (hh:mm)\nČas sledování bez rewatchů: 1797:56 (hh:mm)",
+      "total": "Z toho rewatchnuto: 215:18 (hh:mm)\nČas sledování bez rewatchů: 1804:00 (hh:mm)",
       "2024": "Z toho rewatchnuto: 18:59 (hh:mm)\nČas sledování bez rewatchů: 95:03 (hh:mm)",
       "2025": "Z toho rewatchnuto: 67:13 (hh:mm)\nČas sledování bez rewatchů: 1406:24 (hh:mm)",
-      "2026": "Z toho rewatchnuto: 110:53 (hh:mm)\nČas sledování bez rewatchů: 261:31 (hh:mm)"
+      "2026": "Z toho rewatchnuto: 110:53 (hh:mm)\nČas sledování bez rewatchů: 267:35 (hh:mm)"
     },
     "total_episodes": {
-      "total": "Z toho rewatchnuto: 496 epizod\nPočet zhlédnutých originálních epizod: 4182 epizod",
+      "total": "Z toho rewatchnuto: 496 epizod\nPočet zhlédnutých originálních epizod: 4197 epizod",
       "2024": "Z toho rewatchnuto: 49 epizod\nPočet zhlédnutých originálních epizod: 233 epizod",
       "2025": "Z toho rewatchnuto: 149 epizod\nPočet zhlédnutých originálních epizod: 3273 epizod",
-      "2026": "Z toho rewatchnuto: 259 epizod\nPočet zhlédnutých originálních epizod: 608 epizod"
+      "2026": "Z toho rewatchnuto: 259 epizod\nPočet zhlédnutých originálních epizod: 623 epizod"
     },
     "rewatch_count": {
       "total": "1. Rewatch; Chainsaw Man (06. - 07.09.2024)\n1. Rewatch; Chainsaw Man the Movie: Reze Arc (12.12.2025)\n1. Rewatch; Classroom of the Elite, S01 (28.02.2026)\n1. Rewatch; Classroom of the Elite, S02 (01. - 02.03.2026)\n1. Rewatch; Classroom of the Elite, S03 (03. - 04.03.2026)\n1. Rewatch; Death Note (netuším přesně)\n1. Rewatch; Frieren: Beyond Journey's End, S01 (12. - 16.01.2026)\n1. Rewatch; Howl's Moving Castle (netuším přesně)\n1. Rewatch; Jujutsu Kaisen 0 (07.01.2026)\n1. Rewatch; Jujutsu Kaisen, S01 (04. - 05.01.2026)\n1. Rewatch; Jujutsu Kaisen, S02 (06. - 09.01.2026)\n1. Rewatch; KonoSuba: God's Blessing on This Wonderful World! - God's Blessing on This Wonderful Choker! (01.01.2025)\n1. Rewatch; Lord of Mysteries (31.12.2025 - 01.01.2026)\n1. Rewatch; My Dress-Up Darling, S01 (05.07.2025)\n1. Rewatch; No Game, No Life (22. - 23.03.2025)\n1. Rewatch; Overlord: The Sacred Kingdom (25.06.2025)\n1. Rewatch; Re:Zero -Starting Life in Another World- Memory Snow (07.03.2026)\n1. Rewatch; Re:Zero -Starting Life in Another World- The Frozen Bond (07.03.2026)\n1. Rewatch; Re:Zero -Starting Life in Another World-, S01 (22.01.2025)\n1. Rewatch; Re:Zero -Starting Life in Another World-, S02 Part 1 (26.06.2025)\n1. Rewatch; Re:Zero -Starting Life in Another World-, S02 Part 2 (27. - 28.06.2025)\n1. Rewatch; Re:Zero -Starting Life in Another World-, S03 (29. - 30.06.2025)\n1. Rewatch; Spirited Away (netuším přesně)\n1. Rewatch; Steins;Gate (22. - 23.07.2025)\n1. Rewatch; Steins;Gate 0 (24. - 25.07.2025)\n1. Rewatch; Steins;Gate: Open the Missing Link - Divide By Zero (23.07.2025)\n1. Rewatch; That Time I Got Reincarnated as a Slime, S01 (16. - 21.03.2026)\n1. Rewatch; That Time I Got Reincarnated as a Slime, S02 Part 1 (22. - 24.03.2026)\n1. Rewatch; That Time I Got Reincarnated as a Slime, S02 Part 2 (25. - 28.03.2026)\n1. Rewatch; That Time I Got Reincarnated as a Slime, S03 (29.03.2026 - 03.04.2026)\n2. Rewatch; Death Note (05. - 10.08.2024)\n2. Rewatch; Re:Zero -Starting Life in Another World-, S01 (06. - 08.03.2026)\n2. Rewatch; Re:Zero -Starting Life in Another World-, S02 Part 1 (08. - 09.03.2026)\n2. Rewatch; Re:Zero -Starting Life in Another World-, S02 Part 2 (10. - 11.03.2026)\n2. Rewatch; Re:Zero -Starting Life in Another World-, S03 (12. - 14.03.2026)",
