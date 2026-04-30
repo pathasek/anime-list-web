@@ -1,6 +1,42 @@
 // utils/excelStyles.js
 
-// 1. Palettes exactly from Excel XML
+// ── Gradient helpers for Chart.js scriptable options ──
+export const createVerticalGradient = (color1, color2) => (context) => {
+    const chart = context.chart
+    const { ctx, chartArea } = chart
+    if (!chartArea) return color1
+    const g = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top)
+    g.addColorStop(0, color1)
+    g.addColorStop(1, color2)
+    return g
+}
+
+export const createHorizontalGradient = (color1, color2) => (context) => {
+    const chart = context.chart
+    const { ctx, chartArea } = chart
+    if (!chartArea) return color1
+    const g = ctx.createLinearGradient(chartArea.left, 0, chartArea.right, 0)
+    g.addColorStop(0, color1)
+    g.addColorStop(1, color2)
+    return g
+}
+
+// ── Premium tooltip config ──
+export const premiumTooltipConfig = {
+    backgroundColor: 'rgba(12, 12, 20, 0.94)',
+    borderColor: 'rgba(99, 102, 241, 0.25)',
+    borderWidth: 1,
+    titleColor: '#f1f5f9',
+    bodyColor: '#94a3b8',
+    cornerRadius: 8,
+    padding: 12,
+    boxPadding: 4,
+    usePointStyle: true,
+    titleFont: { weight: '600', size: 13 },
+    bodyFont: { size: 12 }
+}
+
+// 1. Palettes — modernized from Excel XML
 export const excelPalettes = {
     // GrafZanru, AnimeGenreChordChart
     kellysMaxContrast: [

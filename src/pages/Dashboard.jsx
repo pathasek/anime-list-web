@@ -15,8 +15,9 @@ import { Chart, Bar, Pie, Doughnut, Line } from 'react-chartjs-2'
 
 import DashboardGroup from '../components/DashboardGroup'
 import { buildChartOptions } from '../utils/chartSettings'
-import { excelPalettes, excelImageBackgroundPlugin, decadeFloatingLabelsPlugin } from '../utils/excelStyles'
+import { excelPalettes, excelImageBackgroundPlugin, decadeFloatingLabelsPlugin, premiumTooltipConfig, createVerticalGradient, createHorizontalGradient } from '../utils/excelStyles'
 import AnimeGenreChordChart from '../components/charts/AnimeGenreChordChart'
+import SpiralWordCloud from '../components/charts/SpiralWordCloud'
 import { calculateExcelChartsData } from '../utils/excelChartCalculations'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 
@@ -38,6 +39,11 @@ ChartJS.register(
 // Chart.js default options for dark theme
 ChartJS.defaults.color = '#94a3b8'
 ChartJS.defaults.borderColor = '#2a2a3a'
+
+// Premium defaults — rounded bars, better tooltips
+ChartJS.defaults.elements.bar.borderRadius = 6
+ChartJS.defaults.elements.bar.borderSkipped = false
+Object.assign(ChartJS.defaults.plugins.tooltip, premiumTooltipConfig)
 
 // ==========================================
 // MINI CHART OPTIONS (stripped down for previews)
@@ -87,7 +93,7 @@ const miniBarHorizontalOptions = {
 const GROUPS_CONFIG = [
     { id: 'lists', title: 'Poslední & Binge & Nejdelší', icon: '🏆', fullWidth: true, customPreview: true },
     { id: 'status', title: 'Status', icon: '📋', customPreview: true },
-    { id: 'tags', title: 'AniList Tagy', icon: '🏷️', customPreview: true },
+    { id: 'tags', title: 'AniList Tagy', icon: '🏷️', fullWidth: true, customPreview: true },
     { id: 'ratings', title: 'Hodnocení', icon: '⭐', customPreview: true },
     { id: 'types', title: 'Typy', icon: '📊', customPreview: true },
     { id: 'studios', title: 'Studia', icon: '🏢', customPreview: true },
@@ -106,7 +112,12 @@ function Dashboard() {
     const [loading, setLoading] = useState(true)
     const [timeFilter, setTimeFilter] = useState('all')
     const [customRange, setCustomRange] = useState({ start: '', end: '' })
-    const [selectedTag, setSelectedTag] = useState(null)
+
+    // Tags multi-select state
+    const [selectedTags, setSelectedTags] = useState(new Set())
+    const [excludedTags, setExcludedTags] = useState(new Set())
+    const [tagSearchQuery, setTagSearchQuery] = useState('')
+    const [tagFilterMode, setTagFilterMode] = useState('or')
 
     // Group expansion state — dub starts expanded
     const [expandedGroups, setExpandedGroups] = useState(new Set(['dub']))
@@ -309,7 +320,7 @@ function Dashboard() {
         })
 
         // Rating distribution
-        const ratingDist = { '10': 0, '9': 0, '8': 0, '7': 0, '6': 0, '5-': 0 }
+        const ratingDist = { '10': 0, '9': 0, '8': 0, '7': 0, '6': 0, '5': 0, '4-': 0 }
         list.forEach(a => {
             const r = parseFloat(a.rating)
             if (!isNaN(r)) {
@@ -318,7 +329,8 @@ function Dashboard() {
                 else if (r >= 7.5) ratingDist['8']++
                 else if (r >= 6.5) ratingDist['7']++
                 else if (r >= 5.5) ratingDist['6']++
-                else ratingDist['5-']++
+                else if (r >= 4.5) ratingDist['5']++
+                else ratingDist['4-']++
             }
         })
 
@@ -427,8 +439,8 @@ function Dashboard() {
             datasets: [{
                 data: excelData.typesPie.map(t => t.count),
                 backgroundColor: excelPalettes.typesPie,
-                borderWidth: 1,
-                borderColor: '#000'
+                borderWidth: 2,
+                borderColor: 'rgba(10, 10, 15, 0.7)'
             }]
         };
         
@@ -496,8 +508,8 @@ function Dashboard() {
             datasets: [{
                 data: Object.values(excelData.studiosPie),
                 backgroundColor: Object.keys(excelData.studiosPie).map((_,i) => excelPalettes.kellysMaxContrast[i % 15]), 
-                borderColor: '#000',
-                borderWidth: 1
+                borderColor: 'rgba(10, 10, 15, 0.7)',
+                borderWidth: 2
             }]
         };
         
@@ -561,8 +573,8 @@ function Dashboard() {
             datasets: [{
                 data: excelData.topGenres.slice(0, 15).map(g => g.count),
                 backgroundColor: excelPalettes.kellysMaxContrast,
-                borderColor: '#000',
-                borderWidth: 1
+                borderColor: 'rgba(10, 10, 15, 0.7)',
+                borderWidth: 2
             }]
         };
         
@@ -581,8 +593,8 @@ function Dashboard() {
             datasets: [{
                 data: [stats.ratingDist['10'], stats.ratingDist['9'], stats.ratingDist['8'], stats.ratingDist['7'], stats.ratingDist['6'], stats.ratingDist['5-']],
                 backgroundColor: excelPalettes.ratingPie,
-                borderColor: '#000',
-                borderWidth: 1
+                borderColor: 'rgba(10, 10, 15, 0.7)',
+                borderWidth: 2
             }]
         };
 
@@ -618,7 +630,7 @@ function Dashboard() {
             datasets: [{
                 label: 'Průměrné hodnocení',
                 data: excelData.ratingByEpisodes.map(b => b.avg),
-                backgroundColor: '#A5A5A5'
+                backgroundColor: createVerticalGradient('rgba(99, 102, 241, 0.4)', 'rgba(139, 92, 246, 0.8)')
             }]
         };
 
@@ -664,8 +676,8 @@ function Dashboard() {
             datasets: [{
                 data: statusPieLabels.map(l => stats.statuses[l]),
                 backgroundColor: statusPieLabels.map((_, i) => excelPalettes.statusPie[i % excelPalettes.statusPie.length]),
-                borderColor: '#000',
-                borderWidth: 1
+                borderColor: 'rgba(10, 10, 15, 0.7)',
+                borderWidth: 2
             }]
         };
 
@@ -674,7 +686,7 @@ function Dashboard() {
             labels: excelData.dubCount.map(d => d.label),
             datasets: [{
                 data: excelData.dubCount.map(d => d.count),
-                backgroundColor: '#5B9BD5'
+                backgroundColor: createHorizontalGradient('rgba(91, 155, 213, 0.5)', 'rgba(91, 155, 213, 0.9)')
             }]
         };
 
@@ -682,7 +694,7 @@ function Dashboard() {
             labels: excelData.dubAvgRating.map(d => d.label),
             datasets: [{
                 data: excelData.dubAvgRating.map(d => d.avg),
-                backgroundColor: '#ED7D31'
+                backgroundColor: createHorizontalGradient('rgba(237, 125, 49, 0.5)', 'rgba(237, 125, 49, 0.9)')
             }]
         };
 
@@ -690,7 +702,7 @@ function Dashboard() {
             labels: excelData.dubTotalTime.map(d => d.label),
             datasets: [{
                 data: excelData.dubTotalTime.map(d => d.hours),
-                backgroundColor: '#70AD47'
+                backgroundColor: createHorizontalGradient('rgba(112, 173, 71, 0.5)', 'rgba(112, 173, 71, 0.9)')
             }]
         };
 
@@ -699,7 +711,7 @@ function Dashboard() {
             labels: excelData.anilistTags.map(t => t.label),
             datasets: [{
                 data: excelData.anilistTags.map(t => t.score),
-                backgroundColor: '#980935'
+                backgroundColor: createHorizontalGradient('rgba(152, 9, 53, 0.4)', 'rgba(152, 9, 53, 0.9)')
             }]
         };
 
@@ -778,15 +790,16 @@ function Dashboard() {
         return opt;
     };
 
-    // Pie chart options (labels inside slices like Excel)
+    // Pie chart options (labels inside slices — premium dark bg)
     const getPieOptions = () => ({
         responsive: true,
         maintainAspectRatio: false,
         layout: { padding: 40 },
         plugins: {
             legend: { display: false },
-            excelImageBackground: { color: '#B3B3B3' },
+            excelImageBackground: false,
             tooltip: {
+                ...premiumTooltipConfig,
                 callbacks: {
                     label: (context) => {
                         const label = context.label || '';
@@ -798,7 +811,7 @@ function Dashboard() {
                 }
             },
             datalabels: {
-                color: '#000',
+                color: '#fff',
                 display: (context) => {
                     const value = context.dataset.data[context.dataIndex];
                     const total = context.dataset.data.reduce((a, b) => a + b, 0);
@@ -809,10 +822,12 @@ function Dashboard() {
                     if (value === 0) return null;
                     return `${label}:\n${value}`;
                 },
-                font: { weight: 'bold', size: 12, family: 'sans-serif' },
+                font: { weight: 'bold', size: 11, family: 'Inter, sans-serif' },
                 textAlign: 'center',
                 anchor: 'center',
-                align: 'center'
+                align: 'center',
+                textStrokeColor: 'rgba(0, 0, 0, 0.6)',
+                textStrokeWidth: 2
             }
         }
     });
@@ -986,40 +1001,101 @@ function Dashboard() {
             // ─── ANILIST TAGS ───
             case 'tags': {
                 const allTags = excelData.allTags || [];
-                const currentTag = allTags.find(t => t.label === selectedTag);
+                const filteredTagsList = tagSearchQuery
+                    ? allTags.filter(t => t.label.toLowerCase().includes(tagSearchQuery.toLowerCase()))
+                    : allTags;
+
+                // Multi-select anime computation
+                const tagAnimeMap = {};
+                allTags.forEach(tag => { tagAnimeMap[tag.label] = tag.animeList; });
+
+                let combinedAnime = [];
+                if (selectedTags.size > 0) {
+                    if (tagFilterMode === 'or') {
+                        const seen = new Map();
+                        selectedTags.forEach(tn => {
+                            (tagAnimeMap[tn] || []).forEach(a => {
+                                if (!seen.has(a.name)) seen.set(a.name, { ...a, tags: [tn] });
+                                else seen.get(a.name).tags.push(tn);
+                            });
+                        });
+                        combinedAnime = [...seen.values()].sort((a, b) => b.rank - a.rank);
+                    } else {
+                        const tagSets = [...selectedTags].map(tn => new Set((tagAnimeMap[tn] || []).map(a => a.name)));
+                        if (tagSets.length > 0) {
+                            const first = tagAnimeMap[[...selectedTags][0]] || [];
+                            combinedAnime = first.filter(a => tagSets.every(s => s.has(a.name))).sort((a, b) => b.rank - a.rank);
+                        }
+                    }
+                    if (excludedTags.size > 0) {
+                        const excl = new Set();
+                        excludedTags.forEach(tn => { (tagAnimeMap[tn] || []).forEach(a => excl.add(a.name)); });
+                        combinedAnime = combinedAnime.filter(a => !excl.has(a.name));
+                    }
+                }
+
+                const tagScores = excelData.anilistTags.map(t => t.score);
+                const tagMinX = tagScores.length > 0 ? Math.floor((Math.min(...tagScores) - 0.25) * 4) / 4 : 0;
+
+                const handleTagClick = (label, e) => {
+                    if (e && (e.ctrlKey || e.metaKey)) {
+                        setExcludedTags(prev => { const n = new Set(prev); n.has(label) ? n.delete(label) : n.add(label); return n; });
+                        setSelectedTags(prev => { const n = new Set(prev); n.delete(label); return n; });
+                    } else {
+                        setSelectedTags(prev => { const n = new Set(prev); n.has(label) ? n.delete(label) : n.add(label); return n; });
+                        setExcludedTags(prev => { const n = new Set(prev); n.delete(label); return n; });
+                    }
+                };
+
+                const handleWcClick = (label) => {
+                    setSelectedTags(prev => { const n = new Set(prev); n.has(label) ? n.delete(label) : n.add(label); return n; });
+                    setExcludedTags(prev => { const n = new Set(prev); n.delete(label); return n; });
+                };
+
                 return (
                     <>
                         <div className="tags-panels">
                             {/* Left: Tag Selector */}
                             <div className="tag-selector-panel">
-                                <div style={{ padding: '8px 12px', fontWeight: 600, fontSize: '0.85rem', color: 'var(--text-primary)', borderBottom: '2px solid var(--border-color)', position: 'sticky', top: 0, background: 'var(--bg-tertiary)', zIndex: 1 }}>
-                                    🏷️ Tagy ({allTags.length})
+                                <div className="tag-search-wrapper" style={{ position: 'relative' }}>
+                                    <span className="tag-search-icon">🔍</span>
+                                    <input type="text" className="tag-search-input" placeholder="Hledat tagy…" value={tagSearchQuery} onChange={e => setTagSearchQuery(e.target.value)} />
                                 </div>
-                                {allTags.map((tag, i) => (
-                                    <div
-                                        key={i}
-                                        className={`tag-selector-item${selectedTag === tag.label ? ' selected' : ''}`}
-                                        onClick={() => setSelectedTag(selectedTag === tag.label ? null : tag.label)}
-                                        title={tag.description}
-                                    >
-                                        <span>{tag.label}</span>
-                                        <span style={{ fontSize: '0.7rem', opacity: 0.5 }}>{tag.animeList.length}</span>
+                                {(selectedTags.size > 0 || excludedTags.size > 0) && (
+                                    <div className="tag-filter-controls">
+                                        <button className={`tag-filter-btn${tagFilterMode === 'or' ? ' active' : ''}`} onClick={() => setTagFilterMode('or')}>OR</button>
+                                        <button className={`tag-filter-btn${tagFilterMode === 'and' ? ' active' : ''}`} onClick={() => setTagFilterMode('and')}>AND</button>
+                                        <button className="tag-filter-reset" onClick={() => { setSelectedTags(new Set()); setExcludedTags(new Set()); }}>✕ Reset</button>
                                     </div>
-                                ))}
+                                )}
+                                <div style={{ padding: '6px 10px', fontWeight: 600, fontSize: '0.72rem', color: 'var(--text-muted)', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between' }}>
+                                    <span>🏷️ Tagy ({filteredTagsList.length})</span>
+                                    {selectedTags.size > 0 && <span style={{ color: 'var(--accent-primary)', fontSize: '0.62rem' }}>{selectedTags.size} vybráno</span>}
+                                </div>
+                                <div className="tag-selector-scroll">
+                                    {filteredTagsList.map((tag, i) => (
+                                        <div key={i} className={`tag-selector-item${selectedTags.has(tag.label) ? ' selected' : ''}${excludedTags.has(tag.label) ? ' excluded' : ''}`}
+                                            onClick={(e) => handleTagClick(tag.label, e)} title={`${tag.description || tag.label}\nKlik = vybrat | Ctrl+klik = vyloučit`}>
+                                            <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tag.label}</span>
+                                            <span className="tag-count-badge">{tag.animeList.length}</span>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
 
-                            {/* Center: Anime with selected tag */}
+                            {/* Center: Anime list */}
                             <div className="tag-anime-panel">
-                                {currentTag ? (
+                                {selectedTags.size > 0 ? (
                                     <>
-                                        <div style={{ fontWeight: 600, fontSize: '0.95rem', color: 'var(--text-primary)', marginBottom: '8px' }}>
-                                            {currentTag.label}
-                                            {currentTag.description && (
-                                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 400, marginTop: '4px', lineHeight: 1.4 }}>{currentTag.description}</div>
-                                            )}
+                                        <div className="tag-anime-header">
+                                            <h4>{[...selectedTags].join(tagFilterMode === 'and' ? ' ∩ ' : ' ∪ ')}</h4>
+                                            <span className="tag-anime-count">{combinedAnime.length} anime</span>
                                         </div>
+                                        {excludedTags.size > 0 && (
+                                            <div style={{ fontSize: '0.7rem', color: 'var(--accent-red)', marginBottom: '8px', opacity: 0.8 }}>✕ Vyloučeno: {[...excludedTags].join(', ')}</div>
+                                        )}
                                         <ul className="text-list-items">
-                                            {currentTag.animeList.map((a, i) => (
+                                            {combinedAnime.map((a, i) => (
                                                 <li key={i}>
                                                     <span className="text-list-rank">{i + 1}.</span>
                                                     <span className="text-list-name">{a.name}</span>
@@ -1031,47 +1107,29 @@ function Dashboard() {
                                 ) : (
                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--text-muted)', fontSize: '0.85rem', flexDirection: 'column', gap: '8px' }}>
                                         <span style={{ fontSize: '2rem' }}>🏷️</span>
-                                        ← Vyber tag ze seznamu
+                                        <span>← Klikni na tagy v seznamu</span>
+                                        <span style={{ fontSize: '0.7rem', opacity: 0.6 }}>Ctrl+klik = vyloučit</span>
                                     </div>
                                 )}
                             </div>
 
                             {/* Right: Bar chart */}
-                            <div className="full-chart-wrapper dark-gradient" style={{ maxWidth: 'none', aspectRatio: 'unset', height: '450px' }}>
+                            <div className="full-chart-wrapper dark-gradient" style={{ maxWidth: 'none', aspectRatio: 'unset', height: '500px' }}>
                                 <div className="chart-title">Top 20 tagů (Vážené hodnocení)</div>
                                 <div className="chart-body">
                                     <Bar data={tagsData} options={getOptions(horizontalBarOptionsExcel, 'GrafVazeneTagy', null, {
-                                        scales: { x: { min: 0, max: 10, title: { display: true, text: 'Vážený průměr hodnocení' } } }
+                                        scales: { x: { min: tagMinX, max: 10, title: { display: true, text: 'Vážený průměr hodnocení', color: 'var(--text-muted)' } } }
                                     })} />
                                 </div>
                             </div>
                         </div>
 
-                        {/* Bottom: Enhanced Word Cloud */}
+                        {/* Bottom: Spiral Word Cloud */}
                         {excelData.tagCloud && excelData.tagCloud.length > 0 && (
-                            <div className="full-chart-wrapper wide">
+                            <div className="full-chart-wrapper wide" style={{ maxWidth: 'none', aspectRatio: 'unset' }}>
                                 <div className="chart-title">☁️ Word Cloud — AniList Tagy (relevance)</div>
-                                <div className="chart-body tag-word-cloud">
-                                    {excelData.tagCloud.slice(0, 120).map((tag, i) => {
-                                        const maxScore = excelData.tagCloud[0].score;
-                                        const minFont = 0.5, maxFont = 3.5;
-                                        const fontSize = minFont + (tag.score / maxScore) * (maxFont - minFont);
-                                        const hue = 200 + (tag.score / maxScore) * 160;
-                                        const saturation = 60 + (tag.score / maxScore) * 30;
-                                        const lightness = 45 + (1 - tag.score / maxScore) * 30;
-                                        const rotation = ((i * 7 + 3) % 31) - 15;
-                                        const desc = excelData.tagDescriptions?.[tag.label] || '';
-                                        return (
-                                            <span key={i} className="wc-tag" data-tooltip={desc || undefined} style={{
-                                                fontSize: `${fontSize}rem`,
-                                                color: `hsl(${hue}, ${saturation}%, ${lightness}%)`,
-                                                opacity: 0.7 + (tag.score / maxScore) * 0.3,
-                                                transform: `rotate(${rotation}deg)`
-                                            }}>
-                                                {tag.label}
-                                            </span>
-                                        );
-                                    })}
+                                <div className="chart-body" style={{ flex: 'none' }}>
+                                    <SpiralWordCloud tags={excelData.tagCloud} tagDescriptions={excelData.tagDescriptions} onTagClick={handleWcClick} selectedTags={selectedTags} excludedTags={excludedTags} />
                                 </div>
                             </div>
                         )}
@@ -1227,11 +1285,11 @@ function Dashboard() {
 
         switch (groupId) {
             case 'types': {
-                const data = Object.entries(stats.types).sort((a,b) => b[1] - a[1]).slice(0, 4);
+                const all = Object.entries(stats.types).sort((a,b) => b[1] - a[1]);
+                const data = all.slice(0, 5);
                 const max = data[0]?.[1] || 1;
                 return (
                     <div className="preview-premium-grid">
-                        <div className="preview-data-title">📊 Typy</div>
                         {data.map(([type, count], i) => (
                             <div key={i} className="preview-data-item">
                                 <div className="preview-item-info">
@@ -1243,15 +1301,20 @@ function Dashboard() {
                                 </div>
                             </div>
                         ))}
+                        {all.length > 5 && (
+                            <div className="preview-more-indicator" style={{ border: 'none', textAlign: 'left', padding: 0 }}>
+                                a dalších {all.length - 5}…
+                            </div>
+                        )}
                     </div>
                 )
             }
             case 'studios': {
-                const data = Object.entries(excelData.studiosPie).sort((a,b) => b[1] - a[1]).slice(0, 4);
+                const allStudios = Object.entries(excelData.studiosPie).sort((a,b) => b[1] - a[1]);
+                const data = allStudios.slice(0, 5);
                 const max = data[0]?.[1] || 1;
                 return (
                     <div className="preview-premium-grid">
-                        <div className="preview-data-title">🏢 Top Studia</div>
                         {data.map(([name, count], i) => (
                             <div key={i} className="preview-data-item">
                                 <div className="preview-item-info">
@@ -1263,6 +1326,11 @@ function Dashboard() {
                                 </div>
                             </div>
                         ))}
+                        {allStudios.length > 5 && (
+                            <div className="preview-more-indicator" style={{ border: 'none', textAlign: 'left', padding: 0 }}>
+                                a dalších {allStudios.length - 5}…
+                            </div>
+                        )}
                     </div>
                 )
             }
@@ -1270,7 +1338,6 @@ function Dashboard() {
                 return (
                     <div className="preview-premium-grid row">
                         <div className="preview-data-column">
-                            <div className="preview-data-title">🌸 Sezóny</div>
                             {Object.entries(excelData.seasons).sort((a,b) => b[1] - a[1]).map(([season, count], i) => (
                                 <div key={i} className="preview-list-item">
                                     <span className="rank" style={{color: `var(--season-${season.toLowerCase()})`}}>•</span>
@@ -1280,8 +1347,7 @@ function Dashboard() {
                             ))}
                         </div>
                         <div className="preview-data-column">
-                            <div className="preview-data-title">⏳ Věk</div>
-                            {Object.entries(excelData.ageGroups).slice(0, 4).map(([group, d], i) => (
+                            {Object.entries(excelData.ageGroups).slice(0, 5).map(([group, d], i) => (
                                 <div key={i} className="preview-list-item">
                                     <span className="rank">{i+1}.</span>
                                     <span className="name">{group}</span>
@@ -1292,11 +1358,10 @@ function Dashboard() {
                     </div>
                 )
             case 'themes': {
-                const data = excelData.topThemes.slice(0, 4);
+                const data = excelData.topThemes.slice(0, 5);
                 const max = data[0]?.count || 1;
                 return (
                     <div className="preview-premium-grid">
-                        <div className="preview-data-title">🎭 Top Témata</div>
                         {data.map((t, i) => (
                             <div key={i} className="preview-data-item">
                                 <div className="preview-item-info">
@@ -1308,15 +1373,19 @@ function Dashboard() {
                                 </div>
                             </div>
                         ))}
+                        {excelData.topThemes.length > 5 && (
+                            <div className="preview-more-indicator" style={{ border: 'none', textAlign: 'left', padding: 0 }}>
+                                a dalších {excelData.topThemes.length - 5}…
+                            </div>
+                        )}
                     </div>
                 )
             }
             case 'genres': {
-                const data = excelData.topGenres.slice(0, 4);
+                const data = excelData.topGenres.slice(0, 5);
                 const max = data[0]?.count || 1;
                 return (
                     <div className="preview-premium-grid">
-                        <div className="preview-data-title">🎬 Top Žánry</div>
                         {data.map((g, i) => (
                             <div key={i} className="preview-data-item">
                                 <div className="preview-item-info">
@@ -1328,15 +1397,33 @@ function Dashboard() {
                                 </div>
                             </div>
                         ))}
+                        {excelData.topGenres.length > 5 && (
+                            <div className="preview-more-indicator" style={{ border: 'none', textAlign: 'left', padding: 0 }}>
+                                a dalších {excelData.topGenres.length - 5}…
+                            </div>
+                        )}
                     </div>
                 )
             }
-            case 'tags':
+            case 'tags': {
+                const sortedTags = [...excelData.allTags].sort((a, b) => b.animeList.length - a.animeList.length);
+                const topTags = sortedTags.slice(0, 5);
+                const tagMax = topTags[0]?.animeList.length || 1;
                 return (
                     <div className="preview-premium-grid">
-                        <div className="preview-data-title">🏷️ AniList Tagy</div>
-                        <div className="preview-tags-cloud-lite">
-                            {excelData.allTags.slice(0, 15).map((tag, i) => (
+                        {topTags.map((tag, i) => (
+                            <div key={i} className="preview-data-item">
+                                <div className="preview-item-info">
+                                    <span className="name">{tag.label}</span>
+                                    <span className="meta">{tag.animeList.length} anime</span>
+                                </div>
+                                <div className="preview-item-bar-bg">
+                                    <div className="preview-item-bar-fill bar-types" style={getBarFill(tag.animeList.length, tagMax)} />
+                                </div>
+                            </div>
+                        ))}
+                        <div className="preview-tags-cloud-lite" style={{ marginTop: '2px' }}>
+                            {sortedTags.slice(5, 22).map((tag, i) => (
                                 <span key={i} className="preview-tag-badge">
                                     {tag.label} <small>({tag.animeList.length})</small>
                                 </span>
@@ -1347,28 +1434,151 @@ function Dashboard() {
                         </div>
                     </div>
                 )
+            }
             case 'ratings': {
-                const ratingEntries = [10, 9, 8, 7, 6].map(r => ({ label: r, count: stats.ratingDist[r] || 0 }));
+                const ratingEntries = [10, 9, 8, 7, 6, 5].map(r => ({ label: r, count: stats.ratingDist[r] || 0 }));
                 const max = Math.max(...ratingEntries.map(e => e.count)) || 1;
+                
+                // Calculate Standard Deviation
+                const avg = stats.avgRating || 0;
+                let sumOfSquares = 0;
+                let totalRatings = 0;
+                if (stats.ratingDist) {
+                    for (const [rStr, count] of Object.entries(stats.ratingDist)) {
+                        const r = parseFloat(rStr);
+                        if (!isNaN(r)) {
+                            sumOfSquares += count * Math.pow(r - avg, 2);
+                            totalRatings += count;
+                        }
+                    }
+                }
+                const variance = totalRatings > 0 ? sumOfSquares / totalRatings : 0;
+                const stdDev = Math.sqrt(variance).toFixed(2);
+
+                const timelineData = excelData.ratingTimeline || [];
+                
+                // Dynamicky vypočítat zoom osy Y podle všech dat (šedých i průměru) aby nedošlo k ořezu
+                const minVal = timelineData.length ? Math.min(...timelineData.map(d => Math.min(d.rating, d.movingAvg))) : 1;
+                const maxVal = timelineData.length ? Math.max(...timelineData.map(d => Math.max(d.rating, d.movingAvg))) : 10;
+                
+                // Přidáme malý padding (0.2), aby se graf úplně nedotýkal hran, ale stále vyplňoval maximum místa
+                const yMin = Math.max(1, minVal - 0.2);
+                const yMax = Math.min(10, maxVal + 0.2);
+
+                const timelineChartData = {
+                    labels: timelineData.map(d => d.date || d.x),
+                    datasets: [
+                        {
+                            label: 'Hodnocení',
+                            data: timelineData.map(d => d.rating),
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            backgroundColor: 'transparent',
+                            borderWidth: 1,
+                            pointRadius: 0,
+                            pointHoverRadius: 0,
+                            fill: false,
+                            tension: 0,
+                            order: 2
+                        },
+                        {
+                            label: 'Klouzavý průměr',
+                            data: timelineData.map(d => d.movingAvg),
+                            borderColor: 'rgba(167, 139, 250, 0.8)',
+                            backgroundColor: 'transparent',
+                            borderWidth: 2.5,
+                            pointRadius: 0,
+                            pointHoverRadius: 4,
+                            pointBackgroundColor: '#a78bfa',
+                            fill: false,
+                            tension: 0.4,
+                            order: 1
+                        }
+                    ]
+                };
+                
+                const timelineChartOptions = {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: { top: 10, bottom: 20, left: 5, right: 5 }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            ...premiumTooltipConfig,
+                            callbacks: {
+                                title: (ctx) => {
+                                    const item = timelineData[ctx[0].dataIndex];
+                                    return item ? `${item.title} (${item.date})` : '';
+                                },
+                                label: (ctx) => `${ctx.dataset.label}: ${ctx.raw}`
+                            }
+                        },
+                        datalabels: { display: false }
+                    },
+                    scales: {
+                        x: { 
+                            display: true, 
+                            grid: { display: false, drawBorder: false, tickLength: 0 },
+                            ticks: { 
+                                autoSkip: false,
+                                color: 'rgba(255, 255, 255, 0.4)', 
+                                font: { size: 9 }, 
+                                padding: 0,
+                                maxRotation: 0,
+                                callback: function(val, index) {
+                                    const total = timelineData.length;
+                                    if (total <= 5) return this.getLabelForValue(val);
+                                    if (index === 0) return this.getLabelForValue(val);
+                                    if (index === total - 1) return this.getLabelForValue(val);
+                                    const step = Math.floor(total / 4);
+                                    if (index % step === 0 && index !== 0 && index < total - step/2) {
+                                        return this.getLabelForValue(val);
+                                    }
+                                    return null;
+                                }
+                            }
+                        },
+                        y: { 
+                            display: false,
+                            min: yMin,
+                            max: yMax
+                        }
+                    },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    }
+                };
+
                 return (
-                    <div className="preview-premium-grid">
-                        <div className="preview-data-title">⭐ Hodnocení (Top distribuce)</div>
+                    <div className="preview-premium-grid" style={{ height: '100%' }}>
                         {ratingEntries.map((e, i) => (
                             <div key={i} className="preview-rating-row">
                                 <span className="preview-rating-label">{e.label}</span>
                                 <div className="preview-rating-bar-container">
                                     <div className="preview-rating-bar-fill" style={getBarFill(e.count, max)} />
                                 </div>
-                                <span className="preview-rating-count">{e.count} ks</span>
+                                <span className="preview-rating-count">{e.count} anime</span>
                             </div>
                         ))}
-                        <div className="preview-more-indicator" style={{ border: 'none', textAlign: 'left', padding: 4 }}>
-                            Průměr: <strong style={{color: 'var(--accent-amber)'}}>{toCS(stats.avgRating)}</strong>
+                        <div className="preview-more-indicator" style={{ border: 'none', textAlign: 'left', padding: '0 4px', display: 'flex', justifyContent: 'space-between', marginTop: 4, zIndex: 2, position: 'relative' }}>
+                            <span>Průměr: <strong style={{color: 'var(--accent-amber)'}}>{toCS(stats.avgRating)}</strong></span>
+                            <span>Odchylka (σ): <strong style={{color: 'var(--text-muted)'}}>{toCS(stdDev)}</strong></span>
+                        </div>
+                        <div style={{ flex: 1, minHeight: '100px', position: 'relative', marginTop: '6px' }}>
+                            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
+                                <Line data={timelineChartData} options={timelineChartOptions} />
+                            </div>
                         </div>
                     </div>
                 )
             }
-            case 'status':
+            case 'status': {
+                // Status-relevant stats
+                const statusEntries = Object.entries(stats.statuses).sort((a,b) => b[1] - a[1]);
+                const topStatuses = statusEntries.slice(0, 4);
+                const statusMax = topStatuses[0]?.[1] || 1;
                 return (
                     <div className="preview-status-grid">
                         <div className="preview-status-airing">
@@ -1384,11 +1594,22 @@ function Dashboard() {
                             ))}
                             {excelData.airingAnime.length > 5 && <div className="preview-more-indicator">a dalších {excelData.airingAnime.length - 5}…</div>}
                         </div>
-                        <div className="preview-status-pie">
-                            <Pie data={statusPieData} options={miniPieOptions} />
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)' }}>
+                            <div className="preview-status-pie">
+                                <Pie data={statusPieData} options={miniPieOptions} />
+                            </div>
+                            <div className="preview-stats-summary">
+                                {topStatuses.map(([status, count], i) => (
+                                    <div key={i} className="preview-stat-item">
+                                        <span className="preview-stat-value">{count}</span>
+                                        <span className="preview-stat-label">{status.length > 12 ? status.slice(0, 11) + '…' : status}</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 )
+            }
             case 'lists':
                 return (
                     <div className="preview-lists-grid">

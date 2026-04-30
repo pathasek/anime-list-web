@@ -1,3 +1,5 @@
+import { premiumTooltipConfig } from './excelStyles'
+
 // Chart settings utility functions and default values
 
 // Available color palettes
@@ -101,6 +103,10 @@ export const buildChartOptions = (baseOptions, settings) => {
         plugins: {
             ...baseOptions.plugins,
             legend: legendConfig,
+            tooltip: {
+                ...premiumTooltipConfig,
+                ...baseOptions.plugins?.tooltip
+            },
             datalabels: settings.showValues ? {
                 display: true,
                 color: '#fff',

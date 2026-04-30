@@ -210,23 +210,49 @@ export function calculateExcelChartsData(animeList, historyLog) {
         avg: genres[g].r.reduce((a,b)=>a+b,0)/genres[g].r.length || 0
     })).sort((a,b)=>b.avg - a.avg).slice(0, 10);
 
-
     // 14. GrafPrubehHodnoceni (Chronological rating timeline)
-    // We sort anime by their finish date (default order usually is chronological or we can sort by date_finished if available, or just use the log)
-    // We will just use the index if it's already chronological, but let's look at `log` or just reverse `animeList` (assuming newest is at top).
-    // The user's list usually prepends. Let's sort by release_year or id to be safe, but a timeline is best with an index.
-    const validRatingsList = [...animeList].filter(a => !isNaN(parseFloat(a.rating))).reverse();
+    // Helper for parsing Czech date format DD.MM.YYYY and others
+    const parseDateToTime = (dStr) => {
+        if (!dStr) return 0;
+        if (typeof dStr === 'number') return dStr;
+        const s = String(dStr).trim();
+        const parts = s.split('.');
+        if (parts.length === 3) {
+            const d = parseInt(parts[0], 10);
+            const m = parseInt(parts[1], 10) - 1;
+            const y = parseInt(parts[2], 10);
+            return new Date(y, m, d).getTime();
+        }
+        const dObj = new Date(s);
+        return isNaN(dObj.getTime()) ? 0 : dObj.getTime();
+    };
+
+    // Strict chronological sort for timeline
+    const validRatingsList = [...animeList].filter(a => !isNaN(parseFloat(a.rating))).sort((a, b) => {
+        const dateA = parseDateToTime(a.end_date || a.start_date || a.release_date);
+        const dateB = parseDateToTime(b.end_date || b.start_date || b.release_date);
+        return dateA - dateB;
+    });
     
     const ratingTimeline = validRatingsList.map((a, i) => {
+        let dStr = a.end_date || a.start_date || a.release_date;
+        let dFormatted = '';
+        let dTime = parseDateToTime(dStr);
+        if (dTime > 0) {
+            const d = new Date(dTime);
+            dFormatted = `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`;
+        }
         return {
             x: i + 1,
-            title: a.name_cz || a.name_en,
-            rating: parseFloat(a.rating)
+            title: a.name_cz || a.name_en || a.name,
+            rating: parseFloat(a.rating),
+            date: dFormatted,
+            timestamp: dTime
         };
     });
     
-    // Calculate moving average for timeline
-    const movingAvgPeriod = 10;
+    // Klouzavý průměr (30 anime = "měsíční" stabilní křivka)
+    const movingAvgPeriod = 30;
     const timelineWithAvg = ratingTimeline.map((item, i, arr) => {
         let sum = 0;
         let count = 0;
