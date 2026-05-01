@@ -3789,5 +3789,39 @@
     "has_frisson": false,
     "rating_avg": 8.6,
     "rating_final": 9
+  },
+  {
+    "index": "224.",
+    "anime_name": "Jujutsu Kaisen: The Culling Game Part 1",
+    "type": "OP",
+    "song": "AIZO",
+    "author": "King Gnu",
+    "language": "JAP (77%) ENG (23%)",
+    "rating_lyrics": 8.5,
+    "rating_emotion": 8.25,
+    "rating_melody": 9.75,
+    "rating_video": 9.75,
+    "rating_voice": 9.25,
+    "sing_along": 6,
+    "has_frisson": true,
+    "rating_avg": 9.1,
+    "rating_final": 9
+  },
+  {
+    "index": "225.",
+    "anime_name": "Jujutsu Kaisen: The Culling Game Part 1",
+    "type": "ED",
+    "song": "Yoake no Uta",
+    "author": "jo0ji",
+    "language": "JAP",
+    "rating_lyrics": 9.75,
+    "rating_emotion": 8.5,
+    "rating_melody": 9.5,
+    "rating_video": 9,
+    "rating_voice": 10,
+    "sing_along": 1,
+    "has_frisson": true,
+    "rating_avg": 9.35,
+    "rating_final": 9
   }
 ]

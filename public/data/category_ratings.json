@@ -40,7 +40,7 @@
     "categories": {
       "Animace": 10.0,
       "CGI": 9.0,
-      "MC": 9.0,
+      "MC": 8.5,
       "Vedlejší postavy": 10.0,
       "Waifu": 9.0,
       "Plot": 8.5,
@@ -4496,6 +4496,25 @@
     }
   },
   {
+    "name": "Jujutsu Kaisen: The Culling Game Part 1",
+    "categories": {
+      "Animace": 10.0,
+      "CGI": 9.5,
+      "MC": 9.0,
+      "Vedlejší postavy": 9.0,
+      "Waifu": 8.0,
+      "Plot": 8.0,
+      "Pacing": 8.5,
+      "Story Conclusion": 10.0,
+      "Originalita": 9.0,
+      "Emoce": 8.0,
+      "Enjoyment": 9.0,
+      "OP": 9.0,
+      "ED": 9.0,
+      "OST": 10.0
+    }
+  },
+  {
     "name": "Id:Invaded",
     "categories": {
       "Animace": 7.5,
@@ -4550,6 +4569,38 @@
       "OP": 7.0,
       "ED": 7.0,
       "OST": 7.0
+    }
+  },
+  {
+    "name": "Ajin: Demi-Human, S01",
+    "categories": {
+      "Animace": 6.0,
+      "CGI": 7.0,
+      "MC": 8.5,
+      "Vedlejší postavy": 9.0,
+      "Waifu": 8.0,
+      "Plot": 8.0,
+      "Pacing": 8.5,
+      "Story Conclusion": 8.0,
+      "Originalita": 8.5,
+      "Emoce": 7.5,
+      "Enjoyment": 8.0
+    }
+  },
+  {
+    "name": "Ajin, S01 OVA",
+    "categories": {
+      "Animace": 6.0,
+      "CGI": 6.5,
+      "MC": 7.5,
+      "Vedlejší postavy": 9.0,
+      "Waifu": 8.5,
+      "Plot": 6.5,
+      "Pacing": 9.0,
+      "Story Conclusion": 7.5,
+      "Originalita": 7.5,
+      "Emoce": 6.5,
+      "Enjoyment": 8.0
     }
   }
 ]
