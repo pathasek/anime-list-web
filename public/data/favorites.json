@@ -3823,5 +3823,39 @@
     "has_frisson": true,
     "rating_avg": 9.35,
     "rating_final": 9
+  },
+  {
+    "index": "226.",
+    "anime_name": "Ajin: Demi-Human, S01",
+    "type": "OP",
+    "song": "Yoru wa Nemureru kai?",
+    "author": "flumpool",
+    "language": "JAP (90%) ENG (10%)",
+    "rating_lyrics": 9.25,
+    "rating_emotion": 8.75,
+    "rating_melody": 9,
+    "rating_video": 8.5,
+    "rating_voice": 9,
+    "sing_along": 2,
+    "has_frisson": true,
+    "rating_avg": 8.9,
+    "rating_final": 9
+  },
+  {
+    "index": "227.",
+    "anime_name": "Ajin: Demi-Human, S02",
+    "type": "OP",
+    "song": "Boku wa Boku de Atte",
+    "author": "angela x fripSide",
+    "language": "JAP (91%) ENG (9%)",
+    "rating_lyrics": 8.25,
+    "rating_emotion": 8.25,
+    "rating_melody": 8.75,
+    "rating_video": 8.25,
+    "rating_voice": 8.75,
+    "sing_along": 1,
+    "has_frisson": false,
+    "rating_avg": 8.45,
+    "rating_final": 8
   }
 ]

@@ -4584,7 +4584,10 @@
       "Story Conclusion": 8.0,
       "Originalita": 8.5,
       "Emoce": 7.5,
-      "Enjoyment": 8.0
+      "Enjoyment": 8.0,
+      "OP": 9.0,
+      "ED": 7.0,
+      "OST": 9.0
     }
   },
   {
@@ -4600,7 +4603,94 @@
       "Story Conclusion": 7.5,
       "Originalita": 7.5,
       "Emoce": 6.5,
-      "Enjoyment": 8.0
+      "Enjoyment": 8.0,
+      "OP": 9.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Ajin: Demi-Human, S02",
+    "categories": {
+      "Animace": 6.0,
+      "CGI": 7.0,
+      "MC": 8.5,
+      "Vedlejší postavy": 8.5,
+      "Waifu": 8.5,
+      "Plot": 7.5,
+      "Pacing": 8.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 8.5,
+      "Emoce": 6.5,
+      "Enjoyment": 8.0,
+      "OP": 8.0,
+      "ED": 7.0,
+      "OST": 9.0
+    }
+  },
+  {
+    "name": "Ajin, S02 OVA",
+    "categories": {
+      "Animace": 6.0,
+      "CGI": 7.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 7.0,
+      "Plot": 7.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 6.5,
+      "Originalita": 8.0,
+      "Emoce": 6.0,
+      "Enjoyment": 7.5,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Paprika",
+    "categories": {
+      "Animace": 9.0,
+      "CGI": 8.5,
+      "MC": 8.0,
+      "Vedlejší postavy": 7.5,
+      "Waifu": 8.0,
+      "Plot": 7.5,
+      "Pacing": 8.0,
+      "Story Conclusion": 7.5,
+      "Originalita": 10.0,
+      "Emoce": 6.0,
+      "Enjoyment": 8.0,
+      "OST": 9.0
+    }
+  },
+  {
+    "name": "Perfect Blue",
+    "categories": {
+      "Animace": 7.5,
+      "MC": 8.0,
+      "Vedlejší postavy": 7.5,
+      "Waifu": 8.0,
+      "Plot": 8.5,
+      "Pacing": 8.5,
+      "Story Conclusion": 8.0,
+      "Originalita": 9.5,
+      "Emoce": 8.0,
+      "Enjoyment": 7.0,
+      "OST": 9.0
+    }
+  },
+  {
+    "name": "Angel's Egg",
+    "categories": {
+      "Animace": 8.5,
+      "MC": 7.0,
+      "Plot": 7.5,
+      "Pacing": 7.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 10.0,
+      "Emoce": 7.5,
+      "Enjoyment": 8.0,
+      "OST": 9.0
     }
   }
 ]

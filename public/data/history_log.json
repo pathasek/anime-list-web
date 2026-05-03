@@ -1,15 +1,36 @@
 [
   {
-    "name": "Ajin: Demi-Human, S02",
-    "episodes": "(11x) EP 3-13",
-    "time": "257 min (4,3 hod)",
-    "date": "2026-05-01T00:00:00",
+    "name": "Paprika",
+    "episodes": "(1x) EP 1",
+    "time": "91 min (1,5 hod)",
+    "date": "2026-05-02T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "Perfect Blue",
+    "episodes": "(1x) EP 1",
+    "time": "82 min (1,4 hod)",
+    "date": "2026-05-02T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "Angel's Egg",
+    "episodes": "(1x) EP 1",
+    "time": "71 min (1,2 hod)",
+    "date": "2026-05-02T00:00:00",
     "rewatch": null
   },
   {
     "name": "Ajin, S02 OVA",
     "episodes": "(1x) EP 1",
     "time": "22 min",
+    "date": "2026-05-01T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "Ajin: Demi-Human, S02",
+    "episodes": "(11x) EP 3-13",
+    "time": "257 min (4,3 hod)",
     "date": "2026-05-01T00:00:00",
     "rewatch": null
   },
@@ -84,6 +105,20 @@
     "rewatch": null
   },
   {
+    "name": "Wonder Egg Priority",
+    "episodes": "(4x) EP 9-12",
+    "time": "91 min (1,5 hod)",
+    "date": "2026-04-26T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "Wonder Egg Priority: My Priority",
+    "episodes": "(1x) EP 1",
+    "time": "47 min",
+    "date": "2026-04-26T00:00:00",
+    "rewatch": null
+  },
+  {
     "name": "That Time I Got Reincarnated as a Slime, S04",
     "episodes": "(1x) EP 4",
     "time": "24 min",
@@ -120,29 +155,15 @@
   },
   {
     "name": "Wonder Egg Priority",
-    "episodes": "(4x) EP 9-12",
-    "time": "91 min (1,5 hod)",
-    "date": "2026-04-26T00:00:00",
-    "rewatch": null
-  },
-  {
-    "name": "Wonder Egg Priority: My Priority",
-    "episodes": "(1x) EP 1",
-    "time": "47 min",
-    "date": "2026-04-26T00:00:00",
+    "episodes": "(8x) EP 1-8",
+    "time": "183 min (3,0 hod)",
+    "date": "2026-04-25T00:00:00",
     "rewatch": null
   },
   {
     "name": "Id:Invaded",
     "episodes": "(4x) EP 10-13",
     "time": "102 min (1,7 hod)",
-    "date": "2026-04-25T00:00:00",
-    "rewatch": null
-  },
-  {
-    "name": "Wonder Egg Priority",
-    "episodes": "(8x) EP 1-8",
-    "time": "183 min (3,0 hod)",
     "date": "2026-04-25T00:00:00",
     "rewatch": null
   },
@@ -1568,14 +1589,14 @@
     "rewatch": null
   },
   {
-    "name": "Fate/strange Fake, S01",
+    "name": "Jujutsu Kaisen: The Culling Game Part 1",
     "episodes": "(1x) EP 3",
     "time": "24 min",
     "date": "2026-01-19T00:00:00",
     "rewatch": null
   },
   {
-    "name": "Jujutsu Kaisen: The Culling Game Part 1",
+    "name": "Fate/strange Fake, S01",
     "episodes": "(1x) EP 3",
     "time": "24 min",
     "date": "2026-01-19T00:00:00",
