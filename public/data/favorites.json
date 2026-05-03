@@ -3857,5 +3857,22 @@
     "has_frisson": false,
     "rating_avg": 8.45,
     "rating_final": 8
+  },
+  {
+    "index": "228.",
+    "anime_name": "The Beast Player Erin",
+    "type": "OP",
+    "song": "Shizuku",
+    "author": "Sukima Switch",
+    "language": "JAP",
+    "rating_lyrics": 9.5,
+    "rating_emotion": 10,
+    "rating_melody": 9.25,
+    "rating_video": 9.25,
+    "rating_voice": 10,
+    "sing_along": 1,
+    "has_frisson": false,
+    "rating_avg": 9.6,
+    "rating_final": 10
   }
 ]
