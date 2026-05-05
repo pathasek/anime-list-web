@@ -36,6 +36,7 @@ function HistoryLog() {
     const [yearFilter, setYearFilter] = useState('all')
     const [sortBy, setSortBy] = useState('date') // 'date', 'animeCount', 'episodes', 'time'
     const [dateRange, setDateRange] = useState({ start: '', end: '' })
+    const [precisionMode, setPrecisionMode] = useState(false) // false=rounded, true=exact
 
     // UI enhancements
     const [highlightedDate, setHighlightedDate] = useState(null)
@@ -507,7 +508,25 @@ function HistoryLog() {
             time += group.totalTime
         })
 
-        return { episodes, time }
+        // Calculate daily averages
+        const uniqueDays = new Set()
+        groupedHistory.forEach(group => {
+            if (group.date) uniqueDays.add(group.date.split('T')[0])
+        })
+        const days = uniqueDays.size || 1
+        const epsPerDay = episodes / days
+        const minsPerDay = time / days
+
+        // Total calendar days in range (first → last)
+        let totalDaysInRange = days
+        if (uniqueDays.size >= 2) {
+            const sorted = Array.from(uniqueDays).sort()
+            const first = new Date(sorted[0])
+            const last = new Date(sorted[sorted.length - 1])
+            totalDaysInRange = Math.round((last - first) / (1000 * 60 * 60 * 24)) + 1
+        }
+
+        return { episodes, time, days, totalDaysInRange, epsPerDay, minsPerDay }
     }, [groupedHistory])
 
     const scrollToDate = (dateStr) => {
@@ -615,8 +634,43 @@ function HistoryLog() {
                             flexDirection: 'column',
                             minHeight: '220px'
                         }}>
-                            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '8px', fontWeight: '500' }}>
-                                GRAF ZHLÉDNUTÝCH EPIZOD {dateRange.start || dateRange.end || yearFilter !== 'all' ? '(FILTROVÁNO)' : ''}
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
+                                <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: '500' }}>
+                                    GRAF ZHLÉDNUTÝCH EPIZOD {dateRange.start || dateRange.end || yearFilter !== 'all' ? '(FILTROVÁNO)' : ''}
+                                </div>
+                                {/* Daily Averages - top right */}
+                                <div style={{ display: 'flex', gap: '14px', alignItems: 'center', flexWrap: 'wrap' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.75rem' }}>
+                                        <span style={{ color: 'var(--text-muted)' }}>⌀ Ep/den:</span>
+                                        <span style={{ fontWeight: 700, color: 'var(--accent-primary)' }}>
+                                            {precisionMode ? totalStats.epsPerDay.toFixed(4).replace('.', ',') : totalStats.epsPerDay.toFixed(1).replace('.', ',')}
+                                        </span>
+                                    </div>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.75rem' }}>
+                                        <span style={{ color: 'var(--text-muted)' }}>⌀ Čas/den:</span>
+                                        <span style={{ fontWeight: 700, color: 'var(--accent-amber)' }}>
+                                            {precisionMode
+                                                ? `${totalStats.minsPerDay.toFixed(2).replace('.', ',')} min`
+                                                : `${Math.round(totalStats.minsPerDay)} min`
+                                            }
+                                        </span>
+                                    </div>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.75rem' }}>
+                                        <span style={{ color: 'var(--text-muted)' }}>Aktivních dnů:</span>
+                                        <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{totalStats.days}/{totalStats.totalDaysInRange}</span>
+                                    </div>
+                                    <button
+                                        onClick={() => setPrecisionMode(p => !p)}
+                                        style={{
+                                            background: 'none', border: '1px solid var(--border-color)',
+                                            borderRadius: '4px', padding: '1px 7px', color: precisionMode ? 'var(--accent-primary)' : 'var(--text-muted)',
+                                            fontSize: '0.65rem', cursor: 'pointer', transition: 'all 0.2s'
+                                        }}
+                                        title={precisionMode ? 'Zobrazit zaokrouhlené' : 'Zobrazit přesné hodnoty'}
+                                    >
+                                        {precisionMode ? '🔬 Přesně' : '≈ Zaokr.'}
+                                    </button>
+                                </div>
                             </div>
                             <div style={{ flex: 1, position: 'relative', minHeight: '180px' }}>
                                 <Bar ref={chartRef} options={chartOptions} data={chartData} />

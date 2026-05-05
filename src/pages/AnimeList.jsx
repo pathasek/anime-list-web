@@ -115,12 +115,19 @@ function AnimeList() {
             type: {},
             genre: {},
             theme: {},
-            tag: {}
+            tag: {},
+            release_year: {},
+            rewatch: {},
+            studio: {},
+            ep_count: {},
+            ep_duration: {},
+            dub: {}
         }
     })
     const [seriesFilter, setSeriesFilter] = useState(null)
     const [expandedImage, setExpandedImage] = useState(null)
     const [showScrollTop, setShowScrollTop] = useState(false)
+    const [displayCount, setDisplayCount] = useState(50)
 
     useEffect(() => {
         const handleScroll = (e) => {
@@ -143,7 +150,7 @@ function AnimeList() {
                 const seriesQ = searchParams.get('series')
                 if (seriesQ) {
                     setSeriesFilter(seriesQ)
-                    setFilters({ status: {}, type: {}, genre: {}, theme: {}, tag: {} })
+                    setFilters({ status: {}, type: {}, genre: {}, theme: {}, tag: {}, release_year: {}, rewatch: {}, studio: {}, ep_count: {}, ep_duration: {}, dub: {} })
                 }
 
                 // Skok na uloženou pozici (Scroll restoration)
@@ -168,6 +175,9 @@ function AnimeList() {
         const themes = new Set()
         const tags = new Set()
         const tagDescriptions = {}
+        const studiosSet = new Set()
+        const dubsSet = new Set()
+        const releaseYears = new Set()
 
         animeList.forEach(a => {
             if (a.type) types.add(a.type)
@@ -195,7 +205,28 @@ function AnimeList() {
                     }
                 })
             }
+            if (a.studio) {
+                a.studio.split(';').forEach(s => {
+                    const clean = s.trim()
+                    if (clean) studiosSet.add(clean)
+                })
+            }
+            if (a.dub) {
+                a.dub.split(';').forEach(d => {
+                    const clean = d.trim()
+                    if (clean) dubsSet.add(clean)
+                })
+            }
+            if (a.release_date) {
+                const y = new Date(a.release_date).getFullYear()
+                if (y > 1950 && y <= new Date().getFullYear() + 1) releaseYears.add(String(y))
+            }
         })
+
+        // Predefined buckets
+        const rewatchBuckets = ['0', '1', '2', '3+']
+        const epCountBuckets = ['1', '2-13', '14-26', '27-52', '53+']
+        const epDurationBuckets = ['<10 min', '10-24 min', '24-30 min', '>30 min']
 
         return {
             types: Array.from(types).sort(),
@@ -203,12 +234,19 @@ function AnimeList() {
             themes: Array.from(themes).sort(),
             tags: Array.from(tags).sort(),
             tagDescriptions,
-            statuses: ['PENDING', 'AIRING!', 'FINISHED']
+            statuses: ['PENDING', 'AIRING!', 'FINISHED'],
+            studios: Array.from(studiosSet).sort(),
+            dubs: Array.from(dubsSet).sort(),
+            releaseYears: Array.from(releaseYears).sort((a, b) => parseInt(b) - parseInt(a)),
+            rewatchBuckets,
+            epCountBuckets,
+            epDurationBuckets
         }
     }, [animeList])
 
     useEffect(() => {
         localStorage.setItem('animeFiltersObj', JSON.stringify(filters))
+        setDisplayCount(50)
     }, [filters])
 
     const handleFilterChange = (category, option, nextState) => {
@@ -227,7 +265,7 @@ function AnimeList() {
     }
 
     const clearAllFilters = () => {
-        setFilters({ status: {}, type: {}, genre: {}, theme: {}, tag: {} })
+        setFilters({ status: {}, type: {}, genre: {}, theme: {}, tag: {}, release_year: {}, rewatch: {}, studio: {}, ep_count: {}, ep_duration: {}, dub: {} })
         setSearchTerm('')
     }
 
@@ -297,6 +335,59 @@ function AnimeList() {
             // Apply Tags (AND logic)
             const tagArray = (a.tags || '').split(';').map(x => x.split(':')[0].trim()).filter(Boolean)
             if (!checkArrayFilter(tagArray, filters.tag)) return false
+
+            // Apply Release Year (OR logic)
+            if (Object.keys(filters.release_year).some(k => filters.release_year[k] !== 0)) {
+                const year = a.release_date ? String(new Date(a.release_date).getFullYear()) : ''
+                if (!checkSingleFilter(year, filters.release_year)) return false
+            }
+
+            // Apply Rewatch Count (OR logic, buckets)
+            if (Object.keys(filters.rewatch).some(k => filters.rewatch[k] !== 0)) {
+                const rc = parseInt(a.rewatch_count) || 0
+                let bucket = String(rc)
+                if (rc >= 3) bucket = '3+'
+                if (!checkSingleFilter(bucket, filters.rewatch)) return false
+            }
+
+            // Apply Studio (multi-value OR logic)
+            if (Object.keys(filters.studio).some(k => filters.studio[k] !== 0)) {
+                const studioArray = (a.studio || '').split(';').map(x => x.trim()).filter(Boolean)
+                const included = Object.entries(filters.studio).filter(([_, v]) => v === 1).map(([k]) => k)
+                const excluded = Object.entries(filters.studio).filter(([_, v]) => v === -1).map(([k]) => k)
+                if (excluded.some(ex => studioArray.includes(ex))) return false
+                if (included.length > 0 && !included.some(inc => studioArray.includes(inc))) return false
+            }
+
+            // Apply Episode Count (OR logic, buckets)
+            if (Object.keys(filters.ep_count).some(k => filters.ep_count[k] !== 0)) {
+                const eps = parseInt(String(a.episodes).replace(/[^\d]/g, '')) || 0
+                let bucket = '53+'
+                if (eps === 1) bucket = '1'
+                else if (eps >= 2 && eps <= 13) bucket = '2-13'
+                else if (eps >= 14 && eps <= 26) bucket = '14-26'
+                else if (eps >= 27 && eps <= 52) bucket = '27-52'
+                if (!checkSingleFilter(bucket, filters.ep_count)) return false
+            }
+
+            // Apply Episode Duration (OR logic, buckets)
+            if (Object.keys(filters.ep_duration).some(k => filters.ep_duration[k] !== 0)) {
+                const dur = parseFloat(a.episode_duration) || 0
+                let bucket = '>30 min'
+                if (dur < 10) bucket = '<10 min'
+                else if (dur <= 24) bucket = '10-24 min'
+                else if (dur <= 30) bucket = '24-30 min'
+                if (!checkSingleFilter(bucket, filters.ep_duration)) return false
+            }
+
+            // Apply Dub Language (multi-value OR logic)
+            if (Object.keys(filters.dub).some(k => filters.dub[k] !== 0)) {
+                const dubArray = (a.dub || '').split(';').map(x => x.trim()).filter(Boolean)
+                const included = Object.entries(filters.dub).filter(([_, v]) => v === 1).map(([k]) => k)
+                const excluded = Object.entries(filters.dub).filter(([_, v]) => v === -1).map(([k]) => k)
+                if (excluded.some(ex => dubArray.includes(ex))) return false
+                if (included.length > 0 && !included.some(inc => dubArray.includes(inc))) return false
+            }
 
             return true
         })
@@ -517,8 +608,14 @@ function AnimeList() {
                     <FilterDropdown label="Status" options={filterOptions.statuses} currentFilters={filters.status} onFilterChange={handleFilterChange} type="status" />
                     <FilterDropdown label="Typ" options={filterOptions.types} currentFilters={filters.type} onFilterChange={handleFilterChange} type="type" />
                     <FilterDropdown label="Žánry" options={filterOptions.genres} currentFilters={filters.genre} onFilterChange={handleFilterChange} type="genre" />
-                    <FilterDropdown label="Témata" options={filterOptions.themes} currentFilters={filters.theme} onFilterChange={handleFilterChange} type="theme" alignRight={true} />
-                    <FilterDropdown label="Tagy" options={filterOptions.tags} currentFilters={filters.tag} onFilterChange={handleFilterChange} type="tag" alignRight={true} descriptions={filterOptions.tagDescriptions} />
+                    <FilterDropdown label="Témata" options={filterOptions.themes} currentFilters={filters.theme} onFilterChange={handleFilterChange} type="theme" />
+                    <FilterDropdown label="Tagy" options={filterOptions.tags} currentFilters={filters.tag} onFilterChange={handleFilterChange} type="tag" descriptions={filterOptions.tagDescriptions} />
+                    <FilterDropdown label="Rok" options={filterOptions.releaseYears} currentFilters={filters.release_year} onFilterChange={handleFilterChange} type="release_year" />
+                    <FilterDropdown label="Rewatch" options={filterOptions.rewatchBuckets} currentFilters={filters.rewatch} onFilterChange={handleFilterChange} type="rewatch" />
+                    <FilterDropdown label="Studio" options={filterOptions.studios} currentFilters={filters.studio} onFilterChange={handleFilterChange} type="studio" />
+                    <FilterDropdown label="Počet ep." options={filterOptions.epCountBuckets} currentFilters={filters.ep_count} onFilterChange={handleFilterChange} type="ep_count" />
+                    <FilterDropdown label="Délka ep." options={filterOptions.epDurationBuckets} currentFilters={filters.ep_duration} onFilterChange={handleFilterChange} type="ep_duration" />
+                    <FilterDropdown label="Dabing" options={filterOptions.dubs} currentFilters={filters.dub} onFilterChange={handleFilterChange} type="dub" alignRight={true} />
 
                     {Object.values(filters).some(cat => Object.values(cat).some(v => v !== 0)) && (
                         <button className="clear-filter-btn" style={{ width: 'auto', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '6px 12px', marginTop: 0 }} onClick={clearAllFilters}>
@@ -564,7 +661,7 @@ function AnimeList() {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredList.map((anime, idx) => (
+                        {filteredList.slice(0, displayCount).map((anime, idx) => (
                             <tr key={idx}>
                                 <td style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
                                     {idx + 1}.
@@ -754,7 +851,7 @@ function AnimeList() {
 
             {/* Mobile Cards */}
             <div className="mobile-card-list hide-desktop">
-                {filteredList.map((anime, idx) => (
+                {filteredList.slice(0, displayCount).map((anime, idx) => (
                     <div key={idx} className="mobile-card">
                         <div className="mobile-card-header">
                             <div style={{ display: 'flex', gap: 'var(--spacing-md)', width: '100%', alignItems: 'center' }}>
@@ -870,6 +967,26 @@ function AnimeList() {
                     </div>
                 ))}
             </div>
+
+            {/* Show More / Show All button */}
+            {displayCount < filteredList.length && (
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginTop: 'var(--spacing-lg)', marginBottom: 'var(--spacing-md)' }}>
+                    <button
+                        className="filter-btn"
+                        onClick={() => setDisplayCount(prev => prev + 50)}
+                        style={{ padding: '8px 24px', fontWeight: 'bold' }}
+                    >
+                        ZOBRAZIT DALŠÍCH 50 ▼ ({Math.min(displayCount, filteredList.length)}/{filteredList.length})
+                    </button>
+                    <button
+                        className="filter-btn"
+                        onClick={() => setDisplayCount(filteredList.length)}
+                        style={{ padding: '8px 16px', fontSize: '0.8rem' }}
+                    >
+                        VŠE
+                    </button>
+                </div>
+            )}
 
             {/* Full-screen Image Modal */}
             {expandedImage && createPortal(

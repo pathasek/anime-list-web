@@ -479,7 +479,7 @@ tr:hover td {
   grid-template-columns: 1fr 1fr;
   gap: var(--spacing-lg);
   margin-bottom: var(--spacing-xl);
-  align-items: stretch;
+  align-items: start;
 }
 
 /* Lists group spans full width when expanded */
@@ -1004,6 +1004,54 @@ tr:hover td {
   border-radius: 3px;
   flex-shrink: 0;
   font-weight: 600;
+}
+
+/* ─── Marquee Scroll for Long Anime Names ─── */
+.marquee-container {
+  overflow: hidden;
+  position: relative;
+}
+
+.marquee-link {
+  display: inline-block;
+  color: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.marquee-link:hover {
+  color: var(--accent-primary);
+}
+
+.marquee-link:hover .marquee-text {
+  animation: marquee-scroll 6s linear infinite;
+  animation-delay: 0.5s;
+}
+
+@keyframes marquee-scroll {
+  0% { transform: translateX(0); }
+  10% { transform: translateX(0); }
+  90% { transform: translateX(calc(-100% + 150px)); }
+  100% { transform: translateX(calc(-100% + 150px)); }
+}
+
+.marquee-text {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* ─── Anime Link (click-to-detail) ─── */
+a.anime-link {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a.anime-link:hover {
+  color: var(--accent-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 /* ─── "More" Indicator ─── */

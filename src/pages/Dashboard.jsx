@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, Fragment } from 'react'
+import { Link } from 'react-router-dom'
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -624,14 +625,64 @@ function Dashboard() {
             ]
         };
 
-        // 15. GrafHodnoceniVsEpizody
+        // 15. GrafHodnoceniVsEpizody (Dual-axis: bar=count, line=avg rating — Excel style)
         const epBucketsData = {
             labels: excelData.ratingByEpisodes.map(b => b.label),
-            datasets: [{
-                label: 'Průměrné hodnocení',
-                data: excelData.ratingByEpisodes.map(b => b.avg),
-                backgroundColor: createVerticalGradient('rgba(99, 102, 241, 0.4)', 'rgba(139, 92, 246, 0.8)')
-            }]
+            datasets: [
+                {
+                    type: 'bar',
+                    label: 'Počet titulů',
+                    data: excelData.ratingByEpisodes.map(b => b.count),
+                    backgroundColor: [
+                        'rgba(179, 161, 106, 0.85)',
+                        'rgba(179, 161, 106, 0.85)',
+                        'rgba(179, 161, 106, 0.85)',
+                        'rgba(179, 161, 106, 0.85)',
+                        'rgba(179, 161, 106, 0.85)',
+                        'rgba(179, 161, 106, 0.85)',
+                        'rgba(179, 161, 106, 0.85)',
+                        'rgba(179, 161, 106, 0.85)'
+                    ],
+                    yAxisID: 'y',
+                    order: 2,
+                    datalabels: {
+                        display: true,
+                        color: '#fff',
+                        font: { weight: 'bold', size: 10, family: 'Inter, sans-serif' },
+                        anchor: 'center',
+                        align: 'center',
+                        formatter: (val, ctx) => {
+                            const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                            const pct = ((val / total) * 100).toFixed(1).replace('.', ',');
+                            return `# ${val}\n(${pct} %)`;
+                        }
+                    }
+                },
+                {
+                    type: 'line',
+                    label: 'Průměrné skóre',
+                    data: excelData.ratingByEpisodes.map(b => b.avg),
+                    borderColor: '#ED7D31',
+                    backgroundColor: 'rgba(237, 125, 49, 0.3)',
+                    borderWidth: 3,
+                    pointRadius: 6,
+                    pointBackgroundColor: '#ED7D31',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    yAxisID: 'y1',
+                    tension: 0.3,
+                    order: 1,
+                    datalabels: {
+                        display: true,
+                        color: '#ED7D31',
+                        font: { weight: 'bold', size: 12, family: 'Inter, sans-serif' },
+                        anchor: 'end',
+                        align: 'top',
+                        offset: 6,
+                        formatter: (val) => val != null ? val.toFixed(1).replace('.', ',') : ''
+                    }
+                }
+            ]
         };
 
         // 16. AnimeHodnoceniVCaseGraf (Combo)
@@ -1118,7 +1169,7 @@ function Dashboard() {
                                 <div className="chart-title">Top 20 tagů (Vážené hodnocení)</div>
                                 <div className="chart-body">
                                     <Bar data={tagsData} options={getOptions(horizontalBarOptionsExcel, 'GrafVazeneTagy', null, {
-                                        scales: { x: { min: tagMinX, max: 10, title: { display: true, text: 'Vážený průměr hodnocení', color: 'var(--text-muted)' } } }
+                                        scales: { x: { min: tagMinX, max: 10, title: { display: true, text: 'Vážený průměr hodnocení', color: '#e2e8f0' }, ticks: { color: '#e2e8f0' } } }
                                     })} />
                                 </div>
                             </div>
@@ -1138,27 +1189,155 @@ function Dashboard() {
             }
 
             // ─── RATINGS ───
-            case 'ratings':
+            case 'ratings': {
+                // Rating Timeline with gradient background bands (Excel style)
+                const ratingTimelineBandsPlugin = {
+                    id: 'ratingGradientBands',
+                    beforeDraw(chart) {
+                        const { ctx, chartArea: { left, right, top, bottom } } = chart;
+                        const yScale = chart.scales.y;
+                        if (!yScale) return;
+                        const bands = [
+                            { from: 10, to: 9, color: 'rgba(34, 197, 94, 0.25)' },
+                            { from: 9, to: 8, color: 'rgba(163, 230, 53, 0.18)' },
+                            { from: 8, to: 7, color: 'rgba(250, 204, 21, 0.15)' },
+                            { from: 7, to: 6, color: 'rgba(251, 146, 60, 0.15)' },
+                            { from: 6, to: 5, color: 'rgba(239, 68, 68, 0.12)' },
+                            { from: 5, to: 0, color: 'rgba(239, 68, 68, 0.22)' },
+                        ];
+                        bands.forEach(b => {
+                            const y1 = yScale.getPixelForValue(b.from);
+                            const y2 = yScale.getPixelForValue(b.to);
+                            ctx.fillStyle = b.color;
+                            ctx.fillRect(left, Math.min(y1, y2), right - left, Math.abs(y2 - y1));
+                        });
+                    }
+                };
+
+                const ratingTimelineFullData = {
+                    labels: excelData.ratingTimeline.map(t => t.x),
+                    datasets: [
+                        {
+                            type: 'bar',
+                            label: 'Hodnocení',
+                            data: excelData.ratingTimeline.map(t => t.rating),
+                            backgroundColor: 'rgba(30, 30, 40, 0.85)',
+                            borderWidth: 0,
+                            barPercentage: 1.0,
+                            categoryPercentage: 1.0,
+                            order: 2
+                        },
+                        {
+                            type: 'line',
+                            label: 'Klouzavý průměr',
+                            data: excelData.ratingTimeline.map(t => t.movingAvg),
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'transparent',
+                            borderWidth: 2.5,
+                            pointRadius: 0,
+                            tension: 0.3,
+                            order: 1
+                        }
+                    ]
+                };
+
+                const ratingTimelineFullOptions = {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        datalabels: { display: false },
+                        tooltip: {
+                            ...premiumTooltipConfig,
+                            callbacks: {
+                                title: (ctx) => {
+                                    const item = excelData.ratingTimeline[ctx[0].dataIndex];
+                                    return item ? item.title : '';
+                                },
+                                label: (ctx) => `${ctx.dataset.label}: ${typeof ctx.raw === 'object' ? ctx.raw.y : ctx.raw}`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            ticks: {
+                                color: 'rgba(255,255,255,0.5)',
+                                font: { size: 8 },
+                                maxRotation: 90,
+                                autoSkip: true,
+                                maxTicksLimit: 25
+                            },
+                            grid: { display: false }
+                        },
+                        y: {
+                            min: 4,
+                            max: 10,
+                            ticks: { color: 'rgba(255,255,255,0.6)', stepSize: 1 },
+                            grid: { color: 'rgba(255,255,255,0.06)' }
+                        }
+                    }
+                };
+
+                // Rating vs Episodes — dual axis options
+                const epBucketsOptions = {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        datalabels: { display: true },
+                        tooltip: {
+                            ...premiumTooltipConfig,
+                            callbacks: {
+                                label: (ctx) => {
+                                    if (ctx.datasetIndex === 0) return `Počet: ${ctx.raw}`;
+                                    return `Průměrné skóre: ${ctx.raw?.toFixed(1).replace('.', ',')}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#e2e8f0' },
+                            title: { display: true, text: 'Počet epizod', color: '#e2e8f0' }
+                        },
+                        y: {
+                            type: 'linear',
+                            position: 'left',
+                            min: 0,
+                            title: { display: true, text: 'Počet titulů', color: '#94a3b8' },
+                            ticks: { color: '#94a3b8' },
+                            grid: { color: 'rgba(255,255,255,0.05)' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            position: 'right',
+                            min: 0,
+                            max: 10,
+                            title: { display: true, text: 'Průměrné skóre', color: '#ED7D31' },
+                            ticks: { color: '#ED7D31', stepSize: 1 },
+                            grid: { drawOnChartArea: false }
+                        }
+                    }
+                };
+
                 return (
                     <>
                         <FullChart title="Rozdělení hodnocení (Populace)">
                             <Pie data={ratingPieData} options={getPieOptions()} plugins={[ChartDataLabels]} />
                         </FullChart>
-                        <FullChart title="Průběh hodnocení v čase">
-                            <Chart type="line" data={ratingTimelineData} options={buildChartOptions(baseOptions, { 
-                                legendPosition: 'hidden',
-                                scales: { x: { display: false }, y: { min: 0, max: 10 } },
-                                plugins: { tooltip: { callbacks: { label: (ctx) => `${excelData.ratingTimeline[ctx.dataIndex].title}: ${ctx.raw.y || ctx.raw}` } } }
-                            })} />
+                        <FullChart title="Průběh hodnocení v čase" className="wide">
+                            <Chart type="bar" data={ratingTimelineFullData} options={ratingTimelineFullOptions} plugins={[ratingTimelineBandsPlugin]} />
                         </FullChart>
                         <FullChart title="Hodnocení vs počet epizod">
-                            <Bar data={epBucketsData} options={buildChartOptions({ ...barOptionsExcel }, { legendPosition: 'hidden', scales: { y: { min: 6 } } })} />
+                            <Chart type="bar" data={epBucketsData} options={epBucketsOptions} plugins={[ChartDataLabels]} />
                         </FullChart>
                         <FullChart title="Hodnocení v čase & Vývoj kvality" className="wide">
                             <Line data={hoverTimeComboData} options={getOptions(doubleAxisRatingOptions, 'AnimeHodnoceniVCaseGraf', './assets/excel_charts_media/image35.jpg')} />
                         </FullChart>
                     </>
                 )
+            }
 
             // ─── DUB (always expanded) ───
             case 'dub':
@@ -1202,7 +1381,11 @@ function Dashboard() {
                                         {excelData.airingAnime.map((a, i) => (
                                             <li key={i}>
                                                 <span className="text-list-rank">{i + 1}.</span>
-                                                <span className="text-list-name">{a.name}</span>
+                                                <span className="text-list-name marquee-container">
+                                                    <Link to={`/anime/${encodeURIComponent(a.name)}`} className="marquee-link">
+                                                        <span className="marquee-text">{a.name}</span>
+                                                    </Link>
+                                                </span>
                                                 <span className="text-list-value">
                                                     EP {a.watchedEps}
                                                     {a.startDate && ` • ${new Date(a.startDate).toLocaleDateString('cs-CZ')}`}
@@ -1227,7 +1410,7 @@ function Dashboard() {
                                     {excelData.latestWatched.map((a, i) => (
                                         <li key={i}>
                                             <span className="text-list-rank">{i + 1}.</span>
-                                            <span className="text-list-name">{a.name}</span>
+                                            <Link to={`/anime/${encodeURIComponent(a.name)}`} className="text-list-name anime-link">{a.name}</Link>
                                             <span className="text-list-value">
                                                 {a.startDate && new Date(a.startDate).toLocaleDateString('cs-CZ')}
                                                 {a.startDate && a.endDate && ' → '}
@@ -1247,7 +1430,7 @@ function Dashboard() {
                                     {excelData.fastestBinge.map((a, i) => (
                                         <li key={i}>
                                             <span className="text-list-rank">{i + 1}.</span>
-                                            <span className="text-list-name">{a.name}</span>
+                                            <Link to={`/anime/${encodeURIComponent(a.name)}`} className="text-list-name anime-link">{a.name}</Link>
                                             <span className="text-list-value">{a.minPerDay} min/den • {a.days}d • {a.totalHours}h</span>
                                         </li>
                                     ))}
@@ -1261,7 +1444,7 @@ function Dashboard() {
                                     {excelData.longestSeries.map((s, i) => (
                                         <li key={i}>
                                             <span className="text-list-rank">{i + 1}.</span>
-                                            <span className="text-list-name">{s.name}</span>
+                                            <Link to={`/anime?series=${encodeURIComponent(s.name)}`} className="text-list-name anime-link">{s.name}</Link>
                                             <span className="text-list-value">
                                                 {toCS(s.hours)}h ({toCS(s.days)}d) • {s.totalEps} ep • {s.parts} {s.parts === 1 ? 'díl' : s.parts <= 4 ? 'díly' : 'dílů'}
                                                 {s.avgRating && ` • ⭐ ${toCS(s.avgRating)}`}
@@ -1294,7 +1477,7 @@ function Dashboard() {
                             <div key={i} className="preview-data-item">
                                 <div className="preview-item-info">
                                     <span className="name">{type}</span>
-                                    <span className="meta">{count} ks</span>
+                                    <span className="meta">{count} anime</span>
                                 </div>
                                 <div className="preview-item-bar-bg">
                                     <div className="preview-item-bar-fill bar-types" style={getBarFill(count, max)} />
@@ -1319,7 +1502,7 @@ function Dashboard() {
                             <div key={i} className="preview-data-item">
                                 <div className="preview-item-info">
                                     <span className="name">{name}</span>
-                                    <span className="meta">{count} ks</span>
+                                    <span className="meta">{count} anime</span>
                                 </div>
                                 <div className="preview-item-bar-bg">
                                     <div className="preview-item-bar-fill bar-studios" style={getBarFill(count, max)} />
@@ -1366,7 +1549,7 @@ function Dashboard() {
                             <div key={i} className="preview-data-item">
                                 <div className="preview-item-info">
                                     <span className="name">{t.label}</span>
-                                    <span className="meta">{t.count} ks</span>
+                                    <span className="meta">{t.count} anime</span>
                                 </div>
                                 <div className="preview-item-bar-bg">
                                     <div className="preview-item-bar-fill bar-themes" style={getBarFill(t.count, max)} />
@@ -1390,7 +1573,7 @@ function Dashboard() {
                             <div key={i} className="preview-data-item">
                                 <div className="preview-item-info">
                                     <span className="name">{g.label}</span>
-                                    <span className="meta">{g.count} ks</span>
+                                    <span className="meta">{g.count} anime</span>
                                 </div>
                                 <div className="preview-item-bar-bg">
                                     <div className="preview-item-bar-fill bar-genres" style={getBarFill(g.count, max)} />

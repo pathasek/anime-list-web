@@ -15,7 +15,7 @@ import {
     Tooltip,
     Legend
 } from 'chart.js'
-import { Pie, Bar, Radar } from 'react-chartjs-2'
+import { Pie, Bar, Radar, Line } from 'react-chartjs-2'
 
 ChartJS.register(
     CategoryScale, LinearScale, BarElement, ArcElement,
@@ -194,7 +194,134 @@ function Favorites() {
         delete chartTypes['OST']
         delete chartTypes['Other']
 
-        return { types: chartTypes, topAuthors, topAnime, withRating, total: favorites.length, avgRatings, ostItems, topSeriesByFinal }
+        // ──── NEW OP/ED CHARTS DATA (from VBA Graphs_FAV_OP_ED) ────
+
+        // 1. Rating Breakdown: count per rating bucket 1-10, split OP/ED/Total
+        const ratingBreakdown = { labels: [], op: [], ed: [], total: [] }
+        const cntTotal = {}, cntOP = {}, cntED = {}
+        favorites.forEach(f => {
+            const rf = parseFloat(f.rating_final)
+            const tp = (f.type || '').toUpperCase()
+            if (!isNaN(rf) && rf >= 1 && rf <= 10 && (tp === 'OP' || tp === 'ED')) {
+                const bucket = Math.floor(rf)
+                cntTotal[bucket] = (cntTotal[bucket] || 0) + 1
+                if (tp === 'OP') cntOP[bucket] = (cntOP[bucket] || 0) + 1
+                if (tp === 'ED') cntED[bucket] = (cntED[bucket] || 0) + 1
+            }
+        })
+        for (let i = 1; i <= 10; i++) {
+            if (cntTotal[i]) {
+                ratingBreakdown.labels.push(String(i))
+                ratingBreakdown.op.push(cntOP[i] || 0)
+                ratingBreakdown.ed.push(cntED[i] || 0)
+                ratingBreakdown.total.push(cntTotal[i] || 0)
+            }
+        }
+
+        // 2. Radar (5 categories raw averages for radar)
+        const radarAvgs = {
+            lyrics: lyricsCount > 0 ? lyricsSum / lyricsCount : 0,
+            emotion: emotionCount > 0 ? emotionSum / emotionCount : 0,
+            melody: melodyCount > 0 ? melodySum / melodyCount : 0,
+            video: videoCount > 0 ? videoSum / videoCount : 0,
+            voice: voiceCount > 0 ? voiceSum / voiceCount : 0
+        }
+
+        // 3. Frisson influence
+        let frissonYesSum = 0, frissonYesCnt = 0, frissonNoSum = 0, frissonNoCnt = 0
+        favorites.forEach(f => {
+            const rf = parseFloat(f.rating_final)
+            const tp = (f.type || '').toUpperCase()
+            if (!isNaN(rf) && (tp === 'OP' || tp === 'ED')) {
+                if (f.has_frisson) { frissonYesSum += rf; frissonYesCnt++ }
+                else { frissonNoSum += rf; frissonNoCnt++ }
+            }
+        })
+        const frissonData = {
+            labels: [], counts: [], avgs: [],
+        }
+        if (frissonYesCnt > 0) {
+            frissonData.labels.push('ANO')
+            frissonData.counts.push(frissonYesCnt)
+            frissonData.avgs.push(parseFloat((frissonYesSum / frissonYesCnt).toFixed(2)))
+        }
+        if (frissonNoCnt > 0) {
+            frissonData.labels.push('NE')
+            frissonData.counts.push(frissonNoCnt)
+            frissonData.avgs.push(parseFloat((frissonNoSum / frissonNoCnt).toFixed(2)))
+        }
+
+        // 4. Language analysis (count + weighted avg)
+        const langCounts = {}, langSumW = {}, langSumRateW = {}
+        favorites.forEach(f => {
+            const lang = (f.language || '').trim()
+            const rf = parseFloat(f.rating_final)
+            const tp = (f.type || '').toUpperCase()
+            if (lang && !isNaN(rf) && (tp === 'OP' || tp === 'ED')) {
+                if (!lang.includes('%')) {
+                    // Simple language
+                    langCounts[lang] = (langCounts[lang] || 0) + 1
+                    langSumW[lang] = (langSumW[lang] || 0) + 1
+                    langSumRateW[lang] = (langSumRateW[lang] || 0) + rf
+                } else {
+                    // Mixed language with weights e.g. "JAP(70%) ENG(30%)"
+                    const matches = lang.matchAll(/(\w+)\((\d+)%\)/g)
+                    for (const m of matches) {
+                        const k = m[1]
+                        const w = parseInt(m[2]) / 100
+                        if (w > 0) {
+                            langCounts[k] = (langCounts[k] || 0) + 1
+                            langSumW[k] = (langSumW[k] || 0) + w
+                            langSumRateW[k] = (langSumRateW[k] || 0) + (rf * w)
+                        }
+                    }
+                }
+            }
+        })
+        const langAnalysis = Object.entries(langCounts)
+            .sort((a, b) => b[1] - a[1])
+            .map(([lang, count]) => ({
+                lang,
+                count,
+                avgRating: langSumW[lang] > 0 ? parseFloat((langSumRateW[lang] / langSumW[lang]).toFixed(2)) : 0
+            }))
+
+        // 5. OP vs ED average comparison
+        let opSum = 0, opCnt = 0, edSum = 0, edCnt = 0
+        favorites.forEach(f => {
+            const rf = parseFloat(f.rating_final)
+            const tp = (f.type || '').toUpperCase()
+            if (!isNaN(rf)) {
+                if (tp === 'OP') { opSum += rf; opCnt++ }
+                if (tp === 'ED') { edSum += rf; edCnt++ }
+            }
+        })
+        const opVsEd = {
+            opAvg: opCnt > 0 ? parseFloat((opSum / opCnt).toFixed(2)) : 0,
+            edAvg: edCnt > 0 ? parseFloat((edSum / edCnt).toFixed(2)) : 0,
+            opCount: opCnt,
+            edCount: edCnt
+        }
+
+        // 6. Sing-Along distribution
+        const singAlongBuckets = { '0-2': 0, '3-4': 0, '5-6': 0, '7-8': 0, '9-10': 0 }
+        favorites.forEach(f => {
+            const sa = parseFloat(f.sing_along)
+            const tp = (f.type || '').toUpperCase()
+            if (!isNaN(sa) && sa >= 0 && (tp === 'OP' || tp === 'ED')) {
+                if (sa <= 2) singAlongBuckets['0-2']++
+                else if (sa <= 4) singAlongBuckets['3-4']++
+                else if (sa <= 6) singAlongBuckets['5-6']++
+                else if (sa <= 8) singAlongBuckets['7-8']++
+                else singAlongBuckets['9-10']++
+            }
+        })
+
+        return {
+            types: chartTypes, topAuthors, topAnime, withRating, total: favorites.length,
+            avgRatings, ostItems, topSeriesByFinal,
+            ratingBreakdown, radarAvgs, frissonData, langAnalysis, opVsEd, singAlongBuckets
+        }
     }, [favorites])
 
     // Filter and Sort
@@ -449,6 +576,239 @@ function Favorites() {
                         }} />
                     </div>
                 </div>
+            </div>
+
+            {/* NEW OP/ED Charts Section */}
+            <h3 style={{ marginTop: 'var(--spacing-xl)', marginBottom: 'var(--spacing-lg)', color: 'var(--accent-emerald)', fontSize: '1.25rem' }}>
+                🎵 Analytika OP/ED (z VBA)
+            </h3>
+            <div className="charts-grid">
+                {/* Rating Breakdown OP vs ED */}
+                {stats?.ratingBreakdown?.labels.length > 0 && (
+                    <div className="chart-container">
+                        <div className="chart-header">
+                            <div className="chart-title">Rozložení hodnocení (OP vs ED)</div>
+                        </div>
+                        <div style={{ height: '280px' }}>
+                            <Bar data={{
+                                labels: stats.ratingBreakdown.labels,
+                                datasets: [
+                                    { label: 'OP', data: stats.ratingBreakdown.op, backgroundColor: 'rgba(99, 102, 241, 0.85)', borderRadius: 3 },
+                                    { label: 'ED', data: stats.ratingBreakdown.ed, backgroundColor: 'rgba(236, 72, 153, 0.85)', borderRadius: 3 }
+                                ]
+                            }} options={{
+                                responsive: true, maintainAspectRatio: false,
+                                plugins: {
+                                    legend: { position: 'bottom', labels: { color: '#94a3b8', boxWidth: 12, padding: 12 } },
+                                    tooltip: { backgroundColor: 'rgba(18,18,26,0.9)', titleColor: '#f1f5f9', bodyColor: '#f1f5f9', borderColor: '#3a3a4a', borderWidth: 1 }
+                                },
+                                scales: {
+                                    y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', precision: 0 }, title: { display: true, text: 'Počet', color: '#94a3b8' } },
+                                    x: { grid: { display: false }, ticks: { color: '#94a3b8' }, title: { display: true, text: 'Hodnocení', color: '#94a3b8' } }
+                                }
+                            }} />
+                        </div>
+                    </div>
+                )}
+
+                {/* Radar Categories */}
+                {stats?.radarAvgs && (
+                    <div className="chart-container">
+                        <div className="chart-header">
+                            <div className="chart-title">Průměrné hodnocení kategorií</div>
+                        </div>
+                        <div style={{ height: '280px' }}>
+                            <Radar data={{
+                                labels: [
+                                    `Text: ${stats.radarAvgs.lyrics.toFixed(1).replace('.', ',')}/10`,
+                                    `Emoce: ${stats.radarAvgs.emotion.toFixed(1).replace('.', ',')}/10`,
+                                    `Melodie: ${stats.radarAvgs.melody.toFixed(1).replace('.', ',')}/10`,
+                                    `Video: ${stats.radarAvgs.video.toFixed(1).replace('.', ',')}/10`,
+                                    `Hlas: ${stats.radarAvgs.voice.toFixed(1).replace('.', ',')}/10`
+                                ],
+                                datasets: [{
+                                    label: 'Průměr',
+                                    data: [stats.radarAvgs.lyrics, stats.radarAvgs.emotion, stats.radarAvgs.melody, stats.radarAvgs.video, stats.radarAvgs.voice],
+                                    backgroundColor: 'rgba(99, 102, 241, 0.25)',
+                                    borderColor: 'rgba(99, 102, 241, 0.8)',
+                                    borderWidth: 2,
+                                    pointBackgroundColor: '#6366f1',
+                                    pointRadius: 4
+                                }]
+                            }} options={{
+                                responsive: true, maintainAspectRatio: false,
+                                plugins: { legend: { display: false } },
+                                scales: {
+                                    r: {
+                                        min: 0, max: 10,
+                                        ticks: { stepSize: 2, color: '#64748b', backdropColor: 'transparent' },
+                                        grid: { color: 'rgba(255,255,255,0.08)' },
+                                        pointLabels: { color: '#e2e8f0', font: { size: 11 } },
+                                        angleLines: { color: 'rgba(255,255,255,0.08)' }
+                                    }
+                                }
+                            }} />
+                        </div>
+                    </div>
+                )}
+
+                {/* Frisson Influence */}
+                {stats?.frissonData?.labels.length > 0 && (
+                    <div className="chart-container">
+                        <div className="chart-header">
+                            <div className="chart-title">Vliv Frisson Feeling</div>
+                        </div>
+                        <div style={{ height: '280px' }}>
+                            <Bar data={{
+                                labels: stats.frissonData.labels,
+                                datasets: [
+                                    {
+                                        label: 'Počet',
+                                        data: stats.frissonData.counts,
+                                        backgroundColor: 'rgba(99, 102, 241, 0.8)',
+                                        borderRadius: 4,
+                                        yAxisID: 'y'
+                                    },
+                                    {
+                                        label: 'Průměr FH',
+                                        data: stats.frissonData.avgs,
+                                        type: 'line',
+                                        borderColor: '#f59e0b',
+                                        backgroundColor: '#f59e0b',
+                                        pointRadius: 6,
+                                        pointHoverRadius: 8,
+                                        borderWidth: 2,
+                                        yAxisID: 'y1'
+                                    }
+                                ]
+                            }} options={{
+                                responsive: true, maintainAspectRatio: false,
+                                plugins: {
+                                    legend: { position: 'bottom', labels: { color: '#94a3b8', boxWidth: 12, padding: 12 } },
+                                    tooltip: { backgroundColor: 'rgba(18,18,26,0.9)', titleColor: '#f1f5f9', bodyColor: '#f1f5f9' }
+                                },
+                                scales: {
+                                    y: { beginAtZero: true, position: 'left', grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', precision: 0 }, title: { display: true, text: 'Počet', color: '#94a3b8' } },
+                                    y1: { min: 1, max: 10, position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#f59e0b' }, title: { display: true, text: 'Průměr', color: '#f59e0b' } },
+                                    x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+                                }
+                            }} />
+                        </div>
+                    </div>
+                )}
+
+                {/* Language Analysis */}
+                {stats?.langAnalysis?.length > 0 && (
+                    <div className="chart-container">
+                        <div className="chart-header">
+                            <div className="chart-title">Analýza jazyků (Vážený průměr)</div>
+                        </div>
+                        <div style={{ height: '280px' }}>
+                            <Bar data={{
+                                labels: stats.langAnalysis.map(l => l.lang),
+                                datasets: [
+                                    {
+                                        label: 'Počet',
+                                        data: stats.langAnalysis.map(l => l.count),
+                                        backgroundColor: 'rgba(6, 182, 212, 0.8)',
+                                        borderRadius: 4,
+                                        yAxisID: 'y'
+                                    },
+                                    {
+                                        label: 'Prům. hodnocení',
+                                        data: stats.langAnalysis.map(l => l.avgRating),
+                                        type: 'line',
+                                        borderColor: '#ec4899',
+                                        backgroundColor: '#ec4899',
+                                        pointRadius: 5,
+                                        borderWidth: 2,
+                                        yAxisID: 'y1'
+                                    }
+                                ]
+                            }} options={{
+                                responsive: true, maintainAspectRatio: false,
+                                plugins: {
+                                    legend: { position: 'bottom', labels: { color: '#94a3b8', boxWidth: 12, padding: 12 } },
+                                    tooltip: { backgroundColor: 'rgba(18,18,26,0.9)', titleColor: '#f1f5f9', bodyColor: '#f1f5f9' }
+                                },
+                                scales: {
+                                    y: { beginAtZero: true, position: 'left', grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', precision: 0 }, title: { display: true, text: 'Počet', color: '#94a3b8' } },
+                                    y1: { min: 1, max: 10, position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#ec4899' }, title: { display: true, text: 'Prům. hodnocení', color: '#ec4899' } },
+                                    x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+                                }
+                            }} />
+                        </div>
+                    </div>
+                )}
+
+                {/* OP vs ED Average */}
+                {stats?.opVsEd && (
+                    <div className="chart-container">
+                        <div className="chart-header">
+                            <div className="chart-title">Průměr OP vs ED</div>
+                        </div>
+                        <div style={{ height: '280px' }}>
+                            <Bar data={{
+                                labels: [`OP (${stats.opVsEd.opCount})`, `ED (${stats.opVsEd.edCount})`],
+                                datasets: [{
+                                    label: 'Průměrné FH',
+                                    data: [stats.opVsEd.opAvg, stats.opVsEd.edAvg],
+                                    backgroundColor: ['rgba(99, 102, 241, 0.85)', 'rgba(236, 72, 153, 0.85)'],
+                                    borderRadius: 6
+                                }]
+                            }} options={{
+                                responsive: true, maintainAspectRatio: false,
+                                plugins: {
+                                    legend: { display: false },
+                                    tooltip: {
+                                        backgroundColor: 'rgba(18,18,26,0.9)', titleColor: '#f1f5f9', bodyColor: '#f1f5f9',
+                                        callbacks: { label: (ctx) => `Průměr: ${ctx.parsed.y.toFixed(2).replace('.', ',')}` }
+                                    }
+                                },
+                                scales: {
+                                    y: { min: 0, max: 10, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
+                                    x: { grid: { display: false }, ticks: { color: '#e2e8f0', font: { size: 13, weight: 'bold' } } }
+                                }
+                            }} />
+                        </div>
+                    </div>
+                )}
+
+                {/* Sing-Along Distribution */}
+                {stats?.singAlongBuckets && Object.values(stats.singAlongBuckets).some(v => v > 0) && (
+                    <div className="chart-container">
+                        <div className="chart-header">
+                            <div className="chart-title">Sing-Along faktor (Distribuce)</div>
+                        </div>
+                        <div style={{ height: '280px' }}>
+                            <Bar data={{
+                                labels: Object.keys(stats.singAlongBuckets),
+                                datasets: [{
+                                    label: 'Počet songů',
+                                    data: Object.values(stats.singAlongBuckets),
+                                    backgroundColor: [
+                                        'rgba(239, 68, 68, 0.7)',
+                                        'rgba(249, 115, 22, 0.7)',
+                                        'rgba(234, 179, 8, 0.7)',
+                                        'rgba(34, 197, 94, 0.7)',
+                                        'rgba(16, 185, 129, 0.7)'
+                                    ],
+                                    borderRadius: 4
+                                }]
+                            }} options={{
+                                responsive: true, maintainAspectRatio: false,
+                                plugins: {
+                                    legend: { display: false },
+                                    tooltip: { backgroundColor: 'rgba(18,18,26,0.9)', titleColor: '#f1f5f9', bodyColor: '#f1f5f9' }
+                                },
+                                scales: {
+                                    y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', precision: 0 }, title: { display: true, text: 'Počet', color: '#94a3b8' } },
+                                    x: { grid: { display: false }, ticks: { color: '#94a3b8' }, title: { display: true, text: 'Sing-Along skóre', color: '#94a3b8' } }
+                                }
+                            }} />
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* Search and Filters */}
