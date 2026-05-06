@@ -105,24 +105,29 @@ function AnimeList() {
     const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
     const [sortConfig, setSortConfig] = useState({ key: 'default', direction: 'asc' })
+    const defaultFilters = {
+        status: { 'AIRING!': 1 },
+        type: {},
+        genre: {},
+        theme: {},
+        tag: {},
+        release_year: {},
+        rewatch: {},
+        studio: {},
+        ep_count: {},
+        ep_duration: {},
+        dub: {}
+    }
     const [filters, setFilters] = useState(() => {
         const saved = localStorage.getItem('animeFiltersObj')
         if (saved) {
-            try { return JSON.parse(saved) } catch (e) { }
+            try {
+                const parsed = JSON.parse(saved)
+                // Merge with defaults to ensure all keys exist (prevents crash from older localStorage versions)
+                return { ...defaultFilters, ...parsed }
+            } catch (e) { }
         }
-        return {
-            status: { 'AIRING!': 1 },
-            type: {},
-            genre: {},
-            theme: {},
-            tag: {},
-            release_year: {},
-            rewatch: {},
-            studio: {},
-            ep_count: {},
-            ep_duration: {},
-            dub: {}
-        }
+        return { ...defaultFilters }
     })
     const [seriesFilter, setSeriesFilter] = useState(null)
     const [expandedImage, setExpandedImage] = useState(null)
