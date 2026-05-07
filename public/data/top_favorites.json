@@ -237,7 +237,7 @@
       "data": {
         "CHAR_ID": "35252",
         "ANIME_NAME": "Steins;Gate",
-        "NAME": "Rintarou Okabe"
+        "NAME": "Unknown Character"
       },
       "image_file": "images/top_favorites/Top10_Char_3.jpg"
     },
@@ -264,7 +264,7 @@
       "data": {
         "CHAR_ID": "81853",
         "ANIME_NAME": "Death Parade",
-        "NAME": "Decim"
+        "NAME": "Unknown Character"
       },
       "image_file": "images/top_favorites/Top10_Char_6.jpg"
     },
@@ -282,7 +282,7 @@
       "data": {
         "CHAR_ID": "163811",
         "ANIME_NAME": "Ascendance of a Bookworm",
-        "NAME": "Unknown Character"
+        "NAME": "Myne"
       },
       "image_file": "images/top_favorites/Top10_Char_8.jpg"
     },
