@@ -10895,6 +10895,10 @@
       {
         "episode": "EP 5",
         "rating": 8.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.75
       }
     ]
   },
@@ -10932,6 +10936,10 @@
       {
         "episode": "EP 8",
         "rating": 7.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.5
       }
     ]
   },
@@ -10965,6 +10973,10 @@
       {
         "episode": "EP 7",
         "rating": 6.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 6.0
       }
     ]
   },
@@ -10990,6 +11002,10 @@
       {
         "episode": "EP 5",
         "rating": 6.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.5
       }
     ]
   },
@@ -11011,6 +11027,10 @@
       {
         "episode": "EP 4",
         "rating": 7.25
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.5
       }
     ]
   },
@@ -11074,6 +11094,10 @@
       {
         "episode": "EP 4",
         "rating": 8.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.75
       }
     ]
   },
@@ -11099,6 +11123,10 @@
       {
         "episode": "EP 5",
         "rating": 10.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.75
       }
     ]
   },
@@ -11119,7 +11147,11 @@
       },
       {
         "episode": "EP 4",
-        "rating": 9.0
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.25
       }
     ]
   },
@@ -11230,6 +11262,211 @@
       {
         "episode": "EP 12",
         "rating": 8.5
+      }
+    ]
+  },
+  {
+    "name": "The Beast Player Erin",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 7",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 13",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 14",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 15",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 16",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 17",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 18",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 19",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 20",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 21",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 22",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 23",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 24",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 25",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 26",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 27",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 28",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 29",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 30",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 31",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 32",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 33",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 34",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 35",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 36",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 37",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 38",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 39",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 40",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 41",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 42",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 43",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 44",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 45",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 46",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 47",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 48",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 49",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 50",
+        "rating": 8.75
       }
     ]
   }
