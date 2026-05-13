@@ -643,7 +643,7 @@ function HistoryLog() {
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.75rem' }}>
                                         <span style={{ color: 'var(--text-muted)' }}>⌀ Ep/den:</span>
                                         <span style={{ fontWeight: 700, color: 'var(--accent-primary)' }}>
-                                            {precisionMode ? totalStats.epsPerDay.toFixed(4).replace('.', ',') : totalStats.epsPerDay.toFixed(1).replace('.', ',')}
+                                            {precisionMode ? totalStats.epsPerDay.toFixed(4).replace('.', ',') : parseFloat(totalStats.epsPerDay.toFixed(1)).toString().replace('.', ',')}
                                         </span>
                                     </div>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.75rem' }}>
