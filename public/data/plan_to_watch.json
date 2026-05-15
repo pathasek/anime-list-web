@@ -854,5 +854,29 @@
     "total_time": 529.0,
     "source": "Time travel a nic jiného nevím",
     "notes": "Vydáno"
+  },
+  {
+    "name": "WorldEnd: What do you do at the end of the world? Are you busy? Will you save us?",
+    "type": "TV",
+    "episodes": 12,
+    "total_time": 288.0,
+    "source": "\"World End... World End... World End... to vidím furt a furt od jara 2025.. přidávám do PTW, protože mě teď zajímá, o čem to je.\"",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Tekkaman Blade",
+    "type": "Multiple",
+    "episodes": 59,
+    "total_time": 1239.0,
+    "source": "Orbital ring megastructers around the planet, ale hodnocení je nižší, je to super hidden a má to hodně Eps",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Pompo: The Cinéphile",
+    "type": "Movie",
+    "episodes": 1,
+    "total_time": 94.0,
+    "source": "Girl working mundane and monotonous job and crying after work (from TT)",
+    "notes": "Vydáno"
   }
 ]
