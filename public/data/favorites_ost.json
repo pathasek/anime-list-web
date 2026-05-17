@@ -1197,6 +1197,18 @@
       "anime_url": null,
       "ost_name": "Princess Mononoke Theme Song (Vocal) ",
       "ost_url": "https://youtu.be/E8-8TzBKnJQ?si=qn8_HvF2mgzm2GF6"
+    },
+    {
+      "anime_name": "Ranking of Kings",
+      "anime_url": null,
+      "ost_name": "Your Choice",
+      "ost_url": "https://youtu.be/-BVHo2aEhI8?si=eSAOnV5tUAy592YC"
+    },
+    {
+      "anime_name": "Ranking of Kings",
+      "anime_url": null,
+      "ost_name": "Concerto of Determination",
+      "ost_url": "https://youtu.be/IhYFBAiJB4A?si=fdPmbxa4hexERJZM"
     }
   ],
   "whole": [
@@ -1391,6 +1403,14 @@
       "yt_url": "https://youtube.com/playlist?list=PLfgNyk0PzW3Qe6CxAg-TjRn2Usj0_OK7P&si=zFlxgdQ9FmTuH78-",
       "spotify_playlist": "Spotify",
       "spotify_url": "The%20Ancient%20Magus'%20Bride,%20S02%20Part%201"
+    },
+    {
+      "anime_name": "Ranking of Kings",
+      "anime_url": null,
+      "yt_playlist": "YT Playlist",
+      "yt_url": "https://youtube.com/playlist?list=PLBO2h-GzDvIbFXfzlexauXIOi3yPt3DEu&si=fSfMvM4K-W-lzgW5",
+      "spotify_playlist": "Spotify",
+      "spotify_url": "https://open.spotify.com/playlist/2w7ehjUiYqGs9qj6BLQlLR?si=2d4dc0dea36f4811&pt=e39803ff7f103293e5be15c771b26d3e"
     }
   ]
 }
