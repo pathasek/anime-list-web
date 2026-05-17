@@ -1235,6 +1235,7 @@ function Favorites() {
                                         "The Garden of Sinners",
                                         "Kabaneri of the Iron Fortress",
                                         "Spy x Family",
+                                        "Ranking of Kings",
                                         "Somali and the Forest Spirit",
                                         "Tsukimichi -Moonlit Fantasy-"
                                     ];
