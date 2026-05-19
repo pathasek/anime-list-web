@@ -11596,7 +11596,7 @@
     "episodes": [
       {
         "episode": "EP 1",
-        "rating": 7.25
+        "rating": 7.0
       },
       {
         "episode": "EP 2",
@@ -11608,11 +11608,31 @@
       },
       {
         "episode": "EP 4",
-        "rating": 7.75
+        "rating": 8.0
       },
       {
         "episode": "EP 5",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 8",
         "rating": 7.5
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.0
       }
     ]
   }
