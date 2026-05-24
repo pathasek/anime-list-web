@@ -3891,5 +3891,39 @@
     "has_frisson": true,
     "rating_avg": 9.2,
     "rating_final": 9
+  },
+  {
+    "index": "230.",
+    "anime_name": "Moribito - Guardian of the Spirit",
+    "type": "ED",
+    "song": "Itoshii Hito e",
+    "author": "Sachi Tainaka",
+    "language": "JAP",
+    "rating_lyrics": 9.5,
+    "rating_emotion": 9.5,
+    "rating_melody": 8.75,
+    "rating_video": 8.25,
+    "rating_voice": 9.25,
+    "sing_along": 3,
+    "has_frisson": false,
+    "rating_avg": 9.05,
+    "rating_final": 9
+  },
+  {
+    "index": "231.",
+    "anime_name": "Moribito - Guardian of the Spirit",
+    "type": "OP",
+    "song": "SHINE",
+    "author": "L'Arc~en~Ciel",
+    "language": "JAP (54%) ENG (46%)",
+    "rating_lyrics": 8.75,
+    "rating_emotion": 9,
+    "rating_melody": 8.5,
+    "rating_video": 8.75,
+    "rating_voice": 8.75,
+    "sing_along": 7,
+    "has_frisson": false,
+    "rating_avg": 8.75,
+    "rating_final": 9
   }
 ]
