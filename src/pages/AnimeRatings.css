@@ -1054,3 +1054,42 @@
   text-transform: uppercase;
 }
 
+/* Episode Navigation Buttons */
+.episode-nav-buttons {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.ep-nav-btn {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: bold;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+  line-height: 1;
+}
+
+.ep-nav-btn:hover:not(:disabled) {
+  background: var(--bg-hover);
+  border-color: var(--accent-pink);
+  color: var(--text-primary);
+  box-shadow: 0 0 8px rgba(236, 72, 153, 0.3);
+  transform: scale(1.1);
+}
+
+.ep-nav-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+  border-color: var(--border-color);
+}
+

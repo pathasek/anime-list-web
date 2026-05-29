@@ -499,6 +499,30 @@ function AnimeRatings() {
         return { episodes: allEpisodes, boundaries: seasonBoundaries }
     }, [selectedSeries, episodeRatings, categoryRatings, seriesGroups, viewMode])
 
+    // Previous & Next episode navigation inside series timeline
+    const { hasPrevEp, hasNextEp, handlePrevEp, handleNextEp } = useMemo(() => {
+        if (!selectedTimelineEp || !seriesTimelineData || !seriesTimelineData.episodes) {
+            return { hasPrevEp: false, hasNextEp: false, handlePrevEp: () => {}, handleNextEp: () => {} }
+        }
+        const episodes = seriesTimelineData.episodes
+        const currentIndex = episodes.findIndex(ep => ep.index === selectedTimelineEp.index)
+        
+        return {
+            hasPrevEp: currentIndex > 0,
+            hasNextEp: currentIndex >= 0 && currentIndex < episodes.length - 1,
+            handlePrevEp: () => {
+                if (currentIndex > 0) {
+                    setSelectedTimelineEp(episodes[currentIndex - 1])
+                }
+            },
+            handleNextEp: () => {
+                if (currentIndex >= 0 && currentIndex < episodes.length - 1) {
+                    setSelectedTimelineEp(episodes[currentIndex + 1])
+                }
+            }
+        }
+    }, [selectedTimelineEp, seriesTimelineData])
+
     const getPointColor = (rating) => {
         if (rating >= 9.75) return 'rgb(29, 161, 242)' // Cinema (light blue)
         if (rating >= 9.0) return 'rgb(24, 106, 59)'   // Awesome (dark green)
@@ -1466,10 +1490,28 @@ function AnimeRatings() {
                                                         </p>
                                                     )}
                                                 </div>
-                                                <div style={{ marginTop:'6px', flexShrink: 0 }}>
+                                                <div style={{ marginTop:'6px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                                     <p style={{ color:'var(--text-muted)', fontSize:'0.72rem', fontStyle:'italic', margin: 0 }}>
                                                         Chronologicky {selectedTimelineEp.index}. v pořadí série.
                                                     </p>
+                                                    <div className="episode-nav-buttons">
+                                                        <button 
+                                                            className="ep-nav-btn" 
+                                                            onClick={handlePrevEp}
+                                                            disabled={!hasPrevEp}
+                                                            title="Předchozí epizoda"
+                                                        >
+                                                            ←
+                                                        </button>
+                                                        <button 
+                                                            className="ep-nav-btn" 
+                                                            onClick={handleNextEp}
+                                                            disabled={!hasNextEp}
+                                                            title="Další epizoda"
+                                                        >
+                                                            →
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         ) : (
