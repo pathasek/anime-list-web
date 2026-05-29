@@ -6,21 +6,24 @@ const TopFavorites = () => {
     const [data, setData] = useState({ top10_anime: [], hm_anime: [], top10_chars: [] });
     const [animeMap, setAnimeMap] = useState({});
     const [rawAnimeList, setRawAnimeList] = useState([]);
+    const [imageHash, setImageHash] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [favoritesRes, animeListRes] = await Promise.all([
+                const [favoritesRes, animeListRes, hashRes] = await Promise.all([
                     fetch(`data/top_favorites.json?v=${Date.now()}`),
-                    fetch(`data/anime_list.json?v=${Date.now()}`)
+                    fetch(`data/anime_list.json?v=${Date.now()}`),
+                    fetch('data/top_favorites_hash.txt').then(r => r.ok ? r.text() : '').catch(() => '')
                 ]);
 
                 if (!favoritesRes.ok || !animeListRes.ok) throw new Error('Failed to fetch data');
 
                 const favData = await favoritesRes.json();
                 const animeListData = await animeListRes.json();
+                const imgHash = hashRes.trim();
 
                 // Map anime list data by name for easy lookup of poster image
                 const map = {};
@@ -31,6 +34,7 @@ const TopFavorites = () => {
                 setData(favData);
                 setAnimeMap(map);
                 setRawAnimeList(animeListData);
+                setImageHash(imgHash);
                 setLoading(false);
             } catch (err) {
                 setError(err.message);
@@ -116,7 +120,7 @@ const TopFavorites = () => {
                                     {isHM ? 'HM' : `#${index + 1}`}
                                 </div>
                                 {finalImage ? (
-                                    <img src={`${finalImage}?v=${Date.now()}`} alt={name} className="favorite-image" loading="lazy" />
+                                    <img src={imageHash ? `${finalImage}?v=${imageHash}` : finalImage} alt={name} className="favorite-image" loading="lazy" />
                                 ) : (
                                     <div className="favorite-image-placeholder">No Image</div>
                                 )}

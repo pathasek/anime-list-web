@@ -1,10 +1,15 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import {
     Chart as ChartJS,
     registerables
 } from 'chart.js'
 import { Radar, Bar, Chart } from 'react-chartjs-2'
 import regression from 'regression'
+import {
+    extractMalId,
+    getCachedEpisodeList,
+    getCachedEpisodeSynopsis
+} from '../utils/jikanService'
 import './AnimeRatings.css'
 
 ChartJS.register(...registerables)
@@ -22,7 +27,7 @@ const cleanSeasonLabel = (name, seriesName) => {
     // 1. Strip series name prefix
     if (seriesName) {
         const escapedSeries = seriesName.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-        const regex = new RegExp(`^${escapedSeries}(?:,\\s*|\\s+|-+\\s*)`, 'i');
+        const regex = new RegExp(`^${escapedSeries}(?::\\s*|,\\s*|\\s+|-+\\s*)`, 'i');
         cleaned = cleaned.replace(regex, '');
     }
     
@@ -52,6 +57,11 @@ const cleanSeasonLabel = (name, seriesName) => {
         .replace(/Season\s*(\d+)/i, 'S$1')
         .replace(/Part\s*(\d+)/i, 'P$1');
         
+    // 4. Standardize identical name to "S1"
+    if (seriesName && cleaned.trim().toLowerCase() === seriesName.trim().toLowerCase()) {
+        cleaned = "S1";
+    }
+        
     return cleaned.trim();
 };
 
@@ -74,6 +84,12 @@ function AnimeRatings() {
     const [searchQuerySeries, setSearchQuerySeries] = useState('')
     const [showTrendLine, setShowTrendLine] = useState(true)
 
+    const [jikanEpisodes, setJikanEpisodes] = useState(null)  // episode list from Jikan for current anime
+    const [jikanSynopsis, setJikanSynopsis] = useState(null)  // synopsis detail for selected episode
+    const [jikanLoading, setJikanLoading] = useState(false)
+    const selectedTimelineEpRef = useRef(null)
+    selectedTimelineEpRef.current = selectedTimelineEp
+
     // ---- UI STATES: ROW 1 (INDIVIDUAL) ----
     const [searchQuery, setSearchQuery] = useState('')
     const [selectedAnimeTitle, setSelectedAnimeTitle] = useState(null)
@@ -88,35 +104,6 @@ function AnimeRatings() {
     const [lbSort, setLbSort] = useState('Nejlepší')
     const [lbCount, setLbCount] = useState(30)
 
-    // Load data
-    useEffect(() => {
-        Promise.all([
-            fetch('data/anime_list.json').then(r => r.json()),
-            fetch('data/category_ratings.json').then(r => r.json()),
-            fetch('data/episode_ratings.json').then(r => r.json()),
-            fetch('data/notes.json').then(r => r.json())
-        ]).then(([al, cr, er, nt]) => {
-            // Sort anime list by reading primarily those that have category ratings
-            const animeWithRatings = new Set(cr.map(c => c.name))
-            const filteredAl = al.filter(a => animeWithRatings.has(a.name)).sort((a,b) => {
-                const ra = Number(a.rating) || 0;
-                const rb = Number(b.rating) || 0;
-                return rb - ra; // Sort by FH descending
-            })
-            setAnimeList(filteredAl)
-            setCategoryRatings(cr)
-            setEpisodeRatings(er)
-            setNotes(nt)
-
-            if (filteredAl.length > 0) {
-                setSelectedAnimeTitle(filteredAl[0].name)
-            }
-            setLoading(false)
-        }).catch(err => {
-            console.error("Failed to load data for Anime Ratings:", err)
-            setLoading(false)
-        })
-    }, [])
 
     // ============================================
     // SERIES DATA MEMOIZATION & GROUPING
@@ -172,6 +159,191 @@ function AnimeRatings() {
     const selectedSeriesObj = useMemo(() => {
         return seriesList.find(s => s.name === selectedSeries) || null
     }, [seriesList, selectedSeries])
+
+    const seasonColorMap = useMemo(() => {
+        if (!selectedSeriesObj) return {}
+        const map = {}
+        selectedSeriesObj.items.forEach((item, idx) => {
+            const cleanLabel = cleanSeasonLabel(item.name, selectedSeries)
+            map[cleanLabel] = idx
+        })
+        return map
+    }, [selectedSeriesObj, selectedSeries])
+
+    const seasonStyles = [
+        { bg: 'rgba(99, 102, 241, 0.12)', border: 'rgba(99, 102, 241, 0.4)', text: 'rgb(165, 180, 252)' },      // Indigo
+        { bg: 'rgba(16, 185, 129, 0.12)', border: 'rgba(16, 185, 129, 0.4)', text: 'rgb(110, 231, 183)' },     // Emerald
+        { bg: 'rgba(245, 158, 11, 0.12)', border: 'rgba(245, 158, 11, 0.4)', text: 'rgb(253, 230, 138)' },     // Amber
+        { bg: 'rgba(20, 184, 166, 0.12)', border: 'rgba(20, 184, 166, 0.4)', text: 'rgb(94, 234, 212)' },      // Teal
+        { bg: 'rgba(139, 92, 246, 0.12)', border: 'rgba(139, 92, 246, 0.4)', text: 'rgb(196, 181, 253)' },     // Violet
+        { bg: 'rgba(244, 63, 94, 0.12)', border: 'rgba(244, 63, 94, 0.4)', text: 'rgb(244, 143, 177)' },       // Rose
+        { bg: 'rgba(59, 130, 246, 0.12)', border: 'rgba(59, 130, 246, 0.4)', text: 'rgb(147, 197, 253)' },     // Blue
+        { bg: 'rgba(217, 70, 239, 0.12)', border: 'rgba(217, 70, 239, 0.4)', text: 'rgb(240, 171, 252)' }      // Fuchsia
+    ]
+
+    // Load data
+    useEffect(() => {
+        let isMounted = true
+        Promise.all([
+            fetch('data/anime_list.json').then(r => r.json()),
+            fetch('data/category_ratings.json').then(r => r.json()),
+            fetch('data/episode_ratings.json').then(r => r.json()),
+            fetch('data/notes.json').then(r => r.json())
+        ]).then(([al, cr, er, nt]) => {
+            if (!isMounted) return
+
+            // Sort anime list by reading primarily those that have category ratings
+            const animeWithRatings = new Set(cr.map(c => c.name))
+            const filteredAl = al.filter(a => animeWithRatings.has(a.name)).sort((a,b) => {
+                const ra = Number(a.rating) || 0;
+                const rb = Number(b.rating) || 0;
+                return rb - ra; // Sort by FH descending
+            })
+            setAnimeList(filteredAl)
+            setCategoryRatings(cr)
+            setEpisodeRatings(er)
+            setNotes(nt)
+
+            if (filteredAl.length > 0) {
+                setSelectedAnimeTitle(filteredAl[0].name)
+            }
+            setLoading(false)
+        }).catch(err => {
+            console.error("Failed to load data for Anime Ratings:", err)
+            if (isMounted) {
+                setLoading(false)
+            }
+        })
+
+        return () => {
+            isMounted = false
+        }
+    }, [])
+
+    // ============================================
+    // JIKAN: Load episode list when anime selection changes
+    // ============================================
+    useEffect(() => {
+        if (!selectedSeries || viewMode !== 'series' || !selectedSeriesObj) {
+            setJikanEpisodes(null)
+            return
+        }
+
+        let cancelled = false
+        setJikanLoading(true)
+
+        const loadAllSeriesEpisodes = async () => {
+            try {
+                const results = []
+                for (const item of selectedSeriesObj.items) {
+                    if (!item.mal_url) continue
+                    const malId = extractMalId(item.mal_url)
+                    if (!malId) continue
+                    
+                    const cached = await getCachedEpisodeList(malId)
+                    if (cached && cached.episodes && cached.episodes.length > 0) {
+                        const mappedEps = cached.episodes.map(ep => ({
+                            ...ep,
+                            animeName: item.name,
+                            cleanSeasonName: cleanSeasonLabel(item.name, selectedSeries)
+                        }))
+                        results.push({
+                            animeName: item.name,
+                            episodes: mappedEps
+                        })
+                    } else {
+                        // Fallback: generate synthetic episodes so it shows up immediately in the right list panel!
+                        const isMovie = item.type === "Movie" || Number(item.episodes) === 1;
+                        const syntheticEps = []
+                        const totalEps = Number(item.episodes) || 1
+                        
+                        for (let epNum = 1; epNum <= totalEps; epNum++) {
+                            syntheticEps.push({
+                                mal_id: epNum,
+                                title: isMovie ? "Film" : `Epizoda ${epNum}`,
+                                title_japanese: null,
+                                aired: item.release_date || null,
+                                score: Number(item.rating) || null,
+                                filler: false,
+                                recap: false,
+                                animeName: item.name,
+                                cleanSeasonName: cleanSeasonLabel(item.name, selectedSeries)
+                            })
+                        }
+                        results.push({
+                            animeName: item.name,
+                            episodes: syntheticEps
+                        })
+                    }
+                }
+
+                if (cancelled) return
+
+                const mergedEpisodes = []
+                selectedSeriesObj.items.forEach(item => {
+                    const found = results.find(r => r.animeName === item.name)
+                    if (found) {
+                        mergedEpisodes.push(...found.episodes)
+                    }
+                })
+
+                setJikanEpisodes(mergedEpisodes.length > 0 ? mergedEpisodes : null)
+                setJikanLoading(false)
+            } catch (err) {
+                console.error("Failed to load series episodes:", err)
+                if (!cancelled) {
+                    setJikanEpisodes(null)
+                    setJikanLoading(false)
+                }
+            }
+        }
+
+        loadAllSeriesEpisodes()
+
+        return () => { cancelled = true }
+    }, [selectedSeries, selectedSeriesObj, viewMode])
+
+    // ============================================
+    // JIKAN: Load synopsis when episode is selected
+    // ============================================
+    useEffect(() => {
+        if (!selectedTimelineEp || viewMode !== 'series') {
+            setJikanSynopsis(null)
+            return
+        }
+
+        const anime = animeList.find(a => a.name === selectedTimelineEp.animeName)
+        if (!anime || !anime.mal_url) {
+            setJikanSynopsis(null)
+            return
+        }
+
+        const malId = extractMalId(anime.mal_url)
+        if (!malId) {
+            setJikanSynopsis(null)
+            return
+        }
+
+        // Extract episode number from epName (e.g. "EP 3" -> 3, "Film" -> 1)
+        const epName = selectedTimelineEp.epName
+        let epNum = 1
+        const epMatch = epName.match(/EP\s*(\d+)/i)
+        if (epMatch) {
+            epNum = parseInt(epMatch[1], 10)
+        }
+
+        let cancelled = false
+
+        getCachedEpisodeSynopsis(malId, epNum).then(cached => {
+            if (cancelled) return
+            setJikanSynopsis(cached || null)
+        }).catch(() => {
+            if (!cancelled) setJikanSynopsis(null)
+        })
+
+        return () => { cancelled = true }
+    }, [selectedTimelineEp, viewMode, animeList])
+
 
     // Automatically set default series and season when entering series mode
     useEffect(() => {
@@ -337,6 +509,13 @@ function AnimeRatings() {
         return 'rgb(239, 68, 68)'                      // Garbage (red)
     }
 
+    const getPointTextColor = (rating) => {
+        if (rating >= 9.0 && rating < 9.75) return '#fff' // Dark green -> white
+        if (rating >= 5.0 && rating < 6.0) return '#fff'  // Purple -> white
+        if (rating < 5.0) return '#fff'                   // Red -> white
+        return '#000'                                     // Light blue, green, yellow, orange -> black
+    }
+
     const timelineChartData = useMemo(() => {
         if (!seriesTimelineData || seriesTimelineData.episodes.length === 0) return null
         const { episodes } = seriesTimelineData
@@ -397,7 +576,7 @@ function AnimeRatings() {
             labels: episodes.map(ep => `${ep.seasonName} ${ep.epName}`),
             datasets
         }
-    }, [seriesTimelineData, showTrendLine])
+    }, [seriesTimelineData, showTrendLine, selectedTimelineEp])
 
     // Custom Plugin for Season Boundaries and Labels on Chart.js
     const seasonBoundariesPlugin = useMemo(() => {
@@ -427,7 +606,7 @@ function AnimeRatings() {
             },
             afterDraw: (chart) => {
                 const { ctx, chartArea, scales } = chart
-                if (!ctx || !chartArea || !scales || !scales.x) return
+                if (!ctx || !chartArea || !scales || !scales.x || !scales.y) return
                 const { top, bottom } = chartArea
                 const { x } = scales
                 const boundaries = chart.options.plugins.seasonBoundaries?.boundaries || []
@@ -471,6 +650,45 @@ function AnimeRatings() {
                     }
                 })
                 ctx.restore()
+
+                // Draw red vertical arrow pointing from above at the selected episode point
+                const activeEp = selectedTimelineEpRef.current
+                if (activeEp) {
+                    const xVal = parseInt(activeEp.index, 10)
+                    const yVal = activeEp.rating
+
+                    if (!isNaN(xVal) && xVal >= scales.x.min && xVal <= scales.x.max) {
+                        const xPixel = scales.x.getPixelForValue(xVal)
+                        const yPixel = scales.y.getPixelForValue(yVal)
+
+                        const arrowTipY = yPixel - 6
+                        const arrowheadBaseY = yPixel - 14
+                        const arrowShaftStartY = Math.max(top + 2, yPixel - 32)
+
+                        ctx.save()
+                        ctx.strokeStyle = 'rgb(239, 68, 68)'
+                        ctx.fillStyle = 'rgb(239, 68, 68)'
+                        ctx.lineWidth = 2.5
+
+                        // Draw arrowhead (pointing down)
+                        ctx.beginPath()
+                        ctx.moveTo(xPixel - 5, arrowheadBaseY)
+                        ctx.lineTo(xPixel + 5, arrowheadBaseY)
+                        ctx.lineTo(xPixel, arrowTipY)
+                        ctx.closePath()
+                        ctx.fill()
+
+                        // Draw arrow shaft if there is enough space
+                        if (arrowShaftStartY < arrowheadBaseY) {
+                            ctx.beginPath()
+                            ctx.moveTo(xPixel, arrowShaftStartY)
+                            ctx.lineTo(xPixel, arrowheadBaseY)
+                            ctx.stroke()
+                        }
+
+                        ctx.restore()
+                    }
+                }
             }
         }
     }, [])
@@ -489,6 +707,21 @@ function AnimeRatings() {
         return {
             responsive: true,
             maintainAspectRatio: false,
+            onClick: (event, elements, chart) => {
+                const activeElements = chart.getElementsAtEventForMode(
+                    event.native,
+                    'nearest',
+                    { intersect: false },
+                    true
+                )
+                if (activeElements && activeElements.length > 0) {
+                    const element = activeElements[0]
+                    const ep = seriesTimelineData?.episodes?.[element.index]
+                    if (ep) {
+                        setSelectedTimelineEp(ep)
+                    }
+                }
+            },
             scales: {
                 x: {
                     type: 'linear',
@@ -545,7 +778,7 @@ function AnimeRatings() {
                 }
             }
         }
-    }, [seriesTimelineData, showTrendLine, yAxisMin])
+    }, [seriesTimelineData, showTrendLine, yAxisMin, selectedTimelineEp])
 
     // ============================================
     // ROW 1 DATA MEMOIZATION (INDIVIDUAL)
@@ -1102,7 +1335,7 @@ function AnimeRatings() {
                     </div>
 
                     {/* 2. Series Detail Center & Right Panel */}
-                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'var(--spacing-grid)' }}>
+                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'var(--spacing-grid)', minWidth: 0 }}>
                         {/* A. Hlavička Série */}
                         {selectedSeriesObj && (
                             <div className="series-header-card">
@@ -1152,10 +1385,10 @@ function AnimeRatings() {
                         </div>
 
                         {/* C. Vizualizační plocha */}
-                        <div className="ratings-row" style={{ flex: 1, minHeight: 0 }}>
+                        <div className="ratings-row" style={{ flex: 1, minHeight: 0, minWidth: 0 }}>
                             {seriesTab === 'timeline' ? (
                                 <>
-                                    <div className="ratings-panel" style={{ flex: 1, height: '500px' }}>
+                                    <div className="ratings-panel" style={{ flex: 1, height: '500px', minWidth: 0 }}>
                                         <h3 className="ratings-panel-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                             <span>Spojitý vývoj hodnocení epizod</span>
                                             <div className="chart-toggles-container" style={{ display: 'flex', gap: '16px', alignItems: 'center', fontSize: '0.8rem', fontWeight: 'normal', color: 'var(--text-secondary)' }}>
@@ -1172,13 +1405,6 @@ function AnimeRatings() {
                                                     data={timelineChartData}
                                                     options={timelineOptions}
                                                     plugins={[seasonBoundariesPlugin]}
-                                                    onClick={(e, elements) => {
-                                                        if (elements && elements.length > 0) {
-                                                            const element = elements[0]
-                                                            const ep = seriesTimelineData?.episodes?.[element.index]
-                                                            if (ep) setSelectedTimelineEp(ep)
-                                                        }
-                                                    }}
                                                 />
                                             ) : (
                                                 <div style={{ color: 'var(--text-muted)', textAlign: 'center', marginTop: '70px' }}>
@@ -1188,34 +1414,143 @@ function AnimeRatings() {
                                         </div>
                                     </div>
 
-                                    {/* Epizodní panel vpravo */}
-                                    <div className="ratings-panel" style={{ flex: '0 0 320px', height: '500px' }}>
-                                        <h3 className="ratings-panel-title">Detail vybrané epizody</h3>
+                                    {/* Epizodní panel vpravo — Jikan episode list / detail */}
+                                    <div className="ratings-panel episode-panel">
                                         {selectedTimelineEp ? (
-                                            <div className="fade-in" style={{ display:'flex', flexDirection:'column', gap:'12px', fontSize:'0.9rem' }}>
-                                                <div style={{ fontWeight:'bold', fontSize:'1.05rem', color:'var(--text-primary)' }}>
-                                                    {selectedTimelineEp.epName}
-                                                </div>
-                                                <div style={{ color:'var(--text-secondary)' }}>
-                                                    Sezóna/Část: <span style={{ color:'var(--accent-pink)' }}>{selectedTimelineEp.animeName}</span>
-                                                </div>
-                                                <div style={{ display:'flex', gap:'8px', alignItems:'center', marginTop:'4px' }}>
-                                                    <span className="badge" style={{ background: getPointColor(selectedTimelineEp.rating), color:'#fff', fontSize:'1rem', padding:'6px 12px' }}>
-                                                        EP: {selectedTimelineEp.rating.toFixed(2)}
+                                            /* ===== STAV B: Epizoda vybrána — detail + synopsis ===== */
+                                            <div className="fade-in" style={{ display:'flex', flexDirection:'column', flex: 1, minHeight: 0 }}>
+                                                <div className="episode-detail-header">
+                                                    <button className="episode-back-btn" onClick={() => setSelectedTimelineEp(null)}>
+                                                        ← Seznam
+                                                    </button>
+                                                    <span style={{ fontSize:'0.8rem', fontWeight:700, color:'var(--text-muted)' }}>
+                                                        {selectedTimelineEp.epName}
                                                     </span>
                                                 </div>
-                                                <div style={{ marginTop:'8px', borderTop:'1px solid var(--border-color)', paddingTop:'8px' }}>
-                                                    <p style={{ color:'var(--text-muted)', fontSize:'0.8rem', fontStyle:'italic' }}>
-                                                        Poznámka: Epizoda je chronologicky {selectedTimelineEp.index}. v pořadí celé série.
+                                                <div className="episode-detail-title">
+                                                    {jikanSynopsis?.title || selectedTimelineEp.epName}
+                                                </div>
+                                                <div className="episode-season-label">
+                                                    Sezóna: <span style={{ color:'var(--accent-pink)' }}>{selectedTimelineEp.animeName}</span>
+                                                </div>
+                                                <div className="episode-detail-meta">
+                                                    <span className="meta-badge" style={{ background: getPointColor(selectedTimelineEp.rating), color: getPointTextColor(selectedTimelineEp.rating) }}>
+                                                        EP: {selectedTimelineEp.rating.toFixed(2)}
+                                                    </span>
+                                                    {(() => {
+                                                        // Find MAL score from jikanEpisodes list
+                                                        const epName = selectedTimelineEp.epName
+                                                        const epMatch = epName.match(/EP\s*(\d+)/i)
+                                                        const epNum = epMatch ? parseInt(epMatch[1], 10) : null
+                                                        const malEp = epNum && jikanEpisodes ? jikanEpisodes.find(e => e.mal_id === epNum) : null
+                                                        if (malEp && malEp.score) {
+                                                            return <span className="meta-badge" style={{ background:'var(--bg-tertiary)', color:'var(--text-secondary)' }}>MAL: {malEp.score.toFixed(2)}</span>
+                                                        }
+                                                        return null
+                                                    })()}
+                                                    {jikanSynopsis?.filler && <span className="ep-badge filler">Filler</span>}
+                                                    {jikanSynopsis?.recap && <span className="ep-badge recap">Recap</span>}
+                                                </div>
+                                                {jikanSynopsis?.aired && (
+                                                    <div className="episode-aired-date">
+                                                        Aired: {new Date(jikanSynopsis.aired).toLocaleDateString('cs-CZ', { day: 'numeric', month: 'long', year: 'numeric' })}
+                                                        {jikanSynopsis.duration ? ` · ${Math.round(jikanSynopsis.duration / 60)} min` : ''}
+                                                    </div>
+                                                )}
+                                                <div className="episode-synopsis-container">
+                                                    {jikanSynopsis?.synopsis ? (
+                                                        <p className="episode-synopsis-text">{jikanSynopsis.synopsis}</p>
+                                                    ) : (
+                                                        <p className="episode-synopsis-placeholder">
+                                                            {jikanSynopsis === null ? 'Synopsis se stahuje na pozadí...' : 'Synopsis není k dispozici.'}
+                                                        </p>
+                                                    )}
+                                                </div>
+                                                <div style={{ marginTop:'6px', flexShrink: 0 }}>
+                                                    <p style={{ color:'var(--text-muted)', fontSize:'0.72rem', fontStyle:'italic', margin: 0 }}>
+                                                        Chronologicky {selectedTimelineEp.index}. v pořadí série.
                                                     </p>
                                                 </div>
                                             </div>
                                         ) : (
-                                            <div style={{ color: 'var(--text-muted)', textAlign: 'center', marginTop: '60px', fontSize: '0.85rem' }}>
-                                                {seriesTimelineData?.episodes?.length > 0 ? (
-                                                    "Kliknutím na jakýkoliv bod v grafu zobrazíte detail epizody"
+                                            /* ===== STAV A: Žádná epizoda nevybrána — seznam ===== */
+                                            <div style={{ display:'flex', flexDirection:'column', flex: 1, minHeight: 0 }}>
+                                                <h3 className="ratings-panel-title" style={{ fontSize: '0.9rem' }}>
+                                                    {selectedSeriesSeason ? `Epizody` : 'Detail epizod'}
+                                                </h3>
+                                                {jikanLoading ? (
+                                                    <div className="episode-panel-loading">
+                                                        <div className="loading-spinner"></div>
+                                                        Načítání epizod...
+                                                    </div>
+                                                ) : jikanEpisodes && jikanEpisodes.length > 0 ? (
+                                                    <div className="episode-list-panel">
+                                                        {jikanEpisodes.map((ep, epIdx) => (
+                                                            <div
+                                                                key={`${ep.animeName}_${ep.mal_id}_${epIdx}`}
+                                                                className="episode-list-item"
+                                                                onClick={() => {
+                                                                    // Find the exact matching chronological episode in our seriesTimelineData
+                                                                    const isMovie = ep.cleanSeasonName.toLowerCase().includes('film') || ep.cleanSeasonName.toLowerCase().includes('movie') || ep.cleanSeasonName.toLowerCase().includes('0');
+                                                                    const tEp = seriesTimelineData?.episodes?.find(t => 
+                                                                        t.animeName === ep.animeName && 
+                                                                        (t.epName === `EP ${ep.mal_id}` || (t.epName === 'Film' && ep.mal_id === 1))
+                                                                    )
+                                                                    if (tEp) {
+                                                                        setSelectedTimelineEp(tEp)
+                                                                    } else {
+                                                                        // Fallback if not found in timeline data
+                                                                        const animeName = ep.animeName
+                                                                        const erObj = episodeRatings.find(er => er.name === animeName)
+                                                                        const ourEp = erObj?.episodes?.find(e => {
+                                                                            const m = e.episode.match(/EP\s*(\d+)/i)
+                                                                            return m && parseInt(m[1], 10) === ep.mal_id
+                                                                        })
+                                                                        const targetRating = ourEp ? ourEp.rating : (Number(animeList.find(a => a.name === animeName)?.rating) || 0)
+                                                                        setSelectedTimelineEp({
+                                                                            index: ep.mal_id,
+                                                                            rating: targetRating,
+                                                                            epName: ep.mal_id === 1 && (isMovie || animeList.find(a => a.name === animeName)?.type === 'Movie') ? 'Film' : `EP ${ep.mal_id}`,
+                                                                            animeName: animeName,
+                                                                            seasonName: ep.cleanSeasonName
+                                                                        })
+                                                                    }
+                                                                }}
+                                                                title={`${ep.cleanSeasonName} - EP ${ep.mal_id}: ${ep.title}`}
+                                                            >
+                                                                 {selectedSeriesObj && selectedSeriesObj.items.length > 1 && (() => {
+                                                                     const colorIdx = seasonColorMap[ep.cleanSeasonName] ?? 0;
+                                                                     const styleObj = seasonStyles[colorIdx % seasonStyles.length];
+                                                                     return (
+                                                                         <span 
+                                                                             className="ep-season-badge"
+                                                                             style={{
+                                                                                 background: styleObj.bg,
+                                                                                 borderColor: styleObj.border,
+                                                                                 color: styleObj.text
+                                                                             }}
+                                                                         >
+                                                                             {ep.cleanSeasonName}
+                                                                         </span>
+                                                                     );
+                                                                 })()}
+                                                                <span className="ep-number">EP {ep.mal_id}</span>
+                                                                <span className="ep-title">{ep.title}</span>
+                                                                {ep.filler && <span className="ep-badge filler">Fill</span>}
+                                                                {ep.recap && <span className="ep-badge recap">Rec</span>}
+                                                                {ep.score && <span className="ep-score">★ {ep.score.toFixed(1)}</span>}
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                ) : seriesTimelineData?.episodes?.length > 0 ? (
+                                                    <div className="episode-synopsis-placeholder">
+                                                        Data epizod se stahují na pozadí...<br/>
+                                                        Kliknutím na bod v grafu zobrazíte detail.
+                                                    </div>
                                                 ) : (
-                                                    "Žádná data k dispozici"
+                                                    <div className="episode-synopsis-placeholder">
+                                                        Žádná data k dispozici.
+                                                    </div>
                                                 )}
                                             </div>
                                         )}

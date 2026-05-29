@@ -10,6 +10,7 @@ import AnimeRatings from './pages/AnimeRatings'
 import TopFavorites from './pages/TopFavorites'
 import StatsTree from './pages/StatsTree'
 import Recommendations from './pages/Recommendations'
+import { startBackgroundDownload, importJikanStaticCache } from './utils/jikanService'
 import './index.css'
 
 // Icons as simple SVG components
@@ -206,6 +207,27 @@ function App() {
       .then(res => res.json())
       .then(data => setStats(data))
       .catch(err => console.error('Failed to load stats:', err))
+
+    // Start background download for Jikan API v4 episodes 24/7 across the entire application
+    fetch('data/anime_list.json')
+      .then(res => res.json())
+      .then(al => {
+        // First bulk import the static cache deployed on the server
+        fetch('data/jikan_cache.json')
+          .then(res => {
+            if (!res.ok) throw new Error('Static Jikan cache not available on server');
+            return res.json();
+          })
+          .then(async (staticCache) => {
+            await importJikanStaticCache(staticCache);
+            startBackgroundDownload(al);
+          })
+          .catch(err => {
+            console.warn('[Jikan] Could not load static cache on startup, running clean downloader:', err);
+            startBackgroundDownload(al);
+          });
+      })
+      .catch(err => console.error('Failed to start Jikan downloader in App:', err))
   }, [])
 
   return (
