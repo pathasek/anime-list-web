@@ -71,6 +71,7 @@ function AnimeRatings() {
     const [categoryRatings, setCategoryRatings] = useState([])
     const [episodeRatings, setEpisodeRatings] = useState([])
     const [notes, setNotes] = useState([])
+    const [imdbCache, setImdbCache] = useState({})
     const [loading, setLoading] = useState(true)
 
     // ---- UI STATES: ROUTING & MODES ----
@@ -83,6 +84,8 @@ function AnimeRatings() {
     const [selectedTimelineEp, setSelectedTimelineEp] = useState(null)
     const [searchQuerySeries, setSearchQuerySeries] = useState('')
     const [showTrendLine, setShowTrendLine] = useState(true)
+    const [ratingSource, setRatingSource] = useState('moje') // 'moje' | 'mal' | 'imdb'
+    const [franchiseJikanCache, setFranchiseJikanCache] = useState({})
 
     const [jikanEpisodes, setJikanEpisodes] = useState(null)  // episode list from Jikan for current anime
     const [jikanSynopsis, setJikanSynopsis] = useState(null)  // synopsis detail for selected episode
@@ -147,7 +150,9 @@ function AnimeRatings() {
                 studios,
                 totalEps
             }
-        }).sort((a, b) => b.avgRating - a.avgRating) // Sort by overall average rating descending
+        })
+        .filter(s => s.items.length > 1) // Pouze franšízy s více než 1 částí/sezónou
+        .sort((a, b) => b.avgRating - a.avgRating) // Sort by overall average rating descending
     }, [seriesGroups])
 
     const filteredSeriesList = useMemo(() => {
@@ -188,8 +193,9 @@ function AnimeRatings() {
             fetch('data/anime_list.json').then(r => r.json()),
             fetch('data/category_ratings.json').then(r => r.json()),
             fetch('data/episode_ratings.json').then(r => r.json()),
-            fetch('data/notes.json').then(r => r.json())
-        ]).then(([al, cr, er, nt]) => {
+            fetch('data/notes.json').then(r => r.json()),
+            fetch('data/imdb_cache.json').then(r => r.json()).catch(() => ({}))
+        ]).then(([al, cr, er, nt, ic]) => {
             if (!isMounted) return
 
             // Sort anime list by reading primarily those that have category ratings
@@ -203,6 +209,7 @@ function AnimeRatings() {
             setCategoryRatings(cr)
             setEpisodeRatings(er)
             setNotes(nt)
+            setImdbCache(ic)
 
             if (filteredAl.length > 0) {
                 setSelectedAnimeTitle(filteredAl[0].name)
@@ -219,6 +226,44 @@ function AnimeRatings() {
             isMounted = false
         }
     }, [])
+
+    // ============================================
+    // JIKAN: Preload Jikan episode lists for all seasons in selected series franchise
+    // ============================================
+    useEffect(() => {
+        if (!selectedSeriesObj || viewMode !== 'series') {
+            setFranchiseJikanCache({})
+            return
+        }
+
+        let isMounted = true
+        const loadAll = async () => {
+            const cacheObj = {}
+            for (const item of selectedSeriesObj.items) {
+                if (item.mal_url) {
+                    const malId = extractMalId(item.mal_url)
+                    if (malId) {
+                        try {
+                            const cached = await getCachedEpisodeList(malId)
+                            if (cached && cached.episodes) {
+                                cacheObj[String(malId)] = cached.episodes
+                            }
+                        } catch (e) {
+                            console.warn("[Jikan] Preload failed for MAL ID:", malId, e)
+                        }
+                    }
+                }
+            }
+            if (isMounted) {
+                setFranchiseJikanCache(cacheObj)
+            }
+        }
+
+        loadAll()
+        return () => {
+            isMounted = false
+        }
+    }, [selectedSeriesObj, viewMode])
 
     // ============================================
     // JIKAN: Load episode list when anime selection changes
@@ -543,31 +588,85 @@ function AnimeRatings() {
     const timelineChartData = useMemo(() => {
         if (!seriesTimelineData || seriesTimelineData.episodes.length === 0) return null
         const { episodes } = seriesTimelineData
-        const pointColors = episodes.map(ep => getPointColor(ep.rating))
+
+        const getActiveRating = (ep) => {
+            if (ratingSource === 'moje') {
+                return ep.rating
+            }
+            if (ratingSource === 'imdb') {
+                const anime = animeList.find(a => a.name === ep.animeName)
+                if (anime && anime.mal_url) {
+                    const malId = extractMalId(anime.mal_url)
+                    if (malId) {
+                        const imdbAnime = imdbCache[String(malId)]
+                        if (imdbAnime && imdbAnime.episodes) {
+                            const score = imdbAnime.episodes[ep.epName] || imdbAnime.episodes["Film"] || imdbAnime.episodes["OVA"] || imdbAnime.episodes["Speciál"] || imdbAnime.episodes["EP 1"]
+                            if (score) return score
+                        }
+                    }
+                }
+                return null
+            }
+            if (ratingSource === 'mal') {
+                const anime = animeList.find(a => a.name === ep.animeName)
+                if (anime && anime.mal_url) {
+                    const malId = extractMalId(anime.mal_url)
+                    if (malId) {
+                        const malEps = franchiseJikanCache[String(malId)]
+                        if (malEps) {
+                            const epMatch = ep.epName.match(/EP\s*(\d+)/i)
+                            const epNum = epMatch ? parseInt(epMatch[1], 10) : (ep.epName === 'Film' || ep.epName === 'OVA' || malEps.length === 1 ? 1 : null)
+                            const malEp = epNum ? malEps.find(e => e.mal_id === epNum) : null
+                            if (malEp && malEp.score) {
+                                const isMovieOrOVA = ep.epName === 'Film' || ep.epName === 'OVA' || malEps.length === 1
+                                return isMovieOrOVA ? malEp.score / 2 : malEp.score
+                            }
+                        }
+                    }
+                }
+                return null
+            }
+            return null
+        }
+
+        const activePoints = episodes.map(ep => {
+            const yVal = getActiveRating(ep)
+            return { x: ep.index, y: yVal }
+        })
+
+        const pointColors = activePoints.map(pt => {
+            if (pt.y === null) return 'rgba(255, 255, 255, 0.2)'
+            const colorRating = ratingSource === 'mal' ? pt.y * 2 : pt.y
+            return getPointColor(colorRating)
+        })
 
         let trendData = []
         if (episodes.length > 1) {
-            const dataPoints = episodes.map(ep => [ep.index, ep.rating])
-            // Dynamic window size: odd number scaled to series length (LOESS-like local span)
-            const windowSize = Math.max(5, Math.min(13, (Math.round(dataPoints.length / 7.5) | 1)))
-            const half = Math.floor(windowSize / 2)
-            
-            trendData = dataPoints.map((dp, idx) => {
-                let sum = 0
-                let count = 0
-                for (let i = -half; i <= half; i++) {
-                    const checkIdx = idx + i
-                    if (checkIdx >= 0 && checkIdx < dataPoints.length) {
-                        const weight = 1 - Math.abs(i) / (half + 1)
-                        sum += dataPoints[checkIdx][1] * weight
-                        count += weight
+            const validPoints = activePoints.filter(pt => pt.y !== null)
+            if (validPoints.length > 1) {
+                const dataPoints = activePoints.map(pt => [pt.x, pt.y])
+                const windowSize = Math.max(5, Math.min(13, (Math.round(dataPoints.length / 7.5) | 1)))
+                const half = Math.floor(windowSize / 2)
+                
+                trendData = dataPoints.map((dp, idx) => {
+                    if (dp[1] === null) return null
+                    let sum = 0
+                    let count = 0
+                    for (let i = -half; i <= half; i++) {
+                        const checkIdx = idx + i
+                        if (checkIdx >= 0 && checkIdx < dataPoints.length && dataPoints[checkIdx][1] !== null) {
+                            const weight = 1 - Math.abs(i) / (half + 1)
+                            sum += dataPoints[checkIdx][1] * weight
+                            count += weight
+                        }
                     }
-                }
-                return sum / count
-            })
+                    return count > 0 ? (sum / count) : null
+                })
+            }
         }
 
         const datasets = []
+
         if (showTrendLine && trendData.length > 0) {
             datasets.push({
                 type: 'line',
@@ -581,12 +680,24 @@ function AnimeRatings() {
                 showLine: true
             })
         }
+
+        const sourceLabels = {
+            'moje': 'Moje hodnocení',
+            'mal': 'MAL hodnocení',
+            'imdb': 'IMDb hodnocení'
+        }
+        const activeLabel = sourceLabels[ratingSource] || 'Hodnocení'
+
+        let lineColor = 'rgba(255, 255, 255, 0.15)'
+        if (ratingSource === 'imdb') lineColor = 'rgba(245, 197, 24, 0.25)'
+        else if (ratingSource === 'mal') lineColor = 'rgba(46, 81, 162, 0.3)'
+
         datasets.push({
             type: 'line',
-            label: 'Hodnocení',
-            data: episodes.map(ep => ({ x: ep.index, y: ep.rating })),
-            borderColor: 'rgba(255, 255, 255, 0.15)',
-            borderWidth: 1,
+            label: activeLabel,
+            data: activePoints,
+            borderColor: lineColor,
+            borderWidth: 1.5,
             tension: 0.15,
             pointBackgroundColor: pointColors,
             pointBorderColor: '#fff',
@@ -600,7 +711,7 @@ function AnimeRatings() {
             labels: episodes.map(ep => `${ep.seasonName} ${ep.epName}`),
             datasets
         }
-    }, [seriesTimelineData, showTrendLine, selectedTimelineEp])
+    }, [seriesTimelineData, showTrendLine, ratingSource, franchiseJikanCache, selectedTimelineEp, imdbCache, animeList])
 
     // Custom Plugin for Season Boundaries and Labels on Chart.js
     const seasonBoundariesPlugin = useMemo(() => {
@@ -679,9 +790,16 @@ function AnimeRatings() {
                 const activeEp = selectedTimelineEpRef.current
                 if (activeEp) {
                     const xVal = parseInt(activeEp.index, 10)
-                    const yVal = activeEp.rating
+                    const ratingDataset = chart.data.datasets.find(ds => ds.label !== 'Trend')
+                    let yVal = null
+                    if (ratingDataset && ratingDataset.data) {
+                        const pt = ratingDataset.data.find(d => d.x === xVal)
+                        if (pt && pt.y !== null && pt.y !== undefined) {
+                            yVal = pt.y
+                        }
+                    }
 
-                    if (!isNaN(xVal) && xVal >= scales.x.min && xVal <= scales.x.max) {
+                    if (yVal !== null && !isNaN(xVal) && xVal >= scales.x.min && xVal <= scales.x.max) {
                         const xPixel = scales.x.getPixelForValue(xVal)
                         const yPixel = scales.y.getPixelForValue(yVal)
 
@@ -718,13 +836,61 @@ function AnimeRatings() {
     }, [])
 
     const yAxisMin = useMemo(() => {
-        if (!seriesTimelineData || seriesTimelineData.episodes.length === 0) return 4.75
-        const ratings = seriesTimelineData.episodes.map(e => e.rating).filter(r => !isNaN(r) && r > 0)
-        if (ratings.length === 0) return 4.75
+        if (!seriesTimelineData || seriesTimelineData.episodes.length === 0) {
+            return ratingSource === 'mal' ? 2.0 : 4.75
+        }
+        
+        const getActiveRating = (ep) => {
+            if (ratingSource === 'moje') {
+                return ep.rating
+            }
+            if (ratingSource === 'imdb') {
+                const anime = animeList.find(a => a.name === ep.animeName)
+                if (anime && anime.mal_url) {
+                    const malId = extractMalId(anime.mal_url)
+                    if (malId) {
+                        const imdbAnime = imdbCache[String(malId)]
+                        if (imdbAnime && imdbAnime.episodes) {
+                            const score = imdbAnime.episodes[ep.epName] || imdbAnime.episodes["Film"] || imdbAnime.episodes["OVA"] || imdbAnime.episodes["Speciál"] || imdbAnime.episodes["EP 1"]
+                            if (score) return score
+                        }
+                    }
+                }
+                return null
+            }
+            if (ratingSource === 'mal') {
+                const anime = animeList.find(a => a.name === ep.animeName)
+                if (anime && anime.mal_url) {
+                    const malId = extractMalId(anime.mal_url)
+                    if (malId) {
+                        const malEps = franchiseJikanCache[String(malId)]
+                        if (malEps) {
+                            const epMatch = ep.epName.match(/EP\s*(\d+)/i)
+                            const epNum = epMatch ? parseInt(epMatch[1], 10) : (ep.epName === 'Film' || ep.epName === 'OVA' || malEps.length === 1 ? 1 : null)
+                            const malEp = epNum ? malEps.find(e => e.mal_id === epNum) : null
+                            if (malEp && malEp.score) {
+                                const isMovieOrOVA = ep.epName === 'Film' || ep.epName === 'OVA' || malEps.length === 1
+                                return isMovieOrOVA ? malEp.score / 2 : malEp.score
+                            }
+                        }
+                    }
+                }
+                return null
+            }
+            return null
+        }
+
+        const ratings = seriesTimelineData.episodes
+            .map(ep => getActiveRating(ep))
+            .filter(r => r !== null && !isNaN(r) && r > 0)
+
+        if (ratings.length === 0) {
+            return ratingSource === 'mal' ? 2.0 : 4.75
+        }
         const minVal = Math.min(...ratings)
         const floorMin = Math.max(0, Math.floor(minVal - 1.0))
         return floorMin
-    }, [seriesTimelineData])
+    }, [seriesTimelineData, ratingSource, animeList, imdbCache, franchiseJikanCache])
 
     const timelineOptions = useMemo(() => {
         if (!seriesTimelineData) return {}
@@ -768,14 +934,17 @@ function AnimeRatings() {
                 },
                 y: {
                     min: yAxisMin,
-                    max: 10.25,
+                    max: ratingSource === 'mal' ? 5.25 : 10.25,
                     ticks: {
                         color: 'rgba(255,255,255,0.6)',
                         font: { size: 10 },
-                        stepSize: 0.5,
+                        stepSize: ratingSource === 'mal' ? 0.25 : 0.5,
                         callback: (value) => {
-                            if (value > 10) return ''
-                            return value.toFixed(1).replace('.', ',')
+                            if (ratingSource === 'mal' && value > 5) return ''
+                            if (ratingSource !== 'mal' && value > 10) return ''
+                            return ratingSource === 'mal'
+                                ? value.toFixed(2).replace('.', ',')
+                                : value.toFixed(1).replace('.', ',')
                         }
                     },
                     grid: {
@@ -790,10 +959,20 @@ function AnimeRatings() {
                 tooltip: {
                     callbacks: {
                         label: (ctx) => {
-                            if (ctx.datasetIndex === 0 && showTrendLine) return 'Trend'
+                            const datasetLabel = ctx.dataset.label
+                            if (datasetLabel === 'Trend') return 'Trend'
                             const ep = seriesTimelineData.episodes[ctx.dataIndex]
                             if (!ep) return ''
-                            return `${ep.animeName} - ${ep.epName}: ${ep.rating}`
+                            const score = ctx.raw && ctx.raw.y !== undefined ? ctx.raw.y : null
+                            if (score === null) return `${ep.animeName} - ${ep.epName}: N/A`
+                            
+                            if (ratingSource === 'moje') {
+                                return `${ep.animeName} - ${ep.epName} (Moje): ${score}`
+                            } else if (ratingSource === 'mal') {
+                                return `${ep.animeName} - ${ep.epName} (MAL): ${score.toFixed(2)}`
+                            } else {
+                                return `${ep.animeName} - ${ep.epName} (IMDb): ${score.toFixed(2)}`
+                            }
                         }
                     }
                 },
@@ -802,7 +981,7 @@ function AnimeRatings() {
                 }
             }
         }
-    }, [seriesTimelineData, showTrendLine, yAxisMin, selectedTimelineEp])
+    }, [seriesTimelineData, showTrendLine, yAxisMin, selectedTimelineEp, ratingSource])
 
     // ============================================
     // ROW 1 DATA MEMOIZATION (INDIVIDUAL)
@@ -1010,8 +1189,8 @@ function AnimeRatings() {
                 ]
             },
             r2,
-            minX: Math.max(0, Math.floor(minX - 1)),
-            minY: Math.max(0, Math.floor(minY - 1))
+            minX: 4,
+            minY: 4
         }
     }, [row2FilteredAnime, animeList])
 
@@ -1416,6 +1595,29 @@ function AnimeRatings() {
                                         <h3 className="ratings-panel-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                             <span>Spojitý vývoj hodnocení epizod</span>
                                             <div className="chart-toggles-container" style={{ display: 'flex', gap: '16px', alignItems: 'center', fontSize: '0.8rem', fontWeight: 'normal', color: 'var(--text-secondary)' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Zdroj:</span>
+                                                    <select
+                                                        value={ratingSource}
+                                                        onChange={(e) => setRatingSource(e.target.value)}
+                                                        className="slicer-select"
+                                                        style={{
+                                                            background: 'var(--bg-tertiary)',
+                                                            border: '1px solid var(--border-color)',
+                                                            color: 'var(--text-primary)',
+                                                            borderRadius: 'var(--radius-md)',
+                                                            padding: '4px 8px',
+                                                            fontSize: '0.8rem',
+                                                            cursor: 'pointer',
+                                                            outline: 'none',
+                                                            width: 'auto'
+                                                        }}
+                                                    >
+                                                        <option value="moje">Moje hodnocení</option>
+                                                        <option value="mal">MAL hodnocení</option>
+                                                        <option value="imdb">IMDb hodnocení</option>
+                                                    </select>
+                                                </div>
                                                 <label className="toggle-label" style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
                                                     <input type="checkbox" checked={showTrendLine} onChange={(e) => setShowTrendLine(e.target.checked)} style={{ accentColor: 'var(--accent-pink)', cursor: 'pointer' }} />
                                                     Trendová čára
@@ -1469,6 +1671,24 @@ function AnimeRatings() {
                                                         const malEp = epNum && jikanEpisodes ? jikanEpisodes.find(e => e.mal_id === epNum) : null
                                                         if (malEp && malEp.score) {
                                                             return <span className="meta-badge" style={{ background:'var(--bg-tertiary)', color:'var(--text-secondary)' }}>MAL: {malEp.score.toFixed(2)}</span>
+                                                        }
+                                                        return null
+                                                    })()}
+                                                    {(() => {
+                                                        // Find IMDb score from imdbCache
+                                                        const anime = animeList.find(a => a.name === selectedTimelineEp.animeName)
+                                                        if (!anime || !anime.mal_url) return null
+                                                        const malId = extractMalId(anime.mal_url)
+                                                        const imdbAnime = imdbCache[String(malId)]
+                                                        if (imdbAnime && imdbAnime.episodes) {
+                                                            const score = imdbAnime.episodes[selectedTimelineEp.epName]
+                                                            if (score) {
+                                                                return (
+                                                                    <span className="meta-badge" style={{ background: '#f5c518', color: '#000000', fontWeight: 'bold' }}>
+                                                                        IMDb: {score.toFixed(2)}
+                                                                    </span>
+                                                                )
+                                                            }
                                                         }
                                                         return null
                                                     })()}

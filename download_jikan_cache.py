@@ -4,6 +4,15 @@ import time
 import urllib.request
 import urllib.error
 import re
+import sys
+
+# Reconfigure stdout/stderr to UTF-8 to prevent Windows CP1250 charmap encoding crashes on unicode titles
+if sys.platform.startswith('win'):
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+        sys.stderr.reconfigure(encoding='utf-8')
+    except AttributeError:
+        pass
 
 # ============================================
 # CONFIGURATION
@@ -210,6 +219,7 @@ def main():
                         'episodes': synthetic_eps,
                         'fetchedAt': int(time.time() * 1000)
                     }
+                    cached_list = cache['episode_lists'][mal_id_str]
                     
                     # Immediately save synthetic details
                     key = f"{mal_id_str}_1"

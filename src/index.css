@@ -893,7 +893,7 @@ tr:hover td {
 /* ─── Premium Preview Status ─── */
 .preview-status-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 3fr 1fr;
   gap: var(--spacing-sm);
   padding: var(--spacing-xs) var(--spacing-md) var(--spacing-md);
   width: 100%;
