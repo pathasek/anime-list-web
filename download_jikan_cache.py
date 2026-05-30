@@ -178,8 +178,60 @@ def main():
                 print(f"  -> Fetched {len(mapped_eps)} episodes list.")
                 save_counter += 1
             else:
-                print(f"  -> No episodes found on API, skipping.")
-                continue
+                # Fallback: Fetch main anime details (for Movies, OVAs, Specials)
+                print(f"  -> No episodes found on API, fetching main Anime details...")
+                anime_data = None
+                try:
+                    url = f"{JIKAN_BASE_URL}/anime/{anime['malId']}"
+                    resp_data = make_request(url)
+                    time.sleep(API_DELAY_MS / 1000.0)
+                    if resp_data and 'data' in resp_data:
+                        anime_data = resp_data['data']
+                except Exception as e:
+                    print(f"    Failed to fetch main anime details fallback: {e}")
+
+                if anime_data:
+                    # Create synthetic 1-episode list
+                    label = "Film" if anime_data.get('type') == 'Movie' else ("OVA" if anime_data.get('type') == 'OVA' else "Speciál")
+                    synthetic_eps = [{
+                        'mal_id': 1,
+                        'title': label,
+                        'title_japanese': anime_data.get('title_japanese'),
+                        'aired': anime_data.get('aired', {}).get('from'),
+                        'score': anime_data.get('score'),
+                        'filler': False,
+                        'recap': False,
+                        'url': anime_data.get('url'),
+                        'forum_url': None
+                    }]
+                    
+                    cache['episode_lists'][mal_id_str] = {
+                        'animeName': anime_name,
+                        'episodes': synthetic_eps,
+                        'fetchedAt': int(time.time() * 1000)
+                    }
+                    
+                    # Immediately save synthetic details
+                    key = f"{mal_id_str}_1"
+                    cache['episode_details'][key] = {
+                        'malId': anime['malId'],
+                        'epNum': 1,
+                        'title': label,
+                        'title_japanese': anime_data.get('title_japanese'),
+                        'synopsis': anime_data.get('synopsis'),
+                        'duration': anime_data.get('duration'),
+                        'aired': anime_data.get('aired', {}).get('from'),
+                        'filler': False,
+                        'recap': False,
+                        'fetchedAt': int(time.time() * 1000),
+                        'lastRefreshedAt': int(time.time() * 1000)
+                    }
+                    
+                    print(f"  -> Generated synthetic 1-episode list from main Anime info (Type: {anime_data.get('type')}).")
+                    save_counter += 1
+                else:
+                    print(f"  -> No episodes or main details found on API, skipping.")
+                    continue
 
         # 2. Fetch Episode Details/Synopses
         eps = cached_list.get('episodes', [])
