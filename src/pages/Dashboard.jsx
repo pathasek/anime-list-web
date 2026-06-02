@@ -159,9 +159,9 @@ function Dashboard() {
 
     useEffect(() => {
         Promise.all([
-            fetch('data/anime_list.json').then(r => r.json()),
-            fetch('data/history_log.json').then(r => r.json()),
-            fetch('data/stats.json').then(r => r.json()).catch(() => null)
+            fetch('data/anime_list.json?v=' + Date.now()).then(r => r.json()),
+            fetch('data/history_log.json?v=' + Date.now()).then(r => r.json()),
+            fetch('data/stats.json?v=' + Date.now()).then(r => r.json()).catch(() => null)
         ])
             .then(([anime, history, statsJson]) => {
                 setAnimeList(anime)

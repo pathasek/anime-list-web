@@ -203,17 +203,17 @@ function App() {
   const [stats, setStats] = useState(null)
 
   useEffect(() => {
-    fetch('data/stats.json')
+    fetch('data/stats.json?v=' + Date.now())
       .then(res => res.json())
       .then(data => setStats(data))
       .catch(err => console.error('Failed to load stats:', err))
 
     // Start background download for Jikan API v4 episodes 24/7 across the entire application
-    fetch('data/anime_list.json')
+    fetch('data/anime_list.json?v=' + Date.now())
       .then(res => res.json())
       .then(al => {
         // First bulk import the static cache deployed on the server
-        fetch('data/jikan_cache.json')
+        fetch('data/jikan_cache.json?v=' + Date.now())
           .then(res => {
             if (!res.ok) throw new Error('Static Jikan cache not available on server');
             return res.json();

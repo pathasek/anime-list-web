@@ -190,11 +190,11 @@ function AnimeRatings() {
     useEffect(() => {
         let isMounted = true
         Promise.all([
-            fetch('data/anime_list.json').then(r => r.json()),
-            fetch('data/category_ratings.json').then(r => r.json()),
-            fetch('data/episode_ratings.json').then(r => r.json()),
-            fetch('data/notes.json').then(r => r.json()),
-            fetch('data/imdb_cache.json').then(r => r.json()).catch(() => ({}))
+            fetch('data/anime_list.json?v=' + Date.now()).then(r => r.json()),
+            fetch('data/category_ratings.json?v=' + Date.now()).then(r => r.json()),
+            fetch('data/episode_ratings.json?v=' + Date.now()).then(r => r.json()),
+            fetch('data/notes.json?v=' + Date.now()).then(r => r.json()),
+            fetch('data/imdb_cache.json?v=' + Date.now()).then(r => r.json()).catch(() => ({}))
         ]).then(([al, cr, er, nt, ic]) => {
             if (!isMounted) return
 
