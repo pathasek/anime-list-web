@@ -10907,6 +10907,10 @@
       {
         "episode": "EP 8",
         "rating": 9.25
+      },
+      {
+        "episode": "EP 9",
+        "rating": 9.0
       }
     ]
   },
@@ -10956,6 +10960,10 @@
       {
         "episode": "EP 11",
         "rating": 7.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.0
       }
     ]
   },
@@ -10997,6 +11005,14 @@
       {
         "episode": "EP 9",
         "rating": 7.0
+      },
+      {
+        "episode": "EP 10",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.0
       }
     ]
   },
@@ -11030,6 +11046,14 @@
       {
         "episode": "EP 7",
         "rating": 6.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 9",
+        "rating": 6.75
       }
     ]
   },
@@ -11063,6 +11087,14 @@
       {
         "episode": "EP 7",
         "rating": 8.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.25
       }
     ]
   },
@@ -11092,6 +11124,10 @@
       {
         "episode": "EP 6",
         "rating": 8.0
+      },
+      {
+        "episode": "EP 7",
+        "rating": 9.0
       }
     ]
   },
@@ -11113,6 +11149,14 @@
       {
         "episode": "EP 4",
         "rating": 7.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.0
       }
     ]
   },
@@ -11146,6 +11190,10 @@
       {
         "episode": "EP 7",
         "rating": 8.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.5
       }
     ]
   },
@@ -11183,6 +11231,10 @@
       {
         "episode": "EP 8",
         "rating": 9.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 9.25
       }
     ]
   },
@@ -11199,7 +11251,7 @@
       },
       {
         "episode": "EP 3",
-        "rating": 9.75
+        "rating": 10.0
       },
       {
         "episode": "EP 4",
@@ -11216,6 +11268,10 @@
       {
         "episode": "EP 7",
         "rating": 9.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 10.0
       }
     ]
   },
@@ -11782,6 +11838,173 @@
       {
         "episode": "EP 26",
         "rating": 8.0
+      }
+    ]
+  },
+  {
+    "name": "Rage of Bahamut: Genesis",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.5
+      }
+    ]
+  },
+  {
+    "name": "Rage of Bahamut: Genesis - Short Story",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.25
+      }
+    ]
+  },
+  {
+    "name": "Rage of Bahamut: Virgin Soul",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 13",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 14",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 15",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 16",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 17",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 18",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 19",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 20",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 21",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 22",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 23",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 24",
+        "rating": 7.25
       }
     ]
   }
