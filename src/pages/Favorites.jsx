@@ -66,9 +66,9 @@ function Favorites() {
 
     useEffect(() => {
         Promise.all([
-            fetch('data/favorites.json').then(r => r.json()),
-            fetch('data/favorites_ost.json').then(r => r.json()).catch(() => null),
-            fetch('data/spotify_images.json').then(r => r.json()).catch(() => ({}))
+            fetch('data/favorites.json?v=' + Date.now()).then(r => r.json()),
+            fetch('data/favorites_ost.json?v=' + Date.now()).then(r => r.json()).catch(() => null),
+            fetch('data/spotify_images.json?v=' + Date.now()).then(r => r.json()).catch(() => ({}))
         ])
             .then(([favData, ostData, spotData]) => {
                 setFavorites(favData)

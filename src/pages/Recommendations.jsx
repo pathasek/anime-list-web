@@ -946,8 +946,8 @@ function Recommendations() {
     // Load data
     useEffect(() => {
         Promise.all([
-            fetch('data/anime_list.json').then(r => r.json()),
-            fetch('data/plan_to_watch.json').then(r => r.json()).catch(() => []),
+            fetch('data/anime_list.json?v=' + Date.now()).then(r => r.json()),
+            fetch('data/plan_to_watch.json?v=' + Date.now()).then(r => r.json()).catch(() => []),
         ]).then(([anime, ptw]) => {
             setAnimeList(anime)
             setPtwList(ptw)

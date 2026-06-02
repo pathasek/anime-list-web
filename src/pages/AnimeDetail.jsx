@@ -30,11 +30,11 @@ function AnimeDetail() {
         const decodedName = decodeURIComponent(name)
 
         Promise.all([
-            fetch('data/anime_list.json').then(r => r.json()),
-            fetch('data/category_ratings.json').then(r => r.json()),
-            fetch('data/history_log.json').then(r => r.json()),
-            fetch('data/episode_ratings.json').then(r => r.json()),
-            fetch('data/notes.json').then(r => r.json())
+            fetch('data/anime_list.json?v=' + Date.now()).then(r => r.json()),
+            fetch('data/category_ratings.json?v=' + Date.now()).then(r => r.json()),
+            fetch('data/history_log.json?v=' + Date.now()).then(r => r.json()),
+            fetch('data/episode_ratings.json?v=' + Date.now()).then(r => r.json()),
+            fetch('data/notes.json?v=' + Date.now()).then(r => r.json())
         ]).then(([animeList, ratings, historyLog, epRatings, notes]) => {
             // Find anime by name
             const found = animeList.find(a => a.name === decodedName)

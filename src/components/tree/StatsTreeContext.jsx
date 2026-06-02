@@ -23,11 +23,11 @@ export function StatsTreeProvider({ children }) {
                     favoritesOstRes,
                     statsRes
                 ] = await Promise.all([
-                    fetch('data/anime_list.json'),
-                    fetch('data/history_log.json'),
-                    fetch('data/favorites.json'),
-                    fetch('data/favorites_ost.json'),
-                    fetch('data/stats.json')
+                    fetch('data/anime_list.json?v=' + Date.now()),
+                    fetch('data/history_log.json?v=' + Date.now()),
+                    fetch('data/favorites.json?v=' + Date.now()),
+                    fetch('data/favorites_ost.json?v=' + Date.now()),
+                    fetch('data/stats.json?v=' + Date.now())
                 ]);
 
                 const animeList = await animeListRes.json();

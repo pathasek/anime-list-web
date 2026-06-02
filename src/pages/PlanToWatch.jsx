@@ -19,7 +19,7 @@ function PlanToWatch() {
     const [statusFilter, setStatusFilter] = useState('all')
 
     useEffect(() => {
-        fetch('data/plan_to_watch.json')
+        fetch('data/plan_to_watch.json?v=' + Date.now())
             .then(r => r.json())
             .then(data => {
                 // Filter out invalid entries (placeholders like InterestStacks)
