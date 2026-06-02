@@ -36,11 +36,12 @@ function HistoryLog() {
     const [yearFilter, setYearFilter] = useState('all')
     const [sortBy, setSortBy] = useState('date') // 'date', 'animeCount', 'episodes', 'time'
     const [dateRange, setDateRange] = useState({ start: '', end: '' })
-    const [precisionMode, setPrecisionMode] = useState(false) // false=rounded, true=exact
 
     // UI enhancements
     const [highlightedDate, setHighlightedDate] = useState(null)
     const [showScrollTop, setShowScrollTop] = useState(false)
+    const [visibleCount, setVisibleCount] = useState(40)
+    const sentinelRef = useRef(null)
 
     useEffect(() => {
         const handleScroll = (e) => {
@@ -79,7 +80,6 @@ function HistoryLog() {
                 setLoading(false)
             })
     }, [])
-
 
 
     // Get unique years for filter
@@ -469,13 +469,32 @@ function HistoryLog() {
             }
 
             // default or tiebreaker: date desc
-            const dateA = new Date(a.date || 0).getTime()
-            const dateB = new Date(b.date || 0).getTime()
-            return dateB - dateA
+            const dateA = a.date || ''
+            const dateB = b.date || ''
+            return dateB.localeCompare(dateA)
         })
 
         return arr;
     }, [filteredHistory, sortBy])
+
+    // Reset pagination when filter/search/sort parameters change
+    useEffect(() => {
+        setVisibleCount(40)
+    }, [searchTerm, yearFilter, dateRange, sortBy])
+
+    // Infinite scroll observer setup
+    useEffect(() => {
+        if (!sentinelRef.current) return
+
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                setVisibleCount(prev => Math.min(prev + 40, groupedHistory.length))
+            }
+        }, { rootMargin: '200px' })
+
+        observer.observe(sentinelRef.current)
+        return () => observer.disconnect()
+    }, [groupedHistory.length])
 
     const formatDate = (dateStr) => {
         if (!dateStr) return 'Neznámé datum'
@@ -530,8 +549,18 @@ function HistoryLog() {
     }, [groupedHistory])
 
     const scrollToDate = (dateStr) => {
-        const group = groupedHistory.find(g => g.date && g.date.startsWith(dateStr));
-        if (group) {
+        const groupIndex = groupedHistory.findIndex(g => g.date && g.date.startsWith(dateStr));
+        if (groupIndex === -1) return;
+
+        const group = groupedHistory[groupIndex];
+
+        // Pokud položka ještě není vykreslená, rozšíříme viditelný limit
+        if (groupIndex >= visibleCount) {
+            setVisibleCount(groupIndex + 10);
+        }
+
+        // Počkáme malou chvíli (50ms) na to, až React překreslí nové elementy do DOMu
+        setTimeout(() => {
             const el = document.getElementById(`date-${group.date}`);
             if (el) {
                 // Instant teleport - clear header offset
@@ -551,7 +580,7 @@ function HistoryLog() {
                     setHighlightedDate(null);
                 }, 3000);
             }
-        }
+        }, 50);
     }
 
     if (loading) {
@@ -640,36 +669,31 @@ function HistoryLog() {
                                 </div>
                                 {/* Daily Averages - top right */}
                                 <div style={{ display: 'flex', gap: '14px', alignItems: 'center', flexWrap: 'wrap' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.75rem' }}>
+                                    <div 
+                                        style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.75rem', cursor: 'help' }}
+                                        title={`Celkem epizod (${totalStats.episodes}) / Počet aktivních dnů (${totalStats.days}) = ${totalStats.epsPerDay.toFixed(2).replace('.', ',')}`}
+                                    >
                                         <span style={{ color: 'var(--text-muted)' }}>⌀ Ep/den:</span>
                                         <span style={{ fontWeight: 700, color: 'var(--accent-primary)' }}>
-                                            {precisionMode ? totalStats.epsPerDay.toFixed(4).replace('.', ',') : Math.round(totalStats.epsPerDay)}
+                                            {Math.floor(totalStats.epsPerDay)}
                                         </span>
                                     </div>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.75rem' }}>
+                                    <div 
+                                        style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.75rem', cursor: 'help' }}
+                                        title={`Celkový čas (${formatTime(totalStats.time)}) / Počet aktivních dnů (${totalStats.days}) = ${totalStats.minsPerDay.toFixed(2).replace('.', ',')} min`}
+                                    >
                                         <span style={{ color: 'var(--text-muted)' }}>⌀ Čas/den:</span>
                                         <span style={{ fontWeight: 700, color: 'var(--accent-amber)' }}>
-                                            {precisionMode
-                                                ? `${totalStats.minsPerDay.toFixed(2).replace('.', ',')} min`
-                                                : `${Math.round(totalStats.minsPerDay)} min`
-                                            }
+                                            {Math.round(totalStats.minsPerDay)} min
                                         </span>
                                     </div>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.75rem' }}>
+                                    <div 
+                                        style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.75rem', cursor: 'help' }}
+                                        title={`Sledováno v ${totalStats.days} dnech z celkových ${totalStats.totalDaysInRange} kalendářních dnů v tomto období.`}
+                                    >
                                         <span style={{ color: 'var(--text-muted)' }}>Aktivních dnů:</span>
                                         <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{totalStats.days}/{totalStats.totalDaysInRange}</span>
                                     </div>
-                                    <button
-                                        onClick={() => setPrecisionMode(p => !p)}
-                                        style={{
-                                            background: 'none', border: '1px solid var(--border-color)',
-                                            borderRadius: '4px', padding: '1px 7px', color: precisionMode ? 'var(--accent-primary)' : 'var(--text-muted)',
-                                            fontSize: '0.65rem', cursor: 'pointer', transition: 'all 0.2s'
-                                        }}
-                                        title={precisionMode ? 'Zobrazit zaokrouhlené' : 'Zobrazit přesné hodnoty'}
-                                    >
-                                        {precisionMode ? '🔬 Přesně' : '≈ Zaokr.'}
-                                    </button>
                                 </div>
                             </div>
                             <div style={{ flex: 1, position: 'relative', minHeight: '180px' }}>
@@ -893,7 +917,7 @@ function HistoryLog() {
 
             {/* History Groups */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)' }}>
-                {groupedHistory.map((group, idx) => (
+                {groupedHistory.slice(0, visibleCount).map((group, idx) => (
                     <div
                         key={idx}
                         className={`card ${highlightedDate === group.date ? 'highlight-pulse' : ''}`}
@@ -983,6 +1007,12 @@ function HistoryLog() {
                         </div>
                     </div>
                 ))}
+
+                {visibleCount < groupedHistory.length && (
+                    <div ref={sentinelRef} style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                        Načítání dalších záznamů...
+                    </div>
+                )}
 
                 {groupedHistory.length === 0 && (
                     <div style={{
