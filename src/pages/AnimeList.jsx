@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { loadData, STORAGE_KEYS } from '../utils/dataStore'
+import { loadData, getCachedData, STORAGE_KEYS } from '../utils/dataStore'
 
 const FilterDropdown = ({ label, options, currentFilters, onFilterChange, type, alignRight, descriptions }) => {
     const [isOpen, setIsOpen] = useState(false)
@@ -101,8 +101,15 @@ const FilterDropdown = ({ label, options, currentFilters, onFilterChange, type, 
 function AnimeList() {
     const navigate = useNavigate()
     const location = useLocation()
-    const [animeList, setAnimeList] = useState([])
-    const [loading, setLoading] = useState(true)
+    // Try to initialize from memory/localStorage cache synchronously for instant back-navigation
+    const [animeList, setAnimeList] = useState(() => {
+        const cached = getCachedData(STORAGE_KEYS.ANIME_LIST)
+        if (cached) {
+            return cached.map((item, idx) => ({ ...item, originalIndex: idx + 1 }))
+        }
+        return []
+    })
+    const [loading, setLoading] = useState(() => !getCachedData(STORAGE_KEYS.ANIME_LIST))
     const [searchTerm, setSearchTerm] = useState('')
     const [sortConfig, setSortConfig] = useState({ key: 'default', direction: 'asc' })
     const defaultFilters = {
@@ -148,29 +155,43 @@ function AnimeList() {
     }, []);
 
     useEffect(() => {
+        // Check URL for series parameter
+        const searchParams = new URLSearchParams(location.search)
+        const seriesQ = searchParams.get('series')
+        if (seriesQ) {
+            setSeriesFilter(seriesQ)
+            setFilters({ status: {}, type: {}, genre: {}, theme: {}, tag: {}, release_year: {}, rewatch: {}, studio: {}, ep_count: {}, ep_duration: {}, dub: {} })
+        }
+
+        // If data was already loaded from cache in useState, just restore scroll
+        if (animeList.length > 0) {
+            requestAnimationFrame(() => {
+                const savedScroll = sessionStorage.getItem('animeListScroll')
+                if (savedScroll) {
+                    window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'instant' })
+                    sessionStorage.removeItem('animeListScroll')
+                    sessionStorage.removeItem('animeListDisplayCount')
+                }
+            })
+            return
+        }
+
+        // Fetch from server (first visit or after cache clear)
         loadData(STORAGE_KEYS.ANIME_LIST, 'data/anime_list.json')
             .then(data => {
                 const indexedData = data.map((item, idx) => ({ ...item, originalIndex: idx + 1 }))
                 setAnimeList(indexedData)
                 setLoading(false)
 
-                // Check URL for series parameter directly toggle the series filter
-                const searchParams = new URLSearchParams(location.search)
-                const seriesQ = searchParams.get('series')
-                if (seriesQ) {
-                    setSeriesFilter(seriesQ)
-                    setFilters({ status: {}, type: {}, genre: {}, theme: {}, tag: {}, release_year: {}, rewatch: {}, studio: {}, ep_count: {}, ep_duration: {}, dub: {} })
-                }
-
-                // Skok na uloženou pozici (Scroll restoration)
-                setTimeout(() => {
+                // Scroll restoration after data loads
+                requestAnimationFrame(() => {
                     const savedScroll = sessionStorage.getItem('animeListScroll')
                     if (savedScroll) {
                         window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'instant' })
                         sessionStorage.removeItem('animeListScroll')
                         sessionStorage.removeItem('animeListDisplayCount')
                     }
-                }, 50)
+                })
             })
             .catch(err => {
                 console.error('Failed to load anime list:', err)
@@ -470,7 +491,7 @@ function AnimeList() {
 
         const observer = new IntersectionObserver((entries) => {
             if (entries[0].isIntersecting) {
-                setDisplayCount(prev => Math.min(prev + 50, filteredList.length))
+                setDisplayCount(prev => Math.min(prev + 100, filteredList.length))
             }
         }, { rootMargin: '200px' })
 

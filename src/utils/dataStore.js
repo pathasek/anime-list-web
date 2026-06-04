@@ -15,6 +15,31 @@ const STORAGE_KEYS = {
 // Track version check
 let versionChecked = false
 
+// In-memory cache to prevent slow localStorage reads and JSON parsing
+const memoryCache = {}
+
+/**
+ * Get cached data synchronously from memory or localStorage
+ * @param {string} key
+ * @returns {any[]|null}
+ */
+export function getCachedData(key) {
+    if (memoryCache[key]) {
+        return memoryCache[key]
+    }
+    const stored = localStorage.getItem(key)
+    if (stored) {
+        try {
+            const parsed = JSON.parse(stored)
+            memoryCache[key] = parsed
+            return parsed
+        } catch (e) {
+            console.warn(`Failed to parse cached data for ${key}:`, e)
+        }
+    }
+    return null
+}
+
 async function checkServerVersion() {
     try {
         const response = await fetch('data/metadata.json?v=' + Date.now())
@@ -49,20 +74,21 @@ async function checkServerVersion() {
  * @returns {Promise<any[]>}
  */
 export async function loadData(key, jsonPath) {
-    // Check version once per session
+    // Return from memory cache if already loaded
+    if (memoryCache[key]) {
+        return memoryCache[key]
+    }
+
+    // Check version once per session in the background (non-blocking)
     if (!versionChecked) {
-        await checkServerVersion()
         versionChecked = true
+        checkServerVersion().catch(e => console.warn('Failed to check data version:', e))
     }
 
     // Check if we have local edits
-    const stored = localStorage.getItem(key)
-    if (stored) {
-        try {
-            return JSON.parse(stored)
-        } catch (e) {
-            console.warn(`Failed to parse stored data for ${key}:`, e)
-        }
+    const cached = getCachedData(key)
+    if (cached) {
+        return cached
     }
 
     // Fetch from server
@@ -70,8 +96,9 @@ export async function loadData(key, jsonPath) {
     const response = await fetch(`${jsonPath}?v=${Date.now()}`)
     const data = await response.json()
 
-    // Store in local storage
+    // Store in local storage and memory cache
     localStorage.setItem(key, JSON.stringify(data))
+    memoryCache[key] = data
 
     return data
 }
@@ -82,6 +109,7 @@ export async function loadData(key, jsonPath) {
  * @param {any[]} data - Data to save
  */
 export function saveData(key, data) {
+    memoryCache[key] = data
     localStorage.setItem(key, JSON.stringify(data))
 }
 
@@ -258,6 +286,7 @@ export function importData(data) {
  * Reset all local data and reload from server
  */
 export async function resetToServerData() {
+    Object.keys(memoryCache).forEach(k => delete memoryCache[k])
     Object.values(STORAGE_KEYS).forEach(key => {
         localStorage.removeItem(key)
     })
