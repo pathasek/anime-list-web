@@ -184,8 +184,9 @@ function AppContent({ stats }) {
       <main className="main-content">
         <Routes>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/anime" element={<AnimeList />} />
-          <Route path="/anime/:name" element={<AnimeDetail />} />
+          <Route path="/anime" element={<AnimeList />}>
+            <Route path=":name" element={<AnimeDetail />} />
+          </Route>
           <Route path="/ratings" element={<AnimeRatings />} />
           <Route path="/top-favorites" element={<TopFavorites />} />
           <Route path="/history" element={<HistoryLog />} />

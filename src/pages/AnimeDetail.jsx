@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { loadData, STORAGE_KEYS } from '../utils/dataStore'
 import {
     Chart as ChartJS,
     RadialLinearScale,
@@ -16,6 +17,10 @@ import regression from 'regression'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, CategoryScale, LinearScale, BarElement)
 
+// Module-level cache for static read-only files
+let cachedEpRatings = null
+let cachedNotes = null
+
 function AnimeDetail() {
     const { name } = useParams()
     const navigate = useNavigate()
@@ -28,14 +33,46 @@ function AnimeDetail() {
 
     useEffect(() => {
         const decodedName = decodeURIComponent(name)
+        setLoading(true)
+
+        // Helper to load static files with cache
+        const loadStaticFiles = async () => {
+            const promises = []
+            if (cachedEpRatings) {
+                promises.push(Promise.resolve(cachedEpRatings))
+            } else {
+                promises.push(
+                    fetch('data/episode_ratings.json?v=' + Date.now())
+                        .then(r => r.json())
+                        .then(data => {
+                            cachedEpRatings = data
+                            return data
+                        })
+                )
+            }
+
+            if (cachedNotes) {
+                promises.push(Promise.resolve(cachedNotes))
+            } else {
+                promises.push(
+                    fetch('data/notes.json?v=' + Date.now())
+                        .then(r => r.json())
+                        .then(data => {
+                            cachedNotes = data
+                            return data
+                        })
+                )
+            }
+
+            return Promise.all(promises)
+        }
 
         Promise.all([
-            fetch('data/anime_list.json?v=' + Date.now()).then(r => r.json()),
-            fetch('data/category_ratings.json?v=' + Date.now()).then(r => r.json()),
-            fetch('data/history_log.json?v=' + Date.now()).then(r => r.json()),
-            fetch('data/episode_ratings.json?v=' + Date.now()).then(r => r.json()),
-            fetch('data/notes.json?v=' + Date.now()).then(r => r.json())
-        ]).then(([animeList, ratings, historyLog, epRatings, notes]) => {
+            loadData(STORAGE_KEYS.ANIME_LIST, 'data/anime_list.json'),
+            loadData(STORAGE_KEYS.CATEGORY_RATINGS, 'data/category_ratings.json'),
+            loadData(STORAGE_KEYS.HISTORY_LOG, 'data/history_log.json'),
+            loadStaticFiles()
+        ]).then(([animeList, ratings, historyLog, [epRatings, notes]]) => {
             // Find anime by name
             const found = animeList.find(a => a.name === decodedName)
             setAnime(found)
@@ -58,6 +95,9 @@ function AnimeDetail() {
             )
             setHistory(animeHistory)
 
+            setLoading(false)
+        }).catch(err => {
+            console.error('Failed to load anime details:', err)
             setLoading(false)
         })
     }, [name])

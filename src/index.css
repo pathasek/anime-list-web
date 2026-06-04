@@ -2662,3 +2662,33 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   z-index: 100;
   position: relative;
 }
+
+/* ─── Anime Detail Overlay for nested routing ─── */
+.anime-detail-overlay {
+  position: fixed;
+  top: 0;
+  left: 260px;
+  right: 0;
+  bottom: 0;
+  background-color: var(--bg-primary);
+  z-index: 2000;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--spacing-xl);
+  animation: fadeIn 0.2s ease-out;
+}
+
+@media (max-width: 1024px) {
+  .anime-detail-overlay {
+    left: 0;
+    top: 60px; /* Under mobile header */
+    padding: var(--spacing-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .anime-detail-overlay {
+    top: 60px;
+    padding: var(--spacing-sm);
+  }
+}

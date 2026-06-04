@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, Outlet, useParams } from 'react-router-dom'
 import { loadData, getCachedData, STORAGE_KEYS } from '../utils/dataStore'
 
 const FilterDropdown = ({ label, options, currentFilters, onFilterChange, type, alignRight, descriptions }) => {
@@ -138,21 +138,51 @@ function AnimeList() {
     })
     const [seriesFilter, setSeriesFilter] = useState(null)
     const [expandedImage, setExpandedImage] = useState(null)
+    const { name: isDetailOpen } = useParams()
     const [showScrollTop, setShowScrollTop] = useState(false)
     const [displayCount, setDisplayCount] = useState(() => {
         const saved = sessionStorage.getItem('animeListDisplayCount')
         return saved ? parseInt(saved, 10) : 50
     })
     const sentinelRef = useRef(null)
+    const isInitialMountRestored = useRef(false)
 
+    // Scroll listener to update scroll position dynamically
     useEffect(() => {
         const handleScroll = (e) => {
             const currentY = window.scrollY || document.documentElement.scrollTop;
             setShowScrollTop(currentY > 1000);
+
+            // Only update saved scroll after initial restoration has completed
+            if (isInitialMountRestored.current) {
+                if (currentY > 0) {
+                    sessionStorage.setItem('animeListScroll', String(currentY));
+                } else if (currentY === 0 && document.documentElement.scrollHeight > window.innerHeight) {
+                    sessionStorage.setItem('animeListScroll', '0');
+                }
+            }
         };
         window.addEventListener('scroll', handleScroll, true);
         return () => window.removeEventListener('scroll', handleScroll, true);
     }, []);
+
+    // Save displayCount dynamically when it changes
+    useEffect(() => {
+        if (isInitialMountRestored.current) {
+            sessionStorage.setItem('animeListDisplayCount', String(displayCount))
+        }
+    }, [displayCount])
+
+    // Cleanup session storage when leaving the anime page route
+    useEffect(() => {
+        return () => {
+            const nextPath = window.location.hash;
+            if (!nextPath.includes('/anime')) {
+                sessionStorage.removeItem('animeListScroll')
+                sessionStorage.removeItem('animeListDisplayCount')
+            }
+        }
+    }, [])
 
     useEffect(() => {
         // Check URL for series parameter
@@ -169,9 +199,8 @@ function AnimeList() {
                 const savedScroll = sessionStorage.getItem('animeListScroll')
                 if (savedScroll) {
                     window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'instant' })
-                    sessionStorage.removeItem('animeListScroll')
-                    sessionStorage.removeItem('animeListDisplayCount')
                 }
+                isInitialMountRestored.current = true
             })
             return
         }
@@ -188,14 +217,14 @@ function AnimeList() {
                     const savedScroll = sessionStorage.getItem('animeListScroll')
                     if (savedScroll) {
                         window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'instant' })
-                        sessionStorage.removeItem('animeListScroll')
-                        sessionStorage.removeItem('animeListDisplayCount')
                     }
+                    isInitialMountRestored.current = true
                 })
             })
             .catch(err => {
                 console.error('Failed to load anime list:', err)
                 setLoading(false)
+                isInitialMountRestored.current = true
             })
     }, [])
 
@@ -277,7 +306,7 @@ function AnimeList() {
 
     useEffect(() => {
         localStorage.setItem('animeFiltersObj', JSON.stringify(filters))
-        if (sessionStorage.getItem('animeListScroll')) {
+        if (!isInitialMountRestored.current && sessionStorage.getItem('animeListScroll')) {
             return
         }
         setDisplayCount(50)
@@ -491,9 +520,9 @@ function AnimeList() {
 
         const observer = new IntersectionObserver((entries) => {
             if (entries[0].isIntersecting) {
-                setDisplayCount(prev => Math.min(prev + 100, filteredList.length))
+                setDisplayCount(prev => Math.min(prev + 50, filteredList.length))
             }
-        }, { rootMargin: '200px' })
+        }, { rootMargin: '1000px' })
 
         observer.observe(sentinelRef.current)
         return () => observer.disconnect()
@@ -501,7 +530,7 @@ function AnimeList() {
 
     // Reset displayCount when search term, sorting, or series filter changes
     useEffect(() => {
-        if (sessionStorage.getItem('animeListScroll')) {
+        if (!isInitialMountRestored.current && sessionStorage.getItem('animeListScroll')) {
             return
         }
         setDisplayCount(50)
@@ -617,8 +646,9 @@ function AnimeList() {
     }
 
     return (
-        <div className="fade-in">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-xl)' }}>
+        <div style={{ position: 'relative' }}>
+            <div className="fade-in">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-xl)' }}>
                 <h2 style={{ margin: 0 }}>
                     Anime List
                     <span style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginLeft: '12px' }}>
@@ -1075,7 +1105,16 @@ function AnimeList() {
                 document.body
             )}
 
-            {showScrollTop && createPortal(
+            </div>
+
+            {/* Detail overlay */}
+            {isDetailOpen && (
+                <div className="anime-detail-overlay">
+                    <Outlet />
+                </div>
+            )}
+
+            {showScrollTop && !isDetailOpen && createPortal(
                 <button
                     onClick={() => {
                         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1109,7 +1148,7 @@ function AnimeList() {
                 </button>,
                 document.body
             )}
-        </div >
+        </div>
     )
 }
 
