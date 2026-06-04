@@ -61,8 +61,21 @@ const cleanSeasonLabel = (name, seriesName) => {
     if (seriesName && cleaned.trim().toLowerCase() === seriesName.trim().toLowerCase()) {
         cleaned = "S1";
     }
-        
-    return cleaned.trim();
+    
+    return cleaned;
+};
+
+// Robust duration formatting for episodes/movies (handles seconds as numbers and text like "1 hr 3 min")
+const formatDuration = (durationVal) => {
+    if (!durationVal) return '';
+    if (typeof durationVal === 'number') {
+        return `${Math.round(durationVal / 60)} min`;
+    }
+    const str = String(durationVal).trim();
+    if (/^\d+$/.test(str)) {
+        return `${Math.round(Number(str) / 60)} min`;
+    }
+    return str; // Returns pre-formatted strings like "1 hr 3 min" directly
 };
 
 function AnimeRatings() {
@@ -119,13 +132,40 @@ function AnimeRatings() {
             groups[sName].push(anime)
         })
 
-        // Sort seasons/parts chronologically by release_date within each series
-        const parseDate = (dStr) => {
-            if (!dStr || dStr === 'X') return new Date(0)
-            return new Date(dStr)
-        }
+        // Sort seasons/parts within each series based on watch date, status, and name
         Object.keys(groups).forEach(sName => {
-            groups[sName].sort((a, b) => parseDate(a.release_date) - parseDate(b.release_date))
+            groups[sName].sort((a, b) => {
+                // 1. Sort by start_date (watch date)
+                const parseDate = (dStr) => {
+                    if (!dStr || dStr === 'X') return new Date(0)
+                    return new Date(dStr)
+                }
+                const dateA = parseDate(a.start_date)
+                const dateB = parseDate(b.start_date)
+                if (dateA.getTime() !== dateB.getTime()) {
+                    return dateA - dateB
+                }
+
+                // 2. If watch dates are identical, use status as a tie-breaker:
+                // "Pokračování zhlédnuto" (Rank 1) comes before "Neexistuje" (Rank 4)
+                const getStatusRank = (status) => {
+                    if (!status) return 5
+                    const s = status.toLowerCase()
+                    if (s.includes("zhlédnuto") || s.includes("zhlednuto")) return 1
+                    if (s.includes("čekám") || s.includes("cekam") || s.includes("airing") || s.includes("existuje")) return 2
+                    if (s.includes("nepravděpodobné") || s.includes("nepravdepodobne")) return 3
+                    if (s.includes("neexistuje")) return 4
+                    return 5
+                }
+                const rankA = getStatusRank(a.status)
+                const rankB = getStatusRank(b.status)
+                if (rankA !== rankB) {
+                    return rankA - rankB
+                }
+
+                // 3. Otherwise, use natural comparison of the names
+                return a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' })
+            })
         })
 
         return groups
@@ -500,10 +540,34 @@ function AnimeRatings() {
                 const erObj = episodeRatings.find(er => er.name === anime.name)
                 const hasEpisodes = erObj && erObj.episodes && erObj.episodes.length > 0
                 if (hasEpisodes) {
-                    epsToUse = erObj.episodes.map(ep => ({
-                        episode: ep.episode,
-                        rating: ep.rating
-                    }))
+                    // Recap alignment: detect if user skipped recap episodes
+                    let mappedEps = null;
+                    if (anime.mal_url) {
+                        const malId = extractMalId(anime.mal_url);
+                        const jikanEpsList = franchiseJikanCache[String(malId)];
+                        if (jikanEpsList && jikanEpsList.length > 0) {
+                            const nonRecapEps = jikanEpsList.filter(e => !e.recap);
+                            if (erObj.episodes.length === nonRecapEps.length && erObj.episodes.length < jikanEpsList.length) {
+                                // User's episode count matches non-recap count — align by skipping recaps
+                                mappedEps = nonRecapEps.map((jEp, idx) => {
+                                    const userEp = erObj.episodes[idx];
+                                    return {
+                                        episode: `EP ${jEp.mal_id}`,
+                                        rating: userEp ? userEp.rating : null
+                                    };
+                                });
+                            }
+                        }
+                    }
+
+                    if (mappedEps) {
+                        epsToUse = mappedEps;
+                    } else {
+                        epsToUse = erObj.episodes.map(ep => ({
+                            episode: ep.episode,
+                            rating: ep.rating
+                        }))
+                    }
                 } else {
                     const avgCat = getAvgCat(anime.name)
                     if (avgCat !== null) {
@@ -1189,8 +1253,8 @@ function AnimeRatings() {
                 ]
             },
             r2,
-            minX: 4,
-            minY: 4
+            minX: 5,
+            minY: 5
         }
     }, [row2FilteredAnime, animeList])
 
@@ -1654,11 +1718,15 @@ function AnimeRatings() {
                                                     </span>
                                                 </div>
                                                 <div className="episode-detail-title">
-                                                    {jikanSynopsis?.title || selectedTimelineEp.epName}
+                                                    {selectedTimelineEp.epName === "Film" 
+                                                        ? `Film ${selectedTimelineEp.animeName}` 
+                                                        : (jikanSynopsis?.title || selectedTimelineEp.epName)}
                                                 </div>
-                                                <div className="episode-season-label">
-                                                    Sezóna: <span style={{ color:'var(--accent-pink)' }}>{selectedTimelineEp.animeName}</span>
-                                                </div>
+                                                {selectedTimelineEp.epName !== "Film" && (
+                                                    <div className="episode-season-label">
+                                                        Sezóna: <span style={{ color:'var(--accent-pink)' }}>{selectedTimelineEp.animeName}</span>
+                                                    </div>
+                                                )}
                                                 <div className="episode-detail-meta">
                                                     <span className="meta-badge" style={{ background: getPointColor(selectedTimelineEp.rating), color: getPointTextColor(selectedTimelineEp.rating) }}>
                                                         EP: {selectedTimelineEp.rating.toFixed(2)}
@@ -1695,12 +1763,24 @@ function AnimeRatings() {
                                                     {jikanSynopsis?.filler && <span className="ep-badge filler">Filler</span>}
                                                     {jikanSynopsis?.recap && <span className="ep-badge recap">Recap</span>}
                                                 </div>
-                                                {jikanSynopsis?.aired && (
-                                                    <div className="episode-aired-date">
-                                                        Aired: {new Date(jikanSynopsis.aired).toLocaleDateString('cs-CZ', { day: 'numeric', month: 'long', year: 'numeric' })}
-                                                        {jikanSynopsis.duration ? ` · ${Math.round(jikanSynopsis.duration / 60)} min` : ''}
-                                                    </div>
-                                                )}
+                                                {(() => {
+                                                    const anime = animeList.find(a => a.name === selectedTimelineEp.animeName);
+                                                    const airedDate = jikanSynopsis?.aired;
+                                                    const durationText = jikanSynopsis?.duration 
+                                                        ? formatDuration(jikanSynopsis.duration) 
+                                                        : (anime?.episode_duration ? `${Math.round(anime.episode_duration)} min` : '');
+                                                    
+                                                    if (airedDate || durationText) {
+                                                        return (
+                                                            <div className="episode-aired-date">
+                                                                {airedDate && `Aired: ${new Date(airedDate).toLocaleDateString('cs-CZ', { day: 'numeric', month: 'long', year: 'numeric' })}`}
+                                                                {airedDate && durationText ? ' · ' : ''}
+                                                                {durationText}
+                                                            </div>
+                                                        );
+                                                    }
+                                                    return null;
+                                                })()}
                                                 <div className="episode-synopsis-container">
                                                     {jikanSynopsis?.synopsis ? (
                                                         <p className="episode-synopsis-text">{jikanSynopsis.synopsis}</p>
