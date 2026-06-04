@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { loadData, STORAGE_KEYS } from '../utils/dataStore'
@@ -133,6 +133,7 @@ function AnimeList() {
     const [expandedImage, setExpandedImage] = useState(null)
     const [showScrollTop, setShowScrollTop] = useState(false)
     const [displayCount, setDisplayCount] = useState(50)
+    const sentinelRef = useRef(null)
 
     useEffect(() => {
         const handleScroll = (e) => {
@@ -455,6 +456,25 @@ function AnimeList() {
 
         return result
     }, [animeList, searchTerm, filters, sortConfig, seriesFilter])
+
+    // Infinite scroll observer setup
+    useEffect(() => {
+        if (!sentinelRef.current) return
+
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                setDisplayCount(prev => Math.min(prev + 50, filteredList.length))
+            }
+        }, { rootMargin: '200px' })
+
+        observer.observe(sentinelRef.current)
+        return () => observer.disconnect()
+    }, [filteredList.length])
+
+    // Reset displayCount when search term, sorting, or series filter changes
+    useEffect(() => {
+        setDisplayCount(50)
+    }, [searchTerm, sortConfig, seriesFilter])
 
     const handleSort = (key) => {
         if (key === sortConfig.key && sortConfig.key !== 'default') {
@@ -973,22 +993,18 @@ function AnimeList() {
                 ))}
             </div>
 
-            {/* Show More / Show All button */}
+            {/* Infinite Scroll Sentinel and Show All button */}
             {displayCount < filteredList.length && (
-                <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginTop: 'var(--spacing-lg)', marginBottom: 'var(--spacing-md)' }}>
-                    <button
-                        className="filter-btn"
-                        onClick={() => setDisplayCount(prev => prev + 50)}
-                        style={{ padding: '8px 24px', fontWeight: 'bold' }}
-                    >
-                        ZOBRAZIT DALŠÍCH 50 ▼ ({Math.min(displayCount, filteredList.length)}/{filteredList.length})
-                    </button>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', marginTop: 'var(--spacing-lg)', marginBottom: 'var(--spacing-md)' }}>
+                    <div ref={sentinelRef} style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                        Načítání dalších záznamů...
+                    </div>
                     <button
                         className="filter-btn"
                         onClick={() => setDisplayCount(filteredList.length)}
                         style={{ padding: '8px 16px', fontSize: '0.8rem' }}
                     >
-                        VŠE
+                        ZOBRAZIT VŠE (Ctrl+F vyhledávání)
                     </button>
                 </div>
             )}
