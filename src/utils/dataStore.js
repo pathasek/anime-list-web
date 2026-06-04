@@ -9,6 +9,8 @@ const STORAGE_KEYS = {
     FAVORITES: 'favorites_data',
     PLAN_TO_WATCH: 'plan_to_watch_data',
     CATEGORY_RATINGS: 'category_ratings_data',
+    EPISODE_RATINGS: 'episode_ratings_data',
+    NOTES: 'notes_data',
     USER_EDITS: 'user_edits'
 }
 
@@ -57,7 +59,9 @@ async function checkServerVersion() {
                 STORAGE_KEYS.HISTORY_LOG,
                 STORAGE_KEYS.FAVORITES,
                 STORAGE_KEYS.PLAN_TO_WATCH,
-                STORAGE_KEYS.CATEGORY_RATINGS
+                STORAGE_KEYS.CATEGORY_RATINGS,
+                STORAGE_KEYS.EPISODE_RATINGS,
+                STORAGE_KEYS.NOTES
             ].forEach(k => localStorage.removeItem(k))
 
             localStorage.setItem('data_last_updated', serverTime)
@@ -293,6 +297,17 @@ export async function resetToServerData() {
 
     // This will trigger fresh fetch from server on next load
     return true
+}
+
+/**
+ * Preload all list and detail data in the background
+ */
+export function preloadAllData() {
+    loadData(STORAGE_KEYS.ANIME_LIST, 'data/anime_list.json').catch(() => {})
+    loadData(STORAGE_KEYS.CATEGORY_RATINGS, 'data/category_ratings.json').catch(() => {})
+    loadData(STORAGE_KEYS.HISTORY_LOG, 'data/history_log.json').catch(() => {})
+    loadData(STORAGE_KEYS.EPISODE_RATINGS, 'data/episode_ratings.json').catch(() => {})
+    loadData(STORAGE_KEYS.NOTES, 'data/notes.json').catch(() => {})
 }
 
 export { STORAGE_KEYS }

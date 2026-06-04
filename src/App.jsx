@@ -11,6 +11,7 @@ import TopFavorites from './pages/TopFavorites'
 import StatsTree from './pages/StatsTree'
 import Recommendations from './pages/Recommendations'
 import { startBackgroundDownload, importJikanStaticCache } from './utils/jikanService'
+import { preloadAllData } from './utils/dataStore'
 import './index.css'
 
 // Icons as simple SVG components
@@ -204,6 +205,9 @@ function App() {
   const [stats, setStats] = useState(null)
 
   useEffect(() => {
+    // Preload all list and detail data in the background
+    preloadAllData()
+
     fetch('data/stats.json?v=' + Date.now())
       .then(res => res.json())
       .then(data => setStats(data))
