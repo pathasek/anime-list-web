@@ -137,7 +137,6 @@ function AnimeList() {
         return saved ? parseInt(saved, 10) : 50
     })
     const sentinelRef = useRef(null)
-    const isInitialMount = useRef(true)
 
     useEffect(() => {
         const handleScroll = (e) => {
@@ -257,9 +256,10 @@ function AnimeList() {
 
     useEffect(() => {
         localStorage.setItem('animeFiltersObj', JSON.stringify(filters))
-        if (!isInitialMount.current) {
-            setDisplayCount(50)
+        if (sessionStorage.getItem('animeListScroll')) {
+            return
         }
+        setDisplayCount(50)
     }, [filters])
 
     const handleFilterChange = (category, option, nextState) => {
@@ -480,8 +480,7 @@ function AnimeList() {
 
     // Reset displayCount when search term, sorting, or series filter changes
     useEffect(() => {
-        if (isInitialMount.current) {
-            isInitialMount.current = false
+        if (sessionStorage.getItem('animeListScroll')) {
             return
         }
         setDisplayCount(50)
