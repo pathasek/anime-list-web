@@ -530,6 +530,9 @@ function AnimeList() {
 
     // Reset displayCount when search term, sorting, or series filter changes
     useEffect(() => {
+        if (savedDisplayCount !== null) {
+            return
+        }
         if (!isInitialMountRestored.current && sessionStorage.getItem('animeListScroll')) {
             return
         }
@@ -611,19 +614,26 @@ function AnimeList() {
     }
 
     const [savedScrollPos, setSavedScrollPos] = useState(0)
+    const [savedDisplayCount, setSavedDisplayCount] = useState(null)
 
     const toggleSeriesFilter = (anime) => {
         const baseName = extractSeriesBaseName(anime)
         if (seriesFilter === baseName) {
+            if (savedDisplayCount !== null) {
+                setDisplayCount(savedDisplayCount)
+            }
             setSeriesFilter(null)
 
             // Wait for React to re-render the full list, then restore scroll position
             setTimeout(() => {
                 window.scrollTo({ top: savedScrollPos, behavior: 'instant' })
-            }, 10)
+                setSavedScrollPos(0)
+                setSavedDisplayCount(null)
+            }, 50)
         } else {
-            // Save current scroll position before filtering shrinks the page
+            // Save current scroll position and displayCount before filtering shrinks the page
             setSavedScrollPos(window.scrollY)
+            setSavedDisplayCount(displayCount)
 
             setSeriesFilter(baseName)
             // Reset other filters to show the FULL series as requested
