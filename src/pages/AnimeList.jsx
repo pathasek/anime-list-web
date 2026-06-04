@@ -132,7 +132,10 @@ function AnimeList() {
     const [seriesFilter, setSeriesFilter] = useState(null)
     const [expandedImage, setExpandedImage] = useState(null)
     const [showScrollTop, setShowScrollTop] = useState(false)
-    const [displayCount, setDisplayCount] = useState(50)
+    const [displayCount, setDisplayCount] = useState(() => {
+        const saved = sessionStorage.getItem('animeListDisplayCount')
+        return saved ? parseInt(saved, 10) : 50
+    })
     const sentinelRef = useRef(null)
 
     useEffect(() => {
@@ -165,6 +168,7 @@ function AnimeList() {
                     if (savedScroll) {
                         window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'instant' })
                         sessionStorage.removeItem('animeListScroll')
+                        sessionStorage.removeItem('animeListDisplayCount')
                     }
                 }, 50)
             })
@@ -840,6 +844,7 @@ function AnimeList() {
                                             style={{ cursor: 'pointer' }}
                                             onClick={() => {
                                                 sessionStorage.setItem('animeListScroll', window.scrollY)
+                                                sessionStorage.setItem('animeListDisplayCount', displayCount)
                                                 navigate(`/anime/${encodeURIComponent(anime.name)}`)
                                             }}
                                             title="Zobrazit detailní hodnocení"
@@ -852,6 +857,7 @@ function AnimeList() {
                                             style={{ cursor: 'pointer', backgroundColor: 'var(--bg-tertiary)', color: 'var(--text-muted)' }}
                                             onClick={() => {
                                                 sessionStorage.setItem('animeListScroll', window.scrollY)
+                                                sessionStorage.setItem('animeListDisplayCount', displayCount)
                                                 navigate(`/anime/${encodeURIComponent(anime.name)}`)
                                             }}
                                             title="Zobrazit detailní hodnocení"
@@ -946,6 +952,7 @@ function AnimeList() {
                                         style={{ textAlign: 'right', minWidth: '50px', marginLeft: 'auto', cursor: 'pointer', display: 'flex', alignItems: 'baseline', justifyContent: 'flex-end', gap: '2px' }}
                                         onClick={() => {
                                             sessionStorage.setItem('animeListScroll', window.scrollY)
+                                            sessionStorage.setItem('animeListDisplayCount', displayCount)
                                             navigate(`/anime/${encodeURIComponent(anime.name)}`)
                                         }}
                                     >
@@ -959,6 +966,7 @@ function AnimeList() {
                                         style={{ textAlign: 'right', minWidth: '50px', marginLeft: 'auto', cursor: 'pointer', display: 'flex', alignItems: 'baseline', justifyContent: 'flex-end', gap: '2px' }}
                                         onClick={() => {
                                             sessionStorage.setItem('animeListScroll', window.scrollY)
+                                            sessionStorage.setItem('animeListDisplayCount', displayCount)
                                             navigate(`/anime/${encodeURIComponent(anime.name)}`)
                                         }}
                                     >
