@@ -1234,6 +1234,7 @@ function Favorites() {
                                         "Puella Magi Madoka Magica",
                                         "The Garden of Sinners",
                                         "Kabaneri of the Iron Fortress",
+                                        "The Unwanted Undead Adventurer",
                                         "Spy x Family",
                                         "Ranking of Kings",
                                         "Somali and the Forest Spirit",
