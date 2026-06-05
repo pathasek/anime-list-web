@@ -1,15 +1,89 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import '../tree.css';
 import TreeCanvas from '../components/tree/TreeCanvas';
 import SkillNode from '../components/tree/SkillNode';
 import InteractionPath from '../components/tree/InteractionPath';
 import SidePanel from '../components/tree/SidePanel';
 import ProfileHUD from '../components/tree/ProfileHUD';
+import MilestoneCelebration from '../components/tree/MilestoneCelebration';
 import { StatsTreeProvider, useStatsTree } from '../components/tree/StatsTreeContext';
+
+const MILESTONE_STORAGE_KEY = 'anime-tree-node-levels';
 
 function StatsTreeContent() {
     const { nodes, isLoading, error } = useStatsTree();
     const [selectedNode, setSelectedNode] = useState(null);
+    const [activeMilestone, setActiveMilestone] = useState(null);
+    const [milestoneQueue, setMilestoneQueue] = useState([]);
+    const milestoneChecked = useRef(false);
+
+    // Detect milestones by comparing with previously stored state
+    useEffect(() => {
+        if (!nodes || nodes.length === 0 || milestoneChecked.current) return;
+        milestoneChecked.current = true;
+
+        try {
+            const stored = localStorage.getItem(MILESTONE_STORAGE_KEY);
+            const prevLevels = stored ? JSON.parse(stored) : null;
+
+            // Save current state
+            const currentLevels = {};
+            nodes.forEach(n => {
+                currentLevels[n.id] = n.level;
+            });
+            localStorage.setItem(MILESTONE_STORAGE_KEY, JSON.stringify(currentLevels));
+
+            // Skip on first visit (no previous data)
+            if (!prevLevels) return;
+
+            // Find milestones
+            const newMilestones = [];
+            nodes.forEach(node => {
+                const prevLevel = prevLevels[node.id] || 0;
+                const currentLevel = node.level || 0;
+
+                if (currentLevel > prevLevel) {
+                    // New unlock (0 → 1+) or max level reached
+                    const isMaxLevel = currentLevel >= node.maxLevel;
+                    if (prevLevel === 0 && currentLevel >= 1) {
+                        newMilestones.push({
+                            nodeId: node.id,
+                            nodeName: node.label,
+                            level: currentLevel,
+                            isMaxLevel,
+                        });
+                    } else if (isMaxLevel && prevLevel < node.maxLevel) {
+                        newMilestones.push({
+                            nodeId: node.id,
+                            nodeName: node.label,
+                            level: currentLevel,
+                            isMaxLevel: true,
+                        });
+                    }
+                }
+            });
+
+            if (newMilestones.length > 0) {
+                // Show max-level milestones first
+                newMilestones.sort((a, b) => (b.isMaxLevel ? 1 : 0) - (a.isMaxLevel ? 1 : 0));
+                setMilestoneQueue(newMilestones);
+            }
+        } catch {
+            // localStorage error, silently skip
+        }
+    }, [nodes]);
+
+    // Process milestone queue — show one at a time
+    useEffect(() => {
+        if (milestoneQueue.length > 0 && !activeMilestone) {
+            setActiveMilestone(milestoneQueue[0]);
+        }
+    }, [milestoneQueue, activeMilestone]);
+
+    const handleMilestoneComplete = useCallback(() => {
+        setActiveMilestone(null);
+        setMilestoneQueue(prev => prev.slice(1));
+    }, []);
 
     if (isLoading) {
         return (
@@ -75,6 +149,11 @@ function StatsTreeContent() {
                 nodeData={selectedNode}
                 onClose={() => setSelectedNode(null)}
             />
+
+            <MilestoneCelebration
+                milestone={activeMilestone}
+                onComplete={handleMilestoneComplete}
+            />
         </div>
     );
 }
@@ -88,3 +167,4 @@ export default function StatsTree() {
         </div>
     );
 }
+

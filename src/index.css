@@ -2692,3 +2692,428 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     padding: var(--spacing-sm);
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   THEME SYSTEM — Alternative Themes
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Retro 8-bit Theme ─── */
+[data-theme="retro-8bit"] {
+  --bg-primary: #1a0a2e;
+  --bg-secondary: #16082b;
+  --bg-tertiary: #251245;
+  --bg-card: #1e0c38;
+  --bg-hover: #2d1552;
+
+  --accent-primary: #ff6ec7;
+  --accent-secondary: #7b68ee;
+  --accent-pink: #ff69b4;
+  --accent-cyan: #00ffff;
+  --accent-emerald: #39ff14;
+  --accent-amber: #ffff00;
+  --accent-red: #ff0040;
+
+  --text-primary: #f0e6ff;
+  --text-secondary: #b8a0d8;
+  --text-muted: #7a5faa;
+
+  --border-color: #3a1f6e;
+  --border-light: #4a2f7e;
+
+  --gradient-primary: linear-gradient(135deg, #ff6ec7 0%, #7b68ee 100%);
+  --gradient-pink: linear-gradient(135deg, #ff69b4 0%, #7b68ee 100%);
+  --gradient-card: linear-gradient(145deg, rgba(255, 110, 199, 0.08) 0%, transparent 100%);
+
+  --shadow-sm: 0 2px 4px rgba(26, 10, 46, 0.5);
+  --shadow-md: 0 4px 12px rgba(26, 10, 46, 0.6);
+  --shadow-lg: 0 8px 24px rgba(26, 10, 46, 0.7);
+  --shadow-glow: 0 0 20px rgba(255, 110, 199, 0.4), 0 0 40px rgba(123, 104, 238, 0.2);
+
+  --font-family: 'Press Start 2P', 'Courier New', monospace;
+  --font-mono: 'Press Start 2P', 'Courier New', monospace;
+
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-full: 0px;
+}
+
+/* Pixelated borders for 8-bit feel */
+[data-theme="retro-8bit"] .card,
+[data-theme="retro-8bit"] .stat-card,
+[data-theme="retro-8bit"] .dashboard-group,
+[data-theme="retro-8bit"] .table-container {
+  border-width: 3px;
+  border-style: solid;
+  border-image: none;
+  box-shadow: 4px 4px 0 rgba(255, 110, 199, 0.3);
+}
+
+[data-theme="retro-8bit"] .nav-link.active {
+  box-shadow: 4px 4px 0 rgba(255, 110, 199, 0.5);
+}
+
+[data-theme="retro-8bit"] .sidebar-logo h1 {
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-shadow: 2px 2px 0 rgba(123, 104, 238, 0.5);
+}
+
+[data-theme="retro-8bit"] h1,
+[data-theme="retro-8bit"] h2,
+[data-theme="retro-8bit"] h3 {
+  text-shadow: 2px 2px 0 rgba(123, 104, 238, 0.3);
+}
+
+/* Scanline overlay effect */
+[data-theme="retro-8bit"] body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 99999;
+}
+
+/* ─── Pastel Light Theme ─── */
+[data-theme="pastel-light"] {
+  --bg-primary: #faf5ff;
+  --bg-secondary: #f5edf8;
+  --bg-tertiary: #ede4f3;
+  --bg-card: #ffffff;
+  --bg-hover: #f0e6f6;
+
+  --accent-primary: #a855f7;
+  --accent-secondary: #c084fc;
+  --accent-pink: #f472b6;
+  --accent-cyan: #22d3ee;
+  --accent-emerald: #34d399;
+  --accent-amber: #fbbf24;
+  --accent-red: #f87171;
+
+  --text-primary: #1e1b2e;
+  --text-secondary: #6b5f7c;
+  --text-muted: #9b8fb5;
+
+  --border-color: #e2d5f0;
+  --border-light: #d8c8ea;
+
+  --gradient-primary: linear-gradient(135deg, #a855f7 0%, #c084fc 100%);
+  --gradient-pink: linear-gradient(135deg, #f472b6 0%, #c084fc 100%);
+  --gradient-card: linear-gradient(145deg, rgba(168, 85, 247, 0.04) 0%, transparent 100%);
+
+  --shadow-sm: 0 1px 3px rgba(168, 85, 247, 0.08);
+  --shadow-md: 0 4px 12px rgba(168, 85, 247, 0.1);
+  --shadow-lg: 0 8px 24px rgba(168, 85, 247, 0.12);
+  --shadow-glow: 0 0 16px rgba(168, 85, 247, 0.15);
+}
+
+/* Light theme overrides for inverted text on badges */
+[data-theme="pastel-light"] .nav-link.active {
+  color: #fff;
+}
+
+[data-theme="pastel-light"] .rating-badge {
+  font-weight: 700;
+}
+
+/* Soft card style */
+[data-theme="pastel-light"] .card,
+[data-theme="pastel-light"] .stat-card,
+[data-theme="pastel-light"] .dashboard-group {
+  box-shadow: 0 2px 12px rgba(168, 85, 247, 0.06), 0 0 0 1px rgba(168, 85, 247, 0.04);
+}
+
+[data-theme="pastel-light"] .full-chart-wrapper {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 237, 248, 0.98) 100%);
+  border-color: var(--border-color);
+}
+
+/* Cherry blossom accent */
+[data-theme="pastel-light"] .sidebar-logo h1 {
+  background: linear-gradient(135deg, #a855f7, #f472b6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme="pastel-light"] thead,
+[data-theme="pastel-light"] .dashboard-table th,
+[data-theme="pastel-light"] .dashboard-table td {
+  background: var(--bg-tertiary);
+}
+
+/* ─── Excel Classic Theme ─── */
+[data-theme="excel-table"] {
+  --bg-primary: #f0f0f0;
+  --bg-secondary: #e8e8e8;
+  --bg-tertiary: #d4d4d4;
+  --bg-card: #ffffff;
+  --bg-hover: #dbeafe;
+
+  --accent-primary: #217346;
+  --accent-secondary: #2b8a5a;
+  --accent-pink: #c0392b;
+  --accent-cyan: #2980b9;
+  --accent-emerald: #27ae60;
+  --accent-amber: #f39c12;
+  --accent-red: #e74c3c;
+
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --text-muted: #808080;
+
+  --border-color: #b4b4b4;
+  --border-light: #c8c8c8;
+
+  --gradient-primary: linear-gradient(135deg, #217346 0%, #2b8a5a 100%);
+  --gradient-pink: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+  --gradient-card: linear-gradient(145deg, rgba(33, 115, 70, 0.03) 0%, transparent 100%);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-glow: 0 0 8px rgba(33, 115, 70, 0.15);
+
+  --font-family: 'Segoe UI', Calibri, Arial, sans-serif;
+  --font-mono: 'Consolas', 'Courier New', monospace;
+
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-full: 4px;
+}
+
+/* Excel-like cells */
+[data-theme="excel-table"] th {
+  background: linear-gradient(180deg, #f8f8f8 0%, #e0e0e0 100%);
+  border-bottom: 2px solid #217346;
+  font-family: 'Segoe UI', Calibri, Arial, sans-serif;
+  text-transform: none;
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: normal;
+}
+
+[data-theme="excel-table"] td {
+  border: 1px solid var(--border-color);
+  font-size: 0.85rem;
+}
+
+[data-theme="excel-table"] .card,
+[data-theme="excel-table"] .stat-card,
+[data-theme="excel-table"] .dashboard-group {
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="excel-table"] .sidebar {
+  background: linear-gradient(180deg, #217346 0%, #1a5c38 100%);
+  border-right-color: #1a5c38;
+}
+
+[data-theme="excel-table"] .sidebar .nav-link {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+[data-theme="excel-table"] .sidebar .nav-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+[data-theme="excel-table"] .sidebar .nav-link.active {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  box-shadow: none;
+}
+
+[data-theme="excel-table"] .sidebar-logo h1 {
+  background: none;
+  -webkit-text-fill-color: #fff;
+  color: #fff;
+}
+
+[data-theme="excel-table"] .sidebar-logo svg {
+  filter: brightness(0) invert(1);
+}
+
+[data-theme="excel-table"] .full-chart-wrapper {
+  background: #fff;
+  border-color: var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+
+[data-theme="excel-table"] .full-chart-wrapper .chart-title {
+  background: linear-gradient(90deg, rgba(33, 115, 70, 0.06), transparent 70%);
+  border-left-color: #217346;
+}
+
+/* Excel theme sidebar footer override */
+[data-theme="excel-table"] .sidebar > div:last-child {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="excel-table"] .sidebar > div:last-child div:first-child {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+[data-theme="excel-table"] .sidebar > div:last-child div:last-child {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   THEME SWITCHER — Component Styles
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.theme-switcher {
+  position: relative;
+  margin-top: var(--spacing-sm);
+}
+
+.theme-switcher-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.875rem;
+  width: 100%;
+  transition: all var(--transition-fast);
+}
+
+.theme-switcher-toggle:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.theme-switcher-panel {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  z-index: 200;
+  overflow: hidden;
+  animation: themePanelIn 0.2s ease-out;
+}
+
+@keyframes themePanelIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.theme-switcher-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.theme-switcher-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 2px 4px;
+  line-height: 1;
+}
+
+.theme-switcher-close:hover {
+  color: var(--text-primary);
+}
+
+.theme-switcher-options {
+  padding: var(--spacing-xs);
+}
+
+.theme-option {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  width: 100%;
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.theme-option:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.theme-option.active {
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--accent-primary);
+}
+
+.theme-option-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.theme-option-label {
+  flex: 1;
+  text-align: left;
+}
+
+.theme-option-check {
+  color: var(--accent-primary);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+/* Excel theme sidebar switcher overrides */
+[data-theme="excel-table"] .theme-switcher-toggle {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+[data-theme="excel-table"] .theme-switcher-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+[data-theme="excel-table"] .theme-switcher-toggle svg {
+  stroke: rgba(255, 255, 255, 0.8);
+}
+
+[data-theme="excel-table"] .theme-switcher-panel {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}

@@ -10,6 +10,8 @@ import AnimeRatings from './pages/AnimeRatings'
 import TopFavorites from './pages/TopFavorites'
 import StatsTree from './pages/StatsTree'
 import Recommendations from './pages/Recommendations'
+import { ThemeProvider } from './components/ThemeProvider'
+import ThemeSwitcher from './components/ThemeSwitcher'
 import { startBackgroundDownload, importJikanStaticCache } from './utils/jikanService'
 import { preloadAllData } from './utils/dataStore'
 import './index.css'
@@ -164,6 +166,8 @@ function AppContent({ stats }) {
           </NavLink>
         </nav>
 
+        <ThemeSwitcher />
+
         {/* Stats in sidebar footer */}
         {stats && (
           <div style={{
@@ -236,9 +240,11 @@ function App() {
   }, [])
 
   return (
-    <HashRouter>
-      <AppContent stats={stats} />
-    </HashRouter>
+    <ThemeProvider>
+      <HashRouter>
+        <AppContent stats={stats} />
+      </HashRouter>
+    </ThemeProvider>
   )
 }
 

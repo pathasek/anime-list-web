@@ -15,19 +15,29 @@ export function StatsTreeProvider({ children }) {
 
         async function loadDataAndCompute() {
             try {
-                // Fetch massive JSON payloads in parallel
+                // Fetch all JSON payloads in parallel
                 const [
                     animeListRes,
                     historyLogRes,
                     favoritesRes,
                     favoritesOstRes,
-                    statsRes
+                    statsRes,
+                    topFavoritesRes,
+                    notesRes,
+                    planToWatchRes,
+                    categoryRatingsRes,
+                    episodeRatingsRes
                 ] = await Promise.all([
                     fetch('data/anime_list.json?v=' + Date.now()),
                     fetch('data/history_log.json?v=' + Date.now()),
                     fetch('data/favorites.json?v=' + Date.now()),
                     fetch('data/favorites_ost.json?v=' + Date.now()),
-                    fetch('data/stats.json?v=' + Date.now())
+                    fetch('data/stats.json?v=' + Date.now()),
+                    fetch('data/top_favorites.json?v=' + Date.now()),
+                    fetch('data/notes.json?v=' + Date.now()),
+                    fetch('data/plan_to_watch.json?v=' + Date.now()),
+                    fetch('data/category_ratings.json?v=' + Date.now()),
+                    fetch('data/episode_ratings.json?v=' + Date.now())
                 ]);
 
                 const animeList = await animeListRes.json();
@@ -35,10 +45,16 @@ export function StatsTreeProvider({ children }) {
                 const favorites = await favoritesRes.json();
                 const favoritesOst = await favoritesOstRes.json();
                 const stats = await statsRes.json();
+                const topFavorites = await topFavoritesRes.json();
+                const notes = await notesRes.json();
+                const planToWatch = await planToWatchRes.json();
+                const categoryRatings = await categoryRatingsRes.json();
+                const episodeRatings = await episodeRatingsRes.json();
 
                 // Pass everything to the mathematical engine
                 const computedNodes = calculateTreeState({
-                    animeList, historyLog, favorites, favoritesOst, stats
+                    animeList, historyLog, favorites, favoritesOst, stats,
+                    topFavorites, notes, planToWatch, categoryRatings, episodeRatings
                 });
 
                 if (isMounted) {
@@ -63,3 +79,4 @@ export function StatsTreeProvider({ children }) {
         </StatsTreeContext.Provider>
     );
 }
+

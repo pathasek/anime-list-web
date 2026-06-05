@@ -8,30 +8,33 @@ export const calculateFavoritesXP = (nodeDef, currentLevel, { topFavorites }) =>
         // Collect Top 10 Anime
         if (topFavorites.top10_anime && Array.isArray(topFavorites.top10_anime)) {
             topFavorites.top10_anime.forEach(anime => {
+                const animeName = anime.data?.NAME || anime.shape_name || 'Unknown';
                 const gained = 2000;
                 xp += gained;
-                contributors.push({ id: anime.name, name: anime.name, xp: gained });
+                contributors.push({ id: animeName, name: animeName, xp: gained });
             });
         }
         
         // Collect Honorable Mentions
         if (topFavorites.hm_anime && Array.isArray(topFavorites.hm_anime)) {
             topFavorites.hm_anime.forEach(anime => {
+                const animeName = anime.data?.NAME || anime.shape_name || 'Unknown';
                 const gained = 1000;
                 xp += gained;
-                contributors.push({ id: anime.name, name: anime.name, xp: gained });
+                contributors.push({ id: animeName, name: animeName, xp: gained });
             });
         }
     }
     else if (nodeDef.id === 'fav_characters') {
         if (topFavorites.top10_chars && Array.isArray(topFavorites.top10_chars)) {
             topFavorites.top10_chars.forEach(char => {
-                const animeName = char.anime_name || char.name;
+                const charName = char.data?.NAME || 'Unknown';
+                const charAnimeName = char.data?.ANIME_NAME || charName;
                 const gained = 1500;
                 xp += gained;
                 contributors.push({ 
-                    id: `${char.name}-${animeName}`, 
-                    name: `${char.name} (${animeName})`, 
+                    id: `${charName}-${charAnimeName}`, 
+                    name: `${charName} (${charAnimeName})`, 
                     xp: gained 
                 });
             });
@@ -41,8 +44,9 @@ export const calculateFavoritesXP = (nodeDef, currentLevel, { topFavorites }) =>
         const charCounts = new Map();
         if (topFavorites.top10_chars && Array.isArray(topFavorites.top10_chars)) {
             topFavorites.top10_chars.forEach(char => {
-                if (char.anime_name) {
-                    charCounts.set(char.anime_name, (charCounts.get(char.anime_name) || 0) + 1);
+                const devotedAnimeName = char.data?.ANIME_NAME;
+                if (devotedAnimeName) {
+                    charCounts.set(devotedAnimeName, (charCounts.get(devotedAnimeName) || 0) + 1);
                 }
             });
             charCounts.forEach((count, animeName) => {

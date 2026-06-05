@@ -521,3 +521,196 @@
     box-shadow: 0 2px 4px rgba(0,0,0,0.5);
     z-index: 10;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MILESTONE CELEBRATION — Overlay, Particles & Glow
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Particle physics animation */
+@keyframes celebrate-particle {
+    0% {
+        transform: translate(-50%, -50%) translate(0, 0) rotate(0deg);
+        opacity: 1;
+    }
+    70% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(-50%, -50%) translate(var(--px), var(--py)) rotate(var(--pr));
+        opacity: 0;
+    }
+}
+
+/* Overlay */
+.milestone-celebration-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100000;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: celebrationFadeIn 0.3s ease-out;
+}
+
+.milestone-celebration-overlay.fading {
+    animation: celebrationFadeOut 0.8s ease-in forwards;
+}
+
+@keyframes celebrationFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes celebrationFadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+/* Particles container */
+.milestone-particles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+/* Central Card */
+.milestone-card {
+    position: relative;
+    z-index: 100002;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 32px 48px;
+    background: rgba(10, 10, 15, 0.92);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(99, 102, 241, 0.5);
+    border-radius: 20px;
+    box-shadow:
+        0 0 40px rgba(99, 102, 241, 0.3),
+        0 0 80px rgba(99, 102, 241, 0.15),
+        0 20px 60px rgba(0, 0, 0, 0.6);
+    animation: cardBounceIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: auto;
+}
+
+.milestone-card.max-level {
+    border-color: rgba(234, 179, 8, 0.7);
+    box-shadow:
+        0 0 40px rgba(234, 179, 8, 0.4),
+        0 0 80px rgba(234, 179, 8, 0.2),
+        0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+@keyframes cardBounceIn {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.milestone-emoji {
+    font-size: 3rem;
+    animation: emojiPulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes emojiPulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.15); }
+}
+
+.milestone-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: titleShimmer 2s linear infinite;
+    background-size: 200% 100%;
+}
+
+.milestone-card.max-level .milestone-title {
+    background: linear-gradient(135deg, #eab308, #fde047, #f59e0b, #fde047);
+    -webkit-background-clip: text;
+    background-clip: text;
+    background-size: 200% 100%;
+}
+
+@keyframes titleShimmer {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+.milestone-subtitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #e4e4e7;
+    text-align: center;
+    max-width: 280px;
+}
+
+.milestone-level {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+}
+
+/* Sparkle ring for max level */
+.milestone-sparkle-ring {
+    position: absolute;
+    inset: -8px;
+    border-radius: 28px;
+    border: 2px solid transparent;
+    background: linear-gradient(135deg, rgba(234, 179, 8, 0.3), rgba(253, 224, 71, 0.1), rgba(234, 179, 8, 0.3)) border-box;
+    mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    mask-composite: xor;
+    -webkit-mask-composite: xor;
+    animation: sparkleRotate 3s linear infinite;
+}
+
+@keyframes sparkleRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* ─── Glow Pulse for Newly Unlocked Nodes ─── */
+.skill-node-v2.node-newly-unlocked {
+    animation: nodeGlowPulse 2s ease-in-out 3;
+}
+
+@keyframes nodeGlowPulse {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(99, 102, 241, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(99, 102, 241, 0.6), 0 0 50px rgba(99, 102, 241, 0.3);
+    }
+}
+
+.skill-node-v2.node-newly-maxed {
+    animation: nodeMaxGlowPulse 2s ease-in-out 3;
+}
+
+@keyframes nodeMaxGlowPulse {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(234, 179, 8, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(234, 179, 8, 0.6), 0 0 50px rgba(234, 179, 8, 0.3);
+    }
+}
