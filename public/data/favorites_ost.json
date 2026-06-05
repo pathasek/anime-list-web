@@ -1239,6 +1239,18 @@
       "anime_url": null,
       "ost_name": "First Ending",
       "ost_url": "https://youtu.be/_nssUVDoMb0?si=59yZfd2p8E81ZgJZ"
+    },
+    {
+      "anime_name": "The Unwanted Undead Adventurer, S01",
+      "anime_url": null,
+      "ost_name": "Bustling Guild",
+      "ost_url": "https://youtu.be/UNP1HWD86uw?si=NZg22IimdXz1sSah"
+    },
+    {
+      "anime_name": "The Unwanted Undead Adventurer, S01",
+      "anime_url": null,
+      "ost_name": "Flower Garden",
+      "ost_url": "https://youtu.be/2ykgKfciwso?si=raztwsCBBbYppFbg"
     }
   ],
   "whole": [
@@ -1441,6 +1453,14 @@
       "yt_url": "https://youtube.com/playlist?list=PLBO2h-GzDvIbFXfzlexauXIOi3yPt3DEu&si=fSfMvM4K-W-lzgW5",
       "spotify_playlist": "Spotify",
       "spotify_url": "https://open.spotify.com/playlist/2w7ehjUiYqGs9qj6BLQlLR?si=2d4dc0dea36f4811&pt=e39803ff7f103293e5be15c771b26d3e"
+    },
+    {
+      "anime_name": "The Unwanted Undead Adventurer",
+      "anime_url": null,
+      "yt_playlist": "YT Playlist",
+      "yt_url": "https://youtube.com/playlist?list=PLFprXXlH8dEgkfHujKFuxS6qHux4noJVn&si=L1b9fokCklbX-Dz-",
+      "spotify_playlist": "Spotify",
+      "spotify_url": "https://open.spotify.com/playlist/1U9LMQFeSnveTprubOO6Lg?si=982d7ee428044171&pt=76dd7f7e406330f68081fae7e08ed6fe"
     }
   ]
 }
