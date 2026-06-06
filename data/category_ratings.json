@@ -2390,6 +2390,61 @@
     }
   },
   {
+    "name": "Ranking of Kings",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 8.0,
+      "MC": 9.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 8.0,
+      "Plot": 7.5,
+      "Pacing": 7.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 8.5,
+      "Emoce": 8.5,
+      "Enjoyment": 8.0,
+      "OP": 7.0,
+      "ED": 9.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "Rage of Bahamut: Genesis",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 8.0,
+      "MC": 8.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 8.0,
+      "Plot": 7.0,
+      "Pacing": 6.5,
+      "Story Conclusion": 7.5,
+      "Originalita": 7.5,
+      "Emoce": 7.0,
+      "Enjoyment": 8.0,
+      "OP": 8.0,
+      "ED": 9.0,
+      "OST": 9.0
+    }
+  },
+  {
+    "name": "Rage of Bahamut: Genesis - Short Story",
+    "categories": {
+      "Animace": 7.5,
+      "CGI": 7.5,
+      "MC": 8.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 8.0,
+      "Plot": 6.5,
+      "Pacing": 8.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 7.0,
+      "Emoce": 6.0,
+      "Enjoyment": 7.5,
+      "OST": 8.0
+    }
+  },
+  {
     "name": "Girls' Last Tour",
     "categories": {
       "Animace": 7.0,
@@ -2707,6 +2762,25 @@
       "Enjoyment": 8.0,
       "OP": 8.0,
       "ED": 7.0,
+      "OST": 9.0
+    }
+  },
+  {
+    "name": "Rage of Bahamut: Virgin Soul",
+    "categories": {
+      "Animace": 8.0,
+      "CGI": 8.0,
+      "MC": 7.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 8.5,
+      "Plot": 7.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 8.0,
+      "Emoce": 8.0,
+      "Enjoyment": 7.0,
+      "OP": 7.0,
+      "ED": 9.0,
       "OST": 9.0
     }
   },
@@ -3810,6 +3884,77 @@
     }
   },
   {
+    "name": "The Beast Player Erin",
+    "categories": {
+      "Animace": 6.0,
+      "CGI": 6.5,
+      "MC": 9.5,
+      "Vedlejší postavy": 9.0,
+      "Waifu": 8.5,
+      "Plot": 8.0,
+      "Pacing": 7.5,
+      "Story Conclusion": 9.0,
+      "Originalita": 8.5,
+      "Emoce": 10.0,
+      "Enjoyment": 8.5,
+      "OP": 10.0,
+      "ED": 7.0,
+      "OST": 9.0
+    }
+  },
+  {
+    "name": "Nausicaä of the Valley of the Wind",
+    "categories": {
+      "Animace": 7.5,
+      "MC": 7.5,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 8.0,
+      "Plot": 7.0,
+      "Pacing": 7.5,
+      "Story Conclusion": 7.5,
+      "Originalita": 9.0,
+      "Emoce": 7.0,
+      "Enjoyment": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Princess Mononoke",
+    "categories": {
+      "Animace": 9.0,
+      "CGI": 8.5,
+      "MC": 9.0,
+      "Vedlejší postavy": 9.0,
+      "Waifu": 9.0,
+      "Plot": 8.5,
+      "Pacing": 8.0,
+      "Story Conclusion": 7.5,
+      "Originalita": 9.0,
+      "Emoce": 7.5,
+      "Enjoyment": 8.5,
+      "OST": 9.0
+    }
+  },
+  {
+    "name": "Moribito - Guardian of the Spirit",
+    "categories": {
+      "Animace": 7.5,
+      "CGI": 8.0,
+      "MC": 9.0,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 8.0,
+      "Plot": 7.5,
+      "Pacing": 6.5,
+      "Story Conclusion": 8.0,
+      "Originalita": 8.0,
+      "Emoce": 7.5,
+      "Enjoyment": 7.5,
+      "OP": 9.0,
+      "ED": 9.0,
+      "OST": 9.0
+    }
+  },
+  {
     "name": "Fullmetal Alchemist: Brotherhood",
     "categories": {
       "Animace": 8.5,
@@ -4694,77 +4839,6 @@
     }
   },
   {
-    "name": "The Beast Player Erin",
-    "categories": {
-      "Animace": 6.0,
-      "CGI": 6.5,
-      "MC": 9.5,
-      "Vedlejší postavy": 9.0,
-      "Waifu": 8.5,
-      "Plot": 8.0,
-      "Pacing": 7.5,
-      "Story Conclusion": 9.0,
-      "Originalita": 8.5,
-      "Emoce": 10.0,
-      "Enjoyment": 8.5,
-      "OP": 10.0,
-      "ED": 7.0,
-      "OST": 9.0
-    }
-  },
-  {
-    "name": "Nausicaä of the Valley of the Wind",
-    "categories": {
-      "Animace": 7.5,
-      "MC": 7.5,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 8.0,
-      "Plot": 7.0,
-      "Pacing": 7.5,
-      "Story Conclusion": 7.5,
-      "Originalita": 9.0,
-      "Emoce": 7.0,
-      "Enjoyment": 7.0,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Princess Mononoke",
-    "categories": {
-      "Animace": 9.0,
-      "CGI": 8.5,
-      "MC": 9.0,
-      "Vedlejší postavy": 9.0,
-      "Waifu": 9.0,
-      "Plot": 8.5,
-      "Pacing": 8.0,
-      "Story Conclusion": 7.5,
-      "Originalita": 9.0,
-      "Emoce": 7.5,
-      "Enjoyment": 8.5,
-      "OST": 9.0
-    }
-  },
-  {
-    "name": "Ranking of Kings",
-    "categories": {
-      "Animace": 8.0,
-      "CGI": 8.0,
-      "MC": 9.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 8.0,
-      "Plot": 7.5,
-      "Pacing": 7.0,
-      "Story Conclusion": 7.0,
-      "Originalita": 8.5,
-      "Emoce": 8.5,
-      "Enjoyment": 8.0,
-      "OP": 7.0,
-      "ED": 9.0,
-      "OST": 10.0
-    }
-  },
-  {
     "name": "Ranking of Kings: The Treasure Chest of Courage",
     "categories": {
       "Animace": 7.5,
@@ -4784,77 +4858,22 @@
     }
   },
   {
-    "name": "Moribito - Guardian of the Spirit",
+    "name": "The Unwanted Undead Adventurer, S01",
     "categories": {
-      "Animace": 7.5,
-      "CGI": 8.0,
-      "MC": 9.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 8.0,
-      "Plot": 7.5,
-      "Pacing": 6.5,
-      "Story Conclusion": 8.0,
-      "Originalita": 8.0,
-      "Emoce": 7.5,
-      "Enjoyment": 7.5,
-      "OP": 9.0,
-      "ED": 9.0,
-      "OST": 9.0
-    }
-  },
-  {
-    "name": "Rage of Bahamut: Genesis",
-    "categories": {
-      "Animace": 8.0,
-      "CGI": 8.0,
-      "MC": 8.0,
-      "Vedlejší postavy": 7.0,
-      "Waifu": 8.0,
-      "Plot": 7.0,
-      "Pacing": 6.5,
-      "Story Conclusion": 7.5,
-      "Originalita": 7.5,
-      "Emoce": 7.0,
-      "Enjoyment": 8.0,
-      "OP": 8.0,
-      "ED": 9.0,
-      "OST": 9.0
-    }
-  },
-  {
-    "name": "Rage of Bahamut: Genesis - Short Story",
-    "categories": {
-      "Animace": 7.5,
+      "Animace": 7.0,
       "CGI": 7.5,
       "MC": 8.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 8.0,
-      "Plot": 6.5,
-      "Pacing": 8.0,
-      "Story Conclusion": 7.0,
-      "Originalita": 7.0,
-      "Emoce": 6.0,
-      "Enjoyment": 7.5,
-      "OST": 8.0
-    }
-  },
-  {
-    "name": "Rage of Bahamut: Virgin Soul",
-    "categories": {
-      "Animace": 8.0,
-      "CGI": 8.0,
-      "MC": 7.0,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 8.5,
+      "Vedlejší postavy": 7.5,
+      "Waifu": 9.0,
       "Plot": 7.0,
       "Pacing": 7.0,
       "Story Conclusion": 7.0,
-      "Originalita": 8.0,
-      "Emoce": 8.0,
+      "Originalita": 7.0,
+      "Emoce": 6.5,
       "Enjoyment": 7.0,
       "OP": 7.0,
       "ED": 9.0,
-      "OST": 9.0
+      "OST": 10.0
     }
   }
 ]
