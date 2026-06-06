@@ -1211,43 +1211,16 @@ function Favorites() {
                                 gap: '16px'
                             }}>
                                 {(() => {
-                                    // Hardcoded explicit order requested by user
-                                    const explicitOrder = [
-                                        "Made in Abyss",
-                                        "The Rising of the Shield Hero",
-                                        "Attack on Titan",
-                                        "Spice and Wolf: Merchant Meets the Wise Wolf",
-                                        "Demon Slayer",
-                                        "Frieren: Beyond Journey's End",
-                                        "Lord of Mysteries",
-                                        "Jujutsu Kaisen",
-                                        "Tower of God",
-                                        "Cross Ange: Rondo of Angel and Dragon",
-                                        "The Apothecary Diaries",
-                                        "Grimgar: Ashes and Illusions",
-                                        "The Ancient Magus' Bride",
-                                        "Re:Zero - Starting Life in Another World",
-                                        "Steins;Gate",
-                                        "Bâan: The Boundary of Adulthood",
-                                        "Girls' Last Tour",
-                                        "Evangelion",
-                                        "Puella Magi Madoka Magica",
-                                        "The Garden of Sinners",
-                                        "Kabaneri of the Iron Fortress",
-                                        "The Unwanted Undead Adventurer",
-                                        "Spy x Family",
-                                        "Ranking of Kings",
-                                        "Somali and the Forest Spirit",
-                                        "Tsukimichi -Moonlit Fantasy-"
-                                    ];
+                                    const parseOrder = (orderStr) => {
+                                        if (orderStr === null || orderStr === undefined) return 9999;
+                                        const num = parseInt(String(orderStr).replace(/[^\d]/g, ''), 10);
+                                        return isNaN(num) ? 9999 : num;
+                                    };
 
                                     const sortedWhole = [...ostTables.whole].sort((a, b) => {
-                                        let idxA = explicitOrder.indexOf(a.anime_name);
-                                        let idxB = explicitOrder.indexOf(b.anime_name);
-                                        if (idxA === -1) idxA = 999;
-                                        if (idxB === -1) idxB = 999;
-                                        if (idxA !== idxB) return idxA - idxB;
-                                        // fallback to alphabetical if not in explicit order
+                                        const orderA = parseOrder(a.order);
+                                        const orderB = parseOrder(b.order);
+                                        if (orderA !== orderB) return orderA - orderB;
                                         return a.anime_name.localeCompare(b.anime_name);
                                     });
 
