@@ -243,8 +243,8 @@
   {
     "name": "Steins;Gate 0",
     "categories": {
-      "Animace": 8.0,
-      "CGI": 8.0,
+      "Animace": 7.0,
+      "CGI": 7.5,
       "MC": 10.0,
       "Vedlejší postavy": 10.0,
       "Waifu": 9.0,
@@ -262,8 +262,8 @@
   {
     "name": "Steins;Gate: Open the Missing Link - Divide By Zero",
     "categories": {
-      "Animace": 8.0,
-      "CGI": 8.0,
+      "Animace": 7.0,
+      "CGI": 7.5,
       "MC": 10.0,
       "Vedlejší postavy": 10.0,
       "Waifu": 10.0,
@@ -613,8 +613,8 @@
   {
     "name": "Steins;Gate 0: Valentine's of Crystal Polymorphism -Bittersweet Intermedio-",
     "categories": {
-      "Animace": 8.0,
-      "CGI": 8.0,
+      "Animace": 7.0,
+      "CGI": 7.5,
       "MC": 9.0,
       "Vedlejší postavy": 9.0,
       "Waifu": 9.0,
@@ -633,7 +633,7 @@
     "name": "Steins;Gate: The Sagacious Wisdom of Cognitive Computing",
     "categories": {
       "Animace": 7.0,
-      "CGI": 8.0,
+      "CGI": 7.5,
       "MC": 9.0,
       "Vedlejší postavy": 8.0,
       "Waifu": 9.0,
@@ -649,8 +649,8 @@
   {
     "name": "Steins;Gate: Egoistic Poriomania",
     "categories": {
-      "Animace": 8.0,
-      "CGI": 8.0,
+      "Animace": 7.0,
+      "CGI": 7.5,
       "MC": 9.0,
       "Vedlejší postavy": 9.0,
       "Waifu": 10.0,
@@ -2824,8 +2824,8 @@
   {
     "name": "Steins;Gate: The Movie - Load Region of Déjà Vu",
     "categories": {
-      "Animace": 8.0,
-      "CGI": 8.0,
+      "Animace": 7.0,
+      "CGI": 7.5,
       "MC": 9.0,
       "Vedlejší postavy": 9.0,
       "Waifu": 10.0,
@@ -4014,8 +4014,8 @@
   {
     "name": "Steins;Gate",
     "categories": {
-      "Animace": 8.0,
-      "CGI": 8.0,
+      "Animace": 7.0,
+      "CGI": 7.5,
       "MC": 10.0,
       "Vedlejší postavy": 10.0,
       "Waifu": 10.0,
@@ -4892,6 +4892,25 @@
       "Enjoyment": 6.5,
       "OP": 7.0,
       "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Dororo",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 7.5,
+      "MC": 8.5,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 7.5,
+      "Plot": 7.5,
+      "Pacing": 7.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 8.5,
+      "Emoce": 8.0,
+      "Enjoyment": 7.5,
+      "OP": 7.0,
+      "ED": 9.0,
       "OST": 8.0
     }
   }
