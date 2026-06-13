@@ -57,7 +57,7 @@
 .row-1 .right-panel-bottom { flex: 1; min-height: 0; }
 
 /* Row 2 layouts */
-.row-2 .left-panel { flex: 0 0 300px; height: 400px; display: flex; flex-direction: column; }
+.row-2 .left-panel { flex: 0 0 380px; height: 400px; display: flex; flex-direction: column; }
 .row-2 .center-panel { flex: 1; height: 400px; }
 .row-2 .right-panel { flex: 0 0 450px; height: 400px; }
 
@@ -822,6 +822,7 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  overflow-x: hidden;
   gap: 3px;
   padding-right: 2px;
 }
@@ -859,6 +860,7 @@
 
 .episode-list-item .ep-title {
   flex: 1;
+  min-width: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1021,7 +1023,7 @@
   flex: 0 0 300px;
   width: 300px;
   max-width: 300px;
-  height: 500px;
+  height: 100%;
 }
 
 @media (max-width: 1400px) {
@@ -1032,14 +1034,7 @@
   }
 }
 
-/* Hide scrollbars on episode list panel */
-.episode-list-panel::-webkit-scrollbar {
-  display: none !important;
-}
-.episode-list-panel {
-  scrollbar-width: none !important; /* Firefox */
-  -ms-overflow-style: none !important; /* IE and Edge */
-}
+
 
 /* Season badge inside unified chronological episode list */
 .episode-list-item .ep-season-badge {

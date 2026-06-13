@@ -11,6 +11,7 @@ import {
     getCachedEpisodeSynopsis
 } from '../utils/jikanService'
 import './AnimeRatings.css'
+import { customSeasonOrders } from '../utils/customSeasonOrders'
 
 ChartJS.register(...registerables)
 
@@ -134,38 +135,58 @@ function AnimeRatings() {
 
         // Sort seasons/parts within each series based on watch date, status, and name
         Object.keys(groups).forEach(sName => {
-            groups[sName].sort((a, b) => {
-                // 1. Sort by start_date (watch date)
-                const parseDate = (dStr) => {
-                    if (!dStr || dStr === 'X') return new Date(0)
-                    return new Date(dStr)
-                }
-                const dateA = parseDate(a.start_date)
-                const dateB = parseDate(b.start_date)
-                if (dateA.getTime() !== dateB.getTime()) {
-                    return dateA - dateB
-                }
+            const customOrder = customSeasonOrders[sName]
+            if (customOrder) {
+                groups[sName].sort((a, b) => {
+                    const idxA = customOrder.indexOf(a.name)
+                    const idxB = customOrder.indexOf(b.name)
+                    if (idxA !== -1 && idxB !== -1) {
+                        return idxA - idxB
+                    }
+                    if (idxA !== -1) return -1
+                    if (idxB !== -1) return 1
 
-                // 2. If watch dates are identical, use status as a tie-breaker:
-                // "Pokračování zhlédnuto" (Rank 1) comes before "Neexistuje" (Rank 4)
-                const getStatusRank = (status) => {
-                    if (!status) return 5
-                    const s = status.toLowerCase()
-                    if (s.includes("zhlédnuto") || s.includes("zhlednuto")) return 1
-                    if (s.includes("čekám") || s.includes("cekam") || s.includes("airing") || s.includes("existuje")) return 2
-                    if (s.includes("nepravděpodobné") || s.includes("nepravdepodobne")) return 3
-                    if (s.includes("neexistuje")) return 4
-                    return 5
-                }
-                const rankA = getStatusRank(a.status)
-                const rankB = getStatusRank(b.status)
-                if (rankA !== rankB) {
-                    return rankA - rankB
-                }
+                    // Fallback to start_date sorting
+                    const parseDate = (dStr) => {
+                        if (!dStr || dStr === 'X') return new Date(0)
+                        return new Date(dStr)
+                    }
+                    return parseDate(a.start_date) - parseDate(b.start_date)
+                })
+            } else {
+                groups[sName].sort((a, b) => {
+                    // 1. Sort by start_date (watch date)
+                    const parseDate = (dStr) => {
+                        if (!dStr || dStr === 'X') return new Date(0)
+                        return new Date(dStr)
+                    }
+                    const dateA = parseDate(a.start_date)
+                    const dateB = parseDate(b.start_date)
+                    if (dateA.getTime() !== dateB.getTime()) {
+                        return dateA - dateB
+                    }
 
-                // 3. Otherwise, use natural comparison of the names
-                return a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' })
-            })
+                    // 2. If watch dates are identical, use status as a tie-breaker:
+                    // "Pokračování zhlédnuto" (Rank 1) comes before "Neexistuje" (Rank 4)
+                    const getStatusRank = (status) => {
+                        if (!status) return 5
+                        const s = status.toLowerCase()
+                        if (s.includes("zhlédnuto") || s.includes("zhlednuto")) return 1
+                        if (s.includes("čekám") || s.includes("cekam") || s.includes("airing") || s.includes("existuje")) return 2
+                        if (s.includes("nepravděpodobné") || s.includes("nepravdepodobne")) return 3
+                        if (s.includes("neexistuje")) return 4
+                        return 5
+                    }
+                    const rankA = getStatusRank(a.status)
+                    const rankB = getStatusRank(b.status)
+                    if (rankA !== rankB) {
+                        return rankA - rankB
+                    }
+
+                    // 3. Otherwise, use natural comparison of the names
+                    return a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' })
+                })
+            }
         })
 
         return groups
@@ -1031,11 +1052,14 @@ function AnimeRatings() {
                             if (score === null) return `${ep.animeName} - ${ep.epName}: N/A`
                             
                             if (ratingSource === 'moje') {
-                                return `${ep.animeName} - ${ep.epName} (Moje): ${score}`
+                                const formattedScore = typeof score === 'number'
+                                    ? (ep.epName === 'Film' ? score.toFixed(2).replace('.', ',') : (Number.isInteger(score) ? score : score.toFixed(2).replace('.', ',')))
+                                    : score;
+                                return `${ep.animeName} - ${ep.epName} (Moje): ${formattedScore}`
                             } else if (ratingSource === 'mal') {
-                                return `${ep.animeName} - ${ep.epName} (MAL): ${score.toFixed(2)}`
+                                return `${ep.animeName} - ${ep.epName} (MAL): ${score.toFixed(2).replace('.', ',')}`
                             } else {
-                                return `${ep.animeName} - ${ep.epName} (IMDb): ${score.toFixed(2)}`
+                                return `${ep.animeName} - ${ep.epName} (IMDb): ${score.toFixed(2).replace('.', ',')}`
                             }
                         }
                     }
@@ -1268,7 +1292,22 @@ function AnimeRatings() {
             },
             plugins: {
                 legend: { display: false },
-                tooltip: { callbacks: { label: (ctx) => `${ctx.raw.label}: (${ctx.raw.x}, ${ctx.raw.y})` } }
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => {
+                            const name = ctx.raw.label;
+                            const isMovie = name.toLowerCase().includes('movie') || name.toLowerCase().includes('film');
+                            const formatVal = (val) => {
+                                if (typeof val !== 'number') return val;
+                                if (isMovie) return val.toFixed(2).replace('.', ',');
+                                return Number.isInteger(val) ? val : val.toFixed(2).replace('.', ',');
+                            };
+                            const xVal = formatVal(ctx.raw.x);
+                            const yVal = formatVal(ctx.raw.y);
+                            return `${name}: (FH: ${xVal}, ${slicerPolozka}: ${yVal})`;
+                        }
+                    }
+                }
             }
         }
     }, [correlationChartData, slicerPolozka])
@@ -1594,7 +1633,7 @@ function AnimeRatings() {
                                         </span>
                                     </div>
                                     <div className="selector-item-rating" style={{ color: 'var(--accent-pink)' }}>
-                                        {s.avgRating > 0 ? s.avgRating.toFixed(2) : '?'}
+                                        {s.avgRating > 0 ? s.avgRating.toFixed(2).replace('.', ',') : '?'}
                                     </div>
                                 </div>
                             ))}
@@ -1602,7 +1641,7 @@ function AnimeRatings() {
                     </div>
 
                     {/* 2. Series Detail Center & Right Panel */}
-                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'var(--spacing-grid)', minWidth: 0 }}>
+                    <div className="right-panel" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-grid)', minWidth: 0 }}>
                         {/* A. Hlavička Série */}
                         {selectedSeriesObj && (
                             <div className="series-header-card">
@@ -1620,7 +1659,7 @@ function AnimeRatings() {
                                     <h2 className="series-header-title">{selectedSeriesObj.name}</h2>
                                     <div className="series-header-meta">
                                         <span className="badge badge-primary" style={{ background: 'var(--accent-pink)' }}>
-                                            Vážený průměr FH: {selectedSeriesObj.avgRating > 0 ? selectedSeriesObj.avgRating.toFixed(2) : 'N/A'}
+                                            Vážený průměr FH: {selectedSeriesObj.avgRating > 0 ? selectedSeriesObj.avgRating.toFixed(2).replace('.', ',') : 'N/A'}
                                         </span>
                                         <span className="badge" style={{ background: 'var(--bg-secondary)' }}>
                                             Epizod celkem: {selectedSeriesObj.totalEps}
@@ -1655,7 +1694,7 @@ function AnimeRatings() {
                         <div className="ratings-row" style={{ flex: 1, minHeight: 0, minWidth: 0 }}>
                             {seriesTab === 'timeline' ? (
                                 <>
-                                    <div className="ratings-panel" style={{ flex: 1, height: '500px', minWidth: 0 }}>
+                                    <div className="ratings-panel" style={{ flex: 1, height: '100%', minWidth: 0 }}>
                                         <h3 className="ratings-panel-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                             <span>Spojitý vývoj hodnocení epizod</span>
                                             <div className="chart-toggles-container" style={{ display: 'flex', gap: '16px', alignItems: 'center', fontSize: '0.8rem', fontWeight: 'normal', color: 'var(--text-secondary)' }}>
@@ -1729,7 +1768,7 @@ function AnimeRatings() {
                                                 )}
                                                 <div className="episode-detail-meta">
                                                     <span className="meta-badge" style={{ background: getPointColor(selectedTimelineEp.rating), color: getPointTextColor(selectedTimelineEp.rating) }}>
-                                                        EP: {selectedTimelineEp.rating.toFixed(2)}
+                                                        EP: {selectedTimelineEp.epName === 'Film' ? selectedTimelineEp.rating.toFixed(2).replace('.', ',') : (Number.isInteger(selectedTimelineEp.rating) ? selectedTimelineEp.rating : selectedTimelineEp.rating.toFixed(2).replace('.', ','))}
                                                     </span>
                                                     {(() => {
                                                         // Find MAL score from jikanEpisodes list
@@ -1738,26 +1777,26 @@ function AnimeRatings() {
                                                         const epNum = epMatch ? parseInt(epMatch[1], 10) : null
                                                         const malEp = epNum && jikanEpisodes ? jikanEpisodes.find(e => e.mal_id === epNum) : null
                                                         if (malEp && malEp.score) {
-                                                            return <span className="meta-badge" style={{ background:'var(--bg-tertiary)', color:'var(--text-secondary)' }}>MAL: {malEp.score.toFixed(2)}</span>
+                                                            return <span className="meta-badge" style={{ background:'var(--bg-tertiary)', color:'var(--text-secondary)' }}>MAL: {malEp.score.toFixed(2).replace('.', ',')}</span>
                                                         }
                                                         return null
-                                                    })()}
-                                                    {(() => {
-                                                        // Find IMDb score from imdbCache
-                                                        const anime = animeList.find(a => a.name === selectedTimelineEp.animeName)
-                                                        if (!anime || !anime.mal_url) return null
-                                                        const malId = extractMalId(anime.mal_url)
-                                                        const imdbAnime = imdbCache[String(malId)]
-                                                        if (imdbAnime && imdbAnime.episodes) {
-                                                            const score = imdbAnime.episodes[selectedTimelineEp.epName]
-                                                            if (score) {
-                                                                return (
-                                                                    <span className="meta-badge" style={{ background: '#f5c518', color: '#000000', fontWeight: 'bold' }}>
-                                                                        IMDb: {score.toFixed(2)}
-                                                                    </span>
-                                                                )
-                                                            }
-                                                        }
+                                                     })()}
+                                                     {(() => {
+                                                         // Find IMDb score from imdbCache
+                                                         const anime = animeList.find(a => a.name === selectedTimelineEp.animeName)
+                                                         if (!anime || !anime.mal_url) return null
+                                                         const malId = extractMalId(anime.mal_url)
+                                                         const imdbAnime = imdbCache[String(malId)]
+                                                         if (imdbAnime && imdbAnime.episodes) {
+                                                             const score = imdbAnime.episodes[selectedTimelineEp.epName]
+                                                             if (score) {
+                                                                 return (
+                                                                     <span className="meta-badge" style={{ background: '#f5c518', color: '#000000', fontWeight: 'bold' }}>
+                                                                         IMDb: {score.toFixed(2).replace('.', ',')}
+                                                                     </span>
+                                                                 )
+                                                             }
+                                                         }
                                                         return null
                                                     })()}
                                                     {jikanSynopsis?.filler && <span className="ep-badge filler">Filler</span>}
@@ -1901,7 +1940,7 @@ function AnimeRatings() {
                             ) : (
                                 <>
                                     {/* Průměrný Radar Chart & Notes vprostřed */}
-                                    <div className="ratings-panel" style={{ flex: '0 0 380px', height: '500px', display: 'flex', flexDirection: 'column' }}>
+                                    <div className="ratings-panel" style={{ flex: '0 0 380px', height: '100%', display: 'flex', flexDirection: 'column' }}>
                                         <h3 className="ratings-panel-title" style={{ marginBottom: '8px' }}>Agregovaný průměr kategorií</h3>
                                         <div style={{ height: '240px', position: 'relative', marginBottom: '8px' }}>
                                             {seriesRadarData ? (
@@ -1923,7 +1962,7 @@ function AnimeRatings() {
                                     </div>
 
                                     {/* Seznam všech sezón a čtverečky epizod */}
-                                    <div className="ratings-panel" style={{ flex: 1, height: '500px', overflowY: 'auto' }}>
+                                    <div className="ratings-panel" style={{ flex: 1, height: '100%', overflowY: 'auto' }}>
                                         <h3 className="ratings-panel-title">Mřížka epizod (Episode Grid)</h3>
                                         <div className="seasons-grids-list">
                                             {selectedSeriesObj?.items.map(anime => {
@@ -1992,7 +2031,7 @@ function AnimeRatings() {
                                                         >
                                                             <span>{cleanSeasonName}</span>
                                                             <span className="season-grid-avg">
-                                                                (průměr {seasonAvg > 0 ? seasonAvg.toFixed(2) : 'N/A'})
+                                                                (průměr {seasonAvg > 0 ? seasonAvg.toFixed(2).replace('.', ',') : 'N/A'})
                                                             </span>
                                                         </h4>
                                                         <div className="episode-grid-container" style={{ marginTop: '8px' }}>
@@ -2011,10 +2050,10 @@ function AnimeRatings() {
                                                                             animeName: anime.name
                                                                         })
                                                                     }}
-                                                                    title={`${anime.name} - ${ep.episode}: ${ep.rating}`}
+                                                                    title={`${anime.name} - ${ep.episode}: ${ep.episode === 'Film' ? ep.rating.toFixed(2).replace('.', ',') : (Number.isInteger(ep.rating) ? ep.rating : ep.rating.toFixed(2).replace('.', ','))}`}
                                                                 >
                                                                     <span className="ep-card-num">{ep.episode.replace('EP ', 'E')}</span>
-                                                                    <span className="ep-card-val">{ep.rating.toFixed(1)}</span>
+                                                                    <span className="ep-card-val">{ep.episode === 'Film' ? ep.rating.toFixed(2).replace('.', ',') : ep.rating.toFixed(1).replace('.', ',')}</span>
                                                                 </div>
                                                             ))}
                                                         </div>
