@@ -545,7 +545,7 @@
   },
   {
     "index": "33.",
-    "anime_name": "Clasroom of the Elite, S03",
+    "anime_name": "Classroom of the Elite, S03",
     "type": "OP",
     "song": "Minor Piece",
     "author": "ZAQ",
@@ -919,7 +919,7 @@
   },
   {
     "index": "55.",
-    "anime_name": "Fate/Grand Order Absolute Demonic Front - Babylonia",
+    "anime_name": "Fate/Grand Order: Absolute Demonic Front - Babylonia",
     "type": "ED",
     "song": "Prover",
     "author": "milet",
@@ -1922,7 +1922,7 @@
   },
   {
     "index": "114.",
-    "anime_name": "Re:Zero - Starting Life in Another World, S01",
+    "anime_name": "Re:Zero -Starting Life in Another World-, S01",
     "type": "OP",
     "song": "Paradisus-Paradoxum",
     "author": "MYTH AND ROID",
@@ -1939,7 +1939,7 @@
   },
   {
     "index": "115.",
-    "anime_name": "Re:Zero - Starting Life in Another World, S01",
+    "anime_name": "Re:Zero -Starting Life in Another World-, S01",
     "type": "OP",
     "song": "Redo",
     "author": "Konomi Suzuki",
@@ -1956,7 +1956,7 @@
   },
   {
     "index": "116.",
-    "anime_name": "Re:Zero - Starting Life in Another World, S01",
+    "anime_name": "Re:Zero -Starting Life in Another World-, S01",
     "type": "ED",
     "song": "Stay Alive",
     "author": "Rie Takahashi",
@@ -1973,7 +1973,7 @@
   },
   {
     "index": "117.",
-    "anime_name": "Re:Zero - Starting Life in Another World, S01",
+    "anime_name": "Re:Zero -Starting Life in Another World-, S01",
     "type": "ED",
     "song": "Styx Helix",
     "author": "MYTH AND ROID",
@@ -1990,7 +1990,7 @@
   },
   {
     "index": "118.",
-    "anime_name": "Re:Zero - Starting Life in Another World, S02 Part 1",
+    "anime_name": "Re:Zero -Starting Life in Another World-, S02 Part 1",
     "type": "OP",
     "song": "Realize",
     "author": "Konomi Suzuki",
@@ -2007,7 +2007,7 @@
   },
   {
     "index": "119.",
-    "anime_name": "Re:Zero - Starting Life in Another World, S02 Part 2",
+    "anime_name": "Re:Zero -Starting Life in Another World-, S02 Part 2",
     "type": "ED",
     "song": "Believe in you",
     "author": "nonoc",
@@ -2024,7 +2024,7 @@
   },
   {
     "index": "120.",
-    "anime_name": "Re:Zero - Starting Life in Another World, S02 Part 2",
+    "anime_name": "Re:Zero -Starting Life in Another World-, S02 Part 2",
     "type": "OP",
     "song": "Long Shot",
     "author": "Mayu Maeshima",
@@ -2041,7 +2041,7 @@
   },
   {
     "index": "121.",
-    "anime_name": "Re:Zero - Starting Life in Another World, S03",
+    "anime_name": "Re:Zero -Starting Life in Another World-, S03",
     "type": "ED",
     "song": "NOX LUX",
     "author": "MYTH AND ROID",
@@ -2058,7 +2058,7 @@
   },
   {
     "index": "122.",
-    "anime_name": "Re:Zero - Starting Life in Another World, S03",
+    "anime_name": "Re:Zero -Starting Life in Another World-, S03",
     "type": "OP",
     "song": "Reweave",
     "author": "Konomi Suzuki",
@@ -2330,7 +2330,7 @@
   },
   {
     "index": "138.",
-    "anime_name": "Steins;Gate ",
+    "anime_name": "Steins;Gate",
     "type": "OP",
     "song": "Hacking to the Gate",
     "author": "Kanako Itou",
@@ -3992,6 +3992,23 @@
     "sing_along": 4,
     "has_frisson": false,
     "rating_avg": 8.5,
+    "rating_final": 9
+  },
+  {
+    "index": "236.",
+    "anime_name": "Dororo",
+    "type": "ED",
+    "song": "Sayonara Gokko",
+    "author": "amazarashi",
+    "language": "JAP",
+    "rating_lyrics": 9.75,
+    "rating_emotion": 9.25,
+    "rating_melody": 9,
+    "rating_video": 8.75,
+    "rating_voice": 9.25,
+    "sing_along": 1,
+    "has_frisson": false,
+    "rating_avg": 9.2,
     "rating_final": 9
   }
 ]

@@ -3,23 +3,23 @@
     {
       "shape_name": "Top10_Anime_1",
       "data": {
+        "NAME": "Re:Zero -Starting Life in Another World-"
+      },
+      "image_file": "images/top_favorites/Jikan_ReZero -Starting Life in Another World-.jpg"
+    },
+    {
+      "shape_name": "Top10_Anime_2",
+      "data": {
         "NAME": "Code Geass"
       },
       "image_file": "images/top_favorites/Jikan_Code Geass.jpg"
     },
     {
-      "shape_name": "Top10_Anime_2",
+      "shape_name": "Top10_Anime_3",
       "data": {
         "NAME": "Attack on Titan"
       },
       "image_file": "images/top_favorites/Jikan_Attack on Titan.jpg"
-    },
-    {
-      "shape_name": "Top10_Anime_3",
-      "data": {
-        "NAME": "Re:Zero -Starting Life in Another World-"
-      },
-      "image_file": "images/top_favorites/Jikan_ReZero -Starting Life in Another World-.jpg"
     },
     {
       "shape_name": "Top10_Anime_4",
