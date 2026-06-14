@@ -4010,5 +4010,22 @@
     "has_frisson": false,
     "rating_avg": 9.2,
     "rating_final": 9
+  },
+  {
+    "index": "237.",
+    "anime_name": "Claymore",
+    "type": "ED",
+    "song": "Danzai no Hana~Guilty Sky",
+    "author": "Riyu Kosaka",
+    "language": "JAP",
+    "rating_lyrics": 9,
+    "rating_emotion": 8.75,
+    "rating_melody": 8.75,
+    "rating_video": 8.75,
+    "rating_voice": 9,
+    "sing_along": 3,
+    "has_frisson": false,
+    "rating_avg": 8.85,
+    "rating_final": 9
   }
 ]
