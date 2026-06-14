@@ -12,6 +12,7 @@ import {
 } from '../utils/jikanService'
 import './AnimeRatings.css'
 import { customSeasonOrders } from '../utils/customSeasonOrders'
+import { useCustomImages, getPageBackground } from '../utils/customImages'
 
 ChartJS.register(...registerables)
 
@@ -79,6 +80,134 @@ const formatDuration = (durationVal) => {
     return str; // Returns pre-formatted strings like "1 hr 3 min" directly
 };
 
+// ============================================================================
+// RE:ZERO WITCH FACTOR HEPTAGRAM CONFIG & RENDERING
+// ============================================================================
+const heptagramVertices = [
+    { id: 1, name: 'Typhon', label: '1', x: 100.0, y: 168.0, tagDx: -10, tagDy: 10, witch: 'pride' },
+    { id: 2, name: 'Minerva', label: '2', x: 46.8, y: 142.4, tagDx: -12, tagDy: 7, witch: 'wrath' },
+    { id: 3, name: 'Daphne', label: '3', x: 33.7, y: 84.9, tagDx: -13, tagDy: -5, witch: 'gluttony' },
+    { id: 4, name: 'Echidna', label: '4', x: 70.5, y: 38.7, tagDx: -11, tagDy: -10, witch: 'greed' },
+    { id: 5, name: 'Carmilla', label: '5', x: 129.5, y: 38.7, tagDx: 11, tagDy: -10, witch: 'lust' },
+    { id: 6, name: 'Sekhmet', label: '6', x: 166.3, y: 84.9, tagDx: 13, tagDy: -5, witch: 'sloth' },
+    { id: 7, name: 'Satella', label: '7', x: 153.2, y: 142.4, tagDx: 12, tagDy: 7, witch: 'envy' }
+];
+
+const renderBaseSkull = (opacity = 0.85) => (
+    <g opacity={opacity} className="base-skull">
+        {/* Skull dome & cheekbone contour */}
+        <path 
+            d="M -5,-5 C -5,-10 5,-10 5,-5 C 5,-2 4.2,0 3.2,1.8 L 2.8,4.5 C 2.8,5.2 2.0,5.8 1.2,5.8 L -1.2,5.8 C -2.0,5.8 -2.8,5.2 -2.8,4.5 L -3.2,1.8 C -4.2,0 -5,-2 -5,-5 Z" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="1.1" 
+        />
+        {/* Eye sockets */}
+        <ellipse cx="-1.8" cy="-4.5" rx="1.2" ry="1.5" fill="currentColor" />
+        <ellipse cx="1.8" cy="-4.5" rx="1.2" ry="1.5" fill="currentColor" />
+        {/* Nose cavity */}
+        <path d="M 0,-2.2 L -0.6,-1 L 0.6,-1 Z" fill="currentColor" />
+        {/* Teeth/Jaw lines */}
+        <line x1="-1.2" y1="1.8" x2="1.2" y2="1.8" stroke="currentColor" strokeWidth="0.8" />
+        <line x1="-1.2" y1="1.8" x2="-1.2" y2="4.5" stroke="currentColor" strokeWidth="0.8" />
+        <line x1="0" y1="1.8" x2="0" y2="4.5" stroke="currentColor" strokeWidth="0.8" />
+        <line x1="1.2" y1="1.8" x2="1.2" y2="4.5" stroke="currentColor" strokeWidth="0.8" />
+    </g>
+);
+
+const renderWitchDetails = (witch) => {
+    switch(witch) {
+        case 'pride': // Typhon (Bottom, 1) - sunburst radiating lines
+            return (
+                <g className="witch-pride" stroke="currentColor" strokeWidth="0.6" opacity="0.8">
+                    {/* Radiating lines in bottom half of circle */}
+                    <line x1="-3" y1="5" x2="-7" y2="12" />
+                    <line x1="3" y1="5" x2="7" y2="12" />
+                    <line x1="-1.5" y1="5.5" x2="-3.5" y2="12" />
+                    <line x1="1.5" y1="5.5" x2="3.5" y2="12" />
+                    <line x1="0" y1="5.8" x2="0" y2="12.5" strokeWidth="0.8" />
+                    <line x1="-4.5" y1="4.5" x2="-10" y2="10" />
+                    <line x1="4.5" y1="4.5" x2="10" y2="10" />
+                    <line x1="-6" y1="3" x2="-12" y2="6.5" />
+                    <line x1="6" y1="3" x2="12" y2="6.5" />
+                </g>
+            );
+        case 'wrath': // Minerva (Bottom-Left, 2) - collar points below chin
+            return (
+                <g className="witch-wrath" stroke="currentColor" fill="none">
+                    {/* Collar/Frills under chin */}
+                    <path d="M -3.5,5.5 L -5.5,9.5 L -2,7.5 L 0,10.5 L 2,7.5 L 5.5,9.5 L 3.5,5.5 Z" strokeWidth="0.85" fill="var(--bg-tertiary)" />
+                    {/* Angry furrowed brow */}
+                    <path d="M -3.2,-6.8 L -0.5,-5.5 M 3.2,-6.8 L 0.5,-5.5" strokeWidth="1.1" />
+                </g>
+            );
+        case 'gluttony': // Daphne (Upper-Left, 3) - bunny/beast ears and long wavy tongue
+            return (
+                <g className="witch-gluttony" stroke="currentColor" fill="none">
+                    {/* Beast ears on top of head */}
+                    <path d="M -4,-9 L -8,-14 L -2.5,-8.5" strokeWidth="0.9" fill="var(--bg-tertiary)" />
+                    <path d="M 4,-9 L 8,-14 L 2.5,-8.5" strokeWidth="0.9" fill="var(--bg-tertiary)" />
+                    {/* Long tongue sticking out from teeth */}
+                    <path d="M 0,2.5 C -1,5 -5,7 -2.5,12 C -2,13 -0.5,13 -1,11" strokeWidth="0.95" />
+                </g>
+            );
+        case 'greed': // Echidna (Top-Left, 4) - spiral eyes and cheek whiskers
+            return (
+                <g className="witch-greed" stroke="currentColor" fill="none">
+                    {/* Concentric spiral eyes */}
+                    <circle cx="-1.8" cy="-4.5" r="1.5" strokeWidth="0.55" />
+                    <circle cx="-1.8" cy="-4.5" r="0.75" strokeWidth="0.45" />
+                    <circle cx="1.8" cy="-4.5" r="1.5" strokeWidth="0.55" />
+                    <circle cx="1.8" cy="-4.5" r="0.75" strokeWidth="0.45" />
+                    {/* Cheek whiskers/radiating lines */}
+                    <line x1="-4" y1="-3" x2="-8.5" y2="-4.2" strokeWidth="0.75" />
+                    <line x1="-4.2" y1="-1.5" x2="-9" y2="-2" strokeWidth="0.75" />
+                    <line x1="-3.8" y1="0.2" x2="-8.2" y2="0.6" strokeWidth="0.75" />
+                    <line x1="4" y1="-3" x2="8.5" y2="-4.2" strokeWidth="0.75" />
+                    <line x1="4.2" y1="-1.5" x2="9" y2="-2" strokeWidth="0.75" />
+                    <line x1="3.8" y1="0.2" x2="8.2" y2="0.6" strokeWidth="0.75" />
+                </g>
+            );
+        case 'lust': // Carmilla (Top-Right, 5) - Bone and grapes/berries
+            return (
+                <g className="witch-lust" stroke="currentColor" fill="none">
+                    {/* Bone on the upper-left of skull */}
+                    <line x1="-9" y1="-9" x2="-4" y2="-4" strokeWidth="1.2" />
+                    <circle cx="-9" cy="-9" r="1.1" fill="currentColor" />
+                    <circle cx="-10" cy="-7.8" r="1.1" fill="currentColor" />
+                    {/* Grapes/berries bunch on the upper-right of skull */}
+                    <g fill="currentColor" opacity="0.85" stroke="none">
+                        <circle cx="5" cy="-8.5" r="1.1" />
+                        <circle cx="7" cy="-7.5" r="1.1" />
+                        <circle cx="6" cy="-9.5" r="1.1" />
+                        <circle cx="8" cy="-9.5" r="1.1" />
+                        <circle cx="7" cy="-11.2" r="1.1" />
+                        <circle cx="5.2" cy="-10.5" r="1.0" />
+                    </g>
+                </g>
+            );
+        case 'sloth': // Sekhmet (Upper-Right, 6) - Hair strands framing face
+            return (
+                <g className="witch-sloth" stroke="currentColor" fill="none">
+                    {/* Hair strands on left and right */}
+                    <path d="M -5,-8 C -7,-3 -7,2 -5,6 C -3.8,1 -4,-3 -3,-5" strokeWidth="0.8" fill="var(--bg-tertiary)" />
+                    <path d="M 5,-8 C 7,-3 7,2 5,6 C 3.8,1 4,-3 3,-5" strokeWidth="0.8" fill="var(--bg-tertiary)" />
+                </g>
+            );
+        case 'envy': // Satella (Bottom-Right, 7) - Hood shroud framing entire skull
+            return (
+                <g className="witch-envy" stroke="currentColor" fill="none">
+                    {/* Shroud contour */}
+                    <path d="M -6.5,-4 C -6.5,-11 6.5,-11 6.5,-4 C 6.5,2 4.8,7.5 0,7.5 C -4.8,7.5 -6.5,2 -6.5,-4 Z" strokeWidth="0.85" fill="none" />
+                    {/* Inner shroud fold line */}
+                    <path d="M -5.5,-5 C -5.5,-10 5.5,-10 5.5,-5" strokeWidth="0.5" strokeDasharray="1.5 1.5" />
+                </g>
+            );
+        default:
+            return null;
+    }
+};
+
 function AnimeRatings() {
     // ---- DATA STATES ----
     const [animeList, setAnimeList] = useState([])
@@ -87,6 +216,9 @@ function AnimeRatings() {
     const [notes, setNotes] = useState([])
     const [imdbCache, setImdbCache] = useState({})
     const [loading, setLoading] = useState(true)
+
+    // ---- CUSTOM IMAGES ----
+    const customImages = useCustomImages()
 
     // ---- UI STATES: ROUTING & MODES ----
     const [viewMode, setViewMode] = useState('split') // 'split' | 'series' | 'individual'
@@ -1525,29 +1657,57 @@ function AnimeRatings() {
                     
                     {/* LEFT HALF: JEDNOTLIVĚ (INDIVIDUAL ANIME) */}
                     <div className="choice-pane choice-individual" onClick={() => setViewMode('individual')}>
+                        {/* Custom Background Character Art */}
+                        {(() => {
+                            const bg = getPageBackground(customImages, 'ratings_split_left')
+                            return bg ? (
+                                <div
+                                    className="custom-bg-image"
+                                    style={{
+                                        backgroundImage: `url(${bg.src})`,
+                                        backgroundPosition: bg.position || 'center bottom',
+                                        backgroundSize: bg.size || 'contain',
+                                        opacity: bg.opacity || 0.12
+                                    }}
+                                />
+                            ) : null
+                        })()}
+
                         {/* Rotating Magic Summoning Circle */}
-                        <svg className="magic-circle" width="360" height="360" viewBox="0 0 100 100" fill="none" stroke="currentColor">
-                            <circle cx="50" cy="50" r="46" strokeWidth="0.5" strokeDasharray="2 2" />
-                            <circle cx="50" cy="50" r="42" strokeWidth="0.8" />
-                            <circle cx="50" cy="50" r="38" strokeWidth="0.4" strokeDasharray="6 3" />
-                            <polygon points="50,15 80,68 20,68" strokeWidth="0.6" />
-                            <polygon points="50,85 80,32 20,32" strokeWidth="0.6" />
-                            <circle cx="50" cy="50" r="18" strokeWidth="0.8" />
-                            <circle cx="50" cy="50" r="14" strokeWidth="0.4" strokeDasharray="1 1" />
+                        {/* Satella's Heptagram (Witch of Envy / Witch Cult) - Glowing and Prominent */}
+                        <svg className="magic-circle" width="420" height="420" viewBox="0 0 200 200" fill="none" stroke="currentColor">
+                            {/* Outer rings matching the right side heptagram */}
+                            <circle cx="100" cy="100" r="92" strokeWidth="0.8" strokeDasharray="3 2" />
+                            <circle cx="100" cy="100" r="88" strokeWidth="0.4" />
+                            
+                            {/* Heptagram star connecting lines (point at top 100,25) */}
+                            <polygon 
+                                points="100,25 173.1,116.7 67.5,167.6 41.2,53.2 158.8,53.2 132.5,167.6 26.9,116.7"
+                                strokeWidth="0.8" opacity="0.85" 
+                            />
+                            
+                            {/* Heptagon outline connecting adjacent vertices */}
+                            <polygon 
+                                points="100,25 158.8,53.2 173.1,116.7 132.5,167.6 67.5,167.6 26.9,116.7 41.2,53.2"
+                                strokeWidth="0.9" opacity="0.9"
+                            />
+
+                            {/* Inner concentric circular rings */}
+                            <circle cx="100" cy="100" r="45" strokeWidth="0.8" />
+                            <circle cx="100" cy="100" r="28" strokeWidth="0.4" strokeDasharray="3 2" />
+                            <circle cx="100" cy="100" r="14" strokeWidth="0.6" />
+
+                            {/* Central vertical line extending from top vertex to center hook */}
+                            <line x1="100" y1="25" x2="100" y2="88" strokeWidth="1.0" opacity="0.85" />
+
+                            {/* Central Witch of Envy crescent hook symbol */}
+                            <path 
+                                d="M 100,85 C 102,90 106,94 106,100 C 106,112 94,120 82,110 C 74,102 76,92 84,86 C 88,83 94,86 92,92 C 88,96 82,96 82,102 C 82,108 92,112 98,106 C 101,102 100,96 98,90 Z" 
+                                fill="currentColor" 
+                                stroke="none" 
+                            />
                         </svg>
 
-                        {/* Floating Background Icons */}
-                        <div className="float-bg float-bg-1">
-                            <svg width="45" height="45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                            </svg>
-                        </div>
-                        <div className="float-bg float-bg-2">
-                            <svg width="35" height="35" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.961 0 1.36 1.243.588 1.81l-3.974 2.89a1 1 0 00-.364 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.89a1 1 0 00-1.176 0l-3.976 2.89c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.364-1.118L2.98 9.42c-.771-.567-.372-1.81.588-1.81h4.908a1 1 0 00.95-.69l1.519-4.674z" />
-                            </svg>
-                        </div>
-                        
                         <div className="choice-card">
                             <div className="choice-icon-wrapper">📋</div>
                             <h2 className="choice-title">HODNOCENÍ JEDNOTLIVĚ</h2>
@@ -1559,29 +1719,96 @@ function AnimeRatings() {
 
                     {/* RIGHT HALF: SÉRIE (SERIES LEVEL VIEW) */}
                     <div className="choice-pane choice-series" onClick={() => setViewMode('series')}>
-                        {/* Rotating Cyber Hexagon Tech Circle */}
-                        <svg className="cyber-grid" width="360" height="360" viewBox="0 0 100 100" fill="none" stroke="currentColor">
-                            <circle cx="50" cy="50" r="46" strokeWidth="0.5" strokeDasharray="4 4" />
-                            <circle cx="50" cy="50" r="40" strokeWidth="0.8" />
-                            <polygon points="50,10 84.6,30 84.6,70 50,90 15.4,70 15.4,30" strokeWidth="0.4" strokeDasharray="2 2" />
-                            <polygon points="50,18 77.7,34 77.7,66 50,82 22.3,66 22.3,34" strokeWidth="0.6" />
-                            <circle cx="50" cy="50" r="12" strokeWidth="0.8" />
-                            <line x1="50" y1="10" x2="50" y2="90" strokeWidth="0.3" strokeDasharray="3 3" />
-                            <line x1="15.4" y1="30" x2="84.6" y2="70" strokeWidth="0.3" strokeDasharray="3 3" />
-                            <line x1="15.4" y1="70" x2="84.6" y2="30" strokeWidth="0.3" strokeDasharray="3 3" />
-                        </svg>
+                        {/* Custom Background Character Art */}
+                        {(() => {
+                            const bg = getPageBackground(customImages, 'ratings_split_right')
+                            return bg ? (
+                                <div
+                                    className="custom-bg-image"
+                                    style={{
+                                        backgroundImage: `url(${bg.src})`,
+                                        backgroundPosition: bg.position || 'center bottom',
+                                        backgroundSize: bg.size || 'contain',
+                                        opacity: bg.opacity || 0.12
+                                    }}
+                                />
+                            ) : null
+                        })()}
 
-                        {/* Floating Background Icons */}
-                        <div className="float-bg float-bg-3">
-                            <svg width="45" height="45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
-                            </svg>
-                        </div>
-                        <div className="float-bg float-bg-4">
-                            <svg width="35" height="35" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
-                            </svg>
-                        </div>
+                        {/* Re:Zero Witch Factor Heptagram with Skulls - Glowing and Prominent */}
+                        <svg className="cyber-grid" width="420" height="420" viewBox="0 0 200 200" fill="none" stroke="currentColor">
+                            {/* Outer ring */}
+                            <circle cx="100" cy="100" r="92" strokeWidth="0.8" strokeDasharray="3 2" />
+                            <circle cx="100" cy="100" r="88" strokeWidth="0.4" />
+                            
+                            {/* Heptagram star connecting lines (solid, prominent) */}
+                            <polygon 
+                                points="100,168 33.7,84.9 129.5,38.7 153.2,142.4 46.8,142.4 70.5,38.7 166.3,84.9"
+                                strokeWidth="0.8" opacity="0.85" 
+                            />
+                            
+                            {/* Heptagon outline connecting adjacent circles */}
+                            <polygon 
+                                points="100,168 46.8,142.4 33.7,84.9 70.5,38.7 129.5,38.7 166.3,84.9 153.2,142.4"
+                                strokeWidth="0.9" opacity="0.9"
+                            />
+
+                            {/* Inner decorative circle */}
+                            <circle cx="100" cy="100" r="28" strokeWidth="0.8" />
+                            <circle cx="100" cy="100" r="25" strokeWidth="0.4" strokeDasharray="4 2" />
+                            <circle cx="100" cy="100" r="12" strokeWidth="0.8" />
+                            <polygon points="100,91 108,105 92,105" strokeWidth="0.6" />
+                            <polygon points="100,109 108,95 92,95" strokeWidth="0.6" />
+                            
+                            {/* Connecting lines from center to each skull */}
+                            {heptagramVertices.map(v => (
+                                <line 
+                                    key={`line-${v.id}`} 
+                                    x1="100" 
+                                    y1="100" 
+                                    x2={v.x} 
+                                    y2={v.y} 
+                                    strokeWidth="0.4" 
+                                    strokeDasharray="2 3" 
+                                    opacity="0.65" 
+                                />
+                            ))}
+
+                            {/* Render each Witch circle & skull */}
+                            {heptagramVertices.map(v => (
+                                <g key={`vertex-${v.id}`} className={`witch-node node-${v.witch}`}>
+                                    {/* Outer circle for vertex */}
+                                    <circle cx={v.x} cy={v.y} r="13" strokeWidth="1.2" fill="var(--bg-tertiary)" />
+                                    <circle cx={v.x} cy={v.y} r="11" strokeWidth="0.5" strokeDasharray="2 1" />
+                                    
+                                    {/* Upright Skull with specific witch characteristics */}
+                                    <g transform={`translate(${v.x}, ${v.y})`}>
+                                        {renderBaseSkull(0.95)}
+                                        {renderWitchDetails(v.witch)}
+                                    </g>
+
+                                    {/* Number tag bubble */}
+                                    <circle 
+                                        cx={v.x + v.tagDx} 
+                                        cy={v.y + v.tagDy} 
+                                        r="4.2" 
+                                        strokeWidth="0.75" 
+                                        fill="var(--bg-primary)" 
+                                    />
+                                    <text 
+                                        x={v.x + v.tagDx} 
+                                        y={v.y + v.tagDy + 1.3} 
+                                        fontSize="3.8" 
+                                        fontWeight="bold" 
+                                        textAnchor="middle" 
+                                        fill="currentColor"
+                                        stroke="none"
+                                    >
+                                        {v.label}
+                                    </text>
+                                </g>
+                            ))}
+                        </svg>
 
                         <div className="choice-card">
                             <div className="choice-icon-wrapper">📚</div>

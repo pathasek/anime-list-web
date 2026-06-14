@@ -209,19 +209,50 @@
   box-sizing: border-box;
 }
 
-/* Glowing Neon Slanted Divider */
+/* Keyframes for premium pulsating laser line */
+@keyframes laser-pulse {
+  0%, 100% { opacity: 0.75; filter: drop-shadow(0 0 4px #ffffff); }
+  50% { opacity: 1; filter: drop-shadow(0 0 10px #ffffff) drop-shadow(0 0 3px var(--accent-primary)); }
+}
+
+/* 3D Overlap Shadow Cast - Replaces physical divider lines with depth */
 .choice-divider {
   position: absolute;
-  top: -50%;
-  bottom: -50%;
-  width: 4px;
-  background: linear-gradient(to bottom, var(--accent-primary) 0%, var(--accent-pink) 100%);
-  box-shadow: 0 0 20px var(--accent-primary), 0 0 40px var(--accent-pink);
+  top: -10%;
+  bottom: -10%;
+  width: 35px;
+  left: var(--split);
   transform: skewX(-5deg); /* Match skew of clip-path */
-  left: calc(var(--split) - 2px);
   z-index: 10;
   pointer-events: none;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 100%);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: none;
   transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Hide center laser core since we want pure depth shadows */
+.choice-divider::before {
+  display: none;
+}
+
+/* Interactive 3D shadow casting based on hovered panel */
+.ratings-choice-container:has(.choice-individual:hover) .choice-divider {
+  left: var(--split);
+  width: 65px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+  border-left: 1px solid rgba(129, 140, 248, 0.35); /* Indigo rim light */
+  border-right: none;
+  filter: drop-shadow(-8px 0 12px rgba(99, 102, 241, 0.2));
+}
+
+.ratings-choice-container:has(.choice-series:hover) .choice-divider {
+  left: calc(var(--split) - 65px);
+  width: 65px;
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+  border-right: 1px solid rgba(244, 114, 182, 0.35); /* Pink rim light */
+  border-left: none;
+  filter: drop-shadow(8px 0 12px rgba(236, 72, 153, 0.2));
 }
 
 .choice-pane {
@@ -236,19 +267,30 @@
   box-sizing: border-box;
 }
 
-/* Diagonal Clip Paths with overlap */
+/* Diagonal Clip Paths with overlap - Rich Ambient Gradients aligned to character themes */
 .choice-individual {
   left: 0;
-  background: radial-gradient(circle at 20% 50%, rgba(30, 27, 75, 0.45) 0%, rgba(8, 8, 12, 0.97) 80%);
+  background: linear-gradient(135deg, #090c1a 0%, #050508 100%);
   clip-path: polygon(0 0, calc(var(--split) + var(--skew)) 0, calc(var(--split) - var(--skew)) 100%, 0 100%);
   z-index: 2;
+  transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1), background 0.7s ease;
 }
 
 .choice-series {
   left: 0;
-  background: radial-gradient(circle at 80% 50%, rgba(88, 28, 135, 0.45) 0%, rgba(8, 8, 12, 0.97) 80%);
+  background: linear-gradient(135deg, #11091c 0%, #050508 100%);
   clip-path: polygon(calc(var(--split) + var(--skew)) 0, 100% 0, 100% 100%, calc(var(--split) - var(--skew)) 100%);
   z-index: 1;
+  transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1), background 0.7s ease;
+}
+
+/* Hover: transition to a slightly richer theme color to complement the art */
+.choice-individual:hover {
+  background: linear-gradient(135deg, #0f1430 0%, #05060f 100%);
+}
+
+.choice-series:hover {
+  background: linear-gradient(135deg, #1c0e30 0%, #050309 100%);
 }
 
 /* Centered Positioning for Choice Cards on left/right halves (Prevents center overlapping) */
@@ -276,59 +318,79 @@
   transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   padding: var(--spacing-lg);
   border-radius: var(--radius-xl);
-  background: rgba(255, 255, 255, 0.015);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  background: rgba(6, 6, 9, 0.12); /* Extremely transparent dark background */
+  backdrop-filter: blur(4px); /* Very light blur for high transparency */
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
 }
 
 .choice-individual:hover .choice-card {
-  border-color: rgba(99, 102, 241, 0.2);
-  box-shadow: 0 0 30px rgba(99, 102, 241, 0.15), 0 20px 40px rgba(0,0,0,0.6);
-  transform: translate(-50%, -52%);
+  background: rgba(6, 6, 9, 0.18);
+  border-color: rgba(99, 102, 241, 0.45);
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.15), 0 20px 45px rgba(0, 0, 0, 0.7);
+  transform: translate(-50%, -53%);
 }
 
 .choice-series:hover .choice-card {
-  border-color: rgba(236, 72, 153, 0.2);
-  box-shadow: 0 0 30px rgba(236, 72, 153, 0.15), 0 20px 40px rgba(0,0,0,0.6);
-  transform: translate(-50%, -52%);
+  background: rgba(6, 6, 9, 0.18);
+  border-color: rgba(236, 72, 153, 0.45);
+  box-shadow: 0 0 30px rgba(236, 72, 153, 0.15), 0 20px 45px rgba(0, 0, 0, 0.7);
+  transform: translate(-50%, -53%);
 }
 
-/* Glowing summoning circle behind cards */
+/* Glowing summoning circle behind cards - Premium Neon Runes */
 .magic-circle, .cyber-grid {
   position: absolute;
   top: 50%;
   transform-origin: center;
-  opacity: 0.06;
   pointer-events: none;
-  z-index: 1;
+  z-index: 3; /* Placed above background images but below cards */
   transition: all 0.6s ease;
-  color: var(--text-primary);
+}
+
+/* Glowing/Force inner SVG paths to be bolder for maximum visibility */
+.magic-circle circle, 
+.magic-circle polygon, 
+.magic-circle path, 
+.magic-circle line,
+.cyber-grid circle, 
+.cyber-grid polygon, 
+.cyber-grid path, 
+.cyber-grid line {
+  stroke-width: 1.1px; /* Thinner, more delicate lines */
 }
 
 .choice-individual .magic-circle {
   left: 25%;
   transform: translate(-50%, -50%) rotate(0deg);
-  animation: rotate-clockwise 30s linear infinite;
+  animation: rotate-clockwise 45s linear infinite;
+  opacity: 0.38; /* Soft and elegant at rest */
+  color: rgba(140, 150, 255, 0.7); /* Subtle indigo */
+  filter: drop-shadow(0 0 5px rgba(99, 102, 241, 0.3));
 }
 
 .choice-series .cyber-grid {
   left: 75%;
   transform: translate(-50%, -50%) rotate(0deg);
-  animation: rotate-counter 30s linear infinite;
+  animation: rotate-counter 45s linear infinite;
+  opacity: 0.30; /* Soft and elegant at rest, balanced with pink contrast */
+  color: rgba(255, 140, 210, 0.7); /* Subtle pink */
+  filter: drop-shadow(0 0 5px rgba(236, 72, 153, 0.3));
 }
 
 .choice-individual:hover .magic-circle {
-  opacity: 0.15;
-  color: var(--accent-primary);
-  transform: translate(-50%, -50%) scale(1.1);
+  opacity: 0.65 !important;
+  color: rgba(165, 180, 252, 0.9) !important;
+  transform: translate(-50%, -50%) scale(1.04);
+  filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.55));
 }
 
 .choice-series:hover .cyber-grid {
-  opacity: 0.15;
-  color: var(--accent-pink);
-  transform: translate(-50%, -50%) scale(1.1);
+  opacity: 0.58 !important;
+  color: rgba(255, 180, 220, 0.9) !important;
+  transform: translate(-50%, -50%) scale(1.04);
+  filter: drop-shadow(0 0 10px rgba(236, 72, 153, 0.55));
 }
 
 @keyframes rotate-clockwise {
@@ -372,6 +434,63 @@
   100% { transform: translateY(0) rotate(0deg); }
 }
 
+/* Custom Character Art Background Images - Spans 58% width to prevent cutoff at slanted boundaries while maintaining centering */
+.custom-bg-image {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background-repeat: no-repeat;
+  background-size: contain;
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: brightness(0.65) saturate(0.85);
+}
+
+/* Left panel: Subaru container spans left 58% with offset spotlight mask to match position */
+.choice-individual .custom-bg-image {
+  left: 0;
+  width: 58%;
+  mask-image: radial-gradient(circle at 43% 68%, black 40%, transparent 92%);
+  -webkit-mask-image: radial-gradient(circle at 43% 68%, black 40%, transparent 92%);
+}
+
+/* Right panel: Echidna container spans right 58% with offset spotlight mask to match position */
+.choice-series .custom-bg-image {
+  right: 0;
+  width: 58%;
+  mask-image: radial-gradient(circle at 58% 68%, black 40%, transparent 92%);
+  -webkit-mask-image: radial-gradient(circle at 58% 68%, black 40%, transparent 92%);
+}
+
+/* Hover: reveal character more + subtle zoom */
+.choice-pane:hover .custom-bg-image {
+  opacity: 0.45 !important;
+  transform: scale(1.03);
+  filter: brightness(0.85) saturate(1.05);
+}
+
+.choice-individual:hover {
+  z-index: 4;
+}
+
+.choice-series:hover {
+  z-index: 4;
+}
+
+/* Dim and blur the entire non-hovered pane for premium deep focus */
+.ratings-choice-container:has(.choice-individual:hover) .choice-series {
+  filter: blur(4px) brightness(0.35);
+  opacity: 0.6;
+}
+
+.ratings-choice-container:has(.choice-series:hover) .choice-individual {
+  filter: blur(4px) brightness(0.35);
+  opacity: 0.6;
+}
+
 /* Icon Wrap Styles */
 .choice-icon-wrapper {
   width: 76px;
@@ -413,11 +532,13 @@
 .choice-individual:hover .choice-title {
   background: linear-gradient(120deg, #ffffff, var(--accent-primary));
   -webkit-background-clip: text;
+  filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.55));
 }
 
 .choice-series:hover .choice-title {
   background: linear-gradient(120deg, #ffffff, var(--accent-pink));
   -webkit-background-clip: text;
+  filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.55));
 }
 
 .choice-subtitle {
@@ -447,10 +568,10 @@
 
 .choice-btn {
   margin-top: var(--spacing-xs);
-  padding: 10px 22px;
+  padding: 10px 24px;
   border-radius: var(--radius-full);
-  border: 1px solid var(--border-color);
-  background: var(--bg-tertiary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
   color: var(--text-primary);
   font-weight: 600;
   font-size: 0.85rem;
@@ -458,21 +579,21 @@
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .choice-individual:hover .choice-btn {
   background: var(--accent-primary);
   border-color: var(--accent-primary);
-  box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
-  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(99, 102, 241, 0.65);
+  transform: translateY(-2px) scale(1.02);
 }
 
 .choice-series:hover .choice-btn {
   background: var(--accent-pink);
   border-color: var(--accent-pink);
-  box-shadow: 0 0 15px rgba(236, 72, 153, 0.4);
-  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(236, 72, 153, 0.65);
+  transform: translateY(-2px) scale(1.02);
 }
 
 /* Pane expansions on Hover */
