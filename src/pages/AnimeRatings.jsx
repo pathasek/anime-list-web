@@ -253,6 +253,11 @@ function AnimeRatings() {
     const [lbSort, setLbSort] = useState('Nejlepší')
     const [lbCount, setLbCount] = useState(30)
 
+    // ---- UI STATES: ROW 4 (CATEGORY TABLE) ----
+    const [tableSearchQuery, setTableSearchQuery] = useState('')
+    const [tableSortColumn, setTableSortColumn] = useState('FH')
+    const [tableSortDirection, setTableSortDirection] = useState('desc')
+
 
     // ============================================
     // SERIES DATA MEMOIZATION & GROUPING
@@ -1643,6 +1648,122 @@ function AnimeRatings() {
         plugins: { legend: { display: false } }
     }
 
+    // ============================================
+    // ROW 4 DATA MEMOIZATION (CATEGORY TABLE)
+    // ============================================
+    const allCategoryColumns = ['Animace', 'CGI', 'MC', 'Vedlejší postavy', 'Waifu', 'Plot', 'Pacing', 'Story Conclusion', 'Originalita', 'Emoce', 'Enjoyment', 'OP', 'ED', 'OST']
+    const categoryColumnAbbreviations = {
+        'Animace': 'Anim.',
+        'Vedlejší postavy': 'Ved. p.',
+        'Story Conclusion': 'S.Conc.',
+        'Originalita': 'Orig.',
+        'Enjoyment': 'Enjoy.'
+    }
+
+    const tableData = useMemo(() => {
+        // Merge animeList with categoryRatings
+        const merged = animeList.map(anime => {
+            const cr = categoryRatings.find(c => c.name === anime.name)
+            const categories = cr ? cr.categories : null
+
+            // Calculate WA (weighted average)
+            let wa = null
+            if (categories) {
+                let sumProd = 0
+                let sumWeight = 0
+                Object.entries(categories).forEach(([cat, rating]) => {
+                    const w = categoryWeights[cat] || 1
+                    sumProd += rating * w
+                    sumWeight += w
+                })
+                wa = sumWeight > 0 ? (sumProd / sumWeight) : null
+            }
+
+            return {
+                name: anime.name,
+                fh: Number(anime.rating) || null,
+                wa,
+                categories: categories || {}
+            }
+        }).filter(item => Object.keys(item.categories).length > 0) // Only anime with category ratings
+
+        // Search filter
+        let filtered = merged
+        if (tableSearchQuery) {
+            const lower = tableSearchQuery.toLowerCase()
+            filtered = merged.filter(item => item.name.toLowerCase().includes(lower))
+        }
+
+        // Sort
+        if (tableSortColumn) {
+            filtered = [...filtered].sort((a, b) => {
+                let valA, valB
+                if (tableSortColumn === 'Anime') {
+                    valA = a.name.toLowerCase()
+                    valB = b.name.toLowerCase()
+                    const cmp = valA.localeCompare(valB, 'cs')
+                    return tableSortDirection === 'asc' ? cmp : -cmp
+                } else if (tableSortColumn === 'FH') {
+                    valA = a.fh
+                    valB = b.fh
+                } else if (tableSortColumn === 'WA') {
+                    valA = a.wa
+                    valB = b.wa
+                } else {
+                    valA = a.categories[tableSortColumn] ?? null
+                    valB = b.categories[tableSortColumn] ?? null
+                }
+                if (valA === null && valB === null) return 0
+                if (valA === null) return 1
+                if (valB === null) return -1
+                return tableSortDirection === 'asc' ? valA - valB : valB - valA
+            })
+        }
+
+        // Summary stats
+        const fhValues = filtered.map(i => i.fh).filter(v => v !== null)
+        const avgFh = fhValues.length > 0 ? (fhValues.reduce((s, v) => s + v, 0) / fhValues.length) : 0
+
+        const catAverages = {}
+        allCategoryColumns.forEach(cat => {
+            const vals = filtered.map(i => i.categories[cat]).filter(v => v !== undefined && v !== null)
+            catAverages[cat] = vals.length > 0 ? (vals.reduce((s, v) => s + v, 0) / vals.length) : null
+        })
+
+        let bestCat = null, worstCat = null, bestVal = -Infinity, worstVal = Infinity
+        Object.entries(catAverages).forEach(([cat, avg]) => {
+            if (avg !== null) {
+                if (avg > bestVal) { bestVal = avg; bestCat = cat }
+                if (avg < worstVal) { worstVal = avg; worstCat = cat }
+            }
+        })
+
+        return { items: filtered, avgFh, bestCat, bestVal, worstCat, worstVal, total: filtered.length, catAverages }
+    }, [animeList, categoryRatings, tableSearchQuery, tableSortColumn, tableSortDirection])
+
+    const handleTableSort = useCallback((column) => {
+        if (tableSortColumn === column) {
+            // Toggle direction
+            setTableSortDirection(prev => prev === 'asc' ? 'desc' : 'asc')
+        } else {
+            setTableSortColumn(column)
+            setTableSortDirection(column === 'Anime' ? 'asc' : 'desc')
+        }
+    }, [tableSortColumn])
+
+    const getHeatmapStyle = useCallback((value) => {
+        if (value === null || value === undefined) return {}
+        let bgColor, textColor
+        if (value >= 9.75) { bgColor = 'rgba(29, 161, 242, 0.22)'; textColor = 'rgb(29, 161, 242)' }
+        else if (value >= 9.0) { bgColor = 'rgba(24, 106, 59, 0.28)'; textColor = 'rgb(52, 211, 153)' }
+        else if (value >= 8.0) { bgColor = 'rgba(40, 180, 99, 0.22)'; textColor = 'rgb(40, 180, 99)' }
+        else if (value >= 7.0) { bgColor = 'rgba(244, 208, 63, 0.18)'; textColor = 'rgb(244, 208, 63)' }
+        else if (value >= 6.0) { bgColor = 'rgba(243, 156, 18, 0.2)'; textColor = 'rgb(243, 156, 18)' }
+        else if (value >= 5.0) { bgColor = 'rgba(99, 57, 116, 0.25)'; textColor = 'rgb(167, 139, 250)' }
+        else { bgColor = 'rgba(239, 68, 68, 0.22)'; textColor = 'rgb(239, 68, 68)' }
+        return { backgroundColor: bgColor, color: textColor }
+    }, [])
+
     if (loading) return <div className="fade-in" style={{ padding: 'var(--spacing-lg)' }}><h2>Načítám parametry a hodnocení...</h2></div>
 
     // ============================================
@@ -2456,6 +2577,118 @@ function AnimeRatings() {
                             <h3 className="ratings-panel-title">Anime s nestabilním ohodnocením EP (Top 30)</h3>
                             <div style={{ flex: 1, position: 'relative' }}>
                                 <Bar data={unstableChartData} options={unstableOptions} />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* ROW 4: Kompletní tabulka kategorií */}
+                    <div className="ratings-row row-4 fade-in" style={{ marginBottom: 'var(--spacing-xl)' }}>
+                        <div className="ratings-panel" style={{ flex: 1 }}>
+                            <h3 className="ratings-panel-title">
+                                <span>📊 Kompletní tabulka hodnocení</span>
+                                <input
+                                    type="text"
+                                    className="table-search-input"
+                                    placeholder="Hledat anime..."
+                                    value={tableSearchQuery}
+                                    onChange={(e) => setTableSearchQuery(e.target.value)}
+                                />
+                            </h3>
+                            <div className="ratings-category-table-wrapper">
+                                <table className="ratings-category-table">
+                                    <thead>
+                                        <tr>
+                                            <th
+                                                className={`th-sortable th-anime ${tableSortColumn === 'Anime' ? 'th-active' : ''}`}
+                                                onClick={() => handleTableSort('Anime')}
+                                            >
+                                                Anime {tableSortColumn === 'Anime' ? (tableSortDirection === 'asc' ? '▲' : '▼') : ''}
+                                            </th>
+                                            <th
+                                                className={`th-sortable th-numeric ${tableSortColumn === 'FH' ? 'th-active' : ''}`}
+                                                onClick={() => handleTableSort('FH')}
+                                            >
+                                                FH {tableSortColumn === 'FH' ? (tableSortDirection === 'asc' ? '▲' : '▼') : ''}
+                                            </th>
+                                            <th
+                                                className={`th-sortable th-numeric ${tableSortColumn === 'WA' ? 'th-active' : ''}`}
+                                                onClick={() => handleTableSort('WA')}
+                                                title="Weighted Average (vážený průměr kategorií)"
+                                            >
+                                                WA {tableSortColumn === 'WA' ? (tableSortDirection === 'asc' ? '▲' : '▼') : ''}
+                                            </th>
+                                            {allCategoryColumns.map(cat => (
+                                                <th
+                                                    key={cat}
+                                                    className={`th-sortable th-numeric ${tableSortColumn === cat ? 'th-active' : ''}`}
+                                                    onClick={() => handleTableSort(cat)}
+                                                    title={`${cat} (v. ${categoryWeights[cat] || 1})`}
+                                                >
+                                                    {categoryColumnAbbreviations[cat] || cat}
+                                                    {tableSortColumn === cat ? (tableSortDirection === 'asc' ? ' ▲' : ' ▼') : ''}
+                                                </th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {tableData.items.map((item, idx) => (
+                                            <tr
+                                                key={item.name}
+                                                className="table-row-hover"
+                                                onClick={() => {
+                                                    setViewMode('individual')
+                                                    setSelectedAnimeTitle(item.name)
+                                                }}
+                                            >
+                                                <td className="td-anime">
+                                                    <span className="td-rank">{idx + 1}.</span>
+                                                    <span className="td-name" title={item.name}>{item.name}</span>
+                                                </td>
+                                                <td className="td-numeric td-fh" style={getHeatmapStyle(item.fh)}>
+                                                    {item.fh !== null ? item.fh.toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : '—'}
+                                                </td>
+                                                <td className="td-numeric td-wa" style={getHeatmapStyle(item.wa)}>
+                                                    {item.wa !== null ? item.wa.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'}
+                                                </td>
+                                                {allCategoryColumns.map(cat => {
+                                                    const val = item.categories[cat]
+                                                    return (
+                                                        <td key={cat} className="td-numeric heatmap-cell" style={getHeatmapStyle(val)}>
+                                                            {val !== undefined && val !== null
+                                                                ? val.toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+                                                                : '—'}
+                                                        </td>
+                                                    )
+                                                })}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr className="table-footer-row">
+                                            <td className="td-anime td-footer-label">Průměr ({tableData.total} anime)</td>
+                                            <td className="td-numeric td-fh" style={getHeatmapStyle(tableData.avgFh)}>
+                                                {tableData.avgFh.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                            </td>
+                                            <td className="td-numeric td-wa">
+                                                —
+                                            </td>
+                                            {allCategoryColumns.map(cat => {
+                                                const avg = tableData.catAverages[cat]
+                                                return (
+                                                    <td key={cat} className="td-numeric heatmap-cell" style={getHeatmapStyle(avg)}>
+                                                        {avg !== null ? avg.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'}
+                                                    </td>
+                                                )
+                                            })}
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div className="table-footer-stats">
+                                <span>Zobrazeno: <strong>{tableData.total}</strong> anime</span>
+                                <span>Průměr FH: <strong>{tableData.avgFh.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></span>
+                                {tableData.bestCat && <span>Nejvyšší kat.: <strong>{tableData.bestCat}</strong> ({tableData.bestVal.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})</span>}
+                                {tableData.worstCat && <span>Nejnižší kat.: <strong>{tableData.worstCat}</strong> ({tableData.worstVal.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})</span>}
                             </div>
                         </div>
                     </div>
