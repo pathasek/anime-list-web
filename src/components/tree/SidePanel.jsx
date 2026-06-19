@@ -1,6 +1,54 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 export default function SidePanel({ nodeData, onClose }) {
+    const scrollContainerRef = useRef(null);
+    const autoScrollTimer = useRef(null);
+
+    useEffect(() => {
+        const container = scrollContainerRef.current;
+        if (!container) return;
+
+        // Reset scroll position when node changes
+        container.scrollLeft = 0;
+
+        let isHovered = false;
+        let direction = 1;
+
+        const onMouseEnter = () => { isHovered = true; };
+        const onMouseLeave = () => { isHovered = false; };
+
+        container.addEventListener('mouseenter', onMouseEnter);
+        container.addEventListener('mouseleave', onMouseLeave);
+
+        const startAutoScroll = () => {
+            autoScrollTimer.current = setInterval(() => {
+                if (isHovered) return;
+                const maxScrollLeft = container.scrollWidth - container.clientWidth;
+                if (maxScrollLeft <= 0) return; // No scroll needed
+
+                let newScrollLeft = container.scrollLeft + direction * 0.5; // Smooth slow scroll
+                if (newScrollLeft >= maxScrollLeft) {
+                    newScrollLeft = maxScrollLeft;
+                    direction = -1; // Reverse to scroll back
+                } else if (newScrollLeft <= 0) {
+                    newScrollLeft = 0;
+                    direction = 1; // Scroll forward
+                }
+                container.scrollLeft = newScrollLeft;
+            }, 30);
+        };
+
+        // Give a short delay before starting scroll to let UI load
+        const timeoutId = setTimeout(startAutoScroll, 1000);
+
+        return () => {
+            clearTimeout(timeoutId);
+            clearInterval(autoScrollTimer.current);
+            container.removeEventListener('mouseenter', onMouseEnter);
+            container.removeEventListener('mouseleave', onMouseLeave);
+        };
+    }, [nodeData]);
+
     if (!nodeData) return null;
 
     const { id, label, xp = 0, level = 0, maxLevel = 5, isUnlocked = false, calculatedThresholds = [], domain, description, dependencies = [] } = nodeData;
@@ -54,7 +102,7 @@ export default function SidePanel({ nodeData, onClose }) {
                 {nodeData.topContributors && nodeData.topContributors.length > 0 && (
                     <div className="panel-contributors">
                         <h3>Největší Původci (Contributors)</h3>
-                        <div className="contributors-posters">
+                        <div className="contributors-posters" ref={scrollContainerRef}>
                             {nodeData.topContributors.map((c, idx) => (
                                 <div key={idx} className="contrib-poster-wrapper" title={c.name}>
                                     <img 
@@ -64,6 +112,7 @@ export default function SidePanel({ nodeData, onClose }) {
                                         onError={(e) => { e.target.src = 'avatar.jpg' }}
                                     />
                                     <div className="contrib-poster-overlay">
+                                        <div className="contrib-poster-title">{c.name}</div>
                                         <div className="contrib-poster-xp">+{c.xp.toLocaleString()} XP</div>
                                         <div className="contrib-poster-links">
                                             <a href={`#/anime/${encodeURIComponent(c.name)}`} className="contrib-link local-link">Můj List</a>

@@ -130,6 +130,28 @@ export function calculateMiscXP(nodeDef, data) {
             if (a.rating != null && parseFloat(a.rating) >= 9) addAnime(a, 2000);
         });
     }
+    else if (nodeDef.id === 'anime_slime_sovereign') {
+        animeList.forEach(a => {
+            const nameLower = a.name != null ? String(a.name).toLowerCase() : '';
+            const seriesLower = a.series != null ? String(a.series).toLowerCase() : '';
+            if (nameLower.includes('slime') || seriesLower.includes('slime') || nameLower.includes('tensei shitara slime') || seriesLower.includes('tensei shitara slime')) {
+                const gained = 2000;
+                xp += gained;
+                contributors.push({ id: a.name, name: a.name, xp: gained });
+            }
+        });
+    }
+    else if (nodeDef.id === 'anime_steins_gate_savior') {
+        animeList.forEach(a => {
+            const nameLower = a.name != null ? String(a.name).toLowerCase() : '';
+            const seriesLower = a.series != null ? String(a.series).toLowerCase() : '';
+            if (nameLower.includes('steins;gate') || seriesLower.includes('steins;gate') || nameLower.includes('steins gate') || seriesLower.includes('steins gate')) {
+                const gained = 3000;
+                xp += gained;
+                contributors.push({ id: a.name, name: a.name, xp: gained });
+            }
+        });
+    }
 
     contributors.sort((a, b) => b.xp - a.xp);
     return { xp, contributors: contributors.slice(0, 50) };

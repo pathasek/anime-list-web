@@ -8,7 +8,7 @@ import ProfileHUD from '../components/tree/ProfileHUD';
 import MilestoneCelebration from '../components/tree/MilestoneCelebration';
 import { StatsTreeProvider, useStatsTree } from '../components/tree/StatsTreeContext';
 
-const MILESTONE_STORAGE_KEY = 'anime-tree-node-levels';
+const MILESTONE_STORAGE_KEY = 'anime-tree-node-levels-v2';
 
 function StatsTreeContent() {
     const { nodes, isLoading, error } = useStatsTree();

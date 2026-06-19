@@ -11,6 +11,7 @@ export default function TreeCanvas({ connections, skillNodes, nodes = [] }) {
     const [isDragging, setIsDragging] = useState(false);
     const [hasDragged, setHasDragged] = useState(false);
     const dragStart = useRef({ x: 0, y: 0 });
+    const requestRef = useRef(null);
 
     const { minX, minY, worldW, worldH } = useMemo(() => {
         if (!nodes || nodes.length === 0) return { minX: 0, minY: 0, worldW: '100%', worldH: '100%' };
@@ -42,6 +43,14 @@ export default function TreeCanvas({ connections, skillNodes, nodes = [] }) {
         if (worldRef.current) {
             const { x, y, scale } = transformRef.current;
             worldRef.current.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+            
+            if (containerRef.current) {
+                if (scale < 0.45) {
+                    containerRef.current.classList.add('lod-low');
+                } else {
+                    containerRef.current.classList.remove('lod-low');
+                }
+            }
         }
     }, []);
 
@@ -88,9 +97,14 @@ export default function TreeCanvas({ connections, skillNodes, nodes = [] }) {
 
         transformRef.current.x += dx;
         transformRef.current.y += dy;
-        applyTransform();
-
         dragStart.current = { x: e.clientX, y: e.clientY };
+
+        if (!requestRef.current) {
+            requestRef.current = requestAnimationFrame(() => {
+                applyTransform();
+                requestRef.current = null;
+            });
+        }
     }, [isDragging, hasDragged, applyTransform]);
 
     const handleMouseUpOrLeave = useCallback(() => {
@@ -126,7 +140,13 @@ export default function TreeCanvas({ connections, skillNodes, nodes = [] }) {
         const newY = cursorY - (contentCursorY * newScale);
 
         transformRef.current = { x: newX, y: newY, scale: newScale };
-        applyTransform();
+        
+        if (!requestRef.current) {
+            requestRef.current = requestAnimationFrame(() => {
+                applyTransform();
+                requestRef.current = null;
+            });
+        }
     }, [applyTransform]);
 
     // Attach native event handler for wheel to prevent default page scrolling

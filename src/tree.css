@@ -402,16 +402,21 @@
  * ───────────────────────────────────────────────────────── */
 .contributors-posters {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-auto-flow: column;
+    grid-auto-columns: calc(50% - 6px);
     gap: 12px;
     margin-top: 12px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 8px;
 }
 
 .contrib-poster-wrapper {
     position: relative;
     border-radius: 8px;
     overflow: hidden;
-    aspect-ratio: 2 / 3;
+    aspect-ratio: 16 / 9;
     background-color: var(--bg-tertiary);
     cursor: pointer;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
@@ -472,14 +477,15 @@
 
 .contrib-poster-links {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 6px;
     width: 100%;
 }
 
 .contrib-link {
-    font-size: 0.7rem;
-    font-weight: 600;
+    flex: 1;
+    font-size: 0.65rem;
+    font-weight: 700;
     text-align: center;
     text-decoration: none;
     padding: 4px 0;
@@ -713,4 +719,25 @@
     50% {
         box-shadow: 0 0 25px rgba(234, 179, 8, 0.6), 0 0 50px rgba(234, 179, 8, 0.3);
     }
+}
+
+/* ─── Level of Detail (LOD) Performance Optimizations ─── */
+.lod-low .node-v2-header,
+.lod-low .node-v2-body,
+.lod-low .node-v2-lock-overlay {
+    display: none !important;
+}
+
+.lod-low .skill-node-v2 {
+    height: 16px !important;
+    padding: 0 !important;
+    margin-top: 32px !important; /* Center visually in the 80px bounding box */
+    box-shadow: none !important;
+    background: #11141e !important;
+    border-width: 2px !important;
+    border-style: solid !important;
+}
+
+.lod-low .path-v2-active {
+    animation: none !important;
 }

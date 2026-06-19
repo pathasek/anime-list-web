@@ -14,9 +14,6 @@ const STORAGE_KEYS = {
     USER_EDITS: 'user_edits'
 }
 
-// Track version check
-let versionChecked = false
-
 // In-memory cache to prevent slow localStorage reads and JSON parsing
 const memoryCache = {}
 
@@ -71,6 +68,18 @@ async function checkServerVersion() {
     }
 }
 
+// Promise to track version check status
+let versionCheckPromise = null
+
+function ensureVersionChecked() {
+    if (!versionCheckPromise) {
+        versionCheckPromise = checkServerVersion().catch(e => {
+            console.warn('Failed to check data version:', e)
+        })
+    }
+    return versionCheckPromise
+}
+
 /**
  * Load data from local storage or fetch from server
  * @param {string} key - Storage key
@@ -83,11 +92,8 @@ export async function loadData(key, jsonPath) {
         return memoryCache[key]
     }
 
-    // Check version once per session in the background (non-blocking)
-    if (!versionChecked) {
-        versionChecked = true
-        checkServerVersion().catch(e => console.warn('Failed to check data version:', e))
-    }
+    // Wait for version check to complete so we don't load stale cache
+    await ensureVersionChecked()
 
     // Check if we have local edits
     const cached = getCachedData(key)

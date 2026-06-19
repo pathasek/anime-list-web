@@ -17,6 +17,7 @@ export const NODE_DICTIONARY = [
     { id: 'chronos_novice', label: 'Strážce Času', domain: 'emerald', x: 800, y: 0, dependencies: ['singularity'], reqBase: 1000, reqMultiplier: 2.0, maxLevel: 5, description: "Čas plyne a vy ho měníte ve zhlédnuté epizody. XP rostou s každou minutou, kterou strávíte u obrazovky." },
     { id: 'audio_listener', label: 'První Soundtrack', domain: 'cyan', x: 800, y: 2000, dependencies: ['singularity'], reqBase: 5000, reqMultiplier: 2.5, maxLevel: 5, description: "Hudba dokáže anime povýšit na umění. Tento uzel sleduje vaši lásku k originálním soundtrackům a znělkám." },
     { id: 'rating_reviewer', label: 'První Hodnocení', domain: 'red', x: 800, y: 4000, dependencies: ['singularity'], reqBase: 1000, reqMultiplier: 2.0, maxLevel: 5, description: "Nejsi jen pasivní konzument, chceš promluvit do světa. Hodnoť a kritizuj, abys zvyšoval úroveň tohoto uzlu." },
+    { id: 'misc_donghua_explorer', label: 'Průzkumník Donghua', domain: 'orange', x: 800, y: -1000, dependencies: ['singularity'], reqBase: 1000, reqMultiplier: 2.0, maxLevel: 5, description: "Čínská animace má své osobité kouzlo. Sleduje počet zhlédnutých Donghua titulů." },
 
     // ─── L2: Specialization (x = 1000) ───
     // Genre Branch - Expanded
@@ -100,6 +101,7 @@ export const NODE_DICTIONARY = [
     { id: 'notes_essayist', label: 'Esejista', domain: 'red', x: 2400, y: 6000, dependencies: ['notes_scribe'], reqBase: 3000, reqMultiplier: 2.5, maxLevel: 5, description: "100 znaků je pro amatéry. Vy píšete rozsáhlé elaboráty a eseje na téma anime." },
 
     // ─── L4: Mastering Paths (x = 2000) ───
+    { id: 'anime_slime_sovereign', label: 'Vládce Slizu', domain: 'purple', x: 3200, y: -7200, dependencies: ['genre_isekai'], reqBase: 2000, reqMultiplier: 1.5, maxLevel: 3, description: "Rimuru Tempest a jeho cesta za vybudováním národa nestvůr. Sleduje váš pokrok v Tensura sérii." },
     { id: 'trope_op_mc', label: 'Overpowered Hrdina', domain: 'purple', x: 3200, y: -6500, dependencies: ['genre_isekai'], reqBase: 2000, reqMultiplier: 2.0, maxLevel: 5, description: "Kirito, Rimuru, Ainz. Sledování bohů převlečených za lidi." },
     { id: 'trope_darkfantasy', label: 'Temná Fantasy', domain: 'purple', x: 3200, y: -5500, dependencies: ['trope_gore'], reqBase: 3000, reqMultiplier: 2.0, maxLevel: 4, description: "Grimdark, beznaděj a monstra. Fantasy ve své nejdrsnější podobě." },
     { id: 'trope_iyashikei', label: 'Léčitel Duše', domain: 'emerald', x: 3200, y: -4500, dependencies: ['genre_slice'], reqBase: 3000, reqMultiplier: 2.0, maxLevel: 4, description: "Dosáhli jste stavu vnitřního klidu, Iyashikei anime vás kompletně zbavilo stresu." },
@@ -121,6 +123,7 @@ export const NODE_DICTIONARY = [
     { id: 'notes_chronicler', label: 'Kronikář Anime', domain: 'red', x: 3200, y: 6000, dependencies: ['notes_essayist'], reqBase: 8000, reqMultiplier: 2.0, maxLevel: 5, description: "Vaše slova o anime by naplnila celé tlusté svazky encyklopedií." },
 
     // ─── L5: Omegas Convergence (x = 2600) ───
+    { id: 'anime_steins_gate_savior', label: 'Spasitel Steins;Gate', domain: 'primary', x: 4160, y: -2500, dependencies: ['trope_timeloop'], reqBase: 3000, reqMultiplier: 1.5, maxLevel: 3, description: "El Psy Kongroo. Pomozte Okabemu najít linii Steins;Gate. Sleduje váš pokrok ve Steins;Gate sérii." },
     { id: 'omega_shounen', label: 'ULTIMATE: Protagonista', domain: 'orange', x: 4160, y: -6500, dependencies: ['trope_op_mc'], reqBase: 10000, reqMultiplier: 2.0, maxLevel: 5, description: "Jste vtělením nakama power. Čeká vás výcvik v horách a následný power creep." },
     { id: 'omega_corporate_slave', label: 'ULTIMATE: Oáza', domain: 'emerald', x: 4160, y: -4500, dependencies: ['demo_seinen', 'trope_iyashikei'], reqBase: 15000, reqMultiplier: 2.0, maxLevel: 5, description: "Útěk od kruté reality do animovaného bezpečného přístavu." },
     { id: 'era_2020s', label: 'Nová Generace', domain: 'cyan', x: 4160, y: 1500, dependencies: ['era_2010s'], reqBase: 3000, reqMultiplier: 2.5, maxLevel: 5, description: "Léta po pandemii 2020+. Éra šílené animační inflace a gachaprodukcí." },

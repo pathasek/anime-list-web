@@ -4,34 +4,31 @@ import { useStatsTree } from './StatsTreeContext';
 export default function ProfileHUD() {
     const { nodes, isLoading, error } = useStatsTree();
 
-    const { globalLevel, totalXp, xpToNextLevel, progressPercent, title } = useMemo(() => {
-        if (!nodes || nodes.length === 0) return { globalLevel: 0, totalXp: 0, xpToNextLevel: 100, progressPercent: 0, title: 'Novice Watcher' };
+    const { globalLevel, totalPXP, xpToNextLevel, progressPercent, title } = useMemo(() => {
+        if (!nodes || nodes.length === 0) return { globalLevel: 1, totalPXP: 0, xpToNextLevel: 500, progressPercent: 0, title: 'Anime Novice' };
 
-        // Sum up total XP across all nodes
-        const totalXp = nodes.reduce((sum, n) => sum + (n.xp || 0), 0);
+        const totalPXP = nodes.totalPXP || 0;
 
-        // Simple global level curve: Level = floor(sqrt(totalXP / base))
-        // Let's say base is 50. So 200 XP = lvl 2. 800 XP = lvl 4. 20000 XP = lvl 20.
-        const base = 50;
-        const globalLevel = Math.floor(Math.sqrt(totalXp / base)) || 1;
-        
-        // XP required for current level and next level
-        const currentLevelXp = Math.pow(globalLevel, 2) * base;
-        const nextLevelXp = Math.pow(globalLevel + 1, 2) * base;
-        
-        const xpIntoLevel = totalXp - currentLevelXp;
-        const xpNeededForLevel = nextLevelXp - currentLevelXp;
-        
-        const progressPercent = Math.min(100, Math.max(0, (xpIntoLevel / xpNeededForLevel) * 100));
+        // Quadratic curve: level K where PXP >= 250 * K * (K + 1). globalLevel = min(100, K + 1)
+        const K = Math.floor((-1 + Math.sqrt(1 + totalPXP / 62.5)) / 2) || 0;
+        const globalLevel = Math.min(100, K + 1);
+
+        const currentLevelPxp = globalLevel === 1 ? 0 : 250 * (globalLevel - 1) * globalLevel;
+        const nextLevelPxp = globalLevel === 100 ? currentLevelPxp : 250 * globalLevel * (globalLevel + 1);
+
+        const xpIntoLevel = totalPXP - currentLevelPxp;
+        const xpNeededForLevel = nextLevelPxp - currentLevelPxp;
+
+        const progressPercent = globalLevel === 100 ? 100 : Math.min(100, Math.max(0, (xpIntoLevel / xpNeededForLevel) * 100));
 
         let title = 'Anime Novice';
         if (globalLevel >= 5) title = 'Weeb Initiate';
         if (globalLevel >= 15) title = 'Seasoned Otaku';
         if (globalLevel >= 30) title = 'Anime Scholar';
         if (globalLevel >= 50) title = 'Grandmaster of the Medium';
-        if (globalLevel >= 100) title = 'Kami-Sama';
+        if (globalLevel >= 80) title = 'Kami-Sama';
 
-        return { globalLevel, totalXp, xpToNextLevel: nextLevelXp, progressPercent, title };
+        return { globalLevel, totalPXP, xpToNextLevel: nextLevelPxp, progressPercent, title };
     }, [nodes]);
 
     if (isLoading || error) return null;
@@ -98,7 +95,7 @@ export default function ProfileHUD() {
             <div style={{ marginTop: '4px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '6px' }}>
                     <span style={{ color: '#94a3b8', fontWeight: '600' }}>Overall Level {globalLevel}</span>
-                    <span style={{ color: '#e2e8f0', fontFamily: 'monospace' }}>{totalXp.toLocaleString()} XP</span>
+                    <span style={{ color: '#e2e8f0', fontFamily: 'monospace' }}>{totalPXP.toLocaleString()} PXP</span>
                 </div>
                 <div style={{ width: '100%', height: '8px', background: '#2a2a35', borderRadius: '4px', overflow: 'hidden' }}>
                     <div style={{ 
@@ -109,7 +106,7 @@ export default function ProfileHUD() {
                     }}></div>
                 </div>
                 <div style={{ textAlign: 'right', fontSize: '0.7rem', color: '#64748b', marginTop: '4px' }}>
-                    Next Level at {xpToNextLevel.toLocaleString()} XP
+                    {globalLevel === 100 ? 'MAX LEVEL REACHED' : `Next Level at ${xpToNextLevel.toLocaleString()} PXP`}
                 </div>
             </div>
         </div>

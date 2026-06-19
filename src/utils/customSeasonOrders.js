@@ -9,5 +9,14 @@ export const customSeasonOrders = {
         "That Time I Got Reincarnated as a Slime: The Movie - Scarlet Bond",
         "That Time I Got Reincarnated as a Slime, S03",
         "That Time I Got Reincarnated as a Slime, S04"
+    ],
+    "Steins;Gate": [
+        "Steins;Gate",
+        "Steins;Gate: Open the Missing Link - Divide By Zero",
+        "Steins;Gate 0",
+        "Steins;Gate 0: Valentine's of Crystal Polymorphism -Bittersweet Intermedio-",
+        "Steins;Gate: Egoistic Poriomania",
+        "Steins;Gate: The Movie - Load Region of Déjà Vu",
+        "Steins;Gate: The Sagacious Wisdom of Cognitive Computing"
     ]
 };

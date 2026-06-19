@@ -9,6 +9,7 @@ import { calculateMiscXP } from './engineMisc';
 import { calculateRatingsXP } from './engineRatings';
 import { calculateNotesXP } from './engineNotes';
 import { calculateFavoritesXP } from './engineFavorites';
+import { calculateDonghuaXP } from './engineDonghua';
 
 /**
  * calculateTreeState orchestrates the O(N) calculation of all skill nodes.
@@ -77,6 +78,14 @@ export function calculateTreeState(data) {
         else if (id.startsWith('omega_') || id.startsWith('rewatch_') || id.startsWith('lang_') || id.startsWith('len_') || id.startsWith('status_') || id.startsWith('misc_')) {
             processEngine(calculateMiscXP(nodeDef, data));
         }
+        // ─── DONGHUA ENGINE ───
+        else if (id === 'misc_donghua_explorer') {
+            processEngine(calculateDonghuaXP(nodeDef, data));
+        }
+        // ─── SPECIAL ANIME ACHIEVEMENTS ───
+        else if (id === 'anime_slime_sovereign' || id === 'anime_steins_gate_savior') {
+            processEngine(calculateMiscXP(nodeDef, data));
+        }
         // ─── Fallback ───
         else {
             xp = 0;
@@ -127,7 +136,7 @@ export function calculateTreeState(data) {
             });
             const merged = Array.from(uniqueMap.values());
             merged.sort((a, b) => b.xp - a.xp);
-            topContributors = merged.slice(0, 3).map(contrib => {
+            topContributors = merged.slice(0, 8).map(contrib => {
                 const searchId = typeof contrib.id === 'string' ? contrib.id.split('-')[1] || contrib.id : contrib.id;
                 const animeInfo = data.animeList?.find(a => a.name === searchId || a.name === contrib.name);
                 return {
@@ -140,7 +149,7 @@ export function calculateTreeState(data) {
 
         return {
             ...nodeDef,
-            xp,
+            xp: level === calculatedThresholds.length ? maxXp : xp,
             maxXp,
             level,
             maxLevel: calculatedThresholds.length,
@@ -165,6 +174,17 @@ export function calculateTreeState(data) {
             node.isUnlocked = allReqsMet;
         }
     });
+
+    let totalPXP = 0;
+    let totalNodeLevels = 0;
+    baseNodes.forEach(node => {
+        const L = node.level || 0;
+        totalNodeLevels += L;
+        totalPXP += 50 * L * (L + 1);
+    });
+
+    baseNodes.totalPXP = totalPXP;
+    baseNodes.totalNodeLevels = totalNodeLevels;
 
     return baseNodes;
 }

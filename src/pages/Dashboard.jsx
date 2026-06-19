@@ -189,11 +189,10 @@ function Dashboard() {
         }
 
         const isInTimeRange = (dateStr) => {
+            if (timeFilter === 'all') return true
             if (!dateStr) return false
             const d = new Date(dateStr)
             const year = d.getFullYear()
-
-            if (timeFilter === 'all') return true
             // Dynamic year filter
             const yearNum = parseInt(timeFilter)
             if (!isNaN(yearNum)) return year === yearNum
@@ -1836,6 +1835,239 @@ function Dashboard() {
         }
     }
 
+    const parseRewatchDate = (dateStr, animeName) => {
+        const May2019 = new Date('2019-05-01').getTime();
+        const Jan2025 = new Date('2025-01-01').getTime();
+
+        const getFirstWatchTime = () => {
+            const anime = animeList.find(a => a.name.toLowerCase() === animeName.toLowerCase());
+            if (anime) {
+                const dateVal = anime.end_date || anime.start_date || anime.release_date;
+                if (dateVal && dateVal !== 'X') {
+                    const d = new Date(dateVal);
+                    if (!isNaN(d.getTime())) return d.getTime();
+                }
+            }
+            return 0;
+        };
+
+        if (!dateStr || dateStr.includes('netuším')) {
+            const firstWatchTime = getFirstWatchTime();
+            if (firstWatchTime > 0) {
+                if (firstWatchTime < May2019) {
+                    return new Date('2019-04-30').getTime();
+                }
+                if (firstWatchTime >= Jan2025) {
+                    return firstWatchTime + (15 * 24 * 60 * 60 * 1000);
+                }
+                return firstWatchTime + (24 * 60 * 60 * 1000);
+            }
+            return new Date('2019-04-30').getTime();
+        }
+
+        const rangeParts = dateStr.split('-');
+        let cleanDateStr = rangeParts[rangeParts.length - 1].trim();
+        const dotsParts = cleanDateStr.split('.');
+        if (dotsParts.length === 3) {
+            const d = parseInt(dotsParts[0].trim(), 10);
+            const m = parseInt(dotsParts[1].trim(), 10) - 1;
+            const y = parseInt(dotsParts[2].trim(), 10);
+            if (!isNaN(d) && !isNaN(m) && !isNaN(y)) {
+                return new Date(y, m, d).getTime();
+            }
+        }
+        return 0;
+    };
+
+    const renderRewatchTimeline = (rawText, selectedYear = 'all') => {
+        if (!rawText) return null;
+        
+        const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean);
+        const parsedItems = [];
+        
+        lines.forEach((line, idx) => {
+            const match = line.match(/^(\d+)\.\s*Rewatch;\s*(.+?)\s*\(([^)]+)\)$/);
+            if (match) {
+                const rewatchNum = parseInt(match[1], 10);
+                const animeName = match[2].trim();
+                const dateStr = match[3].trim();
+                
+                const animeEntry = animeList.find(a => a.name.toLowerCase() === animeName.toLowerCase());
+                const thumbnail = animeEntry?.thumbnail || null;
+                const series = animeEntry?.series || null;
+                const dateVal = parseRewatchDate(dateStr, animeName);
+                
+                parsedItems.push({
+                    originalIndex: idx,
+                    rewatchNum,
+                    name: animeName,
+                    dateStr,
+                    dateVal,
+                    series,
+                    thumbnail,
+                    animeEntry
+                });
+            } else {
+                const animeEntry = animeList.find(a => a.name.toLowerCase() === line.toLowerCase());
+                parsedItems.push({
+                    originalIndex: idx,
+                    rewatchNum: 1,
+                    name: line,
+                    dateStr: 'netuším přesně',
+                    dateVal: parseRewatchDate('netuším přesně', line),
+                    series: animeEntry?.series || null,
+                    thumbnail: animeEntry?.thumbnail || null,
+                    animeEntry
+                });
+            }
+        });
+        
+        parsedItems.sort((a, b) => (a.dateVal - b.dateVal) || (a.originalIndex - b.originalIndex));
+        
+        const filteredItems = parsedItems.filter(item => {
+            if (selectedYear === 'all') return true;
+            const yearStr = String(selectedYear);
+            if (item.dateStr && item.dateStr.includes(yearStr)) return true;
+            if (item.dateVal) {
+                const itemYear = new Date(item.dateVal).getFullYear();
+                if (String(itemYear) === yearStr) return true;
+            }
+            return false;
+        });
+        
+        const groups = [];
+        let currentSeries = null;
+        let currentGroup = [];
+        
+        filteredItems.forEach((item) => {
+            if (item.series) {
+                if (item.series === currentSeries) {
+                    currentGroup.push(item);
+                } else {
+                    if (currentGroup.length > 0) {
+                        groups.push({
+                            isSeries: currentGroup.length > 1,
+                            seriesName: currentSeries,
+                            items: currentGroup
+                        });
+                    }
+                    currentSeries = item.series;
+                    currentGroup = [item];
+                }
+            } else {
+                if (currentGroup.length > 0) {
+                    groups.push({
+                        isSeries: currentGroup.length > 1,
+                        seriesName: currentSeries,
+                        items: currentGroup
+                    });
+                }
+                currentSeries = null;
+                currentGroup = [];
+                groups.push({
+                    isSeries: false,
+                    items: [item]
+                });
+            }
+        });
+        
+        if (currentGroup.length > 0) {
+            groups.push({
+                isSeries: currentGroup.length > 1,
+                seriesName: currentSeries,
+                items: currentGroup
+            });
+        }
+        
+        const getMALUrl = (anime) => {
+            if (!anime) return null;
+            if (anime.mal_url) return anime.mal_url;
+            const cleanName = anime.name?.replace(/,\s*S\d+.*$/i, '').replace(/\s*Season\s*\d+.*$/i, '');
+            return cleanName ? `https://myanimelist.net/anime.php?q=${encodeURIComponent(cleanName)}&cat=anime` : `https://myanimelist.net/anime.php?q=${encodeURIComponent(anime.name)}&cat=anime`;
+        };
+        
+        const renderCard = (item, key) => {
+            const rewatchBadgeClass = item.rewatchNum === 1 
+                ? 'rewatch-1' 
+                : item.rewatchNum === 2 
+                    ? 'rewatch-2' 
+                    : 'rewatch-3plus';
+                    
+            return (
+                <div key={key} className="rewatch-card">
+                    <div className="rewatch-card-thumb-wrapper">
+                        <span className={`rewatch-card-badge ${rewatchBadgeClass}`}>
+                            {item.rewatchNum}. rewatch
+                        </span>
+                        {item.thumbnail ? (
+                            <img 
+                                src={item.thumbnail.replace(/#/g, '%23')} 
+                                alt={item.name} 
+                                className="rewatch-card-thumb" 
+                                loading="lazy"
+                            />
+                        ) : (
+                            <div className="rewatch-card-thumb" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-secondary)', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                                Bez obrázku
+                            </div>
+                        )}
+                        <div className="rewatch-card-hover-actions">
+                            {item.animeEntry?.mal_url && (
+                                <a 
+                                    href={item.animeEntry.mal_url} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    className="rewatch-action-btn mal"
+                                    title="Otevřít na MyAnimeList"
+                                >
+                                    MAL
+                                </a>
+                            )}
+                            <Link 
+                                to={`/anime/${encodeURIComponent(item.name)}`} 
+                                className="rewatch-action-btn detail"
+                                title="Zobrazit detail v aplikaci"
+                            >
+                                Detail
+                            </Link>
+                        </div>
+                    </div>
+                    <div className="rewatch-card-title" title={item.name}>
+                        {item.name}
+                    </div>
+                    <div className="rewatch-card-date" title={item.dateStr}>
+                        <span>📅</span>
+                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            {item.dateStr}
+                        </span>
+                    </div>
+                </div>
+            );
+        };
+        
+        return (
+            <div className="rewatch-timeline-container">
+                {groups.map((group, groupIdx) => {
+                    if (group.isSeries) {
+                        return (
+                            <div key={groupIdx} className="rewatch-series-box">
+                                <div className="rewatch-series-header">
+                                    <span className="rewatch-series-icon">🎬</span>
+                                    <span className="rewatch-series-title">{group.seriesName}</span>
+                                </div>
+                                <div className="rewatch-series-items">
+                                    {group.items.map((item, idx) => renderCard(item, `${groupIdx}-${idx}`))}
+                                </div>
+                            </div>
+                        );
+                    } else {
+                        return group.items.map((item, idx) => renderCard(item, `${groupIdx}-${idx}`));
+                    }
+                })}
+            </div>
+        );
+    };
+
     return (
 
         <div className="fade-in">
@@ -1845,17 +2077,16 @@ function Dashboard() {
                     href="https://notebooklm.google.com/notebook/54e7fa34-caef-4aeb-a895-ea57e56845ea"
                     target="_blank"
                     rel="noopener noreferrer"
-                    style={{
-                        display: 'flex', alignItems: 'center', gap: '8px',
-                        padding: '8px 16px', borderRadius: 'var(--radius-md)',
-                        background: 'rgba(99, 102, 241, 0.15)', border: '1px solid rgba(99, 102, 241, 0.3)',
-                        color: 'var(--accent-primary)', textDecoration: 'none', fontSize: '0.85rem',
-                        transition: 'all 0.2s ease'
-                    }}
-                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(99, 102, 241, 0.25)'; e.currentTarget.style.borderColor = 'var(--accent-primary)' }}
-                    onMouseLeave={e => { e.currentTarget.style.background = 'rgba(99, 102, 241, 0.15)'; e.currentTarget.style.borderColor = 'rgba(99, 102, 241, 0.3)' }}
+                    className="echidna-notebook-container"
                 >
-                    🤖 NotebookLM Chatbot
+                    <img 
+                        src="images/echidna.jpg" 
+                        alt="Echidna" 
+                        className="echidna-avatar"
+                    />
+                    <div className="notebook-btn">
+                        🤖 NotebookLM Chatbot
+                    </div>
                 </a>
             </div>
 
@@ -2027,9 +2258,11 @@ function Dashboard() {
                                                     <tr style={{ backgroundColor: 'rgba(99,102,241,0.03)' }}>
                                                         {expandedNote.isRewatch ? (
                                                             <td colSpan={2 + yearCols.length} style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-color)' }}>
-                                                                <div style={{ whiteSpace: 'pre-wrap', fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.6, textAlign: 'left' }}>
-                                                                    {expandedNote.text}
-                                                                </div>
+                                                                {(() => {
+                                                                    const colId = expandedNote.id.split('-')[1];
+                                                                    const selectedYear = colId === 'all' ? 'all' : yearCols[parseInt(colId, 10)];
+                                                                    return renderRewatchTimeline(expandedNote.text, selectedYear);
+                                                                })()}
                                                             </td>
                                                         ) : (
                                                             <>
@@ -2086,9 +2319,11 @@ function Dashboard() {
                                                 </div>
                                             </div>
                                             {(expandedNote?.id === `${i}-all` || isRowExpanded) && row.commentAll && (
-                                                <div style={{ padding: '8px 12px', background: 'rgba(0,0,0,0.1)', borderRadius: '4px', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '8px', whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>
-                                                    {row.commentAll}
-                                                </div>
+                                                isRewatch ? renderRewatchTimeline(row.commentAll, 'all') : (
+                                                    <div style={{ padding: '8px 12px', background: 'rgba(0,0,0,0.1)', borderRadius: '4px', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '8px', whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>
+                                                        {row.commentAll}
+                                                    </div>
+                                                )
                                             )}
 
                                             {/* Yearly Rows */}
@@ -2109,9 +2344,11 @@ function Dashboard() {
                                                         </div>
                                                     </div>
                                                     {(expandedNote?.id === `${i}-${j}` || isRowExpanded) && row.commentYears?.[j] && (
-                                                        <div style={{ padding: '8px 12px', background: 'rgba(0,0,0,0.1)', borderRadius: '4px', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: j < row.years.length - 1 ? '8px' : '0', whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>
-                                                            {row.commentYears[j]}
-                                                        </div>
+                                                        isRewatch ? renderRewatchTimeline(row.commentYears[j], yearCols[j]) : (
+                                                            <div style={{ padding: '8px 12px', background: 'rgba(0,0,0,0.1)', borderRadius: '4px', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: j < row.years.length - 1 ? '8px' : '0', whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>
+                                                                {row.commentYears[j]}
+                                                            </div>
+                                                        )
                                                     )}
                                                 </Fragment>
                                             ))}
