@@ -250,6 +250,48 @@ export async function getCachedEpisodeList(malId) {
 }
 
 /**
+ * Get episode list from cache, or fetch from Jikan API if missing/stale
+ * @param {number} malId
+ * @returns {Promise<object[]|null>}
+ */
+export async function getOrFetchEpisodeList(malId) {
+    if (!malId) return null
+    const cached = await getCachedEpisodeList(malId)
+    
+    // Invalidate cache if older than 24 hours (86400000 ms)
+    const CACHE_TTL = 24 * 60 * 60 * 1000;
+    const isExpired = cached && cached.fetchedAt && (Date.now() - cached.fetchedAt > CACHE_TTL);
+
+    if (cached && cached.episodes && cached.episodes.length > 0 && !isExpired) {
+        return cached.episodes
+    }
+    
+    // Fetch from Jikan API
+    const apiEpisodes = await fetchEpisodeListFromAPI(malId)
+    if (apiEpisodes && apiEpisodes.length > 0) {
+        const episodes = apiEpisodes.map(ep => ({
+            mal_id: ep.mal_id,
+            title: ep.title || ep.title_japanese || `Episode ${ep.mal_id}`,
+            title_japanese: ep.title_japanese || null,
+            aired: ep.aired || null,
+            score: ep.score || null,
+            filler: ep.filler || false,
+            recap: ep.recap || false,
+            url: ep.url || null,
+            forum_url: ep.forum_url || null
+        }))
+        
+        await dbPut(STORE_EPISODE_LISTS, {
+            malId,
+            episodes,
+            fetchedAt: Date.now()
+        })
+        return episodes
+    }
+    return null
+}
+
+/**
  * Get cached episode synopsis/detail from IndexedDB
  * @param {number} malId
  * @param {number} epNum
@@ -552,4 +594,104 @@ export async function importJikanStaticCache(staticCache) {
     } catch (e) {
         console.error('[Jikan] Failed to bulk import static cache:', e)
     }
+}
+
+/**
+ * Fetch main anime details (like thumbnail URL) from Jikan.
+ * Caches results in localStorage to avoid hitting API rate limits.
+ * @param {number} malId
+ * @returns {Promise<object|null>}
+ */
+export async function getAnimeInfo(malId) {
+    if (!malId) return null
+    const cacheKey = `jikan_anime_info_${malId}`
+    const cached = localStorage.getItem(cacheKey)
+    if (cached) {
+        try {
+            const parsed = JSON.parse(cached)
+            // If cache doesn't have fetchedAt, or if it's older than 7 days, consider it expired
+            const CACHE_TTL_7DAYS = 7 * 24 * 60 * 60 * 1000
+            if (parsed.fetchedAt && (Date.now() - parsed.fetchedAt < CACHE_TTL_7DAYS)) {
+                if (parsed.broadcast !== undefined) {
+                    return parsed
+                }
+            }
+        } catch {
+            // ignore parsing errors and fetch again
+        }
+    }
+
+    try {
+        const url = `${JIKAN_BASE_URL}/anime/${malId}`
+        const res = await fetchWithRetry(url)
+        if (res && res.data) {
+            const info = {
+                imageUrl: res.data.images?.jpg?.image_url || null,
+                largeImageUrl: res.data.images?.jpg?.large_image_url || null,
+                score: res.data.score || null,
+                title: res.data.title || null,
+                broadcast: res.data.broadcast || null,
+                fetchedAt: Date.now()
+            }
+            localStorage.setItem(cacheKey, JSON.stringify(info))
+            return info
+        }
+    } catch (e) {
+        console.error(`[Jikan] Failed to fetch info for malId ${malId}:`, e)
+        return null
+    }
+}
+
+/**
+ * Calculates the exact next local broadcast Date based on Jikan broadcast info (JST).
+ * @param {object} broadcast - Jikan broadcast object (e.g. { day: "Sundays", time: "23:30", timezone: "Asia/Tokyo" })
+ * @returns {Date|null}
+ */
+export function getNextBroadcastDate(broadcast) {
+    if (!broadcast || !broadcast.day || !broadcast.time || broadcast.timezone !== 'Asia/Tokyo') {
+        return null;
+    }
+    
+    const daysMap = { 
+        "Sundays": 0, "Mondays": 1, "Tuesdays": 2, "Wednesdays": 3, 
+        "Thursdays": 4, "Fridays": 5, "Saturdays": 6,
+        "Sunday": 0, "Monday": 1, "Tuesday": 2, "Wednesday": 3, 
+        "Thursday": 4, "Friday": 5, "Saturday": 6 
+    };
+    
+    const targetDay = daysMap[broadcast.day];
+    if (targetDay === undefined) return null;
+    
+    const [h, m] = broadcast.time.split(':').map(Number);
+    if (isNaN(h) || isNaN(m)) return null;
+    
+    const now = new Date();
+    // Tokyo offset is UTC+9
+    const tokyoOffsetMs = 9 * 60 * 60 * 1000;
+    
+    const currentUtcTime = now.getTime();
+    const currentTokyoTime = currentUtcTime + tokyoOffsetMs;
+    const currentTokyoDate = new Date(currentTokyoTime);
+    
+    const currentTokyoDay = currentTokyoDate.getUTCDay(); // 0-6
+    
+    let dayDiff = targetDay - currentTokyoDay;
+    
+    const currentTokyoHour = currentTokyoDate.getUTCHours();
+    const currentTokyoMin = currentTokyoDate.getUTCMinutes();
+    const passedToday = (currentTokyoHour > h) || (currentTokyoHour === h && currentTokyoMin >= m);
+    
+    if (dayDiff < 0 || (dayDiff === 0 && passedToday)) {
+        dayDiff += 7;
+    }
+    
+    // next broadcast in Tokyo
+    const nextTokyoDate = new Date(currentTokyoDate);
+    nextTokyoDate.setUTCDate(currentTokyoDate.getUTCDate() + dayDiff);
+    nextTokyoDate.setUTCHours(h, m, 0, 0);
+    
+    // Convert back to absolute UTC by subtracting Tokyo offset
+    const nextUtcTime = nextTokyoDate.getTime() - tokyoOffsetMs;
+    
+    return new Date(nextUtcTime); // Standard local JS Date object
 }

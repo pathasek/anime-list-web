@@ -1304,23 +1304,92 @@ function AnimeRatings() {
             const result = regression.polynomial(dataPoints, { order: 6, precision: 10 })
             trendData = dataPoints.map(p => result.predict(p[0])[1])
         }
+        const datasets = []
+        if (showTrendLine && trendData.length > 0) {
+            datasets.push({
+                type: 'line',
+                label: 'Polyn. (Celkem)',
+                data: trendData,
+                borderColor: 'rgba(255, 255, 255, 0.55)',
+                borderWidth: 2.8,
+                pointRadius: 0,
+                fill: false,
+                tension: 0.45
+            })
+        }
+
+        datasets.push({
+            type: 'line',
+            label: 'Hodnocení epizody',
+            data: selectedAnimeEpisodes.map(ep => ep.rating),
+            borderColor: 'rgba(255, 255, 255, 0.15)',
+            borderWidth: 1.5,
+            tension: 0.15,
+            pointBackgroundColor: selectedAnimeEpisodes.map(ep => getPointColor(ep.rating)),
+            pointBorderColor: '#fff',
+            pointBorderWidth: 1,
+            pointRadius: 5.5,
+            pointHoverRadius: 7.5,
+            showLine: true,
+            clip: false
+        })
+
         return {
             labels: selectedAnimeEpisodes.map(ep => ep.episode),
-            datasets: [
-                { type: 'line', label: 'Polyn. (Celkem)', data: trendData, borderColor: 'rgb(255, 0, 0)', borderWidth: 2, pointRadius: 0, fill: false, tension: 0.4 },
-                {
-                    type: 'bar', label: 'Hodnocení epizody', data: selectedAnimeEpisodes.map(ep => ep.rating),
-                    backgroundColor: selectedAnimeEpisodes.map(ep => getPointColor(ep.rating)),
-                    borderRadius: 4
-                }
-            ]
+            datasets
         }
+    }, [selectedAnimeEpisodes, showTrendLine])
+
+    const { epChartMin, epChartMax } = useMemo(() => {
+        if (!selectedAnimeEpisodes || selectedAnimeEpisodes.length === 0) return { epChartMin: 4.75, epChartMax: 10.0 }
+        const valid = selectedAnimeEpisodes.map(e => e.rating).filter(r => r !== null && !isNaN(r))
+        if (valid.length === 0) return { epChartMin: 4.75, epChartMax: 10.0 }
+        const minVal = Math.min(...valid)
+        const maxVal = Math.max(...valid)
+        
+        let dynMin = Math.floor(minVal * 2) / 2 - 0.5
+        let dynMax = Math.ceil(maxVal * 2) / 2 + 0.5
+        
+        dynMax = Math.min(10.0, dynMax)
+        if (dynMin < 0) dynMin = 0
+        
+        if (dynMax - dynMin < 1.0) {
+            if (dynMax === 10.0) {
+                dynMin = Math.max(0, dynMax - 1.0)
+            } else {
+                dynMax = dynMin + 1.0
+            }
+        }
+        return { epChartMin: dynMin, epChartMax: dynMax }
     }, [selectedAnimeEpisodes])
 
     const episodeBarOptions = {
         responsive: true, maintainAspectRatio: false,
+        layout: {
+            padding: {
+                top: 8
+            }
+        },
         scales: {
-            y: { min: 4.75, max: 10, ticks: { color: 'rgba(255,255,255,0.6)', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.1)' } },
+            y: { 
+                min: epChartMin, 
+                max: epChartMax, 
+                ticks: { 
+                    color: 'rgba(255,255,255,0.6)', 
+                    font: { size: 10 },
+                    stepSize: 0.5,
+                    callback: (value) => {
+                        if (value > 10) return ''
+                        return value.toFixed(1).replace('.', ',')
+                    }
+                }, 
+                grid: { 
+                    color: (context) => {
+                        if (context.tick && context.tick.value > 10) return 'transparent';
+                        return 'rgba(255,255,255,0.1)';
+                    }
+                } 
+            },
             x: { ticks: { color: 'rgba(255,255,255,0.6)', font: { size: 10 } }, grid: { display: false } }
         },
         plugins: { legend: { display: false } }
@@ -2470,7 +2539,7 @@ function AnimeRatings() {
                             <div className="ratings-panel right-panel-top">
                                 <h3 className="ratings-panel-title" style={{ fontSize: '0.9rem', marginBottom: '8px' }}>Hodnocení Epizod</h3>
                                 <div style={{ flex: 1, position: 'relative' }}>
-                                    {episodeChartData ? <Bar data={episodeChartData} options={episodeBarOptions} /> : <div style={{ color: 'var(--text-muted)', textAlign: 'center', marginTop: '20px' }}>Žádná data pro epizody</div>}
+                                    {episodeChartData ? <Chart type="line" data={episodeChartData} options={episodeBarOptions} /> : <div style={{ color: 'var(--text-muted)', textAlign: 'center', marginTop: '20px' }}>Žádná data pro epizody</div>}
                                 </div>
                             </div>
                             <div className="ratings-panel right-panel-bottom">

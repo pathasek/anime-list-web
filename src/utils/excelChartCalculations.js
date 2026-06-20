@@ -455,7 +455,22 @@ export function calculateExcelChartsData(animeList, historyLog) {
         .map(a => ({
             name: a.name,
             watchedEps: parseInt(a.watched_episodes) || parseInt(a.episodes) || 0,
-            startDate: a.start_date || null
+            startDate: a.start_date || null,
+            mal_url: a.mal_url || null
+        }))
+        .sort((a, b) => {
+            if (!a.startDate || !b.startDate) return 0;
+            return new Date(b.startDate) - new Date(a.startDate);
+        });
+
+    // ── Pending Anime (for Status group) ──
+    const pendingAnime = animeList
+        .filter(a => a.status === 'PENDING')
+        .map(a => ({
+            name: a.name,
+            episodes: parseInt(a.episodes) || 0,
+            startDate: a.start_date || null,
+            mal_url: a.mal_url || null
         }))
         .sort((a, b) => {
             if (!a.startDate || !b.startDate) return 0;
@@ -489,7 +504,8 @@ export function calculateExcelChartsData(animeList, historyLog) {
         latestWatched,
         longestSeries,
         fastestBinge,
-        airingAnime
+        airingAnime,
+        pendingAnime
     };
 }
 

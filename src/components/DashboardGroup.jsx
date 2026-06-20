@@ -15,7 +15,7 @@ import { useRef, useEffect, useState } from 'react'
  *   previewContent — React node rendered in collapsed state (mini charts)
  *   children      — React nodes rendered in expanded state (full charts)
  */
-function DashboardGroup({ id, title, icon, isExpanded, onToggle, alwaysExpanded = false, fullWidth = false, customPreview = false, previewContent, children }) {
+function DashboardGroup({ id, title, icon, isExpanded, onToggle, alwaysExpanded = false, fullWidth = false, customPreview = false, previewContent, headerExtra, children }) {
     const contentRef = useRef(null)
     const [contentHeight, setContentHeight] = useState(0)
 
@@ -32,6 +32,7 @@ function DashboardGroup({ id, title, icon, isExpanded, onToggle, alwaysExpanded 
         <div 
             className={`dashboard-group ${showExpanded ? 'expanded' : ''}${fullWidth && showExpanded ? ' expanded-full-width' : ''}`}
             id={`group-${id}`}
+            style={(showExpanded && (id === 'status' || id === 'lists')) ? { order: -1 } : undefined}
         >
             <div 
                 className="dashboard-group-header"
@@ -48,6 +49,7 @@ function DashboardGroup({ id, title, icon, isExpanded, onToggle, alwaysExpanded 
                 <div className="dashboard-group-title">
                     <span className="dashboard-group-icon">{icon}</span>
                     <h3>{title}</h3>
+                    {headerExtra && <div className="dashboard-group-header-extra" onClick={(e) => e.stopPropagation()} style={{ marginLeft: '8px' }}>{headerExtra}</div>}
                 </div>
                 {!alwaysExpanded && (
                     <button 
@@ -81,9 +83,8 @@ function DashboardGroup({ id, title, icon, isExpanded, onToggle, alwaysExpanded 
                 )
             )}
 
-            {/* Expanded content — full charts */}
             {showExpanded && (
-                <div className={`dashboard-group-content${id === 'lists' ? ' lists-content' : ''}`} ref={contentRef}>
+                <div className={`dashboard-group-content${id === 'lists' ? ' lists-content' : ''}${id === 'status' ? ' status-content' : ''}`} ref={contentRef}>
                     {children}
                 </div>
             )}

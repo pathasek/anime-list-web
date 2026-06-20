@@ -12,7 +12,7 @@ import {
     LinearScale,
     BarElement
 } from 'chart.js'
-import { Radar, Bar } from 'react-chartjs-2'
+import { Radar, Bar, Chart } from 'react-chartjs-2'
 import regression from 'regression'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, CategoryScale, LinearScale, BarElement)
@@ -146,37 +146,73 @@ function AnimeDetail() {
             trendData = dataPoints.map(p => result.predict(p[0])[1])
         }
 
+        const getPointColor = (rating) => {
+            if (rating >= 9.75) return 'rgb(29, 161, 242)' // Cinema (light blue)
+            if (rating >= 9.0) return 'rgb(24, 106, 59)'   // Awesome (dark green)
+            if (rating >= 8.0) return 'rgb(40, 180, 99)'   // Great (green)
+            if (rating >= 7.0) return 'rgb(244, 208, 63)'  // Good (yellow)
+            if (rating >= 6.0) return 'rgb(243, 156, 18)'  // Regular (orange)
+            if (rating >= 5.0) return 'rgb(99, 57, 116)'   // Bad (purple)
+            return 'rgb(239, 68, 68)'                      // Garbage (red)
+        }
+
+        const datasets = []
+        if (trendData.length > 0) {
+            datasets.push({
+                type: 'line',
+                label: 'Polyn. (Celkem)',
+                data: trendData,
+                borderColor: 'rgba(255, 255, 255, 0.55)',
+                borderWidth: 2.8,
+                pointRadius: 0,
+                fill: false,
+                tension: 0.45
+            })
+        }
+
+        datasets.push({
+            type: 'line',
+            label: 'Hodnocení epizody',
+            data: episodeRatings.map(ep => ep.rating),
+            borderColor: 'rgba(255, 255, 255, 0.15)',
+            borderWidth: 1.5,
+            tension: 0.15,
+            pointBackgroundColor: episodeRatings.map(ep => getPointColor(ep.rating)),
+            pointBorderColor: '#fff',
+            pointBorderWidth: 1,
+            pointRadius: 5.5,
+            pointHoverRadius: 7.5,
+            showLine: true,
+            clip: false
+        })
+
         return {
             labels: episodeRatings.map(ep => ep.episode),
-            datasets: [
-                {
-                    type: 'line',
-                    label: 'Polyn. (Celkem)',
-                    data: trendData,
-                    borderColor: 'rgb(255, 0, 0)',
-                    borderWidth: 2,
-                    pointRadius: 0,
-                    fill: false,
-                    tension: 0.4
-                },
-                {
-                    type: 'bar',
-                    label: 'Hodnocení epizody',
-                    data: episodeRatings.map(ep => ep.rating),
-                    backgroundColor: episodeRatings.map(ep => {
-                        const r = ep.rating
-                        if (r >= 9.75 && r <= 10) return 'rgb(29, 161, 242)' // Absolute Cinema
-                        if (r >= 9 && r <= 9.5) return 'rgb(24, 106, 59)' // Awesome
-                        if (r >= 8 && r <= 8.75) return 'rgb(40, 180, 99)' // Great
-                        if (r >= 7 && r <= 7.75) return 'rgb(244, 208, 63)' // Good
-                        if (r >= 6 && r <= 6.75) return 'rgb(243, 156, 18)' // Regular
-                        if (r >= 5 && r <= 5.75) return 'rgb(99, 57, 116)' // Bad
-                        return 'rgba(239, 68, 68, 0.7)'
-                    }),
-                    borderRadius: 4
-                }
-            ]
+            datasets
         }
+    }, [episodeRatings])
+
+    const { epChartMin, epChartMax } = useMemo(() => {
+        if (!episodeRatings || episodeRatings.length === 0) return { epChartMin: 4.75, epChartMax: 10.0 }
+        const valid = episodeRatings.map(e => e.rating).filter(r => r !== null && !isNaN(r))
+        if (valid.length === 0) return { epChartMin: 4.75, epChartMax: 10.0 }
+        const minVal = Math.min(...valid)
+        const maxVal = Math.max(...valid)
+        
+        let dynMin = Math.floor(minVal * 2) / 2 - 0.5
+        let dynMax = Math.ceil(maxVal * 2) / 2 + 0.5
+        
+        dynMax = Math.min(10.0, dynMax)
+        if (dynMin < 0) dynMin = 0
+        
+        if (dynMax - dynMin < 1.0) {
+            if (dynMax === 10.0) {
+                dynMin = Math.max(0, dynMax - 1.0)
+            } else {
+                dynMax = dynMin + 1.0
+            }
+        }
+        return { epChartMin: dynMin, epChartMax: dynMax }
     }, [episodeRatings])
 
     const radarMin = useMemo(() => {
@@ -243,13 +279,30 @@ function AnimeDetail() {
     const barOptions = {
         responsive: true,
         maintainAspectRatio: false,
+        layout: {
+            padding: {
+                top: 8
+            }
+        },
         scales: {
             y: {
                 beginAtZero: false,
-                min: 4.75,
-                max: 10,
-                ticks: { color: 'rgba(255,255,255,0.6)' },
-                grid: { color: 'rgba(255,255,255,0.1)' }
+                min: epChartMin,
+                max: epChartMax,
+                ticks: {
+                    color: 'rgba(255,255,255,0.6)',
+                    stepSize: 0.5,
+                    callback: (value) => {
+                        if (value > 10) return ''
+                        return value.toFixed(1).replace('.', ',')
+                    }
+                },
+                grid: { 
+                    color: (context) => {
+                        if (context.tick && context.tick.value > 10) return 'transparent';
+                        return 'rgba(255,255,255,0.1)';
+                    }
+                }
             },
             x: {
                 ticks: { color: 'rgba(255,255,255,0.6)' },
@@ -687,7 +740,7 @@ function AnimeDetail() {
                     </div>
 
                     <div style={{ height: '350px' }}>
-                        <Bar data={episodeChartData} options={barOptions} />
+                        <Chart type="line" data={episodeChartData} options={barOptions} />
                     </div>
                 </div>
             )}

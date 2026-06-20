@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, Fragment } from 'react'
+import { useState, useEffect, useMemo, useCallback, useRef, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import {
     Chart as ChartJS,
@@ -21,6 +21,7 @@ import AnimeGenreChordChart from '../components/charts/AnimeGenreChordChart'
 import SpiralWordCloud from '../components/charts/SpiralWordCloud'
 import { calculateExcelChartsData } from '../utils/excelChartCalculations'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
+import { extractMalId, getAnimeInfo, getOrFetchEpisodeList, getNextBroadcastDate } from '../utils/jikanService'
 
 // Register Chart.js components
 ChartJS.register(
@@ -92,8 +93,8 @@ const miniBarHorizontalOptions = {
 // GROUPS CONFIG (fixed order)
 // ==========================================
 const GROUPS_CONFIG = [
+    { id: 'status', title: 'Status', icon: '📋', fullWidth: true, customPreview: true },
     { id: 'lists', title: 'Poslední & Binge & Nejdelší', icon: '🏆', fullWidth: true, customPreview: true },
-    { id: 'status', title: 'Status', icon: '📋', customPreview: true },
     { id: 'tags', title: 'AniList Tagy', icon: '🏷️', fullWidth: true, customPreview: true },
     { id: 'ratings', title: 'Hodnocení', icon: '⭐', customPreview: true },
     { id: 'types', title: 'Typy', icon: '📊', customPreview: true },
@@ -104,6 +105,183 @@ const GROUPS_CONFIG = [
     { id: 'dub', title: 'Dabing', icon: '🎙️', alwaysExpanded: true },
 ]
 
+// ==========================================
+// JIKAN POSTER HELPER (async image loading)
+// ==========================================
+function JikanPoster({ malUrl, size = 'small' }) {
+    const [imageUrl, setImageUrl] = useState(null)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        if (!malUrl) { setLoading(false); return }
+        const malId = extractMalId(malUrl)
+        if (!malId) { setLoading(false); return }
+        
+        let cancelled = false
+        getAnimeInfo(malId).then(info => {
+            if (!cancelled && info) {
+                setImageUrl(size === 'large' ? (info.largeImageUrl || info.imageUrl) : info.imageUrl)
+            }
+            if (!cancelled) setLoading(false)
+        })
+        return () => { cancelled = true }
+    }, [malUrl, size])
+
+    const dims = size === 'large' ? { width: '45px', height: '64px' } : { width: '20px', height: '28px' }
+
+    return (
+        <div className="jikan-poster-container" style={dims}>
+            {imageUrl ? (
+                <img src={imageUrl} alt="" className="jikan-poster-img" loading="lazy" />
+            ) : loading ? (
+                <span className="jikan-poster-placeholder">…</span>
+            ) : (
+                <span className="jikan-poster-placeholder">🎬</span>
+            )}
+        </div>
+    )
+}
+
+// ==========================================
+// ==========================================
+// AIRING EPISODE STATS (async episode data)
+// ==========================================
+function AiringEpisodeStats({ malUrl, animeName, historyLog = [], episodeRatings = [] }) {
+    const [stats, setStats] = useState(null)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        if (!malUrl) { setLoading(false); return }
+        const malId = extractMalId(malUrl)
+        if (!malId) { setLoading(false); return }
+        
+        let cancelled = false
+        getOrFetchEpisodeList(malId).then(episodes => {
+            if (cancelled) return;
+
+            // 1. Gather release date details from Jikan API
+            const now = new Date()
+            let aired = []
+            let upcoming = []
+            if (episodes && episodes.length > 0) {
+                aired = episodes.filter(ep => ep.aired && new Date(ep.aired) <= now)
+                upcoming = episodes.filter(ep => ep.aired && new Date(ep.aired) > now)
+                    .sort((a, b) => new Date(a.aired) - new Date(b.aired))
+            }
+            const lastEp = aired.length > 0 ? aired[aired.length - 1] : null
+            const nextEp = upcoming.length > 0 ? upcoming[0] : null
+
+            // 2. Gather user's OWN ratings from episodeRatings
+            // episodeRatings is like [{ name: "Jujutsu Kaisen, S01", episodes: [{episode: "EP 1", rating: 8.75}, ...] }]
+            const animeRatingsObj = episodeRatings.find(r => r.name && r.name.toLowerCase() === animeName.toLowerCase())
+            let userRatings = []
+            if (animeRatingsObj && animeRatingsObj.episodes) {
+                userRatings = animeRatingsObj.episodes
+                    .map(e => parseFloat(e.rating))
+                    .filter(r => !isNaN(r) && r > 0)
+            }
+
+            const avgScore = userRatings.length > 0
+                ? (userRatings.reduce((sum, r) => sum + r, 0) / userRatings.length)
+                : null
+            const lastScore = userRatings.length > 0
+                ? userRatings[userRatings.length - 1]
+                : null
+
+            const formatLocal = (dateObj) => {
+                return dateObj.toLocaleString('cs-CZ', { weekday: 'short', day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' })
+            }
+
+            let localBroadcast = null
+            let exactNextDate = null
+            let formattedNext = nextEp?.aired ? new Date(nextEp.aired).toLocaleString('cs-CZ', { weekday: 'short', day: 'numeric', month: 'numeric' }) : null
+            let formattedLast = lastEp?.aired ? new Date(lastEp.aired).toLocaleString('cs-CZ', { weekday: 'short', day: 'numeric', month: 'numeric' }) : null
+
+            // Overwrite with accurate broadcast info from API instead of Jikan episode midnight dates
+            getAnimeInfo(malId).then(info => {
+                if (cancelled) return;
+                if (info && info.broadcast) {
+                    exactNextDate = getNextBroadcastDate(info.broadcast)
+                    if (exactNextDate) {
+                        const weekday = exactNextDate.toLocaleDateString('cs-CZ', { weekday: 'long' })
+                        const timeStr = exactNextDate.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' })
+                        localBroadcast = `Pravidelně: ${weekday} ${timeStr}`
+                        
+                        // We can also use exactNextDate for nextEpDate!
+                        formattedNext = formatLocal(exactNextDate)
+                        
+                        // If exactNextDate is next week, last week's exact date is 7 days ago!
+                        const lastExactDate = new Date(exactNextDate.getTime() - 7 * 24 * 60 * 60 * 1000)
+                        formattedLast = formatLocal(lastExactDate)
+                    }
+                }
+
+                setStats({
+                    avgScore,
+                    lastScore,
+                    lastEpDate: formattedLast,
+                    nextEpDate: formattedNext,
+                    totalEps: episodes ? episodes.length : 0,
+                    airedCount: aired.length,
+                    broadcast: localBroadcast
+                })
+                
+                setLoading(false)
+            }).catch(() => {
+                if (!cancelled) {
+                    setStats({
+                        avgScore,
+                        lastScore,
+                        lastEpDate: formattedLast,
+                        nextEpDate: formattedNext,
+                        totalEps: episodes ? episodes.length : 0,
+                        airedCount: aired.length,
+                        broadcast: null
+                    })
+                    setLoading(false)
+                }
+            })
+        }).catch(() => { if (!cancelled) setLoading(false) })
+
+        return () => { cancelled = true }
+    }, [malUrl, animeName, historyLog])
+
+    if (loading) return <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', opacity: 0.5 }}>Načítám…</span>
+    if (!stats) return null
+
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', width: '100%' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 8px', fontSize: '0.62rem', color: 'var(--text-muted)', marginTop: '1px' }}>
+                {stats.avgScore !== null && (
+                    <span title="Tvůj průměr hodnocení sledovaných dílů">
+                        ⭐ Ø {stats.avgScore.toFixed(2).replace('.', ',')}
+                    </span>
+                )}
+                {stats.lastScore !== null && (
+                    <span title="Tvůj poslední hodnocený díl">
+                        📊 Last: {stats.lastScore.toFixed(1).replace('.', ',')}
+                    </span>
+                )}
+                {stats.lastEpDate && (
+                    <span title="Datum poslední epizody (Jikan)">
+                        📅 {stats.lastEpDate}
+                    </span>
+                )}
+                {stats.nextEpDate && (
+                    <span title="Datum příští epizody (Jikan)" style={{ color: '#34d399' }}>
+                        ⏭️ {stats.nextEpDate}
+                    </span>
+                )}
+                {stats.broadcast && (
+                    <span title="Pravidelný čas vysílání (Jikan)" style={{ color: '#818cf8' }}>
+                        📡 {stats.broadcast}
+                    </span>
+                )}
+            </div>
+        </div>
+    )
+}
+
 function Dashboard() {
     // Czech number formatting: dot → comma
     const toCS = (val) => String(val).replace('.', ',')
@@ -113,6 +291,9 @@ function Dashboard() {
     const [loading, setLoading] = useState(true)
     const [timeFilter, setTimeFilter] = useState('all')
     const [customRange, setCustomRange] = useState({ start: '', end: '' })
+    
+    // Airing Anime sorting state
+    const [airingSortKeys, setAiringSortKeys] = useState({})
 
     // Tags multi-select state
     const [selectedTags, setSelectedTags] = useState(new Set())
@@ -135,6 +316,7 @@ function Dashboard() {
     }
 
     const [statsData, setStatsData] = useState(null) // Stats from stats.json (with comments)
+    const [episodeRatings, setEpisodeRatings] = useState([])
     const [expandedNote, setExpandedNote] = useState(null)
 
     const toggleNote = (rowIndex, colId, text, isRewatch) => {
@@ -161,12 +343,14 @@ function Dashboard() {
         Promise.all([
             fetch('data/anime_list.json?v=' + Date.now()).then(r => r.json()),
             fetch('data/history_log.json?v=' + Date.now()).then(r => r.json()),
-            fetch('data/stats.json?v=' + Date.now()).then(r => r.json()).catch(() => null)
+            fetch('data/stats.json?v=' + Date.now()).then(r => r.json()).catch(() => null),
+            fetch('data/episode_ratings.json?v=' + Date.now()).then(r => r.json()).catch(() => [])
         ])
-            .then(([anime, history, statsJson]) => {
+            .then(([anime, history, statsJson, epRatings]) => {
                 setAnimeList(anime)
                 setHistoryLog(history)
                 if (statsJson) setStatsData(statsJson)
+                if (epRatings) setEpisodeRatings(epRatings)
                 setLoading(false)
             })
             .catch(err => {
@@ -425,6 +609,72 @@ function Dashboard() {
             excelData
         }
     }, [animeList, historyLog, timeFilter, customRange])
+
+    // ==========================================
+    // AIRING ANIME ASYNC SORTING
+    // ==========================================
+    useEffect(() => {
+        if (!stats?.excelData?.airingAnime) return;
+        
+        let cancelled = false;
+        const fetchSortKeys = async () => {
+            const keys = {};
+            for (const a of stats.excelData.airingAnime) {
+                const malId = extractMalId(a.mal_url);
+                if (!malId) continue;
+                
+                try {
+                    // Fetch anime info which has the actual broadcast string
+                    const info = await getAnimeInfo(malId);
+                    if (cancelled) return;
+                    
+                    if (info && info.broadcast) {
+                        const nextBroadcast = getNextBroadcastDate(info.broadcast);
+                        if (nextBroadcast) {
+                            const d = nextBroadcast;
+                            const dayVal = d.getDay() || 7; // 1-7
+                            const todayVal = new Date().getDay() || 7;
+                            let dayDiff = dayVal - todayVal;
+                            if (dayDiff < 0) dayDiff += 7;
+                            
+                            const h = d.getHours();
+                            const m = d.getMinutes();
+                            keys[malId] = (dayDiff * 10000) + (h * 100) + m;
+                        }
+                    }
+                } catch (err) {
+                    console.error("[Sort] Failed to fetch episodes for sort key", err);
+                }
+            }
+            if (!cancelled) {
+                setAiringSortKeys(prev => {
+                    let changed = false;
+                    for (const k in keys) {
+                        if (prev[k] !== keys[k]) changed = true;
+                    }
+                    return changed ? { ...prev, ...keys } : prev;
+                });
+            }
+        };
+        fetchSortKeys();
+        return () => { cancelled = true; };
+    }, [stats?.excelData?.airingAnime]);
+
+    const sortedAiringAnime = useMemo(() => {
+        if (!stats?.excelData?.airingAnime) return [];
+        return [...stats.excelData.airingAnime].sort((a, b) => {
+            const keyA = airingSortKeys[extractMalId(a.mal_url)] ?? 9999999;
+            const keyB = airingSortKeys[extractMalId(b.mal_url)] ?? 9999999;
+            
+            // If keys are same or neither has a key yet, maintain fallback sort (by start_date)
+            if (keyA === keyB) {
+                 const dA = a.startDate ? new Date(a.startDate).getTime() : 0;
+                 const dB = b.startDate ? new Date(b.startDate).getTime() : 0;
+                 return dB - dA;
+            }
+            return keyA - keyB;
+        });
+    }, [stats?.excelData?.airingAnime, airingSortKeys]);
 
     // ==========================================
     // EXCEL EXACT CHART CONFIGURATIONS
@@ -1369,26 +1619,55 @@ function Dashboard() {
             case 'status':
                 return (
                     <>
-                        <FullChart title="Rozdělení statusů (Populace)">
-                            <Pie data={statusPieData} options={getPieOptions()} plugins={[ChartDataLabels]} />
-                        </FullChart>
-                        {excelData.airingAnime && excelData.airingAnime.length > 0 && (
+                        {/* Left: Airing Anime with stats */}
+                        {sortedAiringAnime && sortedAiringAnime.length > 0 && (
                             <div className="full-chart-wrapper text-list">
-                                <div className="chart-title">📺 Právě sledované (Airing)</div>
+                                <div className="chart-title">📺 Právě sledované ({sortedAiringAnime.length})</div>
+                                <div className="chart-body text-list-scroll">
+                                    <ul className="text-list-items" style={{ gap: '4px' }}>
+                                        {sortedAiringAnime.map((a, i) => (
+                                            <li key={i} style={{ gap: '8px', padding: '6px 4px' }}>
+                                                <JikanPoster malUrl={a.mal_url} size="large" />
+                                                <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                        <Link to={`/anime/${encodeURIComponent(a.name)}`} className="anime-link" style={{ fontWeight: 600, fontSize: '0.82rem' }}>
+                                                            {a.name}
+                                                        </Link>
+                                                        {a.mal_url && (
+                                                            <a href={a.mal_url} target="_blank" rel="noreferrer" title="Otevřít na MyAnimeList" style={{ color: '#3b82f6', fontSize: '0.7rem', textDecoration: 'none', background: 'rgba(59, 130, 246, 0.1)', padding: '1px 4px', borderRadius: '4px' }}>
+                                                                MAL ↗
+                                                            </a>
+                                                        )}
+                                                    </div>
+                                                    <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
+                                                        EP {a.watchedEps}
+                                                        {a.startDate && ` • od ${new Date(a.startDate).toLocaleDateString('cs-CZ')}`}
+                                                    </span>
+                                                    <AiringEpisodeStats malUrl={a.mal_url} animeName={a.name} historyLog={historyLog} episodeRatings={episodeRatings} />
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Right column: Pending */}
+                        {excelData.pendingAnime && excelData.pendingAnime.length > 0 && (
+                            <div className="full-chart-wrapper text-list">
+                                <div className="chart-title">⏳ Pending ({excelData.pendingAnime.length})</div>
                                 <div className="chart-body text-list-scroll">
                                     <ul className="text-list-items">
-                                        {excelData.airingAnime.map((a, i) => (
-                                            <li key={i}>
+                                        {excelData.pendingAnime.map((a, i) => (
+                                            <li key={i} style={{ gap: '8px' }}>
+                                                <JikanPoster malUrl={a.mal_url} />
                                                 <span className="text-list-rank">{i + 1}.</span>
                                                 <span className="text-list-name marquee-container">
                                                     <Link to={`/anime/${encodeURIComponent(a.name)}`} className="marquee-link">
                                                         <span className="marquee-text">{a.name}</span>
                                                     </Link>
                                                 </span>
-                                                <span className="text-list-value">
-                                                    EP {a.watchedEps}
-                                                    {a.startDate && ` • ${new Date(a.startDate).toLocaleDateString('cs-CZ')}`}
-                                                </span>
+                                                {a.episodes > 0 && <span className="text-list-value">{a.episodes} ep</span>}
                                             </li>
                                         ))}
                                     </ul>
@@ -1758,36 +2037,32 @@ function Dashboard() {
             }
             case 'status': {
                 // Status-relevant stats
-                const statusEntries = Object.entries(stats.statuses).sort((a,b) => b[1] - a[1]);
-                const topStatuses = statusEntries.slice(0, 4);
-                const statusMax = topStatuses[0]?.[1] || 1;
                 return (
                     <div className="preview-status-grid">
-                        <div className="preview-status-airing">
+                        <div className="preview-list-column">
                             <div className="preview-status-airing-title">
-                                📺 Airing
+                                📺 Právě sledované ({sortedAiringAnime.length})
                             </div>
-                            {excelData.airingAnime.slice(0, 5).map((a, i) => (
-                                <div key={i} className="preview-airing-item">
-                                    <span className="rank">{i + 1}.</span>
+                            {sortedAiringAnime.slice(0, 5).map((a, i) => (
+                                <div key={i} className="preview-list-item">
+                                    <span className="rank" style={{ color: '#34d399' }}>{i + 1}.</span>
                                     <span className="name">{a.name}</span>
-                                    <span className="ep-badge">EP {a.watchedEps}</span>
+                                    <span className="meta" style={{ color: '#34d399', fontWeight: 600 }}>EP {a.watchedEps}</span>
                                 </div>
                             ))}
-                            {excelData.airingAnime.length > 5 && <div className="preview-more-indicator">a dalších {excelData.airingAnime.length - 5}…</div>}
+                            {sortedAiringAnime.length > 5 && <div className="preview-more-indicator">a dalších {sortedAiringAnime.length - 5}…</div>}
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)' }}>
-                            <div className="preview-status-pie">
-                                <Pie data={statusPieData} options={miniPieOptions} />
+                        <div className="preview-list-column">
+                            <div className="preview-status-pending-title">
+                                ⏳ Plánované ({excelData.pendingAnime?.length || 0})
                             </div>
-                            <div className="preview-stats-summary">
-                                {topStatuses.map(([status, count], i) => (
-                                    <div key={i} className="preview-stat-item">
-                                        <span className="preview-stat-value">{count}</span>
-                                        <span className="preview-stat-label">{status.length > 12 ? status.slice(0, 11) + '…' : status}</span>
-                                    </div>
-                                ))}
-                            </div>
+                            {(excelData.pendingAnime || []).slice(0, 5).map((a, i) => (
+                                <div key={i} className="preview-list-item">
+                                    <span className="rank" style={{ color: '#a78bfa' }}>{i + 1}.</span>
+                                    <span className="name">{a.name}</span>
+                                </div>
+                            ))}
+                            {(excelData.pendingAnime || []).length > 5 && <div className="preview-more-indicator">a dalších {excelData.pendingAnime.length - 5}…</div>}
                         </div>
                     </div>
                 )
@@ -2079,6 +2354,9 @@ function Dashboard() {
                     rel="noopener noreferrer"
                     className="echidna-notebook-container"
                 >
+                    <div className="echidna-chat-bubble">
+                        Zdravím. Jsem Echidna, Čarodějka Chamtivosti. Mám tu čest spravovat Patrikův osobní archiv. Nalezneš tu vše od detailních statistik až po jeho komplexní hodnocení a faktické rozbory jednotlivých děl. Zkrátka ucelený záznam jeho cesty světem anime. Máš stejnou žízeň po poznání jako my? Ptej se, ráda tě tu provedu.
+                    </div>
                     <img 
                         src="images/echidna.jpg" 
                         alt="Echidna" 
@@ -2366,22 +2644,40 @@ function Dashboard() {
             {/* DASHBOARD GROUPS GRID                      */}
             {/* ═══════════════════════════════════════════ */}
             <div className="dashboard-groups-grid">
-                {GROUPS_CONFIG.map(group => (
-                    <DashboardGroup
-                        key={group.id}
-                        id={group.id}
-                        title={group.title}
-                        icon={group.icon}
-                        isExpanded={expandedGroups.has(group.id)}
-                        onToggle={() => toggleGroup(group.id)}
-                        alwaysExpanded={group.alwaysExpanded || false}
-                        fullWidth={group.fullWidth || false}
-                        customPreview={group.customPreview || false}
-                        previewContent={renderGroupPreview(group.id)}
-                    >
-                        {renderGroupContent(group.id)}
-                    </DashboardGroup>
-                ))}
+                {GROUPS_CONFIG.map(group => {
+                    let headerExtra = null
+                    if (group.id === 'status' && stats) {
+                        const statusEntries = stats.statuses || {}
+                        const finishedCount = statusEntries['FINISHED'] || 0
+                        const airingCount = sortedAiringAnime?.length || 0
+                        const pendingCount = excelData.pendingAnime?.length || 0
+                        headerExtra = (
+                            <div className="status-header-badges" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                <span className="status-badge finished" style={{ background: 'rgba(52, 211, 153, 0.15)', color: '#34d399', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>
+                                    {finishedCount}/{stats.totalAnime} Finished
+                                </span>
+                            </div>
+                        )
+                    }
+
+                    return (
+                        <DashboardGroup
+                            key={group.id}
+                            id={group.id}
+                            title={group.title}
+                            icon={group.icon}
+                            isExpanded={expandedGroups.has(group.id)}
+                            onToggle={() => toggleGroup(group.id)}
+                            alwaysExpanded={group.alwaysExpanded || false}
+                            fullWidth={group.fullWidth || false}
+                            customPreview={group.customPreview || false}
+                            previewContent={renderGroupPreview(group.id)}
+                            headerExtra={headerExtra}
+                        >
+                            {renderGroupContent(group.id)}
+                        </DashboardGroup>
+                    )
+                })}
             </div>
         </div>
     )
