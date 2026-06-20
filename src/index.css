@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap');
+
 /* ═══════════════════════════════════════════════════════════════════════════
    ANIME LIST WEB - Design System
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -80,6 +82,12 @@
   --transition-fast: 150ms ease;
   --transition-normal: 250ms ease;
   --transition-slow: 350ms ease;
+
+  /* Echidna Chat Bubble Theme Customizations */
+  --echidna-bubble-bg: rgba(18, 18, 28, 0.95);
+  --echidna-bubble-border: 1px solid rgba(99, 102, 241, 0.25);
+  --echidna-bubble-radius: 20px;
+  --echidna-bubble-font: 'Plus Jakarta Sans', 'Outfit', var(--font-family);
 }
 
 /* ─── Reset & Base ─── */
@@ -2818,6 +2826,12 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   --radius-md: 0px;
   --radius-lg: 0px;
   --radius-full: 0px;
+
+  /* Echidna Chat Bubble Theme Customizations */
+  --echidna-bubble-bg: rgba(30, 12, 56, 0.95);
+  --echidna-bubble-border: 3px solid var(--accent-primary);
+  --echidna-bubble-radius: 0px;
+  --echidna-bubble-font: 'Press Start 2P', 'Courier New', monospace;
 }
 
 /* Pixelated borders for 8-bit feel */
@@ -2897,6 +2911,12 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   --shadow-md: 0 4px 12px rgba(168, 85, 247, 0.1);
   --shadow-lg: 0 8px 24px rgba(168, 85, 247, 0.12);
   --shadow-glow: 0 0 16px rgba(168, 85, 247, 0.15);
+
+  /* Echidna Chat Bubble Theme Customizations */
+  --echidna-bubble-bg: rgba(255, 255, 255, 0.96);
+  --echidna-bubble-border: 1px solid rgba(168, 85, 247, 0.25);
+  --echidna-bubble-radius: 20px;
+  --echidna-bubble-font: 'Plus Jakarta Sans', 'Outfit', var(--font-family);
 }
 
 /* Light theme overrides for inverted text on badges */
@@ -2973,6 +2993,12 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   --radius-md: 3px;
   --radius-lg: 4px;
   --radius-full: 4px;
+
+  /* Echidna Chat Bubble Theme Customizations */
+  --echidna-bubble-bg: #ffffff;
+  --echidna-bubble-border: 1px solid #217346;
+  --echidna-bubble-radius: 4px;
+  --echidna-bubble-font: 'Segoe UI', Calibri, Arial, sans-serif;
 }
 
 /* Excel-like cells */
@@ -3417,13 +3443,16 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   padding-top: 4px;
 }
 
-/* Velký portrét Echidny a NotebookLM na Dashboardu */
+/* ═══════════════════════════════════════════════════════════════════════════
+   ECHIDNA NOTEBOOKLM CHATBOT — Premium Chat Bubble
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 .echidna-notebook-container {
   position: relative;
   display: flex;
   align-items: center;
   padding-left: 92px; /* 80px avatar + 12px gap */
-  height: 38px; /* match the button height exactly so layout height doesn't expand */
+  height: 38px;
   text-decoration: none;
   transition: all 0.3s ease;
 }
@@ -3433,21 +3462,23 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   left: 0;
   top: 50%;
   transform: translateY(-50%);
-  width: 80px; /* enlarged circle size */
+  width: 80px;
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
   object-position: center 20%;
   border: 3px solid transparent;
   box-shadow: var(--shadow-sm);
-  transition: all 0.25s ease-in-out;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   cursor: pointer;
 }
 
 .echidna-notebook-container:hover .echidna-avatar {
   border-color: var(--accent-primary);
-  box-shadow: 0 0 15px rgba(99, 102, 241, 0.8);
-  transform: translateY(-50%) scale(1.08); /* Keep the vertical center translation while scaling up */
+  box-shadow:
+    0 0 15px var(--echidna-glow-color, rgba(99, 102, 241, 0.6)),
+    0 0 30px var(--echidna-glow-color, rgba(99, 102, 241, 0.15));
+  transform: translateY(-50%) scale(1.08);
 }
 
 .notebook-btn {
@@ -3470,40 +3501,179 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   color: var(--text-primary);
 }
 
+/* ─── Chat Bubble ─── */
 .echidna-chat-bubble {
   position: absolute;
-  right: calc(100% - 15px);
-  top: 50%;
-  transform: translateY(-50%) translateX(-10px);
-  width: 260px;
-  padding: 12px 16px;
-  background: rgba(30, 30, 40, 0.95);
-  border: 1px solid var(--accent-primary);
-  border-radius: var(--radius-lg);
-  color: var(--text-primary);
-  font-size: 0.8rem;
-  line-height: 1.4;
-  box-shadow: var(--shadow-lg);
+  /* Position the bubble's right edge 14px to the LEFT of the container's left edge,
+     so it fully clears the 80px avatar circle with breathing room */
+  right: calc(100% + 14px);
+  /* Anchor from top instead of centering — prevents clipping the top edge of the page */
+  top: -6px;
+  transform: translateX(-12px) scale(0.97);
+  width: 560px;
+  max-width: calc(100vw - 660px);
+  padding: 18px 24px;
+  background: var(--echidna-bubble-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  
+  /* Gradient border respecting border-radius */
+  border: 1.5px solid transparent;
+  background: 
+    linear-gradient(var(--echidna-bubble-bg), var(--echidna-bubble-bg)) padding-box,
+    linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 50%, var(--accent-pink, #ec4899) 100%) border-box;
+  
+  border-radius: var(--echidna-bubble-radius);
+  color: var(--echidna-bubble-text, var(--text-primary));
+  
+  /* Typography - Clean, elegant & highly legible chat bubble style */
+  font-family: var(--echidna-bubble-font);
+  font-size: 0.88rem;
+  font-weight: 450;
+  line-height: 1.6;
+  letter-spacing: 0.015em;
+  font-style: normal;
+  
+  box-shadow:
+    var(--shadow-lg),
+    0 0 30px var(--echidna-glow-color, rgba(99, 102, 241, 0.06)),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
   opacity: 0;
   visibility: hidden;
-  transition: all 0.3s ease;
+  transition:
+    opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   z-index: 100;
   pointer-events: none;
 }
 
+/* Premium speech bubble tail pointing toward the avatar */
 .echidna-chat-bubble::after {
   content: '';
   position: absolute;
-  right: -6px;
-  top: 50%;
-  transform: translateY(-50%);
-  border-width: 6px 0 6px 6px;
-  border-style: solid;
-  border-color: transparent transparent transparent var(--accent-primary);
+  right: -6px; /* Sits halfway out of the border */
+  top: 19px; /* Centered relative to avatar (25px center - 6px half-width) */
+  width: 12px;
+  height: 12px;
+  background: var(--echidna-bubble-bg);
+  /* Rotate square to create a triangle point */
+  border-top: 1.5px solid var(--accent-secondary);
+  border-right: 1.5px solid var(--accent-secondary);
+  border-left: none;
+  border-bottom: none;
+  transform: rotate(45deg);
+  z-index: 1; /* Merges seamlessly, overlaying the main bubble border */
+  filter: drop-shadow(2px -1px 2px var(--echidna-glow-color, rgba(99, 102, 241, 0.1)));
 }
 
+/* Hover reveal */
 .echidna-notebook-container:hover .echidna-chat-bubble {
   opacity: 1;
   visibility: visible;
-  transform: translateY(-50%) translateX(0);
+  transform: translateX(0) scale(1);
+}
+
+
+@media (max-width: 1200px) {
+  .echidna-chat-bubble {
+    width: 440px;
+    max-width: calc(100vw - 520px);
+  }
+}
+
+@media (max-width: 1024px) {
+  .echidna-chat-bubble {
+    width: 380px;
+    max-width: calc(100vw - 420px);
+  }
+}
+
+@media (max-width: 768px) {
+  .echidna-chat-bubble {
+    display: none;
+  }
+}
+
+/* ─── Theme Overrides for Echidna Bubble ─── */
+
+/* Retro 8-bit: pixelated shadow, neon pink glow, sharp border, mono font */
+[data-theme="retro-8bit"] .echidna-chat-bubble {
+  background: var(--echidna-bubble-bg);
+  border: 3px solid var(--accent-primary);
+  border-radius: 0px;
+  box-shadow:
+    4px 4px 0 rgba(255, 110, 199, 0.4),
+    0 0 20px rgba(255, 110, 199, 0.1);
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+[data-theme="retro-8bit"] .echidna-chat-bubble::after {
+  background: var(--echidna-bubble-bg);
+  border-top: 3px solid var(--accent-primary);
+  border-right: 3px solid var(--accent-primary);
+  border-left: none;
+  border-bottom: none;
+  width: 10px;
+  height: 10px;
+  top: 20px;
+  right: -7px;
+  transform: rotate(45deg);
+  filter: none;
+}
+
+/* Pastel Light: soft pastel, light border, friendly font */
+[data-theme="pastel-light"] .echidna-chat-bubble {
+  background: var(--echidna-bubble-bg);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--echidna-bubble-radius);
+  box-shadow:
+    0 4px 20px rgba(168, 85, 247, 0.08),
+    0 1px 4px rgba(168, 85, 247, 0.04);
+  font-style: normal;
+  font-family: var(--echidna-bubble-font);
+  color: var(--text-primary);
+  font-size: 0.88rem;
+}
+
+[data-theme="pastel-light"] .echidna-chat-bubble::after {
+  background: var(--echidna-bubble-bg);
+  border-top: 1.5px solid var(--border-color);
+  border-right: 1.5px solid var(--border-color);
+  border-left: none;
+  border-bottom: none;
+  filter: none;
+}
+
+[data-theme="pastel-light"] .echidna-notebook-container:hover .echidna-avatar {
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.3);
+}
+
+/* Excel Classic: clean professional, standard Sans-serif */
+[data-theme="excel-table"] .echidna-chat-bubble {
+  background: var(--echidna-bubble-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  font-style: normal;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 0.82rem;
+  letter-spacing: 0;
+}
+
+[data-theme="excel-table"] .echidna-chat-bubble::after {
+  background: var(--echidna-bubble-bg);
+  border-top: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+  border-left: none;
+  border-bottom: none;
+  filter: none;
+}
+
+[data-theme="excel-table"] .echidna-notebook-container:hover .echidna-avatar {
+  box-shadow: 0 0 8px rgba(33, 115, 70, 0.3);
 }
