@@ -829,6 +829,12 @@
     flex-wrap: wrap;
   }
   .row-1 .left-panel, .row-2 .left-panel, .row-3 .left-panel { flex: 0 0 250px; }
+  .ratings-dashboard-sidebar {
+    flex: 0 0 250px;
+    width: 250px;
+    max-width: 250px;
+    min-width: 250px;
+  }
 }
 
 @media (max-width: 1024px) {
@@ -1255,7 +1261,7 @@
   overflow: auto;
   flex: 1;
   border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
+  border: none;
 }
 
 /* Table base */
@@ -1459,10 +1465,10 @@
 }
 
 .ratings-dashboard-sidebar {
-  flex: 0 0 240px;
-  width: 240px;
-  max-width: 240px;
-  min-width: 240px;
+  flex: 0 0 300px;
+  width: 300px;
+  max-width: 300px;
+  min-width: 300px;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-grid);
