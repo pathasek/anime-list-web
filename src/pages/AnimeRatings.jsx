@@ -1675,10 +1675,23 @@ function AnimeRatings() {
         }
     }, [episodeRatings, categoryRatings, lbTyp, lbSort, lbCount])
 
+    const lbMinMax = useMemo(() => {
+        const values = leaderboardChartData?.datasets?.[0]?.data || [];
+        if (values.length === 0) return { min: 0, max: 10 };
+        const minRaw = Math.min(...values);
+        const maxRaw = Math.max(...values);
+        
+        // Přidáme malou rezervu (0.15) na obou koncích a zaokrouhlíme
+        const calculatedMin = Math.max(0, Math.floor((minRaw - 0.15) * 10) / 10);
+        const calculatedMax = Math.min(10, Math.ceil((maxRaw + 0.15) * 10) / 10);
+        
+        return { min: calculatedMin, max: calculatedMax };
+    }, [leaderboardChartData]);
+
     const leaderboardOptions = {
         indexAxis: 'y', responsive: true, maintainAspectRatio: false,
         scales: {
-            x: { min: lbSort === 'Nejlepší' ? 6 : undefined, max: 10, ticks: { color: 'rgba(255,255,255,0.6)' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+            x: { min: lbMinMax.min, max: lbMinMax.max, ticks: { color: 'rgba(255,255,255,0.6)' }, grid: { color: 'rgba(255,255,255,0.1)' } },
             y: { ticks: { color: 'rgba(255,255,255,0.8)', font: { size: 10 } }, grid: { display: false } }
         },
         plugins: { legend: { display: false } }
@@ -2558,94 +2571,103 @@ function AnimeRatings() {
                 ============================================ */}
             {viewMode !== 'split' && (
                 <>
-                    {/* ROW 2: Kategorie & Korelace */}
-                    <div className="ratings-row row-2 fade-in">
-                        <div className="ratings-panel left-panel">
-                            <h3 className="ratings-panel-title">Filtry a seznam</h3>
-                            <div className="slicer-group">
-                                <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Typ</label>
-                                <select className="slicer-select" value={slicerTyp} onChange={e => setSlicerTyp(e.target.value)}>
-                                    <option value="Kategorie">Kategorie</option>
-                                    <option value="Epizoda">Epizoda</option>
-                                </select>
+                    <div className="ratings-dashboard-layout fade-in">
+                        {/* LEVÝ SLOUPEC (Sidebar): Filtry a seznam */}
+                        <div className="ratings-dashboard-sidebar">
+                            {/* Filtry a seznam */}
+                            <div className="ratings-panel filter-panel">
+                                <h3 className="ratings-panel-title">Filtry a seznam</h3>
+                                <div className="slicer-group">
+                                    <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Typ</label>
+                                    <select className="slicer-select" value={slicerTyp} onChange={e => setSlicerTyp(e.target.value)}>
+                                        <option value="Kategorie">Kategorie</option>
+                                        <option value="Epizoda">Epizoda</option>
+                                    </select>
+                                </div>
+                                <div className="slicer-group">
+                                    <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Položka</label>
+                                    <select className="slicer-select" value={slicerPolozka} onChange={e => setSlicerPolozka(e.target.value)}>
+                                        {polozkyOptions.map(p => <option key={p} value={p}>{p}</option>)}
+                                    </select>
+                                </div>
+                                <div className="slicer-group">
+                                    <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Hodnocení</label>
+                                    <select className="slicer-select" value={slicerHodnoceni} onChange={e => setSlicerHodnoceni(e.target.value)}>
+                                        {hodnoceniOptions.map(h => <option key={h} value={h}>{h === 'Všechna' ? h : Number(h).toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</option>)}
+                                    </select>
+                                </div>
+                                <div className="anime-selector-list" style={{ marginTop: 'var(--spacing-sm)' }}>
+                                    {row2FilteredAnime.map(a => (
+                                        <div key={a.name} className="anime-selector-item" onClick={() => {
+                                            setViewMode('individual') // fallback to individual detail on click
+                                            setSelectedAnimeTitle(a.name)
+                                        }}>
+                                            <span className="selector-item-name">{a.name}</span>
+                                            <span className="selector-item-rating">{Number(a.hodnoceni).toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                                        </div>
+                                    ))}
+                                    {row2FilteredAnime.length === 0 && <div style={{ color:'var(--text-muted)', padding:'8px' }}>Žádná data</div>}
+                                </div>
                             </div>
-                            <div className="slicer-group">
-                                <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Položka</label>
-                                <select className="slicer-select" value={slicerPolozka} onChange={e => setSlicerPolozka(e.target.value)}>
-                                    {polozkyOptions.map(p => <option key={p} value={p}>{p}</option>)}
-                                </select>
-                            </div>
-                            <div className="slicer-group">
-                                <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Hodnocení</label>
-                                <select className="slicer-select" value={slicerHodnoceni} onChange={e => setSlicerHodnoceni(e.target.value)}>
-                                    {hodnoceniOptions.map(h => <option key={h} value={h}>{h === 'Všechna' ? h : Number(h).toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</option>)}
-                                </select>
-                            </div>
-                            <div className="anime-selector-list" style={{ marginTop: 'var(--spacing-sm)' }}>
-                                {row2FilteredAnime.map(a => (
-                                    <div key={a.name} className="anime-selector-item" onClick={() => {
-                                        setViewMode('individual') // fallback to individual detail on click
-                                        setSelectedAnimeTitle(a.name)
-                                    }}>
-                                        <span className="selector-item-name">{a.name}</span>
-                                        <span className="selector-item-rating">{Number(a.hodnoceni).toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                        </div>
+
+                        {/* PRAVÝ SLOUPEC (Main content) */}
+                        <div className="ratings-dashboard-main">
+                            {/* Horní řada: AVG Hodnocení + Nestabilní EP + Rozložení */}
+                            <div className="ratings-dashboard-row row-top">
+                                <div className="ratings-panel leaderboard-panel">
+                                    <h3 className="ratings-panel-title">Hodnocení Anime podle AVG (Top {lbCount})</h3>
+                                    <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+                                        <select className="slicer-select" style={{flex:1}} value={lbTyp} onChange={e => setLbTyp(e.target.value)}>
+                                            <option value="Epizody">Epizody</option>
+                                            <option value="Kategorie">Kategorie</option>
+                                        </select>
+                                        <select className="slicer-select" style={{flex:1}} value={lbSort} onChange={e => setLbSort(e.target.value)}>
+                                            <option value="Nejlepší">Nejlepší</option>
+                                            <option value="Nejhorší">Nejhorší</option>
+                                        </select>
+                                        <select className="slicer-select" style={{flex:0.5}} value={lbCount} onChange={e => setLbCount(Number(e.target.value))}>
+                                            <option value="10">10</option>
+                                            <option value="30">30</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                        </select>
                                     </div>
-                                ))}
-                                {row2FilteredAnime.length === 0 && <div style={{ color:'var(--text-muted)', padding:'8px' }}>Žádná data</div>}
-                            </div>
-                        </div>
+                                    <div style={{ flex: 1, position: 'relative' }}>
+                                        <Bar data={leaderboardChartData} options={leaderboardOptions} />
+                                    </div>
+                                </div>
 
-                        <div className="ratings-panel center-panel">
-                            <h3 className="ratings-panel-title">Korelace: {slicerPolozka} vs FH {correlationChartData?.r2 ? `(R² = ${correlationChartData.r2.toLocaleString('cs-CZ')})` : ''}</h3>
-                            <div style={{ flex: 1, position: 'relative' }}>
-                                {correlationChartData ? <Chart type='scatter' data={correlationChartData.data} options={correlationChartOptions} /> : <div style={{ color: 'var(--text-muted)' }}>Málo dat pro korelaci</div>}
-                            </div>
-                        </div>
+                                <div className="ratings-panel instability-panel">
+                                    <h3 className="ratings-panel-title">Anime s nestabilním ohodnocením EP (Top 30)</h3>
+                                    <div style={{ flex: 1, position: 'relative' }}>
+                                        <Bar data={unstableChartData} options={unstableOptions} />
+                                    </div>
+                                </div>
 
-                        <div className="ratings-panel right-panel">
-                            <h3 className="ratings-panel-title">Rozložení hodnocení: {slicerPolozka}</h3>
-                            <div style={{ flex: 1, position: 'relative' }}>
-                                {histogramData ? <Bar data={histogramData} options={histogramOptions} /> : <div style={{ color: 'var(--text-muted)' }}>Žádná data</div>}
+                                <div className="ratings-panel distribution-panel">
+                                    <h3 className="ratings-panel-title">Rozložení hodnocení: {slicerPolozka}</h3>
+                                    <div style={{ flex: 1, position: 'relative' }}>
+                                        {histogramData ? <Bar data={histogramData} options={histogramOptions} /> : <div style={{ color: 'var(--text-muted)' }}>Žádná data</div>}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                    {/* ROW 3: Globální žebříčky */}
-                    <div className="ratings-row row-3 fade-in" style={{ marginBottom: 'var(--spacing-xl)' }}>
-                        <div className="ratings-panel left-panel">
-                            <h3 className="ratings-panel-title">Hodnocení Anime podle AVG (Top {lbCount})</h3>
-                            <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
-                                <select className="slicer-select" style={{flex:1}} value={lbTyp} onChange={e => setLbTyp(e.target.value)}>
-                                    <option value="Epizody">Epizody</option>
-                                    <option value="Kategorie">Kategorie</option>
-                                </select>
-                                <select className="slicer-select" style={{flex:1}} value={lbSort} onChange={e => setLbSort(e.target.value)}>
-                                    <option value="Nejlepší">Nejlepší</option>
-                                    <option value="Nejhorší">Nejhorší</option>
-                                </select>
-                                <select className="slicer-select" style={{flex:0.5}} value={lbCount} onChange={e => setLbCount(Number(e.target.value))}>
-                                    <option value="10">10</option>
-                                    <option value="30">30</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>
-                            </div>
-                            <div style={{ flex: 1, position: 'relative' }}>
-                                <Bar data={leaderboardChartData} options={leaderboardOptions} />
-                            </div>
-                        </div>
+                            {/* Spodní řada: Korelace + Kvalita vs Hloubka */}
+                            <div className="ratings-dashboard-row row-bottom">
+                                <div className="ratings-panel correlation-panel">
+                                    <h3 className="ratings-panel-title">Korelace: {slicerPolozka} vs FH {correlationChartData?.r2 ? `(R² = ${correlationChartData.r2.toLocaleString('cs-CZ')})` : ''}</h3>
+                                    <div style={{ flex: 1, position: 'relative' }}>
+                                        {correlationChartData ? <Chart type='scatter' data={correlationChartData.data} options={correlationChartOptions} /> : <div style={{ color: 'var(--text-muted)' }}>Málo dat pro korelaci</div>}
+                                    </div>
+                                </div>
 
-                        <div className="ratings-panel center-panel">
-                            <h3 className="ratings-panel-title">Kvalita (technika) vs. Hloubka (narativ)</h3>
-                            <div style={{ flex: 1, position: 'relative' }}>
-                                <Chart type='bubble' data={hypeChartData} options={hypeChartOptions} />
-                            </div>
-                        </div>
-
-                        <div className="ratings-panel right-panel">
-                            <h3 className="ratings-panel-title">Anime s nestabilním ohodnocením EP (Top 30)</h3>
-                            <div style={{ flex: 1, position: 'relative' }}>
-                                <Bar data={unstableChartData} options={unstableOptions} />
+                                <div className="ratings-panel quality-depth-panel">
+                                    <h3 className="ratings-panel-title">Kvalita (technika) vs. Hloubka (narativ)</h3>
+                                    <div style={{ flex: 1, position: 'relative' }}>
+                                        <Chart type='bubble' data={hypeChartData} options={hypeChartOptions} />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
