@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTheme } from './ThemeProvider';
+import rezeroInsignia from '../assets/rezero-insignia.svg';
 
 const renderThemeIcon = (themeId, defaultIcon) => {
     switch (themeId) {
@@ -7,7 +8,7 @@ const renderThemeIcon = (themeId, defaultIcon) => {
             return (
                 <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '20px', height: '20px' }}>
                     <img 
-                        src="/images/rezero-insignia.svg" 
+                        src={rezeroInsignia} 
                         alt="Re:Zero" 
                         style={{ width: '20px', height: '20px', objectFit: 'contain', filter: 'drop-shadow(0 0 3px rgba(207,156,69,0.4))' }} 
                     />
