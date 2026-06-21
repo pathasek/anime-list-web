@@ -3730,6 +3730,20 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   background: var(--accent-red);
 }
 
+/* Theme-specific badge text color overrides for light backgrounds */
+[data-theme="obsidian-grey"] .rewatch-card-badge.rewatch-1 {
+  color: #0f172a;
+  text-shadow: none;
+}
+[data-theme="obsidian-grey"] .rewatch-card-badge.rewatch-2 {
+  color: #0f172a;
+  text-shadow: none;
+}
+[data-theme="pastel-light"] .rewatch-card-badge.rewatch-2 {
+  color: #1e1b2e;
+  text-shadow: none;
+}
+
 .rewatch-card-hover-actions {
   position: absolute;
   top: 0;
@@ -3806,7 +3820,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 .rewatch-card-date {
   font-size: 0.7rem;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   margin-top: auto;
   display: flex;
   align-items: center;
