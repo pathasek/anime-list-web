@@ -3227,6 +3227,10 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   opacity: 0.08;
 }
 
+[data-theme="rezero"] .rewatch-card-badge.rewatch-2 {
+  background: #357f54; /* Subaru Natsuki zelená */
+}
+
 /* Text glow and headings */
 [data-theme="rezero"] h1,
 [data-theme="rezero"] h2,
