@@ -1149,7 +1149,9 @@ function Dashboard() {
     // ==========================================
     const MiniChart = ({ label, children }) => (
         <div className="mini-chart-wrapper">
-            {children}
+            <div className="mini-chart-container">
+                {children}
+            </div>
             {label && <div className="mini-chart-label">{label}</div>}
         </div>
     )

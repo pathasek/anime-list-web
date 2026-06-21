@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { createPortal } from 'react-dom'
-import ChartSettingsModal from '../components/ChartSettingsModal'
+import DashboardGroup from '../components/DashboardGroup'
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -23,6 +23,42 @@ ChartJS.register(
     Title, Tooltip, Legend
 )
 
+// Simplified options for collapsed mini-charts (like on Dashboard)
+const miniChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: { duration: 0 },
+    plugins: {
+        legend: { display: false },
+        tooltip: { enabled: false },
+        datalabels: { display: false },
+        excelImageBackground: false
+    },
+    scales: {
+        x: { display: false },
+        y: { display: false }
+    },
+    elements: {
+        point: { radius: 0 },
+        bar: { borderWidth: 0 },
+        arc: { borderWidth: 1 }
+    }
+}
+
+const miniPieOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: { duration: 0 },
+    plugins: {
+        legend: { display: false },
+        tooltip: { enabled: false },
+        datalabels: { display: false },
+        excelImageBackground: false
+    },
+    layout: { padding: 4 }
+}
+
+
 function Favorites() {
     const [favorites, setFavorites] = useState([])
     const [showScrollTop, setShowScrollTop] = useState(false)
@@ -36,13 +72,24 @@ function Favorites() {
         return () => window.removeEventListener('scroll', handleScroll, true);
     }, []);
     const [loading, setLoading] = useState(true)
+    const [expandedGroups, setExpandedGroups] = useState(new Set([]))
+    const toggleGroup = (id) => {
+        setExpandedGroups(prev => {
+            const next = new Set(prev)
+            if (next.has(id)) {
+                next.delete(id)
+            } else {
+                next.add(id)
+            }
+            return next
+        })
+    }
     const [searchTerm, setSearchTerm] = useState('')
     const [typeFilter, setTypeFilter] = useState('all')
     const [ratingFilter, setRatingFilter] = useState('all')
     const [languageFilter, setLanguageFilter] = useState('all')
     const [sortColumn, setSortColumn] = useState(null)
     const [sortDirection, setSortDirection] = useState('desc')
-    const [activeChartSettings, setActiveChartSettings] = useState(null)
     const [showAllRatings, setShowAllRatings] = useState(false)
     const [expandedCardIdx, setExpandedCardIdx] = useState(null)
     const [isTableExpanded, setIsTableExpanded] = useState(false)
@@ -51,18 +98,6 @@ function Favorites() {
 
     // Czech number formatting: dot → comma
     const toCS = (val) => String(val).replace('.', ',')
-
-    const openChartSettings = (e, id, title) => {
-        const r = e.currentTarget.getBoundingClientRect()
-        setActiveChartSettings({
-            id,
-            title,
-            anchorPosition: {
-                top: r.bottom + window.scrollY,
-                left: r.left + window.scrollX
-            }
-        })
-    }
 
     useEffect(() => {
         Promise.all([
@@ -324,6 +359,62 @@ function Favorites() {
         }
     }, [favorites])
 
+    // Dynamic axis calculations for premium visual spacing
+    const axisScales = useMemo(() => {
+        if (!stats) return null
+
+        // 1. Top Series Rating Axis
+        const seriesRatings = stats.topSeriesByFinal.map(s => s.avgFinal) || []
+        const seriesMin = seriesRatings.length ? Math.min(...seriesRatings) : 8
+        const seriesMax = seriesRatings.length ? Math.max(...seriesRatings) : 10
+        const seriesAxisMin = Math.max(0, Math.floor((seriesMin - 0.15) * 10) / 10)
+        const seriesAxisMax = Math.min(10, Math.ceil((seriesMax + 0.15) * 10) / 10)
+
+        // 2. Top Authors Count Axis (Horizontal bar chart)
+        const authorCounts = stats.topAuthors.map(a => a[1]) || []
+        const authorMin = authorCounts.length ? Math.min(...authorCounts) : 0
+        const authorMax = authorCounts.length ? Math.max(...authorCounts) : 10
+        const authorAxisMin = Math.max(0, authorMin - 1)
+        const authorAxisMax = authorMax + 1
+
+        // 3. Radar category ratings
+        const radarValues = stats.radarAvgs ? [stats.radarAvgs.lyrics, stats.radarAvgs.emotion, stats.radarAvgs.melody, stats.radarAvgs.video, stats.radarAvgs.voice] : []
+        const radarMin = radarValues.length ? Math.min(...radarValues) : 0
+        const radarMax = radarValues.length ? Math.max(...radarValues) : 10
+        const radarAxisMin = Math.max(0, Math.floor((radarMin - 0.4) * 2) / 2)
+        const radarAxisMax = Math.min(10, Math.ceil((radarMax + 0.4) * 2) / 2)
+
+        // 4. Frisson average ratings
+        const frissonRatings = stats.frissonData?.avgs || []
+        const frissonMin = frissonRatings.length ? Math.min(...frissonRatings) : 8
+        const frissonMax = frissonRatings.length ? Math.max(...frissonRatings) : 10
+        const frissonAxisMin = Math.max(0, Math.floor((frissonMin - 0.3) * 10) / 10)
+        const frissonAxisMax = Math.min(10, Math.ceil((frissonMax + 0.3) * 10) / 10)
+
+        // 5. Language weighted average ratings
+        const langRatings = stats.langAnalysis?.map(l => l.avgRating) || []
+        const langMin = langRatings.length ? Math.min(...langRatings) : 8
+        const langMax = langRatings.length ? Math.max(...langRatings) : 10
+        const langAxisMin = Math.max(0, Math.floor((langMin - 0.3) * 10) / 10)
+        const langAxisMax = Math.min(10, Math.ceil((langMax + 0.3) * 10) / 10)
+
+        // 6. OP vs ED averages
+        const opVsEdRatings = stats.opVsEd ? [stats.opVsEd.opAvg, stats.opVsEd.edAvg] : []
+        const opVsEdMin = opVsEdRatings.length ? Math.min(...opVsEdRatings) : 8
+        const opVsEdMax = opVsEdRatings.length ? Math.max(...opVsEdRatings) : 10
+        const opVsEdAxisMin = Math.max(0, Math.floor((opVsEdMin - 0.15) * 100) / 100)
+        const opVsEdAxisMax = Math.min(10, Math.ceil((opVsEdMax + 0.15) * 100) / 100)
+
+        return {
+            seriesAxisMin, seriesAxisMax,
+            authorAxisMin, authorAxisMax,
+            radarAxisMin, radarAxisMax,
+            frissonAxisMin, frissonAxisMax,
+            langAxisMin, langAxisMax,
+            opVsEdAxisMin, opVsEdAxisMax
+        }
+    }, [stats])
+
     // Filter and Sort
     const filteredFavorites = useMemo(() => {
         let result = [...favorites]
@@ -423,10 +514,10 @@ function Favorites() {
 
     // Top authors chart
     const authorsChartData = {
-        labels: stats?.topAuthors.map(a => a[0].substring(0, 20)) || [],
+        labels: stats?.topAuthors?.map(a => a[0].substring(0, 20)) || [],
         datasets: [{
             label: 'Počet',
-            data: stats?.topAuthors.map(a => a[1]) || [],
+            data: stats?.topAuthors?.map(a => a[1]) || [],
             backgroundColor: '#8b5cf6',
             borderRadius: 4
         }]
@@ -434,19 +525,13 @@ function Favorites() {
 
     // Top Series by Final Rating Chart
     const topSeriesFinalData = {
-        labels: stats?.topSeriesByFinal.map(s => s.name.substring(0, 20)) || [],
+        labels: stats?.topSeriesByFinal?.map(s => s.name.substring(0, 20)) || [],
         datasets: [{
             label: 'Prům. finální hodnocení',
-            data: stats?.topSeriesByFinal.map(s => s.avgFinal) || [],
+            data: stats?.topSeriesByFinal?.map(s => s.avgFinal) || [],
             backgroundColor: '#10b981',
             borderRadius: 4
         }]
-    }
-
-    const chartOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false } }
     }
 
     const pieOptions = {
@@ -457,68 +542,70 @@ function Favorites() {
         }
     }
 
+    const authorsChartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+            x: {
+                min: axisScales?.authorAxisMin ?? 0,
+                max: axisScales?.authorAxisMax ?? 10,
+                ticks: { precision: 0 }
+            }
+        }
+    }
+
+    const topSeriesChartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+            y: {
+                beginAtZero: false,
+                min: axisScales?.seriesAxisMin ?? 8,
+                max: axisScales?.seriesAxisMax ?? 10
+            }
+        }
+    }
+
     return (
         <div className="fade-in">
-            <h2 style={{ marginBottom: 'var(--spacing-md)' }}>
-                Favourite OP/ED/OST
-            </h2>
-
-            {/* 1. Average Ratings Section (Moved to top) */}
-            {stats?.avgRatings?.final && (
-                <div style={{ marginBottom: 'var(--spacing-xl)' }}>
-                    <h3 style={{ marginBottom: 'var(--spacing-lg)', color: 'var(--accent-primary)', fontSize: '1.25rem' }}>
-                        📊 Průměrná hodnocení kategorií pro OP/ED
-                    </h3>
-                    <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))' }}>
-                        <div className="stat-card">
-                            <div className="stat-value">{stats.avgRatings.avg}</div>
-                            <div className="stat-label">Průměrné</div>
-                        </div>
-                        <div className="stat-card">
-                            <div className="stat-value" style={{ color: 'var(--accent-primary)' }}>{stats.avgRatings.final}</div>
-                            <div className="stat-label">Finální</div>
-                        </div>
-                        {stats.avgRatings.emotion && (
-                            <div className={`stat-card pink ${!showAllRatings ? 'hide-mobile' : ''}`}>
-                                <div className="stat-value">{stats.avgRatings.emotion}</div>
-                                <div className="stat-label">Emoce</div>
-                            </div>
-                        )}
-                        {stats.avgRatings.lyrics && (
-                            <div className={`stat-card ${!showAllRatings ? 'hide-mobile' : ''}`}>
-                                <div className="stat-value">{stats.avgRatings.lyrics}</div>
-                                <div className="stat-label">Text</div>
-                            </div>
-                        )}
-                        {stats.avgRatings.melody && (
-                            <div className={`stat-card cyan ${!showAllRatings ? 'hide-mobile' : ''}`}>
-                                <div className="stat-value">{stats.avgRatings.melody}</div>
-                                <div className="stat-label">Melodie</div>
-                            </div>
-                        )}
-                        {stats.avgRatings.video && (
-                            <div className={`stat-card amber ${!showAllRatings ? 'hide-mobile' : ''}`}>
-                                <div className="stat-value">{stats.avgRatings.video}</div>
-                                <div className="stat-label">Videoklip</div>
-                            </div>
-                        )}
-                        {stats.avgRatings.voice && (
-                            <div className={`stat-card emerald ${!showAllRatings ? 'hide-mobile' : ''}`}>
-                                <div className="stat-value">{stats.avgRatings.voice}</div>
-                                <div className="stat-label">Hlas</div>
-                            </div>
-                        )}
-                    </div>
-                    {/* Toggle button for extra ratings */}
-                    <button
-                        className="filter-btn hide-desktop"
-                        style={{ marginTop: 'var(--spacing-md)', width: '100%', justifyContent: 'center' }}
-                        onClick={() => setShowAllRatings(!showAllRatings)}
-                    >
-                        {showAllRatings ? 'MÉNĚ HODNOCENÍ ▲' : 'VÍCE HODNOCENÍ ▼'}
-                    </button>
-                </div>
-            )}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-lg)', flexWrap: 'wrap', gap: 'var(--spacing-md)' }}>
+                <h2 style={{ margin: 0 }}>
+                    Favourite OP/ED/OST
+                </h2>
+                <a
+                    href="https://savsmb-my.sharepoint.com/:f:/g/personal/xmacoun1_is_savs_cz/IgA3rwr2qW-5TaoWx69yOo3eAR8jYsioUJVZqJzk9-oao0I?e=Zgw5mo"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                        background: 'linear-gradient(135deg, #095aba 0%, #1e40af 100%)',
+                        color: 'white',
+                        padding: '10px 20px',
+                        borderRadius: 'var(--radius-md)',
+                        textDecoration: 'none',
+                        fontSize: '0.85rem',
+                        fontWeight: 'bold',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        boxShadow: '0 4px 12px rgba(9, 90, 186, 0.2)',
+                        transition: 'all 0.2s',
+                        border: '1px solid rgba(255,255,255,0.05)'
+                    }}
+                    title="Klikněte pro otevření složky s videoklipy na SharePointu"
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-1px)';
+                        e.currentTarget.style.boxShadow = '0 6px 16px rgba(9, 90, 186, 0.35)';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(9, 90, 186, 0.2)';
+                    }}
+                >
+                    Videoklipy OP/ED ↗
+                </a>
+            </div>
 
             {/* 2. Stats Grid (Counts) */}
             <div className="stats-grid">
@@ -527,11 +614,11 @@ function Favorites() {
                     <div className="stat-label">Celkem songů</div>
                 </div>
                 <div className="stat-card pink">
-                    <div className="stat-value">{stats?.types.OP || 0}</div>
+                    <div className="stat-value">{stats?.types?.OP || 0}</div>
                     <div className="stat-label">Openings</div>
                 </div>
                 <div className="stat-card cyan">
-                    <div className="stat-value">{stats?.types.ED || 0}</div>
+                    <div className="stat-value">{stats?.types?.ED || 0}</div>
                     <div className="stat-label">Endings</div>
                 </div>
                 <div className="stat-card amber">
@@ -540,275 +627,437 @@ function Favorites() {
                 </div>
             </div>
 
-            {/* 3. Charts */}
-            <div className="charts-grid">
-                <div className="chart-container">
-                    <div className="chart-header">
-                        <div className="chart-title">Rozdělení typů</div>
-                        <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'fav_types', 'Rozdělení typů')} title="Nastavení">⚙️</button>
-                    </div>
-                    <div style={{ height: '250px' }}>
-                        <Pie data={typeChartData} options={pieOptions} />
-                    </div>
-                </div>
-                <div className="chart-container">
-                    <div className="chart-header">
-                        <div className="chart-title">Top 10 autorů</div>
-                        <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'fav_authors', 'Top 10 autorů')} title="Nastavení">⚙️</button>
-                    </div>
-                    <div style={{ height: '250px' }}>
-                        <Bar data={authorsChartData} options={{ ...chartOptions, indexAxis: 'y' }} />
-                    </div>
-                </div>
-                <div className="chart-container">
-                    <div className="chart-header">
-                        <div className="chart-title">Top Série (dle fin. hodnocení)</div>
-                        <button className="chart-settings-btn" onClick={(e) => openChartSettings(e, 'fav_series_final', 'Top Série (dle fin. hodnocení)')} title="Nastavení">⚙️</button>
-                    </div>
-                    <div style={{ height: '250px' }}>
-                        <Bar data={topSeriesFinalData} options={{
-                            ...chartOptions, scales: {
-                                y: {
-                                    beginAtZero: false,
-                                    min: 8
-                                }
-                            }
-                        }} />
-                    </div>
-                </div>
-            </div>
+            {/* 3. Collapsible Charts Section */}
+            <div className="dashboard-groups-grid" style={{ marginBottom: 'var(--spacing-xl)' }}>
+                {/* GROUP 1: Základní statistiky */}
+                <DashboardGroup
+                    id="fav_basic"
+                    title="Základní statistiky OP/ED/OST"
+                    icon="📊"
+                    isExpanded={expandedGroups.has('fav_basic')}
+                    onToggle={() => toggleGroup('fav_basic')}
+                    previewContent={
+                        <>
+                            <div className="mini-chart-wrapper">
+                                <div className="mini-chart-container">
+                                    <Pie data={typeChartData} options={miniPieOptions} />
+                                </div>
+                                <div className="mini-chart-label">Rozdělení typů</div>
+                            </div>
+                            <div className="mini-chart-wrapper">
+                                <div className="mini-chart-container">
+                                    <Bar data={authorsChartData} options={{ ...miniChartOptions, indexAxis: 'y' }} />
+                                </div>
+                                <div className="mini-chart-label">Top 10 autorů</div>
+                            </div>
+                            <div className="mini-chart-wrapper">
+                                <div className="mini-chart-container">
+                                    <Bar data={topSeriesFinalData} options={{
+                                        ...miniChartOptions,
+                                        scales: { y: { min: 8 } }
+                                    }} />
+                                </div>
+                                <div className="mini-chart-label">Top Série</div>
+                            </div>
+                        </>
+                    }
+                >
+                    {/* Average Ratings Section inside basic stats */}
+                    {stats?.avgRatings?.final && (
+                        <div style={{ width: '100%', marginBottom: 'var(--spacing-md)' }}>
+                            <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(105px, 1fr))', gap: 'var(--spacing-sm)', marginBottom: 0 }}>
+                                <div className="stat-card" style={{ padding: 'var(--spacing-sm) var(--spacing-xs)', textAlign: 'center' }}>
+                                    <div className="stat-value" style={{ fontSize: '1.25rem' }}>{stats.avgRatings.avg}</div>
+                                    <div className="stat-label" style={{ fontSize: '0.65rem' }}>Průměrné</div>
+                                </div>
+                                <div className="stat-card" style={{ padding: 'var(--spacing-sm) var(--spacing-xs)', textAlign: 'center' }}>
+                                    <div className="stat-value" style={{ fontSize: '1.25rem', color: 'var(--accent-primary)' }}>{stats.avgRatings.final}</div>
+                                    <div className="stat-label" style={{ fontSize: '0.65rem' }}>Finální</div>
+                                </div>
+                                {stats.avgRatings.emotion && (
+                                    <div className="stat-card pink" style={{ padding: 'var(--spacing-sm) var(--spacing-xs)', textAlign: 'center' }}>
+                                        <div className="stat-value" style={{ fontSize: '1.25rem' }}>{stats.avgRatings.emotion}</div>
+                                        <div className="stat-label" style={{ fontSize: '0.65rem' }}>Emoce</div>
+                                    </div>
+                                )}
+                                {stats.avgRatings.lyrics && (
+                                    <div className="stat-card" style={{ padding: 'var(--spacing-sm) var(--spacing-xs)', textAlign: 'center' }}>
+                                        <div className="stat-value" style={{ fontSize: '1.25rem' }}>{stats.avgRatings.lyrics}</div>
+                                        <div className="stat-label" style={{ fontSize: '0.65rem' }}>Text</div>
+                                    </div>
+                                )}
+                                {stats.avgRatings.melody && (
+                                    <div className="stat-card cyan" style={{ padding: 'var(--spacing-sm) var(--spacing-xs)', textAlign: 'center' }}>
+                                        <div className="stat-value" style={{ fontSize: '1.25rem' }}>{stats.avgRatings.melody}</div>
+                                        <div className="stat-label" style={{ fontSize: '0.65rem' }}>Melodie</div>
+                                    </div>
+                                )}
+                                {stats.avgRatings.video && (
+                                    <div className="stat-card amber" style={{ padding: 'var(--spacing-sm) var(--spacing-xs)', textAlign: 'center' }}>
+                                        <div className="stat-value" style={{ fontSize: '1.25rem' }}>{stats.avgRatings.video}</div>
+                                        <div className="stat-label" style={{ fontSize: '0.65rem' }}>Videoklip</div>
+                                    </div>
+                                )}
+                                {stats.avgRatings.voice && (
+                                    <div className="stat-card emerald" style={{ padding: 'var(--spacing-sm) var(--spacing-xs)', textAlign: 'center' }}>
+                                        <div className="stat-value" style={{ fontSize: '1.25rem' }}>{stats.avgRatings.voice}</div>
+                                        <div className="stat-label" style={{ fontSize: '0.65rem' }}>Hlas</div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
 
-            {/* NEW OP/ED Charts Section */}
-            <h3 style={{ marginTop: 'var(--spacing-xl)', marginBottom: 'var(--spacing-lg)', color: 'var(--accent-emerald)', fontSize: '1.25rem' }}>
-                🎵 Analytika OP/ED (z VBA)
-            </h3>
-            <div className="charts-grid">
-                {/* Rating Breakdown OP vs ED */}
-                {stats?.ratingBreakdown?.labels.length > 0 && (
-                    <div className="chart-container">
+                    <div className="full-chart-wrapper standard">
                         <div className="chart-header">
-                            <div className="chart-title">Rozložení hodnocení (OP vs ED)</div>
+                            <div className="chart-title">Rozdělení typů</div>
                         </div>
-                        <div style={{ height: '280px' }}>
-                            <Bar data={{
-                                labels: stats.ratingBreakdown.labels,
-                                datasets: [
-                                    { label: 'OP', data: stats.ratingBreakdown.op, backgroundColor: 'rgba(99, 102, 241, 0.85)', borderRadius: 3 },
-                                    { label: 'ED', data: stats.ratingBreakdown.ed, backgroundColor: 'rgba(236, 72, 153, 0.85)', borderRadius: 3 }
-                                ]
-                            }} options={{
-                                responsive: true, maintainAspectRatio: false,
-                                plugins: {
-                                    legend: { position: 'bottom', labels: { color: '#94a3b8', boxWidth: 12, padding: 12 } },
-                                    tooltip: { backgroundColor: 'rgba(18,18,26,0.9)', titleColor: '#f1f5f9', bodyColor: '#f1f5f9', borderColor: '#3a3a4a', borderWidth: 1 }
-                                },
-                                scales: {
-                                    y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', precision: 0 }, title: { display: true, text: 'Počet', color: '#94a3b8' } },
-                                    x: { grid: { display: false }, ticks: { color: '#94a3b8' }, title: { display: true, text: 'Hodnocení', color: '#94a3b8' } }
-                                }
-                            }} />
+                        <div className="chart-body" style={{ height: '220px' }}>
+                            <Pie data={typeChartData} options={pieOptions} />
                         </div>
                     </div>
-                )}
 
-                {/* Radar Categories */}
-                {stats?.radarAvgs && (
-                    <div className="chart-container">
+                    <div className="full-chart-wrapper standard">
                         <div className="chart-header">
-                            <div className="chart-title">Průměrné hodnocení kategorií</div>
+                            <div className="chart-title">Top 10 autorů</div>
                         </div>
-                        <div style={{ height: '280px' }}>
-                            <Radar data={{
-                                labels: [
-                                    `Text: ${stats.radarAvgs.lyrics.toFixed(1).replace('.', ',')}/10`,
-                                    `Emoce: ${stats.radarAvgs.emotion.toFixed(1).replace('.', ',')}/10`,
-                                    `Melodie: ${stats.radarAvgs.melody.toFixed(1).replace('.', ',')}/10`,
-                                    `Video: ${stats.radarAvgs.video.toFixed(1).replace('.', ',')}/10`,
-                                    `Hlas: ${stats.radarAvgs.voice.toFixed(1).replace('.', ',')}/10`
-                                ],
-                                datasets: [{
-                                    label: 'Průměr',
-                                    data: [stats.radarAvgs.lyrics, stats.radarAvgs.emotion, stats.radarAvgs.melody, stats.radarAvgs.video, stats.radarAvgs.voice],
-                                    backgroundColor: 'rgba(99, 102, 241, 0.25)',
-                                    borderColor: 'rgba(99, 102, 241, 0.8)',
-                                    borderWidth: 2,
-                                    pointBackgroundColor: '#6366f1',
-                                    pointRadius: 4
-                                }]
-                            }} options={{
-                                responsive: true, maintainAspectRatio: false,
-                                plugins: { legend: { display: false } },
-                                scales: {
-                                    r: {
-                                        min: 0, max: 10,
-                                        ticks: { stepSize: 2, color: '#64748b', backdropColor: 'transparent' },
-                                        grid: { color: 'rgba(255,255,255,0.08)' },
-                                        pointLabels: { color: '#e2e8f0', font: { size: 11 } },
-                                        angleLines: { color: 'rgba(255,255,255,0.08)' }
-                                    }
-                                }
-                            }} />
+                        <div className="chart-body" style={{ height: '220px' }}>
+                            <Bar data={authorsChartData} options={{ ...authorsChartOptions, indexAxis: 'y' }} />
                         </div>
                     </div>
-                )}
 
-                {/* Frisson Influence */}
-                {stats?.frissonData?.labels.length > 0 && (
-                    <div className="chart-container">
+                    <div className="full-chart-wrapper standard">
                         <div className="chart-header">
-                            <div className="chart-title">Vliv Frisson Feeling</div>
+                            <div className="chart-title">Top Série (dle fin. hodnocení)</div>
                         </div>
-                        <div style={{ height: '280px' }}>
-                            <Bar data={{
-                                labels: stats.frissonData.labels,
-                                datasets: [
-                                    {
-                                        label: 'Počet',
-                                        data: stats.frissonData.counts,
-                                        backgroundColor: 'rgba(99, 102, 241, 0.8)',
-                                        borderRadius: 4,
-                                        yAxisID: 'y'
+                        <div className="chart-body" style={{ height: '220px' }}>
+                            <Bar data={topSeriesFinalData} options={topSeriesChartOptions} />
+                        </div>
+                    </div>
+                </DashboardGroup>
+
+                {/* GROUP 2: Hudební analytika */}
+                <DashboardGroup
+                    id="fav_analytics"
+                    title="Analytika OP/ED (z VBA)"
+                    icon="🎵"
+                    isExpanded={expandedGroups.has('fav_analytics')}
+                    onToggle={() => toggleGroup('fav_analytics')}
+                    previewContent={
+                        <>
+                            <div className="mini-chart-wrapper">
+                                <div className="mini-chart-container">
+                                    {stats?.ratingBreakdown?.labels?.length > 0 ? (
+                                        <Bar data={{
+                                            labels: stats.ratingBreakdown.labels,
+                                            datasets: [
+                                                { data: stats.ratingBreakdown.op, backgroundColor: 'rgba(99, 102, 241, 0.85)', borderRadius: 2 },
+                                                { data: stats.ratingBreakdown.ed, backgroundColor: 'rgba(236, 72, 153, 0.85)', borderRadius: 2 }
+                                            ]
+                                        }} options={miniChartOptions} />
+                                    ) : <div style={{ fontSize: '0.6rem', textAlign: 'center' }}>N/A</div>}
+                                </div>
+                                <div className="mini-chart-label">Rozložení hodnocení</div>
+                            </div>
+                            <div className="mini-chart-wrapper">
+                                <div className="mini-chart-container">
+                                    {stats?.radarAvgs ? (
+                                        <Radar data={{
+                                            labels: ['', '', '', '', ''],
+                                            datasets: [{
+                                                data: [stats.radarAvgs.lyrics, stats.radarAvgs.emotion, stats.radarAvgs.melody, stats.radarAvgs.video, stats.radarAvgs.voice],
+                                                backgroundColor: 'rgba(99, 102, 241, 0.25)',
+                                                borderColor: 'rgba(99, 102, 241, 0.8)',
+                                                borderWidth: 1,
+                                                pointRadius: 0
+                                            }]
+                                        }} options={{
+                                            ...miniChartOptions,
+                                            scales: { r: { min: 0, max: 10, ticks: { display: false }, grid: { display: false } } }
+                                        }} />
+                                    ) : <div style={{ fontSize: '0.6rem', textAlign: 'center' }}>N/A</div>}
+                                </div>
+                                <div className="mini-chart-label">Kategorie</div>
+                            </div>
+                            <div className="mini-chart-wrapper">
+                                <div className="mini-chart-container">
+                                    {stats?.frissonData?.labels?.length > 0 ? (
+                                        <Bar data={{
+                                            labels: stats.frissonData.labels,
+                                            datasets: [{ data: stats.frissonData.counts, backgroundColor: 'rgba(99, 102, 241, 0.8)', borderRadius: 2 }]
+                                        }} options={miniChartOptions} />
+                                    ) : <div style={{ fontSize: '0.6rem', textAlign: 'center' }}>N/A</div>}
+                                </div>
+                                <div className="mini-chart-label">Vliv Frisson</div>
+                            </div>
+                            <div className="mini-chart-wrapper">
+                                <div className="mini-chart-container">
+                                    {stats?.langAnalysis?.length > 0 ? (
+                                        <Bar data={{
+                                            labels: stats.langAnalysis.map(l => l.lang),
+                                            datasets: [{ data: stats.langAnalysis.map(l => l.count), backgroundColor: 'rgba(6, 182, 212, 0.8)', borderRadius: 2 }]
+                                        }} options={miniChartOptions} />
+                                    ) : <div style={{ fontSize: '0.6rem', textAlign: 'center' }}>N/A</div>}
+                                </div>
+                                <div className="mini-chart-label">Jazyky</div>
+                            </div>
+                            <div className="mini-chart-wrapper">
+                                <div className="mini-chart-container">
+                                    {stats?.opVsEd ? (
+                                        <Bar data={{
+                                            labels: ['', ''],
+                                            datasets: [{ data: [stats.opVsEd.opAvg, stats.opVsEd.edAvg], backgroundColor: ['rgba(99, 102, 241, 0.85)', 'rgba(236, 72, 153, 0.85)'], borderRadius: 4 }]
+                                        }} options={miniChartOptions} />
+                                    ) : <div style={{ fontSize: '0.6rem', textAlign: 'center' }}>N/A</div>}
+                                </div>
+                                <div className="mini-chart-label">OP vs ED</div>
+                            </div>
+                            <div className="mini-chart-wrapper">
+                                <div className="mini-chart-container">
+                                    {stats?.singAlongBuckets && Object.values(stats.singAlongBuckets).some(v => v > 0) ? (
+                                        <Bar data={{
+                                            labels: Object.keys(stats.singAlongBuckets),
+                                            datasets: [{ data: Object.values(stats.singAlongBuckets), backgroundColor: 'rgba(34, 197, 94, 0.7)', borderRadius: 2 }]
+                                        }} options={miniChartOptions} />
+                                    ) : <div style={{ fontSize: '0.6rem', textAlign: 'center' }}>N/A</div>}
+                                </div>
+                                <div className="mini-chart-label">Sing-Along</div>
+                            </div>
+                        </>
+                    }
+                >
+                    {/* Rating Breakdown OP vs ED */}
+                    {stats?.ratingBreakdown?.labels?.length > 0 && (
+                        <div className="full-chart-wrapper standard">
+                            <div className="chart-header">
+                                <div className="chart-title">Rozložení hodnocení (OP vs ED)</div>
+                            </div>
+                            <div className="chart-body" style={{ height: '220px' }}>
+                                <Bar data={{
+                                    labels: stats.ratingBreakdown.labels,
+                                    datasets: [
+                                        { label: 'OP', data: stats.ratingBreakdown.op, backgroundColor: 'rgba(99, 102, 241, 0.85)', borderRadius: 3 },
+                                        { label: 'ED', data: stats.ratingBreakdown.ed, backgroundColor: 'rgba(236, 72, 153, 0.85)', borderRadius: 3 }
+                                    ]
+                                }} options={{
+                                    responsive: true, maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: { position: 'bottom', labels: { color: '#94a3b8', boxWidth: 12, padding: 12 } },
+                                        tooltip: { backgroundColor: 'rgba(18,18,26,0.9)', titleColor: '#f1f5f9', bodyColor: '#f1f5f9', borderColor: '#3a3a4a', borderWidth: 1 }
                                     },
-                                    {
-                                        label: 'Průměr FH',
-                                        data: stats.frissonData.avgs,
-                                        type: 'line',
-                                        borderColor: '#f59e0b',
-                                        backgroundColor: '#f59e0b',
-                                        pointRadius: 6,
-                                        pointHoverRadius: 8,
-                                        borderWidth: 2,
-                                        yAxisID: 'y1'
+                                    scales: {
+                                        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', precision: 0 }, title: { display: true, text: 'Počet', color: '#94a3b8' } },
+                                        x: { grid: { display: false }, ticks: { color: '#94a3b8' }, title: { display: true, text: 'Hodnocení', color: '#94a3b8' } }
                                     }
-                                ]
-                            }} options={{
-                                responsive: true, maintainAspectRatio: false,
-                                plugins: {
-                                    legend: { position: 'bottom', labels: { color: '#94a3b8', boxWidth: 12, padding: 12 } },
-                                    tooltip: { backgroundColor: 'rgba(18,18,26,0.9)', titleColor: '#f1f5f9', bodyColor: '#f1f5f9' }
-                                },
-                                scales: {
-                                    y: { beginAtZero: true, position: 'left', grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', precision: 0 }, title: { display: true, text: 'Počet', color: '#94a3b8' } },
-                                    y1: { min: 1, max: 10, position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#f59e0b' }, title: { display: true, text: 'Průměr', color: '#f59e0b' } },
-                                    x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
-                                }
-                            }} />
+                                }} />
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )}
 
-                {/* Language Analysis */}
-                {stats?.langAnalysis?.length > 0 && (
-                    <div className="chart-container">
-                        <div className="chart-header">
-                            <div className="chart-title">Analýza jazyků (Vážený průměr)</div>
-                        </div>
-                        <div style={{ height: '280px' }}>
-                            <Bar data={{
-                                labels: stats.langAnalysis.map(l => l.lang),
-                                datasets: [
-                                    {
-                                        label: 'Počet',
-                                        data: stats.langAnalysis.map(l => l.count),
-                                        backgroundColor: 'rgba(6, 182, 212, 0.8)',
-                                        borderRadius: 4,
-                                        yAxisID: 'y'
-                                    },
-                                    {
-                                        label: 'Prům. hodnocení',
-                                        data: stats.langAnalysis.map(l => l.avgRating),
-                                        type: 'line',
-                                        borderColor: '#ec4899',
-                                        backgroundColor: '#ec4899',
-                                        pointRadius: 5,
-                                        borderWidth: 2,
-                                        yAxisID: 'y1'
-                                    }
-                                ]
-                            }} options={{
-                                responsive: true, maintainAspectRatio: false,
-                                plugins: {
-                                    legend: { position: 'bottom', labels: { color: '#94a3b8', boxWidth: 12, padding: 12 } },
-                                    tooltip: { backgroundColor: 'rgba(18,18,26,0.9)', titleColor: '#f1f5f9', bodyColor: '#f1f5f9' }
-                                },
-                                scales: {
-                                    y: { beginAtZero: true, position: 'left', grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', precision: 0 }, title: { display: true, text: 'Počet', color: '#94a3b8' } },
-                                    y1: { min: 1, max: 10, position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#ec4899' }, title: { display: true, text: 'Prům. hodnocení', color: '#ec4899' } },
-                                    x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
-                                }
-                            }} />
-                        </div>
-                    </div>
-                )}
-
-                {/* OP vs ED Average */}
-                {stats?.opVsEd && (
-                    <div className="chart-container">
-                        <div className="chart-header">
-                            <div className="chart-title">Průměr OP vs ED</div>
-                        </div>
-                        <div style={{ height: '280px' }}>
-                            <Bar data={{
-                                labels: [`OP (${stats.opVsEd.opCount})`, `ED (${stats.opVsEd.edCount})`],
-                                datasets: [{
-                                    label: 'Průměrné FH',
-                                    data: [stats.opVsEd.opAvg, stats.opVsEd.edAvg],
-                                    backgroundColor: ['rgba(99, 102, 241, 0.85)', 'rgba(236, 72, 153, 0.85)'],
-                                    borderRadius: 6
-                                }]
-                            }} options={{
-                                responsive: true, maintainAspectRatio: false,
-                                plugins: {
-                                    legend: { display: false },
-                                    tooltip: {
-                                        backgroundColor: 'rgba(18,18,26,0.9)', titleColor: '#f1f5f9', bodyColor: '#f1f5f9',
-                                        callbacks: { label: (ctx) => `Průměr: ${ctx.parsed.y.toFixed(2).replace('.', ',')}` }
-                                    }
-                                },
-                                scales: {
-                                    y: { min: 0, max: 10, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
-                                    x: { grid: { display: false }, ticks: { color: '#e2e8f0', font: { size: 13, weight: 'bold' } } }
-                                }
-                            }} />
-                        </div>
-                    </div>
-                )}
-
-                {/* Sing-Along Distribution */}
-                {stats?.singAlongBuckets && Object.values(stats.singAlongBuckets).some(v => v > 0) && (
-                    <div className="chart-container">
-                        <div className="chart-header">
-                            <div className="chart-title">Sing-Along faktor (Distribuce)</div>
-                        </div>
-                        <div style={{ height: '280px' }}>
-                            <Bar data={{
-                                labels: Object.keys(stats.singAlongBuckets),
-                                datasets: [{
-                                    label: 'Počet songů',
-                                    data: Object.values(stats.singAlongBuckets),
-                                    backgroundColor: [
-                                        'rgba(239, 68, 68, 0.7)',
-                                        'rgba(249, 115, 22, 0.7)',
-                                        'rgba(234, 179, 8, 0.7)',
-                                        'rgba(34, 197, 94, 0.7)',
-                                        'rgba(16, 185, 129, 0.7)'
+                    {/* Radar Categories */}
+                    {stats?.radarAvgs && (
+                        <div className="full-chart-wrapper standard">
+                            <div className="chart-header">
+                                <div className="chart-title">Průměrné hodnocení kategorií</div>
+                            </div>
+                            <div className="chart-body" style={{ height: '220px' }}>
+                                <Radar data={{
+                                    labels: [
+                                        `Text: ${stats.radarAvgs.lyrics.toFixed(1).replace('.', ',')}/10`,
+                                        `Emoce: ${stats.radarAvgs.emotion.toFixed(1).replace('.', ',')}/10`,
+                                        `Melodie: ${stats.radarAvgs.melody.toFixed(1).replace('.', ',')}/10`,
+                                        `Video: ${stats.radarAvgs.video.toFixed(1).replace('.', ',')}/10`,
+                                        `Hlas: ${stats.radarAvgs.voice.toFixed(1).replace('.', ',')}/10`
                                     ],
-                                    borderRadius: 4
-                                }]
-                            }} options={{
-                                responsive: true, maintainAspectRatio: false,
-                                plugins: {
-                                    legend: { display: false },
-                                    tooltip: { backgroundColor: 'rgba(18,18,26,0.9)', titleColor: '#f1f5f9', bodyColor: '#f1f5f9' }
-                                },
-                                scales: {
-                                    y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', precision: 0 }, title: { display: true, text: 'Počet', color: '#94a3b8' } },
-                                    x: { grid: { display: false }, ticks: { color: '#94a3b8' }, title: { display: true, text: 'Sing-Along skóre', color: '#94a3b8' } }
-                                }
-                            }} />
+                                    datasets: [{
+                                        label: 'Průměr',
+                                        data: [stats.radarAvgs.lyrics, stats.radarAvgs.emotion, stats.radarAvgs.melody, stats.radarAvgs.video, stats.radarAvgs.voice],
+                                        backgroundColor: 'rgba(99, 102, 241, 0.25)',
+                                        borderColor: 'rgba(99, 102, 241, 0.8)',
+                                        borderWidth: 2,
+                                        pointBackgroundColor: '#6366f1',
+                                        pointRadius: 4
+                                    }]
+                                }} options={{
+                                    responsive: true, maintainAspectRatio: false,
+                                    plugins: { legend: { display: false } },
+                                    scales: {
+                                        r: {
+                                            min: axisScales?.radarAxisMin ?? 0,
+                                            max: axisScales?.radarAxisMax ?? 10,
+                                            ticks: { color: '#64748b', backdropColor: 'transparent' },
+                                            grid: { color: 'rgba(255,255,255,0.08)' },
+                                            pointLabels: { color: '#e2e8f0', font: { size: 10 } },
+                                            angleLines: { color: 'rgba(255,255,255,0.08)' }
+                                        }
+                                    }
+                                }} />
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )}
+
+                    {/* Frisson Influence */}
+                    {stats?.frissonData?.labels?.length > 0 && (
+                        <div className="full-chart-wrapper standard">
+                            <div className="chart-header">
+                                <div className="chart-title">Vliv Frisson Feeling</div>
+                            </div>
+                            <div className="chart-body" style={{ height: '220px' }}>
+                                <Bar data={{
+                                    labels: stats.frissonData.labels,
+                                    datasets: [
+                                        {
+                                            label: 'Počet',
+                                            data: stats.frissonData.counts,
+                                            backgroundColor: 'rgba(99, 102, 241, 0.8)',
+                                            borderRadius: 4,
+                                            yAxisID: 'y',
+                                            order: 2
+                                        },
+                                        {
+                                            label: 'Průměr FH',
+                                            data: stats.frissonData.avgs,
+                                            type: 'line',
+                                            borderColor: '#f59e0b',
+                                            backgroundColor: '#f59e0b',
+                                            pointRadius: 5,
+                                            pointHoverRadius: 7,
+                                            borderWidth: 2,
+                                            yAxisID: 'y1',
+                                            order: 1
+                                        }
+                                    ]
+                                }} options={{
+                                    responsive: true, maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: { position: 'bottom', labels: { color: '#94a3b8', boxWidth: 12, padding: 12 } },
+                                        tooltip: { backgroundColor: 'rgba(18,18,26,0.9)', titleColor: '#f1f5f9', bodyColor: '#f1f5f9' }
+                                    },
+                                    scales: {
+                                        y: { beginAtZero: true, position: 'left', grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', precision: 0 }, title: { display: true, text: 'Počet', color: '#94a3b8' } },
+                                        y1: { min: axisScales?.frissonAxisMin ?? 1, max: axisScales?.frissonAxisMax ?? 10, position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#f59e0b' }, title: { display: true, text: 'Průměr', color: '#f59e0b' } },
+                                        x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+                                    }
+                                }} />
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Language Analysis */}
+                    {stats?.langAnalysis?.length > 0 && (
+                        <div className="full-chart-wrapper standard">
+                            <div className="chart-header">
+                                <div className="chart-title">Analýza jazyků (Vážený průměr)</div>
+                            </div>
+                            <div className="chart-body" style={{ height: '220px' }}>
+                                <Bar data={{
+                                    labels: stats.langAnalysis.map(l => l.lang),
+                                    datasets: [
+                                        {
+                                            label: 'Počet',
+                                            data: stats.langAnalysis.map(l => l.count),
+                                            backgroundColor: 'rgba(6, 182, 212, 0.8)',
+                                            borderRadius: 4,
+                                            yAxisID: 'y',
+                                            order: 2
+                                        },
+                                        {
+                                            label: 'Prům. hodnocení',
+                                            data: stats.langAnalysis.map(l => l.avgRating),
+                                            type: 'line',
+                                            borderColor: '#ec4899',
+                                            backgroundColor: '#ec4899',
+                                            pointRadius: 4,
+                                            borderWidth: 2,
+                                            yAxisID: 'y1',
+                                            order: 1
+                                        }
+                                    ]
+                                }} options={{
+                                    responsive: true, maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: { position: 'bottom', labels: { color: '#94a3b8', boxWidth: 12, padding: 12 } },
+                                        tooltip: { backgroundColor: 'rgba(18,18,26,0.9)', titleColor: '#f1f5f9', bodyColor: '#f1f5f9' }
+                                    },
+                                    scales: {
+                                        y: { beginAtZero: true, position: 'left', grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', precision: 0 }, title: { display: true, text: 'Počet', color: '#94a3b8' } },
+                                        y1: { min: axisScales?.langAxisMin ?? 1, max: axisScales?.langAxisMax ?? 10, position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#ec4899' }, title: { display: true, text: 'Prům. hodnocení', color: '#ec4899' } },
+                                        x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+                                    }
+                                }} />
+                            </div>
+                        </div>
+                    )}
+
+                    {/* OP vs ED Average */}
+                    {stats?.opVsEd && (
+                        <div className="full-chart-wrapper standard">
+                            <div className="chart-header">
+                                <div className="chart-title">Průměr OP vs ED</div>
+                            </div>
+                            <div className="chart-body" style={{ height: '220px' }}>
+                                <Bar data={{
+                                    labels: [`OP (${stats.opVsEd.opCount})`, `ED (${stats.opVsEd.edCount})`],
+                                    datasets: [{
+                                        label: 'Průměrné FH',
+                                        data: [stats.opVsEd.opAvg, stats.opVsEd.edAvg],
+                                        backgroundColor: ['rgba(99, 102, 241, 0.85)', 'rgba(236, 72, 153, 0.85)'],
+                                        borderRadius: 6
+                                    }]
+                                }} options={{
+                                    responsive: true, maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: { display: false },
+                                        tooltip: {
+                                            backgroundColor: 'rgba(18,18,26,0.9)', titleColor: '#f1f5f9', bodyColor: '#f1f5f9',
+                                            callbacks: { label: (ctx) => `Průměr: ${ctx.parsed.y.toFixed(2).replace('.', ',')}` }
+                                        }
+                                    },
+                                    scales: {
+                                        y: { min: axisScales?.opVsEdAxisMin ?? 0, max: axisScales?.opVsEdAxisMax ?? 10, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
+                                        x: { grid: { display: false }, ticks: { color: '#e2e8f0', font: { size: 12, weight: 'bold' } } }
+                                    }
+                                }} />
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Sing-Along Distribution */}
+                    {stats?.singAlongBuckets && Object.values(stats.singAlongBuckets).some(v => v > 0) && (
+                        <div className="full-chart-wrapper standard">
+                            <div className="chart-header">
+                                <div className="chart-title">Sing-Along faktor (Distribuce)</div>
+                            </div>
+                            <div className="chart-body" style={{ height: '220px' }}>
+                                <Bar data={{
+                                    labels: Object.keys(stats.singAlongBuckets),
+                                    datasets: [{
+                                        label: 'Počet songů',
+                                        data: Object.values(stats.singAlongBuckets),
+                                        backgroundColor: [
+                                            'rgba(239, 68, 68, 0.7)',
+                                            'rgba(249, 115, 22, 0.7)',
+                                            'rgba(234, 179, 8, 0.7)',
+                                            'rgba(34, 197, 94, 0.7)',
+                                            'rgba(16, 185, 129, 0.7)'
+                                        ],
+                                        borderRadius: 4
+                                    }]
+                                }} options={{
+                                    responsive: true, maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: { display: false },
+                                        tooltip: { backgroundColor: 'rgba(18,18,26,0.9)', titleColor: '#f1f5f9', bodyColor: '#f1f5f9' }
+                                    },
+                                    scales: {
+                                        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', precision: 0 }, title: { display: true, text: 'Počet', color: '#94a3b8' } },
+                                        x: { grid: { display: false }, ticks: { color: '#94a3b8' }, title: { display: true, text: 'Sing-Along skóre', color: '#94a3b8' } }
+                                    }
+                                }} />
+                            </div>
+                        </div>
+                    )}
+                </DashboardGroup>
             </div>
 
             {/* Search and Filters */}
@@ -881,30 +1130,6 @@ function Favorites() {
                         <option value="MIX">Kombinace (%)</option>
                     </select>
                 </div>
-            </div>
-
-            {/* OP/ED Master Link */}
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '12px' }}>
-                <a
-                    href="https://savsmb-my.sharepoint.com/:f:/g/personal/xmacoun1_is_savs_cz/IgA3rwr2qW-5TaoWx69yOo3eAR8jYsioUJVZqJzk9-oao0I?e=Zgw5mo"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                        background: '#095aba',
-                        color: 'white',
-                        padding: '8px 16px',
-                        borderRadius: '4px',
-                        textDecoration: 'none',
-                        fontSize: '0.85rem',
-                        fontWeight: 'bold',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '6px'
-                    }}
-                    title="Klikněte pro otevření složky s videoklipy na SharePointu"
-                >
-                    Videoklipy OP/ED ↗
-                </a>
             </div>
 
             {/* Table */}
@@ -1312,14 +1537,7 @@ function Favorites() {
                 </div>
             )}
 
-            {/* Chart Settings Popover */}
-            <ChartSettingsModal
-                isOpen={!!activeChartSettings}
-                onClose={() => setActiveChartSettings(null)}
-                chartId={activeChartSettings?.id}
-                chartTitle={activeChartSettings?.title}
-                anchorPosition={activeChartSettings?.anchorPosition}
-            />
+
 
             {showScrollTop && createPortal(
                 <button

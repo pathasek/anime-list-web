@@ -59,14 +59,8 @@ const Icons = {
     </svg>
   ),
   Logo: () => (
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="url(#gradient)">
-      <defs>
-        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#6366f1" />
-          <stop offset="100%" stopColor="#8b5cf6" />
-        </linearGradient>
-      </defs>
-      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+    <svg width="32" height="32" viewBox="0 0 24 24">
+      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" fill="var(--accent-primary, #6366f1)" />
     </svg>
   ),
   Menu: () => (

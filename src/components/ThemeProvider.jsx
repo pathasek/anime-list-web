@@ -5,6 +5,9 @@ const THEMES = [
     { id: 'retro-8bit', label: 'Retro 8-bit', icon: '🕹️', description: 'Pixelový retro herní styl' },
     { id: 'pastel-light', label: 'Pastel Light', icon: '🌸', description: 'Jemný pastelový světlý styl' },
     { id: 'excel-table', label: 'Excel Classic', icon: '📊', description: 'Čistý tabulkový Excel-like styl' },
+    { id: 'rezero', label: 'Re:Zero', icon: '💎', description: 'Exkluzivní fialovo-stříbrné téma s krystalem a miasmatem' },
+    { id: 'obsidian-grey', label: 'Obsidian Grey', icon: '⚙️', description: 'Minimalistický grafitový design' },
+    { id: 'emerald-forest', label: 'Emerald Forest', icon: '🍃', description: 'Hluboký lesní a mátový design s vysokým kontrastem' },
 ];
 
 const STORAGE_KEY = 'anime-list-theme';
