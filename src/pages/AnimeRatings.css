@@ -6,6 +6,7 @@
 }
 
 .ratings-page {
+  --spacing-grid: 24px;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-grid);
@@ -1458,7 +1459,7 @@
 }
 
 .ratings-dashboard-sidebar {
-  flex: 0 0 320px;
+  flex: 0 0 280px;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-grid);
@@ -1513,7 +1514,7 @@
 
 /* Graf Korelace - horizontálně zmenšen */
 .correlation-panel {
-  flex: 0 0 400px;
+  flex: 0.8;
   height: 100%;
 }
 
