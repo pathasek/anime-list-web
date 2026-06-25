@@ -1,6 +1,13 @@
 [
   {
     "name": "Berserk, S02",
+    "episodes": "(2x) EP 11-12",
+    "time": "49 min",
+    "date": "2026-06-25T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "Berserk, S02",
     "episodes": "(4x) EP 7-10",
     "time": "98 min (1,6 hod)",
     "date": "2026-06-24T00:00:00",
@@ -9,7 +16,7 @@
   {
     "name": "Berserk, S02",
     "episodes": "(6x) EP 1-6",
-    "time": "147 min (2,5 hod)",
+    "time": "147 min (2,4 hod)",
     "date": "2026-06-23T00:00:00",
     "rewatch": null
   },
