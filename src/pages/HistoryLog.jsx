@@ -975,7 +975,7 @@ function HistoryLog() {
                                                 marginLeft: '8px',
                                                 fontSize: '0.85rem',
                                                 fontStyle: 'italic',
-                                                color: 'rgba(255, 255, 255, 0.5)',
+                                                color: 'var(--text-muted)',
                                                 fontWeight: 'normal'
                                             }}>
                                                 ({entry.rewatch}. Rewatch)

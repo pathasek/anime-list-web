@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+﻿import { useState, useEffect, useMemo, useRef, useLayoutEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { loadData, STORAGE_KEYS } from '../utils/dataStore'
 import {
@@ -14,6 +14,9 @@ import {
 } from 'chart.js'
 import { Radar, Bar, Chart } from 'react-chartjs-2'
 import regression from 'regression'
+import { formatReview } from '../utils/formatReview'
+import { getThemeChartColors } from '../utils/chartTheme'
+import { useTheme } from '../components/ThemeProvider'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, CategoryScale, LinearScale, BarElement)
 
@@ -22,6 +25,8 @@ let cachedEpRatings = null
 let cachedNotes = null
 
 function AnimeDetail() {
+    const { theme } = useTheme();
+    const c = useMemo(() => getThemeChartColors(), [theme]);
     const { name } = useParams()
     const navigate = useNavigate()
     const [anime, setAnime] = useState(null)
@@ -30,6 +35,34 @@ function AnimeDetail() {
     const [note, setNote] = useState(null)
     const [history, setHistory] = useState([])
     const [loading, setLoading] = useState(true)
+    const [titleWrapped, setTitleWrapped] = useState(false)
+    const titleRef = useRef(null)
+
+    // Detect if title wraps (for responsive badge layout)
+    useLayoutEffect(() => {
+        const el = titleRef.current;
+        if (!el) return;
+        const check = () => {
+            const lineHeight = parseFloat(getComputedStyle(el).lineHeight) || (1.75 * 16 * 1.3);
+            if (el.scrollHeight > lineHeight * 1.2) {
+                setTitleWrapped(true);
+            }
+        };
+        check();
+        const ro = new ResizeObserver(check);
+        ro.observe(el);
+        return () => ro.disconnect();
+    }, [anime]);
+
+    // Map anime type to CSS badge class (matches AnimeList logic)
+    const getTypeBadgeClass = (type) => {
+        const t = type?.toLowerCase() || '';
+        if (t.includes('movie')) return 'movie';
+        if (t.includes('ova')) return 'ova';
+        if (t.includes('ona')) return 'ona';
+        if (t.includes('special')) return 'special';
+        return 'tv';
+    };
 
     useEffect(() => {
         const decodedName = decodeURIComponent(name)
@@ -129,7 +162,7 @@ function AnimeDetail() {
                 borderColor: 'rgba(99, 102, 241, 1)',
                 borderWidth: 2,
                 pointBackgroundColor: 'rgba(99, 102, 241, 1)',
-                pointBorderColor: '#fff',
+                pointBorderColor: c.pointBorder,
                 pointRadius: 4
             }]
         }
@@ -147,13 +180,9 @@ function AnimeDetail() {
         }
 
         const getPointColor = (rating) => {
-            if (rating >= 9.75) return 'rgb(29, 161, 242)' // Cinema (light blue)
-            if (rating >= 9.0) return 'rgb(24, 106, 59)'   // Awesome (dark green)
-            if (rating >= 8.0) return 'rgb(40, 180, 99)'   // Great (green)
-            if (rating >= 7.0) return 'rgb(244, 208, 63)'  // Good (yellow)
-            if (rating >= 6.0) return 'rgb(243, 156, 18)'  // Regular (orange)
-            if (rating >= 5.0) return 'rgb(99, 57, 116)'   // Bad (purple)
-            return 'rgb(239, 68, 68)'                      // Garbage (red)
+            const r = parseFloat(rating);
+            const level = r >= 10 ? '10' : r >= 9 ? '9' : r >= 8 ? '8' : r >= 7 ? '7' : r >= 6 ? '6' : r >= 5 ? '5' : r >= 4 ? '4' : r >= 3 ? '3' : r >= 2 ? '2' : '1';
+            return getComputedStyle(document.documentElement).getPropertyValue(`--rating-${level}`).trim() || '#f8696b';
         }
 
         const datasets = []
@@ -162,7 +191,7 @@ function AnimeDetail() {
                 type: 'line',
                 label: 'Polyn. (Celkem)',
                 data: trendData,
-                borderColor: 'rgba(255, 255, 255, 0.55)',
+                borderColor: c.textMuted,
                 borderWidth: 2.8,
                 pointRadius: 0,
                 fill: false,
@@ -174,11 +203,11 @@ function AnimeDetail() {
             type: 'line',
             label: 'Hodnocení epizody',
             data: episodeRatings.map(ep => ep.rating),
-            borderColor: 'rgba(255, 255, 255, 0.15)',
+            borderColor: c.textFaint,
             borderWidth: 1.5,
             tension: 0.15,
             pointBackgroundColor: episodeRatings.map(ep => getPointColor(ep.rating)),
-            pointBorderColor: '#fff',
+            pointBorderColor: c.pointBorder,
             pointBorderWidth: 1,
             pointRadius: 5.5,
             pointHoverRadius: 7.5,
@@ -190,7 +219,7 @@ function AnimeDetail() {
             labels: episodeRatings.map(ep => ep.episode),
             datasets
         }
-    }, [episodeRatings])
+    }, [episodeRatings, c])
 
     const { epChartMin, epChartMax } = useMemo(() => {
         if (!episodeRatings || episodeRatings.length === 0) return { epChartMin: 4.75, epChartMax: 10.0 }
@@ -240,7 +269,7 @@ function AnimeDetail() {
                 max: radarMax,
                 ticks: {
                     stepSize: 1,
-                    color: 'rgba(255,255,255,0.85)',
+                    color: c.text,
                     font: {
                         size: window.innerWidth < 768 ? 10 : 13,
                         weight: '600'
@@ -249,13 +278,13 @@ function AnimeDetail() {
                     backdropPadding: 2
                 },
                 grid: {
-                    color: 'rgba(255,255,255,0.15)'
+                    color: c.textFaint
                 },
                 angleLines: {
-                    color: 'rgba(255,255,255,0.15)'
+                    color: c.textFaint
                 },
                 pointLabels: {
-                    color: 'rgba(255,255,255,0.9)',
+                    color: c.text,
                     font: {
                         size: window.innerWidth < 768 ? 13 : 13,
                         weight: '500'
@@ -290,7 +319,7 @@ function AnimeDetail() {
                 min: epChartMin,
                 max: epChartMax,
                 ticks: {
-                    color: 'rgba(255,255,255,0.6)',
+                    color: c.textMuted,
                     stepSize: 0.5,
                     callback: (value) => {
                         if (value > 10) return ''
@@ -300,12 +329,12 @@ function AnimeDetail() {
                 grid: { 
                     color: (context) => {
                         if (context.tick && context.tick.value > 10) return 'transparent';
-                        return 'rgba(255,255,255,0.1)';
+                        return c.grid;
                     }
                 }
             },
             x: {
-                ticks: { color: 'rgba(255,255,255,0.6)' },
+                ticks: { color: c.textMuted },
                 grid: { display: false }
             }
         },
@@ -436,11 +465,52 @@ function AnimeDetail() {
 
                     {/* Right: Info */}
                     <div style={{ flex: '1 1 300px', minWidth: 0, width: '100%' }}>
-                        {/* Title Row */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)', flexWrap: 'wrap', marginBottom: 'var(--spacing-md)', justifyContent: 'space-between' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)', flexWrap: 'wrap' }}>
-                                <h2 style={{ margin: 0, fontSize: '1.75rem' }}>{anime.name}</h2>
-                                <span className={`type-badge ${(anime.type || '').toLowerCase().replace(' ', '-')}`} style={{ fontSize: '0.8rem' }}>
+                        {/* Title Row — podmíněné: krátký = flex, dlouhý = title full-width + badge row s button vpravo */}
+                        {titleWrapped ? (
+                            <div style={{ marginBottom: 'var(--spacing-md)' }}>
+                                <h2 ref={titleRef} style={{ margin: 0, fontSize: '1.75rem', display: 'inline' }}>{anime.name}</h2>
+                                <span style={{ display: 'inline-block', width: 'var(--spacing-md)' }} />
+                                <span className={`type-badge ${getTypeBadgeClass(anime.type)}`} style={{ fontSize: '0.8rem', verticalAlign: 'middle' }}>
+                                    {anime.type}
+                                </span>
+                                {' '}
+                                {anime.status && (
+                                    <span className={`status-badge ${anime.status.toLowerCase().replace('!', '')}`} style={{ marginLeft: 'var(--spacing-md)' }}>
+                                        {anime.status}
+                                    </span>
+                                )}
+                                {anime.mal_url && (
+                                    <a href={anime.mal_url} target="_blank" rel="noopener noreferrer"
+                                        style={{ fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '4px', verticalAlign: 'middle', marginLeft: 'var(--spacing-md)' }}>
+                                        🔗 MAL
+                                    </a>
+                                )}
+                                <button
+                                    className="recommend-btn"
+                                    style={{
+                                        display: 'inline-flex', marginTop: 'var(--spacing-sm)', float: 'right', clear: 'both',
+                                        alignItems: 'center', gap: '0.6rem', 
+                                        padding: '0.6rem 1.2rem', fontSize: '0.9rem', fontWeight: 'bold',
+                                        background: 'linear-gradient(135deg, var(--accent-primary), #4f46e5)',
+                                        color: 'white', border: 'none', borderRadius: 'var(--radius-md)',
+                                        boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
+                                        cursor: 'pointer', transition: 'all 0.2s ease',
+                                    }}
+                                    onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(99, 102, 241, 0.6)'; }}
+                                    onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(99, 102, 241, 0.4)'; }}
+                                    onClick={() => navigate('/recommendations', { state: { presetAnime: anime } })}
+                                >
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <circle cx="11" cy="11" r="8"></circle>
+                                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                    </svg>
+                                    Najít doporučení
+                                </button>
+                            </div>
+                        ) : (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)', flexWrap: 'wrap', marginBottom: 'var(--spacing-md)' }}>
+                                <h2 ref={titleRef} style={{ margin: 0, fontSize: '1.75rem' }}>{anime.name}</h2>
+                                <span className={`type-badge ${getTypeBadgeClass(anime.type)}`} style={{ fontSize: '0.8rem' }}>
                                     {anime.type}
                                 </span>
                                 {anime.status && (
@@ -454,59 +524,56 @@ function AnimeDetail() {
                                         🔗 MAL
                                     </a>
                                 )}
+                                <button
+                                    className="recommend-btn"
+                                    style={{
+                                        display: 'inline-flex', alignItems: 'center', gap: '0.6rem', 
+                                        padding: '0.6rem 1.2rem', fontSize: '0.9rem', fontWeight: 'bold',
+                                        background: 'linear-gradient(135deg, var(--accent-primary), #4f46e5)',
+                                        color: 'white', border: 'none', borderRadius: 'var(--radius-md)',
+                                        boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
+                                        cursor: 'pointer', transition: 'all 0.2s ease',
+                                        marginLeft: 'auto',
+                                    }}
+                                    onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(99, 102, 241, 0.6)'; }}
+                                    onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(99, 102, 241, 0.4)'; }}
+                                    onClick={() => navigate('/recommendations', { state: { presetAnime: anime } })}
+                                >
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <circle cx="11" cy="11" r="8"></circle>
+                                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                    </svg>
+                                    Najít doporučení
+                                </button>
                             </div>
-                            {/* PREMIUM RECOMMENDATION BUTTON */}
-                            <button
-                                className="btn"
-                                style={{
-                                    display: 'inline-flex', alignItems: 'center', gap: '0.6rem', 
-                                    padding: '0.6rem 1.2rem', fontSize: '0.9rem', fontWeight: 'bold',
-                                    background: 'linear-gradient(135deg, var(--accent-primary), #4f46e5)',
-                                    color: 'white', border: 'none', borderRadius: 'var(--radius-md)',
-                                    boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
-                                    cursor: 'pointer', transition: 'all 0.2s ease',
-                                    marginLeft: 'auto'
-                                }}
-                                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(99, 102, 241, 0.6)'; }}
-                                onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(99, 102, 241, 0.4)'; }}
-                                onClick={() => navigate('/recommendations', { state: { presetAnime: anime } })}
-                            >
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <circle cx="11" cy="11" r="8"></circle>
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                </svg>
-                                Najít doporučení
-                            </button>
-                        </div>
+                        )}
 
                         {/* Rating + Key Info Row */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xl)', marginBottom: 'var(--spacing-lg)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xl)', marginBottom: 'var(--spacing-lg)', flexWrap: 'wrap' }}>
                             {/* Big Rating Circle */}
-                            {anime.rating && !isNaN(Number(anime.rating)) && (
+                            {anime.rating && !isNaN(Number(anime.rating)) && (() => {
+                                const rv = (r) => r >= 10 ? 'var(--rating-10)' : r >= 9 ? 'var(--rating-9)' : r >= 8 ? 'var(--rating-8)' : r >= 7 ? 'var(--rating-7)' : r >= 6 ? 'var(--rating-6)' : r >= 5 ? 'var(--rating-5)' : r >= 4 ? 'var(--rating-4)' : r >= 3 ? 'var(--rating-3)' : r >= 2 ? 'var(--rating-2)' : 'var(--rating-1)';
+                                const ratingVar = rv(Number(anime.rating));
+                                return (
                                 <div style={{
                                     width: '72px', height: '72px',
                                     borderRadius: '50%',
                                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                                     flexDirection: 'column',
-                                    border: `3px solid ${Number(anime.rating) >= 9 ? 'var(--accent-emerald)' :
-                                        Number(anime.rating) >= 7 ? 'var(--accent-cyan)' :
-                                            Number(anime.rating) >= 5 ? 'var(--accent-amber)' : 'var(--accent-red)'}`,
-                                    background: `${Number(anime.rating) >= 9 ? 'rgba(16,185,129,0.1)' :
-                                        Number(anime.rating) >= 7 ? 'rgba(6,182,212,0.1)' :
-                                            Number(anime.rating) >= 5 ? 'rgba(245,158,11,0.1)' : 'rgba(239,68,68,0.1)'}`,
+                                    border: `3px solid ${ratingVar}`,
+                                    background: `color-mix(in srgb, ${ratingVar} 12%, transparent)`,
                                     flexShrink: 0
                                 }}>
                                     <span style={{
                                         fontSize: '1.5rem', fontWeight: '800', lineHeight: 1,
-                                        color: Number(anime.rating) >= 9 ? 'var(--accent-emerald)' :
-                                            Number(anime.rating) >= 7 ? 'var(--accent-cyan)' :
-                                                Number(anime.rating) >= 5 ? 'var(--accent-amber)' : 'var(--accent-red)'
+                                        color: ratingVar
                                     }}>
                                         {Number(anime.rating) % 1 === 0 ? parseInt(anime.rating) : parseFloat(anime.rating).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})}
                                     </span>
                                     <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', lineHeight: 1 }}>/10</span>
                                 </div>
-                            )}
+                                );
+                            })()}
 
                             <div style={{
                                 display: 'flex',
@@ -574,12 +641,13 @@ function AnimeDetail() {
                             </div>
                         </div>
 
-                        {/* TAGS ROW (Žánry, Témata, AniList Tagy inline) */}
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', alignItems: 'flex-start', background: 'var(--bg-secondary)', padding: 'var(--spacing-md)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)' }}>
+                        {/* TAGS ROW — Žánry + Témata nahoře, AniList Tagy dole */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)', background: 'var(--bg-secondary)', padding: 'var(--spacing-md)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                            {/* Žánry + Témata na jednom řádku */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)', flexWrap: 'wrap' }}>
                                 {anime.genres && (
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)', flexWrap: 'wrap' }}>
-                                        <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginRight: '4px', width: '60px' }}>Žánry</span>
+                                    <>
+                                        <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginRight: '4px' }}>Žánry</span>
                                         {anime.genres.split(';').map((g, i) => (
                                             <span key={`g-${i}`} style={{
                                                 padding: '2px 10px', borderRadius: 'var(--radius-full)',
@@ -588,11 +656,11 @@ function AnimeDetail() {
                                                 border: '1px solid rgba(6,182,212,0.3)'
                                             }}>{g.trim()}</span>
                                         ))}
-                                    </div>
+                                    </>
                                 )}
                                 {anime.themes && anime.themes !== 'X' && (
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)', flexWrap: 'wrap' }}>
-                                        <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginRight: '4px', width: '60px' }}>Témata</span>
+                                    <>
+                                        <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginLeft: '8px', marginRight: '4px' }}>Témata</span>
                                         {anime.themes.split(';').map((t, i) => (
                                             <span key={`t-${i}`} style={{
                                                 padding: '2px 10px', borderRadius: 'var(--radius-full)',
@@ -601,14 +669,14 @@ function AnimeDetail() {
                                                 border: '1px solid rgba(139,92,246,0.3)'
                                             }}>{t.trim()}</span>
                                         ))}
-                                    </div>
+                                    </>
                                 )}
                             </div>
 
-                            {/* AniList Tags - RED BOX */}
+                            {/* AniList Tagy pod žánry+tématy */}
                             {anime.tags && (
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-xs)', flex: 1, minWidth: '300px', borderLeft: '1px solid var(--border-color)', paddingLeft: '1rem' }}>
-                                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>AniList Tagy</span>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-xs)' }}>
+                                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '2px' }}>AniList Tagy</span>
                                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                                         {anime.tags.split(';').map((t, i) => {
                                             const parts = t.split(':');
@@ -645,7 +713,7 @@ function AnimeDetail() {
             {note && (
                 <div className="card" style={{ marginBottom: 'var(--spacing-xl)' }}>
                     <h3 style={{ marginBottom: 'var(--spacing-md)' }}>📝 Recenze / Poznámky</h3>
-                    <p style={{ lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>{note.replace(/_x000D_/g, '')}</p>
+                    <p style={{ fontFamily: "'Open Sans', var(--font-family)", lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>{formatReview(note.replace(/_x000D_/g, ''), decodeURIComponent(name))}</p>
                 </div>
             )}
 
@@ -740,7 +808,7 @@ function AnimeDetail() {
                     </div>
 
                     <div style={{ height: '350px' }}>
-                        <Chart type="line" data={episodeChartData} options={barOptions} />
+                        <Chart type="line" data={episodeChartData} options={barOptions} key={c.isLight ? 'ep-l' : 'ep-d'} />
                     </div>
                 </div>
             )}

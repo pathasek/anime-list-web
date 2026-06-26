@@ -1,7 +1,7 @@
 /* AnimeRatings.css */
 .main-content:has(.ratings-page) {
   padding: 0 !important;
-  background: #060609 !important;
+  background: var(--bg-primary);
   min-height: 100vh !important;
 }
 
@@ -203,7 +203,7 @@
   width: 100%;
   position: relative;
   overflow: hidden;
-  background: #050508;
+  background: var(--bg-primary);
   border-radius: var(--radius-xl);
   border: 1px solid var(--border-color);
   box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.95);

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
+﻿import { useState, useEffect, useMemo, useCallback, useRef, Fragment } from 'react'
 import {
     Chart as ChartJS,
     registerables
@@ -13,6 +13,9 @@ import {
 import './AnimeRatings.css'
 import { customSeasonOrders } from '../utils/customSeasonOrders'
 import { useCustomImages, getPageBackground } from '../utils/customImages'
+import { formatReview } from '../utils/formatReview'
+import { getThemeChartColors } from '../utils/chartTheme'
+import { useTheme } from '../components/ThemeProvider'
 
 ChartJS.register(...registerables)
 
@@ -209,6 +212,10 @@ const renderWitchDetails = (witch) => {
 };
 
 function AnimeRatings() {
+    // ---- CHART THEME COLORS ----
+    const { theme } = useTheme();
+    const c = useMemo(() => getThemeChartColors(), [theme]); // forces re-render on theme change
+
     // ---- DATA STATES ----
     const [animeList, setAnimeList] = useState([])
     const [categoryRatings, setCategoryRatings] = useState([])
@@ -650,10 +657,10 @@ function AnimeRatings() {
                 borderColor: 'rgba(236, 72, 153, 1)',
                 borderWidth: 2,
                 pointBackgroundColor: 'rgba(236, 72, 153, 1)',
-                pointBorderColor: '#fff',
+                pointBorderColor: c.pointBorder,
             }]
         }
-    }, [selectedSeriesCategories])
+    }, [selectedSeriesCategories, c])
 
     // Helper to calculate weighted category average (AVG CAT)
     const getAvgCat = (animeName) => {
@@ -894,7 +901,7 @@ function AnimeRatings() {
                 type: 'line',
                 label: 'Trend',
                 data: episodes.map((ep, i) => ({ x: ep.index, y: trendData[i] })),
-                borderColor: 'rgba(255, 255, 255, 0.55)',
+                borderColor: c.textMuted,
                 borderWidth: 2.8,
                 pointRadius: 0,
                 fill: false,
@@ -910,7 +917,7 @@ function AnimeRatings() {
         }
         const activeLabel = sourceLabels[ratingSource] || 'Hodnocení'
 
-        let lineColor = 'rgba(255, 255, 255, 0.15)'
+        let lineColor = c.textFaint
         if (ratingSource === 'imdb') lineColor = 'rgba(245, 197, 24, 0.25)'
         else if (ratingSource === 'mal') lineColor = 'rgba(46, 81, 162, 0.3)'
 
@@ -922,7 +929,7 @@ function AnimeRatings() {
             borderWidth: 1.5,
             tension: 0.15,
             pointBackgroundColor: pointColors,
-            pointBorderColor: '#fff',
+            pointBorderColor: c.pointBorder,
             pointBorderWidth: 1,
             pointRadius: 5.5,
             pointHoverRadius: 7.5,
@@ -933,7 +940,7 @@ function AnimeRatings() {
             labels: episodes.map(ep => `${ep.seasonName} ${ep.epName}`),
             datasets
         }
-    }, [seriesTimelineData, showTrendLine, ratingSource, franchiseJikanCache, selectedTimelineEp, imdbCache, animeList])
+    }, [seriesTimelineData, showTrendLine, ratingSource, franchiseJikanCache, selectedTimelineEp, imdbCache, animeList, c])
 
     // Custom Plugin for Season Boundaries and Labels on Chart.js
     const seasonBoundariesPlugin = useMemo(() => {
@@ -973,7 +980,7 @@ function AnimeRatings() {
                     // Draw boundary line
                     if (i < boundaries.length - 1) {
                         const lineX = x.getPixelForValue(b.end + 0.5)
-                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)'
+                        ctx.strokeStyle = c.textFaint
                         ctx.lineWidth = 1
                         ctx.setLineDash([5, 5])
                         ctx.beginPath()
@@ -1141,7 +1148,7 @@ function AnimeRatings() {
                     max: seriesTimelineData.episodes.length + 0.5,
                     ticks: {
                         stepSize: 1,
-                        color: 'rgba(255,255,255,0.6)',
+                        color: c.textMuted,
                         font: { size: 9 },
                         callback: (value) => {
                             const ep = seriesTimelineData.episodes.find(e => e.index === value)
@@ -1158,7 +1165,7 @@ function AnimeRatings() {
                     min: yAxisMin,
                     max: ratingSource === 'mal' ? 5.25 : 10.25,
                     ticks: {
-                        color: 'rgba(255,255,255,0.6)',
+                        color: c.textMuted,
                         font: { size: 10 },
                         stepSize: ratingSource === 'mal' ? 0.25 : 0.5,
                         callback: (value) => {
@@ -1171,7 +1178,7 @@ function AnimeRatings() {
                     },
                     grid: {
                         display: true,
-                        color: 'rgba(255,255,255,0.04)',
+                        color: c.grid,
                         borderDash: [5, 5]
                     }
                 }
@@ -1206,7 +1213,7 @@ function AnimeRatings() {
                 }
             }
         }
-    }, [seriesTimelineData, showTrendLine, yAxisMin, selectedTimelineEp, ratingSource])
+    }, [seriesTimelineData, showTrendLine, yAxisMin, selectedTimelineEp, ratingSource, c])
 
     // ============================================
     // ROW 1 DATA MEMOIZATION (INDIVIDUAL)
@@ -1263,10 +1270,10 @@ function AnimeRatings() {
                 borderColor: 'rgba(99, 102, 241, 1)',
                 borderWidth: 2,
                 pointBackgroundColor: 'rgba(99, 102, 241, 1)',
-                pointBorderColor: '#fff',
+                pointBorderColor: c.pointBorder,
             }]
         }
-    }, [selectedAnimeCategories])
+    }, [selectedAnimeCategories, c])
 
     const radarMin = useMemo(() => {
         if (!selectedAnimeCategories) return 0
@@ -1283,11 +1290,11 @@ function AnimeRatings() {
                 beginAtZero: false,
                 min: radarMin,
                 max: 10,
-                ticks: { stepSize: 1, color: 'rgba(255,255,255,0.85)', backdropColor: 'rgba(0,0,0,0.5)', font: { size: 10 } },
-                grid: { color: 'rgba(255,255,255,0.15)' },
-                angleLines: { color: 'rgba(255,255,255,0.15)' },
+                ticks: { stepSize: 1, color: c.text, backdropColor: 'rgba(0,0,0,0.5)', font: { size: 10 } },
+                grid: { color: c.textFaint },
+                angleLines: { color: c.textFaint },
                 pointLabels: {
-                    color: 'rgba(255,255,255,0.9)', font: { size: 11 },
+                    color: c.text, font: { size: 11 },
                     callback: (label) => label.includes('|') ? label.split('|') : label
                 }
             }
@@ -1310,7 +1317,7 @@ function AnimeRatings() {
                 type: 'line',
                 label: 'Polyn. (Celkem)',
                 data: trendData,
-                borderColor: 'rgba(255, 255, 255, 0.55)',
+                borderColor: c.textMuted,
                 borderWidth: 2.8,
                 pointRadius: 0,
                 fill: false,
@@ -1322,11 +1329,11 @@ function AnimeRatings() {
             type: 'line',
             label: 'Hodnocení epizody',
             data: selectedAnimeEpisodes.map(ep => ep.rating),
-            borderColor: 'rgba(255, 255, 255, 0.15)',
+            borderColor: c.textFaint,
             borderWidth: 1.5,
             tension: 0.15,
             pointBackgroundColor: selectedAnimeEpisodes.map(ep => getPointColor(ep.rating)),
-            pointBorderColor: '#fff',
+            pointBorderColor: c.pointBorder,
             pointBorderWidth: 1,
             pointRadius: 5.5,
             pointHoverRadius: 7.5,
@@ -1338,7 +1345,7 @@ function AnimeRatings() {
             labels: selectedAnimeEpisodes.map(ep => ep.episode),
             datasets
         }
-    }, [selectedAnimeEpisodes, showTrendLine])
+    }, [selectedAnimeEpisodes, showTrendLine, c])
 
     const { epChartMin, epChartMax } = useMemo(() => {
         if (!selectedAnimeEpisodes || selectedAnimeEpisodes.length === 0) return { epChartMin: 4.75, epChartMax: 10.0 }
@@ -1375,7 +1382,7 @@ function AnimeRatings() {
                 min: epChartMin, 
                 max: epChartMax, 
                 ticks: { 
-                    color: 'rgba(255,255,255,0.6)', 
+                    color: c.textMuted, 
                     font: { size: 10 },
                     stepSize: 0.5,
                     callback: (value) => {
@@ -1386,11 +1393,11 @@ function AnimeRatings() {
                 grid: { 
                     color: (context) => {
                         if (context.tick && context.tick.value > 10) return 'transparent';
-                        return 'rgba(255,255,255,0.1)';
+                        return c.grid;
                     }
                 } 
             },
-            x: { ticks: { color: 'rgba(255,255,255,0.6)', font: { size: 10 } }, grid: { display: false } }
+            x: { ticks: { color: c.textMuted, font: { size: 10 } }, grid: { display: false } }
         },
         plugins: { legend: { display: false } }
     }
@@ -1493,8 +1500,8 @@ function AnimeRatings() {
         return {
             responsive: true, maintainAspectRatio: false,
             scales: {
-                x: { title: { display: true, text: 'FH', color: 'rgba(255,255,255,0.6)' }, min: correlationChartData.minX, max: 10, ticks: { color: 'rgba(255,255,255,0.6)' }, grid: { color: 'rgba(255,255,255,0.1)' } },
-                y: { title: { display: true, text: `Hodnocení ${slicerPolozka}`, color: 'rgba(255,255,255,0.6)' }, min: correlationChartData.minY, max: 10, ticks: { color: 'rgba(255,255,255,0.6)' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+                x: { title: { display: true, text: 'FH', color: c.textMuted }, min: correlationChartData.minX, max: 10, ticks: { color: c.textMuted }, grid: { color: c.grid } },
+                y: { title: { display: true, text: `Hodnocení ${slicerPolozka}`, color: c.textMuted }, min: correlationChartData.minY, max: 10, ticks: { color: c.textMuted }, grid: { color: c.grid } }
             },
             plugins: {
                 legend: { display: false },
@@ -1516,7 +1523,7 @@ function AnimeRatings() {
                 }
             }
         }
-    }, [correlationChartData, slicerPolozka])
+    }, [correlationChartData, slicerPolozka, c])
 
     const histogramData = useMemo(() => {
         const counts = {}
@@ -1569,8 +1576,8 @@ function AnimeRatings() {
     const histogramOptions = {
         responsive: true, maintainAspectRatio: false,
         scales: {
-            y: { ticks: { beginAtZero: true, color: 'rgba(255,255,255,0.6)', stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.1)' } },
-            x: { title: { display: true, text: 'Hodnocení (Intervaly po 0,5)', color: 'rgba(255,255,255,0.6)' }, ticks: { color: 'rgba(255,255,255,0.6)' }, grid: { display: false } }
+            y: { ticks: { beginAtZero: true, color: c.textMuted, stepSize: 1 }, grid: { color: c.grid } },
+            x: { title: { display: true, text: 'Hodnocení (Intervaly po 0,5)', color: c.textMuted }, ticks: { color: c.textMuted }, grid: { display: false } }
         },
         plugins: { legend: { display: false } }
     }
@@ -1620,17 +1627,17 @@ function AnimeRatings() {
                 label: 'Anime',
                 data: scatterData,
                 backgroundColor: scatterData.map(d => d.color),
-                borderColor: 'rgba(255,255,255,0.2)',
+                borderColor: c.grid,
                 borderWidth: 1
             }]
         }
-    }, [categoryRatings, animeList])
+    }, [categoryRatings, animeList, c])
 
     const hypeChartOptions = {
         responsive: true, maintainAspectRatio: false,
         scales: {
-            x: { title: { display: true, text: 'Technická kvalita (Animace + CGI + OP + ED + OST)', color: 'rgba(255,255,255,0.6)' }, min: 5.5, max: 10, ticks: { color: 'rgba(255,255,255,0.6)' }, grid: { color: 'rgba(255,255,255,0.1)' } },
-            y: { title: { display: true, text: 'Hloubka (Plot + Pacing + Story + Emoce + Originalita)', color: 'rgba(255,255,255,0.6)' }, min: 5.5, max: 10, ticks: { color: 'rgba(255,255,255,0.6)' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+            x: { title: { display: true, text: 'Technická kvalita (Animace + CGI + OP + ED + OST)', color: c.textMuted }, min: 5.5, max: 10, ticks: { color: c.textMuted }, grid: { color: c.grid } },
+            y: { title: { display: true, text: 'Hloubka (Plot + Pacing + Story + Emoce + Originalita)', color: c.textMuted }, min: 5.5, max: 10, ticks: { color: c.textMuted }, grid: { color: c.grid } }
         },
         plugins: {
             legend: { display: false },
@@ -1691,8 +1698,8 @@ function AnimeRatings() {
     const leaderboardOptions = {
         indexAxis: 'y', responsive: true, maintainAspectRatio: false,
         scales: {
-            x: { min: lbMinMax.min, max: lbMinMax.max, ticks: { color: 'rgba(255,255,255,0.6)' }, grid: { color: 'rgba(255,255,255,0.1)' } },
-            y: { ticks: { color: 'rgba(255,255,255,0.8)', font: { size: 10 } }, grid: { display: false } }
+            x: { min: lbMinMax.min, max: lbMinMax.max, ticks: { color: c.textMuted }, grid: { color: c.grid } },
+            y: { ticks: { color: c.text, font: { size: 10 } }, grid: { display: false } }
         },
         plugins: { legend: { display: false } }
     }
@@ -1724,8 +1731,8 @@ function AnimeRatings() {
     const unstableOptions = {
         indexAxis: 'y', responsive: true, maintainAspectRatio: false,
         scales: {
-            x: { title: { display: true, text: 'Průměrná odchylka', color: 'rgba(255,255,255,0.6)' }, ticks: { color: 'rgba(255,255,255,0.6)' }, grid: { color: 'rgba(255,255,255,0.1)' } },
-            y: { ticks: { color: 'rgba(255,255,255,0.8)', font: { size: 10 } }, grid: { display: false } }
+            x: { title: { display: true, text: 'Průměrná odchylka', color: c.textMuted }, ticks: { color: c.textMuted }, grid: { color: c.grid } },
+            y: { ticks: { color: c.text, font: { size: 10 } }, grid: { display: false } }
         },
         plugins: { legend: { display: false } }
     }
@@ -2026,7 +2033,7 @@ function AnimeRatings() {
                 <>
                     {/* Header Navigation action tabs */}
                     <div className="ratings-header-container">
-                        <h1 style={{ margin: 0 }}>Anime Hodnocení a Analýza</h1>
+                        <h1 style={{ margin: 0 }}>Anime hodnocení a analýza</h1>
                         <div className="ratings-header-actions">
                             <button className="btn-nav" onClick={() => setViewMode('split')}>🧩 Rozcestník</button>
                             <button className={`btn-nav ${viewMode === 'series' ? 'active' : ''}`} onClick={() => setViewMode('series')}>📚 Série</button>
@@ -2386,7 +2393,7 @@ function AnimeRatings() {
                                                 {selectedAnimeTitle ? `Recenze: ${selectedAnimeTitle}` : 'Recenze série'}
                                             </h4>
                                             <div style={{ flex: 1, overflowY: 'auto', fontSize: '0.78rem', lineHeight: '1.4', whiteSpace: 'pre-wrap', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.01)', padding: '6px', borderRadius: 'var(--radius-md)' }}>
-                                                {selectedAnimeNote ? selectedAnimeNote.replace(/_x000D_/g, '') : 'Vyberte epizodu nebo část pro zobrazení poznámky.'}
+                                                {selectedAnimeNote ? formatReview(selectedAnimeNote.replace(/_x000D_/g, ''), selectedAnimeTitle) : 'Vyberte epizodu nebo část pro zobrazení poznámky.'}
                                             </div>
                                         </div>
                                     </div>
@@ -2557,8 +2564,8 @@ function AnimeRatings() {
                             </div>
                             <div className="ratings-panel right-panel-bottom">
                                 <h3 className="ratings-panel-title" style={{ fontSize: '0.9rem', marginBottom: '8px' }}>Recenze / Summary</h3>
-                                <div style={{ flex: 1, overflowY: 'auto', fontSize: '0.9rem', lineHeight: '1.5', whiteSpace: 'pre-wrap', paddingRight: '8px', color: 'var(--text-secondary)' }}>
-                                    {selectedAnimeNote ? selectedAnimeNote.replace(/_x000D_/g, '') : 'Žádná poznámka k dispozici.'}
+                                <div style={{ flex: 1, overflowY: 'auto', fontFamily: "'Open Sans', var(--font-family)", fontSize: '0.9rem', lineHeight: '1.5', whiteSpace: 'pre-wrap', paddingRight: '8px', color: 'var(--text-secondary)' }}>
+                                    {selectedAnimeNote ? formatReview(selectedAnimeNote.replace(/_x000D_/g, ''), selectedAnimeTitle) : 'Žádná poznámka k dispozici.'}
                                 </div>
                             </div>
                         </div>
@@ -2570,7 +2577,7 @@ function AnimeRatings() {
                 GLOBAL SECTIONS (ROW 2 & ROW 3) - SHOWN IN BOTH VIEWS (Varianta A)
                 ============================================ */}
             {viewMode !== 'split' && (
-                <>
+                <Fragment key={c.isLight ? 'light' : 'dark'}>
                     <div className="ratings-dashboard-layout fade-in">
                         {/* LEVÝ SLOUPEC (Sidebar): Filtry a seznam */}
                         <div className="ratings-dashboard-sidebar">
@@ -2783,7 +2790,7 @@ function AnimeRatings() {
                             </div>
                         </div>
                     </div>
-                </>
+                </Fragment>
             )}
             </>
             )}

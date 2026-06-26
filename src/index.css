@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap');
 
 /* ═══════════════════════════════════════════════════════════════════════════
    ANIME LIST WEB - Design System
@@ -478,63 +478,63 @@ tr:hover td {
 }
 
 .rating-badge.rating-10 {
-  background: rgba(99, 190, 123, 0.2);
+  background: color-mix(in srgb, var(--rating-10) 18%, transparent);
   color: var(--rating-10);
-  border: 1px solid rgba(99, 190, 123, 0.3);
+  border: 1px solid color-mix(in srgb, var(--rating-10) 28%, transparent);
 }
 
 .rating-badge.rating-9 {
-  background: rgba(177, 213, 128, 0.2);
+  background: color-mix(in srgb, var(--rating-9) 18%, transparent);
   color: var(--rating-9);
-  border: 1px solid rgba(177, 213, 128, 0.3);
+  border: 1px solid color-mix(in srgb, var(--rating-9) 28%, transparent);
 }
 
 .rating-badge.rating-8 {
-  background: rgba(255, 235, 132, 0.2);
+  background: color-mix(in srgb, var(--rating-8) 18%, transparent);
   color: var(--rating-8);
-  border: 1px solid rgba(255, 235, 132, 0.3);
+  border: 1px solid color-mix(in srgb, var(--rating-8) 28%, transparent);
 }
 
 .rating-badge.rating-7 {
-  background: rgba(252, 191, 123, 0.2);
+  background: color-mix(in srgb, var(--rating-7) 18%, transparent);
   color: var(--rating-7);
-  border: 1px solid rgba(252, 191, 123, 0.3);
+  border: 1px solid color-mix(in srgb, var(--rating-7) 28%, transparent);
 }
 
 .rating-badge.rating-6 {
-  background: rgba(250, 148, 115, 0.2);
+  background: color-mix(in srgb, var(--rating-6) 18%, transparent);
   color: var(--rating-6);
-  border: 1px solid rgba(250, 148, 115, 0.3);
+  border: 1px solid color-mix(in srgb, var(--rating-6) 28%, transparent);
 }
 
 .rating-badge.rating-5 {
-  background: rgba(248, 105, 107, 0.2);
+  background: color-mix(in srgb, var(--rating-5) 18%, transparent);
   color: var(--rating-5);
-  border: 1px solid rgba(248, 105, 107, 0.3);
+  border: 1px solid color-mix(in srgb, var(--rating-5) 28%, transparent);
 }
 
 .rating-badge.rating-4 {
-  background: rgba(237, 85, 87, 0.2);
+  background: color-mix(in srgb, var(--rating-4) 18%, transparent);
   color: var(--rating-4);
-  border: 1px solid rgba(237, 85, 87, 0.3);
+  border: 1px solid color-mix(in srgb, var(--rating-4) 28%, transparent);
 }
 
 .rating-badge.rating-3 {
-  background: rgba(226, 65, 67, 0.2);
+  background: color-mix(in srgb, var(--rating-3) 18%, transparent);
   color: var(--rating-3);
-  border: 1px solid rgba(226, 65, 67, 0.3);
+  border: 1px solid color-mix(in srgb, var(--rating-3) 28%, transparent);
 }
 
 .rating-badge.rating-2 {
-  background: rgba(214, 45, 47, 0.2);
+  background: color-mix(in srgb, var(--rating-2) 18%, transparent);
   color: var(--rating-2);
-  border: 1px solid rgba(214, 45, 47, 0.3);
+  border: 1px solid color-mix(in srgb, var(--rating-2) 28%, transparent);
 }
 
 .rating-badge.rating-1 {
-  background: rgba(201, 24, 26, 0.2);
+  background: color-mix(in srgb, var(--rating-1) 18%, transparent);
   color: var(--rating-1);
-  border: 1px solid rgba(201, 24, 26, 0.3);
+  border: 1px solid color-mix(in srgb, var(--rating-1) 28%, transparent);
 }
 
 /* ─── Dashboard Groups Grid ─── */
@@ -2707,22 +2707,21 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 /* ─── Anime Detail Refinements ─── */
 .hero-section {
   display: flex;
-  align-items: center;
-  gap: var(--spacing-xl);
+  align-items: flex-start;
+  gap: var(--spacing-2xl);
   flex-wrap: wrap;
-  justify-content: center;
 }
 
 .hero-image-container {
-  flex: 0 1 280px;
+  flex: 0 1 420px;
   width: 100%;
-  max-width: 280px;
+  max-width: 420px;
   min-width: 200px;
   aspect-ratio: 16 / 9;
   border-radius: var(--radius-md);
   overflow: hidden;
   box-shadow: var(--shadow-md);
-  margin: 0 auto;
+  align-self: center;
 }
 
 .chart-header-flex {
@@ -2846,6 +2845,18 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   .anime-detail-overlay {
     top: 60px;
     padding: var(--spacing-sm);
+  }
+}
+
+/* Recommend button — full-width on small screens for easy tapping */
+.recommend-btn {
+  white-space: nowrap;
+}
+@media (max-width: 500px) {
+  .recommend-btn {
+    float: none !important;
+    width: 100%;
+    justify-content: center;
   }
 }
 
@@ -2984,6 +2995,18 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   --echidna-bubble-border: 1px solid rgba(168, 85, 247, 0.25);
   --echidna-bubble-radius: 20px;
   --echidna-bubble-font: 'Plus Jakarta Sans', 'Outfit', var(--font-family);
+
+  /* Rating colors for light background — darker, more saturated */
+  --rating-10: #2e8b3e;
+  --rating-9: #4b8a28;
+  --rating-8: #7a8500;
+  --rating-7: #c48010;
+  --rating-6: #d05030;
+  --rating-5: #6b1840;
+  --rating-4: #6b1840;
+  --rating-3: #6b1840;
+  --rating-2: #6b1840;
+  --rating-1: #6b1840;
 }
 
 /* Light theme overrides for inverted text on badges */
@@ -3067,6 +3090,18 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   --echidna-bubble-border: 1px solid #217346;
   --echidna-bubble-radius: 4px;
   --echidna-bubble-font: 'Segoe UI', Calibri, Arial, sans-serif;
+
+  /* Rating colors for light Excel background */
+  --rating-10: #217346;
+  --rating-9: #2e8040;
+  --rating-8: #7a7500;
+  --rating-7: #c07000;
+  --rating-6: #c04020;
+  --rating-5: #5a1830;
+  --rating-4: #5a1830;
+  --rating-3: #5a1830;
+  --rating-2: #5a1830;
+  --rating-1: #5a1830;
 }
 
 /* Excel-like cells */
@@ -3188,6 +3223,18 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   --echidna-bubble-border: 2px solid var(--accent-secondary);
   --echidna-bubble-radius: 12px;
   --echidna-bubble-font: 'Georgia', serif;
+
+  /* Re:Zero rating colors — episode chart gradient, smoother steps */
+  --rating-10: #1da1f2;
+  --rating-9: #28b463;
+  --rating-8: #9dc120;
+  --rating-7: #f4d03f;
+  --rating-6: #f39c12;
+  --rating-5: #c0392b;
+  --rating-4: #c0392b;
+  --rating-3: #c0392b;
+  --rating-2: #c0392b;
+  --rating-1: #c0392b;
 }
 
 /* Witch Miasma vignette effect */
@@ -3279,6 +3326,98 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
 }
 
+/* ─── Scarlet Outline Theme ─── */
+[data-theme="scarlet-outline"] {
+  --bg-primary: #0c0808;
+  --bg-secondary: #130e0d;
+  --bg-tertiary: #1c1414;
+  --bg-card: #181111;
+  --bg-hover: #221818;
+
+  --accent-primary: #D7465B;    /* Nekomataya R7 — bright rose */
+  --accent-secondary: #C1113F;   /* Nekomataya R3 — deep crimson */
+  --accent-pink: #E38386;        /* Nekomataya R50 — soft coral */
+  --accent-cyan: #fca5a5;        /* Light red-pink */
+  --accent-emerald: #f87171;     /* Warm red */
+  --accent-amber: #fbbf24;       /* Yellow (midpoint anchor) */
+  --accent-red: #7F2734;         /* Nekomataya R30 — deep dark red */
+
+  --text-primary: #f5eded;
+  --text-secondary: #c4b0b0;
+  --text-muted: #9e8585;
+
+  --border-color: #2a1818;
+  --border-light: #3a2222;
+
+  --gradient-primary: linear-gradient(135deg, #D7465B 0%, #C1113F 100%);
+  --gradient-pink: linear-gradient(135deg, #E38386 0%, #D7465B 100%);
+  --gradient-card: linear-gradient(145deg, rgba(215, 70, 91, 0.04) 0%, transparent 100%);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.7);
+  --shadow-glow: 0 0 20px rgba(215, 70, 91, 0.2), 0 0 40px rgba(193, 17, 63, 0.1);
+
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --echidna-bubble-bg: rgba(24, 17, 17, 0.97);
+  --echidna-bubble-border: 1px solid var(--accent-primary);
+  --echidna-bubble-radius: 20px;
+  --echidna-bubble-font: 'Inter', sans-serif;
+
+  /* Rating colors — warm red scale, midpoint ~7.5 = yellow */
+  --rating-10: #D7465B;
+  --rating-9: #E38386;
+  --rating-8: #E7A1A7;
+  --rating-7: #f4d03f;
+  --rating-6: #f39c12;
+  --rating-5: #7F2734;
+  --rating-4: #7F2734;
+  --rating-3: #7F2734;
+  --rating-2: #7F2734;
+  --rating-1: #7F2734;
+}
+
+/* Scarlet outline effect on cards */
+[data-theme="scarlet-outline"] .card,
+[data-theme="scarlet-outline"] .stat-card,
+[data-theme="scarlet-outline"] .dashboard-group,
+[data-theme="scarlet-outline"] .table-container,
+[data-theme="scarlet-outline"] .ratings-panel {
+  border: 1px solid rgba(215, 70, 91, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  transition: all 0.3s ease;
+}
+
+[data-theme="scarlet-outline"] .card:hover,
+[data-theme="scarlet-outline"] .stat-card:hover,
+[data-theme="scarlet-outline"] .ratings-panel:hover {
+  border-color: rgba(215, 70, 91, 0.4);
+  box-shadow: 0 4px 20px rgba(215, 70, 91, 0.15);
+}
+
+[data-theme="scarlet-outline"] .sidebar {
+  background: linear-gradient(180deg, #0c0808 0%, #0a0606 100%);
+  border-right-color: rgba(215, 70, 91, 0.12);
+}
+
+[data-theme="scarlet-outline"] .nav-link.active {
+  box-shadow: 0 0 16px rgba(215, 70, 91, 0.2);
+  border-left: 3px solid var(--accent-primary);
+  background: linear-gradient(90deg, rgba(215, 70, 91, 0.12) 0%, rgba(193, 17, 63, 0.04) 100%);
+}
+
+[data-theme="scarlet-outline"] .sidebar-logo h1 {
+  background: linear-gradient(135deg, #D7465B, #C1113F);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme="scarlet-outline"] .full-chart-wrapper {
+  border-color: rgba(215, 70, 91, 0.15);
+}
+
 /* ─── Obsidian Grey Theme ─── */
 [data-theme="obsidian-grey"] {
   --bg-primary: #0e0e10;
@@ -3354,6 +3493,28 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   background: var(--bg-card);
   border-color: var(--border-color);
   border-radius: var(--radius-md);
+}
+
+[data-theme="obsidian-grey"] .filter-btn.active {
+  background: var(--bg-tertiary);
+  border-color: var(--border-light);
+  color: var(--text-primary);
+}
+
+[data-theme="obsidian-grey"] .rec-action-btn-primary {
+  background: linear-gradient(135deg, #64748b, #475569);
+  color: #fff;
+}
+
+[data-theme="obsidian-grey"] input,
+[data-theme="obsidian-grey"] select {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+[data-theme="obsidian-grey"] input::placeholder {
+  color: var(--text-muted);
 }
 
 /* ─── Emerald Forest Theme ─── */
@@ -3748,9 +3909,29 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   color: #0f172a;
   text-shadow: none;
 }
+[data-theme="pastel-light"] .rewatch-card-badge.rewatch-1 {
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
 [data-theme="pastel-light"] .rewatch-card-badge.rewatch-2 {
   color: #1e1b2e;
   text-shadow: none;
+}
+[data-theme="pastel-light"] .rewatch-card-badge.rewatch-3plus {
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+[data-theme="excel-table"] .rewatch-card-badge.rewatch-1 {
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+[data-theme="excel-table"] .rewatch-card-badge.rewatch-2 {
+  color: #1a1a1a;
+  text-shadow: none;
+}
+[data-theme="excel-table"] .rewatch-card-badge.rewatch-3plus {
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
 .rewatch-card-hover-actions {
