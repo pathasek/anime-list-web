@@ -67,11 +67,20 @@ function buildMasterRegex() {
 // Also build FH regex
 const FH_REGEX = /\b(Uděluji\s+|Dávám\s+)?FH\s+(\d+[.,]?\d*)\s*\/\s*10/gi;
 
+const normalizeDashes = (str) => {
+  if (!str) return str;
+  // Replace en-dash (\u2013), em-dash (\u2014), and minus sign (\u2212) with standard hyphen-minus (-)
+  return str.replace(/[\u2013\u2014\u2212]/g, '-');
+};
+
 // ============================================================
 // FORMAT REVIEW FUNCTION
 // ============================================================
 export function formatReview(text, animeName) {
   if (!text) return null;
+
+  const normalizedText = normalizeDashes(text);
+  const normalizedAnimeName = normalizeDashes(animeName);
 
   const masterRegex = buildMasterRegex();
   const parts = [];
@@ -87,11 +96,11 @@ export function formatReview(text, animeName) {
   // Reset lastIndex
   combinedRegex.lastIndex = 0;
 
-  while ((match = combinedRegex.exec(text)) !== null) {
+  while ((match = combinedRegex.exec(normalizedText)) !== null) {
     // Add text before match
     if (match.index > lastIndex) {
-      const beforeText = text.slice(lastIndex, match.index);
-      parts.push(...highlightAnimeName(beforeText, animeName, parts.length === 0));
+      const beforeText = normalizedText.slice(lastIndex, match.index);
+      parts.push(...highlightAnimeName(beforeText, normalizedAnimeName, parts.length === 0));
     }
 
     const fullMatch = match[0];
@@ -140,12 +149,12 @@ export function formatReview(text, animeName) {
   }
 
   // Add remaining text
-  if (lastIndex < text.length) {
-    const remaining = text.slice(lastIndex);
-    parts.push(...highlightAnimeName(remaining, animeName, parts.length === 0));
+  if (lastIndex < normalizedText.length) {
+    const remaining = normalizedText.slice(lastIndex);
+    parts.push(...highlightAnimeName(remaining, normalizedAnimeName, parts.length === 0));
   }
 
-  return parts.length > 0 ? parts : text;
+  return parts.length > 0 ? parts : normalizedText;
 }
 
 // ============================================================
