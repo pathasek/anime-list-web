@@ -4325,3 +4325,41 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 [data-theme="emerald-forest"] .echidna-notebook-container:hover .echidna-avatar {
   box-shadow: 0 0 12px rgba(52, 211, 153, 0.4);
 }
+
+/* ─── Generic Badges ─── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.badge-primary {
+  background: var(--accent-primary);
+  color: #ffffff;
+  border: none;
+}
+
+.badge-pink {
+  background: var(--accent-pink);
+  color: #ffffff;
+  border: none;
+}
+
+/* Specific theme overrides for badge text readability on light pink background */
+[data-theme="pastel-light"] .badge-pink,
+[data-theme="excel-table"] .badge-pink,
+[data-theme="rezero"] .badge-pink,
+[data-theme="obsidian-grey"] .badge-pink,
+[data-theme="emerald-forest"] .badge-pink,
+[data-theme="retro-8bit"] .badge-pink {
+  color: #1e1b4b !important; /* Dark color for low contrast pinks */
+}

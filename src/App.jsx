@@ -130,7 +130,11 @@ function AppContent({ stats }) {
             <Icons.List />
             <span>Anime List</span>
           </NavLink>
-          <NavLink to="/history" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
+          <NavLink to="/history" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={() => {
+            sessionStorage.removeItem('history_log_scroll_y');
+            sessionStorage.removeItem('history_log_visible_count');
+            handleNavClick();
+          }}>
             <Icons.History />
             <span>History Log</span>
           </NavLink>

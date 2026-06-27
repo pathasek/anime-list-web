@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useMemo, useRef, useLayoutEffect } from 'react'
+import { useState, useEffect, useMemo, useRef, useLayoutEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { loadData, STORAGE_KEYS } from '../utils/dataStore'
 import {
@@ -175,8 +175,16 @@ function AnimeDetail() {
         const dataPoints = episodeRatings.map((ep, i) => [i + 1, ep.rating])
         let trendData = []
         if (dataPoints.length > 1) {
-            const result = regression.polynomial(dataPoints, { order: 6, precision: 10 })
-            trendData = dataPoints.map(p => result.predict(p[0])[1])
+            const n = dataPoints.length
+            const scaledDataPoints = dataPoints.map((p, idx) => {
+                const scaledX = n > 1 ? -1 + 2 * idx / (n - 1) : 0
+                return [scaledX, p[1]]
+            })
+            const result = regression.polynomial(scaledDataPoints, { order: 6, precision: 10 })
+            trendData = dataPoints.map((p, idx) => {
+                const scaledX = n > 1 ? -1 + 2 * idx / (n - 1) : 0
+                return result.predict(scaledX)[1]
+            })
         }
 
         const getPointColor = (rating) => {
@@ -722,8 +730,14 @@ function AnimeDetail() {
                 <div className="card" style={{ marginBottom: 'var(--spacing-xl)' }}>
                     <h3 style={{ marginBottom: 'var(--spacing-md)' }}>
                         Hodnocení podle kategorií
-                        <span style={{ marginLeft: 'var(--spacing-md)', fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
-                            (WA: <span className="badge badge-primary">{avgCategoryRating}</span>)
+                        <span style={{ marginLeft: 'var(--spacing-md)', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+                            (WA: <span style={{
+                                background: 'rgba(99, 102, 241, 0.2)',
+                                color: 'var(--accent-primary)',
+                                padding: '2px 8px',
+                                borderRadius: '4px',
+                                fontWeight: '600'
+                            }}>{avgCategoryRating}</span>)
                         </span>
                     </h3>
 
@@ -746,7 +760,7 @@ function AnimeDetail() {
                                         fontSize: '0.8rem'
                                     }}>
                                         <span>{cat}</span>
-                                        <span className={`badge rating-${Math.floor(rating)}`} style={{ fontWeight: 'bold' }}>
+                                        <span className={`rating-${Math.floor(rating)}`} style={{ fontWeight: 'bold' }}>
                                             {rating.toLocaleString('cs-CZ', { maximumFractionDigits: 1 })}
                                         </span>
                                     </div>
@@ -774,7 +788,7 @@ function AnimeDetail() {
                         <h3 style={{ margin: 0 }}>
                             Hodnocení epizod
                             <span style={{ marginLeft: 'var(--spacing-md)', fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
-                                (Průměr: <span className="badge badge-primary">{avgEpisodeRating}</span>)
+                                (Průměr: <span style={{ fontWeight: 'bold' }}>{avgEpisodeRating}</span>)
                             </span>
                         </h3>
 

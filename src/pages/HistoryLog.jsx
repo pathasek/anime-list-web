@@ -32,27 +32,65 @@ const pluralEpizoda = (n) => {
 function HistoryLog() {
     const [historyLog, setHistoryLog] = useState([])
     const [loading, setLoading] = useState(true)
-    const [searchTerm, setSearchTerm] = useState('')
-    const [yearFilter, setYearFilter] = useState('all')
-    const [sortBy, setSortBy] = useState('date') // 'date', 'animeCount', 'episodes', 'time'
-    const [dateRange, setDateRange] = useState({ start: '', end: '' })
+    const [searchTerm, setSearchTerm] = useState(() => sessionStorage.getItem('history_log_search_term') || '')
+    const [yearFilter, setYearFilter] = useState(() => sessionStorage.getItem('history_log_year_filter') || 'all')
+    const [sortBy, setSortBy] = useState(() => sessionStorage.getItem('history_log_sort_by') || 'date') // 'date', 'animeCount', 'episodes', 'time'
+    const [dateRange, setDateRange] = useState(() => {
+        try {
+            const saved = sessionStorage.getItem('history_log_date_range');
+            return saved ? JSON.parse(saved) : { start: '', end: '' };
+        } catch (e) {
+            return { start: '', end: '' };
+        }
+    })
 
     // UI enhancements
     const [highlightedDate, setHighlightedDate] = useState(null)
     const [showScrollTop, setShowScrollTop] = useState(false)
-    const [visibleCount, setVisibleCount] = useState(40)
+    const [visibleCount, setVisibleCount] = useState(() => {
+        const saved = sessionStorage.getItem('history_log_visible_count');
+        return saved ? parseInt(saved, 10) : 40;
+    })
     const sentinelRef = useRef(null)
+
+    // Save states to sessionStorage
+    useEffect(() => {
+        sessionStorage.setItem('history_log_search_term', searchTerm)
+    }, [searchTerm])
+
+    useEffect(() => {
+        sessionStorage.setItem('history_log_year_filter', yearFilter)
+    }, [yearFilter])
+
+    useEffect(() => {
+        sessionStorage.setItem('history_log_sort_by', sortBy)
+    }, [sortBy])
+
+    useEffect(() => {
+        sessionStorage.setItem('history_log_date_range', JSON.stringify(dateRange))
+    }, [dateRange])
+
+    useEffect(() => {
+        sessionStorage.setItem('history_log_visible_count', visibleCount)
+    }, [visibleCount])
 
     useEffect(() => {
         const handleScroll = (e) => {
-            // Určení aktuální pozice z jakéhokoliv možného scrollujícího elementu
+            // Ignorujeme scroll při navigaci, abychom nepřepsali uloženou pozici
+            if (sessionStorage.getItem('history_log_navigating') === 'true') return;
+
             const target = e.target;
             let currentY = window.scrollY;
             
-            if (target && target.scrollTop !== undefined) {
+            if (target && target.scrollTop !== undefined && target !== document) {
                 currentY = target.scrollTop;
             } else if (document.documentElement && document.documentElement.scrollTop) {
                 currentY = document.documentElement.scrollTop;
+            }
+
+            // Průběžně ukládáme scroll pozici, pokud je větší než 0
+            if (currentY > 0) {
+                sessionStorage.setItem('history_log_scroll_y', currentY);
             }
 
             if (currentY > 1000) {
@@ -69,7 +107,27 @@ function HistoryLog() {
         }
     }, [])
 
+    // Detekce kliknutí na navigační prvky pro zablokování scroll eventů při odchodu ze stránky
     useEffect(() => {
+        const handleGlobalClick = (e) => {
+            const link = e.target.closest('a') || e.target.closest('button');
+            if (link) {
+                sessionStorage.setItem('history_log_navigating', 'true');
+            }
+        };
+        window.addEventListener('click', handleGlobalClick, true);
+        return () => {
+            window.removeEventListener('click', handleGlobalClick, true);
+        };
+    }, []);
+
+    const [isRestoringScroll, setIsRestoringScroll] = useState(() => {
+        const y = sessionStorage.getItem('history_log_scroll_y');
+        return y && parseInt(y, 10) > 0;
+    });
+
+    useEffect(() => {
+        sessionStorage.setItem('history_log_navigating', 'false');
         loadData(STORAGE_KEYS.HISTORY_LOG, 'data/history_log.json')
             .then(data => {
                 setHistoryLog(data)
@@ -81,7 +139,39 @@ function HistoryLog() {
             })
     }, [])
 
+    // Obnovení pozice scrollu po načtení dat
+    useEffect(() => {
+        if (!loading && historyLog.length > 0) {
+            const savedScrollY = sessionStorage.getItem('history_log_scroll_y');
+            if (savedScrollY && parseInt(savedScrollY, 10) > 0) {
+                const y = parseInt(savedScrollY, 10);
+                
+                const restoreScroll = () => {
+                    window.scrollTo({ top: y, behavior: 'instant' });
+                    const mainContent = document.querySelector('.main-content');
+                    if (mainContent) {
+                        mainContent.scrollTo({ top: y, behavior: 'instant' });
+                    }
+                };
 
+                // Schováme scrollovací artefakty a postupně nastavíme scroll
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        restoreScroll();
+                        setTimeout(() => {
+                            restoreScroll();
+                            setTimeout(() => {
+                                restoreScroll();
+                                setIsRestoringScroll(false);
+                            }, 300);
+                        }, 100);
+                    });
+                });
+            } else {
+                setIsRestoringScroll(false);
+            }
+        }
+    }, [loading, historyLog])
     // Get unique years for filter
     const years = useMemo(() => {
         const y = new Set()
@@ -477,14 +567,28 @@ function HistoryLog() {
         return arr;
     }, [filteredHistory, sortBy])
 
-    // Reset pagination when filter/search/sort parameters change
+    const prevFilters = useRef({ searchTerm, yearFilter, dateRange, sortBy })
+
+    // Reset pagination ONLY when filter/search/sort parameters ACTUALLY change
     useEffect(() => {
-        setVisibleCount(40)
+        const prev = prevFilters.current
+        if (
+            prev.searchTerm !== searchTerm ||
+            prev.yearFilter !== yearFilter ||
+            prev.sortBy !== sortBy ||
+            JSON.stringify(prev.dateRange) !== JSON.stringify(dateRange)
+        ) {
+            setVisibleCount(40)
+            sessionStorage.setItem('history_log_scroll_y', '0')
+            prevFilters.current = { searchTerm, yearFilter, dateRange, sortBy }
+        }
     }, [searchTerm, yearFilter, dateRange, sortBy])
 
     // Infinite scroll observer setup
     useEffect(() => {
-        if (!sentinelRef.current) return
+        // Zabráníme inicializaci observeru, dokud se data nenačtou,
+        // jinak by se prázdný seznam zapsal do visibleCount a omezil ho na 40.
+        if (!sentinelRef.current || loading || groupedHistory.length === 0) return
 
         const observer = new IntersectionObserver((entries) => {
             if (entries[0].isIntersecting) {
@@ -494,7 +598,7 @@ function HistoryLog() {
 
         observer.observe(sentinelRef.current)
         return () => observer.disconnect()
-    }, [groupedHistory.length])
+    }, [groupedHistory.length, loading])
 
     const formatDate = (dateStr) => {
         if (!dateStr) return 'Neznámé datum'
@@ -588,7 +692,7 @@ function HistoryLog() {
     }
 
     return (
-        <div className="fade-in">
+        <div className="fade-in" style={{ opacity: isRestoringScroll ? 0 : 1, transition: 'opacity 0.2s' }}>
             {/* Header and Streaks */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)', marginBottom: 'var(--spacing-xl)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--spacing-lg)' }}>

@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useMemo, useCallback, useRef, Fragment } from 'react'
+import { useState, useEffect, useMemo, useCallback, useRef, Fragment } from 'react'
 import {
     Chart as ChartJS,
     registerables
@@ -18,6 +18,37 @@ import { getThemeChartColors } from '../utils/chartTheme'
 import { useTheme } from '../components/ThemeProvider'
 
 ChartJS.register(...registerables)
+
+// A self-contained debounced search input component to prevent parent re-renders while typing.
+const DebouncedSearchInput = ({ placeholder, onSearch, initialValue = '' }) => {
+    const [val, setVal] = useState(initialValue);
+    const inputRef = useRef(null);
+    
+    // Synchronize inner value if initialValue changes externally and input is not active
+    useEffect(() => {
+        if (document.activeElement !== inputRef.current) {
+            setVal(initialValue);
+        }
+    }, [initialValue]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            onSearch(val);
+        }, 350);
+        return () => clearTimeout(timer);
+    }, [val, onSearch]);
+
+    return (
+        <input
+            ref={inputRef}
+            type="text"
+            className="anime-selector-search"
+            placeholder={placeholder}
+            value={val}
+            onChange={(e) => setVal(e.target.value)}
+        />
+    );
+};
 
 const categoryWeights = {
     "Animace": 2.0, "CGI": 1.8, "MC": 3.0, "Vedlejší postavy": 2.5, "Waifu": 1.5,
@@ -1308,8 +1339,16 @@ function AnimeRatings() {
         const dataPoints = selectedAnimeEpisodes.map((ep, i) => [i + 1, ep.rating])
         let trendData = []
         if (dataPoints.length > 1) {
-            const result = regression.polynomial(dataPoints, { order: 6, precision: 10 })
-            trendData = dataPoints.map(p => result.predict(p[0])[1])
+            const n = dataPoints.length
+            const scaledDataPoints = dataPoints.map((p, idx) => {
+                const scaledX = n > 1 ? -1 + 2 * idx / (n - 1) : 0
+                return [scaledX, p[1]]
+            })
+            const result = regression.polynomial(scaledDataPoints, { order: 6, precision: 10 })
+            trendData = dataPoints.map((p, idx) => {
+                const scaledX = n > 1 ? -1 + 2 * idx / (n - 1) : 0
+                return result.predict(scaledX)[1]
+            })
         }
         const datasets = []
         if (showTrendLine && trendData.length > 0) {
@@ -2049,12 +2088,10 @@ function AnimeRatings() {
                     {/* 1. Selector sérií (Left) */}
                     <div className="ratings-panel left-panel">
                         <h3 className="ratings-panel-title">Vyberte Sérii</h3>
-                        <input
-                            type="text"
-                            className="anime-selector-search"
+                        <DebouncedSearchInput
                             placeholder="Hledat sérii..."
-                            value={searchQuerySeries}
-                            onChange={(e) => setSearchQuerySeries(e.target.value)}
+                            onSearch={setSearchQuerySeries}
+                            initialValue={searchQuerySeries}
                         />
                         <div className="anime-selector-list">
                             {filteredSeriesList.map(s => (
@@ -2095,7 +2132,7 @@ function AnimeRatings() {
                                 <div className="series-header-info">
                                     <h2 className="series-header-title">{selectedSeriesObj.name}</h2>
                                     <div className="series-header-meta">
-                                        <span className="badge badge-primary" style={{ background: 'var(--accent-pink)' }}>
+                                        <span className="badge badge-primary badge-pink" style={{ background: 'var(--accent-pink)' }}>
                                             Vážený průměr FH: {selectedSeriesObj.avgRating > 0 ? selectedSeriesObj.avgRating.toFixed(2).replace('.', ',') : 'N/A'}
                                         </span>
                                         <span className="badge" style={{ background: 'var(--bg-secondary)' }}>
@@ -2516,12 +2553,10 @@ function AnimeRatings() {
                         {/* 1. Selektor (Left) */}
                         <div className="ratings-panel left-panel">
                             <h3 className="ratings-panel-title">Vyberte Anime</h3>
-                            <input
-                                type="text"
-                                className="anime-selector-search"
+                            <DebouncedSearchInput
                                 placeholder="Hledat..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
+                                onSearch={setSearchQuery}
+                                initialValue={searchQuery}
                             />
                             <div className="anime-selector-list">
                                 {row1AnimeList.map(a => (
