@@ -5306,6 +5306,221 @@
     ]
   },
   {
+    "name": "Berserk (1997)",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 10",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 11",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 13",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 14",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 15",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 16",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 17",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 18",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 19",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 20",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 21",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 22",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 23",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 24",
+        "rating": 9.75
+      },
+      {
+        "episode": "EP 25",
+        "rating": 9.0
+      }
+    ]
+  },
+  {
+    "name": "Berserk, S01",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 3",
+        "rating": 5.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 5",
+        "rating": 5.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 5.0
+      },
+      {
+        "episode": "EP 7",
+        "rating": 5.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 5.75
+      },
+      {
+        "episode": "EP 9",
+        "rating": 5.5
+      },
+      {
+        "episode": "EP 10",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 5.75
+      },
+      {
+        "episode": "EP 12",
+        "rating": 5.75
+      }
+    ]
+  },
+  {
+    "name": "Berserk: The Golden Age Arc - Memorial Edition",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 11",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 13",
+        "rating": 8.25
+      }
+    ]
+  },
+  {
     "name": "Girls' Last Tour",
     "episodes": [
       {
@@ -6332,6 +6547,168 @@
       {
         "episode": "EP 24",
         "rating": 7.25
+      }
+    ]
+  },
+  {
+    "name": "Claymore",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 7",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 11",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 12",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 13",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 14",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 15",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 16",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 17",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 18",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 19",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 20",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 21",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 22",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 23",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 24",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 25",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 26",
+        "rating": 7.5
+      }
+    ]
+  },
+  {
+    "name": "Berserk, S02",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 5.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 5.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 9",
+        "rating": 5.75
+      },
+      {
+        "episode": "EP 10",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 11",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 12",
+        "rating": 6.0
       }
     ]
   },
@@ -8538,6 +8915,208 @@
       {
         "episode": "EP 26",
         "rating": 8.0
+      }
+    ]
+  },
+  {
+    "name": "Dororo",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 13",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 14",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 15",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 16",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 17",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 18",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 19",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 20",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 21",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 22",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 23",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 24",
+        "rating": 8.25
+      }
+    ]
+  },
+  {
+    "name": "Blade of the Immortal",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 13",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 14",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 15",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 16",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 17",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 18",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 19",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 20",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 21",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 22",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 23",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 24",
+        "rating": 7.75
       }
     ]
   },
@@ -11497,6 +12076,112 @@
     ]
   },
   {
+    "name": "The Unwanted Undead Adventurer, S01",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 7",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 9",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.25
+      }
+    ]
+  },
+  {
+    "name": "Berserk of Gluttony, S01",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 5",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 7",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 9",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 11",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 12",
+        "rating": 6.75
+      }
+    ]
+  },
+  {
     "name": "Agents of the Four Seasons: Dance of Spring",
     "episodes": [
       {
@@ -11615,55 +12300,6 @@
     ]
   },
   {
-    "name": "Dorohedoro, S02",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 6.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 5.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 4",
-        "rating": 5.5
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 7",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 8",
-        "rating": 6.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 10",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.0
-      }
-    ]
-  },
-  {
     "name": "The Beginning After the End, S02",
     "episodes": [
       {
@@ -11708,6 +12344,10 @@
       },
       {
         "episode": "EP 11",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 12",
         "rating": 6.5
       }
     ]
@@ -11803,6 +12443,14 @@
       {
         "episode": "EP 9",
         "rating": 7.75
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.5
       }
     ]
   },
@@ -11852,6 +12500,10 @@
       {
         "episode": "EP 11",
         "rating": 8.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.5
       }
     ]
   },
@@ -11905,6 +12557,10 @@
       {
         "episode": "EP 12",
         "rating": 8.25
+      },
+      {
+        "episode": "EP 13",
+        "rating": 9.25
       }
     ]
   },
@@ -12068,60 +12724,7 @@
     ]
   },
   {
-    "name": "The Unwanted Undead Adventurer, S01",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 8",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 9",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 12",
-        "rating": 7.25
-      }
-    ]
-  },
-  {
-    "name": "Berserk of Gluttony, S01",
+    "name": "Dorohedoro, S02",
     "episodes": [
       {
         "episode": "EP 1",
@@ -12129,7 +12732,7 @@
       },
       {
         "episode": "EP 2",
-        "rating": 6.25
+        "rating": 5.75
       },
       {
         "episode": "EP 3",
@@ -12137,618 +12740,35 @@
       },
       {
         "episode": "EP 4",
-        "rating": 6.25
-      },
-      {
-        "episode": "EP 5",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 6",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 7",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 8",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 9",
-        "rating": 6.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 6.25
-      },
-      {
-        "episode": "EP 11",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 12",
-        "rating": 6.75
-      }
-    ]
-  },
-  {
-    "name": "Dororo",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 2",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 8",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 12",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 13",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 14",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 15",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 16",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 17",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 18",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 19",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 20",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 21",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 22",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 23",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 24",
-        "rating": 8.25
-      }
-    ]
-  },
-  {
-    "name": "Claymore",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 5",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 6",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 7",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 8",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 11",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 12",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 13",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 14",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 15",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 16",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 17",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 18",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 19",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 20",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 21",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 22",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 23",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 24",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 25",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 26",
-        "rating": 7.5
-      }
-    ]
-  },
-  {
-    "name": "Blade of the Immortal",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 7",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 8",
-        "rating": 6.25
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 12",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 13",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 14",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 15",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 16",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 17",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 18",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 19",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 20",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 21",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 22",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 23",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 24",
-        "rating": 7.75
-      }
-    ]
-  },
-  {
-    "name": "Berserk (1997)",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 6",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 10",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 11",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 13",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 14",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 15",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 16",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 17",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 18",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 19",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 20",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 21",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 22",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 23",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 24",
-        "rating": 9.75
-      },
-      {
-        "episode": "EP 25",
-        "rating": 9.0
-      }
-    ]
-  },
-  {
-    "name": "Berserk, S01",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 6.0
-      },
-      {
-        "episode": "EP 3",
         "rating": 5.5
       },
       {
-        "episode": "EP 4",
-        "rating": 6.25
-      },
-      {
         "episode": "EP 5",
-        "rating": 5.25
-      },
-      {
-        "episode": "EP 6",
-        "rating": 5.0
-      },
-      {
-        "episode": "EP 7",
-        "rating": 5.25
-      },
-      {
-        "episode": "EP 8",
-        "rating": 5.75
-      },
-      {
-        "episode": "EP 9",
-        "rating": 5.5
-      },
-      {
-        "episode": "EP 10",
-        "rating": 6.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 5.75
-      },
-      {
-        "episode": "EP 12",
-        "rating": 5.75
-      }
-    ]
-  },
-  {
-    "name": "Berserk, S02",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 6.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 5.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 6.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 6.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 5.75
-      },
-      {
-        "episode": "EP 6",
-        "rating": 6.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 6.5
-      },
-      {
-        "episode": "EP 8",
-        "rating": 6.25
-      },
-      {
-        "episode": "EP 9",
-        "rating": 5.75
-      },
-      {
-        "episode": "EP 10",
-        "rating": 6.25
-      },
-      {
-        "episode": "EP 11",
-        "rating": 6.0
-      },
-      {
-        "episode": "EP 12",
-        "rating": 6.0
-      }
-    ]
-  },
-  {
-    "name": "Berserk: The Golden Age Arc - Memorial Edition",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 2",
         "rating": 7.0
       },
       {
-        "episode": "EP 3",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.5
-      },
-      {
         "episode": "EP 6",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 8",
-        "rating": 7.25
-      },
-      {
-        "episode": "EP 9",
         "rating": 7.5
       },
       {
+        "episode": "EP 7",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.0
+      },
+      {
         "episode": "EP 10",
-        "rating": 8.25
+        "rating": 6.75
       },
       {
         "episode": "EP 11",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 13",
-        "rating": 8.25
+        "rating": 7.0
       }
     ]
   }
