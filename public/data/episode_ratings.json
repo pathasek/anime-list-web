@@ -9723,6 +9723,51 @@
     ]
   },
   {
+    "name": "Cyberpunk: Edgerunners, S01",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 10.0
+      }
+    ]
+  },
+  {
     "name": "Chainsaw Man",
     "episodes": [
       {
@@ -12231,6 +12276,14 @@
       {
         "episode": "EP 12",
         "rating": 8.5
+      },
+      {
+        "episode": "EP 13",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 14",
+        "rating": 9.0
       }
     ]
   },
@@ -12296,6 +12349,10 @@
       {
         "episode": "EP 15",
         "rating": 8.0
+      },
+      {
+        "episode": "EP 16",
+        "rating": 8.75
       }
     ]
   },
@@ -12401,6 +12458,10 @@
       },
       {
         "episode": "EP 12",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 13",
         "rating": 7.0
       }
     ]
