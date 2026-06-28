@@ -23,7 +23,7 @@ ChartJS.register(...registerables)
 const DebouncedSearchInput = ({ placeholder, onSearch, initialValue = '' }) => {
     const [val, setVal] = useState(initialValue);
     const inputRef = useRef(null);
-    
+
     // Synchronize inner value if initialValue changes externally and input is not active
     useEffect(() => {
         if (document.activeElement !== inputRef.current) {
@@ -59,14 +59,14 @@ const categoryWeights = {
 // Robust clean season labels helper to prevent overlaps in long series (like Monogatari)
 const cleanSeasonLabel = (name, seriesName) => {
     let cleaned = name;
-    
+
     // 1. Strip series name prefix
     if (seriesName) {
         const escapedSeries = seriesName.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
         const regex = new RegExp(`^${escapedSeries}(?::\\s*|,\\s*|\\s+|-+\\s*)`, 'i');
         cleaned = cleaned.replace(regex, '');
     }
-    
+
     // 2. Specialized abbreviation for Monogatari series (Bake, Nise, Neko, Hana, etc.)
     if (seriesName && seriesName.toLowerCase().includes('monogatari')) {
         cleaned = cleaned
@@ -83,7 +83,7 @@ const cleanSeasonLabel = (name, seriesName) => {
     } else {
         cleaned = cleaned.replace(/monogatari/gi, 'mono.');
     }
-    
+
     // 3. General cleaning of long suffixes
     cleaned = cleaned
         .replace(/:\s*Kimetsu no Yaiba\s*-?/i, '')
@@ -92,12 +92,12 @@ const cleanSeasonLabel = (name, seriesName) => {
         .replace(/Third Season/i, 'S3')
         .replace(/Season\s*(\d+)/i, 'S$1')
         .replace(/Part\s*(\d+)/i, 'P$1');
-        
+
     // 4. Standardize identical name to "S1"
     if (seriesName && cleaned.trim().toLowerCase() === seriesName.trim().toLowerCase()) {
         cleaned = "S1";
     }
-    
+
     return cleaned;
 };
 
@@ -130,11 +130,11 @@ const heptagramVertices = [
 const renderBaseSkull = (opacity = 0.85) => (
     <g opacity={opacity} className="base-skull">
         {/* Skull dome & cheekbone contour */}
-        <path 
-            d="M -5,-5 C -5,-10 5,-10 5,-5 C 5,-2 4.2,0 3.2,1.8 L 2.8,4.5 C 2.8,5.2 2.0,5.8 1.2,5.8 L -1.2,5.8 C -2.0,5.8 -2.8,5.2 -2.8,4.5 L -3.2,1.8 C -4.2,0 -5,-2 -5,-5 Z" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="1.1" 
+        <path
+            d="M -5,-5 C -5,-10 5,-10 5,-5 C 5,-2 4.2,0 3.2,1.8 L 2.8,4.5 C 2.8,5.2 2.0,5.8 1.2,5.8 L -1.2,5.8 C -2.0,5.8 -2.8,5.2 -2.8,4.5 L -3.2,1.8 C -4.2,0 -5,-2 -5,-5 Z"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.1"
         />
         {/* Eye sockets */}
         <ellipse cx="-1.8" cy="-4.5" rx="1.2" ry="1.5" fill="currentColor" />
@@ -150,7 +150,7 @@ const renderBaseSkull = (opacity = 0.85) => (
 );
 
 const renderWitchDetails = (witch) => {
-    switch(witch) {
+    switch (witch) {
         case 'pride': // Typhon (Bottom, 1) - sunburst radiating lines
             return (
                 <g className="witch-pride" stroke="currentColor" strokeWidth="0.6" opacity="0.8">
@@ -260,7 +260,7 @@ function AnimeRatings() {
 
     // ---- UI STATES: ROUTING & MODES ----
     const [viewMode, setViewMode] = useState('split') // 'split' | 'series' | 'individual'
-    
+
     // ---- UI STATES: SERIES VIEW ----
     const [selectedSeries, setSelectedSeries] = useState(null)
     const [selectedSeriesSeason, setSelectedSeriesSeason] = useState(null)
@@ -371,10 +371,10 @@ function AnimeRatings() {
         return Object.entries(seriesGroups).map(([name, items]) => {
             const ratings = items.map(a => Number(a.rating)).filter(r => !isNaN(r) && r > 0)
             const avgRating = ratings.length > 0 ? (ratings.reduce((sum, r) => sum + r, 0) / ratings.length) : 0
-            
+
             const thumbItem = items.find(a => a.thumbnail)
             const thumbnail = thumbItem ? thumbItem.thumbnail : null
-            
+
             const studios = Array.from(new Set(items.map(a => a.studio).filter(Boolean)))
             const totalEps = items.reduce((sum, a) => sum + (Number(a.episodes) || 0), 0)
 
@@ -387,8 +387,8 @@ function AnimeRatings() {
                 totalEps
             }
         })
-        .filter(s => s.items.length > 1) // Pouze franšízy s více než 1 částí/sezónou
-        .sort((a, b) => b.avgRating - a.avgRating) // Sort by overall average rating descending
+            .filter(s => s.items.length > 1) // Pouze franšízy s více než 1 částí/sezónou
+            .sort((a, b) => b.avgRating - a.avgRating) // Sort by overall average rating descending
     }, [seriesGroups])
 
     const filteredSeriesList = useMemo(() => {
@@ -436,7 +436,7 @@ function AnimeRatings() {
 
             // Sort anime list by reading primarily those that have category ratings
             const animeWithRatings = new Set(cr.map(c => c.name))
-            const filteredAl = al.filter(a => animeWithRatings.has(a.name)).sort((a,b) => {
+            const filteredAl = al.filter(a => animeWithRatings.has(a.name)).sort((a, b) => {
                 const ra = Number(a.rating) || 0;
                 const rb = Number(b.rating) || 0;
                 return rb - ra; // Sort by FH descending
@@ -520,7 +520,7 @@ function AnimeRatings() {
                     if (!item.mal_url) continue
                     const malId = extractMalId(item.mal_url)
                     if (!malId) continue
-                    
+
                     const cached = await getCachedEpisodeList(malId)
                     if (cached && cached.episodes && cached.episodes.length > 0) {
                         const mappedEps = cached.episodes.map(ep => ({
@@ -537,7 +537,7 @@ function AnimeRatings() {
                         const isMovie = item.type === "Movie" || Number(item.episodes) === 1;
                         const syntheticEps = []
                         const totalEps = Number(item.episodes) || 1
-                        
+
                         for (let epNum = 1; epNum <= totalEps; epNum++) {
                             syntheticEps.push({
                                 mal_id: epNum,
@@ -657,7 +657,7 @@ function AnimeRatings() {
         const items = selectedSeriesObj.items
         const avgCats = {}
         const counts = {}
-        
+
         items.forEach(anime => {
             const found = categoryRatings.find(cr => cr.name === anime.name)
             if (found && found.categories) {
@@ -667,7 +667,7 @@ function AnimeRatings() {
                 });
             }
         })
-        
+
         const result = {}
         Object.keys(avgCats).forEach(cat => {
             result[cat] = avgCats[cat] / counts[cat]
@@ -716,16 +716,16 @@ function AnimeRatings() {
         let currentIndex = 0
 
         seriesItems.forEach(anime => {
-            const isMovieOrSingleEpisode = 
-                anime.type === "Movie" || 
-                Number(anime.episodes) === 1 || 
+            const isMovieOrSingleEpisode =
+                anime.type === "Movie" ||
+                Number(anime.episodes) === 1 ||
                 anime.name === "The Disappearance of Haruhi Suzumiya" ||
-                anime.name.toLowerCase().includes("heaven's feel") || 
+                anime.name.toLowerCase().includes("heaven's feel") ||
                 anime.name.toLowerCase().includes("movie") ||
                 anime.name.toLowerCase().includes("film");
 
             let epsToUse = []
-            
+
             if (isMovieOrSingleEpisode) {
                 const avgCat = getAvgCat(anime.name)
                 epsToUse = [{
@@ -807,11 +807,11 @@ function AnimeRatings() {
     // Previous & Next episode navigation inside series timeline
     const { hasPrevEp, hasNextEp, handlePrevEp, handleNextEp } = useMemo(() => {
         if (!selectedTimelineEp || !seriesTimelineData || !seriesTimelineData.episodes) {
-            return { hasPrevEp: false, hasNextEp: false, handlePrevEp: () => {}, handleNextEp: () => {} }
+            return { hasPrevEp: false, hasNextEp: false, handlePrevEp: () => { }, handleNextEp: () => { } }
         }
         const episodes = seriesTimelineData.episodes
         const currentIndex = episodes.findIndex(ep => ep.index === selectedTimelineEp.index)
-        
+
         return {
             hasPrevEp: currentIndex > 0,
             hasNextEp: currentIndex >= 0 && currentIndex < episodes.length - 1,
@@ -907,7 +907,7 @@ function AnimeRatings() {
                 const dataPoints = activePoints.map(pt => [pt.x, pt.y])
                 const windowSize = Math.max(5, Math.min(13, (Math.round(dataPoints.length / 7.5) | 1)))
                 const half = Math.floor(windowSize / 2)
-                
+
                 trendData = dataPoints.map((dp, idx) => {
                     if (dp[1] === null) return null
                     let sum = 0
@@ -983,12 +983,12 @@ function AnimeRatings() {
                 const { top, bottom } = chartArea
                 const { x } = scales
                 const boundaries = chart.options.plugins.seasonBoundaries?.boundaries || []
-                
+
                 ctx.save()
                 boundaries.forEach((b, i) => {
                     const startX = x.getPixelForValue(b.start + 0.5)
                     const endX = x.getPixelForValue(b.end + 0.5)
-                    
+
                     // Draw alternating background band
                     if (i % 2 === 0) {
                         ctx.fillStyle = 'rgba(255, 255, 255, 0.015)'
@@ -1005,7 +1005,7 @@ function AnimeRatings() {
                 const { top, bottom } = chartArea
                 const { x } = scales
                 const boundaries = chart.options.plugins.seasonBoundaries?.boundaries || []
-                
+
                 ctx.save()
                 boundaries.forEach((b, i) => {
                     // Draw boundary line
@@ -1035,8 +1035,8 @@ function AnimeRatings() {
                         if (textWidth > columnWidth - 4) {
                             const ratio = (columnWidth - 4) / textWidth
                             const chars = Math.floor(ratio * b.label.length)
-                            const truncated = chars > 3 
-                                ? b.label.substring(0, chars - 2) + '..' 
+                            const truncated = chars > 3
+                                ? b.label.substring(0, chars - 2) + '..'
                                 : b.label.substring(0, 1) + '.'
                             ctx.fillText(truncated, centerX, bottom - 12)
                         } else {
@@ -1099,7 +1099,7 @@ function AnimeRatings() {
         if (!seriesTimelineData || seriesTimelineData.episodes.length === 0) {
             return ratingSource === 'mal' ? 2.0 : 4.75
         }
-        
+
         const getActiveRating = (ep) => {
             if (ratingSource === 'moje') {
                 return ep.rating
@@ -1225,7 +1225,7 @@ function AnimeRatings() {
                             if (!ep) return ''
                             const score = ctx.raw && ctx.raw.y !== undefined ? ctx.raw.y : null
                             if (score === null) return `${ep.animeName} - ${ep.epName}: N/A`
-                            
+
                             if (ratingSource === 'moje') {
                                 const formattedScore = typeof score === 'number'
                                     ? (ep.epName === 'Film' ? score.toFixed(2).replace('.', ',') : (Number.isInteger(score) ? score : score.toFixed(2).replace('.', ',')))
@@ -1392,13 +1392,13 @@ function AnimeRatings() {
         if (valid.length === 0) return { epChartMin: 4.75, epChartMax: 10.0 }
         const minVal = Math.min(...valid)
         const maxVal = Math.max(...valid)
-        
+
         let dynMin = Math.floor(minVal * 2) / 2 - 0.5
         let dynMax = Math.ceil(maxVal * 2) / 2 + 0.5
-        
+
         dynMax = Math.min(10.0, dynMax)
         if (dynMin < 0) dynMin = 0
-        
+
         if (dynMax - dynMin < 1.0) {
             if (dynMax === 10.0) {
                 dynMin = Math.max(0, dynMax - 1.0)
@@ -1417,24 +1417,24 @@ function AnimeRatings() {
             }
         },
         scales: {
-            y: { 
-                min: epChartMin, 
-                max: epChartMax, 
-                ticks: { 
-                    color: c.textMuted, 
+            y: {
+                min: epChartMin,
+                max: epChartMax,
+                ticks: {
+                    color: c.textMuted,
                     font: { size: 10 },
                     stepSize: 0.5,
                     callback: (value) => {
                         if (value > 10) return ''
                         return value.toFixed(1).replace('.', ',')
                     }
-                }, 
-                grid: { 
+                },
+                grid: {
                     color: (context) => {
                         if (context.tick && context.tick.value > 10) return 'transparent';
                         return c.grid;
                     }
-                } 
+                }
             },
             x: { ticks: { color: c.textMuted, font: { size: 10 } }, grid: { display: false } }
         },
@@ -1449,7 +1449,7 @@ function AnimeRatings() {
         if (slicerTyp === 'Epizoda') {
             const eps = new Set()
             episodeRatings.forEach(a => a.episodes.forEach(e => eps.add(e.episode)))
-            return Array.from(eps).sort((a,b) => (parseInt(a.replace('EP ', ''))||0) - (parseInt(b.replace('EP ', ''))||0))
+            return Array.from(eps).sort((a, b) => (parseInt(a.replace('EP ', '')) || 0) - (parseInt(b.replace('EP ', '')) || 0))
         }
         return []
     }, [slicerTyp, episodeRatings])
@@ -1472,7 +1472,7 @@ function AnimeRatings() {
                 if (ep) ratings.add(ep.rating)
             })
         }
-        return ['Všechna', ...Array.from(ratings).sort((a,b) => b - a)]
+        return ['Všechna', ...Array.from(ratings).sort((a, b) => b - a)]
     }, [categoryRatings, episodeRatings, slicerTyp, slicerPolozka])
 
     const row2FilteredAnime = useMemo(() => {
@@ -1492,7 +1492,7 @@ function AnimeRatings() {
                 }
             })
         }
-        return results.sort((a,b) => b.hodnoceni - a.hodnoceni)
+        return results.sort((a, b) => b.hodnoceni - a.hodnoceni)
     }, [categoryRatings, episodeRatings, slicerTyp, slicerPolozka, slicerHodnoceni])
 
     const correlationChartData = useMemo(() => {
@@ -1507,7 +1507,7 @@ function AnimeRatings() {
                 const val = item.hodnoceni
                 dataPoints.push([fh, val])
                 scatterData.push({ x: fh, y: val, label: item.name })
-                
+
                 if (fh < minX) minX = fh
                 if (fh > maxX) maxX = fh
                 if (val < minY) minY = val
@@ -1519,7 +1519,7 @@ function AnimeRatings() {
 
         const result = regression.linear(dataPoints, { precision: 4 })
         const r2 = result.r2
-        const lineData = [ { x: minX, y: result.predict(minX)[1] }, { x: maxX, y: result.predict(maxX)[1] } ]
+        const lineData = [{ x: minX, y: result.predict(minX)[1] }, { x: maxX, y: result.predict(maxX)[1] }]
 
         return {
             data: {
@@ -1590,7 +1590,7 @@ function AnimeRatings() {
             counts[bin.toFixed(1)]++
         })
 
-        const labels = Object.keys(counts).sort((a,b) => Number(a) - Number(b)).map(l => l.replace('.', ','))
+        const labels = Object.keys(counts).sort((a, b) => Number(a) - Number(b)).map(l => l.replace('.', ','))
         const data = labels.map(l => counts[l.replace(',', '.')])
 
         return {
@@ -1631,10 +1631,10 @@ function AnimeRatings() {
 
         categoryRatings.forEach(a => {
             if (!a.categories) return
-            
+
             let xSum = 0, xCount = 0
             xCats.forEach(c => { if (a.categories[c] !== undefined) { xSum += a.categories[c]; xCount++; } })
-            
+
             let ySum = 0, yCount = 0
             yCats.forEach(c => { if (a.categories[c] !== undefined) { ySum += a.categories[c]; yCount++; } })
 
@@ -1644,7 +1644,7 @@ function AnimeRatings() {
                 const xVal = xSum / xCount
                 const yVal = ySum / yCount
                 let color = 'rgba(239, 68, 68, 0.8)'
-                
+
                 const animeObj = animeList.find(al => al.name === a.name)
                 if (animeObj && animeObj.rating) {
                     const fh = Number(animeObj.rating)
@@ -1705,8 +1705,8 @@ function AnimeRatings() {
             })
         }
 
-        if (lbSort === 'Nejlepší') items.sort((a,b) => b.val - a.val)
-        else items.sort((a,b) => a.val - b.val)
+        if (lbSort === 'Nejlepší') items.sort((a, b) => b.val - a.val)
+        else items.sort((a, b) => a.val - b.val)
 
         items = items.slice(0, lbCount)
 
@@ -1726,11 +1726,11 @@ function AnimeRatings() {
         if (values.length === 0) return { min: 0, max: 10 };
         const minRaw = Math.min(...values);
         const maxRaw = Math.max(...values);
-        
+
         // Přidáme malou rezervu (0.15) na obou koncích a zaokrouhlíme
         const calculatedMin = Math.max(0, Math.floor((minRaw - 0.15) * 10) / 10);
         const calculatedMax = Math.min(10, Math.ceil((maxRaw + 0.15) * 10) / 10);
-        
+
         return { min: calculatedMin, max: calculatedMax };
     }, [leaderboardChartData]);
 
@@ -1754,7 +1754,7 @@ function AnimeRatings() {
             }
         })
 
-        items.sort((a,b) => b.val - a.val).slice(0, 30) // Top 30
+        items.sort((a, b) => b.val - a.val).slice(0, 30) // Top 30
 
         return {
             labels: items.map(i => i.name),
@@ -1903,7 +1903,7 @@ function AnimeRatings() {
                 <div className="ratings-choice-container fade-in">
                     {/* Glowing Diagonal Divider */}
                     <div className="choice-divider"></div>
-                    
+
                     {/* LEFT HALF: JEDNOTLIVĚ (INDIVIDUAL ANIME) */}
                     <div className="choice-pane choice-individual" onClick={() => setViewMode('individual')}>
                         {/* Custom Background Character Art */}
@@ -1928,15 +1928,15 @@ function AnimeRatings() {
                             {/* Outer rings matching the right side heptagram */}
                             <circle cx="100" cy="100" r="92" strokeWidth="0.8" strokeDasharray="3 2" />
                             <circle cx="100" cy="100" r="88" strokeWidth="0.4" />
-                            
+
                             {/* Heptagram star connecting lines (point at top 100,25) */}
-                            <polygon 
+                            <polygon
                                 points="100,25 173.1,116.7 67.5,167.6 41.2,53.2 158.8,53.2 132.5,167.6 26.9,116.7"
-                                strokeWidth="0.8" opacity="0.85" 
+                                strokeWidth="0.8" opacity="0.85"
                             />
-                            
+
                             {/* Heptagon outline connecting adjacent vertices */}
-                            <polygon 
+                            <polygon
                                 points="100,25 158.8,53.2 173.1,116.7 132.5,167.6 67.5,167.6 26.9,116.7 41.2,53.2"
                                 strokeWidth="0.9" opacity="0.9"
                             />
@@ -1950,10 +1950,10 @@ function AnimeRatings() {
                             <line x1="100" y1="25" x2="100" y2="88" strokeWidth="1.0" opacity="0.85" />
 
                             {/* Central Witch of Envy crescent hook symbol */}
-                            <path 
-                                d="M 100,85 C 102,90 106,94 106,100 C 106,112 94,120 82,110 C 74,102 76,92 84,86 C 88,83 94,86 92,92 C 88,96 82,96 82,102 C 82,108 92,112 98,106 C 101,102 100,96 98,90 Z" 
-                                fill="currentColor" 
-                                stroke="none" 
+                            <path
+                                d="M 100,85 C 102,90 106,94 106,100 C 106,112 94,120 82,110 C 74,102 76,92 84,86 C 88,83 94,86 92,92 C 88,96 82,96 82,102 C 82,108 92,112 98,106 C 101,102 100,96 98,90 Z"
+                                fill="currentColor"
+                                stroke="none"
                             />
                         </svg>
 
@@ -1989,15 +1989,15 @@ function AnimeRatings() {
                             {/* Outer ring */}
                             <circle cx="100" cy="100" r="92" strokeWidth="0.8" strokeDasharray="3 2" />
                             <circle cx="100" cy="100" r="88" strokeWidth="0.4" />
-                            
+
                             {/* Heptagram star connecting lines (solid, prominent) */}
-                            <polygon 
+                            <polygon
                                 points="100,168 33.7,84.9 129.5,38.7 153.2,142.4 46.8,142.4 70.5,38.7 166.3,84.9"
-                                strokeWidth="0.8" opacity="0.85" 
+                                strokeWidth="0.8" opacity="0.85"
                             />
-                            
+
                             {/* Heptagon outline connecting adjacent circles */}
-                            <polygon 
+                            <polygon
                                 points="100,168 46.8,142.4 33.7,84.9 70.5,38.7 129.5,38.7 166.3,84.9 153.2,142.4"
                                 strokeWidth="0.9" opacity="0.9"
                             />
@@ -2008,18 +2008,18 @@ function AnimeRatings() {
                             <circle cx="100" cy="100" r="12" strokeWidth="0.8" />
                             <polygon points="100,91 108,105 92,105" strokeWidth="0.6" />
                             <polygon points="100,109 108,95 92,95" strokeWidth="0.6" />
-                            
+
                             {/* Connecting lines from center to each skull */}
                             {heptagramVertices.map(v => (
-                                <line 
-                                    key={`line-${v.id}`} 
-                                    x1="100" 
-                                    y1="100" 
-                                    x2={v.x} 
-                                    y2={v.y} 
-                                    strokeWidth="0.4" 
-                                    strokeDasharray="2 3" 
-                                    opacity="0.65" 
+                                <line
+                                    key={`line-${v.id}`}
+                                    x1="100"
+                                    y1="100"
+                                    x2={v.x}
+                                    y2={v.y}
+                                    strokeWidth="0.4"
+                                    strokeDasharray="2 3"
+                                    opacity="0.65"
                                 />
                             ))}
 
@@ -2029,7 +2029,7 @@ function AnimeRatings() {
                                     {/* Outer circle for vertex */}
                                     <circle cx={v.x} cy={v.y} r="13" strokeWidth="1.2" fill="var(--bg-tertiary)" />
                                     <circle cx={v.x} cy={v.y} r="11" strokeWidth="0.5" strokeDasharray="2 1" />
-                                    
+
                                     {/* Upright Skull with specific witch characteristics */}
                                     <g transform={`translate(${v.x}, ${v.y})`}>
                                         {renderBaseSkull(0.95)}
@@ -2037,19 +2037,19 @@ function AnimeRatings() {
                                     </g>
 
                                     {/* Number tag bubble */}
-                                    <circle 
-                                        cx={v.x + v.tagDx} 
-                                        cy={v.y + v.tagDy} 
-                                        r="4.2" 
-                                        strokeWidth="0.75" 
-                                        fill="var(--bg-primary)" 
+                                    <circle
+                                        cx={v.x + v.tagDx}
+                                        cy={v.y + v.tagDy}
+                                        r="4.2"
+                                        strokeWidth="0.75"
+                                        fill="var(--bg-primary)"
                                     />
-                                    <text 
-                                        x={v.x + v.tagDx} 
-                                        y={v.y + v.tagDy + 1.3} 
-                                        fontSize="3.8" 
-                                        fontWeight="bold" 
-                                        textAnchor="middle" 
+                                    <text
+                                        x={v.x + v.tagDx}
+                                        y={v.y + v.tagDy + 1.3}
+                                        fontSize="3.8"
+                                        fontWeight="bold"
+                                        textAnchor="middle"
                                         fill="currentColor"
                                         stroke="none"
                                     >
@@ -2080,754 +2080,754 @@ function AnimeRatings() {
                         </div>
                     </div>
 
-            {/* ============================================
+                    {/* ============================================
                 VIEW 2: SERIES RATINGS VIEW
                 ============================================ */}
-            {viewMode === 'series' && (
-                <div className="ratings-row row-1 fade-in">
-                    {/* 1. Selector sérií (Left) */}
-                    <div className="ratings-panel left-panel">
-                        <h3 className="ratings-panel-title">Vyberte Sérii</h3>
-                        <DebouncedSearchInput
-                            placeholder="Hledat sérii..."
-                            onSearch={setSearchQuerySeries}
-                            initialValue={searchQuerySeries}
-                        />
-                        <div className="anime-selector-list">
-                            {filteredSeriesList.map(s => (
-                                <div
-                                    key={s.name}
-                                    className={`anime-selector-item ${selectedSeries === s.name ? 'active' : ''}`}
-                                    onClick={() => setSelectedSeries(s.name)}
-                                >
-                                    <div className="selector-item-content">
-                                        <span className="selector-item-name">{s.name}</span>
-                                        <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
-                                            {s.items.length} {s.items.length === 1 ? 'část' : (s.items.length < 5 ? 'části' : 'částí')}
-                                        </span>
-                                    </div>
-                                    <div className="selector-item-rating" style={{ color: 'var(--accent-pink)' }}>
-                                        {s.avgRating > 0 ? s.avgRating.toFixed(2).replace('.', ',') : '?'}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* 2. Series Detail Center & Right Panel */}
-                    <div className="right-panel" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-grid)', minWidth: 0 }}>
-                        {/* A. Hlavička Série */}
-                        {selectedSeriesObj && (
-                            <div className="series-header-card">
-                                {selectedSeriesObj.thumbnail ? (
-                                    <img
-                                        src={selectedSeriesObj.thumbnail}
-                                        alt={selectedSeriesObj.name}
-                                        className="series-header-poster"
-                                        onError={(e) => { e.target.src = 'placeholder.jpg'; e.target.style.display = 'none'; }}
-                                    />
-                                ) : (
-                                    <div className="series-header-poster" style={{ display:'flex', alignItems:'center', justifyContent:'center', background:'var(--bg-secondary)', fontSize:'1.5rem' }}>🎬</div>
-                                )}
-                                <div className="series-header-info">
-                                    <h2 className="series-header-title">{selectedSeriesObj.name}</h2>
-                                    <div className="series-header-meta">
-                                        <span className="badge badge-primary badge-pink" style={{ background: 'var(--accent-pink)' }}>
-                                            Vážený průměr FH: {selectedSeriesObj.avgRating > 0 ? selectedSeriesObj.avgRating.toFixed(2).replace('.', ',') : 'N/A'}
-                                        </span>
-                                        <span className="badge" style={{ background: 'var(--bg-secondary)' }}>
-                                            Epizod celkem: {selectedSeriesObj.totalEps}
-                                        </span>
-                                        {selectedSeriesObj.studios.length > 0 && (
-                                            <span className="badge" style={{ background: 'var(--bg-secondary)' }}>
-                                                Studio: {selectedSeriesObj.studios.join(', ')}
-                                            </span>
-                                        )}
-                                    </div>
+                    {viewMode === 'series' && (
+                        <div className="ratings-row row-1 fade-in">
+                            {/* 1. Selector sérií (Left) */}
+                            <div className="ratings-panel left-panel">
+                                <h3 className="ratings-panel-title">Vyberte Sérii</h3>
+                                <DebouncedSearchInput
+                                    placeholder="Hledat sérii..."
+                                    onSearch={setSearchQuerySeries}
+                                    initialValue={searchQuerySeries}
+                                />
+                                <div className="anime-selector-list">
+                                    {filteredSeriesList.map(s => (
+                                        <div
+                                            key={s.name}
+                                            className={`anime-selector-item ${selectedSeries === s.name ? 'active' : ''}`}
+                                            onClick={() => setSelectedSeries(s.name)}
+                                        >
+                                            <div className="selector-item-content">
+                                                <span className="selector-item-name">{s.name}</span>
+                                                <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                                                    {s.items.length} {s.items.length === 1 ? 'část' : (s.items.length < 5 ? 'části' : 'částí')}
+                                                </span>
+                                            </div>
+                                            <div className="selector-item-rating" style={{ color: 'var(--accent-pink)' }}>
+                                                {s.avgRating > 0 ? s.avgRating.toFixed(2).replace('.', ',') : '?'}
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
-                        )}
 
-                        {/* B. Přepínač zobrazení sérií */}
-                        <div className="series-tabs-container">
-                            <button
-                                className={`series-tab-btn ${seriesTab === 'timeline' ? 'active' : ''}`}
-                                onClick={() => setSeriesTab('timeline')}
-                            >
-                                📈 Spojená osa epizod (Timeline)
-                            </button>
-                            <button
-                                className={`series-tab-btn ${seriesTab === 'details' ? 'active' : ''}`}
-                                onClick={() => setSeriesTab('details')}
-                            >
-                                📂 Detaily sezón & Radar
-                            </button>
-                        </div>
-
-                        {/* C. Vizualizační plocha */}
-                        <div className="ratings-row" style={{ flex: 1, minHeight: 0, minWidth: 0 }}>
-                            {seriesTab === 'timeline' ? (
-                                <>
-                                    <div className="ratings-panel" style={{ flex: 1, height: '100%', minWidth: 0 }}>
-                                        <h3 className="ratings-panel-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <span>Spojitý vývoj hodnocení epizod</span>
-                                            <div className="chart-toggles-container" style={{ display: 'flex', gap: '16px', alignItems: 'center', fontSize: '0.8rem', fontWeight: 'normal', color: 'var(--text-secondary)' }}>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Zdroj:</span>
-                                                    <select
-                                                        value={ratingSource}
-                                                        onChange={(e) => setRatingSource(e.target.value)}
-                                                        className="slicer-select"
-                                                        style={{
-                                                            background: 'var(--bg-tertiary)',
-                                                            border: '1px solid var(--border-color)',
-                                                            color: 'var(--text-primary)',
-                                                            borderRadius: 'var(--radius-md)',
-                                                            padding: '4px 8px',
-                                                            fontSize: '0.8rem',
-                                                            cursor: 'pointer',
-                                                            outline: 'none',
-                                                            width: 'auto'
-                                                        }}
-                                                    >
-                                                        <option value="moje">Moje hodnocení</option>
-                                                        <option value="mal">MAL hodnocení</option>
-                                                        <option value="imdb">IMDb hodnocení</option>
-                                                    </select>
-                                                </div>
-                                                <label className="toggle-label" style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
-                                                    <input type="checkbox" checked={showTrendLine} onChange={(e) => setShowTrendLine(e.target.checked)} style={{ accentColor: 'var(--accent-pink)', cursor: 'pointer' }} />
-                                                    Trendová čára
-                                                </label>
+                            {/* 2. Series Detail Center & Right Panel */}
+                            <div className="right-panel" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-grid)', minWidth: 0 }}>
+                                {/* A. Hlavička Série */}
+                                {selectedSeriesObj && (
+                                    <div className="series-header-card">
+                                        {selectedSeriesObj.thumbnail ? (
+                                            <img
+                                                src={selectedSeriesObj.thumbnail}
+                                                alt={selectedSeriesObj.name}
+                                                className="series-header-poster"
+                                                onError={(e) => { e.target.src = 'placeholder.jpg'; e.target.style.display = 'none'; }}
+                                            />
+                                        ) : (
+                                            <div className="series-header-poster" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-secondary)', fontSize: '1.5rem' }}>🎬</div>
+                                        )}
+                                        <div className="series-header-info">
+                                            <h2 className="series-header-title">{selectedSeriesObj.name}</h2>
+                                            <div className="series-header-meta">
+                                                <span className="badge badge-primary badge-pink" style={{ background: 'var(--accent-pink)' }}>
+                                                    Vážený průměr FH: {selectedSeriesObj.avgRating > 0 ? selectedSeriesObj.avgRating.toFixed(2).replace('.', ',') : 'N/A'}
+                                                </span>
+                                                <span className="badge" style={{ background: 'var(--bg-secondary)' }}>
+                                                    Epizod celkem: {selectedSeriesObj.totalEps}
+                                                </span>
+                                                {selectedSeriesObj.studios.length > 0 && (
+                                                    <span className="badge" style={{ background: 'var(--bg-secondary)' }}>
+                                                        Studio: {selectedSeriesObj.studios.join(', ')}
+                                                    </span>
+                                                )}
                                             </div>
-                                        </h3>
-                                        <div style={{ flex: 1, position: 'relative' }}>
-                                            {timelineChartData ? (
-                                                <Chart
-                                                    type="line"
-                                                    data={timelineChartData}
-                                                    options={timelineOptions}
-                                                    plugins={[seasonBoundariesPlugin]}
-                                                />
-                                            ) : (
-                                                <div style={{ color: 'var(--text-muted)', textAlign: 'center', marginTop: '70px' }}>
-                                                    Série nemá ohodnocené epizody pro zobrazení timeline
-                                                </div>
-                                            )}
                                         </div>
                                     </div>
+                                )}
 
-                                    {/* Epizodní panel vpravo — Jikan episode list / detail */}
-                                    <div className="ratings-panel episode-panel">
-                                        {selectedTimelineEp ? (
-                                            /* ===== STAV B: Epizoda vybrána — detail + synopsis ===== */
-                                            <div className="fade-in" style={{ display:'flex', flexDirection:'column', flex: 1, minHeight: 0 }}>
-                                                <div className="episode-detail-header">
-                                                    <button className="episode-back-btn" onClick={() => setSelectedTimelineEp(null)}>
-                                                        ← Seznam
-                                                    </button>
-                                                    <span style={{ fontSize:'0.8rem', fontWeight:700, color:'var(--text-muted)' }}>
-                                                        {selectedTimelineEp.epName}
-                                                    </span>
-                                                </div>
-                                                <div className="episode-detail-title">
-                                                    {selectedTimelineEp.epName === "Film" 
-                                                        ? `Film ${selectedTimelineEp.animeName}` 
-                                                        : (jikanSynopsis?.title || selectedTimelineEp.epName)}
-                                                </div>
-                                                {selectedTimelineEp.epName !== "Film" && (
-                                                    <div className="episode-season-label">
-                                                        Sezóna: <span style={{ color:'var(--accent-pink)' }}>{selectedTimelineEp.animeName}</span>
+                                {/* B. Přepínač zobrazení sérií */}
+                                <div className="series-tabs-container">
+                                    <button
+                                        className={`series-tab-btn ${seriesTab === 'timeline' ? 'active' : ''}`}
+                                        onClick={() => setSeriesTab('timeline')}
+                                    >
+                                        📈 Spojená osa epizod (Timeline)
+                                    </button>
+                                    <button
+                                        className={`series-tab-btn ${seriesTab === 'details' ? 'active' : ''}`}
+                                        onClick={() => setSeriesTab('details')}
+                                    >
+                                        📂 Detaily sezón & Radar
+                                    </button>
+                                </div>
+
+                                {/* C. Vizualizační plocha */}
+                                <div className="ratings-row" style={{ flex: 1, minHeight: 0, minWidth: 0 }}>
+                                    {seriesTab === 'timeline' ? (
+                                        <>
+                                            <div className="ratings-panel" style={{ flex: 1, height: '100%', minWidth: 0 }}>
+                                                <h3 className="ratings-panel-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                    <span>Spojitý vývoj hodnocení epizod</span>
+                                                    <div className="chart-toggles-container" style={{ display: 'flex', gap: '16px', alignItems: 'center', fontSize: '0.8rem', fontWeight: 'normal', color: 'var(--text-secondary)' }}>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Zdroj:</span>
+                                                            <select
+                                                                value={ratingSource}
+                                                                onChange={(e) => setRatingSource(e.target.value)}
+                                                                className="slicer-select"
+                                                                style={{
+                                                                    background: 'var(--bg-tertiary)',
+                                                                    border: '1px solid var(--border-color)',
+                                                                    color: 'var(--text-primary)',
+                                                                    borderRadius: 'var(--radius-md)',
+                                                                    padding: '4px 8px',
+                                                                    fontSize: '0.8rem',
+                                                                    cursor: 'pointer',
+                                                                    outline: 'none',
+                                                                    width: 'auto'
+                                                                }}
+                                                            >
+                                                                <option value="moje">Moje hodnocení</option>
+                                                                <option value="mal">MAL hodnocení</option>
+                                                                <option value="imdb">IMDb hodnocení</option>
+                                                            </select>
+                                                        </div>
+                                                        <label className="toggle-label" style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+                                                            <input type="checkbox" checked={showTrendLine} onChange={(e) => setShowTrendLine(e.target.checked)} style={{ accentColor: 'var(--accent-pink)', cursor: 'pointer' }} />
+                                                            Trendová čára
+                                                        </label>
                                                     </div>
-                                                )}
-                                                <div className="episode-detail-meta">
-                                                    <span className="meta-badge" style={{ background: getPointColor(selectedTimelineEp.rating), color: getPointTextColor(selectedTimelineEp.rating) }}>
-                                                        EP: {selectedTimelineEp.epName === 'Film' ? selectedTimelineEp.rating.toFixed(2).replace('.', ',') : (Number.isInteger(selectedTimelineEp.rating) ? selectedTimelineEp.rating : selectedTimelineEp.rating.toFixed(2).replace('.', ','))}
-                                                    </span>
-                                                    {(() => {
-                                                        // Find MAL score from jikanEpisodes list
-                                                        const epName = selectedTimelineEp.epName
-                                                        const epMatch = epName.match(/EP\s*(\d+)/i)
-                                                        const epNum = epMatch ? parseInt(epMatch[1], 10) : null
-                                                        const malEp = epNum && jikanEpisodes ? jikanEpisodes.find(e => e.mal_id === epNum) : null
-                                                        if (malEp && malEp.score) {
-                                                            return <span className="meta-badge" style={{ background:'var(--bg-tertiary)', color:'var(--text-secondary)' }}>MAL: {malEp.score.toFixed(2).replace('.', ',')}</span>
-                                                        }
-                                                        return null
-                                                     })()}
-                                                     {(() => {
-                                                         // Find IMDb score from imdbCache
-                                                         const anime = animeList.find(a => a.name === selectedTimelineEp.animeName)
-                                                         if (!anime || !anime.mal_url) return null
-                                                         const malId = extractMalId(anime.mal_url)
-                                                         const imdbAnime = imdbCache[String(malId)]
-                                                         if (imdbAnime && imdbAnime.episodes) {
-                                                             const score = imdbAnime.episodes[selectedTimelineEp.epName]
-                                                             if (score) {
-                                                                 return (
-                                                                     <span className="meta-badge" style={{ background: '#f5c518', color: '#000000', fontWeight: 'bold' }}>
-                                                                         IMDb: {score.toFixed(2).replace('.', ',')}
-                                                                     </span>
-                                                                 )
-                                                             }
-                                                         }
-                                                        return null
-                                                    })()}
-                                                    {jikanSynopsis?.filler && <span className="ep-badge filler">Filler</span>}
-                                                    {jikanSynopsis?.recap && <span className="ep-badge recap">Recap</span>}
-                                                </div>
-                                                {(() => {
-                                                    const anime = animeList.find(a => a.name === selectedTimelineEp.animeName);
-                                                    const airedDate = jikanSynopsis?.aired;
-                                                    const durationText = jikanSynopsis?.duration 
-                                                        ? formatDuration(jikanSynopsis.duration) 
-                                                        : (anime?.episode_duration ? `${Math.round(anime.episode_duration)} min` : '');
-                                                    
-                                                    if (airedDate || durationText) {
-                                                        return (
-                                                            <div className="episode-aired-date">
-                                                                {airedDate && `Aired: ${new Date(airedDate).toLocaleDateString('cs-CZ', { day: 'numeric', month: 'long', year: 'numeric' })}`}
-                                                                {airedDate && durationText ? ' · ' : ''}
-                                                                {durationText}
-                                                            </div>
-                                                        );
-                                                    }
-                                                    return null;
-                                                })()}
-                                                <div className="episode-synopsis-container">
-                                                    {jikanSynopsis?.synopsis ? (
-                                                        <p className="episode-synopsis-text">{jikanSynopsis.synopsis}</p>
+                                                </h3>
+                                                <div style={{ flex: 1, position: 'relative' }}>
+                                                    {timelineChartData ? (
+                                                        <Chart
+                                                            type="line"
+                                                            data={timelineChartData}
+                                                            options={timelineOptions}
+                                                            plugins={[seasonBoundariesPlugin]}
+                                                        />
                                                     ) : (
-                                                        <p className="episode-synopsis-placeholder">
-                                                            {jikanSynopsis === null ? 'Synopsis se stahuje na pozadí...' : 'Synopsis není k dispozici.'}
-                                                        </p>
+                                                        <div style={{ color: 'var(--text-muted)', textAlign: 'center', marginTop: '70px' }}>
+                                                            Série nemá ohodnocené epizody pro zobrazení timeline
+                                                        </div>
                                                     )}
                                                 </div>
-                                                <div style={{ marginTop:'6px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                                    <p style={{ color:'var(--text-muted)', fontSize:'0.72rem', fontStyle:'italic', margin: 0 }}>
-                                                        Chronologicky {selectedTimelineEp.index}. v pořadí série.
-                                                    </p>
-                                                    <div className="episode-nav-buttons">
-                                                        <button 
-                                                            className="ep-nav-btn" 
-                                                            onClick={handlePrevEp}
-                                                            disabled={!hasPrevEp}
-                                                            title="Předchozí epizoda"
-                                                        >
-                                                            ←
-                                                        </button>
-                                                        <button 
-                                                            className="ep-nav-btn" 
-                                                            onClick={handleNextEp}
-                                                            disabled={!hasNextEp}
-                                                            title="Další epizoda"
-                                                        >
-                                                            →
-                                                        </button>
-                                                    </div>
-                                                </div>
                                             </div>
-                                        ) : (
-                                            /* ===== STAV A: Žádná epizoda nevybrána — seznam ===== */
-                                            <div style={{ display:'flex', flexDirection:'column', flex: 1, minHeight: 0 }}>
-                                                <h3 className="ratings-panel-title" style={{ fontSize: '0.9rem' }}>
-                                                    {selectedSeriesSeason ? `Epizody` : 'Detail epizod'}
-                                                </h3>
-                                                {jikanLoading ? (
-                                                    <div className="episode-panel-loading">
-                                                        <div className="loading-spinner"></div>
-                                                        Načítání epizod...
-                                                    </div>
-                                                ) : jikanEpisodes && jikanEpisodes.length > 0 ? (
-                                                    <div className="episode-list-panel">
-                                                        {jikanEpisodes.map((ep, epIdx) => (
-                                                            <div
-                                                                key={`${ep.animeName}_${ep.mal_id}_${epIdx}`}
-                                                                className="episode-list-item"
-                                                                onClick={() => {
-                                                                    // Find the exact matching chronological episode in our seriesTimelineData
-                                                                    const isMovie = ep.cleanSeasonName.toLowerCase().includes('film') || ep.cleanSeasonName.toLowerCase().includes('movie') || ep.cleanSeasonName.toLowerCase().includes('0');
-                                                                    const tEp = seriesTimelineData?.episodes?.find(t => 
-                                                                        t.animeName === ep.animeName && 
-                                                                        (t.epName === `EP ${ep.mal_id}` || (t.epName === 'Film' && ep.mal_id === 1))
-                                                                    )
-                                                                    if (tEp) {
-                                                                        setSelectedTimelineEp(tEp)
-                                                                    } else {
-                                                                        // Fallback if not found in timeline data
-                                                                        const animeName = ep.animeName
-                                                                        const erObj = episodeRatings.find(er => er.name === animeName)
-                                                                        const ourEp = erObj?.episodes?.find(e => {
-                                                                            const m = e.episode.match(/EP\s*(\d+)/i)
-                                                                            return m && parseInt(m[1], 10) === ep.mal_id
-                                                                        })
-                                                                        const targetRating = ourEp ? ourEp.rating : (Number(animeList.find(a => a.name === animeName)?.rating) || 0)
-                                                                        setSelectedTimelineEp({
-                                                                            index: ep.mal_id,
-                                                                            rating: targetRating,
-                                                                            epName: ep.mal_id === 1 && (isMovie || animeList.find(a => a.name === animeName)?.type === 'Movie') ? 'Film' : `EP ${ep.mal_id}`,
-                                                                            animeName: animeName,
-                                                                            seasonName: ep.cleanSeasonName
-                                                                        })
-                                                                    }
-                                                                }}
-                                                                title={`${ep.cleanSeasonName} - EP ${ep.mal_id}: ${ep.title}`}
-                                                            >
-                                                                 {selectedSeriesObj && selectedSeriesObj.items.length > 1 && (() => {
-                                                                     const colorIdx = seasonColorMap[ep.cleanSeasonName] ?? 0;
-                                                                     const styleObj = seasonStyles[colorIdx % seasonStyles.length];
-                                                                     return (
-                                                                         <span 
-                                                                             className="ep-season-badge"
-                                                                             style={{
-                                                                                 background: styleObj.bg,
-                                                                                 borderColor: styleObj.border,
-                                                                                 color: styleObj.text
-                                                                             }}
-                                                                         >
-                                                                             {ep.cleanSeasonName}
-                                                                         </span>
-                                                                     );
-                                                                 })()}
-                                                                <span className="ep-number">EP {ep.mal_id}</span>
-                                                                <span className="ep-title">{ep.title}</span>
-                                                                {ep.filler && <span className="ep-badge filler">Fill</span>}
-                                                                {ep.recap && <span className="ep-badge recap">Rec</span>}
-                                                                {ep.score && <span className="ep-score">★ {ep.score.toFixed(1)}</span>}
+
+                                            {/* Epizodní panel vpravo — Jikan episode list / detail */}
+                                            <div className="ratings-panel episode-panel">
+                                                {selectedTimelineEp ? (
+                                                    /* ===== STAV B: Epizoda vybrána — detail + synopsis ===== */
+                                                    <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
+                                                        <div className="episode-detail-header">
+                                                            <button className="episode-back-btn" onClick={() => setSelectedTimelineEp(null)}>
+                                                                ← Seznam
+                                                            </button>
+                                                            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)' }}>
+                                                                {selectedTimelineEp.epName}
+                                                            </span>
+                                                        </div>
+                                                        <div className="episode-detail-title">
+                                                            {selectedTimelineEp.epName === "Film"
+                                                                ? `Film ${selectedTimelineEp.animeName}`
+                                                                : (jikanSynopsis?.title || selectedTimelineEp.epName)}
+                                                        </div>
+                                                        {selectedTimelineEp.epName !== "Film" && (
+                                                            <div className="episode-season-label">
+                                                                Sezóna: <span style={{ color: 'var(--accent-pink)' }}>{selectedTimelineEp.animeName}</span>
                                                             </div>
-                                                        ))}
-                                                    </div>
-                                                ) : seriesTimelineData?.episodes?.length > 0 ? (
-                                                    <div className="episode-synopsis-placeholder">
-                                                        Data epizod se stahují na pozadí...<br/>
-                                                        Kliknutím na bod v grafu zobrazíte detail.
+                                                        )}
+                                                        <div className="episode-detail-meta">
+                                                            <span className="meta-badge" style={{ background: getPointColor(selectedTimelineEp.rating), color: getPointTextColor(selectedTimelineEp.rating) }}>
+                                                                EP: {selectedTimelineEp.epName === 'Film' ? selectedTimelineEp.rating.toFixed(2).replace('.', ',') : (Number.isInteger(selectedTimelineEp.rating) ? selectedTimelineEp.rating : selectedTimelineEp.rating.toFixed(2).replace('.', ','))}
+                                                            </span>
+                                                            {(() => {
+                                                                // Find MAL score from jikanEpisodes list
+                                                                const epName = selectedTimelineEp.epName
+                                                                const epMatch = epName.match(/EP\s*(\d+)/i)
+                                                                const epNum = epMatch ? parseInt(epMatch[1], 10) : null
+                                                                const malEp = epNum && jikanEpisodes ? jikanEpisodes.find(e => e.mal_id === epNum) : null
+                                                                if (malEp && malEp.score) {
+                                                                    return <span className="meta-badge" style={{ background: 'var(--bg-tertiary)', color: 'var(--text-secondary)' }}>MAL: {malEp.score.toFixed(2).replace('.', ',')}</span>
+                                                                }
+                                                                return null
+                                                            })()}
+                                                            {(() => {
+                                                                // Find IMDb score from imdbCache
+                                                                const anime = animeList.find(a => a.name === selectedTimelineEp.animeName)
+                                                                if (!anime || !anime.mal_url) return null
+                                                                const malId = extractMalId(anime.mal_url)
+                                                                const imdbAnime = imdbCache[String(malId)]
+                                                                if (imdbAnime && imdbAnime.episodes) {
+                                                                    const score = imdbAnime.episodes[selectedTimelineEp.epName]
+                                                                    if (score) {
+                                                                        return (
+                                                                            <span className="meta-badge" style={{ background: '#f5c518', color: '#000000', fontWeight: 'bold' }}>
+                                                                                IMDb: {score.toFixed(2).replace('.', ',')}
+                                                                            </span>
+                                                                        )
+                                                                    }
+                                                                }
+                                                                return null
+                                                            })()}
+                                                            {jikanSynopsis?.filler && <span className="ep-badge filler">Filler</span>}
+                                                            {jikanSynopsis?.recap && <span className="ep-badge recap">Recap</span>}
+                                                        </div>
+                                                        {(() => {
+                                                            const anime = animeList.find(a => a.name === selectedTimelineEp.animeName);
+                                                            const airedDate = jikanSynopsis?.aired;
+                                                            const durationText = jikanSynopsis?.duration
+                                                                ? formatDuration(jikanSynopsis.duration)
+                                                                : (anime?.episode_duration ? `${Math.round(anime.episode_duration)} min` : '');
+
+                                                            if (airedDate || durationText) {
+                                                                return (
+                                                                    <div className="episode-aired-date">
+                                                                        {airedDate && `Aired: ${new Date(airedDate).toLocaleDateString('cs-CZ', { day: 'numeric', month: 'long', year: 'numeric' })}`}
+                                                                        {airedDate && durationText ? ' · ' : ''}
+                                                                        {durationText}
+                                                                    </div>
+                                                                );
+                                                            }
+                                                            return null;
+                                                        })()}
+                                                        <div className="episode-synopsis-container">
+                                                            {jikanSynopsis?.synopsis ? (
+                                                                <p className="episode-synopsis-text">{jikanSynopsis.synopsis}</p>
+                                                            ) : (
+                                                                <p className="episode-synopsis-placeholder">
+                                                                    {jikanSynopsis === null ? 'Synopsis se stahuje na pozadí...' : 'Synopsis není k dispozici.'}
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                        <div style={{ marginTop: '6px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                            <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem', fontStyle: 'italic', margin: 0 }}>
+                                                                Chronologicky {selectedTimelineEp.index}. v pořadí série.
+                                                            </p>
+                                                            <div className="episode-nav-buttons">
+                                                                <button
+                                                                    className="ep-nav-btn"
+                                                                    onClick={handlePrevEp}
+                                                                    disabled={!hasPrevEp}
+                                                                    title="Předchozí epizoda"
+                                                                >
+                                                                    ←
+                                                                </button>
+                                                                <button
+                                                                    className="ep-nav-btn"
+                                                                    onClick={handleNextEp}
+                                                                    disabled={!hasNextEp}
+                                                                    title="Další epizoda"
+                                                                >
+                                                                    →
+                                                                </button>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 ) : (
-                                                    <div className="episode-synopsis-placeholder">
-                                                        Žádná data k dispozici.
+                                                    /* ===== STAV A: Žádná epizoda nevybrána — seznam ===== */
+                                                    <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
+                                                        <h3 className="ratings-panel-title" style={{ fontSize: '0.9rem' }}>
+                                                            {selectedSeriesSeason ? `Epizody` : 'Detail epizod'}
+                                                        </h3>
+                                                        {jikanLoading ? (
+                                                            <div className="episode-panel-loading">
+                                                                <div className="loading-spinner"></div>
+                                                                Načítání epizod...
+                                                            </div>
+                                                        ) : jikanEpisodes && jikanEpisodes.length > 0 ? (
+                                                            <div className="episode-list-panel">
+                                                                {jikanEpisodes.map((ep, epIdx) => (
+                                                                    <div
+                                                                        key={`${ep.animeName}_${ep.mal_id}_${epIdx}`}
+                                                                        className="episode-list-item"
+                                                                        onClick={() => {
+                                                                            // Find the exact matching chronological episode in our seriesTimelineData
+                                                                            const isMovie = ep.cleanSeasonName.toLowerCase().includes('film') || ep.cleanSeasonName.toLowerCase().includes('movie') || ep.cleanSeasonName.toLowerCase().includes('0');
+                                                                            const tEp = seriesTimelineData?.episodes?.find(t =>
+                                                                                t.animeName === ep.animeName &&
+                                                                                (t.epName === `EP ${ep.mal_id}` || (t.epName === 'Film' && ep.mal_id === 1))
+                                                                            )
+                                                                            if (tEp) {
+                                                                                setSelectedTimelineEp(tEp)
+                                                                            } else {
+                                                                                // Fallback if not found in timeline data
+                                                                                const animeName = ep.animeName
+                                                                                const erObj = episodeRatings.find(er => er.name === animeName)
+                                                                                const ourEp = erObj?.episodes?.find(e => {
+                                                                                    const m = e.episode.match(/EP\s*(\d+)/i)
+                                                                                    return m && parseInt(m[1], 10) === ep.mal_id
+                                                                                })
+                                                                                const targetRating = ourEp ? ourEp.rating : (Number(animeList.find(a => a.name === animeName)?.rating) || 0)
+                                                                                setSelectedTimelineEp({
+                                                                                    index: ep.mal_id,
+                                                                                    rating: targetRating,
+                                                                                    epName: ep.mal_id === 1 && (isMovie || animeList.find(a => a.name === animeName)?.type === 'Movie') ? 'Film' : `EP ${ep.mal_id}`,
+                                                                                    animeName: animeName,
+                                                                                    seasonName: ep.cleanSeasonName
+                                                                                })
+                                                                            }
+                                                                        }}
+                                                                        title={`${ep.cleanSeasonName} - EP ${ep.mal_id}: ${ep.title}`}
+                                                                    >
+                                                                        {selectedSeriesObj && selectedSeriesObj.items.length > 1 && (() => {
+                                                                            const colorIdx = seasonColorMap[ep.cleanSeasonName] ?? 0;
+                                                                            const styleObj = seasonStyles[colorIdx % seasonStyles.length];
+                                                                            return (
+                                                                                <span
+                                                                                    className="ep-season-badge"
+                                                                                    style={{
+                                                                                        background: styleObj.bg,
+                                                                                        borderColor: styleObj.border,
+                                                                                        color: styleObj.text
+                                                                                    }}
+                                                                                >
+                                                                                    {ep.cleanSeasonName}
+                                                                                </span>
+                                                                            );
+                                                                        })()}
+                                                                        <span className="ep-number">EP {ep.mal_id}</span>
+                                                                        <span className="ep-title">{ep.title}</span>
+                                                                        {ep.filler && <span className="ep-badge filler">Fill</span>}
+                                                                        {ep.recap && <span className="ep-badge recap">Rec</span>}
+                                                                        {ep.score && <span className="ep-score">★ {ep.score.toFixed(1)}</span>}
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        ) : seriesTimelineData?.episodes?.length > 0 ? (
+                                                            <div className="episode-synopsis-placeholder">
+                                                                Data epizod se stahují na pozadí...<br />
+                                                                Kliknutím na bod v grafu zobrazíte detail.
+                                                            </div>
+                                                        ) : (
+                                                            <div className="episode-synopsis-placeholder">
+                                                                Žádná data k dispozici.
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 )}
                                             </div>
-                                        )}
-                                    </div>
-                                </>
-                            ) : (
-                                <>
-                                    {/* Průměrný Radar Chart & Notes vprostřed */}
-                                    <div className="ratings-panel" style={{ flex: '0 0 380px', height: '100%', display: 'flex', flexDirection: 'column' }}>
-                                        <h3 className="ratings-panel-title" style={{ marginBottom: '8px' }}>Agregovaný průměr kategorií</h3>
-                                        <div style={{ height: '240px', position: 'relative', marginBottom: '8px' }}>
-                                            {seriesRadarData ? (
-                                                <Radar data={seriesRadarData} options={radarOptions} />
-                                            ) : (
-                                                <div style={{ color: 'var(--text-muted)', textAlign: 'center', marginTop: '40px' }}>
-                                                    Žádná data pro radar
+                                        </>
+                                    ) : (
+                                        <>
+                                            {/* Průměrný Radar Chart & Notes vprostřed */}
+                                            <div className="ratings-panel" style={{ flex: '0 0 380px', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                                                <h3 className="ratings-panel-title" style={{ marginBottom: '8px' }}>Agregovaný průměr kategorií</h3>
+                                                <div style={{ height: '240px', position: 'relative', marginBottom: '8px' }}>
+                                                    {seriesRadarData ? (
+                                                        <Radar data={seriesRadarData} options={radarOptions} />
+                                                    ) : (
+                                                        <div style={{ color: 'var(--text-muted)', textAlign: 'center', marginTop: '40px' }}>
+                                                            Žádná data pro radar
+                                                        </div>
+                                                    )}
                                                 </div>
-                                            )}
-                                        </div>
-                                        <div className="series-notes-container" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', borderTop: '1px solid var(--border-color)', paddingTop: '8px' }}>
-                                            <h4 style={{ margin: '0 0 4px 0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                                                {selectedAnimeTitle ? `Recenze: ${selectedAnimeTitle}` : 'Recenze série'}
-                                            </h4>
-                                            <div style={{ flex: 1, overflowY: 'auto', fontSize: '0.78rem', lineHeight: '1.4', whiteSpace: 'pre-wrap', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.01)', padding: '6px', borderRadius: 'var(--radius-md)' }}>
-                                                {selectedAnimeNote ? formatReview(selectedAnimeNote.replace(/_x000D_/g, ''), selectedAnimeTitle) : 'Vyberte epizodu nebo část pro zobrazení poznámky.'}
+                                                <div className="series-notes-container" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', borderTop: '1px solid var(--border-color)', paddingTop: '8px' }}>
+                                                    <h4 style={{ margin: '0 0 4px 0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                                                        {selectedAnimeTitle ? `Recenze: ${selectedAnimeTitle}` : 'Recenze série'}
+                                                    </h4>
+                                                    <div style={{ flex: 1, overflowY: 'auto', fontSize: '0.78rem', lineHeight: '1.4', whiteSpace: 'pre-wrap', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.01)', padding: '6px', borderRadius: 'var(--radius-md)' }}>
+                                                        {selectedAnimeNote ? formatReview(selectedAnimeNote.replace(/_x000D_/g, ''), selectedAnimeTitle) : 'Vyberte epizodu nebo část pro zobrazení poznámky.'}
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
 
-                                    {/* Seznam všech sezón a čtverečky epizod */}
-                                    <div className="ratings-panel" style={{ flex: 1, height: '100%', overflowY: 'auto' }}>
-                                        <h3 className="ratings-panel-title">Mřížka epizod (Episode Grid)</h3>
-                                        <div className="seasons-grids-list">
-                                            {selectedSeriesObj?.items.map(anime => {
-                                                const isMovieOrSingleEpisode = 
-                                                    anime.type === "Movie" || 
-                                                    Number(anime.episodes) === 1 || 
-                                                    anime.name === "The Disappearance of Haruhi Suzumiya" ||
-                                                    anime.name.toLowerCase().includes("heaven's feel") || 
-                                                    anime.name.toLowerCase().includes("movie") ||
-                                                    anime.name.toLowerCase().includes("film");
+                                            {/* Seznam všech sezón a čtverečky epizod */}
+                                            <div className="ratings-panel" style={{ flex: 1, height: '100%', overflowY: 'auto' }}>
+                                                <h3 className="ratings-panel-title">Mřížka epizod (Episode Grid)</h3>
+                                                <div className="seasons-grids-list">
+                                                    {selectedSeriesObj?.items.map(anime => {
+                                                        const isMovieOrSingleEpisode =
+                                                            anime.type === "Movie" ||
+                                                            Number(anime.episodes) === 1 ||
+                                                            anime.name === "The Disappearance of Haruhi Suzumiya" ||
+                                                            anime.name.toLowerCase().includes("heaven's feel") ||
+                                                            anime.name.toLowerCase().includes("movie") ||
+                                                            anime.name.toLowerCase().includes("film");
 
-                                                let epsToUse = []
-                                                if (isMovieOrSingleEpisode) {
-                                                    const avgCat = getAvgCat(anime.name)
-                                                    epsToUse = [{
-                                                        episode: "Film",
-                                                        rating: avgCat !== null ? avgCat : (Number(anime.rating) || 0)
-                                                    }]
-                                                } else {
-                                                    const erObj = episodeRatings.find(er => er.name === anime.name)
-                                                    if (erObj && erObj.episodes && erObj.episodes.length > 0) {
-                                                        epsToUse = erObj.episodes
-                                                    } else {
-                                                        const avgCat = getAvgCat(anime.name)
-                                                        if (avgCat !== null) {
+                                                        let epsToUse = []
+                                                        if (isMovieOrSingleEpisode) {
+                                                            const avgCat = getAvgCat(anime.name)
                                                             epsToUse = [{
                                                                 episode: "Film",
-                                                                rating: avgCat
+                                                                rating: avgCat !== null ? avgCat : (Number(anime.rating) || 0)
                                                             }]
+                                                        } else {
+                                                            const erObj = episodeRatings.find(er => er.name === anime.name)
+                                                            if (erObj && erObj.episodes && erObj.episodes.length > 0) {
+                                                                epsToUse = erObj.episodes
+                                                            } else {
+                                                                const avgCat = getAvgCat(anime.name)
+                                                                if (avgCat !== null) {
+                                                                    epsToUse = [{
+                                                                        episode: "Film",
+                                                                        rating: avgCat
+                                                                    }]
+                                                                }
+                                                            }
                                                         }
-                                                    }
-                                                }
 
-                                                if (epsToUse.length === 0) return null
-                                                
-                                                // Calculate average rating for this season
-                                                const seasonRatings = epsToUse.map(e => e.rating).filter(r => !isNaN(r) && r > 0)
-                                                const seasonAvg = seasonRatings.length > 0 ? (seasonRatings.reduce((sum, r) => sum + r, 0) / seasonRatings.length) : 0
-                                                
-                                                const cleanSeasonName = anime.name.replace(selectedSeriesObj.name + ', ', '').replace(selectedSeriesObj.name + ' ', '')
-                                                const isSelected = selectedAnimeTitle === anime.name
-                                                
-                                                return (
-                                                    <div 
-                                                        key={anime.name} 
-                                                        className={`season-grid-section ${isSelected ? 'active' : ''}`}
-                                                        style={{
-                                                            borderLeft: isSelected ? '3px solid var(--accent-pink)' : '3px solid transparent',
-                                                            paddingLeft: '8px',
-                                                            transition: 'all 0.2s ease'
-                                                        }}
-                                                    >
-                                                        <h4 
-                                                            className="season-grid-title" 
-                                                            style={{ 
-                                                                cursor: 'pointer', 
-                                                                display: 'flex', 
-                                                                alignItems: 'center', 
-                                                                gap: '8px',
-                                                                color: isSelected ? 'var(--text-primary)' : 'var(--text-secondary)'
-                                                            }}
-                                                            onClick={() => {
-                                                                setSelectedSeriesSeason(anime.name)
-                                                                setSelectedAnimeTitle(anime.name)
-                                                            }}
-                                                        >
-                                                            <span>{cleanSeasonName}</span>
-                                                            <span className="season-grid-avg">
-                                                                (průměr {seasonAvg > 0 ? seasonAvg.toFixed(2).replace('.', ',') : 'N/A'})
-                                                            </span>
-                                                        </h4>
-                                                        <div className="episode-grid-container" style={{ marginTop: '8px' }}>
-                                                            {epsToUse.map(ep => (
-                                                                <div 
-                                                                    key={ep.episode} 
-                                                                    className="episode-grid-card" 
-                                                                    style={{ backgroundColor: getPointColor(ep.rating) }}
+                                                        if (epsToUse.length === 0) return null
+
+                                                        // Calculate average rating for this season
+                                                        const seasonRatings = epsToUse.map(e => e.rating).filter(r => !isNaN(r) && r > 0)
+                                                        const seasonAvg = seasonRatings.length > 0 ? (seasonRatings.reduce((sum, r) => sum + r, 0) / seasonRatings.length) : 0
+
+                                                        const cleanSeasonName = anime.name.replace(selectedSeriesObj.name + ', ', '').replace(selectedSeriesObj.name + ' ', '')
+                                                        const isSelected = selectedAnimeTitle === anime.name
+
+                                                        return (
+                                                            <div
+                                                                key={anime.name}
+                                                                className={`season-grid-section ${isSelected ? 'active' : ''}`}
+                                                                style={{
+                                                                    borderLeft: isSelected ? '3px solid var(--accent-pink)' : '3px solid transparent',
+                                                                    paddingLeft: '8px',
+                                                                    transition: 'all 0.2s ease'
+                                                                }}
+                                                            >
+                                                                <h4
+                                                                    className="season-grid-title"
+                                                                    style={{
+                                                                        cursor: 'pointer',
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        gap: '8px',
+                                                                        color: isSelected ? 'var(--text-primary)' : 'var(--text-secondary)'
+                                                                    }}
                                                                     onClick={() => {
                                                                         setSelectedSeriesSeason(anime.name)
                                                                         setSelectedAnimeTitle(anime.name)
-                                                                        setSelectedTimelineEp({
-                                                                            index: ep.episode === "Film" ? 1 : ep.episode.replace('EP ', ''),
-                                                                            rating: ep.rating,
-                                                                            epName: ep.episode,
-                                                                            animeName: anime.name
-                                                                        })
                                                                     }}
-                                                                    title={`${anime.name} - ${ep.episode}: ${ep.episode === 'Film' ? ep.rating.toFixed(2).replace('.', ',') : (Number.isInteger(ep.rating) ? ep.rating : ep.rating.toFixed(2).replace('.', ','))}`}
                                                                 >
-                                                                    <span className="ep-card-num">{ep.episode.replace('EP ', 'E')}</span>
-                                                                    <span className="ep-card-val">{ep.episode === 'Film' ? ep.rating.toFixed(2).replace('.', ',') : ep.rating.toFixed(1).replace('.', ',')}</span>
+                                                                    <span>{cleanSeasonName}</span>
+                                                                    <span className="season-grid-avg">
+                                                                        (průměr {seasonAvg > 0 ? seasonAvg.toFixed(2).replace('.', ',') : 'N/A'})
+                                                                    </span>
+                                                                </h4>
+                                                                <div className="episode-grid-container" style={{ marginTop: '8px' }}>
+                                                                    {epsToUse.map(ep => (
+                                                                        <div
+                                                                            key={ep.episode}
+                                                                            className="episode-grid-card"
+                                                                            style={{ backgroundColor: getPointColor(ep.rating) }}
+                                                                            onClick={() => {
+                                                                                setSelectedSeriesSeason(anime.name)
+                                                                                setSelectedAnimeTitle(anime.name)
+                                                                                setSelectedTimelineEp({
+                                                                                    index: ep.episode === "Film" ? 1 : ep.episode.replace('EP ', ''),
+                                                                                    rating: ep.rating,
+                                                                                    epName: ep.episode,
+                                                                                    animeName: anime.name
+                                                                                })
+                                                                            }}
+                                                                            title={`${anime.name} - ${ep.episode}: ${ep.episode === 'Film' ? ep.rating.toFixed(2).replace('.', ',') : (Number.isInteger(ep.rating) ? ep.rating : ep.rating.toFixed(2).replace('.', ','))}`}
+                                                                        >
+                                                                            <span className="ep-card-num">{ep.episode.replace('EP ', 'E')}</span>
+                                                                            <span className="ep-card-val">{ep.episode === 'Film' ? ep.rating.toFixed(2).replace('.', ',') : ep.rating.toFixed(1).replace('.', ',')}</span>
+                                                                        </div>
+                                                                    ))}
                                                                 </div>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                )
-                                            })}
-                                        </div>
-                                    </div>
-                                </>
-                            )}
+                                                            </div>
+                                                        )
+                                                    })}
+                                                </div>
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            )}
+                    )}
 
-            {/* ============================================
+                    {/* ============================================
                 VIEW 3: INDIVIDUAL RATINGS VIEW (ORIGINAL LAYOUT)
                 ============================================ */}
-            {viewMode === 'individual' && (
-                <>
-                    {/* ROW 1: Sériové Dashboardy */}
-                    <div className="ratings-row row-1 fade-in">
-                        {/* 1. Selektor (Left) */}
-                        <div className="ratings-panel left-panel">
-                            <h3 className="ratings-panel-title">Vyberte Anime</h3>
-                            <DebouncedSearchInput
-                                placeholder="Hledat..."
-                                onSearch={setSearchQuery}
-                                initialValue={searchQuery}
-                            />
-                            <div className="anime-selector-list">
-                                {row1AnimeList.map(a => (
-                                    <div
-                                        key={a.name}
-                                        className={`anime-selector-item ${selectedAnimeTitle === a.name ? 'active' : ''}`}
-                                        onClick={() => setSelectedAnimeTitle(a.name)}
-                                    >
-                                        <div className="selector-item-content">
-                                            <span className="selector-item-name">{a.name}</span>
-                                            <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{a.type}</span>
-                                        </div>
-                                        <div className="selector-item-rating">{a.rating || '?'}</div>
+                    {viewMode === 'individual' && (
+                        <>
+                            {/* ROW 1: Sériové Dashboardy */}
+                            <div className="ratings-row row-1 fade-in">
+                                {/* 1. Selektor (Left) */}
+                                <div className="ratings-panel left-panel">
+                                    <h3 className="ratings-panel-title">Vyberte Anime</h3>
+                                    <DebouncedSearchInput
+                                        placeholder="Hledat..."
+                                        onSearch={setSearchQuery}
+                                        initialValue={searchQuery}
+                                    />
+                                    <div className="anime-selector-list">
+                                        {row1AnimeList.map(a => (
+                                            <div
+                                                key={a.name}
+                                                className={`anime-selector-item ${selectedAnimeTitle === a.name ? 'active' : ''}`}
+                                                onClick={() => setSelectedAnimeTitle(a.name)}
+                                            >
+                                                <div className="selector-item-content">
+                                                    <span className="selector-item-name">{a.name}</span>
+                                                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{a.type}</span>
+                                                </div>
+                                                <div className="selector-item-rating">{a.rating || '?'}</div>
+                                            </div>
+                                        ))}
                                     </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* 2. Radar Chart (Center) */}
-                        <div className="ratings-panel center-panel">
-                            <h3 className="ratings-panel-title" style={{ fontSize: '1rem' }}>
-                                {selectedAnimeTitle}
-                                <div style={{ display:'flex', gap:'8px', fontSize:'0.85rem' }}>
-                                    <span className="badge badge-primary">WA: {avgCategoryRating}</span>
-                                    <span className="badge" style={{ background:'var(--bg-tertiary)'}}>FH: {selectedAnimeObj?.rating || '?'}</span>
                                 </div>
-                            </h3>
-                            <div style={{ flex: 1, position: 'relative' }}>
-                                {radarData ? <Radar data={radarData} options={radarOptions} /> : <div style={{ color: 'var(--text-muted)', textAlign: 'center', marginTop: '50px' }}>Žádná data pro radar</div>}
-                            </div>
-                        </div>
 
-                        {/* 3. Epizody & Narative (Right) */}
-                        <div className="right-panel">
-                            <div className="ratings-panel right-panel-top">
-                                <h3 className="ratings-panel-title" style={{ fontSize: '0.9rem', marginBottom: '8px' }}>Hodnocení Epizod</h3>
-                                <div style={{ flex: 1, position: 'relative' }}>
-                                    {episodeChartData ? <Chart type="line" data={episodeChartData} options={episodeBarOptions} /> : <div style={{ color: 'var(--text-muted)', textAlign: 'center', marginTop: '20px' }}>Žádná data pro epizody</div>}
+                                {/* 2. Radar Chart (Center) */}
+                                <div className="ratings-panel center-panel">
+                                    <h3 className="ratings-panel-title" style={{ fontSize: '1rem' }}>
+                                        {selectedAnimeTitle}
+                                        <div style={{ display: 'flex', gap: '8px', fontSize: '0.85rem' }}>
+                                            <span className="badge badge-primary">WA: {avgCategoryRating}</span>
+                                            <span className="badge" style={{ background: 'var(--bg-tertiary)' }}>FH: {selectedAnimeObj?.rating || '?'}</span>
+                                        </div>
+                                    </h3>
+                                    <div style={{ flex: 1, position: 'relative' }}>
+                                        {radarData ? <Radar data={radarData} options={radarOptions} /> : <div style={{ color: 'var(--text-muted)', textAlign: 'center', marginTop: '50px' }}>Žádná data pro radar</div>}
+                                    </div>
+                                </div>
+
+                                {/* 3. Epizody & Narative (Right) */}
+                                <div className="right-panel">
+                                    <div className="ratings-panel right-panel-top">
+                                        <h3 className="ratings-panel-title" style={{ fontSize: '0.9rem', marginBottom: '8px' }}>Hodnocení Epizod</h3>
+                                        <div style={{ flex: 1, position: 'relative' }}>
+                                            {episodeChartData ? <Chart type="line" data={episodeChartData} options={episodeBarOptions} /> : <div style={{ color: 'var(--text-muted)', textAlign: 'center', marginTop: '20px' }}>Žádná data pro epizody</div>}
+                                        </div>
+                                    </div>
+                                    <div className="ratings-panel right-panel-bottom">
+                                        <h3 className="ratings-panel-title" style={{ fontSize: '0.9rem', marginBottom: '8px' }}>Recenze / Summary</h3>
+                                        <div style={{ flex: 1, overflowY: 'auto', fontFamily: "'Open Sans', var(--font-family)", fontSize: '0.9rem', lineHeight: '1.5', whiteSpace: 'pre-wrap', paddingRight: '8px', color: 'var(--text-secondary)' }}>
+                                            {selectedAnimeNote ? formatReview(selectedAnimeNote.replace(/_x000D_/g, ''), selectedAnimeTitle) : 'Žádná poznámka k dispozici.'}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="ratings-panel right-panel-bottom">
-                                <h3 className="ratings-panel-title" style={{ fontSize: '0.9rem', marginBottom: '8px' }}>Recenze / Summary</h3>
-                                <div style={{ flex: 1, overflowY: 'auto', fontFamily: "'Open Sans', var(--font-family)", fontSize: '0.9rem', lineHeight: '1.5', whiteSpace: 'pre-wrap', paddingRight: '8px', color: 'var(--text-secondary)' }}>
-                                    {selectedAnimeNote ? formatReview(selectedAnimeNote.replace(/_x000D_/g, ''), selectedAnimeTitle) : 'Žádná poznámka k dispozici.'}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </>
-            )}
+                        </>
+                    )}
 
-            {/* ============================================
+                    {/* ============================================
                 GLOBAL SECTIONS (ROW 2 & ROW 3) - SHOWN IN BOTH VIEWS (Varianta A)
                 ============================================ */}
-            {viewMode !== 'split' && (
-                <Fragment key={c.isLight ? 'light' : 'dark'}>
-                    <div className="ratings-dashboard-layout fade-in">
-                        {/* LEVÝ SLOUPEC (Sidebar): Filtry a seznam */}
-                        <div className="ratings-dashboard-sidebar">
-                            {/* Filtry a seznam */}
-                            <div className="ratings-panel filter-panel">
-                                <h3 className="ratings-panel-title">Filtry a seznam</h3>
-                                <div className="slicer-group">
-                                    <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Typ</label>
-                                    <select className="slicer-select" value={slicerTyp} onChange={e => setSlicerTyp(e.target.value)}>
-                                        <option value="Kategorie">Kategorie</option>
-                                        <option value="Epizoda">Epizoda</option>
-                                    </select>
-                                </div>
-                                <div className="slicer-group">
-                                    <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Položka</label>
-                                    <select className="slicer-select" value={slicerPolozka} onChange={e => setSlicerPolozka(e.target.value)}>
-                                        {polozkyOptions.map(p => <option key={p} value={p}>{p}</option>)}
-                                    </select>
-                                </div>
-                                <div className="slicer-group">
-                                    <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Hodnocení</label>
-                                    <select className="slicer-select" value={slicerHodnoceni} onChange={e => setSlicerHodnoceni(e.target.value)}>
-                                        {hodnoceniOptions.map(h => <option key={h} value={h}>{h === 'Všechna' ? h : Number(h).toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</option>)}
-                                    </select>
-                                </div>
-                                <div className="anime-selector-list" style={{ marginTop: 'var(--spacing-sm)' }}>
-                                    {row2FilteredAnime.map(a => (
-                                        <div key={a.name} className="anime-selector-item" onClick={() => {
-                                            setViewMode('individual') // fallback to individual detail on click
-                                            setSelectedAnimeTitle(a.name)
-                                        }}>
-                                            <span className="selector-item-name">{a.name}</span>
-                                            <span className="selector-item-rating">{Number(a.hodnoceni).toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                    {viewMode !== 'split' && (
+                        <Fragment key={c.isLight ? 'light' : 'dark'}>
+                            <div className="ratings-dashboard-layout fade-in">
+                                {/* LEVÝ SLOUPEC (Sidebar): Filtry a seznam */}
+                                <div className="ratings-dashboard-sidebar">
+                                    {/* Filtry a seznam */}
+                                    <div className="ratings-panel filter-panel">
+                                        <h3 className="ratings-panel-title">Filtry a seznam</h3>
+                                        <div className="slicer-group">
+                                            <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Typ</label>
+                                            <select className="slicer-select" value={slicerTyp} onChange={e => setSlicerTyp(e.target.value)}>
+                                                <option value="Kategorie">Kategorie</option>
+                                                <option value="Epizoda">Epizoda</option>
+                                            </select>
                                         </div>
-                                    ))}
-                                    {row2FilteredAnime.length === 0 && <div style={{ color:'var(--text-muted)', padding:'8px' }}>Žádná data</div>}
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* PRAVÝ SLOUPEC (Main content) */}
-                        <div className="ratings-dashboard-main">
-                            {/* Horní řada: AVG Hodnocení + Nestabilní EP + Rozložení */}
-                            <div className="ratings-dashboard-row row-top">
-                                <div className="ratings-panel leaderboard-panel">
-                                    <h3 className="ratings-panel-title">Hodnocení Anime podle AVG (Top {lbCount})</h3>
-                                    <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
-                                        <select className="slicer-select" style={{flex:1}} value={lbTyp} onChange={e => setLbTyp(e.target.value)}>
-                                            <option value="Epizody">Epizody</option>
-                                            <option value="Kategorie">Kategorie</option>
-                                        </select>
-                                        <select className="slicer-select" style={{flex:1}} value={lbSort} onChange={e => setLbSort(e.target.value)}>
-                                            <option value="Nejlepší">Nejlepší</option>
-                                            <option value="Nejhorší">Nejhorší</option>
-                                        </select>
-                                        <select className="slicer-select" style={{flex:0.5}} value={lbCount} onChange={e => setLbCount(Number(e.target.value))}>
-                                            <option value="10">10</option>
-                                            <option value="30">30</option>
-                                            <option value="50">50</option>
-                                            <option value="100">100</option>
-                                        </select>
-                                    </div>
-                                    <div style={{ flex: 1, position: 'relative' }}>
-                                        <Bar data={leaderboardChartData} options={leaderboardOptions} />
-                                    </div>
-                                </div>
-
-                                <div className="ratings-panel instability-panel">
-                                    <h3 className="ratings-panel-title">Anime s nestabilním ohodnocením EP (Top 30)</h3>
-                                    <div style={{ flex: 1, position: 'relative' }}>
-                                        <Bar data={unstableChartData} options={unstableOptions} />
-                                    </div>
-                                </div>
-
-                                <div className="ratings-panel distribution-panel">
-                                    <h3 className="ratings-panel-title">Rozložení hodnocení: {slicerPolozka}</h3>
-                                    <div style={{ flex: 1, position: 'relative' }}>
-                                        {histogramData ? <Bar data={histogramData} options={histogramOptions} /> : <div style={{ color: 'var(--text-muted)' }}>Žádná data</div>}
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Spodní řada: Korelace + Kvalita vs Hloubka */}
-                            <div className="ratings-dashboard-row row-bottom">
-                                <div className="ratings-panel correlation-panel">
-                                    <h3 className="ratings-panel-title">Korelace: {slicerPolozka} vs FH {correlationChartData?.r2 ? `(R² = ${correlationChartData.r2.toLocaleString('cs-CZ')})` : ''}</h3>
-                                    <div style={{ flex: 1, position: 'relative' }}>
-                                        {correlationChartData ? <Chart type='scatter' data={correlationChartData.data} options={correlationChartOptions} /> : <div style={{ color: 'var(--text-muted)' }}>Málo dat pro korelaci</div>}
-                                    </div>
-                                </div>
-
-                                <div className="ratings-panel quality-depth-panel">
-                                    <h3 className="ratings-panel-title">Kvalita (technika) vs. Hloubka (narativ)</h3>
-                                    <div style={{ flex: 1, position: 'relative' }}>
-                                        <Chart type='bubble' data={hypeChartData} options={hypeChartOptions} />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* ROW 4: Kompletní tabulka kategorií */}
-                    <div className="ratings-row row-4 fade-in" style={{ marginBottom: 'var(--spacing-xl)' }}>
-                        <div className="ratings-panel" style={{ flex: 1 }}>
-                            <h3 className="ratings-panel-title">
-                                <span>📊 Kompletní tabulka hodnocení</span>
-                                <input
-                                    type="text"
-                                    className="table-search-input"
-                                    placeholder="Hledat anime..."
-                                    value={tableSearchQuery}
-                                    onChange={(e) => setTableSearchQuery(e.target.value)}
-                                />
-                            </h3>
-                            <div className="ratings-category-table-wrapper">
-                                <table className="ratings-category-table">
-                                    <thead>
-                                        <tr>
-                                            <th
-                                                className={`th-sortable th-anime ${tableSortColumn === 'Anime' ? 'th-active' : ''}`}
-                                                onClick={() => handleTableSort('Anime')}
-                                            >
-                                                Anime {tableSortColumn === 'Anime' ? (tableSortDirection === 'asc' ? '▲' : '▼') : ''}
-                                            </th>
-                                            <th
-                                                className={`th-sortable th-numeric ${tableSortColumn === 'FH' ? 'th-active' : ''}`}
-                                                onClick={() => handleTableSort('FH')}
-                                            >
-                                                FH {tableSortColumn === 'FH' ? (tableSortDirection === 'asc' ? '▲' : '▼') : ''}
-                                            </th>
-                                            <th
-                                                className={`th-sortable th-numeric ${tableSortColumn === 'WA' ? 'th-active' : ''}`}
-                                                onClick={() => handleTableSort('WA')}
-                                                title="Weighted Average (vážený průměr kategorií)"
-                                            >
-                                                WA {tableSortColumn === 'WA' ? (tableSortDirection === 'asc' ? '▲' : '▼') : ''}
-                                            </th>
-                                            {allCategoryColumns.map(cat => (
-                                                <th
-                                                    key={cat}
-                                                    className={`th-sortable th-numeric ${tableSortColumn === cat ? 'th-active' : ''}`}
-                                                    onClick={() => handleTableSort(cat)}
-                                                    title={`${cat} (v. ${categoryWeights[cat] || 1})`}
-                                                >
-                                                    {categoryColumnAbbreviations[cat] || cat}
-                                                    {tableSortColumn === cat ? (tableSortDirection === 'asc' ? ' ▲' : ' ▼') : ''}
-                                                </th>
+                                        <div className="slicer-group">
+                                            <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Položka</label>
+                                            <select className="slicer-select" value={slicerPolozka} onChange={e => setSlicerPolozka(e.target.value)}>
+                                                {polozkyOptions.map(p => <option key={p} value={p}>{p}</option>)}
+                                            </select>
+                                        </div>
+                                        <div className="slicer-group">
+                                            <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Hodnocení</label>
+                                            <select className="slicer-select" value={slicerHodnoceni} onChange={e => setSlicerHodnoceni(e.target.value)}>
+                                                {hodnoceniOptions.map(h => <option key={h} value={h}>{h === 'Všechna' ? h : Number(h).toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</option>)}
+                                            </select>
+                                        </div>
+                                        <div className="anime-selector-list" style={{ marginTop: 'var(--spacing-sm)' }}>
+                                            {row2FilteredAnime.map(a => (
+                                                <div key={a.name} className="anime-selector-item" onClick={() => {
+                                                    setViewMode('individual') // fallback to individual detail on click
+                                                    setSelectedAnimeTitle(a.name)
+                                                }}>
+                                                    <span className="selector-item-name">{a.name}</span>
+                                                    <span className="selector-item-rating">{Number(a.hodnoceni).toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                                </div>
                                             ))}
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {tableData.items.map((item, idx) => (
-                                            <tr
-                                                key={item.name}
-                                                className="table-row-hover"
-                                                onClick={() => {
-                                                    setViewMode('individual')
-                                                    setSelectedAnimeTitle(item.name)
-                                                }}
-                                            >
-                                                <td className="td-anime">
-                                                    <span className="td-rank">{idx + 1}.</span>
-                                                    <span className="td-name" title={item.name}>{item.name}</span>
-                                                </td>
-                                                <td className="td-numeric td-fh" style={getHeatmapStyle(item.fh)}>
-                                                    {item.fh !== null ? item.fh.toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : '—'}
-                                                </td>
-                                                <td className="td-numeric td-wa" style={getHeatmapStyle(item.wa)}>
-                                                    {item.wa !== null ? item.wa.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'}
-                                                </td>
-                                                {allCategoryColumns.map(cat => {
-                                                    const val = item.categories[cat]
-                                                    return (
-                                                        <td key={cat} className="td-numeric heatmap-cell" style={getHeatmapStyle(val)}>
-                                                            {val !== undefined && val !== null
-                                                                ? val.toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
-                                                                : '—'}
+                                            {row2FilteredAnime.length === 0 && <div style={{ color: 'var(--text-muted)', padding: '8px' }}>Žádná data</div>}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* PRAVÝ SLOUPEC (Main content) */}
+                                <div className="ratings-dashboard-main">
+                                    {/* Horní řada: AVG Hodnocení + Nestabilní EP + Rozložení */}
+                                    <div className="ratings-dashboard-row row-top">
+                                        <div className="ratings-panel leaderboard-panel">
+                                            <h3 className="ratings-panel-title">Hodnocení Anime podle AVG (Top {lbCount})</h3>
+                                            <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+                                                <select className="slicer-select" style={{ flex: 1 }} value={lbTyp} onChange={e => setLbTyp(e.target.value)}>
+                                                    <option value="Epizody">Epizody</option>
+                                                    <option value="Kategorie">Kategorie</option>
+                                                </select>
+                                                <select className="slicer-select" style={{ flex: 1 }} value={lbSort} onChange={e => setLbSort(e.target.value)}>
+                                                    <option value="Nejlepší">Nejlepší</option>
+                                                    <option value="Nejhorší">Nejhorší</option>
+                                                </select>
+                                                <select className="slicer-select" style={{ flex: 0.5 }} value={lbCount} onChange={e => setLbCount(Number(e.target.value))}>
+                                                    <option value="10">10</option>
+                                                    <option value="30">30</option>
+                                                    <option value="50">50</option>
+                                                    <option value="100">100</option>
+                                                </select>
+                                            </div>
+                                            <div style={{ flex: 1, position: 'relative' }}>
+                                                <Bar data={leaderboardChartData} options={leaderboardOptions} />
+                                            </div>
+                                        </div>
+
+                                        <div className="ratings-panel instability-panel">
+                                            <h3 className="ratings-panel-title">Anime s nestabilním ohodnocením EP (Top 30)</h3>
+                                            <div style={{ flex: 1, position: 'relative' }}>
+                                                <Bar data={unstableChartData} options={unstableOptions} />
+                                            </div>
+                                        </div>
+
+                                        <div className="ratings-panel distribution-panel">
+                                            <h3 className="ratings-panel-title">Rozložení hodnocení: {slicerPolozka}</h3>
+                                            <div style={{ flex: 1, position: 'relative' }}>
+                                                {histogramData ? <Bar data={histogramData} options={histogramOptions} /> : <div style={{ color: 'var(--text-muted)' }}>Žádná data</div>}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Spodní řada: Korelace + Kvalita vs Hloubka */}
+                                    <div className="ratings-dashboard-row row-bottom">
+                                        <div className="ratings-panel correlation-panel">
+                                            <h3 className="ratings-panel-title">Korelace: {slicerPolozka} vs FH {correlationChartData?.r2 ? `(R² = ${correlationChartData.r2.toLocaleString('cs-CZ')})` : ''}</h3>
+                                            <div style={{ flex: 1, position: 'relative' }}>
+                                                {correlationChartData ? <Chart type='scatter' data={correlationChartData.data} options={correlationChartOptions} /> : <div style={{ color: 'var(--text-muted)' }}>Málo dat pro korelaci</div>}
+                                            </div>
+                                        </div>
+
+                                        <div className="ratings-panel quality-depth-panel">
+                                            <h3 className="ratings-panel-title">Kvalita (technika) vs. Hloubka (narativ)</h3>
+                                            <div style={{ flex: 1, position: 'relative' }}>
+                                                <Chart type='bubble' data={hypeChartData} options={hypeChartOptions} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* ROW 4: Kompletní tabulka kategorií */}
+                            <div className="ratings-row row-4 fade-in" style={{ marginBottom: 'var(--spacing-xl)' }}>
+                                <div className="ratings-panel" style={{ flex: 1 }}>
+                                    <h3 className="ratings-panel-title">
+                                        <span>📊 Kompletní tabulka hodnocení</span>
+                                        <input
+                                            type="text"
+                                            className="table-search-input"
+                                            placeholder="Hledat anime..."
+                                            value={tableSearchQuery}
+                                            onChange={(e) => setTableSearchQuery(e.target.value)}
+                                        />
+                                    </h3>
+                                    <div className="ratings-category-table-wrapper">
+                                        <table className="ratings-category-table">
+                                            <thead>
+                                                <tr>
+                                                    <th
+                                                        className={`th-sortable th-anime ${tableSortColumn === 'Anime' ? 'th-active' : ''}`}
+                                                        onClick={() => handleTableSort('Anime')}
+                                                    >
+                                                        Anime {tableSortColumn === 'Anime' ? (tableSortDirection === 'asc' ? '▲' : '▼') : ''}
+                                                    </th>
+                                                    <th
+                                                        className={`th-sortable th-numeric ${tableSortColumn === 'FH' ? 'th-active' : ''}`}
+                                                        onClick={() => handleTableSort('FH')}
+                                                    >
+                                                        FH {tableSortColumn === 'FH' ? (tableSortDirection === 'asc' ? '▲' : '▼') : ''}
+                                                    </th>
+                                                    <th
+                                                        className={`th-sortable th-numeric ${tableSortColumn === 'WA' ? 'th-active' : ''}`}
+                                                        onClick={() => handleTableSort('WA')}
+                                                        title="Weighted Average (vážený průměr kategorií)"
+                                                    >
+                                                        WA {tableSortColumn === 'WA' ? (tableSortDirection === 'asc' ? '▲' : '▼') : ''}
+                                                    </th>
+                                                    {allCategoryColumns.map(cat => (
+                                                        <th
+                                                            key={cat}
+                                                            className={`th-sortable th-numeric ${tableSortColumn === cat ? 'th-active' : ''}`}
+                                                            onClick={() => handleTableSort(cat)}
+                                                            title={`${cat} (v. ${categoryWeights[cat] || 1})`}
+                                                        >
+                                                            {categoryColumnAbbreviations[cat] || cat}
+                                                            {tableSortColumn === cat ? (tableSortDirection === 'asc' ? ' ▲' : ' ▼') : ''}
+                                                        </th>
+                                                    ))}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {tableData.items.map((item, idx) => (
+                                                    <tr
+                                                        key={item.name}
+                                                        className="table-row-hover"
+                                                        onClick={() => {
+                                                            setViewMode('individual')
+                                                            setSelectedAnimeTitle(item.name)
+                                                        }}
+                                                    >
+                                                        <td className="td-anime">
+                                                            <span className="td-rank">{idx + 1}.</span>
+                                                            <span className="td-name" title={item.name}>{item.name}</span>
                                                         </td>
-                                                    )
-                                                })}
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                    <tfoot>
-                                        <tr className="table-footer-row">
-                                            <td className="td-anime td-footer-label">Průměr ({tableData.total} anime)</td>
-                                            <td className="td-numeric td-fh" style={getHeatmapStyle(tableData.avgFh)}>
-                                                {tableData.avgFh.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                            </td>
-                                            <td className="td-numeric td-wa">
-                                                —
-                                            </td>
-                                            {allCategoryColumns.map(cat => {
-                                                const avg = tableData.catAverages[cat]
-                                                return (
-                                                    <td key={cat} className="td-numeric heatmap-cell" style={getHeatmapStyle(avg)}>
-                                                        {avg !== null ? avg.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'}
+                                                        <td className="td-numeric td-fh" style={getHeatmapStyle(item.fh)}>
+                                                            {item.fh !== null ? item.fh.toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : '—'}
+                                                        </td>
+                                                        <td className="td-numeric td-wa" style={getHeatmapStyle(item.wa)}>
+                                                            {item.wa !== null ? item.wa.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'}
+                                                        </td>
+                                                        {allCategoryColumns.map(cat => {
+                                                            const val = item.categories[cat]
+                                                            return (
+                                                                <td key={cat} className="td-numeric heatmap-cell" style={getHeatmapStyle(val)}>
+                                                                    {val !== undefined && val !== null
+                                                                        ? val.toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+                                                                        : '—'}
+                                                                </td>
+                                                            )
+                                                        })}
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                            <tfoot>
+                                                <tr className="table-footer-row">
+                                                    <td className="td-anime td-footer-label">Průměr ({tableData.total} anime)</td>
+                                                    <td className="td-numeric td-fh" style={getHeatmapStyle(tableData.avgFh)}>
+                                                        {tableData.avgFh.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                     </td>
-                                                )
-                                            })}
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                                                    <td className="td-numeric td-wa">
+                                                        —
+                                                    </td>
+                                                    {allCategoryColumns.map(cat => {
+                                                        const avg = tableData.catAverages[cat]
+                                                        return (
+                                                            <td key={cat} className="td-numeric heatmap-cell" style={getHeatmapStyle(avg)}>
+                                                                {avg !== null ? avg.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'}
+                                                            </td>
+                                                        )
+                                                    })}
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                    <div className="table-footer-stats">
+                                        <span>Zobrazeno: <strong>{tableData.total}</strong> anime</span>
+                                        <span>Průměr FH: <strong>{tableData.avgFh.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></span>
+                                        {tableData.bestCat && <span>Nejvyšší kat.: <strong>{tableData.bestCat}</strong> ({tableData.bestVal.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})</span>}
+                                        {tableData.worstCat && <span>Nejnižší kat.: <strong>{tableData.worstCat}</strong> ({tableData.worstVal.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})</span>}
+                                    </div>
+                                </div>
                             </div>
-                            <div className="table-footer-stats">
-                                <span>Zobrazeno: <strong>{tableData.total}</strong> anime</span>
-                                <span>Průměr FH: <strong>{tableData.avgFh.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></span>
-                                {tableData.bestCat && <span>Nejvyšší kat.: <strong>{tableData.bestCat}</strong> ({tableData.bestVal.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})</span>}
-                                {tableData.worstCat && <span>Nejnižší kat.: <strong>{tableData.worstCat}</strong> ({tableData.worstVal.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})</span>}
-                            </div>
-                        </div>
-                    </div>
-                </Fragment>
-            )}
-            </>
+                        </Fragment>
+                    )}
+                </>
             )}
         </div>
     )

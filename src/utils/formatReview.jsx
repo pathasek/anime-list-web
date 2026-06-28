@@ -82,6 +82,11 @@ export function formatReview(text, animeName) {
   const normalizedText = normalizeDashes(text);
   const normalizedAnimeName = normalizeDashes(animeName);
 
+  const namesToMatch = [normalizedAnimeName];
+  if (normalizedAnimeName && normalizedAnimeName.includes(',')) {
+    namesToMatch.push(normalizedAnimeName.split(',')[0].trim());
+  }
+
   const masterRegex = buildMasterRegex();
   const parts = [];
   let lastIndex = 0;
@@ -100,7 +105,7 @@ export function formatReview(text, animeName) {
     // Add text before match
     if (match.index > lastIndex) {
       const beforeText = normalizedText.slice(lastIndex, match.index);
-      parts.push(...highlightAnimeName(beforeText, normalizedAnimeName, parts.length === 0));
+      parts.push(...highlightAnimeName(beforeText, namesToMatch, parts.length === 0));
     }
 
     const fullMatch = match[0];
@@ -151,7 +156,7 @@ export function formatReview(text, animeName) {
   // Add remaining text
   if (lastIndex < normalizedText.length) {
     const remaining = normalizedText.slice(lastIndex);
-    parts.push(...highlightAnimeName(remaining, normalizedAnimeName, parts.length === 0));
+    parts.push(...highlightAnimeName(remaining, namesToMatch, parts.length === 0));
   }
 
   return parts.length > 0 ? parts : normalizedText;
@@ -160,14 +165,21 @@ export function formatReview(text, animeName) {
 // ============================================================
 // HIGHLIGHT ANIME NAME (bold)
 // ============================================================
-function highlightAnimeName(text, animeName, isFirst) {
-  if (!animeName || !text.includes(animeName)) {
+function highlightAnimeName(text, animeNames, isFirst) {
+  if (!animeNames || animeNames.length === 0) {
+    return [<span key={Math.random()}>{text}</span>];
+  }
+
+  // Create a combined regex for all possible names, matching longest first
+  const escapedNames = animeNames.map(escapeRegex);
+  const regex = new RegExp(`(${escapedNames.join('|')})`, 'gi');
+  
+  if (!text.match(regex)) {
     return [<span key={Math.random()}>{text}</span>];
   }
 
   const parts = [];
-  const escaped = escapeRegex(animeName);
-  const regex = new RegExp(escaped, 'gi');
+  regex.lastIndex = 0;
   let lastIdx = 0;
   let m;
 

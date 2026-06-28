@@ -1362,6 +1362,11 @@ function Dashboard() {
                                 <div className="tag-search-wrapper" style={{ position: 'relative' }}>
                                     <span className="tag-search-icon">🔍</span>
                                     <input type="text" className="tag-search-input" placeholder="Hledat tagy…" value={tagSearchQuery} onChange={e => setTagSearchQuery(e.target.value)} />
+                                    {tagSearchQuery && (
+                                        <button className="tag-search-clear" onClick={() => setTagSearchQuery('')} title="Zrušit vyhledávání">
+                                            ✕
+                                        </button>
+                                    )}
                                 </div>
                                 {(selectedTags.size > 0 || excludedTags.size > 0) && (
                                     <div className="tag-filter-controls">
@@ -1428,9 +1433,9 @@ function Dashboard() {
 
                         {/* Bottom: Spiral Word Cloud */}
                         {excelData.tagCloud && excelData.tagCloud.length > 0 && (
-                            <div className="full-chart-wrapper wide" style={{ maxWidth: 'none', aspectRatio: 'unset' }}>
+                            <div className="full-chart-wrapper wide" style={{ maxWidth: 'none', aspectRatio: 'unset', height: '500px' }}>
                                 <div className="chart-title">☁️ Word Cloud — AniList Tagy (relevance)</div>
-                                <div className="chart-body" style={{ flex: 'none' }}>
+                                <div className="chart-body">
                                     <SpiralWordCloud tags={excelData.tagCloud} tagDescriptions={excelData.tagDescriptions} onTagClick={handleWcClick} selectedTags={selectedTags} excludedTags={excludedTags} />
                                 </div>
                             </div>
