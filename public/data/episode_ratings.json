@@ -12832,5 +12832,22 @@
         "rating": 7.0
       }
     ]
+  },
+  {
+    "name": "Lord of Mysteries Specials",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 9.5
+      }
+    ]
   }
 ]
