@@ -2,16 +2,51 @@
  * Utility functions for computing Anime Wrapped statistics from raw user data.
  */
 
-// Helper to translate months to Czech
+// Helper to translate months to Czech (Nominative)
 const CZECH_MONTHS = [
-    'Lednu', 'Únoru', 'Březnu', 'Dubnu', 'Květnu', 'Červnu', 
-    'Červenci', 'Srpnu', 'Září', 'Říjnu', 'Listopadu', 'Prosinci'
+    'Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen', 
+    'Červenec', 'Srpen', 'Září', 'Říjen', 'Listopad', 'Prosinec'
+];
+
+// Helper to translate months to Czech (Locative - after "V")
+const CZECH_MONTHS_LOCATIVE = [
+    'lednu', 'únoru', 'březnu', 'dubnu', 'květnu', 'červnu', 
+    'červenci', 'srpnu', 'září', 'říjnu', 'listopadu', 'prosinci'
 ];
 
 // Helper to translate days of week to Czech
 const CZECH_DAYS = [
     'Neděle', 'Pondělí', 'Úterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota'
 ];
+
+/**
+ * Checks if the user watched the anime weekly/simulcast as it aired.
+ * According to MAL rules (from INFO_5_MAL.jpg):
+ * 1. started the title within 4 weeks (28 days) of beginning broadcast, and
+ * 2. completed it within 2 weeks (14 days) of finishing airing.
+ */
+function isWeeklyWatch(a) {
+    if (!a.release_date || !a.start_date || !a.end_date) return false;
+    const release = new Date(a.release_date);
+    const start = new Date(a.start_date.split('T')[0]);
+    const end = new Date(a.end_date.split('T')[0]);
+    
+    // Started within 4 weeks (28 days) of airing start, allowing up to 7 days before
+    const diffDaysStart = (start - release) / (1000 * 60 * 60 * 24);
+    if (diffDaysStart < -7 || diffDaysStart > 28) return false;
+    
+    const eps = parseInt(a.episodes) || 12;
+    const estimatedAiringDays = Math.max(0, eps - 1) * 7;
+    const estimatedEndAiring = new Date(release);
+    estimatedEndAiring.setDate(estimatedEndAiring.getDate() + estimatedAiringDays);
+    
+    const diffDaysEnd = (end - estimatedEndAiring) / (1000 * 60 * 60 * 24);
+    // Completed within 2 weeks (14 days) of airing end, allowing up to 14 days before
+    if (diffDaysEnd < -14 || diffDaysEnd > 14) return false;
+    
+    return true;
+}
+
 
 /**
  * Parses episodes string like "(3x) EP 1-3" or "EP 12" to get numeric count of episodes watched
@@ -201,6 +236,7 @@ export function calculateWrappedData(animeList, historyLog, statsJson, jikanCach
         }
     });
     const peakMonthName = CZECH_MONTHS[peakMonthIdx];
+    const peakMonthLocative = CZECH_MONTHS_LOCATIVE[peakMonthIdx];
 
     // ----------------------------------------------------
     // 4. FAVORITE DAY OF WEEK (SLIDE 5)
@@ -284,10 +320,12 @@ export function calculateWrappedData(animeList, historyLog, statsJson, jikanCach
                 const pad = (n) => n.toString().padStart(2, '0');
                 const dStr = `${currDate.getFullYear()}-${pad(currDate.getMonth() + 1)}-${pad(currDate.getDate())}`;
                 
+                const isOtherYear = !isAllTime && currDate.getFullYear().toString() !== year;
                 col.push({
                     date: new Date(currDate),
                     dateStr: dStr,
-                    eps: dailyTotals[dStr] || 0
+                    eps: dailyTotals[dStr] || 0,
+                    isOtherYear: isOtherYear
                 });
                 currDate.setDate(currDate.getDate() + 1);
             }
@@ -435,14 +473,9 @@ export function calculateWrappedData(animeList, historyLog, statsJson, jikanCach
             recencyCount++;
         }
 
-        // Seasonal Warrior: started watching within 30 days of release
-        if (a.start_date && isRecent) {
-            const release = new Date(a.release_date);
-            const start = new Date(a.start_date);
-            const diffDays = (start - release) / (1000 * 60 * 60 * 24);
-            if (diffDays >= -7 && diffDays <= 30) { // started shortly before or within 30 days
-                seasonalCount++;
-            }
+        // Seasonal Warrior: watched weekly/simulcast as it aired
+        if (isRecent && isWeeklyWatch(a)) {
+            seasonalCount++;
         }
     });
 
@@ -508,7 +541,7 @@ export function calculateWrappedData(animeList, historyLog, statsJson, jikanCach
     // MAL formula: scored lower than 75% of community, meaning negative diff
     const hotTakes = [...userDifferences]
         .sort((a, b) => a.diff - b.diff) // biggest negative differences first
-        .slice(0, 3);
+        .slice(0, 10);
 
     // Under-hyped: user score is high (>=8), community is lower, positive diff
     const underHyped = [...userDifferences]
@@ -584,6 +617,12 @@ export function calculateWrappedData(animeList, historyLog, statsJson, jikanCach
     filteredAnime.forEach(a => {
         if (!a.release_date) return;
         const date = new Date(a.release_date);
+        
+        // Pro roční období uvažujeme POUZE anime vydané v daném roce (new releases)
+        if (!isAllTime && date.getFullYear().toString() !== year) return;
+
+
+
         const month = date.getMonth(); // 0-11
         
         let seasonKey = 'Winter';
@@ -635,12 +674,20 @@ export function calculateWrappedData(animeList, historyLog, statsJson, jikanCach
     // ----------------------------------------------------
     const topAnime = [...ratedAnime]
         .sort((a, b) => {
-            // Sort by rating desc, then by total_time desc
+            // Sort by rating desc, then by user-community difference (hidden gem factor), then by total_time desc
             const scoreDiff = parseFloat(b.rating) - parseFloat(a.rating);
             if (scoreDiff !== 0) return scoreDiff;
+            
+            // Poměr k počtu lidí / skryté klenoty: čím větší diff (user > community), tím výše
+            const aDiffObj = userDifferences.find(ud => ud.name === a.name);
+            const bDiffObj = userDifferences.find(ud => ud.name === b.name);
+            const aDiff = aDiffObj ? aDiffObj.diff : 0;
+            const bDiff = bDiffObj ? bDiffObj.diff : 0;
+            if (bDiff !== aDiff) return bDiff - aDiff;
+            
             return parseFloat(b.total_time || 0) - parseFloat(a.total_time || 0);
         })
-        .slice(0, 5);
+        .slice(0, 10);
 
     return {
         year,
@@ -658,6 +705,7 @@ export function calculateWrappedData(animeList, historyLog, statsJson, jikanCach
         avgEpDuration: parseFloat(Number(avgEpDuration).toFixed(2)),
         
         peakMonthName,
+        peakMonthLocative,
         peakMonthEpCount,
         activeDayName,
         activeDayRatio: Math.round(activeDayRatio * 100),

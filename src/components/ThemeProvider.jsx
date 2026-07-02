@@ -8,6 +8,7 @@ const THEMES = [
     { id: 'pastel-light', label: 'Pastel Light', icon: '🌸', description: 'Jemný pastelový světlý styl' },
     { id: 'excel-table', label: 'Excel Classic', icon: '📊', description: 'Čistý tabulkový Excel-like styl' },
     { id: 'rezero', label: 'Re:Zero', icon: '💎', description: 'Exkluzivní fialovo-stříbrné téma s krystalem a miasmatem' },
+    { id: 'cyberpunk', label: 'Cyberpunk', icon: '⚡', description: 'Neonově růžový a azurový kyberpunkový styl' },
     { id: 'scarlet-outline', label: 'Scarlet Outline', icon: '🌹', description: 'Temně karmínové téma inspirované červenými obrysy v anime (R7 bright rose, R3 deep crimson)' },
     { id: 'obsidian-grey', label: 'Obsidian Grey', icon: '⚙️', description: 'Minimalistický grafitový design' },
     { id: 'emerald-forest', label: 'Emerald Forest', icon: '🍃', description: 'Hluboký lesní a mátový design s vysokým kontrastem' },

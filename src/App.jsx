@@ -216,17 +216,17 @@ function App() {
     // Preload all list and detail data in the background
     preloadAllData()
 
-    fetch('data/stats.json?v=' + Date.now())
+    fetch('data/stats.json')
       .then(res => res.json())
       .then(data => setStats(data))
       .catch(err => console.error('Failed to load stats:', err))
 
     // Start background download for Jikan API v4 episodes 24/7 across the entire application
-    fetch('data/anime_list.json?v=' + Date.now())
+    fetch('data/anime_list.json')
       .then(res => res.json())
       .then(al => {
         // First bulk import the static cache deployed on the server
-        fetch('data/jikan_cache.json?v=' + Date.now())
+        fetch('data/jikan_cache.json')
           .then(res => {
             if (!res.ok) throw new Error('Static Jikan cache not available on server');
             return res.json();

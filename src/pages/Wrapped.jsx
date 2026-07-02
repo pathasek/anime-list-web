@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { loadData, STORAGE_KEYS } from '../utils/dataStore';
-import { extractMalId, getAnimeInfo } from '../utils/jikanService';
 import { calculateWrappedData } from '../utils/wrappedCalculations';
+import { extractMalId, getAnimeInfo } from '../utils/jikanService';
 import './Wrapped.css';
+
+
 
 // Jikan Poster component loading images asynchronously
 function JikanPoster({ malUrl, size = 'small' }) {
@@ -25,7 +27,7 @@ function JikanPoster({ malUrl, size = 'small' }) {
         return () => { cancelled = true; };
     }, [malUrl, size]);
 
-    const dims = size === 'large' ? { width: '85px', height: '120px' } : { width: '45px', height: '64px' };
+    const dims = size === 'large' ? { width: '130px', height: '185px' } : { width: '80px', height: '113px' };
 
     return (
         <div className="jikan-poster-container" style={dims}>
@@ -59,7 +61,7 @@ const HEATMAP_COLOR_LEVEL_3 = 13;
 const HEATMAP_COLOR_LEVEL_4 = 19;
 
 const getHeatmapColor = (eps) => {
-    if (eps === 0) return 'rgba(255, 255, 255, 0.04)';
+    if (eps === 0) return 'var(--bg-secondary)';
     if (eps <= HEATMAP_COLOR_LEVEL_1) return '#0e4429';
     if (eps <= HEATMAP_COLOR_LEVEL_2) return '#006d32';
     if (eps <= HEATMAP_COLOR_LEVEL_3) return '#26a641';
@@ -83,6 +85,7 @@ export default function Wrapped() {
     const [isPlaying, setIsPlaying] = useState(false);
     const [progress, setProgress] = useState(0);
 
+
     const progressInterval = useRef(null);
     const lastTickTime = useRef(0);
     const SLIDE_DURATION = 5500; // 5.5 seconds per slide
@@ -94,11 +97,11 @@ export default function Wrapped() {
                 const [al, hl, st] = await Promise.all([
                     loadData(STORAGE_KEYS.ANIME_LIST, 'data/anime_list.json'),
                     loadData(STORAGE_KEYS.HISTORY_LOG, 'data/history_log.json'),
-                    fetch('data/stats.json?v=' + Date.now()).then(res => res.json()).catch(() => null)
+                    fetch('data/stats.json').then(res => res.json()).catch(() => null)
                 ]);
                 
                 // Fetch static cache to obtain community scores
-                const cache = await fetch('data/jikan_cache.json?v=' + Date.now())
+                const cache = await fetch('data/jikan_cache.json')
                     .then(res => res.ok ? res.json() : null)
                     .catch(() => null);
 
@@ -276,19 +279,48 @@ export default function Wrapped() {
             {/* ==================================================== */}
             {/* STORIES MODE VIEW */}
             {/* ==================================================== */}
-            {viewMode === 'stories' && (
+            {viewMode === 'stories' && currentSlide === 0 && (
                 <div 
-                    className="stories-wrapper"
+                    className="stories-wrapper stories-inline-card"
                     onMouseDown={handleMouseDown}
                     onMouseUp={handleMouseUp}
                     onTouchStart={handleMouseDown}
                     onTouchEnd={handleMouseUp}
+                    style={{ margin: '2rem auto' }}
                 >
                     {/* Morphing Background */}
                     <div className={`stories-bg ${slideBgs[currentSlide]}`} />
+                    
+                    {/* Slide 1: Welcome Intro */}
+                    <div className="story-slide">
+                        <div className="intro-crown">👑</div>
+                        <h1 className="intro-year">{selectedYear === 'all' ? 'All-Time' : selectedYear}</h1>
+                        <h2 className="animate-title">Tvůj Anime Wrapped</h2>
+                        <h3 className="animate-title animate-delay-1">Objev svoji sledovací cestu!</h3>
+                        <p className="animate-fade-up animate-delay-2" style={{ maxWidth: '300px', marginBottom: '2rem' }}>
+                            Sečteno a podtrženo z tvých reálných dat.
+                        </p>
+                        <button className="btn-start-wrapped animate-fade-up animate-delay-3" onClick={handleStart}>
+                            Odstartovat 🚀
+                        </button>
+                    </div>
+                </div>
+            )}
 
-                    {/* Progress bars at top (Instagram Stories style) */}
-                    {currentSlide > 0 && (
+            {viewMode === 'stories' && currentSlide > 0 && (
+                <div className="stories-modal-overlay">
+                    <button className="stories-close-btn" onClick={() => { setViewMode('classic'); setIsPlaying(false); }}>✕ Klasický Přehled</button>
+                    <div 
+                        className="stories-wrapper stories-container-9-16"
+                        onMouseDown={handleMouseDown}
+                        onMouseUp={handleMouseUp}
+                        onTouchStart={handleMouseDown}
+                        onTouchEnd={handleMouseUp}
+                    >
+                        {/* Morphing Background */}
+                        <div className={`stories-bg ${slideBgs[currentSlide]}`} />
+
+                        {/* Progress bars at top (Instagram Stories style) */}
                         <div className="stories-indicators">
                             {Array.from({ length: TOTAL_SLIDES }).map((_, idx) => (
                                 <div key={idx} className="indicator-bar">
@@ -301,31 +333,14 @@ export default function Wrapped() {
                                 </div>
                             ))}
                         </div>
-                    )}
 
-                    {/* Invisible Navigation Click Triggers */}
-                    <div className="story-nav-triggers">
-                        <div className="story-trigger-left" onClick={handlePrevSlide} />
-                        <div className="story-trigger-right" onClick={handleNextSlide} />
-                    </div>
-
-                    {/* ---------------- SLIDE CONTAINER ---------------- */}
-                    
-                    {/* Slide 1: Welcome Intro */}
-                    {currentSlide === 0 && (
-                        <div className="story-slide">
-                            <div className="intro-crown">👑</div>
-                            <h1 className="intro-year">{selectedYear === 'all' ? 'All-Time' : selectedYear}</h1>
-                            <h2 className="animate-title">Tvůj Anime Wrapped</h2>
-                            <h3 className="animate-title animate-delay-1">Objev svoji sledovací cestu!</h3>
-                            <p className="animate-fade-up animate-delay-2" style={{ maxWidth: '300px', marginBottom: '2rem' }}>
-                                Sečteno a podtrženo z tvých reálných dat.
-                            </p>
-                            <button className="btn-start-wrapped animate-fade-up animate-delay-3" onClick={handleStart}>
-                                Odstartovat 🚀
-                            </button>
+                        {/* Invisible Navigation Click Triggers */}
+                        <div className="story-nav-triggers">
+                            <div className="story-trigger-left" onClick={handlePrevSlide} />
+                            <div className="story-trigger-right" onClick={handleNextSlide} />
                         </div>
-                    )}
+
+                        {/* ---------------- SLIDE CONTAINER ---------------- */}
 
                     {/* Slide 2: Watch Time */}
                     {currentSlide === 1 && (
@@ -382,7 +397,7 @@ export default function Wrapped() {
                             <h3 className="animate-title animate-delay-1">Měsíc s největší aktivitou</h3>
                             <div className="intro-crown animate-fade-up animate-delay-1">📅</div>
                             <div className="stats-highlight-val animate-fade-up animate-delay-2">
-                                V {data.peakMonthName}
+                                V {data.peakMonthLocative}
                             </div>
                             <div className="stats-sub-text animate-fade-up animate-delay-2">
                                 Zhlédnuto {data.peakMonthEpCount} epizod!
@@ -724,8 +739,7 @@ export default function Wrapped() {
                         <div className="story-slide" style={{ padding: '2rem 1.5rem' }}>
                             <h2 className="animate-title" style={{ marginBottom: '1rem' }}>Tvůj {selectedYear} v kostce</h2>
                             
-                            {/* Share card wrapper */}
-                            <div className="recap-card animate-fade-up animate-delay-1">
+                            <div id="recap-share-card" className="recap-card animate-fade-up animate-delay-1">
                                 <div className="recap-header">
                                     <div className="recap-logo">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -758,9 +772,9 @@ export default function Wrapped() {
                                 </div>
 
                                 <div style={{ textAlign: 'left', marginTop: '0.2rem' }}>
-                                    <span className="recap-stat-label">Tvoje Top 5 Anime:</span>
+                                    <span className="recap-stat-label">Tvoje Top 10 Anime:</span>
                                     <div className="recap-posters-row">
-                                        {data.topAnime.map((item, idx) => (
+                                        {data.topAnime.slice(0, 10).map((item, idx) => (
                                             <div key={idx} className="recap-poster-wrapper" title={`${item.name} (★ ${item.rating})`}>
                                                 <JikanPoster malUrl={item.mal_url} />
                                             </div>
@@ -769,12 +783,26 @@ export default function Wrapped() {
                                 </div>
                             </div>
 
-                            <button className="btn-start-wrapped animate-fade-up animate-delay-2" style={{ marginTop: '1.5rem' }} onClick={() => setCurrentSlide(0)}>
-                                Přehrát znovu 🔄
-                            </button>
+                            <div style={{ display: 'flex', gap: '0.5rem', width: '100%', marginTop: '1.5rem', justifyContent: 'center' }}>
+                                <button className="btn-start-wrapped" style={{ padding: '0.6rem 1.2rem', fontSize: '0.9rem' }} onClick={() => {
+                                    const text = `📊 Můj Anime List Wrapped ${selectedYear}:\n` +
+                                        `⏱️ Čas sledování: ${data.totalTimeFormatted.replace(':', 'h ') + 'm'} (${data.durationText})\n` +
+                                        `🏆 Dokončená anime: ${data.completedCount} děl (${data.totalEpCount} ep)\n` +
+                                        `⭐ Průměrné hodnocení: ★ ${data.avgScore.toString().replace('.', ',')}\n` +
+                                        `👑 Moje Top 3 Anime: ${data.topAnime.slice(0, 3).map(a => a.name).join(', ')}`;
+                                    navigator.clipboard.writeText(text);
+                                    alert('Statistiky byly zkopírovány do schránky!');
+                                }}>
+                                    📋 Kopírovat text
+                                </button>
+                                <button className="btn-start-wrapped animate-delay-2" style={{ padding: '0.6rem 1.2rem', fontSize: '0.9rem', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)' }} onClick={() => setCurrentSlide(0)}>
+                                    Přehrát znovu 🔄
+                                </button>
+                            </div>
                         </div>
                     )}
                 </div>
+            </div>
             )}
 
             {/* ==================================================== */}
@@ -790,7 +818,7 @@ export default function Wrapped() {
                                 {data.totalTimeFormatted.replace(':', 'h ') + 'm'}
                             </div>
                             <p>{data.durationText}</p>
-                            <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.6)', marginTop: '0.5rem' }}>
+                            <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
                                 Průměrně {data.minsPerDay} minut denně.
                             </p>
                         </div>
@@ -801,7 +829,7 @@ export default function Wrapped() {
                                 {data.completedCount} Anime
                             </div>
                             <p>Zhlédnuto celkem {data.totalEpCount} epizod.</p>
-                            <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.6)', marginTop: '0.5rem' }}>
+                            <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
                                 Z toho {data.rewatchedCount} rewatchů ({data.rewatchEpCount} ep).
                             </p>
                         </div>
@@ -812,7 +840,7 @@ export default function Wrapped() {
                                 ★ {data.avgScore.toString().replace('.', ',')}
                             </div>
                             <p>Hodnoceno celkem {data.completedCount} děl.</p>
-                            <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.6)', marginTop: '0.5rem' }}>
+                            <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
                                 Oblíbené období: {data.favoriteSeason}.
                             </p>
                         </div>
@@ -829,7 +857,7 @@ export default function Wrapped() {
                                         <div key={score} className="chart-bar-row">
                                             <span className="chart-bar-label" style={{ minWidth: '150px' }}>{score} - {MAL_SCORE_LABELS[score]}</span>
                                             <div className="chart-bar-wrapper">
-                                                <div className="chart-bar-fill" style={{ width: `${pct}%`, background: 'linear-gradient(90deg, #818cf8, #c084fc)' }} />
+                                                <div className="chart-bar-fill" style={{ width: `${pct}%`, background: 'var(--gradient-primary)' }} />
                                             </div>
                                             <span className="chart-bar-value">{count}x</span>
                                         </div>
@@ -846,17 +874,17 @@ export default function Wrapped() {
                             <p>Nejaktivnější měsíc: <strong>{data.peakMonthName}</strong> ({data.peakMonthEpCount} epizod)</p>
                             
                             <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                                <span className="badge-deviation positive" style={{ padding: '0.35rem 0.75rem', borderRadius: '20px' }}>
+                                <span className="badge-deviation positive">
                                     Recency Bias: {data.recencyBiasRatio}%
                                 </span>
-                                <span className="badge-deviation" style={{ padding: '0.35rem 0.75rem', borderRadius: '20px', background: 'rgba(129, 140, 248, 0.2)', borderColor: 'rgba(129, 140, 248, 0.4)', color: '#818cf8' }}>
+                                <span className="badge-deviation seasonal">
                                     Seasonal Warrior: {data.seasonalWarriorRatio}%
                                 </span>
                             </div>
 
                             {data.heatmapColumns && data.heatmapColumns.length > 0 && (
                                 <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column' }}>
-                                    <h4 style={{ fontSize: '0.9rem', marginBottom: '0.75rem', color: 'rgba(255,255,255,0.7)' }}>Kalendář aktivity</h4>
+                                    <h4 style={{ fontSize: '0.9rem', marginBottom: '0.75rem', color: 'var(--text-secondary)' }}>Kalendář aktivity</h4>
                                     
                                     <div style={{ display: 'flex', flexDirection: 'column', overflowX: 'auto', paddingBottom: '6px', width: '100%' }}>
                                         {/* Months Header */}
@@ -864,12 +892,12 @@ export default function Wrapped() {
                                             {data.heatmapColumns.map((col, cIdx) => {
                                                 const currentMonth = col[0].date.getMonth();
                                                 const prevMonth = cIdx > 0 ? data.heatmapColumns[cIdx - 1][0].date.getMonth() : -1;
-                                                const showMonth = cIdx === 0 || currentMonth !== prevMonth;
+                                                const showMonth = cIdx > 0 && currentMonth !== prevMonth;
 
                                                 return (
                                                     <div key={`m-${cIdx}`} style={{ width: '10px', height: '16px', flexShrink: 0, position: 'relative' }}>
                                                         {showMonth && (
-                                                            <span style={{ position: 'absolute', bottom: 0, left: 0, fontSize: '0.65rem', color: 'rgba(255,255,255,0.4)', whiteSpace: 'nowrap', zIndex: 1 }}>
+                                                            <span style={{ position: 'absolute', bottom: 0, left: 0, fontSize: '0.65rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', zIndex: 1 }}>
                                                                 {col[0].date.toLocaleDateString('cs-CZ', { month: 'short' })}
                                                             </span>
                                                         )}
@@ -882,7 +910,7 @@ export default function Wrapped() {
                                             {/* Days Sidebar */}
                                             <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', marginRight: '8px', marginTop: '2px' }}>
                                                 {['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'].map((day, idx) => (
-                                                    <div key={day} style={{ height: '10px', fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)', display: 'flex', alignItems: 'center', width: '16px', lineHeight: 1 }}>
+                                                    <div key={day} style={{ height: '10px', fontSize: '0.6rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', width: '16px', lineHeight: 1 }}>
                                                         {[0, 2, 4].includes(idx) ? day : ''}
                                                     </div>
                                                 ))}
@@ -901,7 +929,9 @@ export default function Wrapped() {
                                                                     height: '10px',
                                                                     backgroundColor: getHeatmapColor(cell.eps),
                                                                     borderRadius: '2px',
-                                                                    transition: 'opacity 0.2s, transform 0.1s'
+                                                                    transition: 'opacity 0.2s, transform 0.1s',
+                                                                    opacity: cell.isOtherYear ? 0 : 1,
+                                                                    pointerEvents: cell.isOtherYear ? 'none' : 'auto'
                                                                 }}
                                                                 onMouseEnter={e => {
                                                                     e.target.style.opacity = '0.7';
@@ -920,7 +950,7 @@ export default function Wrapped() {
                                     </div>
 
                                     {/* Heatmap Legend */}
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '12px', fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', flexWrap: 'wrap' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '12px', fontSize: '0.7rem', color: 'var(--text-muted)', flexWrap: 'wrap' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                                             <div style={{ width: '10px', height: '10px', borderRadius: '2px', backgroundColor: getHeatmapColor(0) }} />
                                             0 epizod
@@ -1036,12 +1066,12 @@ export default function Wrapped() {
                         <h3>🌸 Sledování podle ročních období</h3>
                         <div className="classic-grid-2col" style={{ gap: '1.5rem', marginTop: '1rem' }}>
                             {Object.entries(data.seasons).map(([key, season]) => (
-                                <div key={key} style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '1rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                                <div key={key} style={{ background: 'var(--bg-secondary)', padding: '1rem', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
                                     <div style={{ display: 'flex', justifySelf: 'stretch', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                                        <strong style={{ fontSize: '1.1rem', color: '#a5b4fc' }}>
+                                        <strong style={{ fontSize: '1.1rem', color: 'var(--accent-primary)' }}>
                                             {key === 'Winter' ? '❄️ Zima' : (key === 'Spring' ? '🌸 Jaro' : (key === 'Summer' ? '☀️ Léto' : '🍁 Podzim'))}
                                         </strong>
-                                        <span style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.6)' }}>
+                                        <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
                                             {season.total} děl (průměr: ★ {season.avgScore.toString().replace('.', ',')})
                                         </span>
                                     </div>
@@ -1049,7 +1079,7 @@ export default function Wrapped() {
                                     {season.items && season.items.length > 0 ? (
                                         <div className="horizontal-scroll-posters" style={{ paddingBottom: '0.5rem' }}>
                                             {season.topAnime.map((item, idx) => (
-                                                <div key={idx} className="scroll-poster-item" style={{ width: '80px' }}>
+                                                <div key={idx} className="scroll-poster-item">
                                                     <JikanPoster malUrl={item.mal_url} />
                                                     <div className="scroll-poster-title" style={{ fontSize: '0.7rem' }}>{item.name}</div>
                                                     <div className="scroll-poster-rating" style={{ fontSize: '0.65rem' }}>★ {item.rating}</div>
@@ -1057,7 +1087,7 @@ export default function Wrapped() {
                                             ))}
                                         </div>
                                     ) : (
-                                        <div style={{ padding: '1rem 0', color: 'rgba(255,255,255,0.4)', fontSize: '0.9rem', textAlign: 'center' }}>
+                                        <div style={{ padding: '1rem 0', color: 'var(--text-muted)', fontSize: '0.9rem', textAlign: 'center' }}>
                                             Žádná dokončená anime.
                                         </div>
                                     )}

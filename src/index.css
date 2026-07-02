@@ -4380,3 +4380,36 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 [data-theme="retro-8bit"] .badge-pink {
   color: #1e1b4b !important; /* Dark color for low contrast pinks */
 }
+
+/* ─── Cyberpunk Theme ─── */
+[data-theme="cyberpunk"] {
+  --bg-primary: #05010a;
+  --bg-secondary: #120024;
+  --bg-tertiary: #1b0035;
+  --bg-card: #0f0319;
+  --bg-hover: #24003d;
+
+  --accent-primary: #ff0055;
+  --accent-secondary: #00f3ff;
+  --accent-pink: #ff0055;
+  --accent-cyan: #00f3ff;
+  --accent-emerald: #00ff66;
+  --accent-amber: #ffcc00;
+  --accent-red: #ff3366;
+
+  --text-primary: #00f3ff;
+  --text-secondary: #ff0055;
+  --text-muted: #817293;
+
+  --border-color: #ff0055;
+  --border-light: #00f3ff;
+
+  --gradient-primary: linear-gradient(135deg, #ff0055 0%, #00f3ff 100%);
+  --gradient-pink: linear-gradient(135deg, #ff0055 0%, #00f3ff 100%);
+  --gradient-card: linear-gradient(145deg, rgba(255, 0, 85, 0.1) 0%, transparent 100%);
+
+  --shadow-sm: 0 1px 3px rgba(255, 0, 85, 0.3);
+  --shadow-md: 0 4px 12px rgba(255, 0, 85, 0.4);
+  --shadow-lg: 0 8px 24px rgba(255, 0, 85, 0.5);
+  --shadow-glow: 0 0 16px rgba(255, 0, 85, 0.6);
+}
