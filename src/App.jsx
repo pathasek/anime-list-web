@@ -9,6 +9,7 @@ import PlanToWatch from './pages/PlanToWatch'
 import AnimeRatings from './pages/AnimeRatings'
 import TopFavorites from './pages/TopFavorites'
 import StatsTree from './pages/StatsTree'
+import Wrapped from './pages/Wrapped'
 import Recommendations from './pages/Recommendations'
 import { ThemeProvider } from './components/ThemeProvider'
 import ThemeSwitcher from './components/ThemeSwitcher'
@@ -162,6 +163,10 @@ function AppContent({ stats }) {
             <Icons.Tree />
             <span>Research Tree</span>
           </NavLink>
+          <NavLink to="/wrapped" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
+            <span style={{ fontSize: '1.2rem', paddingRight: '0.4rem' }}>🎁</span>
+            <span>Anime Wrapped</span>
+          </NavLink>
         </nav>
 
         <ThemeSwitcher />
@@ -197,6 +202,7 @@ function AppContent({ stats }) {
           <Route path="/plan-to-watch" element={<PlanToWatch />} />
           <Route path="/recommendations" element={<Recommendations />} />
           <Route path="/stats-tree" element={<StatsTree />} />
+          <Route path="/wrapped" element={<Wrapped />} />
         </Routes>
       </main>
     </div>
