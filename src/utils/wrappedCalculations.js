@@ -226,13 +226,19 @@ export function calculateWrappedData(animeList, historyLog, statsJson, jikanCach
     const activeDayRatio = totalHistoryEps > 0 ? (activeDayEpCount / totalHistoryEps) : 0;
 
     // ----------------------------------------------------
-    // 5. UNIQUE DAYS WATCHED (SLIDE 6)
+    // 5. UNIQUE DAYS WATCHED (SLIDE 6) & HEATMAP
     // ----------------------------------------------------
     const uniqueDates = new Set();
+    const dailyTotals = {};
+
     filteredHistory.forEach(h => {
         if (!h.date) return;
         const dateStr = h.date.split('T')[0];
         uniqueDates.add(dateStr);
+        
+        const epMatch = h.episodes?.match(/\d+/);
+        const eps = epMatch ? parseInt(epMatch[0], 10) : 0;
+        dailyTotals[dateStr] = (dailyTotals[dateStr] || 0) + eps;
     });
 
     const uniqueDaysCount = uniqueDates.size;
@@ -240,18 +246,84 @@ export function calculateWrappedData(animeList, historyLog, statsJson, jikanCach
     const uniqueDaysRatio = totalYearDays > 0 ? Math.round((uniqueDaysCount / totalYearDays) * 100) : 0;
 
     // Build calendar grid data for Github-like grid
-    // For specific year, build day-by-day active state
     const calendarGrid = [];
+    const heatmapColumns = [];
+
     if (!isAllTime) {
         const startOfYear = new Date(`${year}-01-01`);
         const endOfYear = new Date(`${year}-12-31`);
+
+        // 1. Flat calendar grid for Slide 6
         for (let d = new Date(startOfYear); d <= endOfYear; d.setDate(d.getDate() + 1)) {
             const dStr = d.toISOString().split('T')[0];
+            const eps = dailyTotals[dStr] || 0;
             calendarGrid.push({
                 date: dStr,
-                active: uniqueDates.has(dStr),
+                active: eps > 0,
+                eps: eps,
                 dayOfWeek: d.getDay()
             });
+        }
+
+        // 2. Structured heatmap columns (representing weeks, starting on Monday)
+        const startHeatmap = new Date(startOfYear);
+        const dayOfWeek = startHeatmap.getDay(); // 0 is Sun, 1 is Mon...
+        const diff = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+        startHeatmap.setDate(startHeatmap.getDate() - diff);
+
+        const endHeatmap = new Date(endOfYear);
+        const endDayOfWeek = endHeatmap.getDay();
+        const endDiff = endDayOfWeek === 0 ? 0 : 7 - endDayOfWeek;
+        endHeatmap.setDate(endHeatmap.getDate() + endDiff);
+
+        let currDate = new Date(startHeatmap);
+        while (currDate <= endHeatmap) {
+            const col = [];
+            for (let d = 0; d < 7; d++) {
+                if (currDate > endHeatmap) break;
+                const pad = (n) => n.toString().padStart(2, '0');
+                const dStr = `${currDate.getFullYear()}-${pad(currDate.getMonth() + 1)}-${pad(currDate.getDate())}`;
+                
+                col.push({
+                    date: new Date(currDate),
+                    dateStr: dStr,
+                    eps: dailyTotals[dStr] || 0
+                });
+                currDate.setDate(currDate.getDate() + 1);
+            }
+            if (col.length > 0) {
+                heatmapColumns.push(col);
+            }
+        }
+    } else {
+        // For All-Time, build the last 364 days leading to today
+        const endHeatmap = new Date();
+        endHeatmap.setHours(23, 59, 59, 999);
+        const startHeatmap = new Date(endHeatmap);
+        startHeatmap.setDate(startHeatmap.getDate() - 364);
+
+        const dayOfWeek = startHeatmap.getDay();
+        const diff = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+        startHeatmap.setDate(startHeatmap.getDate() - diff);
+
+        let currDate = new Date(startHeatmap);
+        while (currDate <= endHeatmap) {
+            const col = [];
+            for (let d = 0; d < 7; d++) {
+                if (currDate > endHeatmap) break;
+                const pad = (n) => n.toString().padStart(2, '0');
+                const dStr = `${currDate.getFullYear()}-${pad(currDate.getMonth() + 1)}-${pad(currDate.getDate())}`;
+                
+                col.push({
+                    date: new Date(currDate),
+                    dateStr: dStr,
+                    eps: dailyTotals[dStr] || 0
+                });
+                currDate.setDate(currDate.getDate() + 1);
+            }
+            if (col.length > 0) {
+                heatmapColumns.push(col);
+            }
         }
     }
 
@@ -263,10 +335,11 @@ export function calculateWrappedData(animeList, historyLog, statsJson, jikanCach
         ? parseFloat((ratedAnime.reduce((sum, a) => sum + parseFloat(a.rating), 0) / ratedAnime.length).toFixed(2))
         : 0;
 
-    const scoreDistribution = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0 };
+    // Minimum rating is 5 (worst rating scale for user)
+    const scoreDistribution = { 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0 };
     ratedAnime.forEach(a => {
         const r = Math.round(parseFloat(a.rating));
-        if (r >= 1 && r <= 10) {
+        if (r >= 5 && r <= 10) {
             scoreDistribution[r]++;
         }
     });
@@ -591,6 +664,7 @@ export function calculateWrappedData(animeList, historyLog, statsJson, jikanCach
         uniqueDaysCount,
         uniqueDaysRatio,
         calendarGrid,
+        heatmapColumns,
         
         avgScore,
         scoreDistribution,

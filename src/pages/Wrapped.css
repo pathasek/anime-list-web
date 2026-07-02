@@ -16,7 +16,7 @@
 /* Year selector & view toggler in header */
 .wrapped-header {
     width: 100%;
-    max-width: 1000px;
+    max-width: 1400px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -564,7 +564,7 @@
 /* ==================================================== */
 .classic-view-container {
     width: 100%;
-    max-width: 1000px;
+    max-width: 1400px;
     padding: 2rem;
     display: flex;
     flex-direction: column;

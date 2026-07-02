@@ -53,6 +53,20 @@ const MAL_SCORE_LABELS = {
     1: 'Appalling'
 };
 
+const HEATMAP_COLOR_LEVEL_1 = 2;
+const HEATMAP_COLOR_LEVEL_2 = 6;
+const HEATMAP_COLOR_LEVEL_3 = 13;
+const HEATMAP_COLOR_LEVEL_4 = 19;
+
+const getHeatmapColor = (eps) => {
+    if (eps === 0) return 'rgba(255, 255, 255, 0.04)';
+    if (eps <= HEATMAP_COLOR_LEVEL_1) return '#0e4429';
+    if (eps <= HEATMAP_COLOR_LEVEL_2) return '#006d32';
+    if (eps <= HEATMAP_COLOR_LEVEL_3) return '#26a641';
+    if (eps <= HEATMAP_COLOR_LEVEL_4) return '#39d353';
+    return '#39d353';
+};
+
 export default function Wrapped() {
     // Data states
     const [animeList, setAnimeList] = useState([]);
@@ -222,6 +236,22 @@ export default function Wrapped() {
     const maxScoreDistCount = data ? Math.max(...Object.values(data.scoreDistribution), 1) : 1;
     const maxGenreCount = data ? Math.max(...data.topGenres.map(g => g.count), 1) : 1;
     const maxDeviantCount = data ? Math.max(...data.bottomGenres.map(g => g.count), 1) : 1;
+
+    if (loading) {
+        return (
+            <div className="wrapped-container" style={{ justifyContent: 'center', height: '80vh' }}>
+                <div style={{ fontSize: '1.5rem', fontWeight: 600 }}>Načítání statistik... ⏱️</div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="wrapped-container" style={{ justifyContent: 'center', height: '80vh' }}>
+                <div style={{ color: '#ef4444', fontSize: '1.2rem' }}>Chyba při načítání dat: {error}</div>
+            </div>
+        );
+    }
 
     return (
         <div className="wrapped-container">
@@ -824,24 +854,97 @@ export default function Wrapped() {
                                 </span>
                             </div>
 
-                            {data.calendarGrid && data.calendarGrid.length > 0 && (
-                                <div style={{ marginTop: '1.5rem' }}>
-                                    <h4 style={{ fontSize: '0.9rem', marginBottom: '0.5rem', color: 'rgba(255,255,255,0.7)' }}>Kalendář aktivity (Leden - Prosinec)</h4>
-                                    <div className="calendar-grid-wrapper" style={{ margin: '0', background: 'rgba(0,0,0,0.15)', width: '100%', maxWidth: '100%' }}>
-                                        {Array.from({ length: 12 }).map((_, mIdx) => {
-                                            const monthDays = data.calendarGrid.filter(d => new Date(d.date).getMonth() === mIdx);
-                                            return (
-                                                <div key={mIdx} className="calendar-month-col">
-                                                    {monthDays.map((d, dIdx) => (
-                                                        <div 
-                                                            key={dIdx} 
-                                                            className={`calendar-day-dot ${d.active ? 'active' : ''}`}
-                                                            title={d.date}
-                                                        />
-                                                    ))}
-                                                </div>
-                                            );
-                                        })}
+                            {data.heatmapColumns && data.heatmapColumns.length > 0 && (
+                                <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column' }}>
+                                    <h4 style={{ fontSize: '0.9rem', marginBottom: '0.75rem', color: 'rgba(255,255,255,0.7)' }}>Kalendář aktivity</h4>
+                                    
+                                    <div style={{ display: 'flex', flexDirection: 'column', overflowX: 'auto', paddingBottom: '6px', width: '100%' }}>
+                                        {/* Months Header */}
+                                        <div style={{ display: 'flex', paddingLeft: '24px', marginBottom: '4px', gap: '3px', height: '16px' }}>
+                                            {data.heatmapColumns.map((col, cIdx) => {
+                                                const currentMonth = col[0].date.getMonth();
+                                                const prevMonth = cIdx > 0 ? data.heatmapColumns[cIdx - 1][0].date.getMonth() : -1;
+                                                const showMonth = cIdx === 0 || currentMonth !== prevMonth;
+
+                                                return (
+                                                    <div key={`m-${cIdx}`} style={{ width: '10px', height: '16px', flexShrink: 0, position: 'relative' }}>
+                                                        {showMonth && (
+                                                            <span style={{ position: 'absolute', bottom: 0, left: 0, fontSize: '0.65rem', color: 'rgba(255,255,255,0.4)', whiteSpace: 'nowrap', zIndex: 1 }}>
+                                                                {col[0].date.toLocaleDateString('cs-CZ', { month: 'short' })}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+
+                                        <div style={{ display: 'flex' }}>
+                                            {/* Days Sidebar */}
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', marginRight: '8px', marginTop: '2px' }}>
+                                                {['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'].map((day, idx) => (
+                                                    <div key={day} style={{ height: '10px', fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)', display: 'flex', alignItems: 'center', width: '16px', lineHeight: 1 }}>
+                                                        {[0, 2, 4].includes(idx) ? day : ''}
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            {/* Heatmap Grid */}
+                                            <div style={{ display: 'flex', gap: '3px' }}>
+                                                {data.heatmapColumns.map((col, cIdx) => (
+                                                    <div key={cIdx} style={{ display: 'flex', flexDirection: 'column', gap: '3px', flexShrink: 0 }}>
+                                                        {col.map((cell, rIdx) => (
+                                                            <div
+                                                                key={rIdx}
+                                                                title={`${new Date(cell.dateStr).toLocaleDateString('cs-CZ')}: ${cell.eps} epizod`}
+                                                                style={{
+                                                                    width: '10px',
+                                                                    height: '10px',
+                                                                    backgroundColor: getHeatmapColor(cell.eps),
+                                                                    borderRadius: '2px',
+                                                                    transition: 'opacity 0.2s, transform 0.1s'
+                                                                }}
+                                                                onMouseEnter={e => {
+                                                                    e.target.style.opacity = '0.7';
+                                                                    if (cell.eps > 0) e.target.style.transform = 'scale(1.2)';
+                                                                }}
+                                                                onMouseLeave={e => {
+                                                                    e.target.style.opacity = '1';
+                                                                    e.target.style.transform = 'scale(1)';
+                                                                }}
+                                                            />
+                                                        ))}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Heatmap Legend */}
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '12px', fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', flexWrap: 'wrap' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            <div style={{ width: '10px', height: '10px', borderRadius: '2px', backgroundColor: getHeatmapColor(0) }} />
+                                            0 epizod
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            <div style={{ width: '10px', height: '10px', borderRadius: '2px', backgroundColor: getHeatmapColor(HEATMAP_COLOR_LEVEL_1) }} />
+                                            1 až {HEATMAP_COLOR_LEVEL_1} epizody
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            <div style={{ width: '10px', height: '10px', borderRadius: '2px', backgroundColor: getHeatmapColor(HEATMAP_COLOR_LEVEL_2) }} />
+                                            {HEATMAP_COLOR_LEVEL_1 + 1} až {HEATMAP_COLOR_LEVEL_2} epizod
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            <div style={{ width: '10px', height: '10px', borderRadius: '2px', backgroundColor: getHeatmapColor(HEATMAP_COLOR_LEVEL_3) }} />
+                                            {HEATMAP_COLOR_LEVEL_2 + 1} až {HEATMAP_COLOR_LEVEL_3} epizod
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            <div style={{ width: '10px', height: '10px', borderRadius: '2px', backgroundColor: getHeatmapColor(HEATMAP_COLOR_LEVEL_4) }} />
+                                            {HEATMAP_COLOR_LEVEL_3 + 1} až {HEATMAP_COLOR_LEVEL_4} epizod
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            <div style={{ width: '10px', height: '10px', borderRadius: '2px', backgroundColor: getHeatmapColor(HEATMAP_COLOR_LEVEL_4 + 1) }} />
+                                            Více než {HEATMAP_COLOR_LEVEL_4}
+                                        </div>
                                     </div>
                                 </div>
                             )}
