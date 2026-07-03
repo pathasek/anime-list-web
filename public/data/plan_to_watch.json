@@ -224,14 +224,6 @@
     "notes": "Vydáno"
   },
   {
-    "name": "Berserk (série)",
-    "type": "Multiple",
-    "episodes": 75.1,
-    "total_time": 1727.3,
-    "source": "Michal a Matouš doporučili originální seriál, existuje ještě 2016 adaptace a filmy, ohledně filmů: Eclipse mě zaujalo dost (taky memorial edition TV verze?)",
-    "notes": "Vydáno"
-  },
-  {
     "name": "Initial D Stages",
     "type": "Multiple",
     "episodes": 88,
@@ -416,22 +408,6 @@
     "notes": "AIRING!"
   },
   {
-    "name": "Anime, co vypadají cute, ale jsou actually dark",
-    "type": "Multiple",
-    "episodes": "x",
-    "total_time": null,
-    "source": "Wonder Egg Priority, Black Bullet, Princess Tutu, Eden of the East, Flip Flappers, Shadows House",
-    "notes": "x"
-  },
-  {
-    "name": "Short Completed Anime with only 1 Season (either completed, or will never get real sequel)",
-    "type": "Multiple",
-    "episodes": "x",
-    "total_time": null,
-    "source": "https://myanimelist.net/stacks/7781",
-    "notes": "x"
-  },
-  {
     "name": "Knights of Sidonia",
     "type": "Multiple",
     "episodes": 29,
@@ -477,14 +453,6 @@
     "episodes": 42,
     "total_time": 1008.0,
     "source": "Looks very promising, Noir and Black Butler style first impression",
-    "notes": "Vydáno"
-  },
-  {
-    "name": "The Unwanted Undead Adventurer",
-    "type": "TV",
-    "episodes": 12,
-    "total_time": 276.0,
-    "source": "Podobný k The Skeleton Knight, \"I wouldn't mind if you wanted to eat me\", není isekai, found family tag",
     "notes": "Vydáno"
   },
   {
@@ -728,14 +696,6 @@
     "notes": "Vydáno"
   },
   {
-    "name": "Claymore",
-    "type": "TV",
-    "episodes": 26,
-    "total_time": 598.0,
-    "source": "Gore, different beings that are made to kill, spíše story o 1x MC (jako výše), možná podobné k Fear and hunger",
-    "notes": "Vydáno"
-  },
-  {
     "name": "Assasination Classroom",
     "type": "Multiple",
     "episodes": 49,
@@ -885,6 +845,14 @@
     "episodes": 28,
     "total_time": 672.0,
     "source": "Viděl jsem zmínku u Higurashi Sotsu Perplexity slučování, poté jsem se mrknul: dívky se zbraněmi, Madhouse studio a celkem plynulé akční sekvence (z GIFu)",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Eden of the East",
+    "type": "Multiple",
+    "episodes": "X",
+    "total_time": null,
+    "source": "Zajímalo mě to a rozbory už mám hotové",
     "notes": "Vydáno"
   }
 ]
