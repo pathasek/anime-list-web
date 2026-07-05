@@ -854,5 +854,21 @@
     "total_time": null,
     "source": "Zajímalo mě to a rozbory už mám hotové",
     "notes": "Vydáno"
+  },
+  {
+    "name": "Pluto",
+    "type": "ONA",
+    "episodes": 8,
+    "total_time": 488.0,
+    "source": "Doporučil mi NotebookLM, jedná se o nejlepší Arc Astro Boy, detektivka",
+    "notes": "Vydáno"
+  },
+  {
+    "name": "Alya Sometimes Hides Her Feelings in Russian",
+    "type": "TV",
+    "episodes": 12,
+    "total_time": 288.0,
+    "source": "Komedické meta narážky sourozenců mě bavili na TT už 1,8 roku",
+    "notes": "Vydáno"
   }
 ]
