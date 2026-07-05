@@ -23,7 +23,7 @@ export const customSeasonOrders = {
         "Mushoku Tensei: Jobless Reincarnation, S01 Part 1",
         "Mushoku Tensei: Jobless Reincarnation, S01 Part 2",
         "Mushoku Tensei: Jobless Reincarnation - Eris the Goblin Slayer",
-        "Mushoku Tensei: Jobless Reincarnation Season 2 - Episode 0 \"Guardian Fitz\"",
+        "Mushoku Tensei: Jobless Reincarnation, S02 - Episode 0 \"Guardian Fitz\"",
         "Mushoku Tensei: Jobless Reincarnation, S02 Part 1",
         "Mushoku Tensei: Jobless Reincarnation, S02 Part 2"
     ]
