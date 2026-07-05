@@ -1,0 +1,2362 @@
+{
+  "19": {
+    "score": 8.89,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/10/18793.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/10/18793l.jpg"
+  },
+  "30": {
+    "score": 8.37,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1314/108941.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1314/108941l.jpg"
+  },
+  "32": {
+    "score": 8.57,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1404/98182.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1404/98182l.jpg"
+  },
+  "33": {
+    "score": 8.61,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1384/119988.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1384/119988l.jpg"
+  },
+  "164": {
+    "score": 8.67,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1355/147277.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1355/147277l.jpg"
+  },
+  "199": {
+    "score": 8.77,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/6/79597.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/6/79597l.jpg"
+  },
+  "226": {
+    "score": 7.45,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1780/121555.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1780/121555l.jpg"
+  },
+  "256": {
+    "score": 7.08,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1980/112997.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1980/112997l.jpg"
+  },
+  "339": {
+    "score": 8.1,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1718/91550.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1718/91550l.jpg"
+  },
+  "376": {
+    "score": 7.12,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1936/121639.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1936/121639l.jpg"
+  },
+  "387": {
+    "score": 8,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/9/13134.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/9/13134l.jpg"
+  },
+  "431": {
+    "score": 8.67,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1470/138723.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1470/138723l.jpg"
+  },
+  "433": {
+    "score": 7.41,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1725/133738.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1725/133738l.jpg"
+  },
+  "437": {
+    "score": 8.56,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1254/134212.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1254/134212l.jpg"
+  },
+  "512": {
+    "score": 8.24,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1579/140483.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1579/140483l.jpg"
+  },
+  "570": {
+    "score": 7.78,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1323/103343.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1323/103343l.jpg"
+  },
+  "572": {
+    "score": 8.36,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/10/75914.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/10/75914l.jpg"
+  },
+  "578": {
+    "score": 8.54,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1485/141208.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1485/141208l.jpg"
+  },
+  "584": {
+    "score": 7.56,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1087/152978.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1087/152978l.jpg"
+  },
+  "790": {
+    "score": 7.9,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1183/136187.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1183/136187l.jpg"
+  },
+  "849": {
+    "score": 7.82,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1470/137929.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1470/137929l.jpg"
+  },
+  "885": {
+    "score": 7.71,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1034/135640.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1034/135640l.jpg"
+  },
+  "889": {
+    "score": 8.04,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1906/121592.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1906/121592l.jpg"
+  },
+  "934": {
+    "score": 7.87,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/12/19634.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/12/19634l.jpg"
+  },
+  "1004": {
+    "score": 7.24,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/11/73498.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/11/73498l.jpg"
+  },
+  "1080": {
+    "score": 7.25,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/7/32707.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/7/32707l.jpg"
+  },
+  "1519": {
+    "score": 8.18,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1701/152849.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1701/152849l.jpg"
+  },
+  "1535": {
+    "score": 8.62,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1079/138100.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1079/138100l.jpg"
+  },
+  "1575": {
+    "score": 8.71,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1032/135088.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1032/135088l.jpg"
+  },
+  "1689": {
+    "score": 7.55,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1410/112994.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1410/112994l.jpg"
+  },
+  "1818": {
+    "score": 7.73,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/3/21834.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/3/21834l.jpg"
+  },
+  "1827": {
+    "score": 8.12,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/4/50337.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/4/50337l.jpg"
+  },
+  "1889": {
+    "score": 8.16,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/12/14114.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/12/14114l.jpg"
+  },
+  "1943": {
+    "score": 8.05,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1929/93629.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1929/93629l.jpg"
+  },
+  "2236": {
+    "score": 8.09,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1/2432.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1/2432l.jpg"
+  },
+  "2593": {
+    "score": 7.55,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/12/21741.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/12/21741l.jpg"
+  },
+  "2759": {
+    "score": 8,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/7/74975.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/7/74975l.jpg"
+  },
+  "2899": {
+    "score": 7.12,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1492/118476.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1492/118476l.jpg"
+  },
+  "2904": {
+    "score": 8.92,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1088/135089.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1088/135089l.jpg"
+  },
+  "3652": {
+    "score": 7.4,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/4/14113.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/4/14113l.jpg"
+  },
+  "3782": {
+    "score": 7.75,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/3/21737.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/3/21737l.jpg"
+  },
+  "3783": {
+    "score": 8,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/4/21735.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/4/21735l.jpg"
+  },
+  "3784": {
+    "score": 8.29,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/5/74983.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/5/74983l.jpg"
+  },
+  "3785": {
+    "score": 7.67,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/9/43201.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/9/43201l.jpg"
+  },
+  "3786": {
+    "score": 8.58,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1422/113533.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1422/113533l.jpg"
+  },
+  "4280": {
+    "score": 7.81,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/9/21736.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/9/21736l.jpg"
+  },
+  "4282": {
+    "score": 8.5,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/4/75851.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/4/75851l.jpg"
+  },
+  "4382": {
+    "score": 7.23,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/8/75377.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/8/75377l.jpg"
+  },
+  "4898": {
+    "score": 7.65,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1467/137783.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1467/137783l.jpg"
+  },
+  "4901": {
+    "score": 8.03,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/8/75529.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/8/75529l.jpg"
+  },
+  "4981": {
+    "score": 7.51,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/8/23336.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/8/23336l.jpg"
+  },
+  "5081": {
+    "score": 8.32,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/11/75274.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/11/75274l.jpg"
+  },
+  "5114": {
+    "score": 9.11,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1208/94745.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1208/94745l.jpg"
+  },
+  "5177": {
+    "score": 7.47,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1722/111810.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1722/111810l.jpg"
+  },
+  "5204": {
+    "score": 7.43,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/2/21739.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/2/21739l.jpg"
+  },
+  "5205": {
+    "score": 8.36,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/9/56619.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/9/56619l.jpg"
+  },
+  "5420": {
+    "score": 8.31,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1929/121700.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1929/121700l.jpg"
+  },
+  "6211": {
+    "score": 8,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1653/152734.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1653/152734l.jpg"
+  },
+  "6421": {
+    "score": 8,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1493/91571.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1493/91571l.jpg"
+  },
+  "6547": {
+    "score": 8.05,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1244/111115.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1244/111115l.jpg"
+  },
+  "6624": {
+    "score": 7.53,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/11/15175.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/11/15175l.jpg"
+  },
+  "6707": {
+    "score": 7.12,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/4/50499.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/4/50499l.jpg"
+  },
+  "6793": {
+    "score": 7.51,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/8/21336.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/8/21336l.jpg"
+  },
+  "6802": {
+    "score": 7.54,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/7/81654.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/7/81654l.jpg"
+  },
+  "6880": {
+    "score": 7.13,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/9/75299.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/9/75299l.jpg"
+  },
+  "6954": {
+    "score": 7.22,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/6/78756.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/6/78756l.jpg"
+  },
+  "7311": {
+    "score": 8.59,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1248/112352.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1248/112352l.jpg"
+  },
+  "7724": {
+    "score": 7.72,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1531/119165.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1531/119165l.jpg"
+  },
+  "8142": {
+    "score": 7.74,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1839/103426.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1839/103426l.jpg"
+  },
+  "8197": {
+    "score": 7.52,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/13/20884.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/13/20884l.jpg"
+  },
+  "8888": {
+    "score": 7.32,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/10/41401.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/10/41401l.jpg"
+  },
+  "9062": {
+    "score": 7.55,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/4/25073.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/4/25073l.jpg"
+  },
+  "9135": {
+    "score": 7.26,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1217/152912.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1217/152912l.jpg"
+  },
+  "9136": {
+    "score": 7.39,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/7/26664.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/7/26664l.jpg"
+  },
+  "9253": {
+    "score": 9.07,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1935/127974.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1935/127974l.jpg"
+  },
+  "9260": {
+    "score": 8.36,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1783/112810.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1783/112810l.jpg"
+  },
+  "9756": {
+    "score": 8.39,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/11/55225.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/11/55225l.jpg"
+  },
+  "9760": {
+    "score": 7.5,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1000/133740.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1000/133740l.jpg"
+  },
+  "9989": {
+    "score": 8.28,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/5/79697.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/5/79697l.jpg"
+  },
+  "10067": {
+    "score": 7.44,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1399/131410.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1399/131410l.jpg"
+  },
+  "10083": {
+    "score": 7.75,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1041/133313.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1041/133313l.jpg"
+  },
+  "10087": {
+    "score": 8.26,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1887/117644.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1887/117644l.jpg"
+  },
+  "10357": {
+    "score": 7.7,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/12/50345.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/12/50345l.jpg"
+  },
+  "10408": {
+    "score": 8.26,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1599/112267.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1599/112267l.jpg"
+  },
+  "10418": {
+    "score": 6.9,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/8/33033.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/8/33033l.jpg"
+  },
+  "10491": {
+    "score": 6.56,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/6/29774.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/6/29774l.jpg"
+  },
+  "10620": {
+    "score": 7.38,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/13/33465.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/13/33465l.jpg"
+  },
+  "10721": {
+    "score": 7.92,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/5/30238.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/5/30238l.jpg"
+  },
+  "10863": {
+    "score": 8.29,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1805/123188.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1805/123188l.jpg"
+  },
+  "11111": {
+    "score": 7.46,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/4/75509.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/4/75509l.jpg"
+  },
+  "11577": {
+    "score": 8.45,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1611/112806.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1611/112806l.jpg"
+  },
+  "11597": {
+    "score": 8.12,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1044/103654.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1044/103654l.jpg"
+  },
+  "11701": {
+    "score": 7.25,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/9/42051.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/9/42051l.jpg"
+  },
+  "11741": {
+    "score": 8.53,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1522/117645.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1522/117645l.jpg"
+  },
+  "11757": {
+    "score": 7.23,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/11/39717.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/11/39717l.jpg"
+  },
+  "11981": {
+    "score": 8.51,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/5/54231.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/5/54231l.jpg"
+  },
+  "12355": {
+    "score": 8.56,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/9/35721.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/9/35721l.jpg"
+  },
+  "12477": {
+    "score": 7.93,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/12/52415.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/12/52415l.jpg"
+  },
+  "13125": {
+    "score": 8.24,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1549/136389.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1549/136389l.jpg"
+  },
+  "13601": {
+    "score": 8.32,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1314/142015.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1314/142015l.jpg"
+  },
+  "14075": {
+    "score": 7.88,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/7/42453.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/7/42453l.jpg"
+  },
+  "14131": {
+    "score": 7.54,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/9/40969.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/9/40969l.jpg"
+  },
+  "14353": {
+    "score": 7.87,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/11/48721.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/11/48721l.jpg"
+  },
+  "14513": {
+    "score": 8,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/11/42773.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/11/42773l.jpg"
+  },
+  "14807": {
+    "score": 7.98,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/6/56621.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/6/56621l.jpg"
+  },
+  "15197": {
+    "score": 7.43,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/9/56243.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/9/56243l.jpg"
+  },
+  "15199": {
+    "score": 7.26,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/12/72698.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/12/72698l.jpg"
+  },
+  "15201": {
+    "score": 7.2,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/6/74757.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/6/74757l.jpg"
+  },
+  "15689": {
+    "score": 7.91,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1170/121597.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1170/121597l.jpg"
+  },
+  "16498": {
+    "score": 8.57,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/10/47347.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/10/47347l.jpg"
+  },
+  "16662": {
+    "score": 8.14,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/8/52353.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/8/52353l.jpg"
+  },
+  "16700": {
+    "score": 7.21,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/12/51063.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/12/51063l.jpg"
+  },
+  "16762": {
+    "score": 7.28,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1715/103523.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1715/103523l.jpg"
+  },
+  "16782": {
+    "score": 7.85,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1597/112995.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1597/112995l.jpg"
+  },
+  "17074": {
+    "score": 8.76,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1807/121534.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1807/121534l.jpg"
+  },
+  "17265": {
+    "score": 7.89,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/5/84004.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/5/84004l.jpg"
+  },
+  "18115": {
+    "score": 8.2,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/13/55039.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/13/55039l.jpg"
+  },
+  "18397": {
+    "score": 7.89,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/9/59221.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/9/59221l.jpg"
+  },
+  "18617": {
+    "score": 8.2,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1776/91467.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1776/91467l.jpg"
+  },
+  "19815": {
+    "score": 8.03,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1074/111944.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1074/111944l.jpg"
+  },
+  "20507": {
+    "score": 7.94,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1886/128266.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1886/128266l.jpg"
+  },
+  "20767": {
+    "score": 7.7,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/7/77177.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/7/77177l.jpg"
+  },
+  "21339": {
+    "score": 7.69,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/8/71793.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/8/71793l.jpg"
+  },
+  "21557": {
+    "score": 8.04,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/7/64293.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/7/64293l.jpg"
+  },
+  "21843": {
+    "score": 7.61,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/2/67513.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/2/67513l.jpg"
+  },
+  "21855": {
+    "score": 7.91,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/13/65755.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/13/65755l.jpg"
+  },
+  "21881": {
+    "score": 6.72,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1223/121999.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1223/121999l.jpg"
+  },
+  "22145": {
+    "score": 8.06,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/6/64811.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/6/64811l.jpg"
+  },
+  "22199": {
+    "score": 7.48,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1429/95946.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1429/95946l.jpg"
+  },
+  "22297": {
+    "score": 8.18,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/12/67333.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/12/67333l.jpg"
+  },
+  "22535": {
+    "score": 8.32,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/3/73178.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/3/73178l.jpg"
+  },
+  "22763": {
+    "score": 7.44,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/3/73930.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/3/73930l.jpg"
+  },
+  "23273": {
+    "score": 8.64,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1405/143284.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1405/143284l.jpg"
+  },
+  "23281": {
+    "score": 7.41,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1197/100616.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1197/100616l.jpg"
+  },
+  "23283": {
+    "score": 8.08,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1417/117422.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1417/117422l.jpg"
+  },
+  "23317": {
+    "score": 8.04,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/12/74392.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/12/74392l.jpg"
+  },
+  "23321": {
+    "score": 7.55,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/5/68097.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/5/68097l.jpg"
+  },
+  "24765": {
+    "score": 7.61,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1798/91548.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1798/91548l.jpg"
+  },
+  "25537": {
+    "score": 8.14,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1274/102213.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1274/102213l.jpg"
+  },
+  "25731": {
+    "score": 7.38,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1780/145951.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1780/145951l.jpg"
+  },
+  "25777": {
+    "score": 8.54,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/4/84177.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/4/84177l.jpg"
+  },
+  "25781": {
+    "score": 8.42,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/8/69497.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/8/69497l.jpg"
+  },
+  "27775": {
+    "score": 7.92,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/4/72750.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/4/72750l.jpg"
+  },
+  "27821": {
+    "score": 8.03,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/9/67425.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/9/67425l.jpg"
+  },
+  "27957": {
+    "score": 7.44,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/10/71319.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/10/71319l.jpg"
+  },
+  "28025": {
+    "score": 8.08,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/6/68259.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/6/68259l.jpg"
+  },
+  "28069": {
+    "score": 7.69,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/6/74156.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/6/74156l.jpg"
+  },
+  "28121": {
+    "score": 7.52,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1172/148981.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1172/148981l.jpg"
+  },
+  "28223": {
+    "score": 8.13,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/5/71553.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/5/71553l.jpg"
+  },
+  "28623": {
+    "score": 7.28,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/12/79164.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/12/79164l.jpg"
+  },
+  "28701": {
+    "score": 8.32,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1881/124810.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1881/124810l.jpg"
+  },
+  "28825": {
+    "score": 7.09,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/12/75086.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/12/75086l.jpg"
+  },
+  "28851": {
+    "score": 8.93,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1122/96435.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1122/96435l.jpg"
+  },
+  "28907": {
+    "score": 7.68,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/8/76222.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/8/76222l.jpg"
+  },
+  "28999": {
+    "score": 7.76,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1826/147276.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1826/147276l.jpg"
+  },
+  "29803": {
+    "score": 7.9,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1945/136600.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1945/136600l.jpg"
+  },
+  "30296": {
+    "score": 7.41,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/9/76493.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/9/76493l.jpg"
+  },
+  "30484": {
+    "score": 8.56,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1375/93521.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1375/93521l.jpg"
+  },
+  "30503": {
+    "score": 8.14,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1689/94850.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1689/94850l.jpg"
+  },
+  "30711": {
+    "score": 7.12,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/2/77640.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/2/77640l.jpg"
+  },
+  "30736": {
+    "score": 7.43,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/13/85564.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/13/85564l.jpg"
+  },
+  "30831": {
+    "score": 8.09,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1895/142748.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1895/142748l.jpg"
+  },
+  "30885": {
+    "score": 7.84,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/11/77510.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/11/77510l.jpg"
+  },
+  "30991": {
+    "score": 7.24,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/7/76826.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/7/76826l.jpg"
+  },
+  "31043": {
+    "score": 8.3,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/10/77957.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/10/77957l.jpg"
+  },
+  "31181": {
+    "score": 8.45,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/8/76479.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/8/76479l.jpg"
+  },
+  "31234": {
+    "score": 7.04,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/13/75074.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/13/75074l.jpg"
+  },
+  "31240": {
+    "score": 8.25,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1522/128039.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1522/128039l.jpg"
+  },
+  "31389": {
+    "score": 7.47,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/4/75684.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/4/75684l.jpg"
+  },
+  "31433": {
+    "score": 7.81,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1104/91793.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1104/91793l.jpg"
+  },
+  "31553": {
+    "score": 7.5,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1709/98068.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1709/98068l.jpg"
+  },
+  "31580": {
+    "score": 7.37,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/13/77968.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/13/77968l.jpg"
+  },
+  "31637": {
+    "score": 7.71,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/8/77382.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/8/77382l.jpg"
+  },
+  "31741": {
+    "score": 7.83,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/10/78783.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/10/78783l.jpg"
+  },
+  "31757": {
+    "score": 8.56,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1981/112812.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1981/112812l.jpg"
+  },
+  "31758": {
+    "score": 8.78,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1084/112813.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1084/112813l.jpg"
+  },
+  "31765": {
+    "score": 7.56,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1557/123313.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1557/123313l.jpg"
+  },
+  "31812": {
+    "score": 8.25,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/9/85792.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/9/85792l.jpg"
+  },
+  "31859": {
+    "score": 7.66,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/13/77976.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/13/77976l.jpg"
+  },
+  "32015": {
+    "score": 7.15,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1173/132720.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1173/132720l.jpg"
+  },
+  "32188": {
+    "score": 8.27,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/7/77324.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/7/77324l.jpg"
+  },
+  "32268": {
+    "score": 7.61,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/2/77744.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/2/77744l.jpg"
+  },
+  "32281": {
+    "score": 8.82,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/5/87048.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/5/87048l.jpg"
+  },
+  "32379": {
+    "score": 6.34,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/10/79352.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/10/79352l.jpg"
+  },
+  "32380": {
+    "score": 7.83,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1649/98516.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1649/98516l.jpg"
+  },
+  "32491": {
+    "score": 7.66,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/9/79716.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/9/79716l.jpg"
+  },
+  "32561": {
+    "score": 6.58,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/11/78160.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/11/78160l.jpg"
+  },
+  "32615": {
+    "score": 7.96,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/5/82890.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/5/82890l.jpg"
+  },
+  "32729": {
+    "score": 7.63,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1415/102477.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1415/102477l.jpg"
+  },
+  "32801": {
+    "score": 7.04,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/9/81432.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/9/81432l.jpg"
+  },
+  "32902": {
+    "score": 8.09,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/4/80587.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/4/80587l.jpg"
+  },
+  "32937": {
+    "score": 8.24,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/2/83188.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/2/83188l.jpg"
+  },
+  "33049": {
+    "score": 8.46,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1974/98158.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1974/98158l.jpg"
+  },
+  "33050": {
+    "score": 8.63,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1142/112957.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1142/112957l.jpg"
+  },
+  "33253": {
+    "score": 7.55,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1292/157314.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1292/157314l.jpg"
+  },
+  "33352": {
+    "score": 8.69,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1795/95088.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1795/95088l.jpg"
+  },
+  "33674": {
+    "score": 8.16,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1085/90759.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1085/90759l.jpg"
+  },
+  "34055": {
+    "score": 6.58,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/12/85296.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/12/85296l.jpg"
+  },
+  "34136": {
+    "score": 7.47,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/10/82129.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/10/82129l.jpg"
+  },
+  "34176": {
+    "score": 7.06,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/5/85224.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/5/85224l.jpg"
+  },
+  "34321": {
+    "score": 6.73,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/6/82651.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/6/82651l.jpg"
+  },
+  "34437": {
+    "score": 7.91,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1274/113436.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1274/113436l.jpg"
+  },
+  "34541": {
+    "score": 7.27,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1828/90335.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1828/90335l.jpg"
+  },
+  "34542": {
+    "score": 7.62,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/7/88471.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/7/88471l.jpg"
+  },
+  "34544": {
+    "score": 7.68,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1749/99713.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1749/99713l.jpg"
+  },
+  "34599": {
+    "score": 8.62,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/6/86733.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/6/86733l.jpg"
+  },
+  "34626": {
+    "score": 8.01,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1115/98517.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1115/98517l.jpg"
+  },
+  "34642": {
+    "score": 7.12,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1581/96672.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1581/96672l.jpg"
+  },
+  "34662": {
+    "score": 7.2,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/9/86573.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/9/86573l.jpg"
+  },
+  "35062": {
+    "score": 8.05,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/3/88476.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/3/88476l.jpg"
+  },
+  "35073": {
+    "score": 7.75,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1212/113415.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1212/113415l.jpg"
+  },
+  "35247": {
+    "score": 8.86,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/6/87322.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/6/87322l.jpg"
+  },
+  "35376": {
+    "score": 7.32,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/10/89671.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/10/89671l.jpg"
+  },
+  "35507": {
+    "score": 7.82,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/5/86830.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/5/86830l.jpg"
+  },
+  "35760": {
+    "score": 8.65,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1173/92110.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1173/92110l.jpg"
+  },
+  "35790": {
+    "score": 7.9,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1490/101365.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1490/101365l.jpg"
+  },
+  "35838": {
+    "score": 8.24,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/12/88321.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/12/88321l.jpg"
+  },
+  "35839": {
+    "score": 8.5,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/6/89879.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/6/89879l.jpg"
+  },
+  "35849": {
+    "score": 7.2,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1614/90408.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1614/90408l.jpg"
+  },
+  "35851": {
+    "score": 8.4,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/11/89556.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/11/89556l.jpg"
+  },
+  "36098": {
+    "score": 8.55,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1768/93291.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1768/93291l.jpg"
+  },
+  "36106": {
+    "score": 7.83,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/3/89417.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/3/89417l.jpg"
+  },
+  "36286": {
+    "score": 7.58,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1081/95707.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1081/95707l.jpg"
+  },
+  "36369": {
+    "score": 8.07,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1772/102667.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1772/102667l.jpg"
+  },
+  "36370": {
+    "score": 8.18,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1215/103351.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1215/103351l.jpg"
+  },
+  "36371": {
+    "score": 8.28,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1782/103917.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1782/103917l.jpg"
+  },
+  "36474": {
+    "score": 7.58,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1993/93837.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1993/93837l.jpg"
+  },
+  "36475": {
+    "score": 7.01,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1141/93288.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1141/93288l.jpg"
+  },
+  "36625": {
+    "score": 7,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1575/132721.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1575/132721l.jpg"
+  },
+  "36862": {
+    "score": 8.6,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1803/117183.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1803/117183l.jpg"
+  },
+  "36882": {
+    "score": 6.72,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1776/97682.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1776/97682l.jpg"
+  },
+  "36915": {
+    "score": 6.32,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1517/127324.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1517/127324l.jpg"
+  },
+  "36999": {
+    "score": 8.44,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1022/96168.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1022/96168l.jpg"
+  },
+  "37055": {
+    "score": 8.23,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1249/117182.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1249/117182l.jpg"
+  },
+  "37095": {
+    "score": 8.36,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/9/89993.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/9/89993l.jpg"
+  },
+  "37347": {
+    "score": 7.24,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1730/101329.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1730/101329l.jpg"
+  },
+  "37348": {
+    "score": 7.45,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1239/96949.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1239/96949l.jpg"
+  },
+  "37349": {
+    "score": 7.41,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1719/95621.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1719/95621l.jpg"
+  },
+  "37430": {
+    "score": 8.13,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1069/123309.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1069/123309l.jpg"
+  },
+  "37440": {
+    "score": 7.16,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1623/96878.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1623/96878l.jpg"
+  },
+  "37441": {
+    "score": 7.47,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1357/96879.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1357/96879l.jpg"
+  },
+  "37442": {
+    "score": 7.71,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1819/97220.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1819/97220l.jpg"
+  },
+  "37450": {
+    "score": 8.23,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1301/93586.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1301/93586l.jpg"
+  },
+  "37492": {
+    "score": 7.29,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1163/97351.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1163/97351l.jpg"
+  },
+  "37520": {
+    "score": 8.26,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1879/100467.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1879/100467l.jpg"
+  },
+  "37521": {
+    "score": 8.78,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1500/103005.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1500/103005l.jpg"
+  },
+  "37675": {
+    "score": 7.91,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1511/93473.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1511/93473l.jpg"
+  },
+  "37779": {
+    "score": 8.47,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1830/118780.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1830/118780l.jpg"
+  },
+  "37984": {
+    "score": 7.44,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1593/113724.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1593/113724l.jpg"
+  },
+  "37987": {
+    "score": 8.83,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1825/110716.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1825/110716l.jpg"
+  },
+  "38000": {
+    "score": 8.4,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1286/99889.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1286/99889l.jpg"
+  },
+  "38040": {
+    "score": 8.4,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1638/119321.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1638/119321l.jpg"
+  },
+  "38084": {
+    "score": 7.94,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1194/103420.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1194/103420l.jpg"
+  },
+  "38085": {
+    "score": 6.92,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1535/103385.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1535/103385l.jpg"
+  },
+  "38086": {
+    "score": 7.62,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1736/114615.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1736/114615l.jpg"
+  },
+  "38256": {
+    "score": 6.85,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1786/104783.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1786/104783l.jpg"
+  },
+  "38329": {
+    "score": 8.59,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1613/102179.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1613/102179l.jpg"
+  },
+  "38414": {
+    "score": 7.58,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1238/104023.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1238/104023l.jpg"
+  },
+  "38524": {
+    "score": 9.05,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1517/100633.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1517/100633l.jpg"
+  },
+  "38594": {
+    "score": 7.62,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1893/99701.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1893/99701l.jpg"
+  },
+  "38659": {
+    "score": 7.46,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1715/103419.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1715/103419l.jpg"
+  },
+  "38668": {
+    "score": 8.05,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1230/119278.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1230/119278l.jpg"
+  },
+  "38793": {
+    "score": 7.47,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1230/118297.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1230/118297l.jpg"
+  },
+  "38816": {
+    "score": 7.49,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1147/112650.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1147/112650l.jpg"
+  },
+  "38826": {
+    "score": 8.27,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1880/101146.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1880/101146l.jpg"
+  },
+  "38903": {
+    "score": 6.58,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1181/148693.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1181/148693l.jpg"
+  },
+  "38936": {
+    "score": 7.1,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1762/114436.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1762/114436l.jpg"
+  },
+  "38959": {
+    "score": 7.38,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1107/111530.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1107/111530l.jpg"
+  },
+  "39198": {
+    "score": 8.07,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1784/106428.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1784/106428l.jpg"
+  },
+  "39468": {
+    "score": 7.96,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1582/101697.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1582/101697l.jpg"
+  },
+  "39491": {
+    "score": 7.44,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1406/104344.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1406/104344l.jpg"
+  },
+  "39535": {
+    "score": 8.32,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1530/117776.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1530/117776l.jpg"
+  },
+  "39551": {
+    "score": 8.33,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1271/109841.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1271/109841l.jpg"
+  },
+  "39575": {
+    "score": 7.81,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1938/102796.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1938/102796l.jpg"
+  },
+  "39576": {
+    "score": 7.26,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1699/110724.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1699/110724l.jpg"
+  },
+  "39587": {
+    "score": 8.33,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1444/108005.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1444/108005l.jpg"
+  },
+  "39597": {
+    "score": 7.59,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1630/103417.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1630/103417l.jpg"
+  },
+  "39617": {
+    "score": 5.24,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1815/110626.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1815/110626l.jpg"
+  },
+  "39741": {
+    "score": 8.43,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1667/112943.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1667/112943l.jpg"
+  },
+  "39806": {
+    "score": 7.45,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1054/110054.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1054/110054l.jpg"
+  },
+  "40028": {
+    "score": 8.79,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1000/110531.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1000/110531l.jpg"
+  },
+  "40046": {
+    "score": 7.81,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1889/105337.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1889/105337l.jpg"
+  },
+  "40083": {
+    "score": 6.74,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1634/102577.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1634/102577l.jpg"
+  },
+  "40206": {
+    "score": 7.13,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1864/102399.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1864/102399l.jpg"
+  },
+  "40221": {
+    "score": 7.55,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1702/106229.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1702/106229l.jpg"
+  },
+  "40295": {
+    "score": 7.09,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1804/113788.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1804/113788l.jpg"
+  },
+  "40356": {
+    "score": 6.53,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1143/121873.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1143/121873l.jpg"
+  },
+  "40357": {
+    "score": 7.08,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1317/139802.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1317/139802l.jpg"
+  },
+  "40453": {
+    "score": 6.5,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1360/111696.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1360/111696l.jpg"
+  },
+  "40454": {
+    "score": 7.47,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1523/108380.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1523/108380l.jpg"
+  },
+  "40507": {
+    "score": 7.13,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1877/119668.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1877/119668l.jpg"
+  },
+  "40540": {
+    "score": 7.51,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1438/105106.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1438/105106l.jpg"
+  },
+  "40571": {
+    "score": 7.56,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1802/108501.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1802/108501l.jpg"
+  },
+  "40586": {
+    "score": 6.88,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1888/133089.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1888/133089l.jpg"
+  },
+  "40748": {
+    "score": 8.5,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1171/109222.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1171/109222l.jpg"
+  },
+  "40787": {
+    "score": 8.38,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1714/108892.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1714/108892l.jpg"
+  },
+  "40815": {
+    "score": 8.07,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1464/107998.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1464/107998l.jpg"
+  },
+  "40834": {
+    "score": 8.48,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1347/117616.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1347/117616l.jpg"
+  },
+  "40841": {
+    "score": 7.45,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1931/114311.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1931/114311l.jpg"
+  },
+  "40858": {
+    "score": 7.77,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1085/110722.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1085/110722l.jpg"
+  },
+  "41006": {
+    "score": 7.21,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1716/111533.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1716/111533l.jpg"
+  },
+  "41025": {
+    "score": 8.35,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1880/118484.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1880/118484l.jpg"
+  },
+  "41053": {
+    "score": 7.11,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1611/105459.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1611/105459l.jpg"
+  },
+  "41084": {
+    "score": 8.59,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1864/122519.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1864/122519l.jpg"
+  },
+  "41109": {
+    "score": 7.08,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1510/108026.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1510/108026l.jpg"
+  },
+  "41380": {
+    "score": 6.52,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1506/117717.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1506/117717l.jpg"
+  },
+  "41456": {
+    "score": 7.13,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1444/115118.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1444/115118l.jpg"
+  },
+  "41457": {
+    "score": 8.35,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1987/117507.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1987/117507l.jpg"
+  },
+  "41468": {
+    "score": 7.15,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1993/108967.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1993/108967l.jpg"
+  },
+  "41487": {
+    "score": 8.29,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1033/118296.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1033/118296l.jpg"
+  },
+  "41488": {
+    "score": 7.59,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1458/117607.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1458/117607l.jpg"
+  },
+  "41497": {
+    "score": 7.71,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1507/114957.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1507/114957l.jpg"
+  },
+  "41530": {
+    "score": 7.05,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1919/116424.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1919/116424l.jpg"
+  },
+  "42203": {
+    "score": 8.42,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1724/117421.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1724/117421l.jpg"
+  },
+  "42310": {
+    "score": 8.62,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1818/126435.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1818/126435l.jpg"
+  },
+  "42340": {
+    "score": 7.21,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1753/116290.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1753/116290l.jpg"
+  },
+  "42429": {
+    "score": 8.06,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1976/122302.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1976/122302l.jpg"
+  },
+  "42886": {
+    "score": 8.32,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1859/118711.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1859/118711l.jpg"
+  },
+  "42916": {
+    "score": 7.94,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1590/116274.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1590/116274l.jpg"
+  },
+  "43299": {
+    "score": 7.54,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1079/110751.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1079/110751l.jpg"
+  },
+  "43523": {
+    "score": 7.71,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1950/116474.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1950/116474l.jpg"
+  },
+  "44511": {
+    "score": 8.42,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1806/126216.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1806/126216l.jpg"
+  },
+  "44881": {
+    "score": 6.79,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1424/117718.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1424/117718l.jpg"
+  },
+  "44983": {
+    "score": 6.91,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1767/110800.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1767/110800l.jpg"
+  },
+  "45576": {
+    "score": 8.6,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1028/117777.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1028/117777l.jpg"
+  },
+  "46095": {
+    "score": 8.37,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1551/128960.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1551/128960l.jpg"
+  },
+  "46569": {
+    "score": 8.08,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1075/131925.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1075/131925l.jpg"
+  },
+  "46971": {
+    "score": 6.69,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1285/111316.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1285/111316l.jpg"
+  },
+  "47160": {
+    "score": 7.21,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1100/138338.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1100/138338l.jpg"
+  },
+  "47164": {
+    "score": 7.75,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1318/126474.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1318/126474l.jpg"
+  },
+  "47194": {
+    "score": 8.46,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1120/120796.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1120/120796l.jpg"
+  },
+  "47778": {
+    "score": 8.69,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1908/120036.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1908/120036l.jpg"
+  },
+  "47917": {
+    "score": 8.73,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1448/127956.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1448/127956l.jpg"
+  },
+  "48171": {
+    "score": 7.92,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1651/117943.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1651/117943l.jpg"
+  },
+  "48316": {
+    "score": 8.21,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1091/128729.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1091/128729l.jpg"
+  },
+  "48438": {
+    "score": 7.56,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1534/129413.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1534/129413l.jpg"
+  },
+  "48488": {
+    "score": 6.74,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1083/115046.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1083/115046l.jpg"
+  },
+  "48556": {
+    "score": 7.16,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1449/117797.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1449/117797l.jpg"
+  },
+  "48561": {
+    "score": 8.36,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1121/119044.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1121/119044l.jpg"
+  },
+  "48569": {
+    "score": 8.73,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1321/117508.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1321/117508l.jpg"
+  },
+  "48583": {
+    "score": 8.77,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1948/120625.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1948/120625l.jpg"
+  },
+  "48614": {
+    "score": 5.16,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1527/113849.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1527/113849l.jpg"
+  },
+  "48736": {
+    "score": 8.13,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1179/119897.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1179/119897l.jpg"
+  },
+  "48760": {
+    "score": 7.13,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1361/120706.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1361/120706l.jpg"
+  },
+  "48842": {
+    "score": 6.39,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1093/121114.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1093/121114l.jpg"
+  },
+  "48849": {
+    "score": 7.86,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1509/117149.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1509/117149l.jpg"
+  },
+  "48895": {
+    "score": 8.06,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1530/120110.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1530/120110l.jpg"
+  },
+  "48896": {
+    "score": 7.75,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1954/144101.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1954/144101l.jpg"
+  },
+  "49236": {
+    "score": 7.46,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1210/117213.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1210/117213l.jpg"
+  },
+  "49291": {
+    "score": 6.87,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1944/122298.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1944/122298l.jpg"
+  },
+  "49361": {
+    "score": 7.47,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1845/120313.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1845/120313l.jpg"
+  },
+  "49387": {
+    "score": 8.83,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1170/124312.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1170/124312l.jpg"
+  },
+  "49458": {
+    "score": 8.33,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1758/141268.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1758/141268l.jpg"
+  },
+  "49709": {
+    "score": 8.11,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1271/127700.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1271/127700l.jpg"
+  },
+  "49818": {
+    "score": 8.61,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1952/149229.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1952/149229l.jpg"
+  },
+  "49834": {
+    "score": 7.52,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1145/127594.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1145/127594l.jpg"
+  },
+  "49835": {
+    "score": 7.47,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1332/127596.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1332/127596l.jpg"
+  },
+  "49877": {
+    "score": 7.63,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1745/128238.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1745/128238l.jpg"
+  },
+  "49889": {
+    "score": 7.84,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1794/142621.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1794/142621l.jpg"
+  },
+  "49926": {
+    "score": 8.33,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1065/118763.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1065/118763l.jpg"
+  },
+  "50265": {
+    "score": 8.41,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1441/122795.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1441/122795l.jpg"
+  },
+  "50273": {
+    "score": 7.7,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1247/121345.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1247/121345l.jpg"
+  },
+  "50275": {
+    "score": 7.7,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1656/126446.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1656/126446l.jpg"
+  },
+  "50346": {
+    "score": 7.94,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1045/123711.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1045/123711l.jpg"
+  },
+  "50360": {
+    "score": 7.78,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1094/120148.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1094/120148l.jpg"
+  },
+  "50593": {
+    "score": 7.99,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1462/125397.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1462/125397l.jpg"
+  },
+  "50594": {
+    "score": 8.24,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1598/128450.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1598/128450l.jpg"
+  },
+  "50602": {
+    "score": 8.2,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1111/127508.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1111/127508l.jpg"
+  },
+  "50709": {
+    "score": 8.14,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1261/127311.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1261/127311l.jpg"
+  },
+  "50738": {
+    "score": 6.7,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1074/147339.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1074/147339l.jpg"
+  },
+  "50916": {
+    "score": 6.93,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1981/120698.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1981/120698l.jpg"
+  },
+  "51009": {
+    "score": 8.7,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1792/138022.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1792/138022l.jpg"
+  },
+  "51019": {
+    "score": 8.15,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1765/135099.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1765/135099l.jpg"
+  },
+  "51096": {
+    "score": 8.04,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1010/124180.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1010/124180l.jpg"
+  },
+  "51105": {
+    "score": 7.56,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1669/150616.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1669/150616l.jpg"
+  },
+  "51116": {
+    "score": 7.59,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1954/129158.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1954/129158l.jpg"
+  },
+  "51122": {
+    "score": 8.13,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1059/142414.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1059/142414l.jpg"
+  },
+  "51179": {
+    "score": 8.2,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1898/138005.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1898/138005l.jpg"
+  },
+  "51180": {
+    "score": 7.92,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1332/139318.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1332/139318l.jpg"
+  },
+  "51297": {
+    "score": 7.56,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1763/140359.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1763/140359l.jpg"
+  },
+  "51473": {
+    "score": 7.16,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1068/124244.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1068/124244l.jpg"
+  },
+  "51535": {
+    "score": 8.86,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1279/131078.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1279/131078l.jpg"
+  },
+  "51553": {
+    "score": 8.56,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1726/155542.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1726/155542l.jpg"
+  },
+  "51648": {
+    "score": 7.43,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1008/140287.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1008/140287l.jpg"
+  },
+  "51805": {
+    "score": 8.32,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1700/123762.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1700/123762l.jpg"
+  },
+  "51958": {
+    "score": 7.52,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1626/135844.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1626/135844l.jpg"
+  },
+  "52299": {
+    "score": 8.15,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1801/142390.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1801/142390l.jpg"
+  },
+  "52347": {
+    "score": 8.1,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1500/139931.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1500/139931l.jpg"
+  },
+  "52588": {
+    "score": 8.2,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1370/140362.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1370/140362l.jpg"
+  },
+  "52635": {
+    "score": 6.66,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1218/143537.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1218/143537l.jpg"
+  },
+  "52657": {
+    "score": 7.41,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1897/131615.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1897/131615l.jpg"
+  },
+  "52747": {
+    "score": 7.66,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1244/134653.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1244/134653l.jpg"
+  },
+  "52955": {
+    "score": 7.77,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1532/135155.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1532/135155l.jpg"
+  },
+  "52976": {
+    "score": 7.92,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1607/127730.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1607/127730l.jpg"
+  },
+  "52991": {
+    "score": 9.26,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1015/138006.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1015/138006l.jpg"
+  },
+  "52995": {
+    "score": 7.02,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1553/145597.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1553/145597l.jpg"
+  },
+  "53065": {
+    "score": 8.17,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1024/150787.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1024/150787l.jpg"
+  },
+  "53111": {
+    "score": 8.26,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1476/128693.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1476/128693l.jpg"
+  },
+  "53127": {
+    "score": 8.14,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1220/136619.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1220/136619l.jpg"
+  },
+  "53129": {
+    "score": 7.76,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1540/134808.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1540/134808l.jpg"
+  },
+  "53393": {
+    "score": 8.2,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1121/133132.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1121/133132l.jpg"
+  },
+  "53439": {
+    "score": 6.72,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1951/138462.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1951/138462l.jpg"
+  },
+  "53580": {
+    "score": 7.71,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1211/143476.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1211/143476l.jpg"
+  },
+  "53887": {
+    "score": 8.05,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1506/138982.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1506/138982l.jpg"
+  },
+  "53888": {
+    "score": 8.1,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1426/139388.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1426/139388l.jpg"
+  },
+  "54463": {
+    "score": 7.45,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1118/133378.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1118/133378l.jpg"
+  },
+  "54492": {
+    "score": 8.85,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1708/138033.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1708/138033l.jpg"
+  },
+  "54565": {
+    "score": 7.58,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1570/135813.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1570/135813l.jpg"
+  },
+  "54595": {
+    "score": 8.25,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1938/138295.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1938/138295l.jpg"
+  },
+  "54703": {
+    "score": 7.43,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1140/152364.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1140/152364l.jpg"
+  },
+  "54857": {
+    "score": 8.42,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1706/144725.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1706/144725l.jpg"
+  },
+  "54870": {
+    "score": 8.28,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1937/138379.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1937/138379l.jpg"
+  },
+  "55272": {
+    "score": 6.91,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1528/135912.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1528/135912l.jpg"
+  },
+  "55701": {
+    "score": 8.01,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1565/142711.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1565/142711l.jpg"
+  },
+  "55742": {
+    "score": 7.92,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1576/153341.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1576/153341l.jpg"
+  },
+  "55818": {
+    "score": 7.54,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1627/136934.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1627/136934l.jpg"
+  },
+  "55825": {
+    "score": 8.17,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1772/154456.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1772/154456l.jpg"
+  },
+  "55830": {
+    "score": 8.28,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1752/150192.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1752/150192l.jpg"
+  },
+  "55855": {
+    "score": 7.86,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1505/141820.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1505/141820l.jpg"
+  },
+  "55888": {
+    "score": 8.38,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1876/141251.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1876/141251l.jpg"
+  },
+  "55994": {
+    "score": 7.15,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1360/153020.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1360/153020l.jpg"
+  },
+  "56009": {
+    "score": 8.14,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1062/151911.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1062/151911l.jpg"
+  },
+  "56038": {
+    "score": 7.19,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1098/150300.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1098/150300l.jpg"
+  },
+  "56063": {
+    "score": 8.06,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1364/143539.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1364/143539l.jpg"
+  },
+  "56671": {
+    "score": 7.42,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1522/139282.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1522/139282l.jpg"
+  },
+  "57066": {
+    "score": 7.89,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1299/144738.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1299/144738l.jpg"
+  },
+  "57433": {
+    "score": 8.17,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1823/149858.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1823/149858l.jpg"
+  },
+  "57466": {
+    "score": 7.83,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1371/155054.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1371/155054l.jpg"
+  },
+  "57555": {
+    "score": 9.06,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1763/150638.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1763/150638l.jpg"
+  },
+  "57658": {
+    "score": 8.61,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1659/154920.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1659/154920l.jpg"
+  },
+  "57779": {
+    "score": 8.48,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1603/155354.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1603/155354l.jpg"
+  },
+  "57864": {
+    "score": 8.64,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1142/146776.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1142/146776l.jpg"
+  },
+  "57907": {
+    "score": 6.89,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1638/150592.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1638/150592l.jpg"
+  },
+  "58125": {
+    "score": 8.61,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1716/142633.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1716/142633l.jpg"
+  },
+  "58390": {
+    "score": 8.34,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1509/148453.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1509/148453l.jpg"
+  },
+  "58514": {
+    "score": 8.91,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1025/147458.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1025/147458l.jpg"
+  },
+  "58567": {
+    "score": 8.52,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1448/147351.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1448/147351l.jpg"
+  },
+  "58572": {
+    "score": 8.26,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1996/147601.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1996/147601l.jpg"
+  },
+  "58883": {
+    "score": 7.92,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1528/143212.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1528/143212l.jpg"
+  },
+  "58913": {
+    "score": 8.02,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1104/148614.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1104/148614l.jpg"
+  },
+  "58920": {
+    "score": 7.24,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1514/143260.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1514/143260l.jpg"
+  },
+  "59027": {
+    "score": 8.21,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1697/151793.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1697/151793l.jpg"
+  },
+  "59169": {
+    "score": 7.36,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1620/148221.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1620/148221l.jpg"
+  },
+  "59177": {
+    "score": 7.78,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1177/150344.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1177/150344l.jpg"
+  },
+  "59192": {
+    "score": 8.66,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1681/148216.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1681/148216l.jpg"
+  },
+  "59228": {
+    "score": 8.17,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1517/148292.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1517/148292l.jpg"
+  },
+  "59369": {
+    "score": 7.7,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1314/147593.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1314/147593l.jpg"
+  },
+  "59443": {
+    "score": 6.06,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1064/155042.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1064/155042l.jpg"
+  },
+  "59452": {
+    "score": 6.95,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1069/148148.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1069/148148l.jpg"
+  },
+  "59459": {
+    "score": 8.11,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1669/149732.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1669/149732l.jpg"
+  },
+  "59490": {
+    "score": 6.81,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1262/146724.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1262/146724l.jpg"
+  },
+  "59562": {
+    "score": 6.6,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1853/154524.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1853/154524l.jpg"
+  },
+  "59612": {
+    "score": 7.71,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1887/144936.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1887/144936l.jpg"
+  },
+  "59708": {
+    "score": 7.88,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1176/153626.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1176/153626l.jpg"
+  },
+  "59833": {
+    "score": 8.14,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1482/146928.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1482/146928l.jpg"
+  },
+  "59846": {
+    "score": 7.35,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1190/151754.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1190/151754l.jpg"
+  },
+  "59970": {
+    "score": 8.09,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1695/156389.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1695/156389l.jpg"
+  },
+  "59971": {
+    "score": 7.18,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1447/153665.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1447/153665l.jpg"
+  },
+  "59978": {
+    "score": 8.86,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1921/154528.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1921/154528l.jpg"
+  },
+  "59989": {
+    "score": 6.88,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1877/145819.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1877/145819l.jpg"
+  },
+  "60146": {
+    "score": 6.2,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1712/148299.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1712/148299l.jpg"
+  },
+  "60489": {
+    "score": 8.75,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1182/149879.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1182/149879l.jpg"
+  },
+  "60732": {
+    "score": 7.06,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1383/151072.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1383/151072l.jpg"
+  },
+  "61316": {
+    "score": 9.19,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1540/155824.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1540/155824l.jpg"
+  },
+  "61443": {
+    "score": 7.74,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1993/156385.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1993/156385l.jpg"
+  },
+  "61831": {
+    "score": 6.4,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1738/156028.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1738/156028l.jpg"
+  },
+  "61984": {
+    "score": 7.22,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1879/150911.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1879/150911l.jpg"
+  },
+  "62001": {
+    "score": 7.9,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1171/156397.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1171/156397l.jpg"
+  },
+  "62276": {
+    "score": 8.74,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1211/157100.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1211/157100l.jpg"
+  },
+  "62352": {
+    "score": 7.78,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1929/151717.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1929/151717l.jpg"
+  },
+  "62405": {
+    "score": 8.04,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1864/151837.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1864/151837l.jpg"
+  },
+  "63375": {
+    "score": 8.57,
+    "imageUrl": "https://cdn.myanimelist.net/images/anime/1623/156387.jpg",
+    "largeImageUrl": "https://cdn.myanimelist.net/images/anime/1623/156387l.jpg"
+  }
+}

@@ -106,7 +106,7 @@ function parseMinutes(timeStr) {
  * @param {object} jikanCache 
  * @param {string} year 
  */
-export function calculateWrappedData(animeList, historyLog, statsJson, jikanCache, year) {
+export function calculateWrappedData(animeList, historyLog, statsJson, jikanCache, year, metadataCache) {
     if (!animeList || !animeList.length) return null;
     const isAllTime = year === 'all';
     
@@ -394,31 +394,50 @@ export function calculateWrappedData(animeList, historyLog, statsJson, jikanCach
                 totalMins: 0,
                 episodes: 0,
                 malUrl: a.mal_url,
-                thumbnail: a.thumbnail
+                thumbnail: a.thumbnail,
+                sumScore: 0,
+                scoreCount: 0,
+                entriesCount: 0
             };
         }
         const eps = parseInt(a.episodes) || 0;
         const dur = parseFloat(a.episode_duration) || 24;
-        // Exclude rewatches from Top Series watch time and episode count
         const mins = eps * dur;
         
         franchises[key].totalMins += mins;
         franchises[key].episodes += eps;
+        franchises[key].entriesCount += 1;
+        
+        const r = parseFloat(a.rating);
+        if (!isNaN(r)) {
+            franchises[key].sumScore += r;
+            franchises[key].scoreCount++;
+        }
     });
 
     const franchiseList = Object.values(franchises)
+        .filter(f => f.entriesCount >= 2)
         .map(f => {
             const hours = f.totalMins / 60;
+            const avgScore = f.scoreCount > 0 ? f.sumScore / f.scoreCount : 0;
             return {
                 ...f,
                 hours: parseFloat(hours.toFixed(1)),
-                days: parseFloat((hours / 24).toFixed(2))
+                days: parseFloat((hours / 24).toFixed(2)),
+                avgScore: parseFloat(avgScore.toFixed(2))
             };
-        })
-        .sort((a, b) => b.totalMins - a.totalMins);
+        });
 
-    const topFranchise = franchiseList[0] || null;
-    const topFranchisesList = franchiseList.slice(0, 5);
+    const topFranchisesList = [...franchiseList]
+        .sort((a, b) => b.totalMins - a.totalMins)
+        .slice(0, 5);
+        
+    const topFranchise = topFranchisesList[0] || null;
+
+    const topFranchisesScoreList = [...franchiseList]
+        .filter(f => f.scoreCount > 0)
+        .sort((a, b) => b.avgScore - a.avgScore || b.totalMins - a.totalMins)
+        .slice(0, 5);
 
     // ----------------------------------------------------
     // 8. QUICKEST BINGES (SLIDE 13 & 14)
@@ -494,30 +513,32 @@ export function calculateWrappedData(animeList, historyLog, statsJson, jikanCach
         const malId = a.mal_url.match(/\/anime\/(\d+)/)?.[1];
         if (!malId) return;
 
-        // Try to get score from JikanCache or local storage
+        // Try to get score from global metadataCache
         let communityScore = null;
         
-        // 1. Check local storage cache
-        const localCached = localStorage.getItem(`jikan_anime_info_${malId}`);
-        if (localCached) {
-            try {
-                communityScore = JSON.parse(localCached).score;
-            } catch {}
-        }
-        
-        // 2. Check memory/jikanCache file
-        if (!communityScore && jikanCache && jikanCache.episode_lists && jikanCache.episode_lists[malId]) {
-            const listData = jikanCache.episode_lists[malId];
-            if (listData.episodes && listData.episodes.length > 0) {
-                // If it's a Movie/Special, it might have score in the synthetic episode
-                const firstEp = listData.episodes[0];
-                if (listData.episodes.length === 1 && (firstEp.title === 'Film' || firstEp.title === 'OVA' || firstEp.title === 'Speciál')) {
-                    communityScore = firstEp.score;
-                } else {
-                    // Average the scores of all episodes
-                    const ratedEps = listData.episodes.filter(e => e.score !== null);
-                    if (ratedEps.length > 0) {
-                        communityScore = ratedEps.reduce((s, e) => s + e.score, 0) / ratedEps.length;
+        if (metadataCache && metadataCache[malId] && metadataCache[malId].score) {
+            communityScore = metadataCache[malId].score;
+        } else {
+            // Fallback: check local storage cache
+            const localCached = localStorage.getItem(`jikan_anime_info_${malId}`);
+            if (localCached) {
+                try {
+                    communityScore = JSON.parse(localCached).score;
+                } catch {}
+            }
+            
+            // Fallback 2: Check memory/jikanCache file
+            if (!communityScore && jikanCache && jikanCache.episode_lists && jikanCache.episode_lists[malId]) {
+                const listData = jikanCache.episode_lists[malId];
+                if (listData.episodes && listData.episodes.length > 0) {
+                    const firstEp = listData.episodes[0];
+                    if (listData.episodes.length === 1 && (firstEp.title === 'Film' || firstEp.title === 'OVA' || firstEp.title === 'Speciál')) {
+                        communityScore = firstEp.score;
+                    } else {
+                        const ratedEps = listData.episodes.filter(e => e.score !== null);
+                        if (ratedEps.length > 0) {
+                            communityScore = ratedEps.reduce((s, e) => s + e.score, 0) / ratedEps.length;
+                        }
                     }
                 }
             }
@@ -546,7 +567,11 @@ export function calculateWrappedData(animeList, historyLog, statsJson, jikanCach
     // Under-hyped: user score is high (>=8), community is lower, positive diff
     const underHyped = [...userDifferences]
         .filter(x => x.userScore >= 8)
-        .sort((a, b) => b.diff - a.diff)
+        .sort((a, b) => {
+            // MAL logic: First sort by User Score DESC, then by Difference DESC
+            if (b.userScore !== a.userScore) return b.userScore - a.userScore;
+            return b.diff - a.diff;
+        })
         .slice(0, 3);
 
     // Over-hyped: user score is low (<=6), community is higher, negative diff
@@ -725,6 +750,7 @@ export function calculateWrappedData(animeList, historyLog, statsJson, jikanCach
         
         topFranchise,
         topFranchisesList,
+        topFranchisesScoreList,
         
         quickestBinge,
         topBingesList,

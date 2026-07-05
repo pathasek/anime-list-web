@@ -86,11 +86,10 @@
 /* ==================================================== */
 .stories-wrapper {
     flex: 1;
-    width: 100%;
-    max-width: 480px;
-    height: 80vh;
-    min-height: 580px;
-    max-height: 850px;
+    height: 95vh;
+    max-height: 950px;
+    aspect-ratio: 9 / 16;
+    max-width: 95vw;
     margin: 1rem 0;
     position: relative;
     border-radius: 20px;
@@ -311,7 +310,7 @@
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid var(--border-color);
     border-radius: 12px;
-    padding: 0.75rem;
+    padding: 0.75rem 1rem 0.75rem 0.75rem; /* Větší padding vpravo pro badge */
     text-align: left;
     gap: 1rem;
     backdrop-filter: blur(10px);
@@ -327,6 +326,7 @@
 
 .wrapped-card-info {
     flex: 1;
+    min-width: 0; /* Zabraňuje přetékání textu uvnitř flex kontejneru */
 }
 
 .wrapped-card-title {
@@ -339,22 +339,28 @@
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .wrapped-card-meta {
     font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.6);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .badge-deviation {
     background: rgba(244, 63, 94, 0.2);
     border: 1px solid rgba(244, 63, 94, 0.4);
     color: #f43f5e;
-    padding: 0.15rem 0.4rem;
-    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    border-radius: 999px; /* Kulatý badge */
     font-weight: bold;
-    margin-left: 0.5rem;
+    margin-left: auto; /* Tlačí badge doprava */
     font-size: 0.75rem;
+    white-space: nowrap;
+    flex-shrink: 0; /* Zabránění zmáčknutí badge */
 }
 
 .badge-deviation.positive {
@@ -723,13 +729,24 @@
     align-items: center;
 }
 
-.stories-wrapper.stories-container-9-16 {
-    width: min(450px, 95vw) !important;
-    height: min(800px, 90vh) !important;
+.stories-wrapper.stories-inline-card {
+    height: min(950px, 95vh) !important;
+    width: calc(min(950px, 95vh) * 0.5625) !important;
     aspect-ratio: 9 / 16 !important;
+    max-width: 95vw !important;
+    margin: -3.5rem auto 1rem auto !important;
+    flex: none !important;
+}
+
+.stories-wrapper.stories-container-9-16 {
+    height: min(950px, 95vh) !important;
+    width: calc(min(950px, 95vh) * 0.5625) !important;
+    aspect-ratio: 9 / 16 !important;
+    max-width: 95vw !important;
     margin: 0;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), var(--shadow-glow);
     border: 1px solid var(--border-color);
+    flex: none !important;
 }
 
 .stories-close-btn {
@@ -753,13 +770,20 @@
 
 /* Classic page layout extra widening and card spacing */
 .classic-view-container {
-    max-width: 98%;
-    padding: 1.5rem 2rem;
+    max-width: 100%;
+    padding: 1.5rem 0.5rem;
+    width: 100%;
 }
 
 .classic-grid-2col {
     grid-template-columns: repeat(auto-fit, minmax(540px, 1fr));
-    gap: 2rem;
+    gap: 1rem;
+}
+
+.classic-grid-3col {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1rem;
 }
 
 .classic-card {
@@ -773,9 +797,12 @@
     border-radius: 20px;
     font-size: 0.8rem;
     font-weight: 700;
-    border: 1px solid var(--border-color);
-    background: var(--bg-secondary);
-    color: var(--text-secondary);
+    background: rgba(244, 63, 94, 0.15);
+    border: 1px solid rgba(244, 63, 94, 0.3);
+    color: #f43f5e;
+    flex-shrink: 0;
+    min-width: 50px;
+    text-align: center;
 }
 
 .badge-deviation.positive {

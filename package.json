@@ -19,6 +19,7 @@
     "react-chartjs-2": "^5.3.1",
     "react-dom": "^19.2.0",
     "react-router-dom": "^6.30.2",
+    "react-youtube": "^10.1.0",
     "regression": "^2.0.1"
   },
   "devDependencies": {

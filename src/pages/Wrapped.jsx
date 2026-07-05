@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { loadData, STORAGE_KEYS } from '../utils/dataStore';
 import { calculateWrappedData } from '../utils/wrappedCalculations';
 import { extractMalId, getAnimeInfo } from '../utils/jikanService';
+import MusicPlayer from '../components/MusicPlayer';
 import './Wrapped.css';
 
 
@@ -75,6 +76,7 @@ export default function Wrapped() {
     const [historyLog, setHistoryLog] = useState([]);
     const [statsJson, setStatsJson] = useState(null);
     const [jikanCache, setJikanCache] = useState(null);
+    const [metadataCache, setMetadataCache] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -101,14 +103,16 @@ export default function Wrapped() {
                 ]);
                 
                 // Fetch static cache to obtain community scores
-                const cache = await fetch('data/jikan_cache.json')
-                    .then(res => res.ok ? res.json() : null)
-                    .catch(() => null);
+                const [cache, metadataCache] = await Promise.all([
+                    fetch('data/jikan_cache.json').then(res => res.ok ? res.json() : null).catch(() => null),
+                    fetch('data/anime_metadata.json').then(res => res.ok ? res.json() : null).catch(() => null)
+                ]);
 
                 setAnimeList(al);
                 setHistoryLog(hl);
                 setStatsJson(st);
                 setJikanCache(cache);
+                setMetadataCache(metadataCache);
                 setLoading(false);
             } catch (err) {
                 console.error('Failed to load data for Wrapped:', err);
@@ -122,8 +126,8 @@ export default function Wrapped() {
     // Calculate dynamic wrapped stats
     const data = useMemo(() => {
         if (!animeList.length || !historyLog.length) return null;
-        return calculateWrappedData(animeList, historyLog, statsJson, jikanCache, selectedYear);
-    }, [animeList, historyLog, statsJson, jikanCache, selectedYear]);
+        return calculateWrappedData(animeList, historyLog, statsJson, jikanCache, selectedYear, metadataCache);
+    }, [animeList, historyLog, statsJson, jikanCache, selectedYear, metadataCache]);
 
     // Available years in database
     const availableYears = useMemo(() => {
@@ -277,37 +281,9 @@ export default function Wrapped() {
             </div>
 
             {/* ==================================================== */}
-            {/* STORIES MODE VIEW */}
+            {/* STORIES MODE VIEW (CELOOBRAZOVKOVÝ OVERLAY PRO VŠECHNY SLIDY) */}
             {/* ==================================================== */}
-            {viewMode === 'stories' && currentSlide === 0 && (
-                <div 
-                    className="stories-wrapper stories-inline-card"
-                    onMouseDown={handleMouseDown}
-                    onMouseUp={handleMouseUp}
-                    onTouchStart={handleMouseDown}
-                    onTouchEnd={handleMouseUp}
-                    style={{ margin: '2rem auto' }}
-                >
-                    {/* Morphing Background */}
-                    <div className={`stories-bg ${slideBgs[currentSlide]}`} />
-                    
-                    {/* Slide 1: Welcome Intro */}
-                    <div className="story-slide">
-                        <div className="intro-crown">👑</div>
-                        <h1 className="intro-year">{selectedYear === 'all' ? 'All-Time' : selectedYear}</h1>
-                        <h2 className="animate-title">Tvůj Anime Wrapped</h2>
-                        <h3 className="animate-title animate-delay-1">Objev svoji sledovací cestu!</h3>
-                        <p className="animate-fade-up animate-delay-2" style={{ maxWidth: '300px', marginBottom: '2rem' }}>
-                            Sečteno a podtrženo z tvých reálných dat.
-                        </p>
-                        <button className="btn-start-wrapped animate-fade-up animate-delay-3" onClick={handleStart}>
-                            Odstartovat 🚀
-                        </button>
-                    </div>
-                </div>
-            )}
-
-            {viewMode === 'stories' && currentSlide > 0 && (
+            {viewMode === 'stories' && (
                 <div className="stories-modal-overlay">
                     <button className="stories-close-btn" onClick={() => { setViewMode('classic'); setIsPlaying(false); }}>✕ Klasický Přehled</button>
                     <div 
@@ -320,27 +296,49 @@ export default function Wrapped() {
                         {/* Morphing Background */}
                         <div className={`stories-bg ${slideBgs[currentSlide]}`} />
 
-                        {/* Progress bars at top (Instagram Stories style) */}
-                        <div className="stories-indicators">
-                            {Array.from({ length: TOTAL_SLIDES }).map((_, idx) => (
-                                <div key={idx} className="indicator-bar">
-                                    <div 
-                                        className={`indicator-progress ${idx < currentSlide ? 'completed' : ''}`}
-                                        style={{ 
-                                            width: idx === currentSlide ? `${progress}%` : undefined 
-                                        }}
-                                    />
-                                </div>
-                            ))}
-                        </div>
+                        {/* Progress bars at top (Instagram Stories style) - pouze pro přehrávané slidy */}
+                        {currentSlide > 0 && (
+                            <div className="stories-indicators">
+                                {Array.from({ length: TOTAL_SLIDES }).map((_, idx) => (
+                                    <div key={idx} className="indicator-bar">
+                                        <div 
+                                            className={`indicator-progress ${idx < currentSlide ? 'completed' : ''}`}
+                                            style={{ 
+                                                width: idx === currentSlide ? `${progress}%` : undefined 
+                                            }}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        )}
 
-                        {/* Invisible Navigation Click Triggers */}
-                        <div className="story-nav-triggers">
-                            <div className="story-trigger-left" onClick={handlePrevSlide} />
-                            <div className="story-trigger-right" onClick={handleNextSlide} />
-                        </div>
+                        {/* Invisible Navigation Click Triggers - pouze pro přehrávané slidy */}
+                        {currentSlide > 0 && (
+                            <div className="story-nav-triggers">
+                                <div className="story-trigger-left" onClick={handlePrevSlide} />
+                                <div className="story-trigger-right" onClick={handleNextSlide} />
+                            </div>
+                        )}
 
                         {/* ---------------- SLIDE CONTAINER ---------------- */}
+
+                        {/* Slide 1: Welcome Intro (Slide 0) */}
+                        {currentSlide === 0 && (
+                            <div className="story-slide">
+                                <div className="intro-crown">👑</div>
+                                <h1 className="intro-year">{selectedYear === 'all' ? 'All-Time' : selectedYear}</h1>
+                                <h2 className="animate-title">Tvůj Anime Wrapped</h2>
+                                <h3 className="animate-title animate-delay-1">Objev svoji sledovací cestu!</h3>
+                                <p className="animate-fade-up animate-delay-2" style={{ maxWidth: '300px', marginBottom: '2rem' }}>
+                                    Sečteno a podtrženo z tvých reálných dat.
+                                </p>
+                                <button className="btn-start-wrapped animate-fade-up animate-delay-3" onClick={handleStart}>
+                                    Odstartovat 🚀
+                                </button>
+                            </div>
+                        )}
+
+
 
                     {/* Slide 2: Watch Time */}
                     {currentSlide === 1 && (
@@ -852,7 +850,8 @@ export default function Wrapped() {
                             <h3>📊 Distribuce hodnocení</h3>
                             <div className="custom-bar-chart" style={{ marginTop: '0.5rem' }}>
                                 {Object.entries(data.scoreDistribution).reverse().map(([score, count]) => {
-                                    const pct = (count / maxScoreDistCount) * 100;
+                                    const maxCount = Math.max(...Object.values(data.scoreDistribution), 1);
+                                    const pct = (count / maxCount) * 100;
                                     return (
                                         <div key={score} className="chart-bar-row">
                                             <span className="chart-bar-label" style={{ minWidth: '150px' }}>{score} - {MAL_SCORE_LABELS[score]}</span>
@@ -867,23 +866,42 @@ export default function Wrapped() {
                         </div>
 
                         {/* Calendar activity info */}
-                        <div className="classic-card">
-                            <h3>📅 Aktivita sledování</h3>
-                            <p>Celkem aktivních dní: <strong>{data.uniqueDaysCount} z {selectedYear === 'all' ? '365' : (parseInt(selectedYear) % 4 === 0 ? 366 : 365)} ({data.uniqueDaysRatio}%)</strong></p>
-                            <p>Nejaktivnější den: <strong>{data.activeDayName}</strong> ({data.activeDayRatio}% epizod)</p>
-                            <p>Nejaktivnější měsíc: <strong>{data.peakMonthName}</strong> ({data.peakMonthEpCount} epizod)</p>
-                            
-                            <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                                <span className="badge-deviation positive">
-                                    Recency Bias: {data.recencyBiasRatio}%
-                                </span>
-                                <span className="badge-deviation seasonal">
-                                    Seasonal Warrior: {data.seasonalWarriorRatio}%
-                                </span>
+                        <div className="classic-card" style={{ display: 'flex', flexDirection: 'column' }}>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem' }}>
+                                {/* Left side: Activity Text */}
+                                <div style={{ flex: '1 1 250px' }}>
+                                    <h3 style={{ marginBottom: '1rem' }}>📅 Aktivita sledování</h3>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                        <p>Celkem aktivních dní: <strong>{data.uniqueDaysCount} z {selectedYear === 'all' ? '365' : (parseInt(selectedYear) % 4 === 0 ? 366 : 365)} ({data.uniqueDaysRatio}%)</strong></p>
+                                        <p>Nejaktivnější den: <strong>{data.activeDayName}</strong> ({data.activeDayRatio}% epizod)</p>
+                                        <p>Nejaktivnější měsíc: <strong>{data.peakMonthName}</strong> ({data.peakMonthEpCount} epizod)</p>
+                                    </div>
+                                </div>
+
+                                {/* Right side: Seasonal Warrior & Recency Bias */}
+                                <div style={{ flex: '1 1 300px', display: 'flex', flexDirection: 'column', gap: '1.5rem', justifyContent: 'center' }}>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                                        <h3 style={{ fontSize: '1rem', margin: 0 }}>🎯 Recency Bias</h3>
+                                        <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', margin: 0 }}>Procento anime vydaných v tomto roce.</p>
+                                        <div className="chart-bar-wrapper" style={{ height: '14px', background: 'var(--bg-primary)', borderRadius: '10px', marginTop: '0.2rem' }}>
+                                            <div className="chart-bar-fill" style={{ width: `${data.recencyBiasRatio}%`, height: '100%', borderRadius: '10px', background: 'linear-gradient(90deg, #10b981, #34d399)' }} />
+                                        </div>
+                                        <div style={{ textAlign: 'right', fontWeight: 'bold', fontSize: '0.9rem', color: '#10b981', marginTop: '-0.2rem' }}>{data.recencyBiasRatio}%</div>
+                                    </div>
+
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                                        <h3 style={{ fontSize: '1rem', margin: 0 }}>⚔️ Seasonal Warrior</h3>
+                                        <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', margin: 0 }}>Procento anime sledovaných průběžně jak vycházela.</p>
+                                        <div className="chart-bar-wrapper" style={{ height: '14px', background: 'var(--bg-primary)', borderRadius: '10px', marginTop: '0.2rem' }}>
+                                            <div className="chart-bar-fill" style={{ width: `${data.seasonalWarriorRatio}%`, height: '100%', borderRadius: '10px', background: 'linear-gradient(90deg, #818cf8, #c084fc)' }} />
+                                        </div>
+                                        <div style={{ textAlign: 'right', fontWeight: 'bold', fontSize: '0.9rem', color: '#a78bfa', marginTop: '-0.2rem' }}>{data.seasonalWarriorRatio}%</div>
+                                    </div>
+                                </div>
                             </div>
 
                             {data.heatmapColumns && data.heatmapColumns.length > 0 && (
-                                <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column' }}>
+                                <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column' }}>
                                     <h4 style={{ fontSize: '0.9rem', marginBottom: '0.75rem', color: 'var(--text-secondary)' }}>Kalendář aktivity</h4>
                                     
                                     <div style={{ display: 'flex', flexDirection: 'column', overflowX: 'auto', paddingBottom: '6px', width: '100%' }}>
@@ -982,7 +1000,7 @@ export default function Wrapped() {
                     </div>
 
                     {/* Top Franchises & Quickest Binges */}
-                    <div className="classic-grid-2col">
+                    <div className="classic-grid-3col">
                         <div className="classic-card">
                             <h3>🏢 Top 5 franšíz (podle času)</h3>
                             <div className="wrapped-cards-container" style={{ marginTop: '0.5rem' }}>
@@ -995,6 +1013,23 @@ export default function Wrapped() {
                                             <div className="wrapped-card-meta">{fran.episodes} epizod</div>
                                         </div>
                                         <div className="stats-sub-text" style={{ fontSize: '1rem' }}>{fran.hours} h</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="classic-card">
+                            <h3>⭐ Top 5 franšíz (podle hodnocení)</h3>
+                            <div className="wrapped-cards-container" style={{ marginTop: '0.5rem' }}>
+                                {data.topFranchisesScoreList && data.topFranchisesScoreList.map((fran, idx) => (
+                                    <div key={idx} className="wrapped-anime-card">
+                                        <div className="wrapped-card-rank">#{idx + 1}</div>
+                                        <JikanPoster malUrl={fran.malUrl} />
+                                        <div className="wrapped-card-info">
+                                            <div className="wrapped-card-title">{fran.name}</div>
+                                            <div className="wrapped-card-meta">{fran.scoreCount} ohodnocených</div>
+                                        </div>
+                                        <div className="stats-sub-text" style={{ fontSize: '1rem', color: '#fbbf24' }}>★ {fran.avgScore.toString().replace('.', ',')}</div>
                                     </div>
                                 ))}
                             </div>
@@ -1136,6 +1171,8 @@ export default function Wrapped() {
                     </div>
                 </div>
             )}
+            
+            <MusicPlayer animeData={animeList} selectedYear={selectedYear} />
         </div>
     );
 }

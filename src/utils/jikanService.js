@@ -596,6 +596,17 @@ export async function importJikanStaticCache(staticCache) {
     }
 }
 
+let metadataCachePromise = null;
+
+function getMetadataCache() {
+    if (!metadataCachePromise) {
+        metadataCachePromise = fetch('data/anime_metadata.json')
+            .then(res => res.json())
+            .catch(() => ({}));
+    }
+    return metadataCachePromise;
+}
+
 /**
  * Fetch main anime details (like thumbnail URL) from Jikan.
  * Caches results in localStorage to avoid hitting API rate limits.
@@ -603,7 +614,14 @@ export async function importJikanStaticCache(staticCache) {
  * @returns {Promise<object|null>}
  */
 export async function getAnimeInfo(malId) {
-    if (!malId) return null
+    if (!malId) return null;
+
+    // Check pre-fetched global static cache first
+    const staticCache = await getMetadataCache();
+    if (staticCache && staticCache[malId]) {
+        return staticCache[malId];
+    }
+
     const cacheKey = `jikan_anime_info_${malId}`
     const cached = localStorage.getItem(cacheKey)
     if (cached) {

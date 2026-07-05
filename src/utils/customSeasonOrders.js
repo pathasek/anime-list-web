@@ -18,5 +18,13 @@ export const customSeasonOrders = {
         "Steins;Gate: Egoistic Poriomania",
         "Steins;Gate: The Movie - Load Region of Déjà Vu",
         "Steins;Gate: The Sagacious Wisdom of Cognitive Computing"
+    ],
+    "Mushoku Tensei: Jobless Reincarnation": [
+        "Mushoku Tensei: Jobless Reincarnation, S01 Part 1",
+        "Mushoku Tensei: Jobless Reincarnation, S01 Part 2",
+        "Mushoku Tensei: Jobless Reincarnation - Eris the Goblin Slayer",
+        "Mushoku Tensei: Jobless Reincarnation Season 2 - Episode 0 \"Guardian Fitz\"",
+        "Mushoku Tensei: Jobless Reincarnation, S02 Part 1",
+        "Mushoku Tensei: Jobless Reincarnation, S02 Part 2"
     ]
 };
