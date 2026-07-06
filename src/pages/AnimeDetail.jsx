@@ -12,11 +12,12 @@ import {
     LinearScale,
     BarElement
 } from 'chart.js'
-import { Radar, Bar, Chart } from 'react-chartjs-2'
+import { Bar, Chart } from 'react-chartjs-2'
 import regression from 'regression'
 import { formatReview } from '../utils/formatReview'
 import { getThemeChartColors } from '../utils/chartTheme'
 import { useTheme } from '../components/ThemeProvider'
+import CategoryRatingsPanel from '../components/CategoryRatingsPanel'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, CategoryScale, LinearScale, BarElement)
 
@@ -141,32 +142,7 @@ function AnimeDetail() {
         "Emoce": 3.5, "Enjoyment": 4.0, "OP": 1.0, "ED": 0.5, "OST": 2.0
     }), [])
 
-    // Radar chart data
-    const radarData = useMemo(() => {
-        if (!categoryRatings) return null
 
-        const categories = Object.keys(categoryRatings)
-        const labels = categories.map(c => {
-            const w = categoryWeights[c] || 1
-            const weightStr = w.toLocaleString('cs-CZ', { maximumFractionDigits: 1 })
-            return `${c}|(v. ${weightStr})`
-        })
-        const values = Object.values(categoryRatings)
-
-        return {
-            labels: labels,
-            datasets: [{
-                label: 'Hodnocení',
-                data: values,
-                backgroundColor: 'rgba(99, 102, 241, 0.3)',
-                borderColor: 'rgba(99, 102, 241, 1)',
-                borderWidth: 2,
-                pointBackgroundColor: 'rgba(99, 102, 241, 1)',
-                pointBorderColor: c.pointBorder,
-                pointRadius: 4
-            }]
-        }
-    }, [categoryRatings, categoryWeights])
 
     // Episode ratings bar chart
     const episodeChartData = useMemo(() => {
@@ -252,66 +228,7 @@ function AnimeDetail() {
         return { epChartMin: dynMin, epChartMax: dynMax }
     }, [episodeRatings])
 
-    const radarMin = useMemo(() => {
-        if (!categoryRatings) return 0
-        const values = Object.values(categoryRatings)
-        // Use a slightly lower min to give the chart some "breathing room" in the center if values are high
-        const minVal = values.length > 0 ? Math.min(...values) : 0
-        return Math.max(0, Math.floor(minVal - 1))
-    }, [categoryRatings])
 
-    const radarMax = useMemo(() => {
-        if (!categoryRatings) return 10
-        const values = Object.values(categoryRatings)
-        // Set max exactly to the highest rating found to maximize the spider web spread
-        return values.length > 0 ? Math.max(...values) : 10
-    }, [categoryRatings])
-
-    const radarOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            r: {
-                beginAtZero: false,
-                min: radarMin,
-                max: radarMax,
-                ticks: {
-                    stepSize: 1,
-                    color: c.text,
-                    font: {
-                        size: window.innerWidth < 768 ? 10 : 13,
-                        weight: '600'
-                    },
-                    backdropColor: 'rgba(0,0,0,0.5)',
-                    backdropPadding: 2
-                },
-                grid: {
-                    color: c.textFaint
-                },
-                angleLines: {
-                    color: c.textFaint
-                },
-                pointLabels: {
-                    color: c.text,
-                    font: {
-                        size: window.innerWidth < 768 ? 13 : 13,
-                        weight: '500'
-                    },
-                    padding: 10,
-                    callback: (label) => {
-                        // Support multi-line via '|' separator
-                        if (label.includes('|')) {
-                            return label.split('|')
-                        }
-                        return label
-                    }
-                }
-            }
-        },
-        plugins: {
-            legend: { display: false }
-        }
-    }
 
     const barOptions = {
         responsive: true,
@@ -726,60 +643,11 @@ function AnimeDetail() {
             )}
 
             {/* Category Ratings Radar Chart */}
-            {categoryRatings && radarData && (
-                <div className="card" style={{ marginBottom: 'var(--spacing-xl)' }}>
-                    <h3 style={{ marginBottom: 'var(--spacing-md)' }}>
-                        Hodnocení podle kategorií
-                        <span style={{ marginLeft: 'var(--spacing-md)', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                            (WA: <span style={{
-                                background: 'rgba(99, 102, 241, 0.2)',
-                                color: 'var(--accent-primary)',
-                                padding: '2px 8px',
-                                borderRadius: '4px',
-                                fontWeight: '600'
-                            }}>{avgCategoryRating}</span>)
-                        </span>
-                    </h3>
-
-                    <div className="ratings-flex-container">
-                        {/* Labels on the Left */}
-                        <div style={{ flex: '1', minWidth: '300px' }}>
-                            <div style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
-                                gap: 'var(--spacing-xs)'
-                            }}>
-                                {Object.entries(categoryRatings).map(([cat, rating]) => (
-                                    <div key={cat} style={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        padding: '4px 8px',
-                                        background: 'var(--bg-secondary)',
-                                        borderRadius: 'var(--radius-sm)',
-                                        border: '1px solid var(--border-color)',
-                                        fontSize: '0.8rem'
-                                    }}>
-                                        <span>{cat}</span>
-                                        <span className={`rating-${Math.floor(rating)}`} style={{ fontWeight: 'bold' }}>
-                                            {rating.toLocaleString('cs-CZ', { maximumFractionDigits: 1 })}
-                                        </span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Chart on the Right - Enlarged */}
-                        <div className="radar-chart-container">
-                            <div style={{ width: '100%', height: '100%' }}>
-                                <Radar
-                                    data={radarData}
-                                    options={radarOptions}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
+            <CategoryRatingsPanel
+                categoryRatings={categoryRatings}
+                categoryWeights={categoryWeights}
+                avgRating={avgCategoryRating}
+            />
 
             {/* Episode Ratings */}
             {episodeRatings && episodeChartData && !['movie', 'film', 'music'].includes((anime.type || '').toLowerCase()) && (
