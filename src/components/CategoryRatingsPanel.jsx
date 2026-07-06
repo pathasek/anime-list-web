@@ -173,7 +173,7 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating }) {
         }
     }), [c, isMobile])
 
-    // Soft glow behind the radar shape
+    // Soft glow behind the radar shape + redraw of the scale numbers on top.
     const chartPlugins = useMemo(() => [{
         id: 'categoryRadarGlow',
         beforeDatasetsDraw(chart) {
@@ -183,6 +183,25 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating }) {
         },
         afterDatasetsDraw(chart) {
             chart.ctx.restore()
+        }
+    }, {
+        // Chart.js draws the radial scale numbers before the dataset, so the
+        // opaque vertex dots paint over them (e.g. "10" at the top vanishes).
+        // Re-run the scale's own drawLabels() after the datasets so the numbers
+        // always sit above the white dots. Reusing drawLabels() keeps their
+        // position/styling identical — the only change is the z-order. Runs
+        // after the glow plugin's ctx.restore(), and clears any shadow so the
+        // redrawn text has no glow.
+        id: 'categoryRadarTicksOnTop',
+        afterDatasetsDraw(chart) {
+            const scale = chart.scales?.r
+            if (!scale || typeof scale.drawLabels !== 'function') return
+            const ctx = chart.ctx
+            ctx.save()
+            ctx.shadowColor = 'transparent'
+            ctx.shadowBlur = 0
+            scale.drawLabels()
+            ctx.restore()
         }
     }], [accent])
 
@@ -283,8 +302,9 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating }) {
                             const txtAlign = isRight ? 'left' : (isLeft ? 'right' : 'center')
 
                             // Compute the transform to center the label group on the anchor point.
-                            const nudgeX = p.ux * 21
-                            const nudgeY = p.uy * 18
+                            // The extra radial offset (vs. 21/18) pushes the text ~1mm further from the icon.
+                            const nudgeX = p.ux * 25
+                            const nudgeY = p.uy * 22
                             const tx = isRight ? '0%' : (isLeft ? '-100%' : '-50%')
                             const ty = p.uy < -0.5 ? '-100%' : (p.uy > 0.5 ? '0%' : '-50%')
 
@@ -329,7 +349,6 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating }) {
                                             }}
                                         >
                                             <span className="radar-label-name">{cat}</span>
-                                            <span className="radar-label-weight">(váha: {fmtWeight(categoryWeights[cat] || 1)})</span>
                                             <span className="radar-label-value">{fmtRating(rating)}</span>
                                         </div>
                                     </div>
