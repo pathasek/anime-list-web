@@ -2595,6 +2595,41 @@
     }
   },
   {
+    "name": "Lord of Mysteries Specials",
+    "categories": {
+      "Animace": 10.0,
+      "CGI": 10.0,
+      "MC": 9.5,
+      "Vedlejší postavy": 9.5,
+      "Waifu": 9.5,
+      "Plot": 9.0,
+      "Pacing": 8.5,
+      "Story Conclusion": 9.5,
+      "Originalita": 10.0,
+      "Emoce": 8.5,
+      "Enjoyment": 10.0,
+      "ED": 10.0,
+      "OST": 10.0
+    }
+  },
+  {
+    "name": "That Time I Got Reincarnated as a Slime the Movie: Tears of the Azure Sea",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 8.5,
+      "MC": 7.5,
+      "Vedlejší postavy": 8.0,
+      "Waifu": 8.0,
+      "Plot": 6.5,
+      "Pacing": 7.0,
+      "Story Conclusion": 8.0,
+      "Originalita": 7.5,
+      "Emoce": 7.5,
+      "Enjoyment": 7.0,
+      "OST": 8.5
+    }
+  },
+  {
     "name": "Girls' Last Tour",
     "categories": {
       "Animace": 7.0,
@@ -5198,38 +5233,22 @@
     }
   },
   {
-    "name": "Lord of Mysteries Specials",
-    "categories": {
-      "Animace": 10.0,
-      "CGI": 10.0,
-      "MC": 9.5,
-      "Vedlejší postavy": 9.5,
-      "Waifu": 9.5,
-      "Plot": 9.0,
-      "Pacing": 8.5,
-      "Story Conclusion": 9.5,
-      "Originalita": 10.0,
-      "Emoce": 8.5,
-      "Enjoyment": 10.0,
-      "ED": 10.0,
-      "OST": 10.0
-    }
-  },
-  {
-    "name": "That Time I Got Reincarnated as a Slime the Movie: Tears of the Azure Sea",
+    "name": "WorldEnd: What do you do at the end of the world? Are you busy? Will you save us?",
     "categories": {
       "Animace": 7.0,
-      "CGI": 8.5,
+      "CGI": 8.0,
       "MC": 7.5,
-      "Vedlejší postavy": 8.0,
-      "Waifu": 8.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 7.5,
       "Plot": 6.5,
-      "Pacing": 7.0,
+      "Pacing": 6.5,
       "Story Conclusion": 8.0,
-      "Originalita": 7.5,
+      "Originalita": 8.0,
       "Emoce": 7.5,
-      "Enjoyment": 7.0,
-      "OST": 8.5
+      "Enjoyment": 7.5,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 9.0
     }
   }
 ]

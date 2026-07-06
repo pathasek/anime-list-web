@@ -5676,6 +5676,23 @@
     ]
   },
   {
+    "name": "Lord of Mysteries Specials",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 9.5
+      }
+    ]
+  },
+  {
     "name": "Girls' Last Tour",
     "episodes": [
       {
@@ -12435,6 +12452,227 @@
     ]
   },
   {
+    "name": "Fate/strange Fake, S01",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 11",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 12",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 13",
+        "rating": 10.0
+      }
+    ]
+  },
+  {
+    "name": "Dorohedoro, S02",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 5.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 5.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 7",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 10",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.0
+      }
+    ]
+  },
+  {
+    "name": "Daemons of the Shadow Realm",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 11",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.5
+      }
+    ]
+  },
+  {
+    "name": "Re:Zero -Starting Life in Another World-, S04",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 10",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 10.0
+      }
+    ]
+  },
+  {
+    "name": "Mushoku Tensei: Jobless Reincarnation, S03",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.5
+      }
+    ]
+  },
+  {
     "name": "Agents of the Four Seasons: Dance of Spring",
     "episodes": [
       {
@@ -12675,59 +12913,6 @@
     ]
   },
   {
-    "name": "Daemons of the Shadow Realm",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 8",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 12",
-        "rating": 7.5
-      }
-    ]
-  },
-  {
     "name": "Nippon Sangoku: The Three Nations of the Crimson Sun",
     "episodes": [
       {
@@ -12838,112 +13023,6 @@
     ]
   },
   {
-    "name": "Re:Zero -Starting Life in Another World-, S04",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 2",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 8",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 10",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 10.0
-      }
-    ]
-  },
-  {
-    "name": "Fate/strange Fake, S01",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 11",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 12",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 13",
-        "rating": 10.0
-      }
-    ]
-  },
-  {
     "name": "Hell's Paradise, S02",
     "episodes": [
       {
@@ -12997,81 +13076,55 @@
     ]
   },
   {
-    "name": "Dorohedoro, S02",
+    "name": "WorldEnd: What do you do at the end of the world? Are you busy? Will you save us?",
     "episodes": [
       {
         "episode": "EP 1",
-        "rating": 6.0
+        "rating": 7.0
       },
       {
         "episode": "EP 2",
-        "rating": 5.75
+        "rating": 7.5
       },
       {
         "episode": "EP 3",
-        "rating": 6.5
+        "rating": 7.25
       },
       {
         "episode": "EP 4",
-        "rating": 5.5
+        "rating": 7.5
       },
       {
         "episode": "EP 5",
-        "rating": 7.0
+        "rating": 6.75
       },
       {
         "episode": "EP 6",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 7",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 8",
-        "rating": 6.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 10",
-        "rating": 6.75
-      },
-      {
-        "episode": "EP 11",
-        "rating": 7.0
-      }
-    ]
-  },
-  {
-    "name": "Lord of Mysteries Specials",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 9.5
-      }
-    ]
-  },
-  {
-    "name": "Mushoku Tensei: Jobless Reincarnation, S03",
-    "episodes": [
-      {
-        "episode": "EP 1",
         "rating": 7.75
       },
       {
-        "episode": "EP 2",
+        "episode": "EP 7",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.25
+      },
+      {
+        "episode": "EP 11",
         "rating": 7.5
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.25
       }
     ]
   }
