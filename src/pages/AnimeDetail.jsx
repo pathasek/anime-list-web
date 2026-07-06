@@ -647,6 +647,8 @@ function AnimeDetail() {
                 categoryRatings={categoryRatings}
                 categoryWeights={categoryWeights}
                 avgRating={avgCategoryRating}
+                animeName={anime.name}
+                animeSeries={anime.series}
             />
 
             {/* Episode Ratings */}

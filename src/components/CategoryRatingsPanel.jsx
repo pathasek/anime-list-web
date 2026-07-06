@@ -10,8 +10,24 @@ import {
 } from 'chart.js'
 import { useTheme } from './ThemeProvider'
 import { getThemeChartColors } from '../utils/chartTheme'
+import { getMediaForAnime, youtubeSearchUrl } from '../utils/mediaMatch'
+import { VideoModal, FloatingOstPlayer, ScrollableText } from './CategoryMediaPlayers'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip)
+
+// Kategorie, u kterých nabízíme přehrání videoklipu / OST
+const MEDIA_CATS = { OP: true, ED: true, OST: true }
+
+// Module-level cache — data se načtou jen jednou na relaci
+let cachedOpEdVideos = null
+let cachedOstPieces = null
+let cachedOstWhole = null
+
+const PlayIcon = () => (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M8 5v14l11-7z" />
+    </svg>
+)
 
 const svg = (children) => (
     <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
@@ -76,10 +92,67 @@ function useAccentColor(theme) {
     return useCallback((a) => `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${a})`, [rgb])
 }
 
-function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating }) {
+function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, animeName, animeSeries }) {
     const { theme } = useTheme()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const c = useMemo(() => getThemeChartColors(), [theme])
     const accent = useAccentColor(theme)
+
+    // OP/ED/OST média pro toto anime
+    const [opEdVideos, setOpEdVideos] = useState(cachedOpEdVideos)
+    const [ostPieces, setOstPieces] = useState(cachedOstPieces)
+    const [ostWhole, setOstWhole] = useState(cachedOstWhole)
+    const [videoModal, setVideoModal] = useState(null)   // OP/ED video (Drive) v překryvném okně
+    const [floatingOst, setFloatingOst] = useState(null) // OST (YouTube) v plovoucím přehrávači
+
+    useEffect(() => {
+        if (cachedOpEdVideos === null) {
+            fetch('data/op_ed_videos.json?v=' + Date.now())
+                .then(r => (r.ok ? r.json() : null))
+                .then(d => { cachedOpEdVideos = (d && d.videos) || []; setOpEdVideos(cachedOpEdVideos) })
+                .catch(() => { cachedOpEdVideos = []; setOpEdVideos([]) })
+        }
+        if (cachedOstPieces === null) {
+            fetch('data/favorites_ost.json?v=' + Date.now())
+                .then(r => (r.ok ? r.json() : null))
+                .then(d => { 
+                    cachedOstPieces = (d && d.pieces) || []; 
+                    cachedOstWhole = (d && d.whole) || [];
+                    setOstPieces(cachedOstPieces)
+                    setOstWhole(cachedOstWhole)
+                })
+                .catch(() => { 
+                    cachedOstPieces = []; 
+                    cachedOstWhole = [];
+                    setOstPieces([])
+                    setOstWhole([])
+                })
+        }
+    }, [])
+
+    const media = useMemo(
+        () => getMediaForAnime(animeName, opEdVideos || [], ostPieces || [], ostWhole || [], animeSeries),
+        [animeName, opEdVideos, ostPieces, ostWhole, animeSeries]
+    )
+
+    const playTrack = useCallback((t) => {
+        if (!t) return
+        if (t.kind === 'video') setVideoModal(t)
+        else if (t.kind === 'youtube' || t.kind === 'youtube-playlist') setFloatingOst(t)
+        else if (t.kind === 'external') window.open(t.url, '_blank', 'noopener')
+    }, [])
+
+    const searchYoutube = useCallback((type) => {
+        window.open(youtubeSearchUrl(animeName, type), '_blank', 'noopener')
+    }, [animeName])
+
+    const handleCardClick = useCallback((cat, tracks) => {
+        if (!tracks || tracks.length === 0) {
+            searchYoutube(cat)
+        } else {
+            playTrack(tracks[0])
+        }
+    }, [searchYoutube, playTrack])
 
     const chartRef = useRef(null)
     const wrapRef = useRef(null)
@@ -171,7 +244,7 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating }) {
                 }
             }
         }
-    }), [c, isMobile])
+    }), [c, isMobile, radarMin, radarMax])
 
     // Soft glow behind the radar shape + redraw of the scale numbers on top.
     const chartPlugins = useMemo(() => [{
@@ -274,18 +347,100 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating }) {
             <div className="ratings-flex-container">
                 {/* Category cards on the left */}
                 <div className="category-cards-grid">
-                    {entries.map(([cat, rating]) => (
-                        <div key={cat} className="category-rating-card">
-                            <div className="category-card-left">
-                                <span className="category-card-icon">{iconFor(cat)}</span>
-                                <span className="category-card-name" title={cat}>{cat}</span>
+                    {entries.map(([cat, rating]) => {
+                        const isMedia = !!MEDIA_CATS[cat]
+                        const tracks = isMedia ? media[cat] : null
+                        const hasTracks = tracks && tracks.length > 0
+                        return (
+                            <div 
+                                key={cat} 
+                                className={`category-rating-card${isMedia ? ' has-media' : ''}`}
+                                onClick={isMedia ? () => handleCardClick(cat, tracks) : undefined}
+                                role={isMedia ? 'button' : undefined}
+                                tabIndex={isMedia ? 0 : undefined}
+                                onKeyDown={isMedia ? (e) => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        e.preventDefault()
+                                        handleCardClick(cat, tracks)
+                                    }
+                                } : undefined}
+                            >
+                                <div className="category-card-left">
+                                    <span className="category-card-icon">{iconFor(cat)}</span>
+                                    <span className="category-card-name" title={cat}>{cat}</span>
+                                    {isMedia && (
+                                        <span className={`category-card-play-hint${hasTracks ? ' has-local' : ' is-search'}`} aria-hidden="true">
+                                            {hasTracks ? (
+                                                <>PLAY <PlayIcon /></>
+                                            ) : (
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                                                    <polyline points="15 3 21 3 21 9" />
+                                                    <line x1="10" y1="14" x2="21" y2="3" />
+                                                </svg>
+                                            )}
+                                        </span>
+                                    )}
+                                </div>
+                                <div className="category-card-right">
+                                    <span className="category-card-weight">váha: {fmtWeight(categoryWeights[cat] || 1)}</span>
+                                    <span className="category-card-value">{fmtRating(rating)}</span>
+                                </div>
+
+                                {isMedia && (
+                                    <div className="media-popover" role="menu" onClick={(e) => e.stopPropagation()}>
+                                        {hasTracks ? (
+                                            <div className="media-popover-inner">
+                                                {tracks.map((t, i) => (
+                                                    <button
+                                                        key={i}
+                                                        type="button"
+                                                        className="media-track-row"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation()
+                                                            playTrack(t)
+                                                        }}
+                                                        title="Přehrát"
+                                                    >
+                                                        <span className="media-track-badge">{t.label}</span>
+                                                        <span className="media-track-meta">
+                                                            <span className="media-track-song">
+                                                                <ScrollableText text={t.song || cat}>
+                                                                    {t.song || cat}
+                                                                    {t.isBestPiece && (
+                                                                        <span className="best-piece-popover-tag"> (Best Pieces)</span>
+                                                                    )}
+                                                                </ScrollableText>
+                                                            </span>
+                                                            {t.artist && <span className="media-track-artist">{t.artist}</span>}
+                                                        </span>
+                                                        <span className="media-play-btn"><PlayIcon /></span>
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div className="media-popover-inner">
+                                                <div className="media-popover-empty">Klip zatím není v knihovně.</div>
+                                                <button
+                                                    type="button"
+                                                    className="media-track-row ghost"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation()
+                                                        searchYoutube(cat)
+                                                    }}
+                                                >
+                                                    <span className="media-track-meta">
+                                                        <span className="media-track-song">Hledat {cat} na YouTube</span>
+                                                    </span>
+                                                    <span className="media-play-btn"><PlayIcon /></span>
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                             </div>
-                            <div className="category-card-right">
-                                <span className="category-card-weight">váha: {fmtWeight(categoryWeights[cat] || 1)}</span>
-                                <span className="category-card-value">{fmtRating(rating)}</span>
-                            </div>
-                        </div>
-                    ))}
+                        )
+                    })}
                 </div>
 
                 {/* Radar chart with overlay labels on the right */}
@@ -360,6 +515,17 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating }) {
                     </div>
                 </div>
             </div>
+
+            {/* OP/ED videoklip v překryvném okně */}
+            <VideoModal media={videoModal} onClose={() => setVideoModal(null)} />
+
+            {/* OST v plovoucím YouTube přehrávači (zůstane, dokud se neopustí detail) */}
+            <FloatingOstPlayer
+                ost={floatingOst}
+                playlist={media.OST}
+                onPlayTrack={playTrack}
+                onClose={() => setFloatingOst(null)}
+            />
         </div>
     )
 }
