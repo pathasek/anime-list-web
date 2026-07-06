@@ -1323,6 +1323,18 @@
       "anime_url": null,
       "ost_name": "ギレーヌのこと",
       "ost_url": "https://youtu.be/fvj5Sk3oG20?si=wW8lcBhCWrSOtOmx"
+    },
+    {
+      "anime_name": "Fate/strange Fake, S01",
+      "anime_url": null,
+      "ost_name": "CURTSY",
+      "ost_url": "https://youtu.be/DRXsQUDOvs8?si=Qn1tbyeE3di5Kz0d"
+    },
+    {
+      "anime_name": "Fate/strange Fake, S01",
+      "anime_url": null,
+      "ost_name": "AVALONIAN",
+      "ost_url": "https://youtu.be/ffE1-RTTpTE?si=RfbboIMeVCdM6bQt"
     }
   ],
   "whole": [
@@ -1472,6 +1484,15 @@
     },
     {
       "order": "17.",
+      "anime_name": "Fate/strange Fake",
+      "anime_url": null,
+      "yt_playlist": "YT Playlist",
+      "yt_url": "https://youtube.com/playlist?list=PLdR7m7PFLzQ4qRZsJKsf8ZL5UhfFgsPWv&si=3KbPvEhQSIqtX2uY",
+      "spotify_playlist": "Spotify",
+      "spotify_url": "https://open.spotify.com/playlist/6cpjB4n78FyxRavDyKMFBG?si=999bfb92a2314880&pt=1205ae45802d45ac435068292f33d059"
+    },
+    {
+      "order": "18.",
       "anime_name": "Steins;Gate",
       "anime_url": null,
       "yt_playlist": "YT Playlist",
@@ -1480,7 +1501,7 @@
       "spotify_url": "https://open.spotify.com/playlist/1c5o2Ulq009CZ95LLotOXX?si=afe3ea5223504600&pt=aa85c88838113fb86458ef945e64f033"
     },
     {
-      "order": "18.",
+      "order": "19.",
       "anime_name": "Bâan: The Boundary of Adulthood",
       "anime_url": null,
       "yt_playlist": "YT Playlist",
@@ -1489,7 +1510,7 @@
       "spotify_url": "https://open.spotify.com/playlist/1luaCw9ZsuHlpCJjVVf7Eh?si=d9a0669a2b2f43f9&pt=5683866d359cc333ad3ac16a8d83f71c"
     },
     {
-      "order": "19.",
+      "order": "20.",
       "anime_name": "Girls' Last Tour",
       "anime_url": null,
       "yt_playlist": "YT Playlist",
@@ -1498,7 +1519,7 @@
       "spotify_url": "https://open.spotify.com/playlist/3xQxWF6v80cO9eDdXmAaTj?si=00ffbb5c690f4a4d&pt=59ebe116b8b65235c27cc2c24c546c5e"
     },
     {
-      "order": "20.",
+      "order": "21.",
       "anime_name": "Evangelion",
       "anime_url": null,
       "yt_playlist": "YT Playlist",
@@ -1507,7 +1528,7 @@
       "spotify_url": "https://open.spotify.com/playlist/214n5V6gDvRcEz8dIAgiED?si=89a4bab75b91425a&pt=da96acbf8bf7b8b02d2de1ef7f05dd54"
     },
     {
-      "order": "21.",
+      "order": "22.",
       "anime_name": "Puella Magi Madoka Magica",
       "anime_url": null,
       "yt_playlist": "YT Playlist",
@@ -1516,7 +1537,7 @@
       "spotify_url": "https://open.spotify.com/playlist/6dQVFIpkCzy4h2Gwwhixwc?si=9479cd6fb483496e&pt=3d2fbcfc95ac9e7dc1a1a68d99ad95f3"
     },
     {
-      "order": "22.",
+      "order": "23.",
       "anime_name": "The Garden of Sinners",
       "anime_url": null,
       "yt_playlist": "YT Playlist",
@@ -1525,7 +1546,7 @@
       "spotify_url": "https://open.spotify.com/playlist/70NAXj9xhxx25wbvAnatrE?si=338e3788ea9d41fe&pt=c2518fe44af019c30f3a5dc956af93d0"
     },
     {
-      "order": "23.",
+      "order": "24.",
       "anime_name": "Kabaneri of the Iron Fortress",
       "anime_url": null,
       "yt_playlist": "YT Playlist",
@@ -1534,7 +1555,7 @@
       "spotify_url": "https://open.spotify.com/playlist/66mdmMhNWWmldTsjQXgpj9?si=b860219072544fb7&pt=f118e7acfcf371032f28883b2155d3c7"
     },
     {
-      "order": "24.",
+      "order": "25.",
       "anime_name": "The Unwanted Undead Adventurer",
       "anime_url": null,
       "yt_playlist": "YT Playlist",
@@ -1543,7 +1564,7 @@
       "spotify_url": "https://open.spotify.com/playlist/1U9LMQFeSnveTprubOO6Lg?si=982d7ee428044171&pt=76dd7f7e406330f68081fae7e08ed6fe"
     },
     {
-      "order": "25.",
+      "order": "26.",
       "anime_name": "Spy x Family",
       "anime_url": null,
       "yt_playlist": "YT Playlist",
@@ -1552,7 +1573,7 @@
       "spotify_url": "https://open.spotify.com/playlist/3m8bUIhiYy1Lj827vVcnir?si=ab8947a0e87e4c1a&pt=9b203c5d314e22e164f346c42c838af7"
     },
     {
-      "order": "26.",
+      "order": "27.",
       "anime_name": "Ranking of Kings",
       "anime_url": null,
       "yt_playlist": "YT Playlist",
@@ -1561,7 +1582,7 @@
       "spotify_url": "https://open.spotify.com/playlist/2w7ehjUiYqGs9qj6BLQlLR?si=2d4dc0dea36f4811&pt=e39803ff7f103293e5be15c771b26d3e"
     },
     {
-      "order": "27.",
+      "order": "28.",
       "anime_name": "Somali and the Forest Spirit",
       "anime_url": null,
       "yt_playlist": "YT Playlist",
@@ -1570,7 +1591,7 @@
       "spotify_url": "https://open.spotify.com/playlist/2HV2Hh4YuXnLSppb1wuUzg?si=8016eb31af294b10&pt=02dd03a2c3a6d9f00ca956baeba25565"
     },
     {
-      "order": "28.",
+      "order": "29.",
       "anime_name": "Tsukimichi -Moonlit Fantasy-",
       "anime_url": null,
       "yt_playlist": "YT Playlist",

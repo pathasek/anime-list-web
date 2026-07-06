@@ -197,7 +197,7 @@
       "Originalita": 7.0,
       "Emoce": 6.0,
       "Enjoyment": 7.5,
-      "OP": 7.0,
+      "OP": 9.0,
       "ED": 7.0,
       "OST": 8.0
     }
@@ -235,7 +235,7 @@
       "Originalita": 9.0,
       "Emoce": 8.0,
       "Enjoyment": 8.0,
-      "OP": 7.0,
+      "OP": 9.0,
       "ED": 7.0,
       "OST": 9.0
     }
@@ -5156,6 +5156,25 @@
       "Enjoyment": 6.5,
       "OP": 7.0,
       "ED": 7.0,
+      "OST": 8.0
+    }
+  },
+  {
+    "name": "Dorohedoro, S02",
+    "categories": {
+      "Animace": 9.0,
+      "CGI": 9.5,
+      "MC": 7.5,
+      "Vedlejší postavy": 7.5,
+      "Waifu": 6.0,
+      "Plot": 6.5,
+      "Pacing": 5.5,
+      "Story Conclusion": 7.0,
+      "Originalita": 8.0,
+      "Emoce": 5.5,
+      "Enjoyment": 6.0,
+      "OP": 8.0,
+      "ED": 8.0,
       "OST": 8.0
     }
   },
