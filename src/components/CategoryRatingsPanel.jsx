@@ -44,30 +44,42 @@ const iconFor = (cat) => CATEGORY_ICONS[cat] || DEFAULT_ICON
 const fmtWeight = (w) => w.toLocaleString('cs-CZ', { maximumFractionDigits: 1 })
 const fmtRating = (r) => r.toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 1 })
 
-// Reads --accent-primary so the chart follows every theme
-function useAccentColor(theme, categoryRatings) {
-    return useMemo(() => {
-        let r = 99, g = 102, b = 241
-        try {
-            const v = getComputedStyle(document.documentElement).getPropertyValue('--accent-primary').trim()
-            const m = v.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i)
-            if (m) {
-                let hex = m[1]
-                if (hex.length === 3) hex = hex.split('').map(ch => ch + ch).join('')
-                r = parseInt(hex.slice(0, 2), 16)
-                g = parseInt(hex.slice(2, 4), 16)
-                b = parseInt(hex.slice(4, 6), 16)
+// Reads the current --accent-primary CSS variable as {r, g, b}
+function readAccentRgb() {
+    let rgb = { r: 99, g: 102, b: 241 }
+    try {
+        const v = getComputedStyle(document.documentElement).getPropertyValue('--accent-primary').trim()
+        const m = v.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i)
+        if (m) {
+            let hex = m[1]
+            if (hex.length === 3) hex = hex.split('').map(ch => ch + ch).join('')
+            rgb = {
+                r: parseInt(hex.slice(0, 2), 16),
+                g: parseInt(hex.slice(2, 4), 16),
+                b: parseInt(hex.slice(4, 6), 16),
             }
-        } catch { /* keep fallback */ }
-        return (a) => `rgba(${r}, ${g}, ${b}, ${a})`
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [theme, categoryRatings])
+        }
+    } catch { /* keep fallback */ }
+    return rgb
+}
+
+// Follows every theme. The accent lives in a CSS variable that ThemeProvider
+// updates from an effect (after render), so reading it during render would be
+// one theme behind. We read it in a requestAnimationFrame instead, which runs
+// after the ThemeProvider effect has applied the new data-theme attribute.
+function useAccentColor(theme) {
+    const [rgb, setRgb] = useState(readAccentRgb)
+    useEffect(() => {
+        const raf = requestAnimationFrame(() => setRgb(readAccentRgb()))
+        return () => cancelAnimationFrame(raf)
+    }, [theme])
+    return useCallback((a) => `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${a})`, [rgb])
 }
 
 function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating }) {
     const { theme } = useTheme()
     const c = useMemo(() => getThemeChartColors(), [theme])
-    const accent = useAccentColor(theme, categoryRatings)
+    const accent = useAccentColor(theme)
 
     const chartRef = useRef(null)
     const wrapRef = useRef(null)
