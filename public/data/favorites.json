@@ -4180,5 +4180,22 @@
     "has_frisson": false,
     "rating_avg": 8.35,
     "rating_final": 8
+  },
+  {
+    "index": "247.",
+    "anime_name": "Hell's Paradise, S02",
+    "type": "OP",
+    "song": "Kasukana Hana",
+    "author": "Tatsuya Kitani; BABYMETAL",
+    "language": "JAP",
+    "rating_lyrics": 9.25,
+    "rating_emotion": 8.5,
+    "rating_melody": 9.5,
+    "rating_video": 9.75,
+    "rating_voice": 9.25,
+    "sing_along": 1,
+    "has_frisson": true,
+    "rating_avg": 9.25,
+    "rating_final": 9
   }
 ]

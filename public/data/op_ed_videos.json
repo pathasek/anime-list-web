@@ -1,8 +1,8 @@
 {
-  "generated": "2026-07-06T18:59:02.129164+00:00",
+  "generated": "2026-07-07T17:12:04.717704+00:00",
   "folder_id": "1oqfgfEFbnkjW92t2HUHU6NS-MdGBdOep",
-  "source": "scrape",
-  "count": 30,
+  "source": "api",
+  "count": 50,
   "videos": [
     {
       "match_key": "86 eighty six s01 part 1",
@@ -47,6 +47,50 @@
       "url": "https://drive.usercontent.google.com/download?id=117fKfcbxu49wt83H5qCyEyryloCOhd9Q&export=download&confirm=t",
       "file_id": "117fKfcbxu49wt83H5qCyEyryloCOhd9Q",
       "filename": "86 Eighty-Six S01 Part 2, OP, _Kyokaisen_ by amazarashi.mp4"
+    },
+    {
+      "match_key": "ajin demi human s02",
+      "anime_display": "Ajin Demi-Human, S02",
+      "type": "OP",
+      "ver": "1",
+      "song": "Boku wa Boku de Atte",
+      "artist": "angela x fripSide",
+      "url": "https://drive.usercontent.google.com/download?id=1F5X-bzBYvdCSiBm2fIEYZS4tW09p_vUI&export=download&confirm=t",
+      "file_id": "1F5X-bzBYvdCSiBm2fIEYZS4tW09p_vUI",
+      "filename": "Ajin Demi-Human, S02, OP 1, _Boku wa Boku de Atte_ by angela x fripSide.mp4"
+    },
+    {
+      "match_key": "ajin demi human s01",
+      "anime_display": "Ajin_ Demi-Human, S01",
+      "type": "OP",
+      "ver": null,
+      "song": "Yoru wa Nemureru kai",
+      "artist": "flumpool",
+      "url": "https://drive.usercontent.google.com/download?id=1W8bkXtFzjDdO6KzEpgqQoeEu8jRQuVV7&export=download&confirm=t",
+      "file_id": "1W8bkXtFzjDdO6KzEpgqQoeEu8jRQuVV7",
+      "filename": "Ajin_ Demi-Human, S01, OP, _Yoru wa Nemureru kai_ by flumpool.mp4"
+    },
+    {
+      "match_key": "akame ga kill",
+      "anime_display": "Akame ga Kill!",
+      "type": "OP",
+      "ver": "2",
+      "song": "LIAR MASK",
+      "artist": "Rika Mayama",
+      "url": "https://drive.usercontent.google.com/download?id=19yvtq22b7siYCI0i6KfqFEGoulvrDGTf&export=download&confirm=t",
+      "file_id": "19yvtq22b7siYCI0i6KfqFEGoulvrDGTf",
+      "filename": "Akame ga Kill!, OP 2, _LIAR MASK_ by Rika Mayama.mp4"
+    },
+    {
+      "match_key": "angel beats",
+      "anime_display": "Angel Beats!",
+      "type": "OP",
+      "ver": "v13",
+      "song": "My Soul, Your Beats!",
+      "artist": "Lia",
+      "url": "https://drive.usercontent.google.com/download?id=1930x3wX_d2Cz5Ic0eL0HTGCdIrGosrhS&export=download&confirm=t",
+      "file_id": "1930x3wX_d2Cz5Ic0eL0HTGCdIrGosrhS",
+      "filename": "Angel Beats!, OP v13, _My Soul, Your Beats!_ by Lia.mp4"
     },
     {
       "match_key": "anohana the flower we saw that day",
@@ -333,6 +377,182 @@
       "url": "https://drive.usercontent.google.com/download?id=113x4ExdAHq8aFjRRGJVI_YfQYEpJfyv9&export=download&confirm=t",
       "file_id": "113x4ExdAHq8aFjRRGJVI_YfQYEpJfyv9",
       "filename": "Bocchi The Rock!, S01, OP, _Seishun Complex_ by kessoku band.mp4"
+    },
+    {
+      "match_key": "call of the night s01",
+      "anime_display": "Call of the Night, S01",
+      "type": "ED",
+      "ver": null,
+      "song": "Yofukashi no Uta",
+      "artist": "Creepy Nuts",
+      "url": "https://drive.usercontent.google.com/download?id=1sZhyYUyzPQCwu64CzBijr05FRzOc3LuF&export=download&confirm=t",
+      "file_id": "1sZhyYUyzPQCwu64CzBijr05FRzOc3LuF",
+      "filename": "Call of the Night, S01, ED, _Yofukashi no Uta_ by Creepy Nuts.mp4"
+    },
+    {
+      "match_key": "call of the night s01",
+      "anime_display": "Call of the Night, S01",
+      "type": "OP",
+      "ver": null,
+      "song": "Daten",
+      "artist": "Creepy Nuts",
+      "url": "https://drive.usercontent.google.com/download?id=1X93MBbt9optiqXjFHgfUHeZTauwKdKvM&export=download&confirm=t",
+      "file_id": "1X93MBbt9optiqXjFHgfUHeZTauwKdKvM",
+      "filename": "Call of the Night, S01, OP, _Daten_ by Creepy Nuts.mp4"
+    },
+    {
+      "match_key": "call of the night s02",
+      "anime_display": "Call of the Night, S02",
+      "type": "OP",
+      "ver": null,
+      "song": "Mirage",
+      "artist": "Creepy Nuts",
+      "url": "https://drive.usercontent.google.com/download?id=17KLtKGmx0CFD2fAb4fVg69bW3WCkSC71&export=download&confirm=t",
+      "file_id": "17KLtKGmx0CFD2fAb4fVg69bW3WCkSC71",
+      "filename": "Call of the Night, S02, OP, _Mirage_ by Creepy Nuts.mp4"
+    },
+    {
+      "match_key": "chainsaw man",
+      "anime_display": "Chainsaw Man",
+      "type": "OP",
+      "ver": null,
+      "song": "KICK BACK",
+      "artist": "Kenshi Yonezu",
+      "url": "https://drive.usercontent.google.com/download?id=109UD2vqzMJdR95Qtx2e_lMDKjgGAtXG0&export=download&confirm=t",
+      "file_id": "109UD2vqzMJdR95Qtx2e_lMDKjgGAtXG0",
+      "filename": "Chainsaw Man, OP, _KICK BACK_ by Kenshi Yonezu.mp4"
+    },
+    {
+      "match_key": "chainsaw man s01",
+      "anime_display": "Chainsaw Man, S01",
+      "type": "ED",
+      "ver": "1",
+      "song": "CHAINSAW BLOOD",
+      "artist": "Vaundy",
+      "url": "https://drive.usercontent.google.com/download?id=1nWV-JqiLI-OwSfl4tSFU5cV_JU6Ogc7E&export=download&confirm=t",
+      "file_id": "1nWV-JqiLI-OwSfl4tSFU5cV_JU6Ogc7E",
+      "filename": "Chainsaw Man, S01, ED 1, _CHAINSAW BLOOD_ by Vaundy.mp4"
+    },
+    {
+      "match_key": "chainsaw man s01",
+      "anime_display": "Chainsaw Man, S01",
+      "type": "ED",
+      "ver": "6",
+      "song": "Rendezvous",
+      "artist": "Kanaria",
+      "url": "https://drive.usercontent.google.com/download?id=1rumrI4-yZ6NBcB2F6dqiv4dGI710Zno0&export=download&confirm=t",
+      "file_id": "1rumrI4-yZ6NBcB2F6dqiv4dGI710Zno0",
+      "filename": "Chainsaw Man, S01, ED 6, _Rendezvous_ by Kanaria.mp4"
+    },
+    {
+      "match_key": "chivalry of a failed knight",
+      "anime_display": "Chivalry of a Failed Knight",
+      "type": "OP",
+      "ver": null,
+      "song": "Identity",
+      "artist": "Mikio Sakai",
+      "url": "https://drive.usercontent.google.com/download?id=1uUMKU0eVj77lIVfsHfbFOqGhxNunQzld&export=download&confirm=t",
+      "file_id": "1uUMKU0eVj77lIVfsHfbFOqGhxNunQzld",
+      "filename": "Chivalry of a Failed Knight, OP, _Identity_ by Mikio Sakai .mp4"
+    },
+    {
+      "match_key": "classroom of the elite s03",
+      "anime_display": "Classroom of the Elite S03",
+      "type": "OP",
+      "ver": null,
+      "song": "Minor Piece",
+      "artist": "ZAQ",
+      "url": "https://drive.usercontent.google.com/download?id=1XqOv5YgBH3getks_5M9UKBCR_UVpnkv9&export=download&confirm=t",
+      "file_id": "1XqOv5YgBH3getks_5M9UKBCR_UVpnkv9",
+      "filename": "Classroom of the Elite S03, OP, _Minor Piece_ by ZAQ.mp4"
+    },
+    {
+      "match_key": "classroom of the elite s02",
+      "anime_display": "Classroom of the Elite, S02",
+      "type": "ED",
+      "ver": null,
+      "song": "Hito Shibai",
+      "artist": "Mai Fuchigami",
+      "url": "https://drive.usercontent.google.com/download?id=1felZ2USDYEArdZ-B5IWLXq4NyBLtfy2C&export=download&confirm=t",
+      "file_id": "1felZ2USDYEArdZ-B5IWLXq4NyBLtfy2C",
+      "filename": "Classroom of the Elite, S02, ED, _Hito Shibai_ by Mai Fuchigami.mp4"
+    },
+    {
+      "match_key": "claymore",
+      "anime_display": "Claymore",
+      "type": "ED",
+      "ver": null,
+      "song": "Danzai no Hana~Guilty Sky",
+      "artist": "Riyu Kosaka",
+      "url": "https://drive.usercontent.google.com/download?id=1OS4d4fE3XpxxYzzMtyXR2wZebPDsXIe5&export=download&confirm=t",
+      "file_id": "1OS4d4fE3XpxxYzzMtyXR2wZebPDsXIe5",
+      "filename": "Claymore, ED, _Danzai no Hana~Guilty Sky_ by Riyu Kosaka.mp4"
+    },
+    {
+      "match_key": "code geass lelouch of the rebellion r1",
+      "anime_display": "Code Geass Lelouch of the Rebellion R1",
+      "type": "OP",
+      "ver": "v2",
+      "song": "Colors",
+      "artist": "FLOW",
+      "url": "https://drive.usercontent.google.com/download?id=1c-OAuNvln4r3pHe4QmjD74xfUG3w5gpt&export=download&confirm=t",
+      "file_id": "1c-OAuNvln4r3pHe4QmjD74xfUG3w5gpt",
+      "filename": "Code Geass Lelouch of the Rebellion R1, OP v2, _Colors_ by FLOW.mp4"
+    },
+    {
+      "match_key": "code geass lelouch of the rebellion r2",
+      "anime_display": "Code Geass Lelouch of the Rebellion R2",
+      "type": "OP",
+      "ver": "1",
+      "song": "O2",
+      "artist": "ORANGE RANGE",
+      "url": "https://drive.usercontent.google.com/download?id=15UBbBEC0ynTPNo0Pfko5dvs71mf-wbmu&export=download&confirm=t",
+      "file_id": "15UBbBEC0ynTPNo0Pfko5dvs71mf-wbmu",
+      "filename": "Code Geass Lelouch of the Rebellion R2, OP 1, _O2_ by ORANGE RANGE.mp4"
+    },
+    {
+      "match_key": "cross ange rondo of angel and dragon",
+      "anime_display": "Cross Ange_ Rondo of Angel and Dragon",
+      "type": "ED",
+      "ver": "2",
+      "song": "Shuumatsu no Love Song",
+      "artist": "Nana Mizuki",
+      "url": "https://drive.usercontent.google.com/download?id=1eLBfnO_UY63sr-wxfGUiwgRrvQFjxNAL&export=download&confirm=t",
+      "file_id": "1eLBfnO_UY63sr-wxfGUiwgRrvQFjxNAL",
+      "filename": "Cross Ange_ Rondo of Angel and Dragon, ED 2, _Shuumatsu no Love Song_ by Nana Mizuki.mp4"
+    },
+    {
+      "match_key": "cross ange rondo of angel and dragon",
+      "anime_display": "Cross Ange_ Rondo of Angel and Dragon",
+      "type": "ED",
+      "ver": "3",
+      "song": "Kindan no Resistance",
+      "artist": "Nana Mizuki",
+      "url": "https://drive.usercontent.google.com/download?id=1ccLvOuNZvuQizs6xnesxGCtFcwBkv4Kn&export=download&confirm=t",
+      "file_id": "1ccLvOuNZvuQizs6xnesxGCtFcwBkv4Kn",
+      "filename": "Cross Ange_ Rondo of Angel and Dragon, ED 3, _Kindan no Resistance_ by Nana Mizuki.mp4"
+    },
+    {
+      "match_key": "cyberpunk edgerunners s01",
+      "anime_display": "Cyberpunk Edgerunners, S01",
+      "type": "ED",
+      "ver": null,
+      "song": "Let You Down",
+      "artist": "Dawid Podsiadło",
+      "url": "https://drive.usercontent.google.com/download?id=1qPOsY5yxQgwTY6eFNpB_i2O4Yb1nlEqi&export=download&confirm=t",
+      "file_id": "1qPOsY5yxQgwTY6eFNpB_i2O4Yb1nlEqi",
+      "filename": "Cyberpunk Edgerunners, S01, ED, _Let You Down_ by Dawid Podsiadło.mp4"
+    },
+    {
+      "match_key": "cyberpunk edgerunners s01",
+      "anime_display": "Cyberpunk Edgerunners, S01",
+      "type": "OP",
+      "ver": null,
+      "song": "This Fffire",
+      "artist": "Franz Ferdinand",
+      "url": "https://drive.usercontent.google.com/download?id=1aZjp7cZA6tFsuHYVC_p3ixizwZpSZuMf&export=download&confirm=t",
+      "file_id": "1aZjp7cZA6tFsuHYVC_p3ixizwZpSZuMf",
+      "filename": "Cyberpunk Edgerunners, S01, OP, _This Fffire_ by Franz Ferdinand.mp4"
     }
   ]
 }
