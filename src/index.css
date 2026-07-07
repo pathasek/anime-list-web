@@ -2885,6 +2885,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   pointer-events: none;
 }
 .category-rating-card.has-media:hover .media-popover,
+.category-rating-card.has-chars:hover .media-popover,
 .media-popover:hover {
   opacity: 1;
   visibility: visible;
@@ -2989,6 +2990,130 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   font-size: 0.72rem;
   color: var(--text-muted);
   padding: 2px 4px 4px;
+}
+
+/* ===== Karty postav (MC / Vedlejší postavy / Waifu) ===== */
+.category-rating-card.has-chars {
+  position: relative;
+}
+.category-rating-card.has-chars:hover {
+  z-index: 10;
+}
+.category-rating-card.has-chars:hover .category-card-name {
+  color: var(--accent-primary);
+}
+
+.char-popover {
+  max-width: 360px;
+}
+.char-popover .media-popover-inner {
+  max-height: 380px;
+  overflow-y: auto;
+}
+
+.char-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.char-row:hover {
+  border-color: var(--accent-primary);
+  background: rgba(99, 102, 241, 0.15);
+}
+
+.char-row-img {
+  flex-shrink: 0;
+  width: 46px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.05);
+}
+.char-row-img-placeholder {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+}
+
+.char-row-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+.char-row-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.char-row-name {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.char-row:hover .char-row-name {
+  color: var(--accent-primary);
+}
+.char-row-role {
+  flex-shrink: 0;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+}
+.char-row-about {
+  font-size: 0.68rem;
+  line-height: 1.35;
+  color: var(--text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.char-row-about.is-empty {
+  font-style: italic;
+}
+
+.char-popover-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  padding: 6px 4px;
+}
+.char-popover-spinner {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  border-top-color: var(--accent-primary);
+  animation: char-spin 0.7s linear infinite;
+}
+@keyframes char-spin {
+  to { transform: rotate(360deg); }
 }
 
 /* ===== OP/ED videoklip v překryvném okně ===== */

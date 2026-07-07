@@ -649,6 +649,8 @@ function AnimeDetail() {
                 avgRating={avgCategoryRating}
                 animeName={anime.name}
                 animeSeries={anime.series}
+                malUrl={anime.mal_url}
+                review={note}
             />
 
             {/* Episode Ratings */}

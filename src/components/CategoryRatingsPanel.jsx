@@ -12,11 +12,17 @@ import { useTheme } from './ThemeProvider'
 import { getThemeChartColors } from '../utils/chartTheme'
 import { getMediaForAnime, youtubeSearchUrl } from '../utils/mediaMatch'
 import { VideoModal, FloatingOstPlayer, ScrollableText } from './CategoryMediaPlayers'
+import { extractMalId, getAnimeCharacters } from '../utils/jikanService'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip)
 
 // Kategorie, u kterých nabízíme přehrání videoklipu / OST
 const MEDIA_CATS = { OP: true, ED: true, OST: true }
+
+// Kategorie, u kterých po najetí ukážeme karty postav z Jikanu
+const CHAR_CATS = { 'MC': true, 'Vedlejší postavy': true, 'Waifu': true }
+
+const CHAR_ROLE_LABELS = { Main: 'Hlavní', Supporting: 'Vedlejší' }
 
 // Module-level cache — data se načtou jen jednou na relaci
 let cachedOpEdVideos = null
@@ -92,7 +98,24 @@ function useAccentColor(theme) {
     return useCallback((a) => `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${a})`, [rgb])
 }
 
-function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, animeName, animeSeries }) {
+// Jméno postavy z Jikanu ("Příjmení, Jméno") rozloží na významné tokeny (délka ≥ 3)
+function nameTokens(name) {
+    return (name || '')
+        .split(/[,\s]+/)
+        .map(t => t.trim())
+        .filter(t => t.length >= 3)
+}
+
+// Je postava zmíněná v textu recenze? (bez diakritiky, po celých slovech)
+function isMentionedInReview(name, normalizedReview) {
+    if (!normalizedReview) return false
+    return nameTokens(name).some(tok => {
+        const t = tok.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+        return new RegExp(`(^|[^\\p{L}])${t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}([^\\p{L}]|$)`, 'u').test(normalizedReview)
+    })
+}
+
+function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, animeName, animeSeries, malUrl, review }) {
     const { theme } = useTheme()
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const c = useMemo(() => getThemeChartColors(), [theme])
@@ -153,6 +176,51 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
             playTrack(tracks[0])
         }
     }, [searchYoutube, playTrack])
+
+    // Postavy z Jikanu — načítají se líně, až při prvním najetí na MC / Vedlejší postavy / Waifu
+    const malId = useMemo(() => extractMalId(malUrl), [malUrl])
+    const [charData, setCharData] = useState(null)
+    const [charState, setCharState] = useState('idle') // idle | loading | done | error
+    const charRequestedRef = useRef(false)
+
+    const ensureCharacters = useCallback(() => {
+        if (charRequestedRef.current || !malId) return
+        charRequestedRef.current = true
+        setCharState('loading')
+        getAnimeCharacters(malId)
+            .then(d => {
+                if (d && (d.main?.length || d.supporting?.length)) {
+                    setCharData(d)
+                    setCharState('done')
+                } else {
+                    setCharState('error')
+                }
+            })
+            .catch(() => setCharState('error'))
+    }, [malId])
+
+    // Text recenze bez diakritiky pro porovnání se jmény postav
+    const normalizedReview = useMemo(
+        () => (review || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''),
+        [review]
+    )
+
+    // Výběr postav pro kategorii: MC = hlavní, Vedlejší = supporting,
+    // Waifu = výrazné ženské postavy (odhad z popisu) NEBO postavy zmíněné
+    // v recenzi. Zmíněné jdou první, pak podle oblíbenosti.
+    const charactersFor = useCallback((cat) => {
+        if (!charData) return []
+        if (cat === 'MC') return charData.main || []
+        if (cat === 'Vedlejší postavy') return (charData.supporting || []).slice(0, 8)
+        if (cat === 'Waifu') {
+            return [...(charData.main || []), ...(charData.supporting || [])]
+                .map(c => ({ ...c, mentioned: isMentionedInReview(c.name, normalizedReview) }))
+                .filter(c => c.gender === 'female' || c.mentioned)
+                .sort((a, b) => (b.mentioned - a.mentioned) || ((b.favorites || 0) - (a.favorites || 0)))
+                .slice(0, 8)
+        }
+        return []
+    }, [charData, normalizedReview])
 
     const chartRef = useRef(null)
     const wrapRef = useRef(null)
@@ -349,12 +417,15 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                 <div className="category-cards-grid">
                     {entries.map(([cat, rating]) => {
                         const isMedia = !!MEDIA_CATS[cat]
+                        const isChar = !!CHAR_CATS[cat] && !!malId
                         const tracks = isMedia ? media[cat] : null
                         const hasTracks = tracks && tracks.length > 0
+                        const chars = isChar ? charactersFor(cat) : null
                         return (
-                            <div 
-                                key={cat} 
-                                className={`category-rating-card${isMedia ? ' has-media' : ''}`}
+                            <div
+                                key={cat}
+                                className={`category-rating-card${isMedia ? ' has-media' : ''}${isChar ? ' has-chars' : ''}`}
+                                onMouseEnter={isChar ? ensureCharacters : undefined}
                                 onClick={isMedia ? () => handleCardClick(cat, tracks) : undefined}
                                 role={isMedia ? 'button' : undefined}
                                 tabIndex={isMedia ? 0 : undefined}
@@ -436,6 +507,54 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                                                 </button>
                                             </div>
                                         )}
+                                    </div>
+                                )}
+
+                                {isChar && (
+                                    <div className="media-popover char-popover" onClick={(e) => e.stopPropagation()}>
+                                        <div className="media-popover-inner">
+                                            {charState === 'loading' && (
+                                                <div className="char-popover-status">
+                                                    <span className="char-popover-spinner" aria-hidden="true" />
+                                                    Načítám postavy z MAL…
+                                                </div>
+                                            )}
+                                            {charState === 'error' && (
+                                                <div className="media-popover-empty">Postavy se nepodařilo načíst.</div>
+                                            )}
+                                            {charState === 'done' && chars && chars.length === 0 && (
+                                                <div className="media-popover-empty">
+                                                    {cat === 'Waifu'
+                                                        ? 'Žádná výrazná ženská postava nenalezena.'
+                                                        : 'Žádné postavy nenalezeny.'}
+                                                </div>
+                                            )}
+                                            {charState === 'done' && chars && chars.map((ch) => (
+                                                <a
+                                                    key={ch.malId}
+                                                    className="char-row"
+                                                    href={ch.url || undefined}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    title="Otevřít na MyAnimeList"
+                                                >
+                                                    {ch.image ? (
+                                                        <img className="char-row-img" src={ch.image} alt={ch.name} loading="lazy" />
+                                                    ) : (
+                                                        <span className="char-row-img char-row-img-placeholder">?</span>
+                                                    )}
+                                                    <span className="char-row-meta">
+                                                        <span className="char-row-top">
+                                                            <span className="char-row-name">{ch.name}</span>
+                                                            <span className="char-row-role">{CHAR_ROLE_LABELS[ch.role] || ch.role}</span>
+                                                        </span>
+                                                        {ch.about
+                                                            ? <span className="char-row-about">{ch.about}</span>
+                                                            : <span className="char-row-about is-empty">Bez popisu.</span>}
+                                                    </span>
+                                                </a>
+                                            ))}
+                                        </div>
                                     </div>
                                 )}
                             </div>

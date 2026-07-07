@@ -42,7 +42,45 @@ export function getMediaForAnime(animeName, opEdVideos, ostPieces, ostWhole, ani
 
     // OP/ED/OST videa z Google Drive
     for (const v of opEdVideos || []) {
-        if (v.match_key !== key) continue
+        let isMatch = (v.match_key === key);
+        if (!isMatch) {
+            // Chytřejší párování řad a částí (seasons & parts)
+            const cleanFileBase = v.match_key.replace(/\s+(?:s(?:eason)?\s*\d+(\s+part\s*\d+)?|part\s*\d+)$/i, '').trim();
+            const cleanAnimeBase = key.replace(/\s+(?:s(?:eason)?\s*\d+(\s+part\s*\d+)?|part\s*\d+)$/i, '').trim();
+            
+            if (cleanFileBase === cleanAnimeBase) {
+                // Mají stejný základní název. Zkontrolujeme řady a části:
+                const fileSeasonMatch = v.match_key.match(/s(?:eason)?\s*(\d+)/i);
+                const animeSeasonMatch = key.match(/s(?:eason)?\s*(\d+)/i);
+                
+                // Pokud řada není specifikována, předpokládáme řadu 1
+                const fileSeason = fileSeasonMatch ? parseInt(fileSeasonMatch[1], 10) : 1;
+                const animeSeason = animeSeasonMatch ? parseInt(animeSeasonMatch[1], 10) : 1;
+                
+                const filePartMatch = v.match_key.match(/part\s*(\d+)/i);
+                const animePartMatch = key.match(/part\s*(\d+)/i);
+                
+                const filePart = filePartMatch ? parseInt(filePartMatch[1], 10) : null;
+                const animePart = animePartMatch ? parseInt(animePartMatch[1], 10) : null;
+                
+                // Obě mají stejnou řadu (případně default 1)
+                if (fileSeason === animeSeason) {
+                    // B1: Pokud soubor specifikuje část (Part 1), musí se rovnat části v databázi
+                    if (filePart !== null) {
+                        if (filePart === animePart) {
+                            isMatch = true;
+                        }
+                    }
+                    // B2: Pokud soubor část nespecifikuje, zápasí s jakoukoliv částí v databázi (Part 1 i Part 2)
+                    else {
+                        isMatch = true;
+                    }
+                }
+            }
+        }
+        
+        if (!isMatch) continue;
+        
         const type = (v.type || '').toUpperCase()
         if (!result[type]) continue
         result[type].push({
