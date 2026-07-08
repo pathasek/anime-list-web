@@ -18,6 +18,7 @@ import { formatReview } from '../utils/formatReview'
 import { getThemeChartColors } from '../utils/chartTheme'
 import { useTheme } from '../components/ThemeProvider'
 import CategoryRatingsPanel from '../components/CategoryRatingsPanel'
+import { RatingInfoButton, EpisodeGuideModal, FinalGuideModal } from '../components/RatingGuideModals'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, CategoryScale, LinearScale, BarElement)
 
@@ -37,6 +38,8 @@ function AnimeDetail() {
     const [history, setHistory] = useState([])
     const [loading, setLoading] = useState(true)
     const [titleWrapped, setTitleWrapped] = useState(false)
+    const [epGuideOpen, setEpGuideOpen] = useState(false)   // Průvodce hodnocením epizod
+    const [fhGuideOpen, setFhGuideOpen] = useState(false)   // Průvodce finálním hodnocením
     const titleRef = useRef(null)
 
     // Detect if title wraps (for responsive badge layout)
@@ -480,22 +483,29 @@ function AnimeDetail() {
                                 const rv = (r) => r >= 10 ? 'var(--rating-10)' : r >= 9 ? 'var(--rating-9)' : r >= 8 ? 'var(--rating-8)' : r >= 7 ? 'var(--rating-7)' : r >= 6 ? 'var(--rating-6)' : r >= 5 ? 'var(--rating-5)' : r >= 4 ? 'var(--rating-4)' : r >= 3 ? 'var(--rating-3)' : r >= 2 ? 'var(--rating-2)' : 'var(--rating-1)';
                                 const ratingVar = rv(Number(anime.rating));
                                 return (
-                                <div style={{
-                                    width: '72px', height: '72px',
-                                    borderRadius: '50%',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    flexDirection: 'column',
-                                    border: `3px solid ${ratingVar}`,
-                                    background: `color-mix(in srgb, ${ratingVar} 12%, transparent)`,
-                                    flexShrink: 0
-                                }}>
-                                    <span style={{
-                                        fontSize: '1.5rem', fontWeight: '800', lineHeight: 1,
-                                        color: ratingVar
+                                <div style={{ position: 'relative', width: '72px', height: '72px', flexShrink: 0 }}>
+                                    <div style={{
+                                        width: '72px', height: '72px',
+                                        borderRadius: '50%',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        flexDirection: 'column',
+                                        border: `3px solid ${ratingVar}`,
+                                        background: `color-mix(in srgb, ${ratingVar} 12%, transparent)`
                                     }}>
-                                        {Number(anime.rating) % 1 === 0 ? parseInt(anime.rating) : parseFloat(anime.rating).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})}
-                                    </span>
-                                    <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', lineHeight: 1 }}>/10</span>
+                                        <span style={{
+                                            fontSize: '1.5rem', fontWeight: '800', lineHeight: 1,
+                                            color: ratingVar
+                                        }}>
+                                            {Number(anime.rating) % 1 === 0 ? parseInt(anime.rating) : parseFloat(anime.rating).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})}
+                                        </span>
+                                        <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', lineHeight: 1 }}>/10</span>
+                                    </div>
+                                    {/* "?" v prázdném rohu vedle kruhu — absolutní pozice, layout se nemění */}
+                                    <RatingInfoButton
+                                        label="Co znamená finální hodnocení"
+                                        style={{ position: 'absolute', top: '-3px', right: '-9px' }}
+                                        onClick={() => setFhGuideOpen(true)}
+                                    />
                                 </div>
                                 );
                             })()}
@@ -662,6 +672,11 @@ function AnimeDetail() {
                             <span style={{ marginLeft: 'var(--spacing-md)', fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
                                 (Průměr: <span style={{ fontWeight: 'bold' }}>{avgEpisodeRating}</span>)
                             </span>
+                            <RatingInfoButton
+                                label="Jak hodnotím epizody"
+                                style={{ marginLeft: '10px' }}
+                                onClick={() => setEpGuideOpen(true)}
+                            />
                         </h3>
 
                         {/* Custom Legend */}
@@ -730,6 +745,10 @@ function AnimeDetail() {
                     </table>
                 </div>
             )}
+
+            {/* Průvodce hodnocením epizod a finálním hodnocením */}
+            <EpisodeGuideModal open={epGuideOpen} onClose={() => setEpGuideOpen(false)} />
+            <FinalGuideModal open={fhGuideOpen} onClose={() => setFhGuideOpen(false)} />
         </div>
     )
 }

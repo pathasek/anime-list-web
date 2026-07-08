@@ -13,7 +13,7 @@ import Wrapped from './pages/Wrapped'
 import Recommendations from './pages/Recommendations'
 import { ThemeProvider, useTheme } from './components/ThemeProvider'
 import ThemeSwitcher from './components/ThemeSwitcher'
-import { startBackgroundDownload, importJikanStaticCache } from './utils/jikanService'
+import { startBackgroundDownload, startCharacterBackgroundDownload, importJikanStaticCache } from './utils/jikanService'
 import { preloadAllData } from './utils/dataStore'
 import './index.css'
 
@@ -370,10 +370,12 @@ function App() {
           .then(async (staticCache) => {
             await importJikanStaticCache(staticCache);
             startBackgroundDownload(al);
+            startCharacterBackgroundDownload(al);
           })
           .catch(err => {
             console.warn('[Jikan] Could not load static cache on startup, running clean downloader:', err);
             startBackgroundDownload(al);
+            startCharacterBackgroundDownload(al);
           });
       })
       .catch(err => console.error('Failed to start Jikan downloader in App:', err))
