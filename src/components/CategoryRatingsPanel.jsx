@@ -340,23 +340,36 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                         const hasTracks = tracks && tracks.length > 0
                         const reviewText = categoryReviews && categoryReviews[animeName] && categoryReviews[animeName][cat]
                         const hasReview = !!reviewText
+                        // Rozbor děje (u filmů/speciálů bez epizodních rozborů) — druhá akce na kartě Plot
+                        const storyReview = cat === 'Plot' ? categoryReviews?.[animeName]?.story : null
+
+                        const openStoryReview = () => {
+                            setActiveReview({
+                                category: 'Rozbor děje',
+                                text: storyReview.text,
+                                rating: null,
+                                icon: '📖'
+                            })
+                        }
 
                         const handleCardClickInner = (e) => {
                             if (isMedia) {
                                 handleCardClick(cat, tracks)
                             } else if (hasReview) {
                                 setActiveReview({ category: cat, text: reviewText, rating: rating })
+                            } else if (storyReview) {
+                                openStoryReview()
                             }
                         }
 
                         return (
                             <div
                                 key={cat}
-                                className={`category-rating-card${isMedia ? ' has-media' : ''}${hasReview ? ' has-review' : ''}`}
+                                className={`category-rating-card${isMedia ? ' has-media' : ''}${(hasReview || storyReview) ? ' has-review' : ''}`}
                                 onClick={handleCardClickInner}
-                                role={(isMedia || hasReview) ? 'button' : undefined}
-                                tabIndex={(isMedia || hasReview) ? 0 : undefined}
-                                onKeyDown={(isMedia || hasReview) ? (e) => {
+                                role={(isMedia || hasReview || storyReview) ? 'button' : undefined}
+                                tabIndex={(isMedia || hasReview || storyReview) ? 0 : undefined}
+                                onKeyDown={(isMedia || hasReview || storyReview) ? (e) => {
                                     if (e.key === 'Enter' || e.key === ' ') {
                                         e.preventDefault()
                                         handleCardClickInner(e)
@@ -367,8 +380,8 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                                     <span className="category-card-icon-wrapper">
                                         <span className="category-card-icon">{iconFor(cat)}</span>
                                         {hasReview && (
-                                            <span 
-                                                className="category-card-review-icon" 
+                                            <span
+                                                className="category-card-review-icon"
                                                 title="Zobrazit detailní rozbor"
                                                 onClick={isMedia ? (e) => {
                                                     e.stopPropagation()
@@ -376,6 +389,18 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                                                 } : undefined}
                                             >
                                                 📝
+                                            </span>
+                                        )}
+                                        {storyReview && (
+                                            <span
+                                                className="category-card-review-icon category-card-review-icon-story"
+                                                title="Zobrazit rozbor děje"
+                                                onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    openStoryReview()
+                                                }}
+                                            >
+                                                📖
                                             </span>
                                         )}
                                     </span>
@@ -555,7 +580,7 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
 function CategoryDetailModal({ activeReview, onClose }) {
     if (!activeReview) return null
 
-    const { category, text, rating } = activeReview
+    const { category, text, rating, icon } = activeReview
 
     const handleOverlayClick = (e) => {
         if (e.target === e.currentTarget) {
@@ -568,9 +593,11 @@ function CategoryDetailModal({ activeReview, onClose }) {
             <div className="category-detail-modal">
                 <div className="category-detail-modal-header">
                     <div className="category-detail-modal-title">
-                        <span className="category-card-icon">{iconFor(category)}</span>
+                        <span className="category-card-icon">{icon || iconFor(category)}</span>
                         <span>{category}</span>
-                        <span className="category-detail-modal-score">{fmtRating(rating)}/10</span>
+                        {rating !== null && rating !== undefined && (
+                            <span className="category-detail-modal-score">{fmtRating(rating)}/10</span>
+                        )}
                     </div>
                     <button type="button" className="category-detail-modal-close" onClick={onClose} aria-label="Zavřít">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

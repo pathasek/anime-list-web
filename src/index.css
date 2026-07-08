@@ -6427,6 +6427,11 @@ button.fav-ost-row-play:hover {
   transform: scale(1);
 }
 
+.category-card-review-icon-story {
+  left: auto;
+  right: -8px;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }

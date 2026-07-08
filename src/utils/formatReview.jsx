@@ -182,16 +182,22 @@ function highlightAnimeName(text, animeNames, isFirst) {
   regex.lastIndex = 0;
   let lastIdx = 0;
   let m;
+  let nameHighlighted = false;
 
   while ((m = regex.exec(text)) !== null) {
     if (m.index > lastIdx) {
       parts.push(<span key={parts.length}>{text.slice(lastIdx, m.index)}</span>);
     }
-    parts.push(
-      <span key={parts.length} style={{ fontWeight: 'bold', fontStyle: 'italic', color: 'var(--text-primary)' }}>
-        {m[0]}
-      </span>
-    );
+    if (!nameHighlighted) {
+      parts.push(
+        <span key={parts.length} style={{ fontWeight: 'bold', fontStyle: 'italic', color: 'var(--text-primary)' }}>
+          {m[0]}
+        </span>
+      );
+      nameHighlighted = true;
+    } else {
+      parts.push(<span key={parts.length}>{m[0]}</span>);
+    }
     lastIdx = regex.lastIndex;
   }
 
