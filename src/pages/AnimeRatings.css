@@ -819,6 +819,244 @@
   font-size: 0.8rem;
 }
 
+/* FH kruh série (stejný styl jako v detailu anime) */
+.series-header-fh {
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.series-fh-circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 3px solid var(--accent-pink);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.series-fh-value {
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.series-fh-outof {
+  font-size: 0.55rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* Meta grid ve stylu detailu anime (malý label + hodnota) */
+.series-header-metagrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px var(--spacing-lg);
+}
+
+.series-meta-item {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.series-meta-label {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.series-meta-value {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+/* Hero varianta hlavičky — rozmazaný backdrop z posteru + větší poster */
+.series-header-hero {
+  position: relative;
+  overflow: hidden;
+  padding: var(--spacing-md) var(--spacing-lg);
+}
+
+.series-header-hero > *:not(.series-header-backdrop) {
+  position: relative;
+  z-index: 1;
+}
+
+.series-header-backdrop {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center 30%;
+  filter: blur(20px) saturate(1.15);
+  opacity: 0.2;
+  transform: scale(1.15);
+  pointer-events: none;
+}
+
+.series-header-poster-lg {
+  width: 224px;
+  height: 126px;
+  /* 16:9, o třetinu větší než původní 140×79 */
+}
+
+.series-header-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.series-header-title-row .series-header-title {
+  flex: 0 1 auto;
+}
+
+/* Tematické boxy s informacemi o sérii — roztáhnou se přes volné místo */
+.series-header-boxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+}
+
+.series-meta-box {
+  background: color-mix(in srgb, var(--bg-secondary) 78%, transparent);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 160px;
+  flex: 1 1 160px;
+}
+
+.series-meta-box-title {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.series-box-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 14px;
+  font-size: 0.78rem;
+}
+
+.series-box-row span {
+  color: var(--text-muted);
+}
+
+.series-box-row b {
+  color: var(--text-primary);
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Vysvětlení a chipy pro radar série */
+.series-radar-explain {
+  margin: 0 0 8px 0;
+  font-size: 0.74rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.series-radar-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.series-radar-chip {
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.series-radar-chip:hover {
+  color: var(--text-primary);
+  border-color: var(--text-muted);
+}
+
+.series-radar-chip.avg.active {
+  background: rgba(236, 72, 153, 0.15);
+  border-color: rgba(236, 72, 153, 0.6);
+  color: rgb(244, 143, 177);
+}
+
+.series-radar-chip.compare.active {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.6);
+  color: rgb(165, 180, 252);
+}
+
+/* Žánrové chipy série (stejné jako v detailu anime) */
+.series-genre-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.series-genre-chip {
+  padding: 1px 9px;
+  border-radius: var(--radius-full);
+  font-size: 0.68rem;
+  font-weight: 500;
+  background: rgba(6, 182, 212, 0.15);
+  color: var(--accent-cyan);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  white-space: nowrap;
+}
+
+/* Fialová varianta pro Témata (jako v detailu anime) */
+.series-genre-chip.theme {
+  background: rgba(139, 92, 246, 0.15);
+  color: var(--accent-secondary);
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+/* Box se žánry/tématy/AniList tagy v hlavičce Jednotlivě */
+.individual-tags-box {
+  background: color-mix(in srgb, var(--bg-secondary) 78%, transparent);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .series-header-card {
+    flex-wrap: wrap;
+  }
+
+  .series-meta-value {
+    white-space: normal;
+  }
+}
+
 /* Switcher within Series ratings */
 .series-tabs-container {
   display: flex;
@@ -1400,6 +1638,10 @@
 .ratings-category-table-wrapper {
   overflow: auto;
   flex: 1;
+  /* Bez min-height: 0 se flex child roztáhne na výšku celé tabulky,
+     panel (max-height + overflow hidden) pak ořízne sumarizační řádek
+     (tfoot) i statistiky pod tabulkou. */
+  min-height: 0;
   border-radius: var(--radius-md);
   border: none;
 }
@@ -1686,6 +1928,12 @@
 
   .ratings-dashboard-sidebar .filter-panel {
     height: auto;
+  }
+
+  /* Bez stropu by seznam vypsal všechna anime pod sebou a natáhl stránku
+     o tisíce pixelů — na úzkých oknech scrolluje uvnitř. */
+  .ratings-dashboard-sidebar .anime-selector-list {
+    max-height: 420px;
   }
 
   .ratings-dashboard-main {

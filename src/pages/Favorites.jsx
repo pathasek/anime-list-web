@@ -1,6 +1,9 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import DashboardGroup from '../components/DashboardGroup'
+import { VideoModal } from '../components/CategoryMediaPlayers'
+import FavoritesOstPlayer from '../components/FavoritesOstPlayer'
+import { normalizeAnimeKey, extractYoutubeId, extractYoutubePlaylistId } from '../utils/mediaMatch'
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -95,6 +98,9 @@ function Favorites() {
     const [isTableExpanded, setIsTableExpanded] = useState(false)
     const [ostTables, setOstTables] = useState(null)
     const [spotifyImages, setSpotifyImages] = useState({})
+    const [opEdVideos, setOpEdVideos] = useState([])       // Gdrive videa OP/ED (stejná knihovna jako v detailu)
+    const [videoModal, setVideoModal] = useState(null)     // přehrávané OP/ED video v modálu
+    const [ostPlayer, setOstPlayer] = useState(null)       // { mode: 'pieces'|'whole', index, nonce }
 
     // Czech number formatting: dot → comma
     const toCS = (val) => String(val).replace('.', ',')
@@ -103,18 +109,106 @@ function Favorites() {
         Promise.all([
             fetch('data/favorites.json?v=' + Date.now()).then(r => r.json()),
             fetch('data/favorites_ost.json?v=' + Date.now()).then(r => r.json()).catch(() => null),
-            fetch('data/spotify_images.json?v=' + Date.now()).then(r => r.json()).catch(() => ({}))
+            fetch('data/spotify_images.json?v=' + Date.now()).then(r => r.json()).catch(() => ({})),
+            fetch('data/op_ed_videos.json?v=' + Date.now()).then(r => r.json()).catch(() => null)
         ])
-            .then(([favData, ostData, spotData]) => {
+            .then(([favData, ostData, spotData, opEdData]) => {
                 setFavorites(favData)
                 if (ostData) setOstTables(ostData)
                 if (spotData) setSpotifyImages(spotData)
+                if (opEdData && opEdData.videos) setOpEdVideos(opEdData.videos)
                 setLoading(false)
             })
             .catch(err => {
                 console.error('Failed to load favorites:', err)
                 setLoading(false)
             })
+    }, [])
+
+    // ---- Párování řádků OP/ED tabulky na Gdrive videa (stejná logika klíče jako detail) ----
+    const opEdVideoIndex = useMemo(() => {
+        const idx = {}
+        opEdVideos.forEach(v => {
+            const key = `${v.match_key}|${(v.type || '').toUpperCase()}`
+            if (!idx[key]) idx[key] = []
+            idx[key].push(v)
+        })
+        return idx
+    }, [opEdVideos])
+
+    const findVideoFor = useCallback((fav) => {
+        const type = (fav.type || '').trim().toUpperCase()
+        if (type !== 'OP' && type !== 'ED') return null
+        const candidates = opEdVideoIndex[`${normalizeAnimeKey(fav.anime_name)}|${type}`]
+        if (!candidates || candidates.length === 0) return null
+        // Preferuj shodu podle názvu songu (v1/v2 varianty)
+        const favSong = normalizeAnimeKey(fav.song)
+        const bySong = favSong
+            ? candidates.find(v => {
+                const vs = normalizeAnimeKey(v.song)
+                return vs && (vs === favSong || vs.includes(favSong) || favSong.includes(vs))
+            })
+            : null
+        return bySong || candidates[0]
+    }, [opEdVideoIndex])
+
+    const playOpEdVideo = useCallback((fav) => {
+        const v = findVideoFor(fav)
+        if (!v) return
+        const type = (v.type || '').toUpperCase()
+        setVideoModal({
+            kind: 'video',
+            type,
+            song: v.song || fav.song || null,
+            artist: v.artist || fav.author || null,
+            label: v.ver ? `${type} ${v.ver}` : type,
+            url: v.url,
+            file_id: v.file_id || null,
+            anime_display: v.anime_display || fav.anime_name
+        })
+    }, [findVideoFor])
+
+    // ---- Data pro OST přehrávač ----
+    // Plochý seznam všech "The Best" skladeb (pieces)
+    const piecesTracks = useMemo(() => {
+        if (!ostTables?.pieces) return []
+        return ostTables.pieces
+            .map(p => {
+                const ytId = extractYoutubeId(p.ost_url)
+                if (!ytId) return null
+                return { anime: p.anime_name, song: p.ost_name, ytId }
+            })
+            .filter(Boolean)
+    }, [ostTables])
+
+    // Playlisty "As a Whole" seřazené stejně jako dlaždice, seskupené podle anime
+    const sortedWhole = useMemo(() => {
+        if (!ostTables?.whole) return []
+        const parseOrder = (orderStr) => {
+            if (orderStr === null || orderStr === undefined) return 9999
+            const num = parseInt(String(orderStr).replace(/[^\d]/g, ''), 10)
+            return isNaN(num) ? 9999 : num
+        }
+        return [...ostTables.whole].sort((a, b) => {
+            const orderA = parseOrder(a.order)
+            const orderB = parseOrder(b.order)
+            if (orderA !== orderB) return orderA - orderB
+            return a.anime_name.localeCompare(b.anime_name)
+        })
+    }, [ostTables])
+
+    const wholeGroups = useMemo(() => {
+        return sortedWhole
+            .map(w => {
+                const playlistId = extractYoutubePlaylistId(w.yt_url)
+                if (!playlistId) return null
+                return { name: w.anime_name, playlistId, spotifyUrl: w.spotify_url || null }
+            })
+            .filter(Boolean)
+    }, [sortedWhole])
+
+    const openOstPlayer = useCallback((mode, index = 0) => {
+        setOstPlayer(prev => ({ mode, index, nonce: (prev?.nonce || 0) + 1 }))
     }, [])
 
     // Statistics
@@ -1154,8 +1248,15 @@ function Favorites() {
                         </tr>
                     </thead>
                     <tbody>
-                        {(isTableExpanded ? filteredFavorites : filteredFavorites.slice(0, 8)).map((fav, idx) => (
-                            <tr key={idx}>
+                        {(isTableExpanded ? filteredFavorites : filteredFavorites.slice(0, 8)).map((fav, idx) => {
+                            const hasVideo = !!findVideoFor(fav)
+                            return (
+                            <tr
+                                key={idx}
+                                className={hasVideo ? 'fav-row-playable' : ''}
+                                onClick={hasVideo ? () => playOpEdVideo(fav) : undefined}
+                                title={hasVideo ? 'Kliknutím přehrajete videoklip (Gdrive)' : undefined}
+                            >
                                 <td style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
                                     {idx + 1}
                                 </td>
@@ -1170,6 +1271,11 @@ function Favorites() {
                                     </span>
                                 </td>
                                 <td style={{ color: 'var(--accent-primary)', fontWeight: '500', maxWidth: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={fav.song}>
+                                    {hasVideo && (
+                                        <span className="fav-play-hint" aria-hidden="true">
+                                            <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                                        </span>
+                                    )}
                                     {fav.song}
                                 </td>
                                 <td style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', maxWidth: '150px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={fav.author}>
@@ -1208,14 +1314,17 @@ function Favorites() {
                                     ) : '-'}
                                 </td>
                             </tr>
-                        ))}
+                            )
+                        })}
                     </tbody>
                 </table>
             </div>
 
             {/* Mobile Cards for Favorites */}
             <div className="mobile-card-list hide-desktop">
-                {(isTableExpanded ? filteredFavorites : filteredFavorites.slice(0, 8)).map((fav, idx) => (
+                {(isTableExpanded ? filteredFavorites : filteredFavorites.slice(0, 8)).map((fav, idx) => {
+                    const hasVideo = !!findVideoFor(fav)
+                    return (
                     <div key={idx} className="mobile-card">
                         <div className="mobile-card-header">
                             <div style={{ display: 'flex', gap: 'var(--spacing-md)', flex: 1, alignItems: 'flex-start' }}>
@@ -1230,10 +1339,20 @@ function Favorites() {
                                         {fav.anime_name}
                                     </div>
                                 </div>
-                                <div style={{ textAlign: 'right' }}>
+                                <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
                                     <span className={`type-badge ${(fav.type || '').trim() === 'OP' ? 'tv' : (fav.type || '').trim() === 'ED' ? 'movie' : 'special'}`} style={{ padding: '2px 6px', fontSize: '0.65rem' }}>
                                         {fav.type}
                                     </span>
+                                    {hasVideo && (
+                                        <button
+                                            type="button"
+                                            className="fav-table-play-btn"
+                                            onClick={() => playOpEdVideo(fav)}
+                                            title="Přehrát videoklip (Gdrive)"
+                                        >
+                                            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -1304,7 +1423,8 @@ function Favorites() {
                             )}
                         </div>
                     </div>
-                ))}
+                    )
+                })}
             </div>
 
             {filteredFavorites.length > 8 && (
@@ -1429,64 +1549,74 @@ function Favorites() {
                         <div style={{ flex: 1.5, minWidth: '350px', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', padding: 'var(--spacing-lg)', border: '1px solid var(--border-color)' }}>
                             <h4 style={{ color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                                 🎧 OST Only (As a Whole)
+                                {wholeGroups.length > 0 && (
+                                    <button
+                                        type="button"
+                                        className="fav-play-all-btn"
+                                        style={{ marginLeft: 'auto' }}
+                                        onClick={() => openOstPlayer('whole', 0)}
+                                        title="Otevřít přehrávač se všemi playlisty seskupenými podle anime"
+                                    >
+                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                                        Přehrát vše
+                                    </button>
+                                )}
                             </h4>
                             <div style={{
                                 display: 'grid',
                                 gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
                                 gap: '16px'
                             }}>
-                                {(() => {
-                                    const parseOrder = (orderStr) => {
-                                        if (orderStr === null || orderStr === undefined) return 9999;
-                                        const num = parseInt(String(orderStr).replace(/[^\d]/g, ''), 10);
-                                        return isNaN(num) ? 9999 : num;
-                                    };
-
-                                    const sortedWhole = [...ostTables.whole].sort((a, b) => {
-                                        const orderA = parseOrder(a.order);
-                                        const orderB = parseOrder(b.order);
-                                        if (orderA !== orderB) return orderA - orderB;
-                                        return a.anime_name.localeCompare(b.anime_name);
-                                    });
-
-                                    return sortedWhole.map((w, i) => {
-                                        let imgSrc = null;
-                                        if (spotifyImages) {
-                                            const matchKey = Object.keys(spotifyImages).find(k => {
-                                                const cleanW = w.anime_name?.replace(/[:\/_\-]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase() || "";
-                                                const cleanK = k.replace(/[:\/_\-]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase() || "";
-                                                return cleanW.includes(cleanK) || cleanK.includes(cleanW);
-                                            });
-                                            if (matchKey) imgSrc = spotifyImages[matchKey];
-                                        }
-                                        return (
-                                            <div key={i} title={w.anime_name} style={{ background: 'var(--bg-tertiary)', borderRadius: '8px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '12px', transition: 'all 0.2s', border: '1px solid var(--border-color)' }}
-                                                onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.borderColor = w.spotify_url ? '#1DB954' : 'var(--accent-primary)'; }}
-                                                onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'var(--border-color)'; }}
+                                {sortedWhole.map((w, i) => {
+                                    let imgSrc = null;
+                                    if (spotifyImages) {
+                                        const matchKey = Object.keys(spotifyImages).find(k => {
+                                            const cleanW = w.anime_name?.replace(/[:\/_\-]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase() || "";
+                                            const cleanK = k.replace(/[:\/_\-]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase() || "";
+                                            return cleanW.includes(cleanK) || cleanK.includes(cleanW);
+                                        });
+                                        if (matchKey) imgSrc = spotifyImages[matchKey];
+                                    }
+                                    const groupIdx = wholeGroups.findIndex(g => g.name === w.anime_name);
+                                    return (
+                                        <div key={i} title={w.anime_name} className="fav-ost-tile" style={{ background: 'var(--bg-tertiary)', borderRadius: '8px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '12px', transition: 'all 0.2s', border: '1px solid var(--border-color)' }}
+                                            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.borderColor = w.spotify_url ? '#1DB954' : 'var(--accent-primary)'; }}
+                                            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'var(--border-color)'; }}
+                                        >
+                                            <div
+                                                style={{ width: '100%', aspectRatio: '1/1', borderRadius: '4px', overflow: 'hidden', background: 'var(--bg-primary)', position: 'relative', boxShadow: '0 4px 12px rgba(0,0,0,0.2)', cursor: groupIdx >= 0 ? 'pointer' : 'default' }}
+                                                onClick={() => { if (groupIdx >= 0) openOstPlayer('whole', groupIdx) }}
+                                                title={groupIdx >= 0 ? `Přehrát playlist: ${w.anime_name}` : w.anime_name}
                                             >
-                                                <a href={w.spotify_url || w.yt_url || w.anime_url || '#'} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
-                                                    <div style={{ width: '100%', aspectRatio: '1/1', borderRadius: '4px', overflow: 'hidden', background: 'var(--bg-primary)', position: 'relative', boxShadow: '0 4px 12px rgba(0,0,0,0.2)' }}>
-                                                        {imgSrc ? (
-                                                            <img src={imgSrc} alt="cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                                        ) : (
-                                                            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', color: 'var(--text-muted)' }}>♪</div>
-                                                        )}
-                                                    </div>
+                                                {imgSrc ? (
+                                                    <img src={imgSrc} alt="cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                ) : (
+                                                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', color: 'var(--text-muted)' }}>♪</div>
+                                                )}
+                                                {groupIdx >= 0 && (
+                                                    <button
+                                                        type="button"
+                                                        className="fav-tile-play-btn"
+                                                        onClick={(e) => { e.stopPropagation(); openOstPlayer('whole', groupIdx) }}
+                                                        title={`Přehrát playlist: ${w.anime_name}`}
+                                                    >
+                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                                                    </button>
+                                                )}
+                                            </div>
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                                <a href={w.anime_url || '#'} target="_blank" rel="noreferrer" style={{ fontWeight: '600', fontSize: '0.85rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--text-primary)', textDecoration: 'none' }}>
+                                                    {w.anime_name}
                                                 </a>
-                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                                                    <a href={w.anime_url || '#'} target="_blank" rel="noreferrer" style={{ fontWeight: '600', fontSize: '0.85rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--text-primary)', textDecoration: 'none' }}>
-                                                        {w.anime_name}
-                                                    </a>
-                                                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>od Patrik Macoun</div>
-                                                    <div style={{ display: 'flex', gap: '8px', marginTop: '6px' }}>
-                                                        {w.spotify_url && <a href={w.spotify_url} target="_blank" rel="noreferrer" style={{ fontSize: '0.7rem', color: '#1DB954', fontWeight: 'bold', textDecoration: 'none' }}>Spotify</a>}
-                                                        {w.yt_url && <a href={w.yt_url} target="_blank" rel="noreferrer" style={{ fontSize: '0.7rem', color: 'var(--accent-primary)', fontWeight: 'bold', textDecoration: 'none' }}>YouTube</a>}
-                                                    </div>
+                                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>od Patrik Macoun</div>
+                                                <div style={{ display: 'flex', gap: '8px', marginTop: '6px' }}>
+                                                    {w.spotify_url && <a href={w.spotify_url} target="_blank" rel="noreferrer" style={{ fontSize: '0.7rem', color: '#1DB954', fontWeight: 'bold', textDecoration: 'none' }}>Spotify</a>}
+                                                    {w.yt_url && <a href={w.yt_url} target="_blank" rel="noreferrer" style={{ fontSize: '0.7rem', color: 'var(--accent-primary)', fontWeight: 'bold', textDecoration: 'none' }}>YouTube</a>}
                                                 </div>
                                             </div>
-                                        )
-                                    });
-                                })()}
+                                        </div>
+                                    )
+                                })}
                             </div>
                         </div>
 
@@ -1494,17 +1624,44 @@ function Favorites() {
                         <div style={{ flex: 1, minWidth: '250px', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', padding: 'var(--spacing-lg)', border: '1px solid var(--border-color)' }}>
                             <h4 style={{ color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                                 🎵 OST Only (The Best)
+                                {piecesTracks.length > 0 && (
+                                    <button
+                                        type="button"
+                                        className="fav-play-all-btn"
+                                        style={{ marginLeft: 'auto' }}
+                                        onClick={() => openOstPlayer('pieces', 0)}
+                                        title={`Otevřít přehrávač se všemi ${piecesTracks.length} skladbami`}
+                                    >
+                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                                        Přehrát vše ({piecesTracks.length})
+                                    </button>
+                                )}
                             </h4>
                             <div className="table-container" style={{ margin: 0, overflow: 'hidden' }}>
                                 <table style={{ fontSize: '0.8rem', width: '100%' }}>
-                                    <thead style={{ background: 'var(--bg-tertiary)' }}><tr><th>Anime</th><th>Název OST</th></tr></thead>
+                                    <thead style={{ background: 'var(--bg-tertiary)' }}><tr><th style={{ width: '32px' }}></th><th>Anime</th><th>Název OST</th></tr></thead>
                                     <tbody>
-                                        {ostTables.pieces.map((p, i) => (
+                                        {ostTables.pieces.map((p, i) => {
+                                            const trackIdx = piecesTracks.findIndex(t => t.anime === p.anime_name && t.song === p.ost_name)
+                                            return (
                                             <tr key={i}>
+                                                <td style={{ textAlign: 'center' }}>
+                                                    {trackIdx >= 0 && (
+                                                        <button
+                                                            type="button"
+                                                            className="fav-table-play-btn"
+                                                            onClick={() => openOstPlayer('pieces', trackIdx)}
+                                                            title="Přehrát tuto skladbu v přehrávači"
+                                                        >
+                                                            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                                                        </button>
+                                                    )}
+                                                </td>
                                                 <td>{p.anime_url ? <a href={p.anime_url} target="_blank" rel="noreferrer" style={{ color: 'var(--text-primary)' }}>{p.anime_name}</a> : p.anime_name}</td>
                                                 <td>{p.ost_url ? <a href={p.ost_url} target="_blank" rel="noreferrer" style={{ color: 'var(--accent-primary)' }}>{p.ost_name}</a> : p.ost_name}</td>
                                             </tr>
-                                        ))}
+                                            )
+                                        })}
                                     </tbody>
                                 </table>
                             </div>
@@ -1538,6 +1695,21 @@ function Favorites() {
             )}
 
 
+
+            {/* OP/ED videoklip (Gdrive) v překryvném okně — stejné jako v detailu anime */}
+            <VideoModal media={videoModal} onClose={() => setVideoModal(null)} />
+
+            {/* Plovoucí OST přehrávač (pieces = všechny skladby, whole = playlisty podle anime) */}
+            {ostPlayer && (
+                <FavoritesOstPlayer
+                    key={`${ostPlayer.mode}-${ostPlayer.index}-${ostPlayer.nonce}`}
+                    mode={ostPlayer.mode}
+                    tracks={piecesTracks}
+                    groups={wholeGroups}
+                    initialIndex={ostPlayer.index}
+                    onClose={() => setOstPlayer(null)}
+                />
+            )}
 
             {showScrollTop && createPortal(
                 <button

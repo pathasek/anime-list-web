@@ -2690,7 +2690,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 /* ─── Anime Detail Ratings - CategoryRatingsPanel ─── */
 .category-ratings-header {
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: 12px;
 }
 
 .category-ratings-header h3 {
@@ -2717,6 +2717,14 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   font-size: 0.85rem;
   color: var(--text-muted);
   margin-top: 4px;
+}
+
+.category-ratings-info-text {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  opacity: 0.8;
+  margin-top: 2px;
+  line-height: 1.35;
 }
 
 .ratings-flex-container {
@@ -3087,8 +3095,11 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   font-size: 0.68rem;
   line-height: 1.35;
   color: var(--text-muted);
+  /* Popis se skládá z celých odstavců (rozpočet znaků řeší datová vrstva),
+     pre-line zachová prázdný řádek mezi odstavci. */
+  white-space: pre-line;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 12;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -4100,6 +4111,216 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   display: flex;
 }
 
+/* ==== OST přehrávač pro stránku Favourite OP/ED/OST ==== */
+/* Větší varianta plovoucího přehrávače s delším seznamem / skupinami */
+.fav-ost-player {
+  width: min(420px, 92vw);
+}
+.fav-ost-playlist {
+  max-height: 320px;
+}
+.fav-ost-list {
+  max-height: 260px;
+}
+.fav-ost-row-play {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  color: var(--accent-primary);
+  font-size: 0.7rem;
+}
+.ost-playlist-item:hover .fav-ost-row-play {
+  background: var(--accent-primary);
+  color: #fff;
+}
+button.fav-ost-row-play {
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+button.fav-ost-row-play:hover {
+  background: var(--accent-primary);
+  color: #fff;
+}
+
+/* Skupiny playlistů (whole mode) */
+.fav-ost-groups {
+  gap: 2px;
+}
+.fav-ost-group {
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+.fav-ost-group.active {
+  border-color: rgba(99, 102, 241, 0.25);
+  background: rgba(99, 102, 241, 0.06);
+}
+.fav-ost-group-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  /* Název série zůstává při scrollování skladbami přilepený nahoře,
+     takže jde skupina sbalit bez scrollu zpět. */
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+}
+.fav-ost-group.active .fav-ost-group-header {
+  background: color-mix(in srgb, var(--accent-primary) 14%, var(--bg-card));
+}
+.fav-ost-group-toggle {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 2px;
+  flex-shrink: 0;
+  display: inline-flex;
+}
+.fav-ost-caret {
+  display: inline-block;
+  transition: transform var(--transition-fast);
+  font-size: 0.7rem;
+}
+.fav-ost-caret.open {
+  transform: rotate(90deg);
+}
+.fav-ost-group-name {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  padding: 2px 0;
+}
+.fav-ost-group.active .fav-ost-group-name {
+  color: var(--accent-primary);
+}
+.fav-ost-group-count {
+  flex-shrink: 0;
+  font-size: 0.68rem;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+.fav-ost-group-tracks {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 6px 6px 22px;
+}
+.fav-ost-group-hint {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 2px 8px 4px;
+}
+
+/* Klikatelné řádky OP/ED tabulky ve Favorites (spouští videoklip) */
+.fav-row-playable {
+  cursor: pointer;
+}
+.fav-play-hint {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: var(--accent-primary);
+  font-size: 0.6rem;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+.fav-row-playable:hover .fav-play-hint {
+  background: var(--accent-primary);
+  color: #fff;
+}
+.fav-table-play-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: var(--accent-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+.fav-table-play-btn:hover {
+  background: var(--accent-primary);
+  color: #fff;
+  transform: scale(1.08);
+}
+.fav-play-all-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  color: var(--accent-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.fav-play-all-btn:hover {
+  background: var(--accent-primary);
+  color: #fff;
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
+}
+.fav-tile-play-btn {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(99, 102, 241, 0.92);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: all var(--transition-fast);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  z-index: 2;
+}
+.fav-ost-tile:hover .fav-tile-play-btn {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fav-tile-play-btn:hover {
+  background: var(--accent-primary);
+  transform: scale(1.08);
+}
+
 /* Radar chart s overlay HTML popisky */
 .radar-chart-container {
   flex: 1.6;
@@ -4148,6 +4369,25 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   width: 0;
   height: 0;
   z-index: 10;
+}
+
+/* Samostatný radar kategorií (CategoryRadar) — mimo detail anime */
+.category-radar-standalone {
+  position: relative;
+  width: 100%;
+}
+
+.category-radar-standalone canvas {
+  position: relative;
+  z-index: 2;
+}
+
+/* Druhá (průměrná) hodnota pod hlavní hodnotou při porovnání s vybranou částí */
+.radar-label-value-sub {
+  font-size: 0.62rem;
+  font-weight: 600;
+  opacity: 0.85;
+  line-height: 1.1;
 }
 
 .radar-label-icon-circle {
@@ -5923,4 +6163,327 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   --shadow-md: 0 4px 12px rgba(255, 0, 85, 0.4);
   --shadow-lg: 0 8px 24px rgba(255, 0, 85, 0.5);
   --shadow-glow: 0 0 16px rgba(255, 0, 85, 0.6);
+}
+
+/* Modální okno pro detail kategorie z DOCX */
+.category-detail-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 10, 15, 0.75);
+  backdrop-filter: blur(8px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md);
+  animation: fadeIn 0.2s ease-out;
+}
+
+.category-detail-modal {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 800px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.category-detail-modal-header {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-secondary);
+}
+
+.category-detail-modal-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-family: 'Outfit', var(--font-family);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.category-detail-modal-title .category-card-icon {
+  background: rgba(99, 102, 241, 0.1);
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+}
+
+.category-detail-modal-score {
+  font-family: 'Outfit', var(--font-family);
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: var(--accent-primary);
+  margin-left: var(--spacing-md);
+}
+
+.category-detail-modal-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.category-detail-modal-close:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+}
+
+.category-detail-modal-body {
+  padding: var(--spacing-lg);
+  overflow-y: auto;
+  display: flex;
+  gap: var(--spacing-lg);
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .category-detail-modal-body.has-chars {
+    flex-direction: row;
+  }
+}
+
+.category-detail-text-column {
+  flex: 1;
+  font-family: 'Open Sans', var(--font-family);
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.category-detail-chars-column {
+  width: 100%;
+  flex-shrink: 0;
+  border-top: 1px solid var(--border-color);
+  padding-top: var(--spacing-md);
+}
+
+@media (min-width: 768px) {
+  .category-detail-chars-column {
+    width: 250px;
+    border-top: none;
+    border-left: 1px solid var(--border-color);
+    padding-top: 0;
+    padding-left: var(--spacing-lg);
+  }
+}
+
+.category-detail-chars-title {
+  font-family: 'Outfit', var(--font-family);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.category-detail-chars-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: var(--spacing-xs);
+}
+
+@media (min-width: 768px) {
+  .category-detail-chars-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.category-detail-p {
+  margin-bottom: var(--spacing-md);
+  font-size: 0.95rem;
+}
+
+.category-detail-ul, .category-detail-ol {
+  margin-bottom: var(--spacing-md);
+  padding-left: var(--spacing-lg);
+}
+
+.category-detail-ul li, .category-detail-ol li {
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+}
+
+/* Tabulky v detailu kategorie */
+.category-detail-table-wrapper {
+  overflow-x: auto;
+  margin-bottom: var(--spacing-lg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.01);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.category-detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.category-detail-table th {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-weight: 700;
+  font-family: 'Outfit', var(--font-family);
+  padding: 12px 16px;
+  border-bottom: 2px solid var(--border-color);
+  font-size: 0.9rem;
+  letter-spacing: 0.3px;
+}
+
+.category-detail-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+
+.category-detail-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.category-detail-table tbody tr {
+  transition: background-color var(--transition-fast);
+}
+
+.category-detail-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.category-detail-table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+/* Hover trigger for categories - Ikona se změní na 📝 na hover bez ovlivnění layoutu */
+.category-rating-card.has-review {
+  cursor: pointer;
+}
+
+.category-card-icon-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+}
+
+.category-card-icon {
+  transition: all var(--transition-fast);
+  opacity: 1;
+  transform: scale(1);
+}
+
+.category-card-review-icon {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  background: rgba(99, 102, 241, 0.16);
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  opacity: 0;
+  transform: scale(0.6);
+  cursor: pointer;
+  z-index: 2;
+}
+
+.category-rating-card.has-review:hover .category-card-icon {
+  opacity: 0;
+  transform: scale(0.6);
+}
+
+.category-rating-card.has-review:hover .category-card-review-icon {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+
+/* Episode Detail Modal Layout */
+.episode-detail-modal {
+    max-width: 1000px;
+    width: 92vw;
+}
+.episode-detail-modal-body {
+    display: flex;
+    gap: var(--spacing-xl);
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+.episode-detail-main-col {
+    flex: 1 1 500px;
+    min-width: 320px;
+}
+.episode-detail-side-col {
+    flex: 0 0 320px;
+    min-width: 280px;
+    display: flex;
+    flex-direction: column;
+}
+@media (max-width: 768px) {
+    .episode-detail-side-col {
+        flex: 1 1 100%;
+    }
+}
+.episode-col-title {
+    margin: 0 0 var(--spacing-md) 0;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    font-weight: 600;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: var(--spacing-xs);
+}
+.episode-synopsis-box {
+    background: var(--bg-hover);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    font-style: italic;
+    white-space: pre-wrap;
+    max-height: 400px;
+    overflow-y: auto;
 }

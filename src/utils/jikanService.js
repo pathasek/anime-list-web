@@ -19,8 +19,6 @@ const RETRY_MAX = 3
 const RETRY_BASE_MS = 1000         // Exponential backoff base
 const DB_NAME = 'jikan_cache'
 const DB_VERSION = 2               // v2: added STORE_CHARACTERS
-const FRESH_THRESHOLD_MS = 90 * 24 * 60 * 60 * 1000  // 3 months in ms
-const REFRESH_INTERVAL_MS = 7 * 24 * 60 * 60 * 1000   // 7 days in ms
 // Store names
 const STORE_EPISODE_LISTS = 'episode_lists'
 const STORE_EPISODE_DETAILS = 'episode_details'
@@ -366,38 +364,6 @@ export async function getDownloadProgress() {
 }
 
 // ============================================
-// REFRESH POLICY
-// ============================================
-
-/**
- * Determine if an episode detail should be refreshed
- * @param {object|null} cachedDetail - existing cached data (or null if not cached)
- * @param {string|null} airedDate - ISO date string of when episode aired
- * @returns {boolean}
- */
-function shouldRefreshEpisode(cachedDetail, airedDate) {
-    // Never cached → must fetch
-    if (!cachedDetail) return true
-
-    // No aired date info → don't refresh if we have data
-    if (!airedDate) return false
-
-    const now = Date.now()
-    const aired = new Date(airedDate).getTime()
-    const age = now - aired
-
-    // Episode aired less than 3 months ago → check weekly refresh
-    if (age < FRESH_THRESHOLD_MS) {
-        const lastRefresh = cachedDetail.lastRefreshedAt || cachedDetail.fetchedAt || 0
-        const timeSinceRefresh = now - lastRefresh
-        return timeSinceRefresh > REFRESH_INTERVAL_MS
-    }
-
-    // Episode aired 3+ months ago → never refresh
-    return false
-}
-
-// ============================================
 // BACKGROUND DOWNLOADER
 // ============================================
 
@@ -445,7 +411,8 @@ export async function startBackgroundDownload(animeList, onProgress) {
         .map(a => ({
             name: a.name,
             malId: extractMalId(a.mal_url),
-            episodeCount: a.episodes || 0
+            episodeCount: a.episodes || 0,
+            releaseDate: a.release_date || null
         }))
         .filter(a => a.malId !== null && a.episodeCount > 0)
 
@@ -473,17 +440,19 @@ export async function startBackgroundDownload(animeList, onProgress) {
         }
 
         const anime = downloadQueue[i]
+        const ageMs = animeAgeMs(anime.releaseDate)
 
-        // --- Step 1: Fetch episode list ---
+        // --- Step 1: Fetch episode list (u anime < 1 rok se kontroluje měsíčně) ---
         let cachedList = await getCachedEpisodeList(anime.malId)
         let episodes = cachedList?.episodes || null
+        const listNeedsRefresh = shouldRefreshRecord(cachedList, ageMs, EP_FRESH_ANIME_MS)
 
-        if (!episodes) {
+        if (!episodes || listNeedsRefresh) {
             const apiEpisodes = await fetchEpisodeListFromAPI(anime.malId, 'low')
             await delay(API_DELAY_MS)
 
             if (apiEpisodes && apiEpisodes.length > 0) {
-                episodes = apiEpisodes.map(ep => ({
+                const mapped = apiEpisodes.map(ep => ({
                     mal_id: ep.mal_id,
                     title: ep.title || ep.title_japanese || `Episode ${ep.mal_id}`,
                     title_japanese: ep.title_japanese || null,
@@ -495,15 +464,22 @@ export async function startBackgroundDownload(animeList, onProgress) {
                     forum_url: ep.forum_url || null
                 }))
 
+                const signature = contentSignature(mapped.map(e => [e.mal_id, e.title, e.filler, e.recap]))
+                const unchanged = !!(cachedList && cachedList.signature === signature)
+                episodes = mapped
+
                 await dbPut(STORE_EPISODE_LISTS, {
                     malId: anime.malId,
                     animeName: anime.name,
                     episodes,
-                    fetchedAt: Date.now()
+                    signature,
+                    unchangedStreak: unchanged ? (cachedList.unchangedStreak || 0) + 1 : 0,
+                    fetchedAt: cachedList?.fetchedAt || Date.now(),
+                    lastRefreshedAt: Date.now()
                 })
 
-                console.log(`[Jikan] ${i + 1}/${totalAnime} "${anime.name}" — ${episodes.length} episodes listed`)
-            } else {
+                console.log(`[Jikan] ${i + 1}/${totalAnime} "${anime.name}" — ${episodes.length} episodes listed${unchanged ? ' (beze změny)' : ''}`)
+            } else if (!episodes) {
                 console.log(`[Jikan] ${i + 1}/${totalAnime} "${anime.name}" — no episodes found, skipping`)
                 continue
             }
@@ -517,9 +493,10 @@ export async function startBackgroundDownload(animeList, onProgress) {
             const epNum = ep.mal_id
             const cacheKey = `${anime.malId}_${epNum}`
 
-            // Check if we need to fetch/refresh
+            // Popisy epizod: chybějící se stáhnou vždy; u anime < 1 rok se
+            // kontrolují měsíčně s prodlužujícím se odstupem beze změn.
             const cachedDetail = await dbGet(STORE_EPISODE_DETAILS, cacheKey)
-            const needsFetch = shouldRefreshEpisode(cachedDetail, ep.aired)
+            const needsFetch = shouldRefreshRecord(cachedDetail, ageMs, EP_FRESH_ANIME_MS)
 
             if (!needsFetch) continue
 
@@ -527,7 +504,7 @@ export async function startBackgroundDownload(animeList, onProgress) {
             await delay(API_DELAY_MS)
 
             if (detail) {
-                await dbPut(STORE_EPISODE_DETAILS, {
+                const record = {
                     key: cacheKey,
                     malId: anime.malId,
                     epNum,
@@ -537,8 +514,15 @@ export async function startBackgroundDownload(animeList, onProgress) {
                     duration: detail.duration || null,
                     aired: detail.aired || ep.aired || null,
                     filler: detail.filler || false,
-                    recap: detail.recap || false,
-                    fetchedAt: Date.now(),
+                    recap: detail.recap || false
+                }
+                const signature = contentSignature([record.title, record.synopsis, record.filler, record.recap, record.duration])
+                const unchanged = !!(cachedDetail && cachedDetail.signature === signature)
+                await dbPut(STORE_EPISODE_DETAILS, {
+                    ...record,
+                    signature,
+                    unchangedStreak: unchanged ? (cachedDetail.unchangedStreak || 0) + 1 : 0,
+                    fetchedAt: cachedDetail?.fetchedAt || Date.now(),
                     lastRefreshedAt: Date.now()
                 })
             }
@@ -707,186 +691,14 @@ export async function getAnimeInfo(malId, priority = 'high') {
 }
 
 // ============================================
-// CHARACTERS (MC / Vedlejší postavy / Waifu)
+// BACKGROUND SYNCHRONIZATION
 // ============================================
 
-// Odhad pohlaví z anglického MAL popisu (poměr ženských vs. mužských zájmen)
-function guessGenderFromAbout(about) {
-    if (!about) return null
-    const f = (about.match(/\b(she|her|hers|herself)\b/gi) || []).length
-    const m = (about.match(/\b(he|him|his|himself)\b/gi) || []).length
-    if (f === 0 && m === 0) return null
-    return f > m ? 'female' : 'male'
-}
-
-// Zkrátí popis na rozumnou délku pro malou kartu (celé věty, max ~limit znaků)
-function trimAbout(about, limit = 320) {
-    if (!about) return null
-    // MAL popisy mívají na konci zdrojovou poznámku "(Source: ...)" — odřízneme
-    let clean = about.replace(/\s+/g, ' ').replace(/\(Source:.*?\)\s*$/i, '').trim()
-    if (!clean) return null
-    if (clean.length <= limit) return clean
-    const cut = clean.slice(0, limit)
-    const lastSentence = cut.lastIndexOf('. ')
-    return (lastSentence > 80 ? cut.slice(0, lastSentence + 1) : cut.trimEnd() + '…')
-}
-
 /**
- * Jádro: stáhne obsazení jednoho anime z Jikanu a obohatí zobrazované
- * postavy o popis + odhad pohlaví. Prochází globálním rate-limiterem.
- * @param {number} malId
- * @returns {Promise<{main: object[], supporting: object[]}|null>}
+ * Kompletní synchronizace na pozadí: stahuje epizody (seznamy + popisy).
  */
-async function fetchCharactersFromAPI(malId, priority = 'low') {
-    const res = await fetchWithRetry(`${JIKAN_BASE_URL}/anime/${malId}/characters`, RETRY_MAX, priority)
-    if (!res || !res.data) return null
-
-    const all = res.data
-        .map(c => ({
-            malId: c.character?.mal_id || null,
-            url: c.character?.url || null,
-            image: c.character?.images?.jpg?.image_url || null,
-            name: c.character?.name || '',
-            role: c.role || 'Supporting',
-            favorites: c.favorites || 0
-        }))
-        .filter(c => c.malId)
-        .sort((a, b) => b.favorites - a.favorites)
-
-    const main = all.filter(c => c.role === 'Main').slice(0, 6)
-    const supporting = all.filter(c => c.role !== 'Main').slice(0, 10)
-
-    // Popis + pohlaví jen pro zobrazované postavy (rozestup řeší rate-limiter)
-    for (const c of [...main, ...supporting]) {
-        const d = await fetchWithRetry(`${JIKAN_BASE_URL}/characters/${c.malId}`, RETRY_MAX, priority)
-        if (d && d.data) {
-            c.about = trimAbout(d.data.about)
-            c.gender = guessGenderFromAbout(d.data.about)
-        }
-    }
-    return { main, supporting }
-}
-
-/**
- * Přečte obsazení z IndexedDB (pokud je uložené a čerstvé).
- * @param {number} malId
- * @returns {Promise<object|null>}
- */
-export async function getCachedCharacters(malId) {
-    if (!malId) return null
-    try {
-        const rec = await dbGet(STORE_CHARACTERS, malId)
-        if (rec) return rec
-    } catch { /* číst dál nemá smysl */ }
-    return null
-}
-
-// In-flight promise deduplikace, ať hover na víc karet nespustí fetch dvakrát
-const _charactersPromises = {}
-
-/**
- * Get characters for an anime: main + top supporting, enriched with
- * about-text and a gender guess (for the Waifu category).
- * Prefers the IndexedDB cache filled by the background downloader.
- * @param {number} malId
- * @returns {Promise<{main: object[], supporting: object[]}|null>}
- */
-export function getAnimeCharacters(malId, priority = 'high') {
-    if (!malId) return Promise.resolve(null)
-    if (_charactersPromises[malId]) return _charactersPromises[malId]
-
-    const p = (async () => {
-        const cached = await getCachedCharacters(malId)
-        if (cached && (cached.main?.length || cached.supporting?.length)) return cached
-
-        const fresh = await fetchCharactersFromAPI(malId, priority)
-        if (!fresh) return null
-
-        const result = { malId, main: fresh.main, supporting: fresh.supporting, fetchedAt: Date.now() }
-        try { await dbPut(STORE_CHARACTERS, result) } catch { /* poběží bez cache */ }
-        return result
-    })()
-
-    _charactersPromises[malId] = p
-    p.finally(() => { delete _charactersPromises[malId] })
-    return p
-}
-
-// ============================================
-// BACKGROUND CHARACTER DOWNLOADER
-// ============================================
-
-let _charDownloadRunning = false
-let _charDownloadCancelled = false
-
-/**
- * Průběžně stáhne postavy pro VŠECHNA anime v seznamu a uloží do IndexedDB.
- * Obnovitelné po refreshi (přeskakuje již stažená), sdílí globální rate-limiter
- * s downloaderem epizod, takže se API nikdy nepřetíží.
- * @param {object[]} animeList
- * @param {function} [onProgress]
- */
-export async function startCharacterBackgroundDownload(animeList, onProgress) {
-    if (_charDownloadRunning) return
-    _charDownloadRunning = true
-    _charDownloadCancelled = false
-
-    try {
-        await openDB()
-    } catch (e) {
-        console.error('[Jikan] Nelze otevřít IndexedDB, ruším stahování postav:', e)
-        _charDownloadRunning = false
-        return
-    }
-
-    const queue = animeList
-        .map(a => ({ name: a.name, malId: extractMalId(a.mal_url) }))
-        .filter(a => a.malId !== null)
-
-    // Deduplikace podle malId (série mají stejné mal_url u víc řádků výjimečně)
-    const seen = new Set()
-    const uniqueQueue = queue.filter(a => (seen.has(a.malId) ? false : seen.add(a.malId)))
-    const total = uniqueQueue.length
-
-    console.log(`[Jikan] Stahování postav: ${total} anime ke zpracování.`)
-
-    for (let i = 0; i < total; i++) {
-        if (_charDownloadCancelled) break
-        const a = uniqueQueue[i]
-
-        const cached = await getCachedCharacters(a.malId)
-        if (cached && (cached.main?.length || cached.supporting?.length)) {
-            if (onProgress) onProgress({ animeName: a.name, idx: i + 1, total, state: 'cached' })
-            continue
-        }
-
-        try {
-            const fresh = await fetchCharactersFromAPI(a.malId, 'low')
-            if (fresh && (fresh.main.length || fresh.supporting.length)) {
-                await dbPut(STORE_CHARACTERS, {
-                    malId: a.malId,
-                    animeName: a.name,
-                    main: fresh.main,
-                    supporting: fresh.supporting,
-                    fetchedAt: Date.now()
-                })
-                console.log(`[Jikan] Postavy ${i + 1}/${total} "${a.name}" — ${fresh.main.length} hl. + ${fresh.supporting.length} ved.`)
-            }
-        } catch (e) {
-            console.warn(`[Jikan] Postavy "${a.name}" selhaly:`, e)
-        }
-
-        if (onProgress) onProgress({ animeName: a.name, idx: i + 1, total, state: 'running' })
-    }
-
-    _charDownloadRunning = false
-    if (onProgress) onProgress({ animeName: null, idx: total, total, state: _charDownloadCancelled ? 'paused' : 'complete' })
-    if (!_charDownloadCancelled) console.log('[Jikan] Stahování postav dokončeno.')
-}
-
-/** Zastaví downloader postav */
-export function stopCharacterBackgroundDownload() {
-    _charDownloadCancelled = true
+export async function runBackgroundSync(animeList, onProgress) {
+    await startBackgroundDownload(animeList, onProgress)
 }
 
 /**

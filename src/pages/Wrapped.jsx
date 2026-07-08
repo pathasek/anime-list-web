@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { loadData, STORAGE_KEYS } from '../utils/dataStore';
 import { calculateWrappedData } from '../utils/wrappedCalculations';
 import { extractMalId, getAnimeInfo } from '../utils/jikanService';
-import MusicPlayer from '../components/MusicPlayer';
 import './Wrapped.css';
 
 
@@ -1171,8 +1170,6 @@ export default function Wrapped() {
                     </div>
                 </div>
             )}
-            
-            <MusicPlayer animeData={animeList} selectedYear={selectedYear} />
         </div>
     );
 }

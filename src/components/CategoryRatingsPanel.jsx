@@ -12,7 +12,7 @@ import { useTheme } from './ThemeProvider'
 import { getThemeChartColors } from '../utils/chartTheme'
 import { getMediaForAnime, youtubeSearchUrl } from '../utils/mediaMatch'
 import { VideoModal, FloatingOstPlayer, ScrollableText } from './CategoryMediaPlayers'
-import { extractMalId, getAnimeCharacters } from '../utils/jikanService'
+import { extractMalId } from '../utils/jikanService'
 import { iconFor } from './categoryIcons'
 import { RatingInfoButton, CategoryGuideModal } from './RatingGuideModals'
 
@@ -21,15 +21,11 @@ ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip)
 // Kategorie, u kterých nabízíme přehrání videoklipu / OST
 const MEDIA_CATS = { OP: true, ED: true, OST: true }
 
-// Kategorie, u kterých po najetí ukážeme karty postav z Jikanu
-const CHAR_CATS = { 'MC': true, 'Vedlejší postavy': true, 'Waifu': true }
-
-const CHAR_ROLE_LABELS = { Main: 'Hlavní', Supporting: 'Vedlejší' }
-
 // Module-level cache — data se načtou jen jednou na relaci
 let cachedOpEdVideos = null
 let cachedOstPieces = null
 let cachedOstWhole = null
+let cachedCategoryReviews = null
 
 const PlayIcon = () => (
     <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -73,24 +69,7 @@ function useAccentColor(theme) {
     return useCallback((a) => `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${a})`, [rgb])
 }
 
-// Jméno postavy z Jikanu ("Příjmení, Jméno") rozloží na významné tokeny (délka ≥ 3)
-function nameTokens(name) {
-    return (name || '')
-        .split(/[,\s]+/)
-        .map(t => t.trim())
-        .filter(t => t.length >= 3)
-}
-
-// Je postava zmíněná v textu recenze? (bez diakritiky, po celých slovech)
-function isMentionedInReview(name, normalizedReview) {
-    if (!normalizedReview) return false
-    return nameTokens(name).some(tok => {
-        const t = tok.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
-        return new RegExp(`(^|[^\\p{L}])${t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}([^\\p{L}]|$)`, 'u').test(normalizedReview)
-    })
-}
-
-function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, animeName, animeSeries, malUrl, review }) {
+function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, animeName, animeSeries, malUrl, review, categoryReviews }) {
     const { theme } = useTheme()
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const c = useMemo(() => getThemeChartColors(), [theme])
@@ -100,6 +79,8 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
     const [opEdVideos, setOpEdVideos] = useState(cachedOpEdVideos)
     const [ostPieces, setOstPieces] = useState(cachedOstPieces)
     const [ostWhole, setOstWhole] = useState(cachedOstWhole)
+    const [activeReview, setActiveReview] = useState(null) // { category, text, rating }
+    
     const [videoModal, setVideoModal] = useState(null)   // OP/ED video (Drive) v překryvném okně
     const [floatingOst, setFloatingOst] = useState(null) // OST (YouTube) v plovoucím přehrávači
     const [guideOpen, setGuideOpen] = useState(false)    // Průvodce hodnocením kategorií
@@ -152,51 +133,6 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
             playTrack(tracks[0])
         }
     }, [searchYoutube, playTrack])
-
-    // Postavy z Jikanu — načítají se líně, až při prvním najetí na MC / Vedlejší postavy / Waifu
-    const malId = useMemo(() => extractMalId(malUrl), [malUrl])
-    const [charData, setCharData] = useState(null)
-    const [charState, setCharState] = useState('idle') // idle | loading | done | error
-    const charRequestedRef = useRef(false)
-
-    const ensureCharacters = useCallback(() => {
-        if (charRequestedRef.current || !malId) return
-        charRequestedRef.current = true
-        setCharState('loading')
-        getAnimeCharacters(malId)
-            .then(d => {
-                if (d && (d.main?.length || d.supporting?.length)) {
-                    setCharData(d)
-                    setCharState('done')
-                } else {
-                    setCharState('error')
-                }
-            })
-            .catch(() => setCharState('error'))
-    }, [malId])
-
-    // Text recenze bez diakritiky pro porovnání se jmény postav
-    const normalizedReview = useMemo(
-        () => (review || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''),
-        [review]
-    )
-
-    // Výběr postav pro kategorii: MC = hlavní, Vedlejší = supporting,
-    // Waifu = výrazné ženské postavy (odhad z popisu) NEBO postavy zmíněné
-    // v recenzi. Zmíněné jdou první, pak podle oblíbenosti.
-    const charactersFor = useCallback((cat) => {
-        if (!charData) return []
-        if (cat === 'MC') return charData.main || []
-        if (cat === 'Vedlejší postavy') return (charData.supporting || []).slice(0, 8)
-        if (cat === 'Waifu') {
-            return [...(charData.main || []), ...(charData.supporting || [])]
-                .map(c => ({ ...c, mentioned: isMentionedInReview(c.name, normalizedReview) }))
-                .filter(c => c.gender === 'female' || c.mentioned)
-                .sort((a, b) => (b.mentioned - a.mentioned) || ((b.favorites || 0) - (a.favorites || 0)))
-                .slice(0, 8)
-        }
-        return []
-    }, [charData, normalizedReview])
 
     const chartRef = useRef(null)
     const wrapRef = useRef(null)
@@ -391,6 +327,9 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                 <p className="category-ratings-subtitle">
                     Průměrné hodnocení zohledňuje váhy jednotlivých kategorií.
                 </p>
+                <p className="category-ratings-info-text">
+                    Faktické rozbory (detaily kategorií 📝) byly vygenerovány AI z webových zdrojů a mohou obsahovat chyby. Pro OP/ED naleznete popisy v kategorii OST.
+                </p>
             </div>
 
             <div className="ratings-flex-container">
@@ -398,27 +337,49 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                 <div className="category-cards-grid">
                     {entries.map(([cat, rating]) => {
                         const isMedia = !!MEDIA_CATS[cat]
-                        const isChar = !!CHAR_CATS[cat] && !!malId
                         const tracks = isMedia ? media[cat] : null
                         const hasTracks = tracks && tracks.length > 0
-                        const chars = isChar ? charactersFor(cat) : null
+                        const reviewText = categoryReviews && categoryReviews[animeName] && categoryReviews[animeName][cat]
+                        const hasReview = !!reviewText
+
+                        const handleCardClickInner = (e) => {
+                            if (isMedia) {
+                                handleCardClick(cat, tracks)
+                            } else if (hasReview) {
+                                setActiveReview({ category: cat, text: reviewText, rating: rating })
+                            }
+                        }
+
                         return (
                             <div
                                 key={cat}
-                                className={`category-rating-card${isMedia ? ' has-media' : ''}${isChar ? ' has-chars' : ''}`}
-                                onMouseEnter={isChar ? ensureCharacters : undefined}
-                                onClick={isMedia ? () => handleCardClick(cat, tracks) : undefined}
-                                role={isMedia ? 'button' : undefined}
-                                tabIndex={isMedia ? 0 : undefined}
-                                onKeyDown={isMedia ? (e) => {
+                                className={`category-rating-card${isMedia ? ' has-media' : ''}${hasReview ? ' has-review' : ''}`}
+                                onClick={handleCardClickInner}
+                                role={(isMedia || hasReview) ? 'button' : undefined}
+                                tabIndex={(isMedia || hasReview) ? 0 : undefined}
+                                onKeyDown={(isMedia || hasReview) ? (e) => {
                                     if (e.key === 'Enter' || e.key === ' ') {
                                         e.preventDefault()
-                                        handleCardClick(cat, tracks)
+                                        handleCardClickInner(e)
                                     }
                                 } : undefined}
                             >
                                 <div className="category-card-left">
-                                    <span className="category-card-icon">{iconFor(cat)}</span>
+                                    <span className="category-card-icon-wrapper">
+                                        <span className="category-card-icon">{iconFor(cat)}</span>
+                                        {hasReview && (
+                                            <span 
+                                                className="category-card-review-icon" 
+                                                title="Zobrazit detailní rozbor"
+                                                onClick={isMedia ? (e) => {
+                                                    e.stopPropagation()
+                                                    setActiveReview({ category: cat, text: reviewText, rating: rating })
+                                                } : undefined}
+                                            >
+                                                📝
+                                            </span>
+                                        )}
+                                    </span>
                                     <span className="category-card-name" title={cat}>{cat}</span>
                                     {isMedia && (
                                         <span className={`category-card-play-hint${hasTracks ? ' has-local' : ' is-search'}`} aria-hidden="true">
@@ -488,54 +449,6 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                                                 </button>
                                             </div>
                                         )}
-                                    </div>
-                                )}
-
-                                {isChar && (
-                                    <div className="media-popover char-popover" onClick={(e) => e.stopPropagation()}>
-                                        <div className="media-popover-inner">
-                                            {charState === 'loading' && (
-                                                <div className="char-popover-status">
-                                                    <span className="char-popover-spinner" aria-hidden="true" />
-                                                    Načítám postavy z MAL…
-                                                </div>
-                                            )}
-                                            {charState === 'error' && (
-                                                <div className="media-popover-empty">Postavy se nepodařilo načíst.</div>
-                                            )}
-                                            {charState === 'done' && chars && chars.length === 0 && (
-                                                <div className="media-popover-empty">
-                                                    {cat === 'Waifu'
-                                                        ? 'Žádná výrazná ženská postava nenalezena.'
-                                                        : 'Žádné postavy nenalezeny.'}
-                                                </div>
-                                            )}
-                                            {charState === 'done' && chars && chars.map((ch) => (
-                                                <a
-                                                    key={ch.malId}
-                                                    className="char-row"
-                                                    href={ch.url || undefined}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    title="Otevřít na MyAnimeList"
-                                                >
-                                                    {ch.image ? (
-                                                        <img className="char-row-img" src={ch.image} alt={ch.name} loading="lazy" />
-                                                    ) : (
-                                                        <span className="char-row-img char-row-img-placeholder">?</span>
-                                                    )}
-                                                    <span className="char-row-meta">
-                                                        <span className="char-row-top">
-                                                            <span className="char-row-name">{ch.name}</span>
-                                                            <span className="char-row-role">{CHAR_ROLE_LABELS[ch.role] || ch.role}</span>
-                                                        </span>
-                                                        {ch.about
-                                                            ? <span className="char-row-about">{ch.about}</span>
-                                                            : <span className="char-row-about is-empty">Bez popisu.</span>}
-                                                    </span>
-                                                </a>
-                                            ))}
-                                        </div>
                                     </div>
                                 )}
                             </div>
@@ -629,8 +542,213 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                 onPlayTrack={playTrack}
                 onClose={() => setFloatingOst(null)}
             />
+
+            {/* Detailní rozbor konkrétní kategorie */}
+            <CategoryDetailModal 
+                activeReview={activeReview} 
+                onClose={() => setActiveReview(null)} 
+            />
         </div>
     )
+}
+
+// Modální okno pro detailní textový rozbor kategorie z DOCX
+function CategoryDetailModal({ activeReview, onClose }) {
+    if (!activeReview) return null
+
+    const { category, text, rating } = activeReview
+
+    const handleOverlayClick = (e) => {
+        if (e.target === e.currentTarget) {
+            onClose()
+        }
+    }
+
+    return (
+        <div className="category-detail-modal-overlay" onClick={handleOverlayClick}>
+            <div className="category-detail-modal">
+                <div className="category-detail-modal-header">
+                    <div className="category-detail-modal-title">
+                        <span className="category-card-icon">{iconFor(category)}</span>
+                        <span>{category}</span>
+                        <span className="category-detail-modal-score">{fmtRating(rating)}/10</span>
+                    </div>
+                    <button type="button" className="category-detail-modal-close" onClick={onClose} aria-label="Zavřít">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+                <div className="category-detail-modal-body">
+                    <div className="category-detail-text-column">
+                        {formatCategoryMarkdown(text)}
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+// Jednoduchý JSX parser na formátování Markdown textu (tučné, kurzíva, seznamy, tabulky)
+export function formatCategoryMarkdown(text) {
+    if (!text) return null
+
+    const lines = text.split('\n')
+    const elements = []
+    let inTable = false
+    let tableRows = []
+    let listType = null // 'ul' | 'ol' | null
+    let listItems = []
+
+    const flushList = (key) => {
+        if (!listType) return
+        const Tag = listType
+        elements.push(
+            <Tag key={key} className={`category-detail-${listType}`}>
+                {listItems.map((item, idx) => (
+                    <li key={idx}>{parseInlineFormatting(item)}</li>
+                ))}
+            </Tag>
+        )
+        listItems = []
+        listType = null
+    }
+
+    const flushTable = (key) => {
+        if (tableRows.length === 0) return
+        const headers = tableRows[0]
+        const dataRows = tableRows.slice(1)
+        elements.push(
+            <div className="category-detail-table-wrapper" key={key}>
+                <table className="category-detail-table">
+                    <thead>
+                        <tr>
+                            {headers.map((cell, cIdx) => (
+                                <th key={cIdx}>{parseInlineFormatting(cell)}</th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {dataRows.map((row, idx) => (
+                            <tr key={idx}>
+                                {row.map((cell, cIdx) => (
+                                    <td key={cIdx}>{parseInlineFormatting(cell)}</td>
+                                ))}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        )
+        tableRows = []
+    }
+
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i]
+        const trimmed = line.trim()
+
+        if (trimmed === '[TABULKA_START]') {
+            flushList(`list-before-table-${i}`)
+            inTable = true
+            continue
+        }
+        if (trimmed === '[TABULKA_KONEC]') {
+            flushTable(`table-${i}`)
+            inTable = false
+            continue
+        }
+        if (inTable) {
+            if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
+                const cells = trimmed
+                    .slice(1, -1)
+                    .split('|')
+                    .map(c => c.trim())
+                tableRows.push(cells)
+            }
+            continue
+        }
+
+        const bulletMatch = line.match(/^(\s*)-\s+(.*)$/)
+        const decimalMatch = line.match(/^(\s*)(\d+)\.\s+(.*)$/)
+
+        if (bulletMatch) {
+            if (listType !== 'ul') {
+                flushList(`list-before-ul-${i}`)
+                listType = 'ul'
+            }
+            listItems.push(bulletMatch[2])
+            continue
+        } else if (decimalMatch) {
+            if (listType !== 'ol') {
+                flushList(`list-before-ol-${i}`)
+                listType = 'ol'
+            }
+            listItems.push(decimalMatch[3])
+            continue
+        } else {
+            flushList(`list-before-para-${i}`)
+        }
+
+        if (trimmed) {
+            elements.push(
+                <p key={`p-${i}`} className="category-detail-p">
+                    {parseInlineFormatting(trimmed)}
+                </p>
+            )
+        }
+    }
+
+    flushList('list-final')
+    flushTable('table-final')
+
+    return elements
+}
+
+function parseInlineFormatting(text) {
+    if (!text) return ''
+
+    const tripleRegex = /\*\*\*([^*]+)\*\*\*/g
+    const doubleRegex = /\*\*([^*]+)\*\*/g
+    const singleRegex = /\*([^*]+)\*/g
+
+    let tokens = [{ type: 'plain', text: text }]
+
+    const runRegex = (regex, type) => {
+        let nextTokens = []
+        for (const t of tokens) {
+            if (t.type !== 'plain') {
+                nextTokens.push(t)
+                continue
+            }
+            const parts = t.text.split(regex)
+            for (let i = 0; i < parts.length; i++) {
+                if (i % 2 === 1) {
+                    nextTokens.push({ type: type, text: parts[i] })
+                } else if (parts[i]) {
+                    nextTokens.push({ type: 'plain', text: parts[i] })
+                }
+            }
+        }
+        tokens = nextTokens
+    }
+
+    runRegex(tripleRegex, 'bold-italic')
+    runRegex(doubleRegex, 'bold')
+    runRegex(singleRegex, 'italic')
+
+    return tokens.map((tok, idx) => {
+        if (tok.type === 'bold-italic') {
+            return <strong key={idx}><em>{tok.text}</em></strong>
+        }
+        if (tok.type === 'bold') {
+            return <strong key={idx}>{tok.text}</strong>
+        }
+        if (tok.type === 'italic') {
+            return <em key={idx}>{tok.text}</em>
+        }
+        return tok.text
+    })
 }
 
 export default CategoryRatingsPanel

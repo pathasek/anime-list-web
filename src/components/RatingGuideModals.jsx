@@ -188,12 +188,20 @@ function GuideShell({ open, onClose, icon, title, subtitle, children, wide = fal
         // <body> se nepropaguje na viewport) — zamknout musíme oba elementy.
         const prevBodyOverflow = document.body.style.overflow
         const prevHtmlOverflow = document.documentElement.style.overflow
+        const prevHtmlPaddingRight = document.documentElement.style.paddingRight
+        // Zmizení scrollbaru by rozšířilo obsah a po zavření zase smrsklo —
+        // kompenzujeme jeho šířku paddingem, ať se layout ani nehne.
+        const scrollbarW = window.innerWidth - document.documentElement.clientWidth
         document.body.style.overflow = 'hidden'
         document.documentElement.style.overflow = 'hidden'
+        if (scrollbarW > 0) {
+            document.documentElement.style.paddingRight = `${scrollbarW}px`
+        }
         return () => {
             window.removeEventListener('keydown', onKey)
             document.body.style.overflow = prevBodyOverflow
             document.documentElement.style.overflow = prevHtmlOverflow
+            document.documentElement.style.paddingRight = prevHtmlPaddingRight
         }
     }, [open, onClose])
 
@@ -368,13 +376,14 @@ const FINAL_LEVELS = [
     { v: 5, name: 'Meh', text: 'Podprůměr. Anime s promarněným potenciálem nebo problémy, které převážily světlé momenty. Dokoukáno spíš ze setrvačnosti.' }
 ]
 
-// Živá ukázka: 9 scénářů, jak vzniká FH — včetně reálných příkladů z mého
-// seznamu. Průměr (bar) a FH (kruh) jsou schválně oddělené věci: krok
-// { fh: N } překlopí FH silou klíčových kategorií, i když se průměr nehne.
+// Živá ukázka: 9 scénářů, jak vzniká FH — všechny vycházejí z reálných dat
+// z mého seznamu, jen bez konkrétních názvů. Průměr (bar) a FH (kruh) jsou
+// schválně oddělené věci: krok { fh: N } překlopí FH silou klíčových
+// kategorií, i když se průměr nehne.
 const FH_SCENARIOS = [
-    // 1. Reálný příklad: Bookworm S01 má WA 8,64 a FH 10 — MC, Emoce,
-    //    Enjoyment i Story Conclusion 10/10 přebijí průměr, bar se ani nehne
-    { from: 7.4, label: 'reálný příklad: Ascendance of a Bookworm S01', steps: [
+    // 1. Z dat: anime s WA 8,9 — MC, Emoce, Enjoyment i Story Conclusion
+    //    10/10 přebijí průměr a FH skočí na 10, bar se ani nehne
+    { from: 7.4, label: 'klíčové kategorie zvednou FH až na 10', steps: [
         { to: 8.9, ms: 3000 },
         { event: { cat: 'Emoce', score: 10, weight: 3.5, dir: 'up' }, hold: 1100 },
         { event: { cat: 'Enjoyment', score: 10, weight: 4, dir: 'up' }, hold: 1100 },
@@ -413,17 +422,17 @@ const FH_SCENARIOS = [
         { to: 5.25, ms: 1100 },
         { hold: 1700 }
     ] },
-    // 7. Reálný příklad: Nisemonogatari má WA 6,96, ale MC i Enjoyment jen
-    //    6/10 → FH přeskočí šestku a spadne rovnou na 5/10
-    { from: 6.0, label: 'reálný příklad: Nisemonogatari', steps: [
-        { to: 6.96, ms: 2800 },
-        { event: { cat: 'MC', score: 6, weight: 3, dir: 'down' }, hold: 1100 },
+    // 7. Z dat: anime s WA 6,87 — Emoce jen 5,5 a Enjoyment 6 s vysokými
+    //    váhami stáhnou FH pod zaokrouhlený průměr na 6/10
+    { from: 6.1, label: 'důležité kategorie srazí FH pod průměr', steps: [
+        { to: 6.87, ms: 2800 },
+        { event: { cat: 'Emoce', score: 5.5, weight: 3.5, dir: 'down' }, hold: 1100 },
         { event: { cat: 'Enjoyment', score: 6, weight: 4, dir: 'down' }, hold: 1100 },
-        { fh: 5, hold: 2300 }
+        { fh: 6, hold: 2300 }
     ] },
-    // 8. Reálný příklad: Monster má WA 8,11, ale Originalita 10/10 a vedlejší
-    //    postavy 9,5/10 zvednou FH na 9/10
-    { from: 7.0, label: 'reálný příklad: Monster', steps: [
+    // 8. Z dat: anime s WA 8,11, ale Originalita 10/10 a vedlejší postavy
+    //    9,5/10 zvednou FH na 9/10
+    { from: 7.0, label: 'silné kategorie zvednou FH o stupeň', steps: [
         { to: 8.11, ms: 2800 },
         { event: { cat: 'Originalita', score: 10, weight: 2.5, dir: 'up' }, hold: 1100 },
         { event: { cat: 'Vedlejší postavy', score: 9.5, weight: 2.5, dir: 'up' }, hold: 1100 },
@@ -584,12 +593,12 @@ export function FinalGuideModal({ open, onClose }) {
         >
             <ScaleBarSVG />
             <p className="guide-intro">
-                FH vychází z váženého průměru kategorií, ale poslední slovo má dojem: anime s WA 7,6
-                může skončit na 7 i 8 podle toho, co ve mně zůstalo po závěrečné epizodě.
-                Velkou roli hrají specifické kategorie s vysokou váhou — když jich víc trefí 10/10,
-                může FH 10/10 padnout i pro anime s průměrem epizod 8,9 a WA 9,3. A platí to
-                i reverzně: anime s průměrem 5,9 skončí na FH 5/10, když ty důležité kategorie
-                dostaly jen 5/10. {/* mock text */}
+                FH vychází z váženého průměru kategorií (WA), ale poslední slovo má vždy celkový dojem.
+                Anime s WA 7,6 tak může skončit na 7 i na 8 podle toho, co ve mně zůstalo po závěrečné
+                epizodě. Velkou roli přitom hrají kategorie s vysokou váhou. Když jich několik trefí
+                10/10, dokážou vytáhnout FH na 10/10 i u anime s průměrem epizod 8,9 a WA 9,3.
+                Funguje to ale i opačně: pokud právě ty důležité kategorie dostanou jen 5/10,
+                spadne anime s průměrem 5,9 rovnou na FH 5/10.
             </p>
             <FhDemo />
             <div className="guide-fh-list">

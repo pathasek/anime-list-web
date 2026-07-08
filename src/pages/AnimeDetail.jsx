@@ -17,7 +17,7 @@ import regression from 'regression'
 import { formatReview } from '../utils/formatReview'
 import { getThemeChartColors } from '../utils/chartTheme'
 import { useTheme } from '../components/ThemeProvider'
-import CategoryRatingsPanel from '../components/CategoryRatingsPanel'
+import CategoryRatingsPanel, { formatCategoryMarkdown } from '../components/CategoryRatingsPanel'
 import { RatingInfoButton, EpisodeGuideModal, FinalGuideModal } from '../components/RatingGuideModals'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, CategoryScale, LinearScale, BarElement)
@@ -25,6 +25,7 @@ ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, 
 // Module-level cache for static read-only files
 let cachedEpRatings = null
 let cachedNotes = null
+let cachedCategoryTexts = null
 
 function AnimeDetail() {
     const { theme } = useTheme();
@@ -34,6 +35,8 @@ function AnimeDetail() {
     const [anime, setAnime] = useState(null)
     const [categoryRatings, setCategoryRatings] = useState(null)
     const [episodeRatings, setEpisodeRatings] = useState(null)
+    const [categoryReviews, setCategoryReviews] = useState(null)
+    const [activeEpisode, setActiveEpisode] = useState(null) // { episodeNumber, title, text, rating, synopsis }
     const [note, setNote] = useState(null)
     const [history, setHistory] = useState([])
     const [loading, setLoading] = useState(true)
@@ -101,6 +104,20 @@ function AnimeDetail() {
                 )
             }
 
+            if (cachedCategoryTexts) {
+                promises.push(Promise.resolve(cachedCategoryTexts))
+            } else {
+                promises.push(
+                    fetch('data/category_texts.json?v=' + Date.now())
+                        .then(r => r.json())
+                        .then(data => {
+                            cachedCategoryTexts = data
+                            return data
+                        })
+                        .catch(() => ({}))
+                )
+            }
+
             return Promise.all(promises)
         }
 
@@ -109,7 +126,7 @@ function AnimeDetail() {
             loadData(STORAGE_KEYS.CATEGORY_RATINGS, 'data/category_ratings.json'),
             loadData(STORAGE_KEYS.HISTORY_LOG, 'data/history_log.json'),
             loadStaticFiles()
-        ]).then(([animeList, ratings, historyLog, [epRatings, notes]]) => {
+        ]).then(([animeList, ratings, historyLog, [epRatings, notes, categoryTexts]]) => {
             // Find anime by name
             const found = animeList.find(a => a.name === decodedName)
             setAnime(found)
@@ -117,6 +134,9 @@ function AnimeDetail() {
             // Find category ratings
             const foundRatings = ratings.find(r => r.name === decodedName)
             setCategoryRatings(foundRatings?.categories || null)
+
+            // Find category reviews
+            setCategoryReviews(categoryTexts || {})
 
             // Find episode ratings
             const foundEpRatings = epRatings.find(r => r.name === decodedName)
@@ -236,6 +256,32 @@ function AnimeDetail() {
     const barOptions = {
         responsive: true,
         maintainAspectRatio: false,
+        onClick: (event, elements) => {
+            if (elements && elements.length > 0 && episodeRatings && categoryReviews && anime) {
+                const index = elements[0].index;
+                const epNum = index + 1;
+                const docxEp = categoryReviews[anime.name]?.episodes?.[epNum];
+                if (docxEp) {
+                    setActiveEpisode({
+                        episodeNumber: epNum,
+                        title: docxEp.title,
+                        text: docxEp.text,
+                        rating: episodeRatings[index]?.rating
+                    });
+                }
+            }
+        },
+        onHover: (event, chartElement) => {
+            if (event && event.native && event.native.target) {
+                if (chartElement.length && categoryReviews && anime) {
+                    const idx = chartElement[0].index;
+                    const hasDocx = !!categoryReviews[anime.name]?.episodes?.[idx + 1];
+                    event.native.target.style.cursor = hasDocx ? 'pointer' : 'default';
+                } else {
+                    event.native.target.style.cursor = 'default';
+                }
+            }
+        },
         layout: {
             padding: {
                 top: 8
@@ -267,7 +313,22 @@ function AnimeDetail() {
             }
         },
         plugins: {
-            legend: { display: false }
+            legend: { display: false },
+            tooltip: {
+                callbacks: {
+                    title: (context) => {
+                        if (context && context[0] && categoryReviews && anime) {
+                            const idx = context[0].dataIndex;
+                            const docxEp = categoryReviews[anime.name]?.episodes?.[idx + 1];
+                            return docxEp ? `📝 ${docxEp.title}` : `Epizoda ${idx + 1}`;
+                        }
+                        return '';
+                    },
+                    label: (context) => {
+                        return `Hodnocení: ${context.raw.toFixed(1).replace('.', ',')}/10`;
+                    }
+                }
+            }
         }
     }
 
@@ -500,10 +561,11 @@ function AnimeDetail() {
                                         </span>
                                         <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', lineHeight: 1 }}>/10</span>
                                     </div>
-                                    {/* "?" v prázdném rohu vedle kruhu — absolutní pozice, layout se nemění */}
+                                    {/* "?" v prázdném rohu vedle kruhu — absolutní pozice, layout se nemění.
+                                        Odsazené dál od kruhu, ať mezi ikonami zůstane viditelná mezera. */}
                                     <RatingInfoButton
                                         label="Co znamená finální hodnocení"
-                                        style={{ position: 'absolute', top: '-3px', right: '-9px' }}
+                                        style={{ position: 'absolute', top: '-7px', right: '-16px' }}
                                         onClick={() => setFhGuideOpen(true)}
                                     />
                                 </div>
@@ -661,51 +723,59 @@ function AnimeDetail() {
                 animeSeries={anime.series}
                 malUrl={anime.mal_url}
                 review={note}
+                categoryReviews={categoryReviews}
             />
 
             {/* Episode Ratings */}
             {episodeRatings && episodeChartData && !['movie', 'film', 'music'].includes((anime.type || '').toLowerCase()) && (
                 <div className="card" style={{ marginBottom: 'var(--spacing-xl)' }}>
-                    <div className="chart-header-flex">
-                        <h3 style={{ margin: 0 }}>
-                            Hodnocení epizod
-                            <span style={{ marginLeft: 'var(--spacing-md)', fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
-                                (Průměr: <span style={{ fontWeight: 'bold' }}>{avgEpisodeRating}</span>)
-                            </span>
-                            <RatingInfoButton
-                                label="Jak hodnotím epizody"
-                                style={{ marginLeft: '10px' }}
-                                onClick={() => setEpGuideOpen(true)}
-                            />
-                        </h3>
+                    <div className="chart-header-flex" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '4px', marginBottom: '16px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', flexWrap: 'wrap', gap: '12px' }}>
+                            <h3 style={{ margin: 0 }}>
+                                Hodnocení epizod
+                                <span style={{ marginLeft: 'var(--spacing-md)', fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
+                                    (Průměr: <span style={{ fontWeight: 'bold' }}>{avgEpisodeRating}</span>)
+                                </span>
+                                <RatingInfoButton
+                                    label="Jak hodnotím epizody"
+                                    style={{ marginLeft: '10px' }}
+                                    onClick={() => setEpGuideOpen(true)}
+                                />
+                            </h3>
 
-                        {/* Custom Legend */}
-                        <div className="chart-legend-container">
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
-                                <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgb(29, 161, 242)' }}></span>
-                                <span>Absolute Cinema</span>
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
-                                <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgb(24, 106, 59)' }}></span>
-                                <span>Awesome</span>
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
-                                <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgb(40, 180, 99)' }}></span>
-                                <span>Great</span>
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
-                                <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgb(244, 208, 63)' }}></span>
-                                <span>Good</span>
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
-                                <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgb(243, 156, 18)' }}></span>
-                                <span>Regular</span>
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
-                                <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgb(99, 57, 116)' }}></span>
-                                <span>Bad</span>
+                            {/* Custom Legend */}
+                            <div className="chart-legend-container">
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
+                                    <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgb(29, 161, 242)' }}></span>
+                                    <span>Absolute Cinema</span>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
+                                    <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgb(24, 106, 59)' }}></span>
+                                    <span>Awesome</span>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
+                                    <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgb(40, 180, 99)' }}></span>
+                                    <span>Great</span>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
+                                    <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgb(244, 208, 63)' }}></span>
+                                    <span>Good</span>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
+                                    <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgb(243, 156, 18)' }}></span>
+                                    <span>Regular</span>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
+                                    <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgb(99, 57, 116)' }}></span>
+                                    <span>Bad</span>
+                                </div>
                             </div>
                         </div>
+                        {categoryReviews && anime && categoryReviews[anime.name]?.episodes && (
+                            <p className="category-ratings-info-text" style={{ margin: '4px 0 0 0' }}>
+                                Faktické rozbory epizod byly vygenerovány AI z webových zdrojů a mohou obsahovat chyby. Kliknutím na bod (tečku) konkrétní epizody v grafu zobrazíte její detailní rozbor.
+                            </p>
+                        )}
                     </div>
 
                     <div style={{ height: '350px' }}>
@@ -749,6 +819,51 @@ function AnimeDetail() {
             {/* Průvodce hodnocením epizod a finálním hodnocením */}
             <EpisodeGuideModal open={epGuideOpen} onClose={() => setEpGuideOpen(false)} />
             <FinalGuideModal open={fhGuideOpen} onClose={() => setFhGuideOpen(false)} />
+            <EpisodeDetailModal activeEpisode={activeEpisode} onClose={() => setActiveEpisode(null)} />
+        </div>
+    )
+}
+
+function EpisodeDetailModal({ activeEpisode, onClose }) {
+    if (!activeEpisode) return null
+
+    const { episodeNumber, title, text, rating } = activeEpisode
+
+    const handleOverlayClick = (e) => {
+        if (e.target === e.currentTarget) {
+            onClose()
+        }
+    }
+
+    const fmtRating = (r) => {
+        if (r === null || r === undefined) return 'N/A'
+        return r.toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 1 })
+    }
+
+    return (
+        <div className="category-detail-modal-overlay" onClick={handleOverlayClick}>
+            <div className="category-detail-modal">
+                <div className="category-detail-modal-header">
+                    <div className="category-detail-modal-title">
+                        <span className="category-card-icon">📝</span>
+                        <span>{title}</span>
+                        {rating !== undefined && rating !== null && (
+                            <span className="category-detail-modal-score">{fmtRating(rating)}/10</span>
+                        )}
+                    </div>
+                    <button type="button" className="category-detail-modal-close" onClick={onClose} aria-label="Zavřít">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+                <div className="category-detail-modal-body">
+                    <div className="category-detail-text-column">
+                        {formatCategoryMarkdown(text)}
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
