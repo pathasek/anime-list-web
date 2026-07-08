@@ -42,7 +42,7 @@ export function getCachedData(key) {
 async function checkServerVersion() {
     try {
         const response = await fetch('data/metadata.json?v=' + Date.now())
-        if (!response.ok) return
+        if (!response.ok) return null
 
         const meta = await response.json()
         const serverTime = meta.lastUpdated
@@ -50,7 +50,9 @@ async function checkServerVersion() {
 
         if (serverTime > localTime) {
             console.log('New data version detected. refresh local data.');
-            // Clear cached data keys
+            // Clear cached data keys — both localStorage and the in-memory cache,
+            // otherwise data already read synchronously via getCachedData() would
+            // keep serving the stale version for the whole session.
             [
                 STORAGE_KEYS.ANIME_LIST,
                 STORAGE_KEYS.HISTORY_LOG,
@@ -59,12 +61,17 @@ async function checkServerVersion() {
                 STORAGE_KEYS.CATEGORY_RATINGS,
                 STORAGE_KEYS.EPISODE_RATINGS,
                 STORAGE_KEYS.NOTES
-            ].forEach(k => localStorage.removeItem(k))
+            ].forEach(k => {
+                localStorage.removeItem(k)
+                delete memoryCache[k]
+            })
 
             localStorage.setItem('data_last_updated', serverTime)
         }
+        return serverTime || null
     } catch (e) {
         console.warn('Failed to check data version:', e)
+        return null
     }
 }
 
@@ -81,19 +88,33 @@ function ensureVersionChecked() {
 }
 
 /**
+ * Get the current server data version (metadata.json lastUpdated).
+ * Falls back to the locally stored version, or Date.now() when unknown,
+ * so callers can always use it as a cache-busting query parameter.
+ * @returns {Promise<number>}
+ */
+export async function getDataVersion() {
+    const serverTime = await ensureVersionChecked()
+    if (serverTime) return serverTime
+    return parseInt(localStorage.getItem('data_last_updated') || '0') || Date.now()
+}
+
+/**
  * Load data from local storage or fetch from server
  * @param {string} key - Storage key
  * @param {string} jsonPath - Path to JSON file
  * @returns {Promise<any[]>}
  */
 export async function loadData(key, jsonPath) {
+    // Wait for version check to complete so we don't load stale cache.
+    // This must happen before reading memoryCache, because the version check
+    // invalidates both caches when the server has newer data.
+    await ensureVersionChecked()
+
     // Return from memory cache if already loaded
     if (memoryCache[key]) {
         return memoryCache[key]
     }
-
-    // Wait for version check to complete so we don't load stale cache
-    await ensureVersionChecked()
 
     // Check if we have local edits
     const cached = getCachedData(key)
@@ -104,10 +125,18 @@ export async function loadData(key, jsonPath) {
     // Fetch from server
     // Add cache busting
     const response = await fetch(`${jsonPath}?v=${Date.now()}`)
+    if (!response.ok) {
+        throw new Error(`Failed to fetch ${jsonPath}: ${response.status}`)
+    }
     const data = await response.json()
 
     // Store in local storage and memory cache
-    localStorage.setItem(key, JSON.stringify(data))
+    try {
+        localStorage.setItem(key, JSON.stringify(data))
+    } catch (e) {
+        // Quota exceeded — keep the in-memory copy and continue
+        console.warn(`Failed to persist ${key} to localStorage:`, e)
+    }
     memoryCache[key] = data
 
     return data

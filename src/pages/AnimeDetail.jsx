@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef, useLayoutEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { loadData, STORAGE_KEYS } from '../utils/dataStore'
+import { loadData, getDataVersion, STORAGE_KEYS } from '../utils/dataStore'
 import {
     Chart as ChartJS,
     RadialLinearScale,
@@ -22,10 +22,26 @@ import { RatingInfoButton, EpisodeGuideModal, FinalGuideModal } from '../compone
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, CategoryScale, LinearScale, BarElement)
 
-// Module-level cache for static read-only files
-let cachedEpRatings = null
-let cachedNotes = null
+// Module-level cache for the (large) category texts file. Episode ratings and
+// notes go through the shared dataStore, so they are downloaded only once and
+// invalidated by the metadata version check like the rest of the data.
 let cachedCategoryTexts = null
+
+async function loadCategoryTexts() {
+    if (cachedCategoryTexts) return cachedCategoryTexts
+    try {
+        // Use the server data version instead of Date.now() as the cache buster,
+        // so the browser HTTP cache can reuse this multi-MB file between visits
+        // and it is re-downloaded only when the data actually changes.
+        const version = await getDataVersion()
+        const response = await fetch('data/category_texts.json?v=' + version)
+        if (!response.ok) return {}
+        cachedCategoryTexts = await response.json()
+        return cachedCategoryTexts
+    } catch {
+        return {}
+    }
+}
 
 function AnimeDetail() {
     const { theme } = useTheme();
@@ -73,60 +89,20 @@ function AnimeDetail() {
 
     useEffect(() => {
         const decodedName = decodeURIComponent(name)
+        let cancelled = false
         setLoading(true)
-
-        // Helper to load static files with cache
-        const loadStaticFiles = async () => {
-            const promises = []
-            if (cachedEpRatings) {
-                promises.push(Promise.resolve(cachedEpRatings))
-            } else {
-                promises.push(
-                    fetch('data/episode_ratings.json?v=' + Date.now())
-                        .then(r => r.json())
-                        .then(data => {
-                            cachedEpRatings = data
-                            return data
-                        })
-                )
-            }
-
-            if (cachedNotes) {
-                promises.push(Promise.resolve(cachedNotes))
-            } else {
-                promises.push(
-                    fetch('data/notes.json?v=' + Date.now())
-                        .then(r => r.json())
-                        .then(data => {
-                            cachedNotes = data
-                            return data
-                        })
-                )
-            }
-
-            if (cachedCategoryTexts) {
-                promises.push(Promise.resolve(cachedCategoryTexts))
-            } else {
-                promises.push(
-                    fetch('data/category_texts.json?v=' + Date.now())
-                        .then(r => r.json())
-                        .then(data => {
-                            cachedCategoryTexts = data
-                            return data
-                        })
-                        .catch(() => ({}))
-                )
-            }
-
-            return Promise.all(promises)
-        }
 
         Promise.all([
             loadData(STORAGE_KEYS.ANIME_LIST, 'data/anime_list.json'),
             loadData(STORAGE_KEYS.CATEGORY_RATINGS, 'data/category_ratings.json'),
             loadData(STORAGE_KEYS.HISTORY_LOG, 'data/history_log.json'),
-            loadStaticFiles()
-        ]).then(([animeList, ratings, historyLog, [epRatings, notes, categoryTexts]]) => {
+            loadData(STORAGE_KEYS.EPISODE_RATINGS, 'data/episode_ratings.json'),
+            loadData(STORAGE_KEYS.NOTES, 'data/notes.json'),
+            loadCategoryTexts()
+        ]).then(([animeList, ratings, historyLog, epRatings, notes, categoryTexts]) => {
+            // Ignore results that arrive after navigating to a different anime
+            if (cancelled) return
+
             // Find anime by name
             const found = animeList.find(a => a.name === decodedName)
             setAnime(found)
@@ -154,9 +130,12 @@ function AnimeDetail() {
 
             setLoading(false)
         }).catch(err => {
+            if (cancelled) return
             console.error('Failed to load anime details:', err)
             setLoading(false)
         })
+
+        return () => { cancelled = true }
     }, [name])
 
     const categoryWeights = useMemo(() => ({
@@ -171,19 +150,22 @@ function AnimeDetail() {
     const episodeChartData = useMemo(() => {
         if (!episodeRatings || episodeRatings.length === 0) return null
 
-        const dataPoints = episodeRatings.map((ep, i) => [i + 1, ep.rating])
+        const n = episodeRatings.length
         let trendData = []
-        if (dataPoints.length > 1) {
-            const n = dataPoints.length
-            const scaledDataPoints = dataPoints.map((p, idx) => {
-                const scaledX = n > 1 ? -1 + 2 * idx / (n - 1) : 0
-                return [scaledX, p[1]]
-            })
-            const result = regression.polynomial(scaledDataPoints, { order: 6, precision: 10 })
-            trendData = dataPoints.map((p, idx) => {
-                const scaledX = n > 1 ? -1 + 2 * idx / (n - 1) : 0
-                return result.predict(scaledX)[1]
-            })
+        // Fit the trend only on valid numeric ratings; a polynomial of order 6
+        // needs at least 7 points to be well-conditioned, so cap the order by
+        // the number of points to avoid a singular fit (NaN trend) for short series.
+        const scaledX = (idx) => n > 1 ? -1 + 2 * idx / (n - 1) : 0
+        const validPoints = []
+        episodeRatings.forEach((ep, idx) => {
+            const r = typeof ep.rating === 'number' ? ep.rating : parseFloat(ep.rating)
+            if (isFinite(r)) validPoints.push([scaledX(idx), r])
+        })
+        if (validPoints.length > 1) {
+            const order = Math.min(6, validPoints.length - 1)
+            const result = regression.polynomial(validPoints, { order, precision: 10 })
+            trendData = episodeRatings.map((ep, idx) => result.predict(scaledX(idx))[1])
+            if (trendData.some(v => !isFinite(v))) trendData = []
         }
 
         const getPointColor = (rating) => {
@@ -325,7 +307,9 @@ function AnimeDetail() {
                         return '';
                     },
                     label: (context) => {
-                        return `Hodnocení: ${context.raw.toFixed(1).replace('.', ',')}/10`;
+                        const v = typeof context.raw === 'number' ? context.raw : parseFloat(context.raw);
+                        if (!isFinite(v)) return '';
+                        return `Hodnocení: ${v.toFixed(1).replace('.', ',')}/10`;
                     }
                 }
             }
@@ -345,11 +329,15 @@ function AnimeDetail() {
         return sumWeight > 0 ? (sumProd / sumWeight).toLocaleString('cs-CZ', { maximumFractionDigits: 2 }) : 'N/A'
     }, [categoryRatings, categoryWeights])
 
-    // Calculate average episode rating
+    // Calculate average episode rating (ignoring missing/invalid values)
     const avgEpisodeRating = useMemo(() => {
         if (!episodeRatings || episodeRatings.length === 0) return null
-        const sum = episodeRatings.reduce((a, ep) => a + ep.rating, 0)
-        return (sum / episodeRatings.length).toLocaleString('cs-CZ', { maximumFractionDigits: 2 })
+        const valid = episodeRatings
+            .map(ep => typeof ep.rating === 'number' ? ep.rating : parseFloat(ep.rating))
+            .filter(r => isFinite(r))
+        if (valid.length === 0) return null
+        const sum = valid.reduce((a, r) => a + r, 0)
+        return (sum / valid.length).toLocaleString('cs-CZ', { maximumFractionDigits: 2 })
     }, [episodeRatings])
 
     // Calculate rewatch strings for the tooltip dynamically from history
@@ -827,7 +815,7 @@ function AnimeDetail() {
 function EpisodeDetailModal({ activeEpisode, onClose }) {
     if (!activeEpisode) return null
 
-    const { episodeNumber, title, text, rating } = activeEpisode
+    const { title, text, rating } = activeEpisode
 
     const handleOverlayClick = (e) => {
         if (e.target === e.currentTarget) {

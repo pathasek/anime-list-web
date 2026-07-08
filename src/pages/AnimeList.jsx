@@ -101,10 +101,14 @@ const FilterDropdown = ({ label, options, currentFilters, onFilterChange, type, 
 function AnimeList() {
     const navigate = useNavigate()
     const location = useLocation()
-    // Try to initialize from memory/localStorage cache synchronously for instant back-navigation
+    // Try to initialize from memory/localStorage cache synchronously for instant back-navigation.
+    // The raw cached array is remembered so the async revalidation below can tell
+    // whether the server has newer data (loadData returns a different reference).
+    const initialCacheRef = useRef(null)
     const [animeList, setAnimeList] = useState(() => {
         const cached = getCachedData(STORAGE_KEYS.ANIME_LIST)
         if (cached) {
+            initialCacheRef.current = cached
             return cached.map((item, idx) => ({ ...item, originalIndex: idx + 1 }))
         }
         return []
@@ -193,7 +197,9 @@ function AnimeList() {
             setFilters({ status: {}, type: {}, genre: {}, theme: {}, tag: {}, release_year: {}, rewatch: {}, studio: {}, ep_count: {}, ep_duration: {}, dub: {} })
         }
 
-        // If data was already loaded from cache in useState, just restore scroll
+        // If data was already loaded from cache in useState, restore scroll immediately,
+        // but still revalidate against the server version in the background —
+        // the synchronous cache read may predate the async version check.
         if (animeList.length > 0) {
             requestAnimationFrame(() => {
                 const savedScroll = sessionStorage.getItem('animeListScroll')
@@ -202,6 +208,15 @@ function AnimeList() {
                 }
                 isInitialMountRestored.current = true
             })
+
+            loadData(STORAGE_KEYS.ANIME_LIST, 'data/anime_list.json')
+                .then(data => {
+                    // Same reference = cache still valid, nothing to update
+                    if (data !== initialCacheRef.current) {
+                        setAnimeList(data.map((item, idx) => ({ ...item, originalIndex: idx + 1 })))
+                    }
+                })
+                .catch(() => { /* keep showing cached data */ })
             return
         }
 
