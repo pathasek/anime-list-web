@@ -13,6 +13,7 @@ import Wrapped from './pages/Wrapped'
 import Recommendations from './pages/Recommendations'
 import { ThemeProvider, useTheme } from './components/ThemeProvider'
 import ThemeSwitcher from './components/ThemeSwitcher'
+import { OstPlayerProvider } from './components/OstPlayerProvider'
 import { runBackgroundSync, importJikanStaticCache } from './utils/jikanService'
 import { preloadAllData } from './utils/dataStore'
 import './index.css'
@@ -382,7 +383,9 @@ function App() {
   return (
     <ThemeProvider>
       <HashRouter>
-        <AppContent stats={stats} />
+        <OstPlayerProvider>
+          <AppContent stats={stats} />
+        </OstPlayerProvider>
       </HashRouter>
     </ThemeProvider>
   )

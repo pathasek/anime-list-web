@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import DashboardGroup from '../components/DashboardGroup'
 import { VideoModal } from '../components/CategoryMediaPlayers'
-import FavoritesOstPlayer from '../components/FavoritesOstPlayer'
+import { useOstPlayer } from '../components/OstPlayerProvider'
 import { normalizeAnimeKey, extractYoutubeId, extractYoutubePlaylistId } from '../utils/mediaMatch'
 import {
     Chart as ChartJS,
@@ -100,7 +100,7 @@ function Favorites() {
     const [spotifyImages, setSpotifyImages] = useState({})
     const [opEdVideos, setOpEdVideos] = useState([])       // Gdrive videa OP/ED (stejná knihovna jako v detailu)
     const [videoModal, setVideoModal] = useState(null)     // přehrávané OP/ED video v modálu
-    const [ostPlayer, setOstPlayer] = useState(null)       // { mode: 'pieces'|'whole', index, nonce }
+    const { openPlayer } = useOstPlayer()                  // globální OST přehrávač (přežívá navigaci)
 
     // Czech number formatting: dot → comma
     const toCS = (val) => String(val).replace('.', ',')
@@ -208,8 +208,8 @@ function Favorites() {
     }, [sortedWhole])
 
     const openOstPlayer = useCallback((mode, index = 0) => {
-        setOstPlayer(prev => ({ mode, index, nonce: (prev?.nonce || 0) + 1 }))
-    }, [])
+        openPlayer({ mode, index, tracks: piecesTracks, groups: wholeGroups })
+    }, [openPlayer, piecesTracks, wholeGroups])
 
     // Statistics
     const stats = useMemo(() => {
@@ -1699,17 +1699,7 @@ function Favorites() {
             {/* OP/ED videoklip (Gdrive) v překryvném okně — stejné jako v detailu anime */}
             <VideoModal media={videoModal} onClose={() => setVideoModal(null)} />
 
-            {/* Plovoucí OST přehrávač (pieces = všechny skladby, whole = playlisty podle anime) */}
-            {ostPlayer && (
-                <FavoritesOstPlayer
-                    key={`${ostPlayer.mode}-${ostPlayer.index}-${ostPlayer.nonce}`}
-                    mode={ostPlayer.mode}
-                    tracks={piecesTracks}
-                    groups={wholeGroups}
-                    initialIndex={ostPlayer.index}
-                    onClose={() => setOstPlayer(null)}
-                />
-            )}
+            {/* Plovoucí OST přehrávač je globální (OstPlayerProvider) — přežívá odchod ze stránky */}
 
             {showScrollTop && createPortal(
                 <button

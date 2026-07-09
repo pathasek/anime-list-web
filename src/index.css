@@ -111,8 +111,9 @@ body {
   line-height: 1.6;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
-  overflow: hidden;
-  /* Prevent page-level scrollbars for the app interface */
+  /* clip místo hidden: potlačí scrollbary stejně, ale nedělá z body
+     scroll container — hidden tiše rozbíjel position: sticky v celé aplikaci */
+  overflow: clip;
   position: relative;
 }
 
@@ -230,7 +231,9 @@ a:hover {
   background: var(--bg-primary);
   min-height: 100vh;
   max-width: 100%;
-  overflow-x: hidden;
+  /* clip místo hidden: hidden dělá z elementu scroll container,
+     což tiše rozbíjí position: sticky u vnořených panelů */
+  overflow-x: clip;
 }
 
 /* ─── Cards ─── */
@@ -3962,6 +3965,22 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   100% { transform: scaleY(1); }
 }
 
+/* Mobil: rozevřený přehrávač zabírá celou šířku displeje a playlist
+   se vejde pod video bez přetečení viewportu. Minimalizovaný stav
+   (odsun mimo obrazovku) zůstává beze změny. */
+@media (max-width: 768px) {
+  .ost-floating-player:not(.minimized) {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    width: auto;
+  }
+
+  .fav-ost-player:not(.minimized) {
+    width: auto;
+  }
+}
+
 /* Playlist pro FloatingOstPlayer */
 .ost-floating-playlist {
   border-top: 1px solid var(--border-color);
@@ -4121,6 +4140,18 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 .fav-ost-list {
   max-height: 260px;
+}
+
+/* Mobil: playlist se přizpůsobí výšce displeje, aby se player vždy vešel */
+@media (max-width: 768px) {
+  .ost-floating-playlist,
+  .fav-ost-playlist {
+    max-height: 34vh;
+  }
+
+  .fav-ost-list {
+    max-height: calc(34vh - 44px);
+  }
 }
 .fav-ost-row-play {
   flex-shrink: 0;

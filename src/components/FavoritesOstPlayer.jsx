@@ -22,8 +22,12 @@ const PlaySmallIcon = () => (
     </svg>
 )
 
-export default function FavoritesOstPlayer({ mode, tracks = [], groups = [], initialIndex = 0, onClose }) {
-    const [isMinimized, setIsMinimized] = useState(false)
+export default function FavoritesOstPlayer({ mode, tracks = [], groups = [], initialIndex = 0, onClose, isMinimized: minimizedProp, onMinimizeChange }) {
+    // Minimalizaci může řídit rodič (OstPlayerProvider) — přehrávač pak přežívá
+    // navigaci mezi stránkami; bez props funguje postaru s vlastním stavem.
+    const [internalMinimized, setInternalMinimized] = useState(false)
+    const isMinimized = minimizedProp !== undefined ? minimizedProp : internalMinimized
+    const setIsMinimized = onMinimizeChange !== undefined ? onMinimizeChange : setInternalMinimized
     const [isShuffle, setIsShuffle] = useState(false)
 
     // ---- pieces mode ----

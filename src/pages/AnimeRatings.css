@@ -50,10 +50,16 @@
   justify-content: space-between;
 }
 
-/* Row 1 layouts */
+/* Row 1 layouts
+   Jednotný layout pro oba pohledy (Série i Jednotlivě):
+   levý selektor je sticky a vysoký přesně na viewport, pravý sloupec
+   volně teče pod sebou s konzistentními výškami sekcí. */
 .row-1 .left-panel {
   flex: 0 0 300px;
-  height: 680px;
+  position: sticky;
+  top: var(--spacing-grid);
+  align-self: flex-start;
+  height: calc(100vh - 2 * var(--spacing-grid));
   overflow: hidden;
 }
 
@@ -67,7 +73,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-grid);
-  height: 680px;
+  min-width: 0;
 }
 
 .row-1 .right-panel-top {
@@ -112,6 +118,125 @@
 .row-3 .right-panel {
   flex: 0 0 350px;
   height: 500px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   JEDNOTNÉ VIZUALIZAČNÍ ŘADY (Série + Jednotlivě)
+   Všechny sekce v řadě mají stejnou výšku — žádné inline ad-hoc rozměry.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Vizualizační plocha série (Timeline / Detaily sezón & Radar) */
+.series-viz-row {
+  height: 620px;
+  min-height: 0;
+  min-width: 0;
+}
+
+/* Hlavní panel řady (timeline graf / radar kategorií) */
+.viz-main-panel {
+  flex: 1.2 1 480px;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Pravý sloupec řady (mřížka epizod + recenze) */
+.viz-side-col {
+  flex: 1 1 420px;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-grid);
+}
+
+.viz-side-col .viz-grid-panel {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.viz-side-col .viz-review-panel {
+  flex: 0 0 200px;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Pohled Jednotlivě: hero jako v detailu anime */
+.individual-hero {
+  align-items: center;
+}
+
+/* Větší poster (16:9) svisle vystředěný vůči obsahu hlavičky
+   (dvojitá třída kvůli specificitě — základní .series-header-poster
+   je v souboru definován později) */
+.series-header-poster.series-header-poster-xl {
+  width: 300px;
+  height: 169px;
+}
+
+/* FH kruh + meta údaje v jednom řádku (jako "Rating + Key Info" v detailu) */
+.individual-hero-meta-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  flex-wrap: wrap;
+  margin: 2px 0;
+}
+
+/* Recenze hned pod hlavičkou — volná výška jako karta v detailu */
+.individual-review-text {
+  margin: 0;
+  font-family: 'Open Sans', var(--font-family);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  color: var(--text-secondary);
+}
+
+/* Graf hodnocení epizod přes celou šířku pravého sloupce */
+.episode-chart-panel {
+  width: 100%;
+  height: 460px;
+  min-height: 0;
+}
+
+/* Radar v panelu kategorií: na této stránce je panel užší než v detailu,
+   takže HTML popisky radaru (OST 10, ED 9…) zasahovaly do karet kategorií.
+   Vnitřní odsazení dá popiskům prostor uvnitř vlastního kontejneru. */
+.ratings-page .ratings-flex-container {
+  gap: var(--spacing-2xl);
+}
+
+.ratings-page .radar-chart-container {
+  padding: 0 64px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .ratings-page .radar-chart-container {
+    padding: 0 40px;
+  }
+}
+
+/* Nadpis oddělující globální sekce (dashboard + tabulka) od detailu */
+.ratings-section-heading {
+  margin: var(--spacing-sm) 0 calc(-1 * var(--spacing-sm)) 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ratings-section-heading::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-color);
 }
 
 /* Selector Styles */
@@ -1211,7 +1336,6 @@
 
   .row-1 .left-panel,
   .row-1 .center-panel,
-  .row-1 .right-panel,
   .row-2 .left-panel,
   .row-2 .center-panel,
   .row-2 .right-panel,
@@ -1221,6 +1345,65 @@
     flex: 1 1 auto;
     width: 100%;
     height: 400px;
+  }
+
+  /* Selektor na mobilu neplave — roluje normálně s obsahem */
+  .row-1 .left-panel {
+    position: static;
+    align-self: auto;
+    height: 360px;
+  }
+
+  /* Pravý sloupec nemá pevnou výšku — sekce se skládají pod sebe */
+  .row-1 .right-panel {
+    flex: 1 1 auto;
+    width: 100%;
+    height: auto;
+  }
+
+  /* Vizualizační řady: každý panel má na mobilu vlastní rozumnou výšku */
+  .series-viz-row {
+    height: auto;
+  }
+
+  .viz-main-panel {
+    flex: none;
+    width: 100%;
+    height: 440px;
+  }
+
+  .viz-side-col {
+    flex: none;
+    width: 100%;
+    height: auto;
+  }
+
+  .viz-side-col .viz-grid-panel {
+    flex: none;
+    max-height: 420px;
+  }
+
+  .viz-side-col .viz-review-panel {
+    flex: none;
+    height: 220px;
+  }
+
+  .episode-panel {
+    flex: none;
+    width: 100%;
+    max-width: 100%;
+    height: 400px;
+  }
+
+  .episode-chart-panel {
+    height: 400px;
+  }
+
+  /* Poster hero na mobilu přes celou šířku */
+  .series-header-poster.series-header-poster-xl {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
   }
 }
 
@@ -1540,6 +1723,17 @@
   }
 }
 
+/* Na mobilu/tabletu se panel epizod skládá pod graf v plné šířce
+   (musí být až za pravidlem pro 1400px, aby ho přepsal). */
+@media (max-width: 1024px) {
+  .episode-panel {
+    flex: none;
+    width: 100%;
+    max-width: 100%;
+    height: 400px;
+  }
+}
+
 
 
 /* Season badge inside unified chronological episode list */
@@ -1834,116 +2028,78 @@
 }
 
 /* ==========================================================================
-   Dvousloupcový layout pro záložku Anime hodnocení
+   Globální sekce (žebříčky / průzkum kategorie / kvalita vs hloubka)
    ========================================================================== */
 
-.ratings-dashboard-layout {
-  display: flex;
-  flex-direction: row;
-  gap: var(--spacing-grid);
-  width: 100%;
-  box-sizing: border-box;
+/* Sekce 1: dva žebříčky vedle sebe, stejná šířka i výška */
+.leaderboard-row {
+  height: 520px;
 }
 
-.ratings-dashboard-sidebar {
-  flex: 0 0 300px;
-  width: 300px;
-  max-width: 300px;
-  min-width: 300px;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-grid);
-  box-sizing: border-box;
-  height: 924px;
-}
-
-.ratings-dashboard-sidebar .filter-panel {
-  height: 100%;
-}
-
-.ratings-dashboard-main {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-grid);
-  box-sizing: border-box;
-}
-
-.ratings-dashboard-row {
-  display: flex;
-  flex-direction: row;
-  gap: var(--spacing-grid);
-  width: 100%;
-  min-height: 0;
-  box-sizing: border-box;
-}
-
-.ratings-dashboard-row.row-top {
-  height: 450px;
-}
-
-.ratings-dashboard-row.row-bottom {
-  height: 450px;
-}
-
-.leaderboard-panel {
-  flex: 1;
-  height: 100%;
-}
-
+.leaderboard-panel,
 .instability-panel {
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+}
+
+/* Sekce 2: filtry + rozložení + korelace v jedné řadě (filtry řídí oba grafy) */
+.explore-row {
+  height: 520px;
+}
+
+.explore-row .filter-panel {
+  flex: 0 0 300px;
+  min-width: 0;
   height: 100%;
 }
 
 .distribution-panel {
-  flex: 0 0 450px;
+  flex: 1 1 0;
+  min-width: 0;
   height: 100%;
 }
 
-/* Graf Korelace - horizontálně zmenšen */
 .correlation-panel {
-  flex: 0.8;
+  flex: 1.15 1 0;
+  min-width: 0;
   height: 100%;
 }
 
-/* Graf Kvalita vs Hloubka - horizontálně zvětšen */
+/* Sekce 3: bublinový graf přes celou šířku */
+.quality-row {
+  height: 560px;
+}
+
 .quality-depth-panel {
-  flex: 1.2;
+  flex: 1;
+  min-width: 0;
   height: 100%;
+}
+
+/* Řádek ovládacích prvků pod titulkem panelu */
+.panel-controls-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+
+/* Drobná nápověda pod grafem */
+.panel-hint {
+  margin: 6px 0 0;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-style: italic;
+  flex-shrink: 0;
 }
 
 /* Responzivní chování pro tablety a mobily */
 @media (max-width: 1024px) {
-  .ratings-dashboard-layout {
-    flex-direction: column;
-  }
-
-  .ratings-dashboard-sidebar {
-    flex: none;
-    width: 100%;
+  .leaderboard-row,
+  .explore-row,
+  .quality-row {
     height: auto;
-  }
-
-  .ratings-dashboard-sidebar .filter-panel {
-    height: auto;
-  }
-
-  /* Bez stropu by seznam vypsal všechna anime pod sebou a natáhl stránku
-     o tisíce pixelů — na úzkých oknech scrolluje uvnitř. */
-  .ratings-dashboard-sidebar .anime-selector-list {
-    max-height: 420px;
-  }
-
-  .ratings-dashboard-main {
-    flex: none;
-    width: 100%;
-  }
-
-  .ratings-dashboard-row {
-    flex-direction: column;
-    height: auto !important;
   }
 
   .leaderboard-panel,
@@ -1955,6 +2111,18 @@
     flex: none !important;
     width: 100%;
   }
+
+  .explore-row .filter-panel {
+    flex: none !important;
+    width: 100%;
+    height: auto;
+  }
+
+  /* Bez stropu by seznam vypsal všechna anime pod sebou a natáhl stránku
+     o tisíce pixelů — na úzkých oknech scrolluje uvnitř. */
+  .explore-row .anime-selector-list {
+    max-height: 420px;
+  }
 }
 
 /* Oprava mobilního posouvání kompletní tabulky */
@@ -1965,5 +2133,69 @@
     max-width: 100vw !important;
     overflow-x: auto !important;
     -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Kompaktnější stránka — menší okraje a mezery mezi sekcemi */
+  .ratings-page {
+    --spacing-grid: 14px;
+    padding: 12px;
+  }
+
+  /* Hero hlavička: poster přes celou šířku, texty se zalamují */
+  .series-header-hero {
+    padding: var(--spacing-md);
+  }
+
+  .series-header-poster-lg {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+
+  .series-header-title {
+    white-space: normal;
+    font-size: 1.15rem;
+  }
+
+  /* Titulky panelů s ovládáním (Zdroj, checkbox, hledání) se zalamují */
+  .ratings-panel-title {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .ratings-panel-title .chart-toggles-container {
+    flex-wrap: wrap;
+    gap: 8px !important;
+  }
+
+  .table-search-input {
+    width: 100%;
+  }
+
+  /* Hlavička stránky: přepínače pohledů roztažené na celou šířku */
+  .ratings-header-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .ratings-header-actions .btn-nav {
+    flex: 1;
+    justify-content: center;
+    padding: 8px 6px;
+  }
+
+  /* Meta boxy série pod sebou místo vedle sebe */
+  .series-meta-box {
+    flex: 1 1 100%;
+  }
+
+  /* Záložky série (Timeline / Detaily) roztažené na celou šířku */
+  .series-tabs-container {
+    flex-wrap: wrap;
+  }
+
+  .series-tab-btn {
+    flex: 1 1 auto;
+    justify-content: center;
   }
 }
