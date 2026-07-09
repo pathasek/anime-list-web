@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState, useEffect, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import { Radar } from 'react-chartjs-2'
 import {
     Chart as ChartJS,
@@ -68,7 +69,7 @@ function useAccentColor(theme) {
     return useCallback((a) => `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${a})`, [rgb])
 }
 
-function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, animeName, animeSeries, malUrl, review, categoryReviews }) {
+function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, animeName, animeSeries, malUrl, review, categoryReviews, compactRadar = false }) {
     const { theme } = useTheme()
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const c = useMemo(() => getThemeChartColors(), [theme])
@@ -187,8 +188,10 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
         responsive: true,
         maintainAspectRatio: false,
         layout: {
-            // Balanced padding for larger radar with space for labels
-            padding: isMobile ? 35 : 45
+            // Balanced padding for larger radar with space for labels.
+            // compactRadar (stránka Anime hodnocení) přidá extra padding →
+            // menší poloměr, aby popisky nezasahovaly do karet kategorií.
+            padding: isMobile ? 35 : (compactRadar ? 78 : 45)
         },
         scales: {
             r: {
@@ -223,7 +226,7 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                 }
             }
         }
-    }), [c, isMobile, radarMin, radarMax])
+    }), [c, isMobile, radarMin, radarMax, compactRadar])
 
     // Soft glow behind the radar shape + redraw of the scale numbers on top.
     const chartPlugins = useMemo(() => [{
@@ -481,7 +484,7 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                 </div>
 
                 {/* Radar chart with overlay labels on the right */}
-                <div className="radar-chart-container">
+                <div className={`radar-chart-container${compactRadar ? ' radar-compact' : ''}`}>
                     <div className="radar-overlay-wrap" ref={wrapRef}>
                         {entries.map(([cat, rating], i) => {
                             const p = labelPos[i]
@@ -578,6 +581,21 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
 
 // Modální okno pro detailní textový rozbor kategorie z DOCX
 function CategoryDetailModal({ activeReview, onClose }) {
+    // Zamkne scroll pozadí (okno i detailový overlay), dokud je modal otevřený
+    useEffect(() => {
+        if (!activeReview) return
+        const html = document.documentElement
+        const overlay = document.querySelector('.anime-detail-overlay')
+        const prevHtml = html.style.overflow
+        const prevOverlay = overlay ? overlay.style.overflow : null
+        html.style.overflow = 'hidden'
+        if (overlay) overlay.style.overflow = 'hidden'
+        return () => {
+            html.style.overflow = prevHtml
+            if (overlay) overlay.style.overflow = prevOverlay
+        }
+    }, [activeReview])
+
     if (!activeReview) return null
 
     const { category, text, rating, icon } = activeReview
@@ -588,7 +606,7 @@ function CategoryDetailModal({ activeReview, onClose }) {
         }
     }
 
-    return (
+    return createPortal(
         <div className="category-detail-modal-overlay" onClick={handleOverlayClick}>
             <div className="category-detail-modal">
                 <div className="category-detail-modal-header">
@@ -612,7 +630,8 @@ function CategoryDetailModal({ activeReview, onClose }) {
                     </div>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     )
 }
 

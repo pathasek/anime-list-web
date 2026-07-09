@@ -63,6 +63,22 @@
   overflow: hidden;
 }
 
+/* Série: pravý sloupec je nižší než celý viewport. Selektor série se výškou
+   dorovná pravému sloupci (hero + záložky + vizualizace), aby pod timeline
+   nezůstávalo prázdné místo před další sekcí. Výšku řídí grid níže. */
+.series-row-1 {
+  align-items: flex-start;
+}
+
+.series-row-1 .left-panel {
+  position: sticky;
+  top: var(--spacing-grid);
+  align-self: flex-start;
+  /* hero + záložky (~210) + 2× gap + timeline (502) — mírně méně než pravý
+     sloupec, aby selektor nepřečníval a nevznikala prázdná mezera */
+  height: calc(502px + 210px + 2 * var(--spacing-grid));
+}
+
 .row-1 .center-panel {
   flex: 0 0 400px;
   height: 680px;
@@ -125,11 +141,18 @@
    Všechny sekce v řadě mají stejnou výšku — žádné inline ad-hoc rozměry.
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/* Vizualizační plocha série (Timeline / Detaily sezón & Radar) */
+/* Vizualizační plocha série (Timeline / Detaily sezón & Radar)
+   Snížená ~o 20 % oproti původní výšce, aby první sekce (výběr série +
+   timeline) nebyla tak vysoká; selektor série se výškou dorovná. */
 .series-viz-row {
-  height: 620px;
+  height: 502px;
   min-height: 0;
   min-width: 0;
+}
+
+/* Selektor série musí uvnitř stretch panelu scrollovat, ne přetéct */
+.series-row-1 .left-panel .anime-selector-list {
+  min-height: 0;
 }
 
 /* Hlavní panel řady (timeline graf / radar kategorií) */
@@ -164,26 +187,40 @@
   flex-direction: column;
 }
 
-/* Pohled Jednotlivě: hero jako v detailu anime */
+/* Pohled Jednotlivě: hero jako v detailu anime.
+   Poster vyplní výšku hlavičky (žádné prázdné místo u anime s krátkým obsahem
+   nebo mnoha tagy), informace se natáhnou přes zbytek šířky. */
 .individual-hero {
-  align-items: center;
+  align-items: stretch;
 }
 
-/* Větší poster (16:9) svisle vystředěný vůči obsahu hlavičky
-   (dvojitá třída kvůli specificitě — základní .series-header-poster
-   je v souboru definován později) */
+.individual-hero .series-header-info {
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Poster: pevná šířka, výška podle hlavičky (16:9 se ořízne přes object-fit) */
 .series-header-poster.series-header-poster-xl {
-  width: 300px;
-  height: 169px;
+  width: 320px;
+  height: auto;
+  min-height: 169px;
+  align-self: stretch;
+  object-fit: cover;
 }
 
 /* FH kruh + meta údaje v jednom řádku (jako "Rating + Key Info" v detailu) */
 .individual-hero-meta-row {
   display: flex;
   align-items: center;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-md) var(--spacing-xl);
   flex-wrap: wrap;
   margin: 2px 0;
+}
+
+/* Meta grid v hero využije volné místo místo úzkého sloupce vpravo */
+.individual-hero-meta-row .series-header-metagrid {
+  flex: 1;
+  gap: 8px var(--spacing-xl);
 }
 
 /* Recenze hned pod hlavičkou — volná výška jako karta v detailu */
@@ -203,27 +240,30 @@
   min-height: 0;
 }
 
+/* CategoryRatingsPanel je sdílená .card s vlastním marginem dole (xl) — v tomto
+   sloupci mezery řídí flex gap, takže margin vynulujeme (jinak je mezera nad
+   grafem epizod větší než mezi ostatními sekcemi). */
+.ratings-page .right-panel > .card {
+  margin-bottom: 0 !important;
+}
+
 /* Radar v panelu kategorií: na této stránce je panel užší než v detailu,
    takže HTML popisky radaru (OST 10, ED 9…) zasahovaly do karet kategorií.
-   Vnitřní odsazení dá popiskům prostor uvnitř vlastního kontejneru. */
+   Menší poloměr (compactRadar → layout.padding v grafu) dá popiskům prostor;
+   navíc trochu odsadíme karty od radaru a snížíme posun radaru nahoru. */
 .ratings-page .ratings-flex-container {
   gap: var(--spacing-2xl);
 }
 
-.ratings-page .radar-chart-container {
-  padding: 0 64px;
-  box-sizing: border-box;
+.ratings-page .radar-chart-container.radar-compact .radar-overlay-wrap {
+  transform: translateY(-24px);
 }
 
-@media (max-width: 768px) {
-  .ratings-page .radar-chart-container {
-    padding: 0 40px;
-  }
-}
-
-/* Nadpis oddělující globální sekce (dashboard + tabulka) od detailu */
+/* Nadpis oddělující globální sekce (dashboard + tabulka) od detailu.
+   Nulový vlastní margin — mezera nad i pod je řízená jednotným flex gapem
+   stránky, takže je všude stejná (žádná nadměrná mezera nad žebříčky). */
 .ratings-section-heading {
-  margin: var(--spacing-sm) 0 calc(-1 * var(--spacing-sm)) 0;
+  margin: 0;
   font-size: 1.05rem;
   font-weight: 700;
   color: var(--text-secondary);
@@ -1403,7 +1443,13 @@
   .series-header-poster.series-header-poster-xl {
     width: 100%;
     height: auto;
+    min-height: 0;
+    align-self: auto;
     aspect-ratio: 16 / 9;
+  }
+
+  .individual-hero {
+    align-items: flex-start;
   }
 }
 
@@ -2043,9 +2089,10 @@
   height: 100%;
 }
 
-/* Sekce 2: filtry + rozložení + korelace v jedné řadě (filtry řídí oba grafy) */
+/* Sekce 2: filtry + rozložení + korelace v jedné řadě (filtry řídí oba grafy)
+   Vyšší ~o 25 %, aby grafy měly víc prostoru. */
 .explore-row {
-  height: 520px;
+  height: 650px;
 }
 
 .explore-row .filter-panel {
@@ -2075,6 +2122,143 @@
   flex: 1;
   min-width: 0;
   height: 100%;
+}
+
+/* ═══ R² přehled kategorií (pod nadpisem Průzkum hodnocení) ═══ */
+.r2-overview {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--bg-secondary) 92%, transparent), var(--bg-secondary));
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.r2-overview-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.r2-overview-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+
+.r2-overview-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.2px;
+}
+
+.r2-overview-sub {
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+  max-width: 780px;
+}
+
+.r2-overview-sub sup {
+  font-size: 0.6em;
+}
+
+.r2-legend {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.r2-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+
+.r2-legend-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+/* Mřížka chipů — automatické zalomení, každá kategorie stejně velká */
+.r2-chip-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  gap: 8px;
+}
+
+.r2-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 5px;
+  padding: 8px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.15s ease, filter 0.15s ease;
+  text-align: left;
+}
+
+.r2-chip:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.12);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.r2-chip.active {
+  box-shadow: 0 0 0 2px var(--accent-primary), 0 6px 16px rgba(99, 102, 241, 0.25);
+}
+
+.r2-chip-cat {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.r2-chip-val {
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.r2-chip-bar {
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.r2-chip-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (max-width: 768px) {
+  .r2-chip-row {
+    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  }
+  .r2-overview-title {
+    font-size: 0.92rem;
+  }
 }
 
 /* Řádek ovládacích prvků pod titulkem panelu */

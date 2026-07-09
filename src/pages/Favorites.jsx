@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import DashboardGroup from '../components/DashboardGroup'
 import { VideoModal } from '../components/CategoryMediaPlayers'
 import { useOstPlayer } from '../components/OstPlayerProvider'
-import { normalizeAnimeKey, extractYoutubeId, extractYoutubePlaylistId } from '../utils/mediaMatch'
+import { normalizeAnimeKey, extractYoutubeId, extractYoutubePlaylistId, findOpEdVideo } from '../utils/mediaMatch'
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -125,32 +125,18 @@ function Favorites() {
             })
     }, [])
 
-    // ---- Párování řádků OP/ED tabulky na Gdrive videa (stejná logika klíče jako detail) ----
-    const opEdVideoIndex = useMemo(() => {
-        const idx = {}
-        opEdVideos.forEach(v => {
-            const key = `${v.match_key}|${(v.type || '').toUpperCase()}`
-            if (!idx[key]) idx[key] = []
-            idx[key].push(v)
-        })
-        return idx
-    }, [opEdVideos])
-
+    // ---- Párování řádků OP/ED tabulky na Gdrive videa ----
+    // Používá sdílený robustní matcher (findOpEdVideo) — stejný jako v detailu.
+    // Toleruje rozdíly v zápisu řady/části (např. soubor "Bocchi The Rock!, S01"
+    // vs. řádek "Bocchi The Rock!"), takže se namapuje každá písnička.
     const findVideoFor = useCallback((fav) => {
-        const type = (fav.type || '').trim().toUpperCase()
-        if (type !== 'OP' && type !== 'ED') return null
-        const candidates = opEdVideoIndex[`${normalizeAnimeKey(fav.anime_name)}|${type}`]
-        if (!candidates || candidates.length === 0) return null
-        // Preferuj shodu podle názvu songu (v1/v2 varianty)
-        const favSong = normalizeAnimeKey(fav.song)
-        const bySong = favSong
-            ? candidates.find(v => {
-                const vs = normalizeAnimeKey(v.song)
-                return vs && (vs === favSong || vs.includes(favSong) || favSong.includes(vs))
-            })
-            : null
-        return bySong || candidates[0]
-    }, [opEdVideoIndex])
+        return findOpEdVideo(opEdVideos, {
+            animeName: fav.anime_name,
+            animeSeries: fav.series,
+            type: fav.type,
+            song: fav.song,
+        })
+    }, [opEdVideos])
 
     const playOpEdVideo = useCallback((fav) => {
         const v = findVideoFor(fav)

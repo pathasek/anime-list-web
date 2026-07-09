@@ -1,4 +1,5 @@
-import { useState, useEffect, useMemo, useCallback, useRef, Fragment } from 'react'
+import { useState, useEffect, useMemo, useCallback, useRef, useImperativeHandle, forwardRef, Fragment } from 'react'
+import { createPortal } from 'react-dom'
 import {
     Chart as ChartJS,
     registerables
@@ -17,8 +18,82 @@ import { formatReview } from '../utils/formatReview'
 import { getThemeChartColors } from '../utils/chartTheme'
 import { useTheme } from '../components/ThemeProvider'
 import { RatingInfoButton, CategoryGuideModal, EpisodeGuideModal, FinalGuideModal } from '../components/RatingGuideModals'
-import CategoryRatingsPanel from '../components/CategoryRatingsPanel'
+import CategoryRatingsPanel, { formatCategoryMarkdown } from '../components/CategoryRatingsPanel'
 import CategoryRadar from '../components/CategoryRadar'
+
+// Cache pro AI rozbory kategorií/epizod (category_texts.json — víc MB, načíst jen jednou)
+let cachedCategoryTexts = null
+async function loadCategoryTexts() {
+    if (cachedCategoryTexts) return cachedCategoryTexts
+    try {
+        const response = await fetch('data/category_texts.json?v=' + Date.now())
+        if (!response.ok) return {}
+        cachedCategoryTexts = await response.json()
+        return cachedCategoryTexts
+    } catch {
+        return {}
+    }
+}
+
+// Zamkne scroll pozadí (okno i detailový overlay), dokud je modal otevřený.
+function useScrollLock(active) {
+    useEffect(() => {
+        if (!active) return
+        const html = document.documentElement
+        const overlay = document.querySelector('.anime-detail-overlay')
+        const prevHtml = html.style.overflow
+        const prevOverlay = overlay ? overlay.style.overflow : null
+        html.style.overflow = 'hidden'
+        if (overlay) overlay.style.overflow = 'hidden'
+        return () => {
+            html.style.overflow = prevHtml
+            if (overlay) overlay.style.overflow = prevOverlay
+        }
+    }, [active])
+}
+
+// Modální okno pro AI rozbor epizody — stejné jako v detailu anime.
+// Řízené imperativně (ref.open(ep)) a s vlastním stavem, takže klik na bod grafu
+// NEvyvolá re-render celé (těžké) stránky → žádný lag při otevírání/zavírání.
+const EpisodeModalHost = forwardRef(function EpisodeModalHost(_props, ref) {
+    const [active, setActive] = useState(null)
+    useImperativeHandle(ref, () => ({ open: (ep) => setActive(ep) }), [])
+    useScrollLock(!!active)
+    if (!active) return null
+
+    const { title, text, rating } = active
+    const close = () => setActive(null)
+    const handleOverlayClick = (e) => { if (e.target === e.currentTarget) close() }
+    const fmtR = (r) => (r === null || r === undefined) ? 'N/A' : r.toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 1 })
+
+    return createPortal(
+        <div className="category-detail-modal-overlay" onClick={handleOverlayClick}>
+            <div className="category-detail-modal">
+                <div className="category-detail-modal-header">
+                    <div className="category-detail-modal-title">
+                        <span className="category-card-icon">📝</span>
+                        <span>{title}</span>
+                        {rating !== undefined && rating !== null && (
+                            <span className="category-detail-modal-score">{fmtR(rating)}/10</span>
+                        )}
+                    </div>
+                    <button type="button" className="category-detail-modal-close" onClick={close} aria-label="Zavřít">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+                <div className="category-detail-modal-body">
+                    <div className="category-detail-text-column">
+                        {formatCategoryMarkdown(text)}
+                    </div>
+                </div>
+            </div>
+        </div>,
+        document.body
+    )
+})
 
 ChartJS.register(...registerables)
 
@@ -256,6 +331,8 @@ function AnimeRatings() {
     const [episodeRatings, setEpisodeRatings] = useState([])
     const [notes, setNotes] = useState([])
     const [imdbCache, setImdbCache] = useState({})
+    const [categoryReviews, setCategoryReviews] = useState(null)   // AI rozbory kategorií/epizod
+    const episodeModalRef = useRef(null)                           // imperativní ovládání rozboru epizody
     const [loading, setLoading] = useState(true)
 
     // ---- CUSTOM IMAGES ----
@@ -290,7 +367,6 @@ function AnimeRatings() {
     const [slicerPolozka, setSlicerPolozka] = useState('Vedlejší postavy')
     const [slicerHodnoceni, setSlicerHodnoceni] = useState('Všechna')
     const [dashListQuery, setDashListQuery] = useState('')      // hledání v seznamu filtrů
-    const [histBin, setHistBin] = useState(0.5)                 // šířka intervalu histogramu
 
     // ---- UI STATES: ROW 3 ----
     const [lbTyp, setLbTyp] = useState('Epizody')
@@ -469,6 +545,9 @@ function AnimeRatings() {
                 setSelectedAnimeTitle(filteredAl[0].name)
             }
             setLoading(false)
+
+            // AI rozbory epizod (dotáhnou se na pozadí, graf je použije jakmile dorazí)
+            loadCategoryTexts().then(ct => { if (isMounted) setCategoryReviews(ct || {}) })
         }).catch(err => {
             console.error("Failed to load data for Anime Ratings:", err)
             if (isMounted) {
@@ -1349,6 +1428,19 @@ function AnimeRatings() {
         return found ? found.episodes : null
     }, [episodeRatings, selectedAnimeTitle])
 
+    // Průměr hodnocení epizod (do titulku grafu, jako v detailu)
+    const avgEpisodeRating = useMemo(() => {
+        if (!selectedAnimeEpisodes || selectedAnimeEpisodes.length === 0) return null
+        const valid = selectedAnimeEpisodes
+            .map(ep => typeof ep.rating === 'number' ? ep.rating : parseFloat(ep.rating))
+            .filter(r => isFinite(r))
+        if (valid.length === 0) return null
+        return (valid.reduce((a, r) => a + r, 0) / valid.length).toLocaleString('cs-CZ', { maximumFractionDigits: 2 })
+    }, [selectedAnimeEpisodes])
+
+    // Má vybrané anime AI rozbory epizod? (řídí zobrazení poznámky a klikací body)
+    const selectedEpisodeReviews = categoryReviews?.[selectedAnimeTitle]?.episodes || null
+
     const selectedAnimeNote = useMemo(() => {
         const found = notes.find(n => n.name === selectedAnimeTitle)
         return found ? found.note : null
@@ -1442,8 +1534,34 @@ function AnimeRatings() {
         return { epChartMin: dynMin, epChartMax: dynMax }
     }, [selectedAnimeEpisodes])
 
-    const episodeBarOptions = {
+    const episodeBarOptions = useMemo(() => ({
         responsive: true, maintainAspectRatio: false,
+        // Klik na bod epizody otevře její AI rozbor (imperativně — bez re-renderu stránky)
+        onClick: (event, elements) => {
+            if (elements && elements.length > 0 && selectedAnimeEpisodes && selectedEpisodeReviews) {
+                const index = elements[0].index
+                const epNum = index + 1
+                const docxEp = selectedEpisodeReviews[epNum]
+                if (docxEp) {
+                    episodeModalRef.current?.open({
+                        episodeNumber: epNum,
+                        title: docxEp.title,
+                        text: docxEp.text,
+                        rating: selectedAnimeEpisodes[index]?.rating
+                    })
+                }
+            }
+        },
+        onHover: (event, chartElement) => {
+            if (event && event.native && event.native.target) {
+                if (chartElement.length && selectedEpisodeReviews) {
+                    const idx = chartElement[0].index
+                    event.native.target.style.cursor = selectedEpisodeReviews[idx + 1] ? 'pointer' : 'default'
+                } else {
+                    event.native.target.style.cursor = 'default'
+                }
+            }
+        },
         layout: {
             padding: {
                 top: 8
@@ -1471,8 +1589,27 @@ function AnimeRatings() {
             },
             x: { ticks: { color: c.textMuted, font: { size: 10 } }, grid: { display: false } }
         },
-        plugins: { legend: { display: false } }
-    }
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                callbacks: {
+                    title: (context) => {
+                        if (context && context[0] && selectedEpisodeReviews) {
+                            const idx = context[0].dataIndex
+                            const docxEp = selectedEpisodeReviews[idx + 1]
+                            return docxEp ? `📝 ${docxEp.title}` : `Epizoda ${idx + 1}`
+                        }
+                        return ''
+                    },
+                    label: (context) => {
+                        const v = typeof context.raw === 'number' ? context.raw : parseFloat(context.raw)
+                        if (!isFinite(v)) return ''
+                        return `Hodnocení: ${v.toFixed(1).replace('.', ',')}/10`
+                    }
+                }
+            }
+        }
+    }), [epChartMin, epChartMax, c, selectedEpisodeReviews, selectedAnimeEpisodes])
 
     // ============================================
     // ROW 2 DATA MEMOIZATION
@@ -1549,19 +1686,6 @@ function AnimeRatings() {
         }
     }), [openAnimeFromChart])
 
-    // Varianta pro scatter/bubble grafy — jméno anime je v datovém bodě (raw.label)
-    const pointChartClickHandlers = useMemo(() => ({
-        onClick: (evt, elements, chart) => {
-            const el = elements?.[0]
-            if (!el) return
-            const point = chart.data.datasets?.[el.datasetIndex]?.data?.[el.index]
-            openAnimeFromChart(point?.label)
-        },
-        onHover: (evt, elements) => {
-            if (evt?.native?.target) evt.native.target.style.cursor = elements?.length ? 'pointer' : 'default'
-        }
-    }), [openAnimeFromChart])
-
     const correlationChartData = useMemo(() => {
         const dataPoints = []
         const scatterData = []
@@ -1605,7 +1729,6 @@ function AnimeRatings() {
         if (!correlationChartData) return {}
         return {
             responsive: true, maintainAspectRatio: false,
-            ...pointChartClickHandlers,
             scales: {
                 x: { title: { display: true, text: 'FH', color: c.textMuted }, min: correlationChartData.minX, max: 10, ticks: { color: c.textMuted }, grid: { color: c.grid } },
                 y: { title: { display: true, text: `Hodnocení ${slicerPolozka}`, color: c.textMuted }, min: correlationChartData.minY, max: 10, ticks: { color: c.textMuted }, grid: { color: c.grid } }
@@ -1630,13 +1753,11 @@ function AnimeRatings() {
                 }
             }
         }
-    }, [correlationChartData, slicerPolozka, c, pointChartClickHandlers])
+    }, [correlationChartData, slicerPolozka, c])
 
     const histogramData = useMemo(() => {
-        // Volitelná šířka intervalu (0,25 / 0,5 / 1,0) — jemnější či hrubší pohled
-        const step = histBin
-        const decimals = step < 0.5 ? 2 : 1
-        const fmtBin = (v) => v.toFixed(decimals)
+        const step = 0.5
+        const fmtBin = (v) => v.toFixed(1)
 
         const counts = {}
         for (let i = 5.0; i <= 10.0 + 1e-9; i += step) counts[fmtBin(i)] = 0
@@ -1674,16 +1795,49 @@ function AnimeRatings() {
                 borderRadius: 2
             }]
         }
-    }, [slicerTyp, slicerPolozka, categoryRatings, episodeRatings, histBin])
+    }, [slicerTyp, slicerPolozka, categoryRatings, episodeRatings])
 
-    const histogramOptions = {
+    const histogramOptions = useMemo(() => ({
         responsive: true, maintainAspectRatio: false,
         scales: {
             y: { ticks: { beginAtZero: true, color: c.textMuted, stepSize: 1 }, grid: { color: c.grid } },
-            x: { title: { display: true, text: `Hodnocení (Intervaly po ${String(histBin).replace('.', ',')})`, color: c.textMuted }, ticks: { color: c.textMuted }, grid: { display: false } }
+            x: { title: { display: true, text: 'Hodnocení (Intervaly po 0,5)', color: c.textMuted }, ticks: { color: c.textMuted }, grid: { display: false } }
         },
         plugins: { legend: { display: false } }
-    }
+    }), [c])
+
+    // R² každé kategorie vs. finální hodnocení (lineární regrese napříč anime).
+    // Ukazuje, jak silně jednotlivé kategorie souvisí s celkovým hodnocením.
+    const categoryR2List = useMemo(() => {
+        const cats = ['Animace', 'CGI', 'MC', 'Vedlejší postavy', 'Waifu', 'Plot', 'Pacing', 'Story Conclusion', 'Originalita', 'Emoce', 'Enjoyment', 'OP', 'ED', 'OST']
+        const fhByName = {}
+        animeList.forEach(a => { const fh = Number(a.rating); if (!isNaN(fh) && fh > 0) fhByName[a.name] = fh })
+        return cats.map(cat => {
+            const pts = []
+            categoryRatings.forEach(a => {
+                const v = a.categories ? a.categories[cat] : undefined
+                const fh = fhByName[a.name]
+                if (v !== undefined && v !== null && fh !== undefined) pts.push([fh, v])
+            })
+            let r2 = null
+            if (pts.length >= 3) {
+                try {
+                    const val = regression.linear(pts, { precision: 4 }).r2
+                    r2 = (typeof val === 'number' && isFinite(val)) ? Math.max(0, Math.min(1, val)) : null
+                } catch { r2 = null }
+            }
+            return { cat, r2, n: pts.length }
+        }).sort((a, b) => (b.r2 ?? -1) - (a.r2 ?? -1))
+    }, [categoryRatings, animeList])
+
+    // Barva a slovní síla podle R² (0–1)
+    const r2Style = useCallback((r2) => {
+        if (r2 === null) return { color: 'var(--text-muted)', bg: 'rgba(148,163,184,0.1)', border: 'rgba(148,163,184,0.25)', label: '—' }
+        if (r2 >= 0.5) return { color: 'rgb(52, 211, 153)', bg: 'rgba(24,106,59,0.22)', border: 'rgba(52,211,153,0.4)', label: 'silná' }
+        if (r2 >= 0.3) return { color: 'rgb(40, 180, 99)', bg: 'rgba(40,180,99,0.16)', border: 'rgba(40,180,99,0.35)', label: 'střední' }
+        if (r2 >= 0.15) return { color: 'rgb(244, 208, 63)', bg: 'rgba(244,208,63,0.14)', border: 'rgba(244,208,63,0.35)', label: 'slabší' }
+        return { color: 'rgb(243, 156, 18)', bg: 'rgba(243,156,18,0.12)', border: 'rgba(243,156,18,0.3)', label: 'slabá' }
+    }, [])
 
     // ============================================
     // ROW 3 DATA MEMOIZATION
@@ -1736,9 +1890,8 @@ function AnimeRatings() {
         }
     }, [categoryRatings, animeList, c])
 
-    const hypeChartOptions = {
+    const hypeChartOptions = useMemo(() => ({
         responsive: true, maintainAspectRatio: false,
-        ...pointChartClickHandlers,
         scales: {
             x: { title: { display: true, text: 'Technická kvalita (Animace + CGI + OP + ED + OST)', color: c.textMuted }, min: 5.5, max: 10, ticks: { color: c.textMuted }, grid: { color: c.grid } },
             y: { title: { display: true, text: 'Hloubka (Plot + Pacing + Story + Emoce + Originalita)', color: c.textMuted }, min: 5.5, max: 10, ticks: { color: c.textMuted }, grid: { color: c.grid } }
@@ -1747,7 +1900,7 @@ function AnimeRatings() {
             legend: { display: false },
             tooltip: { callbacks: { label: (ctx) => `${ctx.raw.label} (Enjoyment: ${ctx.raw.enjoyment})` } }
         }
-    }
+    }), [c])
 
     const leaderboardChartData = useMemo(() => {
         let items = []
@@ -1799,7 +1952,7 @@ function AnimeRatings() {
         return { min: calculatedMin, max: calculatedMax };
     }, [leaderboardChartData]);
 
-    const leaderboardOptions = {
+    const leaderboardOptions = useMemo(() => ({
         indexAxis: 'y', responsive: true, maintainAspectRatio: false,
         ...barChartClickHandlers,
         scales: {
@@ -1807,7 +1960,7 @@ function AnimeRatings() {
             y: { ticks: { color: c.text, font: { size: 10 } }, grid: { display: false } }
         },
         plugins: { legend: { display: false } }
-    }
+    }), [lbMinMax, c, barChartClickHandlers])
 
     const unstableChartData = useMemo(() => {
         let items = []
@@ -1834,7 +1987,7 @@ function AnimeRatings() {
         }
     }, [episodeRatings, instabCount])
 
-    const unstableOptions = {
+    const unstableOptions = useMemo(() => ({
         indexAxis: 'y', responsive: true, maintainAspectRatio: false,
         ...barChartClickHandlers,
         scales: {
@@ -1842,7 +1995,7 @@ function AnimeRatings() {
             y: { ticks: { color: c.text, font: { size: 10 } }, grid: { display: false } }
         },
         plugins: { legend: { display: false } }
-    }
+    }), [c, barChartClickHandlers])
 
     // ============================================
     // ROW 4 DATA MEMOIZATION (CATEGORY TABLE)
@@ -2164,7 +2317,7 @@ function AnimeRatings() {
                 VIEW 2: SERIES RATINGS VIEW
                 ============================================ */}
                     {viewMode === 'series' && (
-                        <div className="ratings-row row-1 fade-in">
+                        <div className="ratings-row row-1 series-row-1 fade-in">
                             {/* 1. Selector sérií (Left) */}
                             <div className="ratings-panel left-panel">
                                 <h3 className="ratings-panel-title">Vyberte Sérii</h3>
@@ -3001,22 +3154,56 @@ function AnimeRatings() {
                                     animeSeries={selectedAnimeObj?.series}
                                     malUrl={selectedAnimeObj?.mal_url}
                                     review={selectedAnimeNote}
+                                    categoryReviews={categoryReviews}
+                                    compactRadar
                                 />
 
-                                {/* Hodnocení epizod přes celou šířku (vzhled grafu zachován) */}
-                                <div className="ratings-panel episode-chart-panel">
-                                    <h3 className="ratings-panel-title" style={{ fontSize: '0.95rem', marginBottom: '8px' }}>
-                                        Hodnocení Epizod
-                                        <RatingInfoButton
-                                            label="Jak hodnotím epizody"
-                                            style={{ marginLeft: '8px' }}
-                                            onClick={() => setEpGuideOpen(true)}
-                                        />
-                                    </h3>
-                                    <div style={{ flex: 1, position: 'relative', minHeight: 0 }}>
-                                        {episodeChartData ? <Chart type="line" data={episodeChartData} options={episodeBarOptions} /> : <div style={{ color: 'var(--text-muted)', textAlign: 'center', marginTop: '20px' }}>Žádná data pro epizody</div>}
+                                {/* Hodnocení epizod přes celou šířku — hlavička, legenda, AI poznámka
+                                    a klikací body pro rozbor epizod, stejně jako v detailu anime */}
+                                {episodeChartData && (
+                                    <div className="ratings-panel episode-chart-panel">
+                                        <div className="chart-header-flex" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '4px', marginBottom: '12px' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', flexWrap: 'wrap', gap: '12px' }}>
+                                                <h3 style={{ margin: 0 }}>
+                                                    Hodnocení epizod
+                                                    {avgEpisodeRating && (
+                                                        <span style={{ marginLeft: 'var(--spacing-md)', fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
+                                                            (Průměr: <span style={{ fontWeight: 'bold' }}>{avgEpisodeRating}</span>)
+                                                        </span>
+                                                    )}
+                                                    <RatingInfoButton
+                                                        label="Jak hodnotím epizody"
+                                                        style={{ marginLeft: '10px' }}
+                                                        onClick={() => setEpGuideOpen(true)}
+                                                    />
+                                                </h3>
+                                                <div className="chart-legend-container">
+                                                    {[
+                                                        ['rgb(29, 161, 242)', 'Absolute Cinema'],
+                                                        ['rgb(24, 106, 59)', 'Awesome'],
+                                                        ['rgb(40, 180, 99)', 'Great'],
+                                                        ['rgb(244, 208, 63)', 'Good'],
+                                                        ['rgb(243, 156, 18)', 'Regular'],
+                                                        ['rgb(99, 57, 116)', 'Bad'],
+                                                    ].map(([col, lbl]) => (
+                                                        <div key={lbl} style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
+                                                            <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: col }}></span>
+                                                            <span>{lbl}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            {selectedEpisodeReviews && (
+                                                <p className="category-ratings-info-text" style={{ margin: '4px 0 0 0' }}>
+                                                    Faktické rozbory epizod byly vygenerovány AI z webových zdrojů a mohou obsahovat chyby. Kliknutím na bod (tečku) konkrétní epizody v grafu zobrazíte její detailní rozbor.
+                                                </p>
+                                            )}
+                                        </div>
+                                        <div style={{ flex: 1, position: 'relative', minHeight: 0 }}>
+                                            <Chart type="line" data={episodeChartData} options={episodeBarOptions} key={c.isLight ? 'ep-l' : 'ep-d'} />
+                                        </div>
                                     </div>
-                                </div>
+                                )}
                             </div>
                         </div>
                     )}
@@ -3040,12 +3227,23 @@ function AnimeRatings() {
                                             <option value="Nejlepší">Nejlepší</option>
                                             <option value="Nejhorší">Nejhorší</option>
                                         </select>
-                                        <select className="slicer-select" style={{ flex: 0.5 }} value={lbCount} onChange={e => setLbCount(Number(e.target.value))}>
+                                        <select className="slicer-select" style={{ flex: 0.6 }} value={[10, 30, 50, 100].includes(lbCount) ? lbCount : 'custom'} onChange={e => { if (e.target.value !== 'custom') setLbCount(Number(e.target.value)) }}>
                                             <option value="10">10</option>
                                             <option value="30">30</option>
                                             <option value="50">50</option>
                                             <option value="100">100</option>
+                                            <option value="custom" disabled>Vlastní…</option>
                                         </select>
+                                        <input
+                                            type="number"
+                                            className="slicer-select"
+                                            style={{ flex: 0.5, minWidth: 0 }}
+                                            min={1}
+                                            max={999}
+                                            value={lbCount}
+                                            title="Vlastní počet"
+                                            onChange={e => { const v = Math.max(1, Math.min(999, Number(e.target.value) || 1)); setLbCount(v) }}
+                                        />
                                     </div>
                                     <div style={{ flex: 1, position: 'relative', minHeight: 0 }}>
                                         <Bar data={leaderboardChartData} options={leaderboardOptions} />
@@ -3071,6 +3269,48 @@ function AnimeRatings() {
 
                             {/* ═══ SEKCE: Průzkum kategorie (filtry + rozložení + korelace) ═══ */}
                             <h2 className="ratings-section-heading">🔍 Průzkum hodnocení: {slicerPolozka}</h2>
+
+                            {/* R² přehled — jak silně každá kategorie souvisí s finálním hodnocením */}
+                            <div className="r2-overview fade-in">
+                                <div className="r2-overview-head">
+                                    <div className="r2-overview-titles">
+                                        <span className="r2-overview-title">Vliv kategorií na finální hodnocení</span>
+                                        <span className="r2-overview-sub">
+                                            R<sup>2</sup> = jak dobře daná kategorie předpovídá finální hodnocení (0 = žádný vztah, 1 = dokonalý).
+                                            Vyšší hodnota → kategorie víc „táhne" celkové hodnocení. Klikni pro detail v grafech níže.
+                                        </span>
+                                    </div>
+                                    <div className="r2-legend">
+                                        {[['silná', 'rgb(52, 211, 153)'], ['střední', 'rgb(40, 180, 99)'], ['slabší', 'rgb(244, 208, 63)'], ['slabá', 'rgb(243, 156, 18)']].map(([lbl, col]) => (
+                                            <span key={lbl} className="r2-legend-item"><span className="r2-legend-dot" style={{ background: col }} />{lbl}</span>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="r2-chip-row">
+                                    {categoryR2List.map(({ cat, r2 }) => {
+                                        const s = r2Style(r2)
+                                        const isActive = slicerPolozka === cat
+                                        const pct = r2 !== null ? Math.round(r2 * 100) : 0
+                                        return (
+                                            <button
+                                                key={cat}
+                                                type="button"
+                                                className={`r2-chip${isActive ? ' active' : ''}`}
+                                                style={{ borderColor: s.border, background: s.bg }}
+                                                title={r2 !== null ? `R² = ${r2.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${s.label} korelace)` : 'Málo dat'}
+                                                onClick={() => { setSlicerTyp('Kategorie'); setSlicerPolozka(cat) }}
+                                            >
+                                                <span className="r2-chip-cat">{categoryColumnAbbreviations[cat] || cat}</span>
+                                                <span className="r2-chip-val" style={{ color: s.color }}>
+                                                    {r2 !== null ? r2.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'}
+                                                </span>
+                                                <span className="r2-chip-bar"><span className="r2-chip-bar-fill" style={{ width: `${pct}%`, background: s.color }} /></span>
+                                            </button>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+
                             <div className="ratings-row explore-row fade-in">
                                 <div className="ratings-panel filter-panel">
                                     <h3 className="ratings-panel-title">Filtry a seznam</h3>
@@ -3120,14 +3360,6 @@ function AnimeRatings() {
 
                                 <div className="ratings-panel distribution-panel">
                                     <h3 className="ratings-panel-title">Rozložení hodnocení: {slicerPolozka}</h3>
-                                    <div className="panel-controls-row">
-                                        <label style={{ fontSize: '0.78rem', color: 'var(--text-muted)', alignSelf: 'center' }}>Interval:</label>
-                                        <select className="slicer-select" style={{ flex: '0 0 90px' }} value={histBin} onChange={e => setHistBin(Number(e.target.value))}>
-                                            <option value="0.25">0,25</option>
-                                            <option value="0.5">0,50</option>
-                                            <option value="1">1,00</option>
-                                        </select>
-                                    </div>
                                     <div style={{ flex: 1, position: 'relative', minHeight: 0 }}>
                                         {histogramData ? <Bar data={histogramData} options={histogramOptions} /> : <div style={{ color: 'var(--text-muted)' }}>Žádná data</div>}
                                     </div>
@@ -3138,7 +3370,6 @@ function AnimeRatings() {
                                     <div style={{ flex: 1, position: 'relative', minHeight: 0 }}>
                                         {correlationChartData ? <Chart type='scatter' data={correlationChartData.data} options={correlationChartOptions} /> : <div style={{ color: 'var(--text-muted)' }}>Málo dat pro korelaci</div>}
                                     </div>
-                                    <p className="panel-hint">Kliknutím na bod otevřeš detail anime.</p>
                                 </div>
                             </div>
 
@@ -3149,7 +3380,7 @@ function AnimeRatings() {
                                     <div style={{ flex: 1, position: 'relative', minHeight: 0 }}>
                                         <Chart type='bubble' data={hypeChartData} options={hypeChartOptions} />
                                     </div>
-                                    <p className="panel-hint">Velikost bubliny = Enjoyment · barva = FH · kliknutím otevřeš detail anime.</p>
+                                    <p className="panel-hint">Velikost bubliny = Enjoyment · barva = FH.</p>
                                 </div>
                             </div>
 
@@ -3288,6 +3519,9 @@ function AnimeRatings() {
             <CategoryGuideModal open={catGuideOpen} onClose={() => setCatGuideOpen(false)} weights={categoryWeights} />
             <EpisodeGuideModal open={epGuideOpen} onClose={() => setEpGuideOpen(false)} />
             <FinalGuideModal open={fhGuideOpen} onClose={() => setFhGuideOpen(false)} />
+
+            {/* AI rozbor epizody (klik na bod grafu Hodnocení epizod) — imperativní host */}
+            <EpisodeModalHost ref={episodeModalRef} />
         </div>
     )
 }

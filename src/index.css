@@ -6282,9 +6282,13 @@ button.fav-ost-row-play:hover {
 .category-detail-modal-body {
   padding: var(--spacing-lg);
   overflow-y: auto;
+  /* Text (a hlavně tabulky) se nesmí roztáhnout přes šířku modalu —
+     horizontální scroll patří do wrapperu tabulky, ne do celého okna */
+  overflow-x: hidden;
   display: flex;
   gap: var(--spacing-lg);
   flex-direction: column;
+  min-width: 0;
 }
 
 @media (min-width: 768px) {
@@ -6295,6 +6299,7 @@ button.fav-ost-row-play:hover {
 
 .category-detail-text-column {
   flex: 1;
+  min-width: 0;
   font-family: 'Open Sans', var(--font-family);
   line-height: 1.7;
   color: var(--text-secondary);
@@ -6355,25 +6360,30 @@ button.fav-ost-row-play:hover {
   font-size: 0.95rem;
 }
 
-/* Tabulky v detailu kategorie */
+/* Tabulky v detailu kategorie — vlastní scroll (X i Y) se zakotvenou hlavičkou */
 .category-detail-table-wrapper {
-  overflow-x: auto;
+  overflow: auto;
+  max-height: 62vh;
   margin-bottom: var(--spacing-lg);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.01);
+  background: var(--bg-primary);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .category-detail-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 0.88rem;
   line-height: 1.5;
   text-align: left;
 }
 
 .category-detail-table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
   background: var(--bg-secondary);
   color: var(--text-primary);
   font-weight: 700;
@@ -6382,6 +6392,7 @@ button.fav-ost-row-play:hover {
   border-bottom: 2px solid var(--border-color);
   font-size: 0.9rem;
   letter-spacing: 0.3px;
+  white-space: nowrap;
 }
 
 .category-detail-table td {

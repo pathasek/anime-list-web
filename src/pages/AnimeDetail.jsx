@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useRef, useLayoutEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { useParams, useNavigate } from 'react-router-dom'
 import { loadData, getDataVersion, STORAGE_KEYS } from '../utils/dataStore'
 import {
@@ -813,6 +814,21 @@ function AnimeDetail() {
 }
 
 function EpisodeDetailModal({ activeEpisode, onClose }) {
+    // Zamkne scroll pozadí (okno i detailový overlay), dokud je modal otevřený
+    useEffect(() => {
+        if (!activeEpisode) return
+        const html = document.documentElement
+        const overlay = document.querySelector('.anime-detail-overlay')
+        const prevHtml = html.style.overflow
+        const prevOverlay = overlay ? overlay.style.overflow : null
+        html.style.overflow = 'hidden'
+        if (overlay) overlay.style.overflow = 'hidden'
+        return () => {
+            html.style.overflow = prevHtml
+            if (overlay) overlay.style.overflow = prevOverlay
+        }
+    }, [activeEpisode])
+
     if (!activeEpisode) return null
 
     const { title, text, rating } = activeEpisode
@@ -828,7 +844,7 @@ function EpisodeDetailModal({ activeEpisode, onClose }) {
         return r.toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 1 })
     }
 
-    return (
+    return createPortal(
         <div className="category-detail-modal-overlay" onClick={handleOverlayClick}>
             <div className="category-detail-modal">
                 <div className="category-detail-modal-header">
@@ -852,7 +868,8 @@ function EpisodeDetailModal({ activeEpisode, onClose }) {
                     </div>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     )
 }
 

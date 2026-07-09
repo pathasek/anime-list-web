@@ -13,6 +13,93 @@ export function normalizeAnimeKey(s) {
         .trim()
 }
 
+// Odstraní koncový příznak řady/části z normalizovaného klíče
+// ("... s01", "... season 2", "... part 1") → holý název série.
+function stripSeasonPart(key) {
+    return (key || '')
+        .replace(/\s+(?:s(?:eason)?\s*\d+(?:\s+part\s*\d+)?|part\s*\d+)$/i, '')
+        .trim()
+}
+
+function seasonOf(key) {
+    const m = (key || '').match(/s(?:eason)?\s*(\d+)/i)
+    return m ? parseInt(m[1], 10) : 1 // bez uvedení = řada 1
+}
+
+function partOf(key) {
+    const m = (key || '').match(/part\s*(\d+)/i)
+    return m ? parseInt(m[1], 10) : null
+}
+
+// Robustní shoda dvou normalizovaných klíčů anime — toleruje rozdíly v zápisu
+// řady/části (např. soubor "bocchi the rock s01" vs list "bocchi the rock").
+// Používá se JEDINÉ místo pro párování napříč aplikací (detail i seznam OP/ED),
+// aby se každá písnička namapovala spolehlivě a stejně.
+export function animeKeysMatch(fileKey, animeKey) {
+    if (!fileKey || !animeKey) return false
+    if (fileKey === animeKey) return true
+
+    const fileBase = stripSeasonPart(fileKey)
+    const animeBase = stripSeasonPart(animeKey)
+    if (fileBase !== animeBase) return false
+
+    // Stejný základní název — porovnáme řadu (default 1) a část.
+    if (seasonOf(fileKey) !== seasonOf(animeKey)) return false
+
+    const filePart = partOf(fileKey)
+    const animePart = partOf(animeKey)
+    // Soubor bez části pasuje na cokoli; soubor s částí jen na stejnou část
+    // (nebo na anime bez uvedené části — celá řada).
+    if (filePart !== null && animePart !== null && filePart !== animePart) return false
+
+    return true
+}
+
+// Najde nejlepší OP/ED video z Drive knihovny pro daný řádek/anime.
+// Zkouší (v tomto pořadí): přesný klíč anime → robustní shodu klíče anime →
+// robustní shodu podle názvu série. Mezi kandidáty preferuje shodu songu.
+export function findOpEdVideo(opEdVideos, { animeName, animeSeries, type, song } = {}) {
+    const t = (type || '').trim().toUpperCase()
+    if (t !== 'OP' && t !== 'ED') return null
+    const animeKey = normalizeAnimeKey(animeName)
+    const seriesKey = animeSeries ? normalizeAnimeKey(animeSeries) : null
+    if (!animeKey && !seriesKey) return null
+
+    const songKey = normalizeAnimeKey(song)
+    const songMatches = (v) => {
+        const vs = normalizeAnimeKey(v.song)
+        return vs && songKey && (vs === songKey || vs.includes(songKey) || songKey.includes(vs))
+    }
+
+    const ofType = (opEdVideos || []).filter(v => (v.type || '').toUpperCase() === t)
+
+    // 1) Striktní shoda klíče (respektuje řadu/část)
+    const candidates = ofType.filter(v =>
+        (animeKey && animeKeysMatch(v.match_key, animeKey)) ||
+        (seriesKey && animeKeysMatch(v.match_key, seriesKey))
+    )
+    if (candidates.length === 1) return candidates[0]
+    if (candidates.length > 1) {
+        // Víc kandidátů (např. v1/v2) — preferuj shodu podle názvu písničky.
+        return (songKey && candidates.find(songMatches)) || candidates[0]
+    }
+
+    // 2) Fallback: shoda podle základního názvu série + názvu písničky.
+    //    Řeší případy, kdy list používá generický název bez řady, ale píseň
+    //    ji jednoznačně určuje (jinak by rozdíl v zápisu řady zabránil shodě).
+    if (songKey) {
+        const base = stripSeasonPart(animeKey)
+        const seriesBase = seriesKey ? stripSeasonPart(seriesKey) : null
+        const loose = ofType.filter(v => {
+            const vb = stripSeasonPart(v.match_key)
+            return (vb === base || (seriesBase && vb === seriesBase)) && songMatches(v)
+        })
+        if (loose.length > 0) return loose[0]
+    }
+
+    return null
+}
+
 const YT_RE = /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?/\s]+)/
 
 export function extractYoutubeId(url) {
@@ -40,47 +127,12 @@ export function getMediaForAnime(animeName, opEdVideos, ostPieces, ostWhole, ani
     const result = { OP: [], ED: [], OST: [] }
     if (!key) return result
 
-    // OP/ED/OST videa z Google Drive
+    // OP/ED/OST videa z Google Drive — robustní shoda podle klíče anime.
+    // (Detail zná přesný název včetně řady, takže se páruje jen na tuto část —
+    //  žádné series-wide párování, aby S02 netahala klipy z S01.)
     for (const v of opEdVideos || []) {
-        let isMatch = (v.match_key === key);
-        if (!isMatch) {
-            // Chytřejší párování řad a částí (seasons & parts)
-            const cleanFileBase = v.match_key.replace(/\s+(?:s(?:eason)?\s*\d+(\s+part\s*\d+)?|part\s*\d+)$/i, '').trim();
-            const cleanAnimeBase = key.replace(/\s+(?:s(?:eason)?\s*\d+(\s+part\s*\d+)?|part\s*\d+)$/i, '').trim();
-            
-            if (cleanFileBase === cleanAnimeBase) {
-                // Mají stejný základní název. Zkontrolujeme řady a části:
-                const fileSeasonMatch = v.match_key.match(/s(?:eason)?\s*(\d+)/i);
-                const animeSeasonMatch = key.match(/s(?:eason)?\s*(\d+)/i);
-                
-                // Pokud řada není specifikována, předpokládáme řadu 1
-                const fileSeason = fileSeasonMatch ? parseInt(fileSeasonMatch[1], 10) : 1;
-                const animeSeason = animeSeasonMatch ? parseInt(animeSeasonMatch[1], 10) : 1;
-                
-                const filePartMatch = v.match_key.match(/part\s*(\d+)/i);
-                const animePartMatch = key.match(/part\s*(\d+)/i);
-                
-                const filePart = filePartMatch ? parseInt(filePartMatch[1], 10) : null;
-                const animePart = animePartMatch ? parseInt(animePartMatch[1], 10) : null;
-                
-                // Obě mají stejnou řadu (případně default 1)
-                if (fileSeason === animeSeason) {
-                    // B1: Pokud soubor specifikuje část (Part 1), musí se rovnat části v databázi
-                    if (filePart !== null) {
-                        if (filePart === animePart) {
-                            isMatch = true;
-                        }
-                    }
-                    // B2: Pokud soubor část nespecifikuje, zápasí s jakoukoliv částí v databázi (Part 1 i Part 2)
-                    else {
-                        isMatch = true;
-                    }
-                }
-            }
-        }
-        
-        if (!isMatch) continue;
-        
+        if (!animeKeysMatch(v.match_key, key)) continue;
+
         const type = (v.type || '').toUpperCase()
         if (!result[type]) continue
         result[type].push({
