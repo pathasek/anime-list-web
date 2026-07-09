@@ -1,11 +1,12 @@
 {
-  "generated": "2026-07-07T17:31:01.558295+00:00",
+  "generated": "2026-07-09T18:43:00.762293+00:00",
   "folder_id": "1oqfgfEFbnkjW92t2HUHU6NS-MdGBdOep",
   "source": "api",
   "count": 207,
   "videos": [
     {
       "match_key": "86 eighty six s01 part 1",
+      "match_key_base": "86 eighty six",
       "anime_display": "86 Eighty-Six S01 Part 1",
       "type": "ED",
       "ver": "v2",
@@ -17,6 +18,7 @@
     },
     {
       "match_key": "86 eighty six s01 part 1",
+      "match_key_base": "86 eighty six",
       "anime_display": "86 Eighty-Six S01 Part 1",
       "type": "OP",
       "ver": null,
@@ -28,6 +30,7 @@
     },
     {
       "match_key": "86 eighty six s01 part 2",
+      "match_key_base": "86 eighty six",
       "anime_display": "86 Eighty-Six S01 Part 2",
       "type": "ED",
       "ver": null,
@@ -39,6 +42,7 @@
     },
     {
       "match_key": "86 eighty six s01 part 2",
+      "match_key_base": "86 eighty six",
       "anime_display": "86 Eighty-Six S01 Part 2",
       "type": "OP",
       "ver": null,
@@ -50,6 +54,7 @@
     },
     {
       "match_key": "ajin demi human s02",
+      "match_key_base": "ajin demi human",
       "anime_display": "Ajin Demi-Human, S02",
       "type": "OP",
       "ver": "1",
@@ -61,6 +66,7 @@
     },
     {
       "match_key": "ajin demi human s01",
+      "match_key_base": "ajin demi human",
       "anime_display": "Ajin_ Demi-Human, S01",
       "type": "OP",
       "ver": null,
@@ -72,6 +78,7 @@
     },
     {
       "match_key": "akame ga kill",
+      "match_key_base": "akame ga kill",
       "anime_display": "Akame ga Kill!",
       "type": "OP",
       "ver": "2",
@@ -83,6 +90,7 @@
     },
     {
       "match_key": "angel beats",
+      "match_key_base": "angel beats",
       "anime_display": "Angel Beats!",
       "type": "OP",
       "ver": "v13",
@@ -94,6 +102,7 @@
     },
     {
       "match_key": "anohana the flower we saw that day",
+      "match_key_base": "anohana the flower we saw that day",
       "anime_display": "Anohana The Flower We Saw That Day",
       "type": "ED",
       "ver": "1",
@@ -105,6 +114,7 @@
     },
     {
       "match_key": "arifureta from commonplace to world s strongest s01",
+      "match_key_base": "arifureta from commonplace to world s strongest",
       "anime_display": "Arifureta_ From Commonplace to World's Strongest, S01",
       "type": "OP",
       "ver": "v1",
@@ -116,6 +126,7 @@
     },
     {
       "match_key": "arifureta from commonplace to world s strongest s02",
+      "match_key_base": "arifureta from commonplace to world s strongest",
       "anime_display": "Arifureta_ From Commonplace to World's Strongest, S02",
       "type": "ED",
       "ver": "v2",
@@ -127,6 +138,7 @@
     },
     {
       "match_key": "arifureta from commonplace to world s strongest s02",
+      "match_key_base": "arifureta from commonplace to world s strongest",
       "anime_display": "Arifureta_ From Commonplace to World's Strongest, S02",
       "type": "OP",
       "ver": null,
@@ -138,6 +150,7 @@
     },
     {
       "match_key": "ascendance of a bookworm s03",
+      "match_key_base": "ascendance of a bookworm",
       "anime_display": "Ascendance of a Bookworm, S03",
       "type": "ED",
       "ver": null,
@@ -149,6 +162,7 @@
     },
     {
       "match_key": "attack on titan final season part 1",
+      "match_key_base": "attack on titan final season",
       "anime_display": "Attack on Titan Final Season Part 1",
       "type": "OP",
       "ver": null,
@@ -160,6 +174,7 @@
     },
     {
       "match_key": "attack on titan final season part 2",
+      "match_key_base": "attack on titan final season",
       "anime_display": "Attack on Titan Final Season Part 2",
       "type": "ED",
       "ver": null,
@@ -171,6 +186,7 @@
     },
     {
       "match_key": "attack on titan final season part 2",
+      "match_key_base": "attack on titan final season",
       "anime_display": "Attack on Titan Final Season Part 2",
       "type": "OP",
       "ver": null,
@@ -182,6 +198,7 @@
     },
     {
       "match_key": "attack on titan s01",
+      "match_key_base": "attack on titan",
       "anime_display": "Attack on Titan, S01",
       "type": "ED",
       "ver": "1",
@@ -193,6 +210,7 @@
     },
     {
       "match_key": "attack on titan s01",
+      "match_key_base": "attack on titan",
       "anime_display": "Attack on Titan, S01",
       "type": "ED",
       "ver": "2",
@@ -204,6 +222,7 @@
     },
     {
       "match_key": "attack on titan s01",
+      "match_key_base": "attack on titan",
       "anime_display": "Attack on Titan, S01",
       "type": "OP",
       "ver": "1",
@@ -215,6 +234,7 @@
     },
     {
       "match_key": "attack on titan s02",
+      "match_key_base": "attack on titan",
       "anime_display": "Attack on Titan, S02",
       "type": "OP",
       "ver": null,
@@ -226,6 +246,7 @@
     },
     {
       "match_key": "bakemonogatari",
+      "match_key_base": "bakemonogatari",
       "anime_display": "Bakemonogatari",
       "type": "OP",
       "ver": "1",
@@ -237,6 +258,7 @@
     },
     {
       "match_key": "bakemonogatari",
+      "match_key_base": "bakemonogatari",
       "anime_display": "Bakemonogatari",
       "type": "OP",
       "ver": "3",
@@ -248,6 +270,7 @@
     },
     {
       "match_key": "berserk 1997",
+      "match_key_base": "berserk 1997",
       "anime_display": "Berserk (1997)",
       "type": "OP",
       "ver": null,
@@ -259,6 +282,7 @@
     },
     {
       "match_key": "berserk the golden age arc memorial edition",
+      "match_key_base": "berserk the golden age arc memorial edition",
       "anime_display": "Berserk The Golden Age Arc - Memorial Edition",
       "type": "ED",
       "ver": "v1",
@@ -270,6 +294,7 @@
     },
     {
       "match_key": "berserk s01",
+      "match_key_base": "berserk",
       "anime_display": "Berserk, S01",
       "type": "ED",
       "ver": null,
@@ -281,6 +306,7 @@
     },
     {
       "match_key": "berserk s01",
+      "match_key_base": "berserk",
       "anime_display": "Berserk, S01",
       "type": "OP",
       "ver": null,
@@ -292,6 +318,7 @@
     },
     {
       "match_key": "black butler s01",
+      "match_key_base": "black butler",
       "anime_display": "Black Butler, S01",
       "type": "ED",
       "ver": "1",
@@ -303,6 +330,7 @@
     },
     {
       "match_key": "black butler s01",
+      "match_key_base": "black butler",
       "anime_display": "Black Butler, S01",
       "type": "ED",
       "ver": "2",
@@ -314,6 +342,7 @@
     },
     {
       "match_key": "black butler s01",
+      "match_key_base": "black butler",
       "anime_display": "Black Butler, S01",
       "type": "OP",
       "ver": "v2",
@@ -325,6 +354,7 @@
     },
     {
       "match_key": "black butler book of circus",
+      "match_key_base": "black butler book of circus",
       "anime_display": "Black Butler_ Book of Circus",
       "type": "ED",
       "ver": null,
@@ -336,6 +366,7 @@
     },
     {
       "match_key": "black lagoon",
+      "match_key_base": "black lagoon",
       "anime_display": "Black Lagoon",
       "type": "OP",
       "ver": null,
@@ -347,6 +378,7 @@
     },
     {
       "match_key": "blast of tempest",
+      "match_key_base": "blast of tempest",
       "anime_display": "Blast of Tempest",
       "type": "OP",
       "ver": "2",
@@ -358,6 +390,7 @@
     },
     {
       "match_key": "bocchi the rock s01",
+      "match_key_base": "bocchi the rock",
       "anime_display": "Bocchi The Rock!, S01",
       "type": "ED",
       "ver": "1",
@@ -369,6 +402,7 @@
     },
     {
       "match_key": "bocchi the rock s01",
+      "match_key_base": "bocchi the rock",
       "anime_display": "Bocchi The Rock!, S01",
       "type": "OP",
       "ver": null,
@@ -380,6 +414,7 @@
     },
     {
       "match_key": "call of the night s01",
+      "match_key_base": "call of the night",
       "anime_display": "Call of the Night, S01",
       "type": "ED",
       "ver": null,
@@ -391,6 +426,7 @@
     },
     {
       "match_key": "call of the night s01",
+      "match_key_base": "call of the night",
       "anime_display": "Call of the Night, S01",
       "type": "OP",
       "ver": null,
@@ -402,6 +438,7 @@
     },
     {
       "match_key": "call of the night s02",
+      "match_key_base": "call of the night",
       "anime_display": "Call of the Night, S02",
       "type": "OP",
       "ver": null,
@@ -413,6 +450,7 @@
     },
     {
       "match_key": "chainsaw man",
+      "match_key_base": "chainsaw man",
       "anime_display": "Chainsaw Man",
       "type": "OP",
       "ver": null,
@@ -424,6 +462,7 @@
     },
     {
       "match_key": "chainsaw man s01",
+      "match_key_base": "chainsaw man",
       "anime_display": "Chainsaw Man, S01",
       "type": "ED",
       "ver": "1",
@@ -435,6 +474,7 @@
     },
     {
       "match_key": "chainsaw man s01",
+      "match_key_base": "chainsaw man",
       "anime_display": "Chainsaw Man, S01",
       "type": "ED",
       "ver": "6",
@@ -446,6 +486,7 @@
     },
     {
       "match_key": "chivalry of a failed knight",
+      "match_key_base": "chivalry of a failed knight",
       "anime_display": "Chivalry of a Failed Knight",
       "type": "OP",
       "ver": null,
@@ -457,6 +498,7 @@
     },
     {
       "match_key": "classroom of the elite s03",
+      "match_key_base": "classroom of the elite",
       "anime_display": "Classroom of the Elite S03",
       "type": "OP",
       "ver": null,
@@ -468,6 +510,7 @@
     },
     {
       "match_key": "classroom of the elite s02",
+      "match_key_base": "classroom of the elite",
       "anime_display": "Classroom of the Elite, S02",
       "type": "ED",
       "ver": null,
@@ -479,6 +522,7 @@
     },
     {
       "match_key": "claymore",
+      "match_key_base": "claymore",
       "anime_display": "Claymore",
       "type": "ED",
       "ver": null,
@@ -490,6 +534,7 @@
     },
     {
       "match_key": "code geass lelouch of the rebellion r1",
+      "match_key_base": "code geass lelouch of the rebellion r1",
       "anime_display": "Code Geass Lelouch of the Rebellion R1",
       "type": "OP",
       "ver": "v2",
@@ -501,6 +546,7 @@
     },
     {
       "match_key": "code geass lelouch of the rebellion r2",
+      "match_key_base": "code geass lelouch of the rebellion r2",
       "anime_display": "Code Geass Lelouch of the Rebellion R2",
       "type": "OP",
       "ver": "1",
@@ -512,6 +558,7 @@
     },
     {
       "match_key": "cross ange rondo of angel and dragon",
+      "match_key_base": "cross ange rondo of angel and dragon",
       "anime_display": "Cross Ange_ Rondo of Angel and Dragon",
       "type": "ED",
       "ver": "2",
@@ -523,6 +570,7 @@
     },
     {
       "match_key": "cross ange rondo of angel and dragon",
+      "match_key_base": "cross ange rondo of angel and dragon",
       "anime_display": "Cross Ange_ Rondo of Angel and Dragon",
       "type": "ED",
       "ver": "3",
@@ -534,6 +582,7 @@
     },
     {
       "match_key": "cyberpunk edgerunners s01",
+      "match_key_base": "cyberpunk edgerunners",
       "anime_display": "Cyberpunk Edgerunners, S01",
       "type": "ED",
       "ver": null,
@@ -545,6 +594,7 @@
     },
     {
       "match_key": "cyberpunk edgerunners s01",
+      "match_key_base": "cyberpunk edgerunners",
       "anime_display": "Cyberpunk Edgerunners, S01",
       "type": "OP",
       "ver": null,
@@ -556,6 +606,7 @@
     },
     {
       "match_key": "darling in the franxx",
+      "match_key_base": "darling in the franxx",
       "anime_display": "Darling in the FranXX",
       "type": "OP",
       "ver": "1",
@@ -567,6 +618,7 @@
     },
     {
       "match_key": "dead dead demons dededede destruction",
+      "match_key_base": "dead dead demons dededede destruction",
       "anime_display": "Dead Dead Demons Dededede Destruction",
       "type": "ED",
       "ver": "1",
@@ -578,6 +630,7 @@
     },
     {
       "match_key": "deadman wonderland",
+      "match_key_base": "deadman wonderland",
       "anime_display": "Deadman Wonderland",
       "type": "OP",
       "ver": null,
@@ -589,6 +642,7 @@
     },
     {
       "match_key": "death note",
+      "match_key_base": "death note",
       "anime_display": "Death Note",
       "type": "ED",
       "ver": "1",
@@ -600,6 +654,7 @@
     },
     {
       "match_key": "death note",
+      "match_key_base": "death note",
       "anime_display": "Death Note",
       "type": "OP",
       "ver": "1",
@@ -611,6 +666,7 @@
     },
     {
       "match_key": "death parade",
+      "match_key_base": "death parade",
       "anime_display": "Death Parade",
       "type": "ED",
       "ver": null,
@@ -622,6 +678,7 @@
     },
     {
       "match_key": "death parade",
+      "match_key_base": "death parade",
       "anime_display": "Death Parade",
       "type": "OP",
       "ver": null,
@@ -633,6 +690,7 @@
     },
     {
       "match_key": "demon slayer",
+      "match_key_base": "demon slayer",
       "anime_display": "Demon Slayer",
       "type": "ED",
       "ver": "1",
@@ -644,6 +702,7 @@
     },
     {
       "match_key": "demon slayer",
+      "match_key_base": "demon slayer",
       "anime_display": "Demon Slayer",
       "type": "ED",
       "ver": "2",
@@ -655,6 +714,7 @@
     },
     {
       "match_key": "demon slayer",
+      "match_key_base": "demon slayer",
       "anime_display": "Demon Slayer",
       "type": "OP",
       "ver": "v4",
@@ -666,6 +726,7 @@
     },
     {
       "match_key": "demon slayer swordsmith village arc",
+      "match_key_base": "demon slayer swordsmith village arc",
       "anime_display": "Demon Slayer Swordsmith Village Arc",
       "type": "ED",
       "ver": null,
@@ -677,6 +738,7 @@
     },
     {
       "match_key": "demon slayer entertainment district arc",
+      "match_key_base": "demon slayer entertainment district arc",
       "anime_display": "Demon Slayer_ Entertainment District Arc",
       "type": "OP",
       "ver": null,
@@ -688,6 +750,7 @@
     },
     {
       "match_key": "demon slayer mugen train arc",
+      "match_key_base": "demon slayer mugen train arc",
       "anime_display": "Demon Slayer_ Mugen Train Arc",
       "type": "ED",
       "ver": "1",
@@ -699,6 +762,7 @@
     },
     {
       "match_key": "demon slayer mugen train arc",
+      "match_key_base": "demon slayer mugen train arc",
       "anime_display": "Demon Slayer_ Mugen Train Arc",
       "type": "OP",
       "ver": null,
@@ -710,6 +774,7 @@
     },
     {
       "match_key": "dorohedoro s01",
+      "match_key_base": "dorohedoro",
       "anime_display": "Dorohedoro, S01",
       "type": "ED",
       "ver": "1",
@@ -721,6 +786,7 @@
     },
     {
       "match_key": "dororo",
+      "match_key_base": "dororo",
       "anime_display": "Dororo",
       "type": "ED",
       "ver": "1",
@@ -732,6 +798,7 @@
     },
     {
       "match_key": "electromagnetic girlfriend",
+      "match_key_base": "electromagnetic girlfriend",
       "anime_display": "Electromagnetic Girlfriend",
       "type": "ED",
       "ver": "1",
@@ -743,6 +810,7 @@
     },
     {
       "match_key": "elfen lied",
+      "match_key_base": "elfen lied",
       "anime_display": "Elfen Lied",
       "type": "ED",
       "ver": null,
@@ -754,6 +822,7 @@
     },
     {
       "match_key": "elfen lied",
+      "match_key_base": "elfen lied",
       "anime_display": "Elfen Lied",
       "type": "OP",
       "ver": null,
@@ -765,6 +834,7 @@
     },
     {
       "match_key": "erased",
+      "match_key_base": "erased",
       "anime_display": "Erased",
       "type": "ED",
       "ver": null,
@@ -776,6 +846,7 @@
     },
     {
       "match_key": "erased",
+      "match_key_base": "erased",
       "anime_display": "Erased",
       "type": "OP",
       "ver": null,
@@ -787,6 +858,7 @@
     },
     {
       "match_key": "ergo proxy",
+      "match_key_base": "ergo proxy",
       "anime_display": "Ergo Proxy",
       "type": "OP",
       "ver": null,
@@ -798,6 +870,7 @@
     },
     {
       "match_key": "fate grand order absolute demonic front babylonia",
+      "match_key_base": "fate grand order absolute demonic front babylonia",
       "anime_display": "Fate Grand Order Absolute Demonic Front - Babylonia",
       "type": "ED",
       "ver": "2",
@@ -809,6 +882,7 @@
     },
     {
       "match_key": "fate grand order absolute demonic front babylonia",
+      "match_key_base": "fate grand order absolute demonic front babylonia",
       "anime_display": "Fate Grand Order Absolute Demonic Front - Babylonia",
       "type": "OP",
       "ver": "v1",
@@ -820,6 +894,7 @@
     },
     {
       "match_key": "fate grand order absolute demonic front babylonia",
+      "match_key_base": "fate grand order absolute demonic front babylonia",
       "anime_display": "Fate Grand Order_ Absolute Demonic Front - Babylonia",
       "type": "ED",
       "ver": "3",
@@ -831,6 +906,7 @@
     },
     {
       "match_key": "fate stay night unlimited blade works s01",
+      "match_key_base": "fate stay night unlimited blade works",
       "anime_display": "Fate stay night [Unlimited Blade Works], S01",
       "type": "ED",
       "ver": "2",
@@ -842,6 +918,7 @@
     },
     {
       "match_key": "fate stay night unlimited blade works s01",
+      "match_key_base": "fate stay night unlimited blade works",
       "anime_display": "Fate stay night [Unlimited Blade Works], S01",
       "type": "OP",
       "ver": null,
@@ -853,6 +930,7 @@
     },
     {
       "match_key": "fate strange fake s01",
+      "match_key_base": "fate strange fake",
       "anime_display": "Fate strange Fake, S01",
       "type": "ED",
       "ver": "v1",
@@ -864,6 +942,7 @@
     },
     {
       "match_key": "fate zero s01",
+      "match_key_base": "fate zero",
       "anime_display": "Fate Zero, S01",
       "type": "OP",
       "ver": null,
@@ -875,6 +954,7 @@
     },
     {
       "match_key": "fate zero s02",
+      "match_key_base": "fate zero",
       "anime_display": "Fate Zero, S02",
       "type": "OP",
       "ver": null,
@@ -886,6 +966,7 @@
     },
     {
       "match_key": "frieren beyond journey s end",
+      "match_key_base": "frieren beyond journey s end",
       "anime_display": "Frieren_ Beyond Journey_s End",
       "type": "ED",
       "ver": "1",
@@ -897,6 +978,7 @@
     },
     {
       "match_key": "frieren beyond journey s end",
+      "match_key_base": "frieren beyond journey s end",
       "anime_display": "Frieren_ Beyond Journey_s End",
       "type": "ED",
       "ver": "2",
@@ -908,6 +990,7 @@
     },
     {
       "match_key": "frieren beyond journey s end",
+      "match_key_base": "frieren beyond journey s end",
       "anime_display": "Frieren_ Beyond Journey_s End",
       "type": "OP",
       "ver": "1",
@@ -919,6 +1002,7 @@
     },
     {
       "match_key": "from old country bumpkin to master swordsman",
+      "match_key_base": "from old country bumpkin to master swordsman",
       "anime_display": "From Old Country Bumpkin to Master Swordsman",
       "type": "ED",
       "ver": null,
@@ -930,6 +1014,7 @@
     },
     {
       "match_key": "from old country bumpkin to master swordsman",
+      "match_key_base": "from old country bumpkin to master swordsman",
       "anime_display": "From Old Country Bumpkin to Master Swordsman",
       "type": "OP",
       "ver": null,
@@ -941,6 +1026,7 @@
     },
     {
       "match_key": "fullmetal alchemist brotherhood",
+      "match_key_base": "fullmetal alchemist brotherhood",
       "anime_display": "Fullmetal Alchemist_ Brotherhood",
       "type": "OP",
       "ver": "1",
@@ -952,6 +1038,7 @@
     },
     {
       "match_key": "goblin slayer s01",
+      "match_key_base": "goblin slayer",
       "anime_display": "Goblin Slayer, S01",
       "type": "OP",
       "ver": null,
@@ -963,6 +1050,7 @@
     },
     {
       "match_key": "grimgar ashes and illusions",
+      "match_key_base": "grimgar ashes and illusions",
       "anime_display": "Grimgar_ Ashes and Illusions",
       "type": "ED",
       "ver": "v2",
@@ -974,6 +1062,7 @@
     },
     {
       "match_key": "heavenly delusion",
+      "match_key_base": "heavenly delusion",
       "anime_display": "Heavenly Delusion",
       "type": "OP",
       "ver": null,
@@ -985,6 +1074,7 @@
     },
     {
       "match_key": "hell s paradise s01",
+      "match_key_base": "hell s paradise",
       "anime_display": "Hell's Paradise, S01",
       "type": "ED",
       "ver": null,
@@ -996,6 +1086,7 @@
     },
     {
       "match_key": "hell s paradise s01",
+      "match_key_base": "hell s paradise",
       "anime_display": "Hell's Paradise, S01",
       "type": "OP",
       "ver": null,
@@ -1007,6 +1098,7 @@
     },
     {
       "match_key": "higurashi when they cry",
+      "match_key_base": "higurashi when they cry",
       "anime_display": "Higurashi_ When They Cry",
       "type": "OP",
       "ver": null,
@@ -1018,6 +1110,7 @@
     },
     {
       "match_key": "higurashi when they cry gou",
+      "match_key_base": "higurashi when they cry gou",
       "anime_display": "Higurashi_ When They Cry – Gou",
       "type": "ED",
       "ver": "2",
@@ -1029,6 +1122,7 @@
     },
     {
       "match_key": "higurashi when they cry gou",
+      "match_key_base": "higurashi when they cry gou",
       "anime_display": "Higurashi_ When They Cry – Gou",
       "type": "OP",
       "ver": "v2",
@@ -1040,6 +1134,7 @@
     },
     {
       "match_key": "id invaded",
+      "match_key_base": "id invaded",
       "anime_display": "Id_Invaded",
       "type": "OP",
       "ver": null,
@@ -1051,6 +1146,7 @@
     },
     {
       "match_key": "inuyashiki last hero",
+      "match_key_base": "inuyashiki last hero",
       "anime_display": "Inuyashiki_Last Hero",
       "type": "OP",
       "ver": null,
@@ -1062,6 +1158,7 @@
     },
     {
       "match_key": "is it wrong to try to pick up girls in a dungeon s05",
+      "match_key_base": "is it wrong to try to pick up girls in a dungeon",
       "anime_display": "Is It Wrong to Try to Pick Up Girls in a Dungeon_ S05",
       "type": "OP",
       "ver": null,
@@ -1073,6 +1170,7 @@
     },
     {
       "match_key": "jujutsu kaisen s02",
+      "match_key_base": "jujutsu kaisen",
       "anime_display": "Jujutsu Kaisen S02",
       "type": "OP",
       "ver": "2",
@@ -1084,6 +1182,7 @@
     },
     {
       "match_key": "jujutsu kaisen s01",
+      "match_key_base": "jujutsu kaisen",
       "anime_display": "Jujutsu Kaisen, S01",
       "type": "ED",
       "ver": "1",
@@ -1095,6 +1194,7 @@
     },
     {
       "match_key": "jujutsu kaisen s01",
+      "match_key_base": "jujutsu kaisen",
       "anime_display": "Jujutsu Kaisen, S01",
       "type": "ED",
       "ver": "2",
@@ -1106,6 +1206,7 @@
     },
     {
       "match_key": "jujutsu kaisen s02",
+      "match_key_base": "jujutsu kaisen",
       "anime_display": "Jujutsu Kaisen, S02",
       "type": "ED",
       "ver": "2",
@@ -1117,6 +1218,7 @@
     },
     {
       "match_key": "kabaneri of the iron fortress",
+      "match_key_base": "kabaneri of the iron fortress",
       "anime_display": "Kabaneri of the Iron Fortress",
       "type": "ED",
       "ver": "1",
@@ -1128,6 +1230,7 @@
     },
     {
       "match_key": "kabaneri of the iron fortress",
+      "match_key_base": "kabaneri of the iron fortress",
       "anime_display": "Kabaneri of the Iron Fortress",
       "type": "OP",
       "ver": null,
@@ -1139,6 +1242,7 @@
     },
     {
       "match_key": "konosuba god s blessing on this wonderful world s03",
+      "match_key_base": "konosuba god s blessing on this wonderful world",
       "anime_display": "KonoSuba_ God_s Blessing on This Wonderful World! S03",
       "type": "OP",
       "ver": null,
@@ -1150,6 +1254,7 @@
     },
     {
       "match_key": "legend of the galactic heroes die neue these",
+      "match_key_base": "legend of the galactic heroes die neue these",
       "anime_display": "Legend of the Galactic Heroes_ Die Neue These",
       "type": "OP",
       "ver": null,
@@ -1161,6 +1266,7 @@
     },
     {
       "match_key": "log horizon destruction of the round table",
+      "match_key_base": "log horizon destruction of the round table",
       "anime_display": "Log Horizon_ Destruction of the Round Table",
       "type": "OP",
       "ver": null,
@@ -1172,6 +1278,7 @@
     },
     {
       "match_key": "lord of mysteries",
+      "match_key_base": "lord of mysteries",
       "anime_display": "Lord of Mysteries",
       "type": "ED",
       "ver": "1",
@@ -1183,6 +1290,7 @@
     },
     {
       "match_key": "lycoris recoil",
+      "match_key_base": "lycoris recoil",
       "anime_display": "Lycoris Recoil",
       "type": "OP",
       "ver": null,
@@ -1194,6 +1302,7 @@
     },
     {
       "match_key": "made in abyss",
+      "match_key_base": "made in abyss",
       "anime_display": "Made in Abyss",
       "type": "OP",
       "ver": null,
@@ -1205,6 +1314,7 @@
     },
     {
       "match_key": "made in abyss the golden city of the scorching sun",
+      "match_key_base": "made in abyss the golden city of the scorching sun",
       "anime_display": "Made in Abyss_ The Golden City of the Scorching Sun",
       "type": "ED",
       "ver": null,
@@ -1216,6 +1326,7 @@
     },
     {
       "match_key": "magi the kingdom of magic",
+      "match_key_base": "magi the kingdom of magic",
       "anime_display": "Magi_ The Kingdom of Magic",
       "type": "ED",
       "ver": "2",
@@ -1227,6 +1338,7 @@
     },
     {
       "match_key": "magi the labyrinth of magic",
+      "match_key_base": "magi the labyrinth of magic",
       "anime_display": "Magi_ The Labyrinth of Magic",
       "type": "OP",
       "ver": "1",
@@ -1238,6 +1350,7 @@
     },
     {
       "match_key": "may i ask for one final thing",
+      "match_key_base": "may i ask for one final thing",
       "anime_display": "May I Ask for One Final Thing",
       "type": "ED",
       "ver": null,
@@ -1249,6 +1362,7 @@
     },
     {
       "match_key": "may i ask for one final thing",
+      "match_key_base": "may i ask for one final thing",
       "anime_display": "May I Ask for One Final Thing",
       "type": "OP",
       "ver": null,
@@ -1260,6 +1374,7 @@
     },
     {
       "match_key": "monogatari series second season",
+      "match_key_base": "monogatari series second season",
       "anime_display": "Monogatari Series_ Second Season",
       "type": "OP",
       "ver": "5",
@@ -1271,6 +1386,7 @@
     },
     {
       "match_key": "moribito guardian of the spirit",
+      "match_key_base": "moribito guardian of the spirit",
       "anime_display": "Moribito - Guardian of the Spirit",
       "type": "ED",
       "ver": null,
@@ -1282,6 +1398,7 @@
     },
     {
       "match_key": "moribito guardian of the spirit",
+      "match_key_base": "moribito guardian of the spirit",
       "anime_display": "Moribito - Guardian of the Spirit",
       "type": "OP",
       "ver": null,
@@ -1293,6 +1410,7 @@
     },
     {
       "match_key": "mushoku tensei jobless reincarnation s02 part 1",
+      "match_key_base": "mushoku tensei jobless reincarnation",
       "anime_display": "Mushoku Tensei_ Jobless Reincarnation S02 Part 1",
       "type": "OP",
       "ver": null,
@@ -1304,6 +1422,7 @@
     },
     {
       "match_key": "mushoku tensei jobless reincarnation s02 part 2",
+      "match_key_base": "mushoku tensei jobless reincarnation",
       "anime_display": "Mushoku Tensei_ Jobless Reincarnation S02 Part 2",
       "type": "OP",
       "ver": null,
@@ -1315,6 +1434,7 @@
     },
     {
       "match_key": "mushoku tensei jobless reincarnation s01 part 2",
+      "match_key_base": "mushoku tensei jobless reincarnation",
       "anime_display": "Mushoku Tensei_ Jobless Reincarnation, S01 Part 2",
       "type": "OP",
       "ver": "3",
@@ -1326,6 +1446,7 @@
     },
     {
       "match_key": "nekomonogatari black",
+      "match_key_base": "nekomonogatari black",
       "anime_display": "Nekomonogatari Black",
       "type": "OP",
       "ver": null,
@@ -1337,6 +1458,7 @@
     },
     {
       "match_key": "neon genesis evangelion",
+      "match_key_base": "neon genesis evangelion",
       "anime_display": "Neon Genesis Evangelion",
       "type": "OP",
       "ver": null,
@@ -1348,6 +1470,7 @@
     },
     {
       "match_key": "nier automata ver1 1a",
+      "match_key_base": "nier automata ver1 1a",
       "anime_display": "NieR_Automata Ver1.1a",
       "type": "ED",
       "ver": "1",
@@ -1359,6 +1482,7 @@
     },
     {
       "match_key": "noragami",
+      "match_key_base": "noragami",
       "anime_display": "Noragami",
       "type": "OP",
       "ver": null,
@@ -1370,6 +1494,7 @@
     },
     {
       "match_key": "noragami aragoto",
+      "match_key_base": "noragami aragoto",
       "anime_display": "Noragami Aragoto",
       "type": "OP",
       "ver": null,
@@ -1381,6 +1506,7 @@
     },
     {
       "match_key": "overlord s01",
+      "match_key_base": "overlord",
       "anime_display": "Overlord S01",
       "type": "OP",
       "ver": null,
@@ -1392,6 +1518,7 @@
     },
     {
       "match_key": "overlord s03",
+      "match_key_base": "overlord",
       "anime_display": "Overlord S03",
       "type": "OP",
       "ver": null,
@@ -1403,6 +1530,7 @@
     },
     {
       "match_key": "overlord s04",
+      "match_key_base": "overlord",
       "anime_display": "Overlord S04",
       "type": "OP",
       "ver": null,
@@ -1414,6 +1542,7 @@
     },
     {
       "match_key": "owarimonogatari s01",
+      "match_key_base": "owarimonogatari",
       "anime_display": "Owarimonogatari, S01",
       "type": "OP",
       "ver": "1",
@@ -1425,6 +1554,7 @@
     },
     {
       "match_key": "owarimonogatari s01",
+      "match_key_base": "owarimonogatari",
       "anime_display": "Owarimonogatari, S01",
       "type": "OP",
       "ver": "3",
@@ -1436,6 +1566,7 @@
     },
     {
       "match_key": "owarimonogatari s02",
+      "match_key_base": "owarimonogatari",
       "anime_display": "Owarimonogatari, S02",
       "type": "OP",
       "ver": "3",
@@ -1447,6 +1578,7 @@
     },
     {
       "match_key": "psycho pass s01",
+      "match_key_base": "psycho pass",
       "anime_display": "Psycho-Pass, S01",
       "type": "ED",
       "ver": "1",
@@ -1458,6 +1590,7 @@
     },
     {
       "match_key": "psycho pass s01",
+      "match_key_base": "psycho pass",
       "anime_display": "Psycho-Pass, S01",
       "type": "OP",
       "ver": "1",
@@ -1469,6 +1602,7 @@
     },
     {
       "match_key": "psycho pass s02",
+      "match_key_base": "psycho pass",
       "anime_display": "Psycho-Pass, S02",
       "type": "OP",
       "ver": null,
@@ -1480,6 +1614,7 @@
     },
     {
       "match_key": "puella magi madoka magica",
+      "match_key_base": "puella magi madoka magica",
       "anime_display": "Puella Magi Madoka Magica",
       "type": "ED",
       "ver": "2",
@@ -1491,6 +1626,7 @@
     },
     {
       "match_key": "rage of bahamut genesis",
+      "match_key_base": "rage of bahamut genesis",
       "anime_display": "Rage of Bahamut_ Genesis",
       "type": "ED",
       "ver": null,
@@ -1502,6 +1638,7 @@
     },
     {
       "match_key": "rage of bahamut genesis",
+      "match_key_base": "rage of bahamut genesis",
       "anime_display": "Rage of Bahamut_ Genesis",
       "type": "OP",
       "ver": null,
@@ -1513,6 +1650,7 @@
     },
     {
       "match_key": "rage of bahamut virgin soul",
+      "match_key_base": "rage of bahamut virgin soul",
       "anime_display": "Rage of Bahamut_ Virgin Soul",
       "type": "ED",
       "ver": "2",
@@ -1524,6 +1662,7 @@
     },
     {
       "match_key": "ranking of kings",
+      "match_key_base": "ranking of kings",
       "anime_display": "Ranking of Kings",
       "type": "ED",
       "ver": "1",
@@ -1535,6 +1674,7 @@
     },
     {
       "match_key": "re zero starting life in another world s01",
+      "match_key_base": "re zero starting life in another world",
       "anime_display": "Re_Zero - Starting Life in Another World S01",
       "type": "ED",
       "ver": "1",
@@ -1546,6 +1686,7 @@
     },
     {
       "match_key": "re zero starting life in another world s01",
+      "match_key_base": "re zero starting life in another world",
       "anime_display": "Re_Zero - Starting Life in Another World S01",
       "type": "OP",
       "ver": "1",
@@ -1557,6 +1698,7 @@
     },
     {
       "match_key": "re zero starting life in another world s01",
+      "match_key_base": "re zero starting life in another world",
       "anime_display": "Re_Zero - Starting Life in Another World S01",
       "type": "OP",
       "ver": "2",
@@ -1568,6 +1710,7 @@
     },
     {
       "match_key": "re zero starting life in another world s02 part 1",
+      "match_key_base": "re zero starting life in another world",
       "anime_display": "Re_Zero - Starting Life in Another World S02 Part 1",
       "type": "OP",
       "ver": null,
@@ -1579,6 +1722,7 @@
     },
     {
       "match_key": "re zero starting life in another world s02 part 2",
+      "match_key_base": "re zero starting life in another world",
       "anime_display": "Re_Zero - Starting Life in Another World S02 Part 2",
       "type": "OP",
       "ver": null,
@@ -1590,6 +1734,7 @@
     },
     {
       "match_key": "re zero starting life in another world s03",
+      "match_key_base": "re zero starting life in another world",
       "anime_display": "Re_Zero - Starting Life in Another World S03",
       "type": "ED",
       "ver": null,
@@ -1601,6 +1746,7 @@
     },
     {
       "match_key": "re zero starting life in another world s03",
+      "match_key_base": "re zero starting life in another world",
       "anime_display": "Re_Zero - Starting Life in Another World S03",
       "type": "OP",
       "ver": null,
@@ -1612,6 +1758,7 @@
     },
     {
       "match_key": "re zero starting life in another world s01",
+      "match_key_base": "re zero starting life in another world",
       "anime_display": "Re_Zero - Starting Life in Another World, S01",
       "type": "ED",
       "ver": "2",
@@ -1623,6 +1770,7 @@
     },
     {
       "match_key": "re zero starting life in another world s02 part 2",
+      "match_key_base": "re zero starting life in another world",
       "anime_display": "Re_Zero - Starting Life in Another World, S02 Part 2",
       "type": "ED",
       "ver": null,
@@ -1634,6 +1782,7 @@
     },
     {
       "match_key": "saga of tanya the evil s01",
+      "match_key_base": "saga of tanya the evil",
       "anime_display": "Saga of Tanya the Evil, S01",
       "type": "ED",
       "ver": "1",
@@ -1645,6 +1794,7 @@
     },
     {
       "match_key": "saga of tanya the evil s01",
+      "match_key_base": "saga of tanya the evil",
       "anime_display": "Saga of Tanya the Evil, S01",
       "type": "OP",
       "ver": null,
@@ -1656,6 +1806,7 @@
     },
     {
       "match_key": "serial experiments lain",
+      "match_key_base": "serial experiments lain",
       "anime_display": "Serial Experiments Lain",
       "type": "OP",
       "ver": null,
@@ -1667,6 +1818,7 @@
     },
     {
       "match_key": "shangri la frontier s01",
+      "match_key_base": "shangri la frontier",
       "anime_display": "Shangri-La Frontier, S01",
       "type": "OP",
       "ver": "1",
@@ -1678,6 +1830,7 @@
     },
     {
       "match_key": "shiki",
+      "match_key_base": "shiki",
       "anime_display": "Shiki",
       "type": "OP",
       "ver": "2",
@@ -1689,6 +1842,7 @@
     },
     {
       "match_key": "solo leveling s01",
+      "match_key_base": "solo leveling",
       "anime_display": "Solo Leveling, S01",
       "type": "ED",
       "ver": null,
@@ -1700,6 +1854,7 @@
     },
     {
       "match_key": "solo leveling s01",
+      "match_key_base": "solo leveling",
       "anime_display": "Solo Leveling, S01",
       "type": "OP",
       "ver": null,
@@ -1711,6 +1866,7 @@
     },
     {
       "match_key": "solo leveling s02 arise from the shadow",
+      "match_key_base": "solo leveling s02 arise from the shadow",
       "anime_display": "Solo Leveling, S02 Arise from the Shadow",
       "type": "OP",
       "ver": null,
@@ -1722,6 +1878,7 @@
     },
     {
       "match_key": "somali and the forest spirit",
+      "match_key_base": "somali and the forest spirit",
       "anime_display": "Somali and the Forest Spirit",
       "type": "ED",
       "ver": "v2",
@@ -1733,6 +1890,7 @@
     },
     {
       "match_key": "sound of the sky",
+      "match_key_base": "sound of the sky",
       "anime_display": "Sound of the Sky",
       "type": "OP",
       "ver": null,
@@ -1744,6 +1902,7 @@
     },
     {
       "match_key": "spice and wolf merchant meets the wise wolf s01",
+      "match_key_base": "spice and wolf merchant meets the wise wolf",
       "anime_display": "Spice and Wolf_ Merchant Meets the Wise Wolf, S01",
       "type": "ED",
       "ver": "1",
@@ -1755,6 +1914,7 @@
     },
     {
       "match_key": "spice and wolf merchant meets the wise wolf s01",
+      "match_key_base": "spice and wolf merchant meets the wise wolf",
       "anime_display": "Spice and Wolf_ Merchant Meets the Wise Wolf, S01",
       "type": "OP",
       "ver": "1",
@@ -1766,6 +1926,7 @@
     },
     {
       "match_key": "steins gate 0",
+      "match_key_base": "steins gate 0",
       "anime_display": "Steins;Gate 0",
       "type": "ED",
       "ver": "3",
@@ -1777,6 +1938,7 @@
     },
     {
       "match_key": "steins gate 0",
+      "match_key_base": "steins gate 0",
       "anime_display": "Steins;Gate 0",
       "type": "ED",
       "ver": "6",
@@ -1788,6 +1950,7 @@
     },
     {
       "match_key": "steins gate",
+      "match_key_base": "steins gate",
       "anime_display": "Steins_Gate",
       "type": "OP",
       "ver": "v1",
@@ -1799,6 +1962,7 @@
     },
     {
       "match_key": "steins gate 0",
+      "match_key_base": "steins gate 0",
       "anime_display": "Steins_Gate 0",
       "type": "ED",
       "ver": "1",
@@ -1810,6 +1974,7 @@
     },
     {
       "match_key": "steins gate 0",
+      "match_key_base": "steins gate 0",
       "anime_display": "Steins_Gate 0",
       "type": "OP",
       "ver": "v1",
@@ -1821,6 +1986,7 @@
     },
     {
       "match_key": "summer time rendering",
+      "match_key_base": "summer time rendering",
       "anime_display": "Summer Time Rendering",
       "type": "OP",
       "ver": "2",
@@ -1832,6 +1998,7 @@
     },
     {
       "match_key": "sword art online s01",
+      "match_key_base": "sword art online",
       "anime_display": "Sword Art Online, S01",
       "type": "OP",
       "ver": "1",
@@ -1843,6 +2010,7 @@
     },
     {
       "match_key": "sword art online s02",
+      "match_key_base": "sword art online",
       "anime_display": "Sword Art Online, S02",
       "type": "OP",
       "ver": "1",
@@ -1854,6 +2022,7 @@
     },
     {
       "match_key": "sword art online alicization",
+      "match_key_base": "sword art online alicization",
       "anime_display": "Sword Art Online_ Alicization",
       "type": "ED",
       "ver": "1",
@@ -1865,6 +2034,7 @@
     },
     {
       "match_key": "sword art online alicization",
+      "match_key_base": "sword art online alicization",
       "anime_display": "Sword Art Online_ Alicization",
       "type": "ED",
       "ver": "2",
@@ -1876,6 +2046,7 @@
     },
     {
       "match_key": "sword art online alicization",
+      "match_key_base": "sword art online alicization",
       "anime_display": "Sword Art Online_ Alicization",
       "type": "OP",
       "ver": "1",
@@ -1887,6 +2058,7 @@
     },
     {
       "match_key": "sword art online alicization",
+      "match_key_base": "sword art online alicization",
       "anime_display": "Sword Art Online_ Alicization",
       "type": "OP",
       "ver": "2",
@@ -1898,6 +2070,7 @@
     },
     {
       "match_key": "sword art online alicization",
+      "match_key_base": "sword art online alicization",
       "anime_display": "Sword Art Online_ Alicization",
       "type": "OP",
       "ver": "2",
@@ -1909,6 +2082,7 @@
     },
     {
       "match_key": "sword art online alicization war of underworld part 1",
+      "match_key_base": "sword art online alicization war of underworld",
       "anime_display": "Sword Art Online_ Alicization - War of Underworld Part 1",
       "type": "ED",
       "ver": null,
@@ -1920,6 +2094,7 @@
     },
     {
       "match_key": "sword art online alicization war of underworld part 1",
+      "match_key_base": "sword art online alicization war of underworld",
       "anime_display": "Sword Art Online_ Alicization - War of Underworld Part 1",
       "type": "OP",
       "ver": "v1",
@@ -1931,6 +2106,7 @@
     },
     {
       "match_key": "that time i got reincarnated as a slime s02 part 2",
+      "match_key_base": "that time i got reincarnated as a slime",
       "anime_display": "That Time I Got Reincarnated as a Slime S02 Part 2",
       "type": "OP",
       "ver": null,
@@ -1942,6 +2118,7 @@
     },
     {
       "match_key": "that time i got reincarnated as a slime s02 part 1",
+      "match_key_base": "that time i got reincarnated as a slime",
       "anime_display": "That Time I Got Reincarnated as a Slime, S02 Part 1",
       "type": "ED",
       "ver": null,
@@ -1953,6 +2130,7 @@
     },
     {
       "match_key": "that time i got reincarnated as a slime s03",
+      "match_key_base": "that time i got reincarnated as a slime",
       "anime_display": "That Time I Got Reincarnated as a Slime, S03",
       "type": "ED",
       "ver": "2",
@@ -1964,6 +2142,7 @@
     },
     {
       "match_key": "the ancient magus bride s01",
+      "match_key_base": "the ancient magus bride",
       "anime_display": "The Ancient Magus' Bride, S01",
       "type": "ED",
       "ver": "1",
@@ -1975,6 +2154,7 @@
     },
     {
       "match_key": "the ancient magus bride s01",
+      "match_key_base": "the ancient magus bride",
       "anime_display": "The Ancient Magus' Bride, S01",
       "type": "OP",
       "ver": "1",
@@ -1986,6 +2166,7 @@
     },
     {
       "match_key": "the ancient magus bride s01",
+      "match_key_base": "the ancient magus bride",
       "anime_display": "The Ancient Magus' Bride, S01",
       "type": "OP",
       "ver": "2",
@@ -1997,6 +2178,7 @@
     },
     {
       "match_key": "the ancient magus bride s02 part 1",
+      "match_key_base": "the ancient magus bride",
       "anime_display": "The Ancient Magus' Bride, S02 Part 1",
       "type": "OP",
       "ver": null,
@@ -2008,6 +2190,7 @@
     },
     {
       "match_key": "the apothecary diaries s01",
+      "match_key_base": "the apothecary diaries",
       "anime_display": "The Apothecary Diaries, S01",
       "type": "OP",
       "ver": "1",
@@ -2019,6 +2202,7 @@
     },
     {
       "match_key": "the beast player erin",
+      "match_key_base": "the beast player erin",
       "anime_display": "The Beast Player Erin",
       "type": "OP",
       "ver": "1",
@@ -2030,6 +2214,7 @@
     },
     {
       "match_key": "the future diary",
+      "match_key_base": "the future diary",
       "anime_display": "The Future Diary",
       "type": "ED",
       "ver": "2",
@@ -2041,6 +2226,7 @@
     },
     {
       "match_key": "the future diary",
+      "match_key_base": "the future diary",
       "anime_display": "The Future Diary",
       "type": "OP",
       "ver": "1",
@@ -2052,6 +2238,7 @@
     },
     {
       "match_key": "the melancholy of haruhi suzumiya s02",
+      "match_key_base": "the melancholy of haruhi suzumiya",
       "anime_display": "The Melancholy of Haruhi Suzumiya, S02",
       "type": "OP",
       "ver": null,
@@ -2063,6 +2250,7 @@
     },
     {
       "match_key": "the rising of the shield hero s01",
+      "match_key_base": "the rising of the shield hero",
       "anime_display": "The Rising of the Shield Hero, S01",
       "type": "ED",
       "ver": "1",
@@ -2074,6 +2262,7 @@
     },
     {
       "match_key": "the rising of the shield hero s01",
+      "match_key_base": "the rising of the shield hero",
       "anime_display": "The Rising of the Shield Hero, S01",
       "type": "OP",
       "ver": "1",
@@ -2085,6 +2274,7 @@
     },
     {
       "match_key": "the rising of the shield hero s02",
+      "match_key_base": "the rising of the shield hero",
       "anime_display": "The Rising of the Shield Hero, S02",
       "type": "ED",
       "ver": null,
@@ -2096,6 +2286,7 @@
     },
     {
       "match_key": "the rising of the shield hero s03",
+      "match_key_base": "the rising of the shield hero",
       "anime_display": "The Rising of the Shield Hero, S03",
       "type": "OP",
       "ver": null,
@@ -2107,6 +2298,7 @@
     },
     {
       "match_key": "tokyo magnitude 8 0",
+      "match_key_base": "tokyo magnitude 8 0",
       "anime_display": "Tokyo Magnitude 8.0",
       "type": "OP",
       "ver": null,
@@ -2118,6 +2310,7 @@
     },
     {
       "match_key": "tomodachi game",
+      "match_key_base": "tomodachi game",
       "anime_display": "Tomodachi Game",
       "type": "ED",
       "ver": null,
@@ -2129,6 +2322,7 @@
     },
     {
       "match_key": "tower of god s01",
+      "match_key_base": "tower of god",
       "anime_display": "Tower of God, S01",
       "type": "ED",
       "ver": null,
@@ -2140,6 +2334,7 @@
     },
     {
       "match_key": "tower of god s01",
+      "match_key_base": "tower of god",
       "anime_display": "Tower of God, S01",
       "type": "OP",
       "ver": null,
@@ -2151,6 +2346,7 @@
     },
     {
       "match_key": "tsukimichi moonlit fantasy s01",
+      "match_key_base": "tsukimichi moonlit fantasy",
       "anime_display": "Tsukimichi -Moonlit Fantasy-, S01",
       "type": "ED",
       "ver": "3",
@@ -2162,6 +2358,7 @@
     },
     {
       "match_key": "tsukimichi moonlit fantasy s02",
+      "match_key_base": "tsukimichi moonlit fantasy",
       "anime_display": "Tsukimichi -Moonlit Fantasy-, S02",
       "type": "ED",
       "ver": "1",
@@ -2173,6 +2370,7 @@
     },
     {
       "match_key": "vinland saga s01",
+      "match_key_base": "vinland saga",
       "anime_display": "Vinland Saga, S01",
       "type": "ED",
       "ver": "2",
@@ -2184,6 +2382,7 @@
     },
     {
       "match_key": "vinland saga s01",
+      "match_key_base": "vinland saga",
       "anime_display": "Vinland Saga, S01",
       "type": "OP",
       "ver": "1",
@@ -2195,6 +2394,7 @@
     },
     {
       "match_key": "vinland saga s01",
+      "match_key_base": "vinland saga",
       "anime_display": "Vinland Saga, S01",
       "type": "OP",
       "ver": "2",
@@ -2206,6 +2406,7 @@
     },
     {
       "match_key": "vinland saga s02",
+      "match_key_base": "vinland saga",
       "anime_display": "Vinland Saga, S02",
       "type": "ED",
       "ver": "1",
@@ -2217,6 +2418,7 @@
     },
     {
       "match_key": "vinland saga s02",
+      "match_key_base": "vinland saga",
       "anime_display": "Vinland Saga, S02",
       "type": "OP",
       "ver": "1",
@@ -2228,6 +2430,7 @@
     },
     {
       "match_key": "violet evergarden",
+      "match_key_base": "violet evergarden",
       "anime_display": "Violet Evergarden",
       "type": "OP",
       "ver": null,
@@ -2239,6 +2442,7 @@
     },
     {
       "match_key": "vivy fluorite eye s song",
+      "match_key_base": "vivy fluorite eye s song",
       "anime_display": "Vivy_ Fluorite Eye_s Song",
       "type": "OP",
       "ver": null,
@@ -2250,6 +2454,7 @@
     },
     {
       "match_key": "wandering witch the journey of elaina",
+      "match_key_base": "wandering witch the journey of elaina",
       "anime_display": "Wandering Witch_ The Journey of Elaina",
       "type": "ED",
       "ver": null,
@@ -2261,6 +2466,7 @@
     },
     {
       "match_key": "your lie in april",
+      "match_key_base": "your lie in april",
       "anime_display": "Your Lie in April",
       "type": "OP",
       "ver": "1",
@@ -2272,6 +2478,7 @@
     },
     {
       "match_key": "your lie in april",
+      "match_key_base": "your lie in april",
       "anime_display": "Your Lie in April",
       "type": "OP",
       "ver": "2",
