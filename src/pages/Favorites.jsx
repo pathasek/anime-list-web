@@ -1,6 +1,9 @@
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useState, useEffect, useMemo, useCallback, lazy, Suspense } from 'react'
 import { createPortal } from 'react-dom'
 import DashboardGroup from '../components/DashboardGroup'
+
+// Minihra „Hádej OP/ED“ — izolovaná featura, načítá se lazy až při spuštění
+const OpEdQuizGame = lazy(() => import('../components/opedquiz/OpEdQuizGame'))
 import { VideoModal } from '../components/CategoryMediaPlayers'
 import { useOstPlayer } from '../components/OstPlayerProvider'
 import { normalizeAnimeKey, extractYoutubeId, extractYoutubePlaylistId, findOpEdVideo } from '../utils/mediaMatch'
@@ -100,6 +103,7 @@ function Favorites() {
     const [spotifyImages, setSpotifyImages] = useState({})
     const [opEdVideos, setOpEdVideos] = useState([])       // Gdrive videa OP/ED (stejná knihovna jako v detailu)
     const [videoModal, setVideoModal] = useState(null)     // přehrávané OP/ED video v modálu
+    const [quizOpen, setQuizOpen] = useState(false)         // minihra „Hádej OP/ED“
     const { openPlayer } = useOstPlayer()                  // globální OST přehrávač (přežívá navigaci)
 
     // Czech number formatting: dot → comma
@@ -654,6 +658,37 @@ function Favorites() {
                 <h2 style={{ margin: 0 }}>
                     Favourite OP/ED/OST
                 </h2>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+                <button
+                    type="button"
+                    onClick={() => setQuizOpen(true)}
+                    style={{
+                        background: 'linear-gradient(135deg, #7c3aed 0%, #db2777 100%)',
+                        color: 'white',
+                        padding: '10px 20px',
+                        borderRadius: 'var(--radius-md)',
+                        border: '1px solid rgba(255,255,255,0.05)',
+                        fontSize: '0.85rem',
+                        fontWeight: 'bold',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        cursor: 'pointer',
+                        boxShadow: '0 4px 12px rgba(124, 58, 237, 0.25)',
+                        transition: 'all 0.2s'
+                    }}
+                    title="Minihra: pustí se jen hudba OP/ED a hádáš anime"
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-1px)';
+                        e.currentTarget.style.boxShadow = '0 6px 16px rgba(124, 58, 237, 0.4)';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(124, 58, 237, 0.25)';
+                    }}
+                >
+                    🎮 Hádej OP/ED
+                </button>
                 <a
                     href="https://savsmb-my.sharepoint.com/:f:/g/personal/xmacoun1_is_savs_cz/IgA3rwr2qW-5TaoWx69yOo3eAR8jYsioUJVZqJzk9-oao0I?e=Zgw5mo"
                     target="_blank"
@@ -685,7 +720,15 @@ function Favorites() {
                 >
                     Videoklipy OP/ED ↗
                 </a>
+                </div>
             </div>
+
+            {/* Minihra Hádej OP/ED — renderuje se portálem, lazy-loaded */}
+            {quizOpen && (
+                <Suspense fallback={null}>
+                    <OpEdQuizGame onClose={() => setQuizOpen(false)} />
+                </Suspense>
+            )}
 
             {/* 2. Stats Grid (Counts) */}
             <div className="stats-grid">
@@ -819,7 +862,7 @@ function Favorites() {
                 {/* GROUP 2: Hudební analytika */}
                 <DashboardGroup
                     id="fav_analytics"
-                    title="Analytika OP/ED (z VBA)"
+                    title="Analytika OP/ED"
                     icon="🎵"
                     isExpanded={expandedGroups.has('fav_analytics')}
                     onToggle={() => toggleGroup('fav_analytics')}

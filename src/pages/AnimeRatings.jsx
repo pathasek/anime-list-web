@@ -358,6 +358,35 @@ function AnimeRatings() {
     const selectedTimelineEpRef = useRef(null)
     selectedTimelineEpRef.current = selectedTimelineEp
 
+    // Série: levý selektor „Vyberte Sérii“ výškově dorovnat pravému sloupci
+    // (hero hlavička má dynamickou výšku, takže čistě CSS to kvůli vnitřnímu
+    // scrollovacímu seznamu spolehlivě nejde). Spodní hrany se pak zarovnají se
+    // „Spojitým vývojem hodnocení epizod“.
+    const seriesLeftPanelRef = useRef(null)
+    const seriesRightPanelRef = useRef(null)
+    useEffect(() => {
+        const left = seriesLeftPanelRef.current
+        const right = seriesRightPanelRef.current
+        if (!left || !right) return
+        const sync = () => { left.style.height = right.offsetHeight + 'px' }
+        sync()
+        const ro = new ResizeObserver(sync)
+        ro.observe(right)
+        return () => ro.disconnect()
+    }, [viewMode, seriesTab, selectedSeries])
+
+    // Task 7: můj rozbor k vybrané epizodě ve spojitém grafu (z docx rozborů,
+    // stejný zdroj jako graf v detailu anime). U filmů/speciálů bez čísla
+    // epizody jde o rozbor děje (story).
+    const timelineDocxReview = useMemo(() => {
+        if (!categoryReviews || !selectedTimelineEp) return null
+        const entry = categoryReviews[selectedTimelineEp.animeName]
+        if (!entry) return null
+        const m = String(selectedTimelineEp.epName || '').match(/EP\s*(\d+)/i)
+        if (m) return entry.episodes?.[parseInt(m[1], 10)] || null
+        return entry.story || null
+    }, [categoryReviews, selectedTimelineEp])
+
     // ---- UI STATES: ROW 1 (INDIVIDUAL) ----
     const [searchQuery, setSearchQuery] = useState('')
     const [selectedAnimeTitle, setSelectedAnimeTitle] = useState(null)
@@ -1885,13 +1914,19 @@ function AnimeRatings() {
                 data: scatterData,
                 backgroundColor: scatterData.map(d => d.color),
                 borderColor: c.grid,
-                borderWidth: 1
+                borderWidth: 1,
+                // Nechat vykreslit celé bubliny i těsně u hran (bod na 10/10 se
+                // pak nepřeřízne). Spolu s layout.padding níže mají kam přesáhnout.
+                clip: false
             }]
         }
     }, [categoryRatings, animeList, c])
 
     const hypeChartOptions = useMemo(() => ({
         responsive: true, maintainAspectRatio: false,
+        // Fyzický prostor kolem plochy grafu, aby bubliny na krajích (např. 10/10)
+        // byly celé vidět. Max poloměr bubliny je 12 px.
+        layout: { padding: { top: 16, right: 16, bottom: 10, left: 10 } },
         scales: {
             x: { title: { display: true, text: 'Technická kvalita (Animace + CGI + OP + ED + OST)', color: c.textMuted }, min: 5.5, max: 10, ticks: { color: c.textMuted }, grid: { color: c.grid } },
             y: { title: { display: true, text: 'Hloubka (Plot + Pacing + Story + Emoce + Originalita)', color: c.textMuted }, min: 5.5, max: 10, ticks: { color: c.textMuted }, grid: { color: c.grid } }
@@ -2319,7 +2354,7 @@ function AnimeRatings() {
                     {viewMode === 'series' && (
                         <div className="ratings-row row-1 series-row-1 fade-in">
                             {/* 1. Selector sérií (Left) */}
-                            <div className="ratings-panel left-panel">
+                            <div className="ratings-panel left-panel" ref={seriesLeftPanelRef}>
                                 <h3 className="ratings-panel-title">Vyberte Sérii</h3>
                                 <DebouncedSearchInput
                                     placeholder="Hledat sérii..."
@@ -2348,7 +2383,7 @@ function AnimeRatings() {
                             </div>
 
                             {/* 2. Series Detail Center & Right Panel */}
-                            <div className="right-panel">
+                            <div className="right-panel" ref={seriesRightPanelRef}>
                                 {/* A. Hlavička Série — hero banner s backdropem, velkým posterem a boxy */}
                                 {selectedSeriesObj && (
                                     <div className="series-header-card series-header-hero">
@@ -2568,9 +2603,10 @@ function AnimeRatings() {
                                                             </span>
                                                         </div>
                                                         <div className="episode-detail-title">
-                                                            {selectedTimelineEp.epName === "Film"
-                                                                ? `Film ${selectedTimelineEp.animeName}`
-                                                                : (jikanSynopsis?.title || selectedTimelineEp.epName)}
+                                                            {timelineDocxReview?.title
+                                                                || (selectedTimelineEp.epName === "Film"
+                                                                    ? `Film ${selectedTimelineEp.animeName}`
+                                                                    : (jikanSynopsis?.title || selectedTimelineEp.epName))}
                                                         </div>
                                                         {selectedTimelineEp.epName !== "Film" && (
                                                             <div className="episode-season-label">
@@ -2631,12 +2667,17 @@ function AnimeRatings() {
                                                             }
                                                             return null;
                                                         })()}
+                                                        {/* Task 7: místo MAL/Jikan synopse můj rozbor epizody (u filmů děj) */}
                                                         <div className="episode-synopsis-container">
-                                                            {jikanSynopsis?.synopsis ? (
-                                                                <p className="episode-synopsis-text">{jikanSynopsis.synopsis}</p>
+                                                            {timelineDocxReview?.text ? (
+                                                                <div className="episode-review-docx">
+                                                                    {formatCategoryMarkdown(timelineDocxReview.text)}
+                                                                </div>
                                                             ) : (
                                                                 <p className="episode-synopsis-placeholder">
-                                                                    {jikanSynopsis === null ? 'Synopsis se stahuje na pozadí...' : 'Synopsis není k dispozici.'}
+                                                                    {selectedTimelineEp.epName === 'Film'
+                                                                        ? 'Rozbor děje zatím není k dispozici.'
+                                                                        : 'Rozbor epizody zatím není k dispozici.'}
                                                                 </p>
                                                             )}
                                                         </div>

@@ -394,20 +394,21 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                                                 📝
                                             </span>
                                         )}
-                                        {storyReview && (
-                                            <span
-                                                className="category-card-review-icon category-card-review-icon-story"
-                                                title="Zobrazit rozbor děje"
-                                                onClick={(e) => {
-                                                    e.stopPropagation()
-                                                    openStoryReview()
-                                                }}
-                                            >
-                                                📖
-                                            </span>
-                                        )}
                                     </span>
                                     <span className="category-card-name" title={cat}>{cat}</span>
+                                    {/* Rozbor děje — až ZA slovem Plot (task 10a) */}
+                                    {storyReview && (
+                                        <span
+                                            className="category-card-review-icon category-card-review-icon-story"
+                                            title="Zobrazit rozbor děje"
+                                            onClick={(e) => {
+                                                e.stopPropagation()
+                                                openStoryReview()
+                                            }}
+                                        >
+                                            📖
+                                        </span>
+                                    )}
                                     {isMedia && (
                                         <span className={`category-card-play-hint${hasTracks ? ' has-local' : ' is-search'}`} aria-hidden="true">
                                             {hasTracks ? (
@@ -596,6 +597,28 @@ function CategoryDetailModal({ activeReview, onClose }) {
         }
     }, [activeReview])
 
+    // Chytrý fallback pro tabulky: normálně se buňky zalamují a tabulka se vejde
+    // do šířky (bez horizontálního scrollu). Ale když má tabulka tolik sloupců,
+    // že by na sloupec zbylo míň než ~110 px (zbytečně úzké/vysoké řádky),
+    // radši povolíme horizontální scroll (třída .scroll-x).
+    const bodyRef = useRef(null)
+    useEffect(() => {
+        if (!activeReview) return
+        const body = bodyRef.current
+        if (!body) return
+        const MIN_COL = 110
+        const apply = () => {
+            body.querySelectorAll('.category-detail-table-wrapper').forEach(wrap => {
+                const cols = wrap.querySelectorAll('thead th').length || 1
+                const tooCramped = cols * MIN_COL > wrap.clientWidth
+                wrap.classList.toggle('scroll-x', tooCramped)
+            })
+        }
+        apply()
+        window.addEventListener('resize', apply)
+        return () => window.removeEventListener('resize', apply)
+    }, [activeReview])
+
     if (!activeReview) return null
 
     const { category, text, rating, icon } = activeReview
@@ -624,7 +647,7 @@ function CategoryDetailModal({ activeReview, onClose }) {
                         </svg>
                     </button>
                 </div>
-                <div className="category-detail-modal-body">
+                <div className="category-detail-modal-body" ref={bodyRef}>
                     <div className="category-detail-text-column">
                         {formatCategoryMarkdown(text)}
                     </div>

@@ -102,6 +102,10 @@
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
+  /* Rezervuje místo pro svislý scrollbar vždy. Když modaly zamknou scroll
+     (html.style.overflow = 'hidden'), scrollbar zmizí, ale bez rezervace by se
+     viewport rozšířil o jeho šířku a stránka by poskočila doprava (task 4). */
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -3847,6 +3851,11 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   overflow: hidden;
   animation: media-fade-in 0.2s ease;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  /* Task 18: celý plovoucí OST přehrávač o 10 % větší se zachováním poměrů.
+     Kotví vpravo dole → roste doleva/nahoru. Minimalizovaný stav
+     (.ost-minimized-btn) se záměrně NEškáluje. */
+  transform: scale(1.1);
+  transform-origin: bottom right;
 }
 .ost-floating-player.minimized {
   position: fixed;
@@ -6360,10 +6369,11 @@ button.fav-ost-row-play:hover {
   font-size: 0.95rem;
 }
 
-/* Tabulky v detailu kategorie — vlastní scroll (X i Y) se zakotvenou hlavičkou */
+/* Tabulky v detailu kategorie — bez vlastního scrollu: celá tabulka je vidět
+   a scrolluje se celý modal. Hlavička je sticky vůči .category-detail-modal-body,
+   takže zůstává nahoře i u vysokých tabulek. */
 .category-detail-table-wrapper {
-  overflow: auto;
-  max-height: 62vh;
+  overflow: visible;
   margin-bottom: var(--spacing-lg);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
@@ -6371,8 +6381,17 @@ button.fav-ost-row-play:hover {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
+/* Fallback (nastavuje JS): když má tabulka tolik sloupců, že by je zalomení
+   zmáčklo do zbytečně úzkých/vysokých řádků, povolíme horizontální scroll. */
+.category-detail-table-wrapper.scroll-x {
+  overflow-x: auto;
+}
+
 .category-detail-table {
   width: 100%;
+  /* auto rozdělí šířku podle obsahu (chytré proporce), díky overflow-wrap se
+     sloupce vejdou bez horizontálního scrollu a řádky rostou jen dle potřeby */
+  table-layout: auto;
   border-collapse: separate;
   border-spacing: 0;
   font-size: 0.88rem;
@@ -6392,7 +6411,9 @@ button.fav-ost-row-play:hover {
   border-bottom: 2px solid var(--border-color);
   font-size: 0.9rem;
   letter-spacing: 0.3px;
-  white-space: nowrap;
+  /* bylo nowrap → nutilo sloupce být široké a vznikal horizontální scroll */
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .category-detail-table td {
@@ -6400,6 +6421,14 @@ button.fav-ost-row-play:hover {
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   color: var(--text-secondary);
   vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+/* Fallback scroll-x: v tomto režimu se nezalamuje, jede horizontální scroll */
+.category-detail-table-wrapper.scroll-x .category-detail-table th,
+.category-detail-table-wrapper.scroll-x .category-detail-table td {
+  white-space: nowrap;
+  overflow-wrap: normal;
 }
 
 .category-detail-table tbody tr:last-child td {
@@ -6469,9 +6498,15 @@ button.fav-ost-row-play:hover {
   transform: scale(1);
 }
 
+/* Rozbor děje: ikona sedí staticky ZA názvem kategorie („za slovem Plot“),
+   ne přes ikonu kategorie (task 10a). Reveal na hover karty zůstává. */
 .category-card-review-icon-story {
-  left: auto;
-  right: -8px;
+  position: static;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  margin-left: 4px;
+  font-size: 0.85rem;
 }
 
 @keyframes fadeIn {

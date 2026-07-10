@@ -48,6 +48,62 @@ ChartJS.defaults.elements.bar.borderSkipped = false
 Object.assign(ChartJS.defaults.plugins.tooltip, premiumTooltipConfig)
 
 // ==========================================
+// AUTO-SCROLL pás rewatchů (task 15)
+// Po otevření detailu „Počet rewatchů“ se pás po prodlevě začne sám pomalu
+// posouvat doprava. Interakce uživatele (hover, kolečko, tažení/touch) posun
+// pozastaví; po chvíli bez interakce se zase rozjede. Na konci pásu zastaví.
+// ==========================================
+function RewatchAutoScroll({ className, children }) {
+    const ref = useRef(null)
+
+    useEffect(() => {
+        const el = ref.current
+        if (!el) return
+
+        const START_DELAY = 1800   // ms před prvním rozjezdem (delayed)
+        const RESUME_DELAY = 2500  // ms klidu po interakci, než se zase rozjede
+        const SPEED = 0.55         // px/frame (~33 px/s @60 Hz) — pomalé „vitrínové“ tempo
+
+        let raf = null
+        let hovering = false
+        let holdUntil = performance.now() + START_DELAY
+
+        const holdFor = (ms) => { holdUntil = Math.max(holdUntil, performance.now() + ms) }
+
+        const step = () => {
+            if (!hovering && performance.now() >= holdUntil) {
+                if (el.scrollLeft + el.clientWidth < el.scrollWidth - 1) {
+                    el.scrollLeft += SPEED
+                }
+            }
+            raf = requestAnimationFrame(step)
+        }
+
+        const onEnter = () => { hovering = true }
+        const onLeave = () => { hovering = false; holdFor(600) }
+        const onUserScroll = () => holdFor(RESUME_DELAY)
+
+        el.addEventListener('pointerenter', onEnter)
+        el.addEventListener('pointerleave', onLeave)
+        el.addEventListener('wheel', onUserScroll, { passive: true })
+        el.addEventListener('touchstart', onUserScroll, { passive: true })
+        el.addEventListener('pointerdown', onUserScroll)
+        raf = requestAnimationFrame(step)
+
+        return () => {
+            cancelAnimationFrame(raf)
+            el.removeEventListener('pointerenter', onEnter)
+            el.removeEventListener('pointerleave', onLeave)
+            el.removeEventListener('wheel', onUserScroll)
+            el.removeEventListener('touchstart', onUserScroll)
+            el.removeEventListener('pointerdown', onUserScroll)
+        }
+    }, [])
+
+    return <div ref={ref} className={className}>{children}</div>
+}
+
+// ==========================================
 // MINI CHART OPTIONS (stripped down for previews)
 // ==========================================
 const miniChartOptions = {
@@ -2328,7 +2384,7 @@ function Dashboard() {
         };
         
         return (
-            <div className="rewatch-timeline-container">
+            <RewatchAutoScroll className="rewatch-timeline-container">
                 {groups.map((group, groupIdx) => {
                     if (group.isSeries) {
                         return (
@@ -2346,7 +2402,7 @@ function Dashboard() {
                         return group.items.map((item, idx) => renderCard(item, `${groupIdx}-${idx}`));
                     }
                 })}
-            </div>
+            </RewatchAutoScroll>
         );
     };
 

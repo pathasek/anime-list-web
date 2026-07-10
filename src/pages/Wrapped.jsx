@@ -81,7 +81,8 @@ export default function Wrapped() {
 
     // Interactive states
     const [selectedYear, setSelectedYear] = useState('2025'); // default to 2025 as the main year
-    const [viewMode, setViewMode] = useState('stories'); // 'stories' or 'classic'
+    // Výchozí je klasický přehled — stories se spouští až tlačítkem (task 16)
+    const [viewMode, setViewMode] = useState('classic'); // 'stories' or 'classic'
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
     const [progress, setProgress] = useState(0);

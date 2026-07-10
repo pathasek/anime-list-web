@@ -74,9 +74,11 @@
   position: sticky;
   top: var(--spacing-grid);
   align-self: flex-start;
-  /* hero + záložky (~210) + 2× gap + timeline (502) — mírně méně než pravý
-     sloupec, aby selektor nepřečníval a nevznikala prázdná mezera */
-  height: calc(502px + 210px + 2 * var(--spacing-grid));
+  /* Přesnou výšku (= pravý sloupec: hero + záložky + timeline) dorovnává JS
+     ResizeObserverem, protože hero hlavička má dynamickou výšku a čistě CSS to
+     kvůli vnitřnímu scrollovacímu seznamu spolehlivě nejde (kruhová závislost).
+     Tato hodnota je jen fallback, než/pokud JS nastaví přesnou výšku inline. */
+  height: calc(502px + 320px + 2 * var(--spacing-grid));
 }
 
 .row-1 .center-panel {
@@ -199,12 +201,14 @@
   gap: 8px;
 }
 
-/* Poster: pevná šířka, výška podle hlavičky (16:9 se ořízne přes object-fit) */
+/* Poster: pevná šířka, VŽDY přesně 16:9 (žádné roztažení na výšku hlavičky).
+   Dřív mělo align-self:stretch + height:auto, takže se u vysokých hlaviček
+   poster protáhl a object-fit:cover ho nepěkně ořízl. */
 .series-header-poster.series-header-poster-xl {
   width: 320px;
   height: auto;
-  min-height: 169px;
-  align-self: stretch;
+  aspect-ratio: 16 / 9;
+  align-self: flex-start;
   object-fit: cover;
 }
 
@@ -1114,8 +1118,11 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  gap: 14px;
+  gap: 4px 14px;
   font-size: 0.78rem;
+  /* Dlouhé hodnoty (rozsah datumů „28. 6. 2025 – 29. 6. 2026“) se smí
+     zalomit na vlastní řádek místo přetečení boxu. */
+  flex-wrap: wrap;
 }
 
 .series-box-row span {
@@ -1127,6 +1134,8 @@
   font-weight: 600;
   text-align: right;
   white-space: nowrap;
+  /* Drží hodnotu vpravo i když se zalomí na vlastní řádek. */
+  margin-left: auto;
 }
 
 /* Vysvětlení a chipy pro radar série */
@@ -1702,6 +1711,23 @@
   line-height: 1.55;
   color: var(--text-secondary);
   white-space: pre-wrap;
+}
+
+/* Můj rozbor epizody/děje (z docx) — kompaktnější sazba pro úzký panel */
+.episode-review-docx {
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.episode-review-docx .category-detail-p {
+  font-size: 0.8rem;
+  margin-bottom: 8px;
+}
+
+.episode-review-docx .category-detail-ul li,
+.episode-review-docx .category-detail-ol li {
+  font-size: 0.8rem;
 }
 
 .episode-synopsis-placeholder {

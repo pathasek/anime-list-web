@@ -114,7 +114,12 @@ export default function MusicPlayer({ animeData, selectedYear }) {
                 display: isExpanded ? 'flex' : 'none',
                 flexDirection: 'column',
                 gap: '1rem',
-                animation: 'slideFadeIn 0.3s ease-out'
+                animation: 'slideFadeIn 0.3s ease-out',
+                // Celý přehrávač o 10 % větší se zachováním všech poměrů. Kotví
+                // vpravo dole, takže roste doleva/nahoru a zůstává v rohu.
+                // Minimalizovaná ikona (toggle níže) se záměrně NEškáluje.
+                transform: 'scale(1.1)',
+                transformOrigin: 'bottom right'
             }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <h4 style={{ margin: 0, fontSize: '1.1rem', color: '#fff', display: 'flex', alignItems: 'center', gap: '8px' }}>
