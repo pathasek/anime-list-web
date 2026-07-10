@@ -33,7 +33,13 @@ function CategoryRadar({
     overlayEntries = null,                     // [[kategorie, hodnota|null]] zarovnané na stejné kategorie
     overlayLabel = null,
     overlayColor = { r: 99, g: 102, b: 241 },  // indigo (vybraná část)
-    height = 460
+    height = 460,
+    // Task 8c: pevná škála — když ji rodič zadá, min/max se NEmění podle
+    // aktuálního overlay (průměr série tak při přepínání dílů „netancuje“)
+    scaleMin = null,
+    scaleMax = null,
+    // Task 8b: klikatelné ikonky kategorií (jen když rodič dodá handler)
+    onCategoryClick = null
 }) {
     const { theme } = useTheme()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -96,6 +102,10 @@ function CategoryRadar({
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 
     const { radarMin, radarMax } = useMemo(() => {
+        // Pevná škála od rodiče má přednost (task 8c)
+        if (scaleMin !== null && scaleMax !== null) {
+            return { radarMin: scaleMin, radarMax: scaleMax }
+        }
         const values = [
             ...entries.map(([, v]) => v),
             ...(overlayEntries ? overlayEntries.map(([, v]) => v) : [])
@@ -103,12 +113,17 @@ function CategoryRadar({
         const minVal = values.length > 0 ? Math.min(...values) : 0
         const maxVal = values.length > 0 ? Math.max(...values) : 10
         return { radarMin: Math.max(0, Math.floor(minVal - 1)), radarMax: maxVal }
-    }, [entries, overlayEntries])
+    }, [entries, overlayEntries, scaleMin, scaleMax])
 
     const chartOptions = useMemo(() => ({
         responsive: true,
         maintainAspectRatio: false,
-        layout: { padding: isMobile ? 35 : 45 },
+        animation: false,
+        // Dole víc místa: popisky pod grafem (ikona + hodnota) se kreslí SMĚREM
+        // dolů od kotvy, takže potřebují větší rezervu než ostatní strany
+        // (jinak přetékaly panel — task 8a). Nahoře stejně: horní popisky se
+        // kreslí SMĚREM nahoru a zasahovaly do chipů nad grafem.
+        layout: { padding: isMobile ? { top: 56, left: 35, right: 35, bottom: 64 } : { top: 72, left: 48, right: 48, bottom: 80 } },
         scales: {
             r: {
                 min: radarMin,
@@ -196,6 +211,10 @@ function CategoryRadar({
 
     useEffect(() => {
         const raf = requestAnimationFrame(computePositions)
+        // Graf se na těžkých stránkách inicializuje o pár framů později než
+        // první rAF — bez opakování by popisky (ikony) zůstaly nevykreslené.
+        // setLabelPos deduplikuje, takže opakované volání nic nerozbije.
+        const retries = [150, 450, 900, 1600].map(ms => setTimeout(computePositions, ms))
         const el = wrapRef.current
         let ro
         if (el && typeof ResizeObserver !== 'undefined') {
@@ -204,6 +223,7 @@ function CategoryRadar({
         }
         return () => {
             cancelAnimationFrame(raf)
+            retries.forEach(clearTimeout)
             if (ro) ro.disconnect()
         }
     }, [computePositions, entries, overlayEntries, theme])
@@ -211,7 +231,8 @@ function CategoryRadar({
     if (!entries || entries.length === 0) return null
 
     return (
-        <div className="category-radar-standalone" style={{ height: `${height}px` }}>
+        // height=null → vyplní rodiče (flex), takže nikdy nepřeteče panel
+        <div className="category-radar-standalone" style={{ height: height ? `${height}px` : '100%' }}>
             <div className="radar-overlay-wrap" style={{ transform: 'none' }} ref={wrapRef}>
                 {entries.map(([cat, rating], i) => {
                     const p = labelPos[i]
@@ -222,8 +243,8 @@ function CategoryRadar({
                     const alignment = isRight ? 'flex-start' : (isLeft ? 'flex-end' : 'center')
                     const txtAlign = isRight ? 'left' : (isLeft ? 'right' : 'center')
 
-                    const nudgeX = p.ux * 25
-                    const nudgeY = p.uy * 22
+                    const nudgeX = p.ux * 22
+                    const nudgeY = p.uy * 15
                     const tx = isRight ? '0%' : (isLeft ? '-100%' : '-50%')
                     const ty = p.uy < -0.5 ? '-100%' : (p.uy > 0.5 ? '0%' : '-50%')
                     const angleRad = Math.atan2(p.uy, p.ux)
@@ -242,7 +263,21 @@ function CategoryRadar({
                                 }}
                             />
                             <div className="radar-overlay-label" style={{ left: `${p.x}px`, top: `${p.y}px` }}>
-                                <div className="radar-label-icon-circle">{iconFor(cat)}</div>
+                                <div
+                                    className={`radar-label-icon-circle${onCategoryClick ? ' clickable' : ''}`}
+                                    {...(onCategoryClick ? {
+                                        role: 'button',
+                                        tabIndex: 0,
+                                        title: `Zobrazit rozbor: ${cat}`,
+                                        onClick: () => onCategoryClick(cat),
+                                        onKeyDown: (e) => {
+                                            if (e.key === 'Enter' || e.key === ' ') {
+                                                e.preventDefault()
+                                                onCategoryClick(cat)
+                                            }
+                                        }
+                                    } : {})}
+                                >{iconFor(cat)}</div>
                                 <div
                                     className="radar-label-text-box"
                                     style={{

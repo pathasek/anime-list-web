@@ -180,18 +180,10 @@ export function FloatingOstPlayer({ ost, playlist, onPlayTrack, onClose }) {
         }
     }
 
-    const handleEnd = () => {
+    const playNext = () => {
         if (ost.kind === 'youtube-playlist') {
-            if (isShuffle && player) {
-                const ids = player.getPlaylist() || []
-                if (ids.length > 1) {
-                    const currentIndex = player.getPlaylistIndex()
-                    let randomIndex = currentIndex
-                    while (randomIndex === currentIndex) {
-                        randomIndex = Math.floor(Math.random() * ids.length)
-                    }
-                    player.playVideoAt(randomIndex)
-                }
+            if (player && typeof player.nextVideo === 'function') {
+                player.nextVideo()
             }
             return
         }
@@ -223,6 +215,24 @@ export function FloatingOstPlayer({ ost, playlist, onPlayTrack, onClose }) {
         if (nextTrack) {
             onPlayTrack(nextTrack)
         }
+    }
+
+    const handleEnd = () => {
+        if (ost.kind === 'youtube-playlist') {
+            if (isShuffle && player) {
+                const ids = player.getPlaylist() || []
+                if (ids.length > 1) {
+                    const currentIndex = player.getPlaylistIndex()
+                    let randomIndex = currentIndex
+                    while (randomIndex === currentIndex) {
+                        randomIndex = Math.floor(Math.random() * ids.length)
+                    }
+                    player.playVideoAt(randomIndex)
+                }
+            }
+            return
+        }
+        playNext()
     }
 
     return createPortal(
@@ -286,14 +296,26 @@ export function FloatingOstPlayer({ ost, playlist, onPlayTrack, onClose }) {
                     <div className="ost-floating-playlist">
                         <div className="ost-playlist-header">
                             <span>Další skladby ({displayTracks.length}):</span>
-                            <button
-                                type="button"
-                                className={`ost-shuffle-btn${isShuffle ? ' active' : ''}`}
-                                onClick={() => setIsShuffle(!isShuffle)}
-                                title={isShuffle ? "Vypnout náhodné přehrávání" : "Zapnout náhodné přehrávání"}
-                            >
-                                🔀 Shuffle
-                            </button>
+                            <div style={{ display: 'flex', gap: '6px' }}>
+                                {displayTracks.length > 1 && (
+                                    <button
+                                        type="button"
+                                        className="ost-shuffle-btn"
+                                        onClick={playNext}
+                                        title="Přehrát další skladbu"
+                                    >
+                                        ⏭️ Next song
+                                    </button>
+                                )}
+                                <button
+                                    type="button"
+                                    className={`ost-shuffle-btn${isShuffle ? ' active' : ''}`}
+                                    onClick={() => setIsShuffle(!isShuffle)}
+                                    title={isShuffle ? "Vypnout náhodné přehrávání" : "Zapnout náhodné přehrávání"}
+                                >
+                                    🔀 Shuffle
+                                </button>
+                            </div>
                         </div>
                         <div className="ost-playlist-list">
                             {displayTracks.map((track, i) => {

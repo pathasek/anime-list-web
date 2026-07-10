@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo, useRef, useLayoutEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useLocation, Link } from 'react-router-dom'
 import { loadData, getDataVersion, STORAGE_KEYS } from '../utils/dataStore'
+import { customSeasonOrders } from '../utils/customSeasonOrders'
 import {
     Chart as ChartJS,
     RadialLinearScale,
@@ -18,7 +19,8 @@ import regression from 'regression'
 import { formatReview } from '../utils/formatReview'
 import { getThemeChartColors } from '../utils/chartTheme'
 import { useTheme } from '../components/ThemeProvider'
-import CategoryRatingsPanel, { formatCategoryMarkdown } from '../components/CategoryRatingsPanel'
+import CategoryRatingsPanel from '../components/CategoryRatingsPanel'
+import { formatCategoryMarkdown } from '../utils/formatCategoryMarkdown'
 import { RatingInfoButton, EpisodeGuideModal, FinalGuideModal } from '../components/RatingGuideModals'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, CategoryScale, LinearScale, BarElement)
@@ -49,6 +51,11 @@ function AnimeDetail() {
     const c = useMemo(() => getThemeChartColors(), [theme]);
     const { name } = useParams()
     const navigate = useNavigate()
+    const location = useLocation()
+    // Batch 2 task 10a: počet detail→detail přeskoků (sequel/prequel) v řadě.
+    // „Zpět" pak vyskočí z celého řetězu najednou — na původní pozici seznamu.
+    const detailDepth = location.state?.detailDepth || 0
+    const nextDetailState = { detailDepth: detailDepth + 1 }
     const [anime, setAnime] = useState(null)
     const [categoryRatings, setCategoryRatings] = useState(null)
     const [episodeRatings, setEpisodeRatings] = useState(null)
@@ -58,9 +65,15 @@ function AnimeDetail() {
     const [history, setHistory] = useState([])
     const [loading, setLoading] = useState(true)
     const [titleWrapped, setTitleWrapped] = useState(false)
+    const [badgesRow2, setBadgesRow2] = useState(false)  // TAG+STATUS+MAL na 2. řádku, když kolidují s tlačítkem
+    const [seriesParts, setSeriesParts] = useState([])       // díly stejné série (task 17)
+    const [seriesModalOpen, setSeriesModalOpen] = useState(false)
     const [epGuideOpen, setEpGuideOpen] = useState(false)   // Průvodce hodnocením epizod
     const [fhGuideOpen, setFhGuideOpen] = useState(false)   // Průvodce finálním hodnocením
     const titleRef = useRef(null)
+    const titleRowRef = useRef(null)
+    const badgeGroupRef = useRef(null)
+    const recommendBtnRef = useRef(null)
 
     // Detect if title wraps (for responsive badge layout)
     useLayoutEffect(() => {
@@ -78,6 +91,29 @@ function AnimeDetail() {
         return () => ro.disconnect();
     }, [anime]);
 
+    // Batch 2 task 11: když se titulek + badge skupina + tlačítko „Najít
+    // doporučení" nevejdou na jeden řádek (badge by zasahovaly do pole
+    // tlačítka), přesune se celá badge skupina na druhý řádek. Měří se
+    // přirozené šířky (scrollWidth), takže se výsledek nemění podle toho,
+    // kde badge zrovna jsou — žádná oscilace.
+    useLayoutEffect(() => {
+        const row = titleRowRef.current
+        if (!row) return
+        const check = () => {
+            const t = titleRef.current
+            const b = badgeGroupRef.current
+            const btn = recommendBtnRef.current
+            if (!t || !b || !btn) return
+            const GAPS = 3 * 16 + 8 // 3× flex gap (spacing-md) + rezerva
+            const needed = t.scrollWidth + b.scrollWidth + btn.scrollWidth + GAPS
+            setBadgesRow2(needed > row.clientWidth)
+        }
+        check()
+        const ro = new ResizeObserver(check)
+        ro.observe(row)
+        return () => ro.disconnect()
+    }, [anime, titleWrapped]);
+
     // Map anime type to CSS badge class (matches AnimeList logic)
     const getTypeBadgeClass = (type) => {
         const t = type?.toLowerCase() || '';
@@ -88,10 +124,17 @@ function AnimeDetail() {
         return 'tv';
     };
 
+    // Reset loadingu při přechodu na jiné anime — render-time místo setState
+    // v efektu (react-hooks/set-state-in-effect)
+    const [prevName, setPrevName] = useState(name)
+    if (prevName !== name) {
+        setPrevName(name)
+        setLoading(true)
+    }
+
     useEffect(() => {
         const decodedName = decodeURIComponent(name)
         let cancelled = false
-        setLoading(true)
 
         Promise.all([
             loadData(STORAGE_KEYS.ANIME_LIST, 'data/anime_list.json'),
@@ -107,6 +150,28 @@ function AnimeDetail() {
             // Find anime by name
             const found = animeList.find(a => a.name === decodedName)
             setAnime(found)
+
+            // Task 17: díly stejné série (pro badge s prev/next a modal se
+            // všemi díly). Řazení shodné se stránkou hodnocení: vlastní pořadí
+            // (customSeasonOrders) → datum sledování.
+            if (found?.series) {
+                const parts = animeList.filter(a => a.series === found.series)
+                const customOrder = customSeasonOrders[found.series]
+                const parseDate = (dStr) => (!dStr || dStr === 'X') ? new Date(0) : new Date(dStr)
+                parts.sort((a, b) => {
+                    if (customOrder) {
+                        const idxA = customOrder.indexOf(a.name)
+                        const idxB = customOrder.indexOf(b.name)
+                        if (idxA !== -1 && idxB !== -1) return idxA - idxB
+                        if (idxA !== -1) return -1
+                        if (idxB !== -1) return 1
+                    }
+                    return parseDate(a.start_date) - parseDate(b.start_date)
+                })
+                setSeriesParts(parts)
+            } else {
+                setSeriesParts([])
+            }
 
             // Find category ratings
             const foundRatings = ratings.find(r => r.name === decodedName)
@@ -412,7 +477,7 @@ function AnimeDetail() {
         <div className="fade-in">
             <button
                 className="btn btn-primary"
-                onClick={() => navigate(-1)}
+                onClick={() => navigate(-(detailDepth + 1))}
                 style={{
                     marginBottom: 'var(--spacing-lg)',
                     background: 'var(--accent-primary)',
@@ -448,21 +513,24 @@ function AnimeDetail() {
                             <div style={{ marginBottom: 'var(--spacing-md)' }}>
                                 <h2 ref={titleRef} style={{ margin: 0, fontSize: '1.75rem', display: 'inline' }}>{anime.name}</h2>
                                 <span style={{ display: 'inline-block', width: 'var(--spacing-md)' }} />
-                                <span className={`type-badge ${getTypeBadgeClass(anime.type)}`} style={{ fontSize: '0.8rem', verticalAlign: 'middle' }}>
-                                    {anime.type}
-                                </span>
-                                {' '}
-                                {anime.status && (
-                                    <span className={`status-badge ${anime.status.toLowerCase().replace('!', '')}`} style={{ marginLeft: 'var(--spacing-md)' }}>
-                                        {anime.status}
+                                {/* Task 12: TYP+STATUS+MAL jako atomická skupina — láme se jen
+                                    jako celek, takže nikdy neskončí TYP na 1. a zbytek na 2. řádku */}
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--spacing-md)', whiteSpace: 'nowrap', verticalAlign: 'middle' }}>
+                                    <span className={`type-badge ${getTypeBadgeClass(anime.type)}`} style={{ fontSize: '0.8rem' }}>
+                                        {anime.type}
                                     </span>
-                                )}
-                                {anime.mal_url && (
-                                    <a href={anime.mal_url} target="_blank" rel="noopener noreferrer"
-                                        style={{ fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '4px', verticalAlign: 'middle', marginLeft: 'var(--spacing-md)' }}>
-                                        🔗 MAL
-                                    </a>
-                                )}
+                                    {anime.status && (
+                                        <span className={`status-badge ${anime.status.toLowerCase().replace('!', '')}`}>
+                                            {anime.status}
+                                        </span>
+                                    )}
+                                    {anime.mal_url && (
+                                        <a href={anime.mal_url} target="_blank" rel="noopener noreferrer"
+                                            style={{ fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                            🔗 MAL
+                                        </a>
+                                    )}
+                                </span>
                                 <button
                                     className="recommend-btn"
                                     style={{
@@ -485,46 +553,64 @@ function AnimeDetail() {
                                     Najít doporučení
                                 </button>
                             </div>
-                        ) : (
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)', flexWrap: 'wrap', marginBottom: 'var(--spacing-md)' }}>
-                                <h2 ref={titleRef} style={{ margin: 0, fontSize: '1.75rem' }}>{anime.name}</h2>
-                                <span className={`type-badge ${getTypeBadgeClass(anime.type)}`} style={{ fontSize: '0.8rem' }}>
-                                    {anime.type}
-                                </span>
-                                {anime.status && (
-                                    <span className={`status-badge ${anime.status.toLowerCase().replace('!', '')}`}>
-                                        {anime.status}
+                        ) : (() => {
+                            // Task 12 + batch 2 task 11: badge skupina je atomická; když by
+                            // zasahovala do pole tlačítka „Najít doporučení", jde celá na
+                            // druhý řádek (měří to useLayoutEffect → badgesRow2)
+                            const badgeGroup = (
+                                <span ref={badgeGroupRef} style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--spacing-md)', whiteSpace: 'nowrap' }}>
+                                    <span className={`type-badge ${getTypeBadgeClass(anime.type)}`} style={{ fontSize: '0.8rem' }}>
+                                        {anime.type}
                                     </span>
-                                )}
-                                {anime.mal_url && (
-                                    <a href={anime.mal_url} target="_blank" rel="noopener noreferrer"
-                                        style={{ fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                                        🔗 MAL
-                                    </a>
-                                )}
-                                <button
-                                    className="recommend-btn"
-                                    style={{
-                                        display: 'inline-flex', alignItems: 'center', gap: '0.6rem', 
-                                        padding: '0.6rem 1.2rem', fontSize: '0.9rem', fontWeight: 'bold',
-                                        background: 'linear-gradient(135deg, var(--accent-primary), #4f46e5)',
-                                        color: 'white', border: 'none', borderRadius: 'var(--radius-md)',
-                                        boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
-                                        cursor: 'pointer', transition: 'all 0.2s ease',
-                                        marginLeft: 'auto',
-                                    }}
-                                    onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(99, 102, 241, 0.6)'; }}
-                                    onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(99, 102, 241, 0.4)'; }}
-                                    onClick={() => navigate('/recommendations', { state: { presetAnime: anime } })}
-                                >
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        <circle cx="11" cy="11" r="8"></circle>
-                                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                    </svg>
-                                    Najít doporučení
-                                </button>
-                            </div>
-                        )}
+                                    {anime.status && (
+                                        <span className={`status-badge ${anime.status.toLowerCase().replace('!', '')}`}>
+                                            {anime.status}
+                                        </span>
+                                    )}
+                                    {anime.mal_url && (
+                                        <a href={anime.mal_url} target="_blank" rel="noopener noreferrer"
+                                            style={{ fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                            🔗 MAL
+                                        </a>
+                                    )}
+                                </span>
+                            )
+                            return (
+                                <>
+                                    <div ref={titleRowRef} style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)', flexWrap: 'wrap', marginBottom: badgesRow2 ? 'var(--spacing-sm)' : 'var(--spacing-md)' }}>
+                                        <h2 ref={titleRef} style={{ margin: 0, fontSize: '1.75rem' }}>{anime.name}</h2>
+                                        {!badgesRow2 && badgeGroup}
+                                        <button
+                                            ref={recommendBtnRef}
+                                            className="recommend-btn"
+                                            style={{
+                                                display: 'inline-flex', alignItems: 'center', gap: '0.6rem',
+                                                padding: '0.6rem 1.2rem', fontSize: '0.9rem', fontWeight: 'bold',
+                                                background: 'linear-gradient(135deg, var(--accent-primary), #4f46e5)',
+                                                color: 'white', border: 'none', borderRadius: 'var(--radius-md)',
+                                                boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
+                                                cursor: 'pointer', transition: 'all 0.2s ease',
+                                                marginLeft: 'auto',
+                                            }}
+                                            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(99, 102, 241, 0.6)'; }}
+                                            onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(99, 102, 241, 0.4)'; }}
+                                            onClick={() => navigate('/recommendations', { state: { presetAnime: anime } })}
+                                        >
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                <circle cx="11" cy="11" r="8"></circle>
+                                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                            </svg>
+                                            Najít doporučení
+                                        </button>
+                                    </div>
+                                    {badgesRow2 && (
+                                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 'var(--spacing-md)' }}>
+                                            {badgeGroup}
+                                        </div>
+                                    )}
+                                </>
+                            )
+                        })()}
 
                         {/* Rating + Key Info Row */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xl)', marginBottom: 'var(--spacing-lg)', flexWrap: 'wrap' }}>
@@ -657,6 +743,47 @@ function AnimeDetail() {
                                         ))}
                                     </>
                                 )}
+
+                                {/* Task 17 + batch 2 task 9: navigátor série — napravo od témat
+                                    (stejná pozice na ose X jako dřív v meta řadě, jen níž na ose Y) */}
+                                {anime.series && seriesParts.length > 1 && (() => {
+                                    const idx = seriesParts.findIndex(p => p.name === anime.name)
+                                    const prev = idx > 0 ? seriesParts[idx - 1] : null
+                                    const next = idx >= 0 && idx < seriesParts.length - 1 ? seriesParts[idx + 1] : null
+                                    const shortLabel = (p) => {
+                                        if (!p) return ''
+                                        let s = p.name
+                                        if (s.toLowerCase().startsWith(anime.series.toLowerCase())) {
+                                            s = s.slice(anime.series.length).replace(/^[\s,:–-]+/, '')
+                                        }
+                                        return s || p.name
+                                    }
+                                    return (
+                                        <div className="series-nav-badge" style={{ marginLeft: 'auto', alignSelf: 'center' }}>
+                                            {prev ? (
+                                                <Link to={`/anime/${encodeURIComponent(prev.name)}`} state={nextDetailState} className="series-nav-chip" title={`Předchozí díl: ${prev.name}`}>
+                                                    <span aria-hidden="true">←</span>
+                                                    <span className="series-nav-chip-label">{shortLabel(prev)}</span>
+                                                </Link>
+                                            ) : (
+                                                <span className="series-nav-chip disabled" title="Toto je první díl série">←</span>
+                                            )}
+                                            <button type="button" className="series-nav-name" onClick={() => setSeriesModalOpen(true)} title="Zobrazit všechny díly série">
+                                                <span aria-hidden="true">📚</span>
+                                                <span className="series-nav-name-label">{anime.series}</span>
+                                                <span className="series-nav-count">{idx + 1}/{seriesParts.length}</span>
+                                            </button>
+                                            {next ? (
+                                                <Link to={`/anime/${encodeURIComponent(next.name)}`} state={nextDetailState} className="series-nav-chip" title={`Další díl: ${next.name}`}>
+                                                    <span className="series-nav-chip-label">{shortLabel(next)}</span>
+                                                    <span aria-hidden="true">→</span>
+                                                </Link>
+                                            ) : (
+                                                <span className="series-nav-chip disabled" title="Toto je poslední díl série">→</span>
+                                            )}
+                                        </div>
+                                    )
+                                })()}
                             </div>
 
                             {/* AniList Tagy pod žánry+tématy */}
@@ -809,7 +936,118 @@ function AnimeDetail() {
             <EpisodeGuideModal open={epGuideOpen} onClose={() => setEpGuideOpen(false)} />
             <FinalGuideModal open={fhGuideOpen} onClose={() => setFhGuideOpen(false)} />
             <EpisodeDetailModal activeEpisode={activeEpisode} onClose={() => setActiveEpisode(null)} />
+            {seriesModalOpen && anime?.series && (
+                <SeriesPartsModal
+                    series={anime.series}
+                    parts={seriesParts}
+                    currentName={anime.name}
+                    onClose={() => setSeriesModalOpen(false)}
+                />
+            )}
         </div>
+    )
+}
+
+// Task 17: modal se všemi díly série — základní data + odkazy na jejich detaily
+function SeriesPartsModal({ series, parts, currentName, onClose }) {
+    // Batch 2 task 10a: přechod na jiný díl série zvyšuje hloubku detail
+    // řetězu — „Zpět" pak vyskočí z celého řetězu najednou.
+    const location = useLocation()
+    const nextDetailState = { detailDepth: (location.state?.detailDepth || 0) + 1 }
+
+    // Zamkne scroll pozadí, dokud je modal otevřený (stejný vzor jako ostatní modaly)
+    useEffect(() => {
+        const html = document.documentElement
+        const overlay = document.querySelector('.anime-detail-overlay')
+        const prevHtml = html.style.overflow
+        const prevOverlay = overlay ? overlay.style.overflow : null
+        html.style.overflow = 'hidden'
+        if (overlay) overlay.style.overflow = 'hidden'
+        return () => {
+            html.style.overflow = prevHtml
+            if (overlay) overlay.style.overflow = prevOverlay
+        }
+    }, [])
+
+    // Batch 2 task 10d: chytrý rozsah sledování — sdílené části data se
+    // vypisují jen jednou: „8. – 15. 7. 2026", „8. 6. – 3. 7. 2026",
+    // „28. 6. 2025 – 29. 6. 2026". Jeden den / chybějící konec → jedno datum.
+    const fmtWatchedRange = (startStr, endStr) => {
+        const parse = (d) => (d && !isNaN(new Date(d).getTime())) ? new Date(d) : null
+        const s = parse(startStr)
+        const e = parse(endStr)
+        const full = (d) => `${d.getDate()}. ${d.getMonth() + 1}. ${d.getFullYear()}`
+        if (!s && !e) return null
+        if (!s) return full(e)
+        if (!e || s.getTime() === e.getTime()) return full(s)
+        if (s.getFullYear() === e.getFullYear()) {
+            if (s.getMonth() === e.getMonth()) return `${s.getDate()}. – ${full(e)}`
+            return `${s.getDate()}. ${s.getMonth() + 1}. – ${full(e)}`
+        }
+        return `${full(s)} – ${full(e)}`
+    }
+
+    const partsWord = parts.length === 1 ? 'díl' : (parts.length < 5 ? 'díly' : 'dílů')
+
+    return createPortal(
+        <div className="category-detail-modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose() }}>
+            <div className="category-detail-modal series-parts-modal">
+                <div className="category-detail-modal-header">
+                    <div className="category-detail-modal-title">
+                        <span className="category-card-icon">📚</span>
+                        <span>{series}</span>
+                        <span className="category-detail-modal-score" style={{ whiteSpace: 'nowrap' }}>{parts.length} {partsWord}</span>
+                    </div>
+                    <button type="button" className="category-detail-modal-close" onClick={onClose} aria-label="Zavřít">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+                <div className="category-detail-modal-body">
+                    <div className="series-parts-list">
+                        {parts.map((p, i) => {
+                            const isCurrent = p.name === currentName
+                            const watched = fmtWatchedRange(p.start_date, p.end_date)
+                            return (
+                                <Link
+                                    key={p.name}
+                                    to={`/anime/${encodeURIComponent(p.name)}`}
+                                    state={nextDetailState}
+                                    className={`series-part-row${isCurrent ? ' current' : ''}`}
+                                    onClick={onClose}
+                                    title={isCurrent ? 'Právě zobrazený díl' : `Otevřít detail: ${p.name}`}
+                                >
+                                    <span className="series-part-index">{i + 1}.</span>
+                                    {p.thumbnail ? (
+                                        <img className="series-part-thumb" src={p.thumbnail.replace(/#/g, '%23')} alt="" loading="lazy" />
+                                    ) : (
+                                        <span className="series-part-thumb series-part-thumb-empty">🎬</span>
+                                    )}
+                                    <span className="series-part-info">
+                                        <span className="series-part-name">{p.name}</span>
+                                        <span className="series-part-meta">
+                                            {[
+                                                p.type,
+                                                p.episodes ? `${p.episodes} ep` : null,
+                                                p.episode_duration ? `${Math.round(p.episode_duration)} min` : null,
+                                                watched ? `Sledováno ${watched}` : null
+                                            ].filter(Boolean).join(' · ')}
+                                        </span>
+                                    </span>
+                                    {p.rating && !isNaN(Number(p.rating)) && (
+                                        <span className="series-part-rating">{Number(p.rating).toLocaleString('cs-CZ')}</span>
+                                    )}
+                                    {isCurrent && <span className="series-part-current-tag">AKTUÁLNÍ</span>}
+                                </Link>
+                            )
+                        })}
+                    </div>
+                </div>
+            </div>
+        </div>,
+        document.body
     )
 }
 

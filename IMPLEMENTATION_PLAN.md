@@ -1,5 +1,10 @@
 # Implementační plán — „Plán pro Claude" (2026-07-09)
 
+> **STAV 2026-07-10: HOTOVO — všech 18 úkolů dokončeno a ověřeno v prohlížeči.**
+> Audit dat (10b): viz [DATA_AUDIT.md](DATA_AUDIT.md). Minihra (13):
+> `src/components/opedquiz/`. Úkol 2 zatím používá mock texty
+> (`CATEGORY_PHILOSOPHY_MOCK` v `AnimeRatings.jsx`) — reálné popisy kategorií doplní autor.
+
 Zdroj: `Plán pro Claude.docx` (18 úkolů + 13 obrázků). Tento dokument mapuje každý úkol na konkrétní soubory, popisuje postup, otevřené otázky a rizika.
 
 ## Datový model (reference)

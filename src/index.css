@@ -865,6 +865,22 @@ tr:hover td {
 }
 
 /* Lists group: strict three-column grid layout */
+/* Task 14: Favorites — rozbalený detail grafů se rozloží do prostoru
+   (mřížka přes celou šířku), ne jen do jednoho svislého sloupce. */
+#group-fav_basic .dashboard-group-content,
+#group-fav_analytics .dashboard-group-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  align-items: stretch;
+}
+
+#group-fav_basic .dashboard-group-content .full-chart-wrapper.standard,
+#group-fav_analytics .dashboard-group-content .full-chart-wrapper.standard {
+  max-width: none;
+  aspect-ratio: auto;
+  min-height: 300px;
+}
+
 .dashboard-group-content.lists-content {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -3856,6 +3872,8 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
      (.ost-minimized-btn) se záměrně NEškáluje. */
   transform: scale(1.1);
   transform-origin: bottom right;
+  display: flex;
+  flex-direction: column;
 }
 .ost-floating-player.minimized {
   position: fixed;
@@ -4140,20 +4158,19 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 /* ==== OST přehrávač pro stránku Favourite OP/ED/OST ==== */
-/* Větší varianta plovoucího přehrávače s delším seznamem / skupinami */
+/* Větší varianta plovoucího přehrávače s delším seznamem / skupinami skladeb */
 .fav-ost-player {
   width: min(420px, 92vw);
 }
 .fav-ost-playlist {
-  max-height: 320px;
+  max-height: 480px;
 }
 .fav-ost-list {
-  max-height: 260px;
+  max-height: 420px;
 }
 
 /* Mobil: playlist se přizpůsobí výšce displeje, aby se player vždy vešel */
 @media (max-width: 768px) {
-  .ost-floating-playlist,
   .fav-ost-playlist {
     max-height: 34vh;
   }
@@ -6289,7 +6306,11 @@ button.fav-ost-row-play:hover {
 }
 
 .category-detail-modal-body {
-  padding: var(--spacing-lg);
+  /* Horní padding nesmí být na scroll kontejneru: sticky hlavička tabulky se
+     přilepuje až na jeho content edge (záporný top Chrome klampuje na 0),
+     takže by nad ní zůstávala díra, kterou prosvítá text. Odsazení obsahu
+     shora řeší padding-top na .category-detail-text-column. */
+  padding: 0 var(--spacing-lg) var(--spacing-lg);
   overflow-y: auto;
   /* Text (a hlavně tabulky) se nesmí roztáhnout přes šířku modalu —
      horizontální scroll patří do wrapperu tabulky, ne do celého okna */
@@ -6309,6 +6330,7 @@ button.fav-ost-row-play:hover {
 .category-detail-text-column {
   flex: 1;
   min-width: 0;
+  padding-top: var(--spacing-lg);
   font-family: 'Open Sans', var(--font-family);
   line-height: 1.7;
   color: var(--text-secondary);
@@ -6411,9 +6433,10 @@ button.fav-ost-row-play:hover {
   border-bottom: 2px solid var(--border-color);
   font-size: 0.9rem;
   letter-spacing: 0.3px;
-  /* bylo nowrap → nutilo sloupce být široké a vznikal horizontální scroll */
+  /* bylo nowrap → nutilo sloupce být široké a vznikal horizontální scroll;
+     anywhere zase srážel min. šířku sloupce na jediné písmeno („POS TAVA“) */
   white-space: normal;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
 }
 
 .category-detail-table td {
@@ -6421,7 +6444,9 @@ button.fav-ost-row-play:hover {
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   color: var(--text-secondary);
   vertical-align: top;
-  overflow-wrap: anywhere;
+  /* break-word (ne anywhere): dlouhá slova se zalomí, ale min. šířka sloupce
+     zůstává podle celých slov → auto layout nedělá degenerovaně úzké sloupce */
+  overflow-wrap: break-word;
 }
 
 /* Fallback scroll-x: v tomto režimu se nezalamuje, jede horizontální scroll */
@@ -6445,6 +6470,233 @@ button.fav-ost-row-play:hover {
 
 .category-detail-table tbody tr:nth-child(even) {
   background: rgba(255, 255, 255, 0.015);
+}
+
+/* Task 8b: klikatelné ikonky kategorií v radaru série */
+.radar-label-icon-circle.clickable {
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.radar-label-icon-circle.clickable:hover,
+.radar-label-icon-circle.clickable:focus-visible {
+  /* Musí zopakovat translate ze základní třídy — samotné scale() by přepsalo
+     centrování a ikona při hoveru uskočila mimo kotvu. */
+  transform: translate(-50%, -50%) scale(1.18);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent-primary) 55%, transparent);
+}
+
+/* Task 7 (batch 2): typografie popisků standalone radaru sladěná s velikostí
+   grafu a 32px ikon — čísla hodnocení a názvy kategorií byly příliš velké. */
+.category-radar-standalone .radar-label-name {
+  font-size: 0.74rem;
+}
+
+.category-radar-standalone .radar-label-value {
+  font-size: 0.86rem;
+  margin-top: 1px;
+}
+
+.category-radar-standalone .radar-label-value-sub {
+  font-size: 0.6rem;
+}
+
+.radar-part-chooser {
+  max-width: 480px;
+}
+
+/* Bez tabulek se sticky hlavičkou → horní padding tu může být přímo na body */
+.radar-part-chooser .category-detail-modal-body {
+  padding-top: var(--spacing-lg);
+}
+
+.radar-part-chooser-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TASK 17: Badge série v detailu anime + modal se všemi díly série
+   ═══════════════════════════════════════════════════════════════════════════ */
+.series-nav-badge {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid color-mix(in srgb, var(--accent-primary) 45%, transparent);
+  border-radius: var(--radius-full);
+  background: color-mix(in srgb, var(--accent-primary) 8%, transparent);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.series-nav-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.series-nav-chip:hover {
+  background: color-mix(in srgb, var(--accent-primary) 22%, transparent);
+  color: var(--text-primary);
+}
+
+.series-nav-chip.disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.series-nav-chip-label {
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.series-nav-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  border-left: 1px solid color-mix(in srgb, var(--accent-primary) 35%, transparent);
+  border-right: 1px solid color-mix(in srgb, var(--accent-primary) 35%, transparent);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.series-nav-name:hover {
+  background: color-mix(in srgb, var(--accent-primary) 22%, transparent);
+}
+
+.series-nav-name-label {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.series-nav-count {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  background: color-mix(in srgb, var(--accent-primary) 16%, transparent);
+  padding: 1px 7px;
+  border-radius: var(--radius-full);
+}
+
+/* Modal se seznamem dílů série */
+.series-parts-modal {
+  max-width: 640px;
+}
+
+.series-parts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  /* Horní odsazení obsahu: modal-body nemá padding-top (kvůli sticky
+     hlavičkám tabulek v rozborech), musí si ho dodat obsah sám. */
+  padding-top: var(--spacing-lg);
+}
+
+.series-part-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--bg-secondary);
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+.series-part-row:hover {
+  border-color: var(--accent-primary);
+  transform: translateX(3px);
+}
+
+.series-part-row.current {
+  border-color: var(--accent-primary);
+  background: color-mix(in srgb, var(--accent-primary) 10%, transparent);
+}
+
+.series-part-index {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  width: 22px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.series-part-thumb {
+  width: 64px;
+  height: 36px; /* 16:9 */
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.series-part-thumb-empty {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-tertiary);
+  font-size: 0.9rem;
+}
+
+.series-part-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.series-part-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.series-part-meta {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.series-part-rating {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--accent-primary);
+  flex-shrink: 0;
+}
+
+.series-part-current-tag {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--accent-primary);
+  border: 1px solid color-mix(in srgb, var(--accent-primary) 50%, transparent);
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
 }
 
 /* Hover trigger for categories - Ikona se změní na 📝 na hover bez ovlivnění layoutu */
@@ -6507,6 +6759,23 @@ button.fav-ost-row-play:hover {
   flex-shrink: 0;
   margin-left: 4px;
   font-size: 0.85rem;
+}
+
+/* Text „Děj" napravo od ikony rozboru děje — objeví se při hoveru karty */
+.category-card-story-label {
+  flex-shrink: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+
+.category-rating-card:hover .category-card-story-label {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 @keyframes fadeIn {

@@ -111,18 +111,45 @@ export function generateGame(pool, animeList, roundCount, spareCount = 5) {
         partsBySeries[a.series].push(a.name)
     }
 
-    const ctx = { uniqueAnime, artists, songsByType, partsBySeries }
-    const tracks = shuffle(pool).slice(0, roundCount + spareCount)
-    const rounds = tracks.map(t => makeRound(t, ctx))
+    const ctx = {
+        uniqueAnime, artists, songsByType, partsBySeries,
+        // Strop sériových kol na hru — bez něj jich padalo příliš mnoho.
+        seriesRoundsLeft: Math.max(1, Math.floor(roundCount * 0.2)),
+    }
+
+    // Výběr skladeb bez duplicit: žádné anime ani písnička se v jedné hře
+    // nesmí objevit dvakrát (platí i pro náhradní kola, která můžou
+    // nahradit nepřehratelné skladby).
+    const usedAnime = new Set()
+    const usedSongs = new Set()
+    const picked = []
+    const rest = []
+    for (const t of shuffle(pool)) {
+        if (picked.length >= roundCount + spareCount) break
+        const songKey = t.song ? t.song.toLowerCase() : null
+        if (usedAnime.has(t.animeName) || (songKey && usedSongs.has(songKey))) {
+            rest.push(t)
+            continue
+        }
+        usedAnime.add(t.animeName)
+        if (songKey) usedSongs.add(songKey)
+        picked.push(t)
+    }
+    // Fallback pro malý pool: radši opakované anime než kratší hra.
+    while (picked.length < roundCount + spareCount && rest.length) picked.push(rest.shift())
+
+    const rounds = picked.map(t => makeRound(t, ctx))
     return { rounds: rounds.slice(0, roundCount), spares: rounds.slice(roundCount) }
 }
 
 function makeRound(track, ctx) {
-    // Sériové kolo: anime má v listu ≥3 díly série → ~40% šance, že se hádá
-    // konkrétní část série (výrazně těžší, přesně dle zadání).
+    // Sériové kolo: anime má v listu ≥3 díly série → malá šance, že se hádá
+    // konkrétní část série. Omezeno pravděpodobností (15 %) i stropem na
+    // celou hru (ctx.seriesRoundsLeft) — bývalo jich příliš mnoho.
     const parts = track.series ? (ctx.partsBySeries[track.series] || []) : []
     const otherParts = parts.filter(n => n !== track.animeName)
-    const isSeries = otherParts.length >= 2 && Math.random() < 0.4
+    const isSeries = otherParts.length >= 2 && ctx.seriesRoundsLeft > 0 && Math.random() < 0.15
+    if (isSeries) ctx.seriesRoundsLeft--
 
     let question, animeOptions
     if (isSeries) {

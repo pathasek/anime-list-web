@@ -212,6 +212,11 @@
   object-fit: cover;
 }
 
+/* V pohledu Jednotlivě je poster vertikálně na středu hlavičky */
+.individual-hero .series-header-poster.series-header-poster-xl {
+  align-self: center;
+}
+
 /* FH kruh + meta údaje v jednom řádku (jako "Rating + Key Info" v detailu) */
 .individual-hero-meta-row {
   display: flex;
@@ -388,6 +393,16 @@
 }
 
 /* Slicer styles */
+.slicer-row {
+  display: flex;
+  gap: 8px;
+}
+
+.slicer-row .slicer-group {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
 .slicer-group {
   display: flex;
   flex-direction: column;
@@ -412,6 +427,15 @@
 /* ═══════════════════════════════════════════════════════════════════════════
    PREMIUM DIAGONAL CHOICE SCREEN & SERIES STYLES
    ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Okamžitá odezva při přepínání pohledu: rozcestník ztlumit, dokud se na
+   pozadí připravuje těžký render cílového pohledu (task 5). */
+.ratings-choice-container.choice-loading {
+  opacity: 0.55;
+  pointer-events: none;
+  cursor: progress;
+  transition: opacity 0.15s ease;
+}
 
 /* Choice Screen Container - Full Page Adaptive Height */
 .ratings-choice-container {
@@ -1086,56 +1110,19 @@
 }
 
 /* Tematické boxy s informacemi o sérii — roztáhnou se přes volné místo */
-.series-header-boxes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+/* Hlavička série: plochý metagrid (stejný jazyk jako hlavička detailu),
+   větší hodnoty a volnější rozestupy místo dřívějších boxů. */
+.series-header-metagrid-lg {
+  gap: 10px var(--spacing-xl);
   width: 100%;
 }
 
-.series-meta-box {
-  background: color-mix(in srgb, var(--bg-secondary) 78%, transparent);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 8px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  min-width: 160px;
-  flex: 1 1 160px;
+.series-header-metagrid-lg .series-meta-item {
+  gap: 2px;
 }
 
-.series-meta-box-title {
-  font-size: 0.62rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 2px;
-}
-
-.series-box-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 4px 14px;
-  font-size: 0.78rem;
-  /* Dlouhé hodnoty (rozsah datumů „28. 6. 2025 – 29. 6. 2026“) se smí
-     zalomit na vlastní řádek místo přetečení boxu. */
-  flex-wrap: wrap;
-}
-
-.series-box-row span {
-  color: var(--text-muted);
-}
-
-.series-box-row b {
-  color: var(--text-primary);
-  font-weight: 600;
-  text-align: right;
-  white-space: nowrap;
-  /* Drží hodnotu vpravo i když se zalomí na vlastní řádek. */
-  margin-left: auto;
+.series-header-metagrid-lg .series-meta-value {
+  font-size: 0.92rem;
 }
 
 /* Vysvětlení a chipy pro radar série */
@@ -2116,9 +2103,10 @@
 }
 
 /* Sekce 2: filtry + rozložení + korelace v jedné řadě (filtry řídí oba grafy)
-   Vyšší ~o 25 %, aby grafy měly víc prostoru. */
+   Výška adaptivní: celá sekce (nadpis 22 + 24 + R² přehled ~335 + 24 + tato
+   řada) se musí vejít do viewportu Chrome s lištou záložek. */
 .explore-row {
-  height: 650px;
+  height: clamp(420px, calc(100vh - 430px), 650px);
 }
 
 .explore-row .filter-panel {
@@ -2223,6 +2211,77 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
   gap: 8px;
+}
+
+/* Task 1: skupiny kategorií — viditelný nadpis + barevné ohraničení,
+   kanonické pořadí (Animace první, OST poslední). Skupiny se roztáhnou
+   přes šířku a chipy uvnitř se natáhnou (širší ukazatele). */
+.r2-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.r2-group {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 8px 10px 10px;
+  min-width: 0;
+}
+
+.r2-group-title {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.r2-group-chips {
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+}
+
+.r2-group-chips .r2-chip {
+  flex: 1 1 0;
+  min-width: 108px;
+}
+
+/* Task 2: malé ⓘ tlačítko na chipu — detail mého pojetí kategorie */
+.r2-chip-info {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 5px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+  vertical-align: middle;
+}
+
+.r2-chip-info:hover,
+.r2-chip-info:focus-visible {
+  color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  background: color-mix(in srgb, var(--accent-primary) 14%, transparent);
+  transform: scale(1.15);
+}
+
+@media (max-width: 900px) {
+  .r2-group { flex: 1 1 100%; }
+  .r2-group-chips { flex-wrap: wrap; }
 }
 
 .r2-chip {
@@ -2392,11 +2451,6 @@
     flex: 1;
     justify-content: center;
     padding: 8px 6px;
-  }
-
-  /* Meta boxy série pod sebou místo vedle sebe */
-  .series-meta-box {
-    flex: 1 1 100%;
   }
 
   /* Záložky série (Timeline / Detaily) roztažené na celou šířku */

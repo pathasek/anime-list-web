@@ -76,6 +76,16 @@ export default function FavoritesOstPlayer({ mode, tracks = [], groups = [], ini
         }
     }
 
+    const playNext = () => {
+        if (isWhole) {
+            if (player && typeof player.nextVideo === 'function') {
+                player.nextVideo()
+            }
+        } else {
+            playNextPiece()
+        }
+    }
+
     // ---- whole: player callbacks ----
     const onPlayerReady = (event) => {
         const p = event.target
@@ -228,14 +238,24 @@ export default function FavoritesOstPlayer({ mode, tracks = [], groups = [], ini
                     <div className="ost-floating-playlist fav-ost-playlist">
                         <div className="ost-playlist-header">
                             <span>Skladby ({tracks.length}):</span>
-                            <button
-                                type="button"
-                                className={`ost-shuffle-btn${isShuffle ? ' active' : ''}`}
-                                onClick={() => setIsShuffle(!isShuffle)}
-                                title={isShuffle ? 'Vypnout náhodné přehrávání' : 'Zapnout náhodné přehrávání'}
-                            >
-                                🔀 Shuffle
-                            </button>
+                            <div style={{ display: 'flex', gap: '6px' }}>
+                                <button
+                                    type="button"
+                                    className="ost-shuffle-btn"
+                                    onClick={playNext}
+                                    title="Přehrát další skladbu"
+                                >
+                                    ⏭️ Next song
+                                </button>
+                                <button
+                                    type="button"
+                                    className={`ost-shuffle-btn${isShuffle ? ' active' : ''}`}
+                                    onClick={() => setIsShuffle(!isShuffle)}
+                                    title={isShuffle ? 'Vypnout náhodné přehrávání' : 'Zapnout náhodné přehrávání'}
+                                >
+                                    🔀 Shuffle
+                                </button>
+                            </div>
                         </div>
                         <div className="ost-playlist-list fav-ost-list" ref={activeListRef}>
                             {tracks.map((t, i) => {
@@ -269,14 +289,24 @@ export default function FavoritesOstPlayer({ mode, tracks = [], groups = [], ini
                     <div className="ost-floating-playlist fav-ost-playlist">
                         <div className="ost-playlist-header">
                             <span>Playlisty podle anime ({groups.length}):</span>
-                            <button
-                                type="button"
-                                className={`ost-shuffle-btn${isShuffle ? ' active' : ''}`}
-                                onClick={() => setIsShuffle(!isShuffle)}
-                                title={isShuffle ? 'Vypnout náhodné přehrávání' : 'Zapnout náhodné přehrávání (uvnitř playlistu)'}
-                            >
-                                🔀 Shuffle
-                            </button>
+                            <div style={{ display: 'flex', gap: '6px' }}>
+                                <button
+                                    type="button"
+                                    className="ost-shuffle-btn"
+                                    onClick={playNext}
+                                    title="Přehrát další skladbu"
+                                >
+                                    ⏭️ Next song
+                                </button>
+                                <button
+                                    type="button"
+                                    className={`ost-shuffle-btn${isShuffle ? ' active' : ''}`}
+                                    onClick={() => setIsShuffle(!isShuffle)}
+                                    title={isShuffle ? 'Vypnout náhodné přehrávání' : 'Zapnout náhodné přehrávání (uvnitř playlistu)'}
+                                >
+                                    🔀 Shuffle
+                                </button>
+                            </div>
                         </div>
                         <div className="ost-playlist-list fav-ost-list fav-ost-groups" ref={activeListRef}>
                             {groups.map((g, gIdx) => {

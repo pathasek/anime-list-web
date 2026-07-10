@@ -757,6 +757,7 @@ function Favorites() {
                     id="fav_basic"
                     title="Základní statistiky OP/ED/OST"
                     icon="📊"
+                    fullWidth
                     isExpanded={expandedGroups.has('fav_basic')}
                     onToggle={() => toggleGroup('fav_basic')}
                     previewContent={
@@ -864,6 +865,7 @@ function Favorites() {
                     id="fav_analytics"
                     title="Analytika OP/ED"
                     icon="🎵"
+                    fullWidth
                     isExpanded={expandedGroups.has('fav_analytics')}
                     onToggle={() => toggleGroup('fav_analytics')}
                     previewContent={

@@ -13,9 +13,10 @@ import { useTheme } from './ThemeProvider'
 import { getThemeChartColors } from '../utils/chartTheme'
 import { getMediaForAnime, youtubeSearchUrl } from '../utils/mediaMatch'
 import { VideoModal, FloatingOstPlayer, ScrollableText } from './CategoryMediaPlayers'
-import { extractMalId } from '../utils/jikanService'
 import { iconFor } from './categoryIcons'
+import { formatCategoryMarkdown } from '../utils/formatCategoryMarkdown'
 import { RatingInfoButton, CategoryGuideModal } from './RatingGuideModals'
+import { useOstPlayer } from './OstPlayerProvider'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip)
 
@@ -69,11 +70,12 @@ function useAccentColor(theme) {
     return useCallback((a) => `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${a})`, [rgb])
 }
 
-function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, animeName, animeSeries, malUrl, review, categoryReviews, compactRadar = false }) {
+function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, animeName, animeSeries, categoryReviews, compactRadar = false }) {
     const { theme } = useTheme()
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const c = useMemo(() => getThemeChartColors(), [theme])
     const accent = useAccentColor(theme)
+    const ostPlayer = useOstPlayer()
 
     // OP/ED/OST média pro toto anime
     const [opEdVideos, setOpEdVideos] = useState(cachedOpEdVideos)
@@ -118,9 +120,14 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
     const playTrack = useCallback((t) => {
         if (!t) return
         if (t.kind === 'video') setVideoModal(t)
-        else if (t.kind === 'youtube' || t.kind === 'youtube-playlist') setFloatingOst(t)
+        else if (t.kind === 'youtube' || t.kind === 'youtube-playlist') {
+            if (ostPlayer && typeof ostPlayer.closePlayer === 'function') {
+                ostPlayer.closePlayer()
+            }
+            setFloatingOst(t)
+        }
         else if (t.kind === 'external') window.open(t.url, '_blank', 'noopener')
-    }, [])
+    }, [ostPlayer])
 
     const searchYoutube = useCallback((type) => {
         window.open(youtubeSearchUrl(animeName, type), '_blank', 'noopener')
@@ -355,7 +362,7 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                             })
                         }
 
-                        const handleCardClickInner = (e) => {
+                        const handleCardClickInner = () => {
                             if (isMedia) {
                                 handleCardClick(cat, tracks)
                             } else if (hasReview) {
@@ -398,16 +405,19 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                                     <span className="category-card-name" title={cat}>{cat}</span>
                                     {/* Rozbor děje — až ZA slovem Plot (task 10a) */}
                                     {storyReview && (
-                                        <span
-                                            className="category-card-review-icon category-card-review-icon-story"
-                                            title="Zobrazit rozbor děje"
-                                            onClick={(e) => {
-                                                e.stopPropagation()
-                                                openStoryReview()
-                                            }}
-                                        >
-                                            📖
-                                        </span>
+                                        <>
+                                            <span
+                                                className="category-card-review-icon category-card-review-icon-story"
+                                                title="Zobrazit rozbor děje"
+                                                onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    openStoryReview()
+                                                }}
+                                            >
+                                                📖
+                                            </span>
+                                            <span className="category-card-story-label" aria-hidden="true">Děj</span>
+                                        </>
                                     )}
                                     {isMedia && (
                                         <span className={`category-card-play-hint${hasTracks ? ' has-local' : ' is-search'}`} aria-hidden="true">
@@ -610,13 +620,41 @@ function CategoryDetailModal({ activeReview, onClose }) {
         const apply = () => {
             body.querySelectorAll('.category-detail-table-wrapper').forEach(wrap => {
                 const cols = wrap.querySelectorAll('thead th').length || 1
-                const tooCramped = cols * MIN_COL > wrap.clientWidth
+                const table = wrap.querySelector('table')
+                // Kromě heuristiky počtu sloupců i reálné přetečení (dlouhá
+                // nezalomitelná slova zvedají min. šířku sloupců)
+                const tooCramped = cols * MIN_COL > wrap.clientWidth ||
+                    (table && table.scrollWidth > wrap.clientWidth + 2)
                 wrap.classList.toggle('scroll-x', tooCramped)
             })
         }
+        // Sticky hlavička nemá dojet až na konec tabulky: jakmile horní hrana
+        // POSLEDNÍHO řádku dosáhne spodku hlavičky, hlavička odjíždí nahoru
+        // (drží se tedy nejdéle na předposledním řádku).
+        const baseTop = -parseFloat(getComputedStyle(body).paddingTop || '0')
+        const syncSticky = () => {
+            const bodyTop = body.getBoundingClientRect().top
+            body.querySelectorAll('.category-detail-table-wrapper').forEach(wrap => {
+                const thead = wrap.querySelector('thead')
+                const rows = wrap.querySelectorAll('tbody tr')
+                if (!thead || rows.length === 0) return
+                const headH = thead.getBoundingClientRect().height
+                const lastTop = rows[rows.length - 1].getBoundingClientRect().top
+                const overshoot = (bodyTop + headH) - lastTop
+                const top = (overshoot > 0 ? baseTop - overshoot : baseTop) + 'px'
+                thead.querySelectorAll('th').forEach(th => {
+                    if (th.style.top !== top) th.style.top = top
+                })
+            })
+        }
         apply()
+        syncSticky()
+        body.addEventListener('scroll', syncSticky, { passive: true })
         window.addEventListener('resize', apply)
-        return () => window.removeEventListener('resize', apply)
+        return () => {
+            body.removeEventListener('scroll', syncSticky)
+            window.removeEventListener('resize', apply)
+        }
     }, [activeReview])
 
     if (!activeReview) return null
@@ -656,167 +694,6 @@ function CategoryDetailModal({ activeReview, onClose }) {
         </div>,
         document.body
     )
-}
-
-// Jednoduchý JSX parser na formátování Markdown textu (tučné, kurzíva, seznamy, tabulky)
-export function formatCategoryMarkdown(text) {
-    if (!text) return null
-
-    const lines = text.split('\n')
-    const elements = []
-    let inTable = false
-    let tableRows = []
-    let listType = null // 'ul' | 'ol' | null
-    let listItems = []
-
-    const flushList = (key) => {
-        if (!listType) return
-        const Tag = listType
-        elements.push(
-            <Tag key={key} className={`category-detail-${listType}`}>
-                {listItems.map((item, idx) => (
-                    <li key={idx}>{parseInlineFormatting(item)}</li>
-                ))}
-            </Tag>
-        )
-        listItems = []
-        listType = null
-    }
-
-    const flushTable = (key) => {
-        if (tableRows.length === 0) return
-        const headers = tableRows[0]
-        const dataRows = tableRows.slice(1)
-        elements.push(
-            <div className="category-detail-table-wrapper" key={key}>
-                <table className="category-detail-table">
-                    <thead>
-                        <tr>
-                            {headers.map((cell, cIdx) => (
-                                <th key={cIdx}>{parseInlineFormatting(cell)}</th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {dataRows.map((row, idx) => (
-                            <tr key={idx}>
-                                {row.map((cell, cIdx) => (
-                                    <td key={cIdx}>{parseInlineFormatting(cell)}</td>
-                                ))}
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        )
-        tableRows = []
-    }
-
-    for (let i = 0; i < lines.length; i++) {
-        const line = lines[i]
-        const trimmed = line.trim()
-
-        if (trimmed === '[TABULKA_START]') {
-            flushList(`list-before-table-${i}`)
-            inTable = true
-            continue
-        }
-        if (trimmed === '[TABULKA_KONEC]') {
-            flushTable(`table-${i}`)
-            inTable = false
-            continue
-        }
-        if (inTable) {
-            if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
-                const cells = trimmed
-                    .slice(1, -1)
-                    .split('|')
-                    .map(c => c.trim())
-                tableRows.push(cells)
-            }
-            continue
-        }
-
-        const bulletMatch = line.match(/^(\s*)-\s+(.*)$/)
-        const decimalMatch = line.match(/^(\s*)(\d+)\.\s+(.*)$/)
-
-        if (bulletMatch) {
-            if (listType !== 'ul') {
-                flushList(`list-before-ul-${i}`)
-                listType = 'ul'
-            }
-            listItems.push(bulletMatch[2])
-            continue
-        } else if (decimalMatch) {
-            if (listType !== 'ol') {
-                flushList(`list-before-ol-${i}`)
-                listType = 'ol'
-            }
-            listItems.push(decimalMatch[3])
-            continue
-        } else {
-            flushList(`list-before-para-${i}`)
-        }
-
-        if (trimmed) {
-            elements.push(
-                <p key={`p-${i}`} className="category-detail-p">
-                    {parseInlineFormatting(trimmed)}
-                </p>
-            )
-        }
-    }
-
-    flushList('list-final')
-    flushTable('table-final')
-
-    return elements
-}
-
-function parseInlineFormatting(text) {
-    if (!text) return ''
-
-    const tripleRegex = /\*\*\*([^*]+)\*\*\*/g
-    const doubleRegex = /\*\*([^*]+)\*\*/g
-    const singleRegex = /\*([^*]+)\*/g
-
-    let tokens = [{ type: 'plain', text: text }]
-
-    const runRegex = (regex, type) => {
-        let nextTokens = []
-        for (const t of tokens) {
-            if (t.type !== 'plain') {
-                nextTokens.push(t)
-                continue
-            }
-            const parts = t.text.split(regex)
-            for (let i = 0; i < parts.length; i++) {
-                if (i % 2 === 1) {
-                    nextTokens.push({ type: type, text: parts[i] })
-                } else if (parts[i]) {
-                    nextTokens.push({ type: 'plain', text: parts[i] })
-                }
-            }
-        }
-        tokens = nextTokens
-    }
-
-    runRegex(tripleRegex, 'bold-italic')
-    runRegex(doubleRegex, 'bold')
-    runRegex(singleRegex, 'italic')
-
-    return tokens.map((tok, idx) => {
-        if (tok.type === 'bold-italic') {
-            return <strong key={idx}><em>{tok.text}</em></strong>
-        }
-        if (tok.type === 'bold') {
-            return <strong key={idx}>{tok.text}</strong>
-        }
-        if (tok.type === 'italic') {
-            return <em key={idx}>{tok.text}</em>
-        }
-        return tok.text
-    })
 }
 
 export default CategoryRatingsPanel

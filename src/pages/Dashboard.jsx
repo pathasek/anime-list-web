@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback, useRef, Fragment } from 'react'
+import { useState, useEffect, useMemo, useRef, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import {
     Chart as ChartJS,
@@ -15,8 +15,9 @@ import {
 import { Chart, Bar, Pie, Doughnut, Line } from 'react-chartjs-2'
 
 import DashboardGroup from '../components/DashboardGroup'
+import InfoIcon from '../components/InfoIcon'
 import { buildChartOptions } from '../utils/chartSettings'
-import { excelPalettes, excelImageBackgroundPlugin, decadeFloatingLabelsPlugin, premiumTooltipConfig, createVerticalGradient, createHorizontalGradient } from '../utils/excelStyles'
+import { excelPalettes, excelImageBackgroundPlugin, decadeFloatingLabelsPlugin, premiumTooltipConfig, createHorizontalGradient } from '../utils/excelStyles'
 import AnimeGenreChordChart from '../components/charts/AnimeGenreChordChart'
 import SpiralWordCloud from '../components/charts/SpiralWordCloud'
 import { calculateExcelChartsData } from '../utils/excelChartCalculations'
@@ -60,8 +61,8 @@ function RewatchAutoScroll({ className, children }) {
         const el = ref.current
         if (!el) return
 
-        const START_DELAY = 1800   // ms před prvním rozjezdem (delayed)
-        const RESUME_DELAY = 2500  // ms klidu po interakci, než se zase rozjede
+        const START_DELAY = 600    // ms před prvním rozjezdem — krátké, ale oko stihne zaostřit
+        const RESUME_DELAY = 1200  // ms klidu po interakci, než se zase rozjede
         const SPEED = 0.55         // px/frame (~33 px/s @60 Hz) — pomalé „vitrínové“ tempo
 
         let raf = null
@@ -104,48 +105,6 @@ function RewatchAutoScroll({ className, children }) {
 }
 
 // ==========================================
-// MINI CHART OPTIONS (stripped down for previews)
-// ==========================================
-const miniChartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    animation: { duration: 0 },
-    plugins: {
-        legend: { display: false },
-        tooltip: { enabled: false },
-        datalabels: { display: false },
-        excelImageBackground: false
-    },
-    scales: {
-        x: { display: false },
-        y: { display: false }
-    },
-    elements: {
-        point: { radius: 0 },
-        bar: { borderWidth: 0 },
-        arc: { borderWidth: 1 }
-    }
-}
-
-const miniPieOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    animation: { duration: 0 },
-    plugins: {
-        legend: { display: false },
-        tooltip: { enabled: false },
-        datalabels: { display: false },
-        excelImageBackground: false
-    },
-    layout: { padding: 4 }
-}
-
-const miniBarHorizontalOptions = {
-    ...miniChartOptions,
-    indexAxis: 'y'
-}
-
-// ==========================================
 // GROUPS CONFIG (fixed order)
 // ==========================================
 const GROUPS_CONFIG = [
@@ -165,14 +124,22 @@ const GROUPS_CONFIG = [
 // JIKAN POSTER HELPER (async image loading)
 // ==========================================
 function JikanPoster({ malUrl, size = 'small' }) {
+    // malId je odvozený z props — loading se inicializuje/resetuje podle něj
+    // při renderu, takže efekt nemusí volat setState synchronně
+    // (react-hooks/set-state-in-effect).
+    const malId = malUrl ? extractMalId(malUrl) : null
     const [imageUrl, setImageUrl] = useState(null)
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(!!malId)
+    const [prevMalId, setPrevMalId] = useState(malId)
+    if (prevMalId !== malId) {
+        setPrevMalId(malId)
+        setImageUrl(null)
+        setLoading(!!malId)
+    }
 
     useEffect(() => {
-        if (!malUrl) { setLoading(false); return }
-        const malId = extractMalId(malUrl)
-        if (!malId) { setLoading(false); return }
-        
+        if (!malId) return
+
         let cancelled = false
         getAnimeInfo(malId).then(info => {
             if (!cancelled && info) {
@@ -181,7 +148,7 @@ function JikanPoster({ malUrl, size = 'small' }) {
             if (!cancelled) setLoading(false)
         })
         return () => { cancelled = true }
-    }, [malUrl, size])
+    }, [malId, size])
 
     const dims = size === 'large' ? { width: '45px', height: '64px' } : { width: '20px', height: '28px' }
 
@@ -203,14 +170,21 @@ function JikanPoster({ malUrl, size = 'small' }) {
 // AIRING EPISODE STATS (async episode data)
 // ==========================================
 function AiringEpisodeStats({ malUrl, animeName, historyLog = [], episodeRatings = [] }) {
+    // Stejný vzor jako JikanPoster: loading odvozený z malId při renderu,
+    // efekt nevolá setState synchronně (react-hooks/set-state-in-effect).
+    const malId = malUrl ? extractMalId(malUrl) : null
     const [stats, setStats] = useState(null)
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(!!malId)
+    const [prevMalId, setPrevMalId] = useState(malId)
+    if (prevMalId !== malId) {
+        setPrevMalId(malId)
+        setStats(null)
+        setLoading(!!malId)
+    }
 
     useEffect(() => {
-        if (!malUrl) { setLoading(false); return }
-        const malId = extractMalId(malUrl)
-        if (!malId) { setLoading(false); return }
-        
+        if (!malId) return
+
         let cancelled = false
         getOrFetchEpisodeList(malId).then(episodes => {
             if (cancelled) return;
@@ -300,7 +274,7 @@ function AiringEpisodeStats({ malUrl, animeName, historyLog = [], episodeRatings
         }).catch(() => { if (!cancelled) setLoading(false) })
 
         return () => { cancelled = true }
-    }, [malUrl, animeName, historyLog])
+    }, [malId, animeName, historyLog])
 
     if (loading) return <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', opacity: 0.5 }}>Načítám…</span>
     if (!stats) return null
@@ -1092,8 +1066,8 @@ function Dashboard() {
     const {
         typesPieData, typesKombiData, typesDistData, studiosPieData, studiosBestData,
         seasonsData, ageVekuData, avgAgeData, tematPopData, tematBestData,
-        zanruData, zanruBestData, ratingPieData, ratingTimelineData, epBucketsData,
-        hoverTimeComboData, statusPieData, dubCountData, dubAvgRatingData, dubTotalTimeData,
+        zanruData, zanruBestData, ratingPieData, epBucketsData,
+        hoverTimeComboData, dubCountData, dubAvgRatingData, dubTotalTimeData,
         tagsData, activeTypes, distScoreLabels
     } = chartConfigs;
 
@@ -1506,7 +1480,7 @@ function Dashboard() {
                 const ratingTimelineBandsPlugin = {
                     id: 'ratingGradientBands',
                     beforeDraw(chart) {
-                        const { ctx, chartArea: { left, right, top, bottom } } = chart;
+                        const { ctx, chartArea: { left, right } } = chart;
                         const yScale = chart.scales.y;
                         if (!yScale) return;
                         const bands = [
@@ -2317,13 +2291,6 @@ function Dashboard() {
             });
         }
         
-        const getMALUrl = (anime) => {
-            if (!anime) return null;
-            if (anime.mal_url) return anime.mal_url;
-            const cleanName = anime.name?.replace(/,\s*S\d+.*$/i, '').replace(/\s*Season\s*\d+.*$/i, '');
-            return cleanName ? `https://myanimelist.net/anime.php?q=${encodeURIComponent(cleanName)}&cat=anime` : `https://myanimelist.net/anime.php?q=${encodeURIComponent(anime.name)}&cat=anime`;
-        };
-        
         const renderCard = (item, key) => {
             const rewatchBadgeClass = item.rewatchNum === 1 
                 ? 'rewatch-1' 
@@ -2477,7 +2444,6 @@ function Dashboard() {
                 }
                 const yearCols = stats.sortedYears.slice(-3)
                 const all = stats.allTimeStats
-                const filtered = stats.filteredStats
                 const ys = stats.yearStats
                 const getYear = (dateStr) => { if (!dateStr) return null; return new Date(dateStr).getFullYear() }
                 const getFromStatsData = (label, yearIdx) => {
@@ -2574,7 +2540,7 @@ function Dashboard() {
                                                                 onClick={() => toggleNote(i, 'all', row.commentAll, isRewatch)}
                                                                 title="Zobrazit poznámku"
                                                             >
-                                                                ⓘ
+                                                                <InfoIcon />
                                                             </span>
                                                         )}
                                                     </td>
@@ -2587,7 +2553,7 @@ function Dashboard() {
                                                                     onClick={() => toggleNote(i, j, row.commentYears[j], isRewatch)}
                                                                     title="Zobrazit poznámku"
                                                                 >
-                                                                    ⓘ
+                                                                    <InfoIcon />
                                                                 </span>
                                                             )}
                                                         </td>
@@ -2654,7 +2620,7 @@ function Dashboard() {
                                                             style={{ cursor: 'pointer', color: (isRewatch ? expandedNote?.id === `${i}-all` : isRowExpanded) ? 'var(--accent-primary)' : 'var(--text-secondary)' }}
                                                             onClick={() => toggleNote(i, 'all', row.commentAll, isRewatch)}
                                                         >
-                                                            ⓘ
+                                                            <InfoIcon />
                                                         </span>
                                                     )}
                                                 </div>
@@ -2679,7 +2645,7 @@ function Dashboard() {
                                                                     style={{ cursor: 'pointer', color: (isRewatch ? expandedNote?.id === `${i}-${j}` : isRowExpanded) ? 'var(--accent-primary)' : 'var(--text-secondary)' }}
                                                                     onClick={() => toggleNote(i, j, row.commentYears[j], isRewatch)}
                                                                 >
-                                                                    ⓘ
+                                                                    <InfoIcon />
                                                                 </span>
                                                             )}
                                                         </div>
@@ -2712,8 +2678,6 @@ function Dashboard() {
                     if (group.id === 'status' && stats) {
                         const statusEntries = stats.statuses || {}
                         const finishedCount = statusEntries['FINISHED'] || 0
-                        const airingCount = sortedAiringAnime?.length || 0
-                        const pendingCount = excelData.pendingAnime?.length || 0
                         headerExtra = (
                             <div className="status-header-badges" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                                 <span className="status-badge finished" style={{ background: 'rgba(52, 211, 153, 0.15)', color: '#34d399', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>
