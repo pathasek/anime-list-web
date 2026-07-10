@@ -419,7 +419,7 @@ export function calculateExcelChartsData(animeList, historyLog) {
             days: parseFloat((s.totalMinutes / 60 / 24).toFixed(1)),
             totalEps: s.totalEps,
             parts: s.parts,
-            avgRating: s.countRated > 0 ? parseFloat((s.sumRating / s.countRated).toFixed(1)) : null
+            avgRating: s.countRated > 0 ? parseFloat((s.sumRating / s.countRated).toFixed(2)) : null
         }))
         .sort((a, b) => b.hours - a.hours);
 

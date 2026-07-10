@@ -36,7 +36,7 @@ const PlayIcon = () => (
 
 
 const fmtWeight = (w) => w.toLocaleString('cs-CZ', { maximumFractionDigits: 1 })
-const fmtRating = (r) => r.toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 1 })
+const fmtRating = (r) => r.toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 2 })
 
 // Reads the current --accent-primary CSS variable as {r, g, b}
 function readAccentRgb() {

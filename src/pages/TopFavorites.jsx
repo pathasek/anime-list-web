@@ -99,7 +99,7 @@ const TopFavorites = () => {
                             if (ratedItems.length > 0) {
                                 const sum = ratedItems.reduce((acc, curr) => acc + parseFloat(curr.rating), 0);
                                 const avg = sum / ratedItems.length;
-                                fhDisplay = Number.isInteger(avg) ? avg.toString() : avg.toFixed(1);
+                                fhDisplay = Number.isInteger(avg) ? avg.toString() : parseFloat(avg.toFixed(2));
                             }
                         } else if (isAnimeLists && mappedAnime && mappedAnime.rating) {
                             fhDisplay = mappedAnime.rating !== 'X' ? mappedAnime.rating : null;

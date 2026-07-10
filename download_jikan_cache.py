@@ -84,12 +84,6 @@ def fetch_episode_list(mal_id):
 
     return all_episodes
 
-def fetch_episode_detail(mal_id, ep_num):
-    url = f"{JIKAN_BASE_URL}/anime/{mal_id}/episodes/{ep_num}"
-    data = make_request(url)
-    time.sleep(API_DELAY_MS / 1000.0)
-    return data['data'] if data and 'data' in data else None
-
 def main():
     print("=" * 60)
     print("Jikan API Cache Downloader for Git Persistence")
@@ -119,19 +113,16 @@ def main():
     print(f"Loaded {len(queue)} anime with valid MyAnimeList links.")
 
     # Load existing static cache
-    cache = {'episode_lists': {}, 'episode_details': {}}
+    cache = {'episode_lists': {}}
     if os.path.exists(jikan_cache_path):
         try:
             with open(jikan_cache_path, 'r', encoding='utf-8') as f:
-                cache = json.load(f)
+                raw_cache = json.load(f)
+                # Keep only episode_lists
+                cache['episode_lists'] = raw_cache.get('episode_lists', {})
             print("Loaded existing jikan_cache.json from disk.")
         except Exception as e:
             print(f"Warning: Could not parse existing cache, starting fresh: {e}")
-
-    if 'episode_lists' not in cache:
-        cache['episode_lists'] = {}
-    if 'episode_details' not in cache:
-        cache['episode_details'] = {}
 
     total_anime = len(queue)
     save_counter = 0
@@ -143,18 +134,7 @@ def main():
         # Check if list is already fully cached
         cached_list = cache['episode_lists'].get(mal_id_str)
         
-        # Check details status
-        has_all_details = True
-        if cached_list and 'episodes' in cached_list:
-            for ep in cached_list['episodes']:
-                key = f"{mal_id_str}_{ep['mal_id']}"
-                if key not in cache['episode_details']:
-                    has_all_details = False
-                    break
-        else:
-            has_all_details = False
-
-        if cached_list and has_all_details:
+        if cached_list:
             # Fully cached! Skip.
             continue
 
@@ -220,69 +200,17 @@ def main():
                         'fetchedAt': int(time.time() * 1000)
                     }
                     cached_list = cache['episode_lists'][mal_id_str]
-                    
-                    # Immediately save synthetic details
-                    key = f"{mal_id_str}_1"
-                    cache['episode_details'][key] = {
-                        'malId': anime['malId'],
-                        'epNum': 1,
-                        'title': label,
-                        'title_japanese': anime_data.get('title_japanese'),
-                        'synopsis': anime_data.get('synopsis'),
-                        'duration': anime_data.get('duration'),
-                        'aired': anime_data.get('aired', {}).get('from'),
-                        'filler': False,
-                        'recap': False,
-                        'fetchedAt': int(time.time() * 1000),
-                        'lastRefreshedAt': int(time.time() * 1000)
-                    }
-                    
                     print(f"  -> Generated synthetic 1-episode list from main Anime info (Type: {anime_data.get('type')}).")
                     save_counter += 1
                 else:
                     print(f"  -> No episodes or main details found on API, skipping.")
                     continue
 
-        # 2. Fetch Episode Details/Synopses
-        eps = cached_list.get('episodes', [])
-        details_fetched = 0
-        
-        for ep in eps:
-            ep_num = ep['mal_id']
-            key = f"{mal_id_str}_{ep_num}"
-            
-            if key in cache['episode_details']:
-                # Already detailed!
-                continue
-                
-            print(f"  -> Fetching synopsis for EP {ep_num}...")
-            detail = fetch_episode_detail(anime['malId'], ep_num)
-            
-            if detail:
-                cache['episode_details'][key] = {
-                    'malId': anime['malId'],
-                    'epNum': ep_num,
-                    'title': detail.get('title') or detail.get('title_japanese') or f"Episode {ep_num}",
-                    'title_japanese': detail.get('title_japanese'),
-                    'synopsis': detail.get('synopsis'),
-                    'duration': detail.get('duration'),
-                    'aired': detail.get('aired') or ep.get('aired'),
-                    'filler': detail.get('filler', False),
-                    'recap': detail.get('recap', False),
-                    'fetchedAt': int(time.time() * 1000),
-                    'lastRefreshedAt': int(time.time() * 1000)
-                }
-                details_fetched += 1
-                save_counter += 1
-                
-                # Incremental save every 10 API operations to avoid losing progress
-                if save_counter >= 10:
-                    with open(jikan_cache_path, 'w', encoding='utf-8') as f:
-                        json.dump(cache, f, ensure_ascii=False, indent=2)
-                    save_counter = 0
-
-        if details_fetched > 0:
-            print(f"  -> Completed synopses download: {details_fetched} new episodes saved.")
+        # Incremental save every 10 API operations to avoid losing progress
+        if save_counter >= 10:
+            with open(jikan_cache_path, 'w', encoding='utf-8') as f:
+                json.dump(cache, f, ensure_ascii=False, indent=2)
+            save_counter = 0
 
     # Final Save
     with open(jikan_cache_path, 'w', encoding='utf-8') as f:

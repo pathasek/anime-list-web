@@ -8,8 +8,7 @@ import { Bar, Chart } from 'react-chartjs-2'
 import regression from 'regression'
 import {
     extractMalId,
-    getCachedEpisodeList,
-    getCachedEpisodeSynopsis
+    getCachedEpisodeList
 } from '../utils/jikanService'
 import './AnimeRatings.css'
 import { customSeasonOrders } from '../utils/customSeasonOrders'
@@ -66,7 +65,7 @@ const EpisodeModalHost = forwardRef(function EpisodeModalHost(_props, ref) {
     const { title, text, rating } = active
     const close = () => setActive(null)
     const handleOverlayClick = (e) => { if (e.target === e.currentTarget) close() }
-    const fmtR = (r) => (r === null || r === undefined) ? 'N/A' : r.toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 1 })
+    const fmtR = (r) => (r === null || r === undefined) ? 'N/A' : r.toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 2 })
 
     return createPortal(
         <div className="category-detail-modal-overlay" onClick={handleOverlayClick}>
@@ -781,12 +780,12 @@ function AnimeRatings() {
         if (epMatch) {
             epNum = parseInt(epMatch[1], 10)
         }
-
         let cancelled = false
 
-        getCachedEpisodeSynopsis(malId, epNum).then(cached => {
+        getCachedEpisodeList(malId).then(cachedList => {
             if (cancelled) return
-            setJikanSynopsis(cached || null)
+            const epData = cachedList?.episodes?.find(e => e.mal_id === epNum)
+            setJikanSynopsis(epData || null)
         }).catch(() => {
             if (!cancelled) setJikanSynopsis(null)
         })
@@ -1724,7 +1723,7 @@ function AnimeRatings() {
                     label: (context) => {
                         const v = typeof context.raw === 'number' ? context.raw : parseFloat(context.raw)
                         if (!isFinite(v)) return ''
-                        return `Hodnocení: ${v.toFixed(1).replace('.', ',')}/10`
+                        return `Hodnocení: ${parseFloat(v.toFixed(2)).toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}/10`
                     }
                 }
             }
@@ -1955,7 +1954,7 @@ function AnimeRatings() {
     // Barva a slovní síla podle R² (0–1)
     const r2Style = useCallback((r2) => {
         if (r2 === null) return { color: 'var(--text-muted)', bg: 'rgba(148,163,184,0.1)', border: 'rgba(148,163,184,0.25)', label: '—' }
-        if (r2 >= 0.5) return { color: 'rgb(52, 211, 153)', bg: 'rgba(24,106,59,0.22)', border: 'rgba(52,211,153,0.4)', label: 'silná' }
+        if (r2 >= 0.5) return { color: 'rgb(52, 211, 153)', bg: 'rgba(24,106,59,0.22)', border: 'rgb(52,211,153,0.4)', label: 'silná' }
         if (r2 >= 0.3) return { color: 'rgb(40, 180, 99)', bg: 'rgba(40,180,99,0.16)', border: 'rgba(40,180,99,0.35)', label: 'střední' }
         if (r2 >= 0.15) return { color: 'rgb(244, 208, 63)', bg: 'rgba(244,208,63,0.14)', border: 'rgba(244,208,63,0.35)', label: 'slabší' }
         return { color: 'rgb(243, 156, 18)', bg: 'rgba(243,156,18,0.12)', border: 'rgba(243,156,18,0.3)', label: 'slabá' }
@@ -3023,7 +3022,7 @@ function AnimeRatings() {
                                                                             title={`${anime.name} - ${ep.episode}: ${ep.episode === 'Film' ? ep.rating.toFixed(2).replace('.', ',') : (Number.isInteger(ep.rating) ? ep.rating : ep.rating.toFixed(2).replace('.', ','))}`}
                                                                         >
                                                                             <span className="ep-card-num">{ep.episode.replace('EP ', 'E')}</span>
-                                                                            <span className="ep-card-val">{ep.episode === 'Film' ? ep.rating.toFixed(2).replace('.', ',') : ep.rating.toFixed(1).replace('.', ',')}</span>
+                                                                            <span className="ep-card-val">{parseFloat(ep.rating.toFixed(2)).toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
                                                                         </div>
                                                                     ))}
                                                                 </div>
@@ -3646,7 +3645,7 @@ function AnimeRatings() {
                                                             return (
                                                                 <td key={cat} className="td-numeric heatmap-cell" style={getHeatmapStyle(val)}>
                                                                     {val !== undefined && val !== null
-                                                                        ? val.toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+                                                                        ? val.toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 2 })
                                                                         : '—'}
                                                                 </td>
                                                             )

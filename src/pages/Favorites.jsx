@@ -1335,12 +1335,12 @@ function Favorites() {
                                     {fav.has_frisson ? '⚡' : ''}
                                 </td>
                                 <td style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
-                                    {fav.rating_avg && !isNaN(parseFloat(fav.rating_avg)) ? toCS(parseFloat(parseFloat(fav.rating_avg).toFixed(1))) : ''}
+                                    {fav.rating_avg && !isNaN(parseFloat(fav.rating_avg)) ? toCS(parseFloat(parseFloat(fav.rating_avg).toFixed(2))) : ''}
                                 </td>
                                 <td>
                                     {fav.rating_final && !isNaN(parseFloat(fav.rating_final)) ? (
                                         <span className={`rating-badge rating-${Math.floor(parseFloat(fav.rating_final))}`}>
-                                            {toCS(parseFloat(parseFloat(fav.rating_final).toFixed(1)))}
+                                            {toCS(parseFloat(parseFloat(fav.rating_final).toFixed(2)))}
                                         </span>
                                     ) : '-'}
                                 </td>
@@ -1404,12 +1404,12 @@ function Favorites() {
                                 <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                                     {fav.has_frisson && <span title="Frisson" style={{ color: 'var(--accent-amber)' }}>⚡</span>}
                                     <span style={{ color: 'var(--text-muted)' }}>
-                                        {fav.rating_avg && !isNaN(parseFloat(fav.rating_avg)) ? toCS(parseFloat(parseFloat(fav.rating_avg).toFixed(1))) : '-'}
+                                        {fav.rating_avg && !isNaN(parseFloat(fav.rating_avg)) ? toCS(parseFloat(parseFloat(fav.rating_avg).toFixed(2))) : '-'}
                                     </span>
                                     <span>/</span>
                                     {fav.rating_final && !isNaN(parseFloat(fav.rating_final)) ? (
                                         <span className={`rating-badge rating-${Math.floor(parseFloat(fav.rating_final))}`} style={{ fontSize: '0.75rem', padding: '2px 6px', minWidth: 'auto' }}>
-                                            {toCS(parseFloat(parseFloat(fav.rating_final).toFixed(1)))}
+                                            {toCS(parseFloat(parseFloat(fav.rating_final).toFixed(2)))}
                                         </span>
                                     ) : '-'}
                                 </div>
@@ -1514,7 +1514,7 @@ function Favorites() {
                                         <td>
                                             {ost.rating_final && !isNaN(parseFloat(ost.rating_final)) ? (
                                                 <span className={`rating-badge rating-${Math.floor(parseFloat(ost.rating_final))}`}>
-                                                    {toCS(parseFloat(parseFloat(ost.rating_final).toFixed(1)))}
+                                                    {toCS(parseFloat(parseFloat(ost.rating_final).toFixed(2)))}
                                                 </span>
                                             ) : '-'}
                                         </td>
@@ -1552,7 +1552,7 @@ function Favorites() {
                                         <span>Hodnocení:</span>
                                         {ost.rating_final && !isNaN(parseFloat(ost.rating_final)) ? (
                                             <span className={`rating-badge rating-${Math.floor(parseFloat(ost.rating_final))}`} style={{ fontSize: '0.75rem', padding: '2px 6px', minWidth: 'auto' }}>
-                                                {toCS(parseFloat(parseFloat(ost.rating_final).toFixed(1)))}
+                                                {toCS(parseFloat(parseFloat(ost.rating_final).toFixed(2)))}
                                             </span>
                                         ) : '-'}
                                     </div>

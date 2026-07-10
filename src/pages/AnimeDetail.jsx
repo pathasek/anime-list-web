@@ -375,7 +375,7 @@ function AnimeDetail() {
                     label: (context) => {
                         const v = typeof context.raw === 'number' ? context.raw : parseFloat(context.raw);
                         if (!isFinite(v)) return '';
-                        return `Hodnocení: ${v.toFixed(1).replace('.', ',')}/10`;
+                        return `Hodnocení: ${parseFloat(v.toFixed(2)).toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}/10`;
                     }
                 }
             }
@@ -632,7 +632,7 @@ function AnimeDetail() {
                                             fontSize: '1.5rem', fontWeight: '800', lineHeight: 1,
                                             color: ratingVar
                                         }}>
-                                            {Number(anime.rating) % 1 === 0 ? parseInt(anime.rating) : parseFloat(anime.rating).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})}
+                                            {Number(anime.rating) % 1 === 0 ? parseInt(anime.rating) : parseFloat(anime.rating).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 2})}
                                         </span>
                                         <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', lineHeight: 1 }}>/10</span>
                                     </div>
@@ -1079,7 +1079,7 @@ function EpisodeDetailModal({ activeEpisode, onClose }) {
 
     const fmtRating = (r) => {
         if (r === null || r === undefined) return 'N/A'
-        return r.toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 1 })
+        return r.toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 2 })
     }
 
     return createPortal(

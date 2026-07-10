@@ -258,23 +258,6 @@ async function fetchEpisodeListFromAPI(malId, priority = 'low') {
     return allEpisodes
 }
 
-/**
- * Fetch single episode detail from Jikan
- * Endpoint: GET /anime/{id}/episodes/{ep}
- * Returns: { synopsis, title, title_japanese, duration, aired, filler, recap }
- * 
- * @param {number} malId
- * @param {number} epNum
- * @returns {Promise<object|null>}
- */
-async function fetchEpisodeDetailFromAPI(malId, epNum, priority = 'low') {
-    const data = await fetchWithRetry(`${JIKAN_BASE_URL}/anime/${malId}/episodes/${epNum}`, RETRY_MAX, priority)
-
-    if (!data || !data.data) return null
-
-    return data.data
-}
-
 // ============================================
 // CACHED READ FUNCTIONS (for UI)
 // ============================================
@@ -335,21 +318,7 @@ export async function getOrFetchEpisodeList(malId) {
     return null
 }
 
-/**
- * Get cached episode synopsis/detail from IndexedDB
- * @param {number} malId
- * @param {number} epNum
- * @returns {Promise<object|null>} - { key, malId, epNum, title, synopsis, duration, aired, ... }
- */
-export async function getCachedEpisodeSynopsis(malId, epNum) {
-    try {
-        const key = `${malId}_${epNum}`
-        return await dbGet(STORE_EPISODE_DETAILS, key)
-    } catch (e) {
-        console.warn('[Jikan] Failed to read episode detail from cache:', e)
-        return null
-    }
-}
+
 
 /**
  * Get the current download progress
@@ -377,6 +346,19 @@ async function saveDownloadProgress(progress) {
         // Non-critical, just log
         console.warn('[Jikan] Failed to save progress:', e)
     }
+}
+
+async function checkIsExcelRunning() {
+    try {
+        const response = await fetch('/api/excel-running')
+        if (response.ok) {
+            const data = await response.json()
+            return !!data.excelRunning
+        }
+    } catch {
+        // Fallback when endpoint is not available
+    }
+    return false
 }
 
 /**
@@ -439,6 +421,28 @@ export async function startBackgroundDownload(animeList, onProgress) {
             break
         }
 
+        // Check if Excel is running and pause Jikan sync if it is
+        let isExcelRunning = await checkIsExcelRunning()
+        if (isExcelRunning) {
+            console.log('[Jikan] Excel is running. Pausing background download.')
+            while (isExcelRunning && !_downloadCancelled) {
+                if (onProgress) {
+                    onProgress({
+                        animeName: downloadQueue[i].name,
+                        animeIdx: i,
+                        totalAnime,
+                        epIdx: 0,
+                        totalEps: 0,
+                        state: 'paused_excel'
+                    })
+                }
+                await delay(10000)
+                isExcelRunning = await checkIsExcelRunning()
+            }
+            if (_downloadCancelled) break
+            console.log('[Jikan] Excel closed. Resuming background download.')
+        }
+
         const anime = downloadQueue[i]
         const ageMs = animeAgeMs(anime.releaseDate)
 
@@ -485,59 +489,16 @@ export async function startBackgroundDownload(animeList, onProgress) {
             }
         }
 
-        // --- Step 2: Fetch synopsis for each episode ---
-        for (let j = 0; j < episodes.length; j++) {
-            if (_downloadCancelled) break
-
-            const ep = episodes[j]
-            const epNum = ep.mal_id
-            const cacheKey = `${anime.malId}_${epNum}`
-
-            // Popisy epizod: chybějící se stáhnou vždy; u anime < 1 rok se
-            // kontrolují měsíčně s prodlužujícím se odstupem beze změn.
-            const cachedDetail = await dbGet(STORE_EPISODE_DETAILS, cacheKey)
-            const needsFetch = shouldRefreshRecord(cachedDetail, ageMs, EP_FRESH_ANIME_MS)
-
-            if (!needsFetch) continue
-
-            const detail = await fetchEpisodeDetailFromAPI(anime.malId, epNum, 'low')
-            await delay(API_DELAY_MS)
-
-            if (detail) {
-                const record = {
-                    key: cacheKey,
-                    malId: anime.malId,
-                    epNum,
-                    title: detail.title || detail.title_japanese || `Episode ${epNum}`,
-                    title_japanese: detail.title_japanese || null,
-                    synopsis: detail.synopsis || null,
-                    duration: detail.duration || null,
-                    aired: detail.aired || ep.aired || null,
-                    filler: detail.filler || false,
-                    recap: detail.recap || false
-                }
-                const signature = contentSignature([record.title, record.synopsis, record.filler, record.recap, record.duration])
-                const unchanged = !!(cachedDetail && cachedDetail.signature === signature)
-                await dbPut(STORE_EPISODE_DETAILS, {
-                    ...record,
-                    signature,
-                    unchangedStreak: unchanged ? (cachedDetail.unchangedStreak || 0) + 1 : 0,
-                    fetchedAt: cachedDetail?.fetchedAt || Date.now(),
-                    lastRefreshedAt: Date.now()
-                })
-            }
-
-            // Report progress
-            if (onProgress) {
-                onProgress({
-                    animeName: anime.name,
-                    animeIdx: i,
-                    totalAnime,
-                    epIdx: j + 1,
-                    totalEps: episodes.length,
-                    state: 'running'
-                })
-            }
+        // Report progress at the end of each anime list fetch
+        if (onProgress && episodes) {
+            onProgress({
+                animeName: anime.name,
+                animeIdx: i,
+                totalAnime,
+                epIdx: episodes.length,
+                totalEps: episodes.length,
+                state: 'running'
+            })
         }
 
         // Save progress after each anime
@@ -600,19 +561,6 @@ export async function importJikanStaticCache(staticCache) {
             for (const [malId, data] of Object.entries(staticCache.episode_lists)) {
                 const malIdNum = parseInt(malId, 10)
                 store.put({ malId: malIdNum, ...data })
-            }
-            await new Promise((resolve, reject) => {
-                tx.oncomplete = () => resolve()
-                tx.onerror = () => reject(tx.error)
-            })
-        }
-        
-        // 2. Bulk import episode details
-        if (staticCache.episode_details) {
-            const tx = db.transaction(STORE_EPISODE_DETAILS, 'readwrite')
-            const store = tx.objectStore(STORE_EPISODE_DETAILS)
-            for (const [key, data] of Object.entries(staticCache.episode_details)) {
-                store.put({ key, ...data })
             }
             await new Promise((resolve, reject) => {
                 tx.oncomplete = () => resolve()
