@@ -1257,38 +1257,42 @@ a.anime-link:hover {
   width: 100%;
 }
 
+/* Sjednoceno s .full-chart-wrapper (stejné pozadí, rádius, stín, padding) */
 .dub-chart-card {
-  background: linear-gradient(145deg, rgba(22, 22, 31, 0.9) 0%, rgba(13, 13, 20, 0.95) 100%);
+  background: linear-gradient(145deg, rgba(22, 22, 31, 0.95) 0%, rgba(13, 13, 20, 0.98) 100%);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.02);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .dub-chart-card:hover {
-  border-color: rgba(99, 102, 241, 0.2);
-  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.06);
+  border-color: rgba(99, 102, 241, 0.25);
+  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
+/* Sjednoceno s .full-chart-wrapper .chart-title (stejný font/odsazení/levý okraj) */
 .dub-chart-title {
-  font-size: 0.75rem;
+  font-size: 0.82rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   color: var(--text-secondary);
-  margin-bottom: var(--spacing-xs);
+  margin: 0 0 var(--spacing-sm) 0;
   text-align: center;
-  background: linear-gradient(90deg, rgba(99, 102, 241, 0.06), transparent);
-  padding: 4px 8px;
+  background: linear-gradient(90deg, rgba(99, 102, 241, 0.08), transparent 70%);
+  padding: 8px 12px;
   border-radius: var(--radius-sm);
+  border-left: 3px solid rgba(99, 102, 241, 0.4);
 }
 
+/* Sjednocená výška s ostatními „short-stacked" grafy (160px) */
 .dub-chart-body {
-  height: 140px;
+  height: 160px;
   position: relative;
 }
 
@@ -6633,6 +6637,28 @@ button.fav-ost-row-play:hover {
   background: color-mix(in srgb, var(--accent-primary) 16%, transparent);
   padding: 1px 7px;
   border-radius: var(--radius-full);
+}
+
+/* Mobil: navigátor série se na úzkých displejích ořezával (flex-shrink:0 +
+   overflow:hidden). Zúžíme labely a padding, aby se celý badge vešel.
+   Desktop zůstává beze změny. */
+@media (max-width: 600px) {
+  .series-nav-badge {
+    max-width: 100%;
+  }
+  .series-nav-chip {
+    padding: 5px 7px;
+    gap: 3px;
+  }
+  .series-nav-chip-label {
+    max-width: 56px;
+  }
+  .series-nav-name {
+    padding: 5px 8px;
+  }
+  .series-nav-name-label {
+    max-width: 96px;
+  }
 }
 
 /* Modal se seznamem dílů série */

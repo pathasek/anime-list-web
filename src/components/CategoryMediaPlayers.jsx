@@ -50,7 +50,7 @@ export function ScrollableText({ text, className, children }) {
 // Ztmavené pozadí, vlastní <video> s ovládáním + tlačítko fullscreen, zavření (X / Esc / klik do pozadí).
 // B3-6: nejdřív zkusí přímé <video autoPlay> (plné ovládání), při selhání
 // fallback na GDrive /preview iframe (vyžaduje klik na play — limit Google Drive).
-export function VideoModal({ media, onClose }) {
+export function VideoModal({ media, onClose, onNext }) {
     // Zamknout scroll pozadí, dokud je video otevřené
     useModalScrollLock(!!media)
 
@@ -67,13 +67,13 @@ export function VideoModal({ media, onClose }) {
 
     return createPortal(
         <div className="media-modal-backdrop" onClick={onClose}>
-            <VideoModalInner key={mediaKey} media={media} onClose={onClose} />
+            <VideoModalInner key={mediaKey} media={media} onClose={onClose} onNext={onNext} />
         </div>,
         document.body
     )
 }
 
-function VideoModalInner({ media, onClose }) {
+function VideoModalInner({ media, onClose, onNext }) {
     // 'video' = přímý <video> s autoPlay (plné ovládání hlasitosti, seekování)
     // 'iframe' = GDrive /preview (cross-origin, nelze ovládat programově)
     const [playMode, setPlayMode] = useState('video')
@@ -94,6 +94,16 @@ function VideoModalInner({ media, onClose }) {
                     {subtitle && <span className="media-modal-subtitle">{subtitle}</span>}
                 </div>
                 <div className="media-modal-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {onNext && (
+                        <button
+                            className="media-icon-btn"
+                            title="Přehrát další náhodný OP/ED"
+                            onClick={onNext}
+                            style={{ width: 'auto', padding: '0 10px', gap: '6px', fontSize: '0.8rem', fontWeight: 600 }}
+                        >
+                            🎲 Další
+                        </button>
+                    )}
                     <button className="media-icon-btn" title="Zavřít (Esc)" onClick={onClose}>
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />

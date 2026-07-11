@@ -158,6 +158,18 @@ function Favorites() {
         })
     }, [findVideoFor])
 
+    // Náhodné přehrání OP/ED z tabulky (jen řádky se spárovaným videoklipem).
+    // Používá se pro tlačítko nahoře i pro re-roll uvnitř modalu.
+    const playRandomOpEd = useCallback(() => {
+        const candidates = favorites.filter(f => {
+            const t = (f.type || '').toUpperCase()
+            return (t === 'OP' || t === 'ED') && !!findVideoFor(f)
+        })
+        if (!candidates.length) return
+        const pick = candidates[Math.floor(Math.random() * candidates.length)]
+        playOpEdVideo(pick)
+    }, [favorites, findVideoFor, playOpEdVideo])
+
     // ---- Data pro OST přehrávač ----
     // Plochý seznam všech "The Best" skladeb (pieces)
     const piecesTracks = useMemo(() => {
@@ -689,26 +701,25 @@ function Favorites() {
                 >
                     🎮 Hádej OP/ED
                 </button>
-                <a
-                    href="https://savsmb-my.sharepoint.com/:f:/g/personal/xmacoun1_is_savs_cz/IgA3rwr2qW-5TaoWx69yOo3eAR8jYsioUJVZqJzk9-oao0I?e=Zgw5mo"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                <button
+                    type="button"
+                    onClick={playRandomOpEd}
                     style={{
                         background: 'linear-gradient(135deg, #095aba 0%, #1e40af 100%)',
                         color: 'white',
                         padding: '10px 20px',
                         borderRadius: 'var(--radius-md)',
-                        textDecoration: 'none',
+                        border: '1px solid rgba(255,255,255,0.05)',
                         fontSize: '0.85rem',
                         fontWeight: 'bold',
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '8px',
+                        cursor: 'pointer',
                         boxShadow: '0 4px 12px rgba(9, 90, 186, 0.2)',
-                        transition: 'all 0.2s',
-                        border: '1px solid rgba(255,255,255,0.05)'
+                        transition: 'all 0.2s'
                     }}
-                    title="Klikněte pro otevření složky s videoklipy na SharePointu"
+                    title="Přehraje náhodný OP/ED videoklip z tabulky"
                     onMouseEnter={(e) => {
                         e.currentTarget.style.transform = 'translateY(-1px)';
                         e.currentTarget.style.boxShadow = '0 6px 16px rgba(9, 90, 186, 0.35)';
@@ -718,8 +729,8 @@ function Favorites() {
                         e.currentTarget.style.boxShadow = '0 4px 12px rgba(9, 90, 186, 0.2)';
                     }}
                 >
-                    Videoklipy OP/ED ↗
-                </a>
+                    🎲 Náhodný OP/ED
+                </button>
                 </div>
             </div>
 
@@ -1729,8 +1740,9 @@ function Favorites() {
 
 
 
-            {/* OP/ED videoklip (Gdrive) v překryvném okně — stejné jako v detailu anime */}
-            <VideoModal media={videoModal} onClose={() => setVideoModal(null)} />
+            {/* OP/ED videoklip (Gdrive) v překryvném okně — stejné jako v detailu anime.
+                onNext umožní re-roll na další náhodný OP/ED přímo z modalu. */}
+            <VideoModal media={videoModal} onClose={() => setVideoModal(null)} onNext={playRandomOpEd} />
 
             {/* Plovoucí OST přehrávač je globální (OstPlayerProvider) — přežívá odchod ze stránky */}
 

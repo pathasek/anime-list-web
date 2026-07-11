@@ -350,16 +350,18 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
 
         return (
             <div className="card" style={{ marginBottom: 'var(--spacing-xl)' }}>
-                <div className="category-ratings-header" style={{ marginBottom: '20px' }}>
+                <div className="category-ratings-header" style={{ marginBottom: '14px' }}>
                     <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
                         📖 Textové rozbory a analýza
                     </h3>
                     <p className="category-ratings-subtitle">
-                        Podrobné textové analýzy děje, vybraných aspektů a epizod z docx rozborů.
+                        Podrobné textové analýzy děje, vybraných aspektů a epizod z docx rozborů vygenerované pomocí AI z webových zdrojů (mohou obsahovat chyby).
                     </p>
                 </div>
 
-                <div className="ratings-flex-container" style={{ display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'stretch' }}>
+                {/* Kompaktní sloupec — NEpoužívá .ratings-flex-container (ta má flex-wrap:wrap
+                    pro horizontální radar layout; v kombinaci s column tvořila obří prázdné místo). */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                     {/* Story Review Hero */}
                     {storyReview?.text && (
                         <button type="button" className="story-review-hero-card" onClick={openStoryReview}>
@@ -375,7 +377,7 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                     {/* Category Reviews Grid */}
                     {reviewedCategories.length > 0 && (
                         <div>
-                            <h4 style={{ margin: '0 0 10px 0', fontSize: '0.9rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                            <h4 style={{ margin: '0 0 8px 0', fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                                 Hodnocené aspekty
                             </h4>
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
@@ -397,33 +399,42 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                     {/* Episode Reviews */}
                     {episodeNumbers.length > 0 && (
                         <div>
-                            <h4 style={{ margin: '10px 0 10px 0', fontSize: '0.9rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                            <h4 style={{ margin: '0 0 8px 0', fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                                 Rozbory epizod
                             </h4>
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '8px' }}>
-                                {episodeNumbers.map(epNum => (
-                                    <button
-                                        key={epNum}
-                                        type="button"
-                                        className="episode-review-btn-chip"
-                                        onClick={() => setActiveReview({
-                                            category: `Epizoda ${epNum}`,
-                                            text: reviews.episodes[epNum],
-                                            rating: null,
-                                            icon: '📝'
-                                        })}
-                                    >
-                                        Epizoda {epNum}
-                                    </button>
-                                ))}
+                                {episodeNumbers.map(epNum => {
+                                    // episodes[epNum] je objekt { title, text } (starší data mohou
+                                    // být holý string). Modal potřebuje STRING do formatCategoryMarkdown
+                                    // — předání objektu dřív shazovalo celou stránku (text.split).
+                                    const ep = reviews.episodes[epNum]
+                                    const epText = (ep && typeof ep === 'object') ? ep.text : ep
+                                    const epTitle = (ep && typeof ep === 'object' && ep.title) ? ep.title : `Epizoda ${epNum}`
+                                    return (
+                                        <button
+                                            key={epNum}
+                                            type="button"
+                                            className="episode-review-btn-chip"
+                                            title={epTitle}
+                                            onClick={() => setActiveReview({
+                                                category: epTitle,
+                                                text: epText,
+                                                rating: null,
+                                                icon: '📝'
+                                            })}
+                                        >
+                                            Epizoda {epNum}
+                                        </button>
+                                    )
+                                })}
                             </div>
                         </div>
                     )}
 
                     {/* Media Players if available */}
                     {['OP', 'ED', 'OST'].some(cat => media[cat] && media[cat].length > 0) && (
-                        <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '20px', marginTop: '10px' }}>
-                            <h4 style={{ margin: '0 0 12px 0', fontSize: '0.9rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                        <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '12px', marginTop: '2px' }}>
+                            <h4 style={{ margin: '0 0 8px 0', fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                                 Doprovodná hudba a znělky
                             </h4>
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '10px' }}>

@@ -1234,7 +1234,7 @@ function Dashboard() {
                             <Pie data={typesPieData} options={getPieOptions()} plugins={[ChartDataLabels]} />
                         </FullChart>
                         <FullChart title="Kombinovaný graf Typů (Hodiny vs Hodnocení)" className="wide">
-                            <Bar data={typesKombiData} options={getOptions(doubleAxisOptions, 'GrafTypuKombi', './assets/excel_charts_media/image41.jpg')} plugins={[ChartDataLabels]} />
+                            <Bar data={typesKombiData} options={getOptions(doubleAxisOptions, 'GrafTypuKombi', null)} plugins={[ChartDataLabels]} />
                         </FullChart>
                         <FullChart title="Rozdělení Typů (Distributivní Skóre)" className="wide">
                             <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -1248,7 +1248,7 @@ function Dashboard() {
                                                 x: { ...stackedBarOptions.scales.x, ticks: { display: false }, grid: { display: false } },
                                                 y: { ...stackedBarOptions.scales.y, max: 250 }
                                              }
-                                         }, 'GrafTypuDist', './assets/excel_charts_media/image47.jpg')} />
+                                         }, 'GrafTypuDist', null)} />
                                 </div>
                                 <div style={{ overflowX: 'auto', marginTop: '-1px' }}>
                                     <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'center', fontSize: '0.9rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)' }}>
@@ -1291,7 +1291,7 @@ function Dashboard() {
                             <Pie data={studiosPieData} options={getPieOptions()} plugins={[ChartDataLabels]} />
                         </FullChart>
                         <FullChart title="Nejlepší Studia (TOP 10)">
-                            <Bar data={studiosBestData} options={getOptions(horizontalBarOptionsExcel, 'GrafStudiiBest', './assets/excel_charts_media/image4.jpg', {
+                            <Bar data={studiosBestData} options={getOptions(horizontalBarOptionsExcel, 'GrafStudiiBest', null, {
                                 scales: { x: { min: floorTo025(Math.min(...excelData.studiosBest.map(s => s.avg))), ticks: { stepSize: 0.25 } } }
                             })} />
                         </FullChart>
@@ -1306,19 +1306,19 @@ function Dashboard() {
                             <Bar data={{
                                 labels: seasonsData.labels,
                                 datasets: [{ ...seasonsData.datasets[0], datalabels: { display: true, formatter: (val) => val, color: '#000', anchor: 'center', align: 'center', font: { weight: 'bold' } } }]
-                            }} options={getOptions(horizontalBarOptionsExcel, 'GrafAnimeSezony', './assets/excel_charts_media/image6.jpg', { scales: { x: { display: false } } })} />
+                            }} options={getOptions(horizontalBarOptionsExcel, 'GrafAnimeSezony', null, { scales: { x: { display: false } } })} />
                         </FullChart>
                         <FullChart title="Počet Anime podle stáří věkových skupin" className="short-stacked">
                             <Bar data={{
                                 labels: ageVekuData.labels,
                                 datasets: [{ ...ageVekuData.datasets[0], datalabels: { display: true, formatter: (val) => `${val}`, color: '#000', anchor: 'center', align: 'center' } }]
-                            }} options={getOptions(horizontalBarOptionsExcel, 'GrafAnimeVeku', './assets/excel_charts_media/image5.jpg', { scales: { x: { display: false } } })} />
+                            }} options={getOptions(horizontalBarOptionsExcel, 'GrafAnimeVeku', null, { scales: { x: { display: false } } })} />
                         </FullChart>
                         <FullChart title="Průměrné hodnocení věkových skupin" className="short-stacked">
                             <Bar data={{
                                 labels: avgAgeData.labels,
                                 datasets: [{ ...avgAgeData.datasets[0], datalabels: { display: true, formatter: (val) => `${parseFloat(val).toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, color: '#000', anchor: 'center', align: 'center' } }]
-                            }} options={getOptions(horizontalBarOptionsExcel, 'GrafPrumerVeku', './assets/excel_charts_media/image45.jpg', {
+                            }} options={getOptions(horizontalBarOptionsExcel, 'GrafPrumerVeku', null, {
                                 scales: { x: { min: floorTo025(Math.min(...Object.values(excelData.ageAvg).filter(v => v > 0))), ticks: { stepSize: 0.25 }, display: false } }
                             })} />
                         </FullChart>
@@ -1333,7 +1333,7 @@ function Dashboard() {
                             <Pie data={tematPopData} options={getPieOptions()} plugins={[ChartDataLabels]} />
                         </FullChart>
                         <FullChart title="Nejlepší Témata (TOP 10)">
-                            <Bar data={tematBestData} options={getOptions(horizontalBarOptionsExcel, 'GrafTematBest', './assets/excel_charts_media/image7.jpg', {
+                            <Bar data={tematBestData} options={getOptions(horizontalBarOptionsExcel, 'GrafTematBest', null, {
                                 scales: { x: { min: floorTo025(Math.min(...excelData.themesBest.map(h => h.avg))), ticks: { stepSize: 0.25 } } }
                             })} />
                         </FullChart>
@@ -1348,7 +1348,7 @@ function Dashboard() {
                             <Pie data={zanruData} options={getPieOptions()} plugins={[ChartDataLabels]} />
                         </FullChart>
                         <FullChart title="Nejlepší Žánry (TOP 10)">
-                            <Bar data={zanruBestData} options={getOptions(horizontalBarOptionsExcel, 'GrafZanruBest', './assets/excel_charts_media/image8.jpg', {
+                            <Bar data={zanruBestData} options={getOptions(horizontalBarOptionsExcel, 'GrafZanruBest', null, {
                                 scales: { x: { min: floorTo025(Math.min(...excelData.genresBest.map(h => h.avg))), ticks: { stepSize: 0.25 } } }
                             })} />
                         </FullChart>
@@ -1647,7 +1647,7 @@ function Dashboard() {
                             <Chart type="bar" data={epBucketsData} options={epBucketsOptions} plugins={[ChartDataLabels]} />
                         </FullChart>
                         <FullChart title="Hodnocení v čase & Vývoj kvality" className="wide">
-                            <Line data={hoverTimeComboData} options={getOptions(doubleAxisRatingOptions, 'AnimeHodnoceniVCaseGraf', './assets/excel_charts_media/image35.jpg')} />
+                            <Line data={hoverTimeComboData} options={getOptions(doubleAxisRatingOptions, 'AnimeHodnoceniVCaseGraf', null)} />
                         </FullChart>
                     </>
                 )

@@ -1040,6 +1040,15 @@ function HistoryLog() {
                                 {formatDate(group.date)}
                             </div>
                             <div style={{ display: 'flex', gap: 'var(--spacing-lg)', fontSize: '0.875rem' }}>
+                                {(() => {
+                                    // Počet UNIKÁTNÍCH anime zhlédnutých daný den (ne počet řádků)
+                                    const animeCount = new Set(group.entries.map(e => e.name).filter(Boolean)).size
+                                    return (
+                                        <span style={{ color: 'var(--accent-secondary)' }}>
+                                            {animeCount} Anime
+                                        </span>
+                                    )
+                                })()}
                                 <span style={{ color: 'var(--accent-cyan)' }}>
                                     {pluralEpizoda(group.totalEpisodes)}
                                 </span>
