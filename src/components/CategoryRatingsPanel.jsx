@@ -362,18 +362,6 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                 {/* Kompaktní sloupec — NEpoužívá .ratings-flex-container (ta má flex-wrap:wrap
                     pro horizontální radar layout; v kombinaci s column tvořila obří prázdné místo). */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                    {/* Story Review Hero */}
-                    {storyReview?.text && (
-                        <button type="button" className="story-review-hero-card" onClick={openStoryReview}>
-                            <div className="hero-card-icon" aria-hidden="true">📖</div>
-                            <div className="hero-card-content">
-                                <h4>Celkový rozbor děje</h4>
-                                <p>Kliknutím zobrazíte detailní analýzu struktury děje (expozice, konfrontace, rozuzlení).</p>
-                            </div>
-                            <span className="hero-card-action-btn">Zobrazit</span>
-                        </button>
-                    )}
-
                     {/* Category Reviews Grid */}
                     {reviewedCategories.length > 0 && (
                         <div>
@@ -394,6 +382,18 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                                 ))}
                             </div>
                         </div>
+                    )}
+
+                    {/* Story Review Hero — pod kategoriemi */}
+                    {storyReview?.text && (
+                        <button type="button" className="story-review-hero-card" onClick={openStoryReview}>
+                            <div className="hero-card-icon" aria-hidden="true">📖</div>
+                            <div className="hero-card-content">
+                                <h4>Celkový rozbor děje</h4>
+                                <p>Kliknutím zobrazíte detailní analýzu struktury děje (expozice, konfrontace, rozuzlení).</p>
+                            </div>
+                            <span className="hero-card-action-btn">Zobrazit</span>
+                        </button>
                     )}
 
                     {/* Episode Reviews */}
