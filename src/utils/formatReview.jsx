@@ -170,6 +170,13 @@ function highlightAnimeName(text, animeNames, isFirst) {
     return [<span key={Math.random()}>{text}</span>];
   }
 
+  // Only bold the anime name in the very first text segment (before the first
+  // detected category/FH rating). In later segments the name refers to a
+  // character or is a natural re-mention — not the title itself.
+  if (!isFirst) {
+    return [<span key={Math.random()}>{text}</span>];
+  }
+
   // Create a combined regex for all possible names, matching longest first
   const escapedNames = animeNames.map(escapeRegex);
   const regex = new RegExp(`(${escapedNames.join('|')})`, 'gi');
