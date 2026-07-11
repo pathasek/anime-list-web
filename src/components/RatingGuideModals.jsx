@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { iconFor } from './categoryIcons'
+import { useModalScrollLock } from '../utils/useModalScrollLock'
 
 // ---- Animační hook: plynulý morphing mezi "pózami" hodnot ------------------
 // Drží holdMs, pak morphMs plynule interpoluje na další pózu (ease-in-out).
@@ -180,29 +181,13 @@ function RadarMiniSVG() {
 
 // ---- Společná schránka modálu ----------------------------------------------
 function GuideShell({ open, onClose, icon, title, subtitle, children, wide = false }) {
+    useModalScrollLock(open)
+
     useEffect(() => {
         if (!open) return
         const onKey = (e) => { if (e.key === 'Escape') onClose() }
         window.addEventListener('keydown', onKey)
-        // Stránku scrolluje <html> (má overflow-x: hidden, takže overflow na
-        // <body> se nepropaguje na viewport) — zamknout musíme oba elementy.
-        const prevBodyOverflow = document.body.style.overflow
-        const prevHtmlOverflow = document.documentElement.style.overflow
-        const prevHtmlPaddingRight = document.documentElement.style.paddingRight
-        // Zmizení scrollbaru by rozšířilo obsah a po zavření zase smrsklo —
-        // kompenzujeme jeho šířku paddingem, ať se layout ani nehne.
-        const scrollbarW = window.innerWidth - document.documentElement.clientWidth
-        document.body.style.overflow = 'hidden'
-        document.documentElement.style.overflow = 'hidden'
-        if (scrollbarW > 0) {
-            document.documentElement.style.paddingRight = `${scrollbarW}px`
-        }
-        return () => {
-            window.removeEventListener('keydown', onKey)
-            document.body.style.overflow = prevBodyOverflow
-            document.documentElement.style.overflow = prevHtmlOverflow
-            document.documentElement.style.paddingRight = prevHtmlPaddingRight
-        }
+        return () => window.removeEventListener('keydown', onKey)
     }, [open, onClose])
 
     if (!open) return null

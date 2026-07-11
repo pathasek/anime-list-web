@@ -4,9 +4,14 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import { POINTS, buildPool, generateGame } from './quizEngine'
+import { useModalScrollLock } from '../../utils/useModalScrollLock'
 import './opedquiz.css'
 
-const ROUND_CHOICES = [5, 10, 15]
+// Infinity = nekonečný režim (batch 3 task 5c): hraje se, dokud hráč hru
+// sám neukončí nebo nevyčerpá všechny unikátní skladby knihovny.
+const ROUND_CHOICES = [5, 10, 15, Infinity]
+
+const VOLUME_KEY = 'opq-volume'
 
 const emptyPicks = () => ({ anime: null, type: null, artist: null, song: null })
 const emptyStats = () => ({
@@ -42,7 +47,14 @@ export default function OpEdQuizGame({ onClose }) {
     const [score, setScore] = useState(0)
     const [stats, setStats] = useState(emptyStats)
     const [audio, setAudio] = useState({ playing: false, time: 0, dur: 0, error: false })
-    const [volume, setVolume] = useState(0.75)
+    // Hlasitost přežívá mezi hrami (localStorage) — batch 3 task 5b
+    const [volume, setVolume] = useState(() => {
+        const v = parseFloat(localStorage.getItem(VOLUME_KEY))
+        return Number.isFinite(v) ? Math.min(1, Math.max(0, v)) : 0.75
+    })
+    // Součet max. bodů ODEHRANÝCH kol — v nekonečném režimu se výsledek
+    // počítá jen z kol, na která hráč skutečně odpovídal
+    const [playedMax, setPlayedMax] = useState(0)
     const [notice, setNotice] = useState(null)
     // 'video' = skrytý <video> s přímým URL (žádný vizuál, plné ovládání).
     // 'iframe' = fallback: GDrive preview rozmazaný proti spoilerům — přímé
@@ -79,12 +91,7 @@ export default function OpEdQuizGame({ onClose }) {
     }, [])
 
     // Zámek scrollu pozadí (stejný vzor jako ostatní modaly v aplikaci)
-    useEffect(() => {
-        const html = document.documentElement
-        const prev = html.style.overflow
-        html.style.overflow = 'hidden'
-        return () => { html.style.overflow = prev }
-    }, [])
+    useModalScrollLock()
 
     // Esc zavírá hru; při odchodu zastavit zvuk
     useEffect(() => {
@@ -97,6 +104,7 @@ export default function OpEdQuizGame({ onClose }) {
 
     useEffect(() => {
         if (videoRef.current) videoRef.current.volume = volume
+        localStorage.setItem(VOLUME_KEY, String(volume))
     }, [volume, idx, phase])
 
     // Nové kolo → automaticky přehrát (spouští se z user gesture Start/Další)
@@ -126,6 +134,7 @@ export default function OpEdQuizGame({ onClose }) {
         setScore(0)
         setStats(emptyStats())
         setPicks(emptyPicks())
+        setPlayedMax(0)
         setNotice(null)
         setPhase('round')
     }, [data, roundCount])
@@ -138,10 +147,19 @@ export default function OpEdQuizGame({ onClose }) {
         const ok = option === correctValue
         setPicks({ ...prev, [kind]: option })
         setScore(s => s + (ok ? POINTS[kind] : 0))
+        // Kolo se počítá jako odehrané, jakmile padne odpověď na hlavní otázku
+        if (kind === 'anime') {
+            setPlayedMax(m => m + (gameRef.current?.rounds?.[idxRef.current]?.maxPoints || 0))
+        }
         setStats(st => ({
             ...st,
             [kind]: { ok: st[kind].ok + (ok ? 1 : 0), total: st[kind].total + 1 },
         }))
+    }, [])
+
+    const endGame = useCallback(() => {
+        videoRef.current?.pause()
+        setPhase('results')
     }, [])
 
     const next = useCallback(() => {
@@ -218,6 +236,7 @@ export default function OpEdQuizGame({ onClose }) {
     }
 
     const totalMax = game ? game.rounds.reduce((s, r) => s + r.maxPoints, 0) : 0
+    const isEndless = !!game?.endless
 
     return createPortal(
         <div className="opq-overlay">
@@ -251,12 +270,12 @@ export default function OpEdQuizGame({ onClose }) {
                             <span>Počet kol:</span>
                             {ROUND_CHOICES.map(n => (
                                 <button
-                                    key={n}
+                                    key={Number.isFinite(n) ? n : 'inf'}
                                     type="button"
                                     className={`opq-round-btn${roundCount === n ? ' active' : ''}`}
                                     onClick={() => setRoundCount(n)}
                                 >
-                                    {n}
+                                    {Number.isFinite(n) ? n : '∞'}
                                 </button>
                             ))}
                         </div>
@@ -279,8 +298,13 @@ export default function OpEdQuizGame({ onClose }) {
                 {phase === 'round' && round && (
                     <div className="opq-body">
                         <div className="opq-progress">
-                            <span>Kolo {idx + 1} / {game.rounds.length}</span>
+                            <span>Kolo {idx + 1}{isEndless ? '' : ` / ${game.rounds.length}`}</span>
                             {round.isSeries && <span className="opq-series-badge">SÉRIOVÉ KOLO</span>}
+                            {isEndless && (
+                                <button type="button" className="opq-end-btn" onClick={endGame}>
+                                    🏁 Ukončit hru
+                                </button>
+                            )}
                         </div>
 
                         {playMode === 'iframe' ? (
@@ -384,7 +408,9 @@ export default function OpEdQuizGame({ onClose }) {
                                 )}
 
                                 <button type="button" className="opq-next-btn" onClick={next}>
-                                    {idx + 1 >= game.rounds.length ? '🏁 Vyhodnocení' : 'Další kolo →'}
+                                    {idx + 1 >= game.rounds.length
+                                        ? (isEndless ? '📚 Knihovna vyčerpána — Vyhodnocení' : '🏁 Vyhodnocení')
+                                        : 'Další kolo →'}
                                 </button>
                             </div>
                         )}
@@ -393,14 +419,17 @@ export default function OpEdQuizGame({ onClose }) {
 
                 {/* ============ VÝSLEDKY ============ */}
                 {phase === 'results' && game && (() => {
-                    const pct = totalMax > 0 ? score / totalMax : 0
+                    // V nekonečném režimu se procenta počítají z odehraných kol (playedMax),
+                    // ne z celého poolu (totalMax) — hráč mohl hru ukončit kdykoli.
+                    const effectiveMax = isEndless ? playedMax : totalMax
+                    const pct = effectiveMax > 0 ? score / effectiveMax : 0
                     const rank = rankFor(pct)
                     return (
                         <div className="opq-body opq-results">
                             <div className={`opq-rank rank-${rank.grade}`}>{rank.grade}</div>
                             <div className="opq-rank-label">{rank.label}</div>
                             <div className="opq-final-score">
-                                {score} / {totalMax} bodů ({Math.round(pct * 100)} %)
+                                {score} / {effectiveMax} bodů ({Math.round(pct * 100)} %)
                             </div>
                             <div className="opq-stats-grid">
                                 <div>🎯 Anime <b>{stats.anime.ok}/{stats.anime.total}</b></div>

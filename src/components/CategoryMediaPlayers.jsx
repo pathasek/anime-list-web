@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import YouTube from 'react-youtube'
+import { useModalScrollLock } from '../utils/useModalScrollLock'
 
 export function ScrollableText({ text, className, children }) {
     const containerRef = useRef(null)
@@ -47,8 +48,12 @@ export function ScrollableText({ text, className, children }) {
 
 // Překryvné (modal) přehrávání OP/ED videa z Google Drive.
 // Ztmavené pozadí, vlastní <video> s ovládáním + tlačítko fullscreen, zavření (X / Esc / klik do pozadí).
+// B3-6: nejdřív zkusí přímé <video autoPlay> (plné ovládání), při selhání
+// fallback na GDrive /preview iframe (vyžaduje klik na play — limit Google Drive).
+const VIDEO_VOLUME_KEY = 'opq-volume'
 export function VideoModal({ media, onClose }) {
-    const videoRef = useRef(null)
+    // Zamknout scroll pozadí, dokud je video otevřené
+    useModalScrollLock(!!media)
 
     useEffect(() => {
         const onKey = (e) => { if (e.key === 'Escape') onClose() }
@@ -58,48 +63,100 @@ export function VideoModal({ media, onClose }) {
 
     if (!media) return null
 
-    const subtitle = [media.label, media.artist].filter(Boolean).join(' · ')
+    // Key na url/file_id: nový klip → nový VideoModalInner → čistý state (playMode='video')
+    const mediaKey = media.url || media.file_id || 'unknown'
 
     return createPortal(
         <div className="media-modal-backdrop" onClick={onClose}>
-            <div className="media-modal" onClick={(e) => e.stopPropagation()}>
-                <div className="media-modal-header">
-                    <div className="media-modal-titles">
-                        <span className="media-modal-title">{media.song || media.anime_display || 'Videoklip'}</span>
-                        {subtitle && <span className="media-modal-subtitle">{subtitle}</span>}
-                    </div>
-                    <div className="media-modal-actions">
-                        <button className="media-icon-btn" title="Zavřít (Esc)" onClick={onClose}>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                <div className="media-modal-video-wrap">
-                    {media.file_id ? (
-                        <iframe
-                            src={`https://drive.google.com/file/d/${media.file_id}/preview`}
-                            width="100%"
-                            height="100%"
-                            allow="autoplay; encrypted-media"
-                            allowFullScreen
-                            style={{ border: 'none', display: 'block', background: '#000', width: '100%', height: '100%' }}
-                        />
-                    ) : (
-                        <video
-                            ref={videoRef}
-                            src={media.url}
-                            controls
-                            autoPlay
-                            playsInline
-                            style={{ width: '100%', height: '100%', display: 'block', background: '#000' }}
-                        />
-                    )}
-                </div>
-            </div>
+            <VideoModalInner key={mediaKey} media={media} onClose={onClose} />
         </div>,
         document.body
+    )
+}
+
+function VideoModalInner({ media, onClose }) {
+    const videoRef = useRef(null)
+    // 'video' = přímý <video> s autoPlay (plné ovládání hlasitosti, seekování)
+    // 'iframe' = GDrive /preview (cross-origin, nelze ovládat programově)
+    const [playMode, setPlayMode] = useState('video')
+    const [volume, setVolume] = useState(() => {
+        const v = parseFloat(localStorage.getItem(VIDEO_VOLUME_KEY))
+        return Number.isFinite(v) ? Math.min(1, Math.max(0, v)) : 0.75
+    })
+
+    // Synchronizace hlasitosti s <video> elementem
+    useEffect(() => {
+        if (videoRef.current) videoRef.current.volume = volume
+    }, [volume])
+
+    const handleVolumeChange = (e) => {
+        const v = parseFloat(e.target.value)
+        setVolume(v)
+        localStorage.setItem(VIDEO_VOLUME_KEY, String(v))
+    }
+
+    const subtitle = [media.label, media.artist].filter(Boolean).join(' · ')
+    const hasFileId = !!media.file_id
+
+    // Přímý <video> selhal → fallback na iframe (pokud máme file_id)
+    const onVideoError = () => {
+        if (hasFileId) setPlayMode('iframe')
+    }
+
+    return (
+        <div className="media-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="media-modal-header">
+                <div className="media-modal-titles">
+                    <span className="media-modal-title">{media.song || media.anime_display || 'Videoklip'}</span>
+                    {subtitle && <span className="media-modal-subtitle">{subtitle}</span>}
+                </div>
+                <div className="media-modal-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {/* Volume slider — funguje jen pro direct <video>, u iframe disabled */}
+                    <label
+                        style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', color: 'var(--text-muted)' }}
+                        title={playMode === 'iframe' ? 'Hlasitost nelze ovládat v GDrive režimu' : 'Hlasitost'}
+                    >
+                        🔊
+                        <input
+                            type="range"
+                            min="0" max="1" step="0.05"
+                            value={volume}
+                            onChange={handleVolumeChange}
+                            disabled={playMode === 'iframe'}
+                            style={{ width: '60px', accentColor: 'var(--accent-primary)', opacity: playMode === 'iframe' ? 0.4 : 1 }}
+                        />
+                    </label>
+                    <button className="media-icon-btn" title="Zavřít (Esc)" onClick={onClose}>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div className="media-modal-video-wrap">
+                {playMode === 'iframe' && hasFileId ? (
+                    <iframe
+                        src={`https://drive.google.com/file/d/${media.file_id}/preview`}
+                        width="100%"
+                        height="100%"
+                        allow="autoplay; encrypted-media"
+                        allowFullScreen
+                        style={{ border: 'none', display: 'block', background: '#000', width: '100%', height: '100%' }}
+                    />
+                ) : (
+                    <video
+                        ref={videoRef}
+                        src={media.url}
+                        controls
+                        autoPlay
+                        playsInline
+                        style={{ width: '100%', height: '100%', display: 'block', background: '#000' }}
+                        onError={onVideoError}
+                        onLoadedMetadata={() => { if (videoRef.current) videoRef.current.volume = volume }}
+                    />
+                )}
+            </div>
+        </div>
     )
 }
 
@@ -112,12 +169,6 @@ export function FloatingOstPlayer({ ost, playlist, onPlayTrack, onClose }) {
     const [player, setPlayer] = useState(null)
     const [playlistTracks, setPlaylistTracks] = useState([])
     const [currentPlaylistIndex, setCurrentPlaylistIndex] = useState(-1)
-
-    useEffect(() => {
-        setPlaylistTracks([])
-        setCurrentPlaylistIndex(-1)
-        setPlayer(null)
-    }, [ost])
 
     if (!ost) return null
 

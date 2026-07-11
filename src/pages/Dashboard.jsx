@@ -40,12 +40,15 @@ ChartJS.register(
 )
 
 // Chart.js default options for dark theme
-ChartJS.defaults.color = '#94a3b8'
-ChartJS.defaults.borderColor = '#2a2a3a'
+ChartJS.defaults.color = 'var(--text-secondary, #94a3b8)'
+ChartJS.defaults.borderColor = 'var(--border-color, rgba(255, 255, 255, 0.08))'
+ChartJS.defaults.font.family = "'Outfit', 'Inter', system-ui, -apple-system, sans-serif"
+ChartJS.defaults.font.size = 11
 
-// Premium defaults — rounded bars, better tooltips
+// Premium defaults — rounded bars, better tooltips, disabled animations for performance
 ChartJS.defaults.elements.bar.borderRadius = 6
 ChartJS.defaults.elements.bar.borderSkipped = false
+ChartJS.defaults.animation = false
 Object.assign(ChartJS.defaults.plugins.tooltip, premiumTooltipConfig)
 
 // ==========================================
@@ -1110,11 +1113,36 @@ function Dashboard() {
             opt.plugins.excelImageBackground = { imagePath: bgImage };
         }
         
+        opt.scales = opt.scales || {};
+        if (opt.scales.x) {
+            opt.scales.x.grid = {
+                ...opt.scales.x.grid,
+                color: 'rgba(255, 255, 255, 0.04)',
+                drawBorder: false,
+            };
+            opt.scales.x.ticks = {
+                ...opt.scales.x.ticks,
+                color: 'var(--text-muted, #64748b)',
+            };
+        }
+        if (opt.scales.y) {
+            opt.scales.y.grid = {
+                ...opt.scales.y.grid,
+                color: 'rgba(255, 255, 255, 0.04)',
+                drawBorder: false,
+            };
+            opt.scales.y.ticks = {
+                ...opt.scales.y.ticks,
+                color: 'var(--text-muted, #64748b)',
+            };
+        }
+
         if (overrides.scales) {
             opt.scales = {
                 ...opt.scales,
                 x: { ...opt.scales?.x, ...overrides.scales.x },
-                y: { ...opt.scales?.y, ...overrides.scales.y }
+                y: { ...opt.scales?.y, ...overrides.scales.y },
+                y1: overrides.scales.y1 ? { ...opt.scales?.y1, ...overrides.scales.y1 } : opt.scales?.y1
             };
         }
         return opt;

@@ -85,8 +85,13 @@ export function buildPool(videos, animeList) {
 /**
  * Vygeneruje celou hru: `roundCount` kol + pár náhradních kol pro případ,
  * že se některá skladba nepodaří přehrát (GDrive výpadek apod.).
+ *
+ * Batch 3 task 5c: `roundCount = Infinity` → nekonečný režim. Kola tvoří
+ * VŠECHNY unikátní skladby knihovny (stále bez opakování anime/písničky);
+ * hra běží, dokud ji hráč sám neukončí nebo nevyčerpá celou knihovnu.
  */
 export function generateGame(pool, animeList, roundCount, spareCount = 5) {
+    const endless = !Number.isFinite(roundCount)
     // Unikátní anime z poolu — distraktory hlavní otázky jsou jen anime,
     // která v knihovně OP/ED reálně existují (věrohodné a těžší možnosti).
     const uniqueAnime = []
@@ -111,12 +116,6 @@ export function generateGame(pool, animeList, roundCount, spareCount = 5) {
         partsBySeries[a.series].push(a.name)
     }
 
-    const ctx = {
-        uniqueAnime, artists, songsByType, partsBySeries,
-        // Strop sériových kol na hru — bez něj jich padalo příliš mnoho.
-        seriesRoundsLeft: Math.max(1, Math.floor(roundCount * 0.2)),
-    }
-
     // Výběr skladeb bez duplicit: žádné anime ani písnička se v jedné hře
     // nesmí objevit dvakrát (platí i pro náhradní kola, která můžou
     // nahradit nepřehratelné skladby).
@@ -124,8 +123,9 @@ export function generateGame(pool, animeList, roundCount, spareCount = 5) {
     const usedSongs = new Set()
     const picked = []
     const rest = []
+    const target = endless ? Infinity : roundCount + spareCount
     for (const t of shuffle(pool)) {
-        if (picked.length >= roundCount + spareCount) break
+        if (picked.length >= target) break
         const songKey = t.song ? t.song.toLowerCase() : null
         if (usedAnime.has(t.animeName) || (songKey && usedSongs.has(songKey))) {
             rest.push(t)
@@ -136,10 +136,21 @@ export function generateGame(pool, animeList, roundCount, spareCount = 5) {
         picked.push(t)
     }
     // Fallback pro malý pool: radši opakované anime než kratší hra.
-    while (picked.length < roundCount + spareCount && rest.length) picked.push(rest.shift())
+    // (V nekonečném režimu se nedoplňuje — hra prostě skončí s knihovnou.)
+    if (!endless) {
+        while (picked.length < roundCount + spareCount && rest.length) picked.push(rest.shift())
+    }
+
+    const ctx = {
+        uniqueAnime, artists, songsByType, partsBySeries,
+        // Strop sériových kol na hru — bez něj jich padalo příliš mnoho.
+        // V nekonečném režimu se strop odvíjí od reálného počtu kol.
+        seriesRoundsLeft: Math.max(1, Math.floor((endless ? picked.length : roundCount) * 0.2)),
+    }
 
     const rounds = picked.map(t => makeRound(t, ctx))
-    return { rounds: rounds.slice(0, roundCount), spares: rounds.slice(roundCount) }
+    if (endless) return { rounds, spares: [], endless: true }
+    return { rounds: rounds.slice(0, roundCount), spares: rounds.slice(roundCount), endless: false }
 }
 
 function makeRound(track, ctx) {

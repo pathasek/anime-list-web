@@ -226,6 +226,25 @@
   margin: 2px 0;
 }
 
+/* FH kruh + meta údaje v jednom řádku pro zobrazení série */
+.series-hero-meta-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md) var(--spacing-xl);
+  flex-wrap: wrap;
+  margin: 2px 0;
+  width: 100%;
+}
+
+.series-hero-meta-row .series-header-metagrid-lg {
+  flex: 1;
+  gap: 8px var(--spacing-xl);
+}
+
+.series-hero-meta-row .series-header-fh {
+  margin-right: 5px !important;
+}
+
 /* Meta grid v hero využije volné místo místo úzkého sloupce vpravo */
 .individual-hero-meta-row .series-header-metagrid {
   flex: 1;
@@ -1016,6 +1035,7 @@
 .series-header-fh {
   flex-shrink: 0;
   align-self: center;
+  margin-right: 24px;
 }
 
 .series-fh-circle {
@@ -1030,7 +1050,7 @@
 }
 
 .series-fh-value {
-  font-size: 1.15rem;
+  font-size: 1.4rem;
   font-weight: 800;
   line-height: 1;
 }
@@ -1072,7 +1092,7 @@
 .series-header-hero {
   position: relative;
   overflow: hidden;
-  padding: var(--spacing-md) var(--spacing-lg);
+  padding: var(--spacing-md);
 }
 
 .series-header-hero > *:not(.series-header-backdrop) {
@@ -1092,9 +1112,8 @@
 }
 
 .series-header-poster-lg {
-  width: 224px;
-  height: 126px;
-  /* 16:9, o třetinu větší než původní 140×79 */
+  width: 280px;
+  height: 158px;
 }
 
 .series-header-title-row {
@@ -1123,6 +1142,71 @@
 
 .series-header-metagrid-lg .series-meta-value {
   font-size: 0.92rem;
+}
+
+/* Batch 3 task 2: SVG ikonky + hover interaktivita metagrid položek */
+.series-meta-icon {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  opacity: 0.75;
+  transition: color 0.15s ease, opacity 0.15s ease;
+}
+
+.series-header-metagrid-lg .series-meta-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.series-header-metagrid-lg .series-meta-item {
+  padding: 4px 8px;
+  margin: -4px -8px;
+  border-radius: var(--radius-sm);
+  transition: background-color 0.15s ease;
+  cursor: default;
+}
+
+.series-header-metagrid-lg .series-meta-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.series-header-metagrid-lg .series-meta-item:hover .series-meta-icon {
+  color: var(--accent-primary);
+  opacity: 1;
+}
+
+/* Batch 3 task 2: pás chipů částí série pod metagridem — vyplňuje prázdné
+   místo hlavičky; barvy dílů drží seasonStyles (stejné jako timeline/radar) */
+.series-header-parts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.series-header-part-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 3px 11px;
+  border: 1px solid;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.series-header-part-chip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+  filter: brightness(1.15);
+}
+
+.series-part-chip-rating {
+  font-weight: 700;
 }
 
 /* Vysvětlení a chipy pro radar série */
@@ -1436,12 +1520,15 @@
   }
 
   /* Poster hero na mobilu přes celou šířku */
-  .series-header-poster.series-header-poster-xl {
+  .series-header-poster.series-header-poster-xl,
+  .series-header-poster.series-header-poster-lg {
     width: 100%;
     height: auto;
     min-height: 0;
     align-self: auto;
     aspect-ratio: 16 / 9;
+    margin-right: 0;
+    margin-bottom: var(--spacing-md);
   }
 
   .individual-hero {
@@ -2419,6 +2506,11 @@
     width: 100%;
     height: auto;
     aspect-ratio: 16 / 9;
+    margin-right: 0;
+  }
+
+  .series-header-fh {
+    margin-right: 0;
   }
 
   .series-header-title {

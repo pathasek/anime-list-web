@@ -184,6 +184,23 @@
   border-radius: var(--radius-full, 999px);
 }
 
+.opq-end-btn {
+  margin-left: auto;
+  background: color-mix(in srgb, var(--accent-primary, #6366f1) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-primary, #6366f1) 40%, transparent);
+  color: var(--accent-primary, #a5b4fc);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 12px;
+  border-radius: var(--radius-full, 999px);
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s;
+}
+.opq-end-btn:hover {
+  background: color-mix(in srgb, var(--accent-primary, #6366f1) 25%, transparent);
+  border-color: var(--accent-primary, #6366f1);
+}
+
 .opq-player {
   display: flex;
   align-items: center;

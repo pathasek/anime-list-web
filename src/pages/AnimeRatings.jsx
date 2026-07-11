@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, useCallback, useRef, useImperativeHandle, forwardRef, Fragment, useTransition } from 'react'
 import { createPortal } from 'react-dom'
+import { Link, useLocation } from 'react-router-dom'
 import {
     Chart as ChartJS,
     registerables
@@ -21,6 +22,8 @@ import CategoryRatingsPanel from '../components/CategoryRatingsPanel'
 import { formatCategoryMarkdown } from '../utils/formatCategoryMarkdown'
 import CategoryRadar from '../components/CategoryRadar'
 import InfoIcon from '../components/InfoIcon'
+import { useModalScrollLock } from '../utils/useModalScrollLock'
+import { useModalTables } from '../utils/useModalTables'
 
 // Cache pro AI rozbory kategorií/epizod (category_texts.json — víc MB, načíst jen jednou)
 let cachedCategoryTexts = null
@@ -36,30 +39,16 @@ async function loadCategoryTexts() {
     }
 }
 
-// Zamkne scroll pozadí (okno i detailový overlay), dokud je modal otevřený.
-function useScrollLock(active) {
-    useEffect(() => {
-        if (!active) return
-        const html = document.documentElement
-        const overlay = document.querySelector('.anime-detail-overlay')
-        const prevHtml = html.style.overflow
-        const prevOverlay = overlay ? overlay.style.overflow : null
-        html.style.overflow = 'hidden'
-        if (overlay) overlay.style.overflow = 'hidden'
-        return () => {
-            html.style.overflow = prevHtml
-            if (overlay) overlay.style.overflow = prevOverlay
-        }
-    }, [active])
-}
-
 // Modální okno pro AI rozbor epizody — stejné jako v detailu anime.
 // Řízené imperativně (ref.open(ep)) a s vlastním stavem, takže klik na bod grafu
 // NEvyvolá re-render celé (těžké) stránky → žádný lag při otevírání/zavírání.
 const EpisodeModalHost = forwardRef(function EpisodeModalHost(_props, ref) {
     const [active, setActive] = useState(null)
     useImperativeHandle(ref, () => ({ open: (ep) => setActive(ep) }), [])
-    useScrollLock(!!active)
+    useModalScrollLock(!!active)
+    // Tabulky z rozboru: scroll-x fallback, push-off a rohy sticky hlavičky
+    const bodyRef = useRef(null)
+    useModalTables(bodyRef, !!active)
     if (!active) return null
 
     const { title, text, rating } = active
@@ -85,7 +74,7 @@ const EpisodeModalHost = forwardRef(function EpisodeModalHost(_props, ref) {
                         </svg>
                     </button>
                 </div>
-                <div className="category-detail-modal-body">
+                <div className="category-detail-modal-body" ref={bodyRef}>
                     <div className="category-detail-text-column">
                         {formatCategoryMarkdown(text)}
                     </div>
@@ -97,6 +86,31 @@ const EpisodeModalHost = forwardRef(function EpisodeModalHost(_props, ref) {
 })
 
 ChartJS.register(...registerables)
+
+// Batch 3 task 2: SVG ikonky pro metagrid hlavičky série — stejný jazyk jako
+// InfoIcon (stroke currentColor, dědí barvu z labelu), ať hlavička není jen text.
+const SERIES_META_ICON_PATHS = {
+    avgEp: <><polyline points="3 17 9 11 13 15 21 7" /><polyline points="15 7 21 7 21 13" /></>,
+    wa: <><path d="M12 3l8.5 6.2-3.2 9.8h-10.6l-3.2-9.8z" /><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none" /></>,
+    parts: <><polygon points="12 2 22 8.5 12 15 2 8.5" /><polyline points="2 14 12 20.5 22 14" /></>,
+    episodes: <><rect x="3" y="5" width="18" height="14" rx="2" /><polygon points="10 9 15 12 10 15" fill="currentColor" stroke="none" /></>,
+    time: <><circle cx="12" cy="12" r="9" /><polyline points="12 7 12 12 15.5 14" /></>,
+    release: <><rect x="3" y="5" width="18" height="16" rx="2" /><line x1="3" y1="10" x2="21" y2="10" /><line x1="8" y1="3" x2="8" y2="7" /><line x1="16" y1="3" x2="16" y2="7" /></>,
+    watched: <><path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z" /><circle cx="12" cy="12" r="2.6" /></>,
+    rewatch: <><polyline points="1.5 5 1.5 10 6.5 10" /><path d="M3 15a9 9 0 1 0 .8-7.2L1.5 10" /></>,
+    studio: <><path d="M4 21V7l6-4v18" /><path d="M10 9l10 3v9" /><line x1="2" y1="21" x2="22" y2="21" /><line x1="7" y1="9" x2="7" y2="9.01" /><line x1="7" y1="13" x2="7" y2="13.01" /><line x1="7" y1="17" x2="7" y2="17.01" /></>,
+}
+
+function SeriesMetaIcon({ kind }) {
+    const paths = SERIES_META_ICON_PATHS[kind]
+    if (!paths) return null
+    return (
+        <svg className="series-meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            {paths}
+        </svg>
+    )
+}
 
 // Task 1: skupiny kategorií pro panel „Vliv kategorií na finální hodnocení“.
 // Souvislé bloky v kanonickém pořadí (Animace první, OST poslední).
@@ -371,8 +385,12 @@ function AnimeRatings() {
     // ---- CUSTOM IMAGES ----
     const customImages = useCustomImages()
 
+    const location = useLocation()
+
     // ---- UI STATES: ROUTING & MODES ----
-    const [viewMode, setViewModeRaw] = useState('split') // 'split' | 'series' | 'individual'
+    const [viewMode, setViewModeRaw] = useState(() => {
+        return location.state?.fromViewMode || 'split'
+    })
     // Přepnutí pohledu je těžký render (grafy + stovky položek) — transition
     // ho nechá doběhnout na pozadí místo zamrznutí UI po kliknutí (task 5);
     // viewPending dává okamžitou vizuální odezvu na klik.
@@ -382,7 +400,9 @@ function AnimeRatings() {
     }, [startViewTransition])
 
     // ---- UI STATES: SERIES VIEW ----
-    const [selectedSeries, setSelectedSeries] = useState(null)
+    const [selectedSeries, setSelectedSeries] = useState(() => {
+        return location.state?.selectedSeries || null
+    })
     const [selectedSeriesSeason, setSelectedSeriesSeason] = useState(null)
     const [seriesTab, setSeriesTab] = useState('timeline') // 'timeline' | 'details'
     const [selectedTimelineEp, setSelectedTimelineEp] = useState(null)
@@ -1496,6 +1516,16 @@ function AnimeRatings() {
                 legend: { display: false },
                 tooltip: {
                     callbacks: {
+                        // Název epizody z DOCX rozborů — stejný zdroj jako graf v detailu anime
+                        title: (items) => {
+                            const item = items && items[0]
+                            if (!item || item.dataset.label === 'Trend') return ''
+                            const ep = seriesTimelineData.episodes[item.dataIndex]
+                            if (!ep) return ''
+                            const m = String(ep.epName || '').match(/EP\s*(\d+)/i)
+                            const docxEp = m ? categoryReviews?.[ep.animeName]?.episodes?.[parseInt(m[1], 10)] : null
+                            return docxEp?.title ? `📝 ${docxEp.title}` : ''
+                        },
                         label: (ctx) => {
                             const datasetLabel = ctx.dataset.label
                             if (datasetLabel === 'Trend') return 'Trend'
@@ -1522,7 +1552,7 @@ function AnimeRatings() {
                 }
             }
         }
-    }, [seriesTimelineData, showTrendLine, yAxisMin, selectedTimelineEp, ratingSource, c])
+    }, [seriesTimelineData, showTrendLine, yAxisMin, selectedTimelineEp, ratingSource, categoryReviews, c])
 
     // ============================================
     // ROW 1 DATA MEMOIZATION (INDIVIDUAL)
@@ -2497,29 +2527,6 @@ function AnimeRatings() {
                                             <div className="series-header-poster series-header-poster-lg" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-secondary)', fontSize: '1.5rem' }}>🎬</div>
                                         )}
 
-                                        {/* FH kruh (průměr částí) s "?" průvodcem */}
-                                        {selectedSeriesObj.avgRating > 0 && (() => {
-                                            const rColor = ratingVar(selectedSeriesObj.avgRating)
-                                            return (
-                                                <div className="series-header-fh" style={{ position: 'relative' }}>
-                                                    <div className="series-fh-circle" style={{
-                                                        borderColor: rColor,
-                                                        background: `color-mix(in srgb, ${rColor} 12%, transparent)`
-                                                    }}>
-                                                        <span className="series-fh-value" style={{ color: rColor }}>
-                                                            {fmtFH(selectedSeriesObj.avgRating)}
-                                                        </span>
-                                                        <span className="series-fh-outof">/10 AVG</span>
-                                                    </div>
-                                                    <RatingInfoButton
-                                                        label="Co znamená finální hodnocení"
-                                                        style={{ position: 'absolute', top: '-7px', right: '-16px' }}
-                                                        onClick={() => setFhGuideOpen(true)}
-                                                    />
-                                                </div>
-                                            )
-                                        })()}
-
                                         <div className="series-header-info">
                                             <div className="series-header-title-row">
                                                 <h2 className="series-header-title">{selectedSeriesObj.name}</h2>
@@ -2532,59 +2539,115 @@ function AnimeRatings() {
                                                 )}
                                             </div>
 
-                                            {/* Plochý metagrid místo boxů — stejný styl jako hlavička detailu */}
-                                            <div className="series-header-metagrid series-header-metagrid-lg">
-                                                {seriesHeaderStats?.avgEp && (
-                                                    <div className="series-meta-item">
-                                                        <span className="series-meta-label">Průměr epizod</span>
-                                                        <span className="series-meta-value" style={{ color: ratingVar(seriesHeaderStats.avgEp) }}>{fmtFH(seriesHeaderStats.avgEp)}</span>
+                                            {/* FH kruh + meta grid v jednom řádku (kopíruje detail anime) */}
+                                            <div className="series-hero-meta-row">
+                                                {/* FH kruh (průměr částí) s "?" průvodcem */}
+                                                {selectedSeriesObj.avgRating > 0 && (() => {
+                                                    const rColor = ratingVar(selectedSeriesObj.avgRating)
+                                                    return (
+                                                        <div className="series-header-fh" style={{ position: 'relative' }}>
+                                                            <div className="series-fh-circle" style={{
+                                                                borderColor: rColor,
+                                                                background: `color-mix(in srgb, ${rColor} 12%, transparent)`
+                                                            }}>
+                                                                <span className="series-fh-value" style={{ color: rColor }}>
+                                                                    {fmtFH(selectedSeriesObj.avgRating)}
+                                                                </span>
+                                                                <span className="series-fh-outof">/10 AVG</span>
+                                                            </div>
+                                                            <RatingInfoButton
+                                                                label="Co znamená finální hodnocení"
+                                                                style={{ position: 'absolute', top: '-7px', right: '-16px' }}
+                                                                onClick={() => setFhGuideOpen(true)}
+                                                            />
+                                                        </div>
+                                                    )
+                                                })()}
+
+                                                {/* Plochý metagrid místo boxů — stejný styl jako hlavička detailu.
+                                                    Batch 3 task 2: + SVG ikonky a hover zvýraznění položek */}
+                                                <div className="series-header-metagrid series-header-metagrid-lg">
+                                                    {seriesHeaderStats?.avgEp && (
+                                                        <div className="series-meta-item" title="Průměr všech ohodnocených epizod série">
+                                                            <span className="series-meta-label"><SeriesMetaIcon kind="avgEp" />Průměr epizod</span>
+                                                            <span className="series-meta-value" style={{ color: ratingVar(seriesHeaderStats.avgEp) }}>{fmtFH(seriesHeaderStats.avgEp)}</span>
+                                                        </div>
+                                                    )}
+                                                    {seriesHeaderStats?.wa && (
+                                                        <div className="series-meta-item" title="Vážený průměr hodnocení kategorií napříč sérií">
+                                                            <span className="series-meta-label"><SeriesMetaIcon kind="wa" />WA kategorií</span>
+                                                            <span className="series-meta-value" style={{ color: ratingVar(seriesHeaderStats.wa) }}>{fmtFH(seriesHeaderStats.wa)}</span>
+                                                        </div>
+                                                    )}
+                                                    <div className="series-meta-item" title="Počet částí série (sezóny, filmy, speciály)">
+                                                        <span className="series-meta-label"><SeriesMetaIcon kind="parts" />Částí</span>
+                                                        <span className="series-meta-value">{selectedSeriesObj.items.length}{seriesHeaderStats?.typeSummary ? ` (${seriesHeaderStats.typeSummary})` : ''}</span>
                                                     </div>
-                                                )}
-                                                {seriesHeaderStats?.wa && (
-                                                    <div className="series-meta-item">
-                                                        <span className="series-meta-label">WA kategorií</span>
-                                                        <span className="series-meta-value" style={{ color: ratingVar(seriesHeaderStats.wa) }}>{fmtFH(seriesHeaderStats.wa)}</span>
+                                                    <div className="series-meta-item" title="Celkový počet epizod všech částí">
+                                                        <span className="series-meta-label"><SeriesMetaIcon kind="episodes" />Epizod</span>
+                                                        <span className="series-meta-value">{selectedSeriesObj.totalEps}</span>
                                                     </div>
-                                                )}
-                                                <div className="series-meta-item">
-                                                    <span className="series-meta-label">Částí</span>
-                                                    <span className="series-meta-value">{selectedSeriesObj.items.length}{seriesHeaderStats?.typeSummary ? ` (${seriesHeaderStats.typeSummary})` : ''}</span>
+                                                    {seriesHeaderStats?.totalTime && (
+                                                        <div className="series-meta-item" title="Součet délky všech epizod série">
+                                                            <span className="series-meta-label"><SeriesMetaIcon kind="time" />Celkový čas</span>
+                                                            <span className="series-meta-value">{seriesHeaderStats.totalTime}</span>
+                                                        </div>
+                                                    )}
+                                                    {seriesHeaderStats?.yearsRange && (
+                                                        <div className="series-meta-item" title="Roky vydání první a poslední části">
+                                                            <span className="series-meta-label"><SeriesMetaIcon kind="release" />Vydání</span>
+                                                            <span className="series-meta-value">{seriesHeaderStats.yearsRange}</span>
+                                                        </div>
+                                                    )}
+                                                    {seriesHeaderStats?.watchedRange && (
+                                                        <div className="series-meta-item" title="Období, kdy jsem sérii sledoval">
+                                                            <span className="series-meta-label"><SeriesMetaIcon kind="watched" />Sledováno</span>
+                                                            <span className="series-meta-value">{seriesHeaderStats.watchedRange}</span>
+                                                        </div>
+                                                    )}
+                                                    {seriesHeaderStats?.rewatchTotal > 0 && (
+                                                        <div className="series-meta-item" title="Kolikrát jsem části série viděl znovu">
+                                                            <span className="series-meta-label"><SeriesMetaIcon kind="rewatch" />Rewatch</span>
+                                                            <span className="series-meta-value">{seriesHeaderStats.rewatchTotal}×</span>
+                                                        </div>
+                                                    )}
+                                                    {selectedSeriesObj.studios.length > 0 && (
+                                                        <div className="series-meta-item" title="Studia, která sérii animovala">
+                                                            <span className="series-meta-label"><SeriesMetaIcon kind="studio" />Studio</span>
+                                                            <span className="series-meta-value">{selectedSeriesObj.studios.join(', ')}</span>
+                                                        </div>
+                                                    )}
                                                 </div>
-                                                <div className="series-meta-item">
-                                                    <span className="series-meta-label">Epizod</span>
-                                                    <span className="series-meta-value">{selectedSeriesObj.totalEps}</span>
-                                                </div>
-                                                {seriesHeaderStats?.totalTime && (
-                                                    <div className="series-meta-item">
-                                                        <span className="series-meta-label">Celkový čas</span>
-                                                        <span className="series-meta-value">{seriesHeaderStats.totalTime}</span>
-                                                    </div>
-                                                )}
-                                                {seriesHeaderStats?.yearsRange && (
-                                                    <div className="series-meta-item">
-                                                        <span className="series-meta-label">Vydání</span>
-                                                        <span className="series-meta-value">{seriesHeaderStats.yearsRange}</span>
-                                                    </div>
-                                                )}
-                                                {seriesHeaderStats?.watchedRange && (
-                                                    <div className="series-meta-item">
-                                                        <span className="series-meta-label">Sledováno</span>
-                                                        <span className="series-meta-value">{seriesHeaderStats.watchedRange}</span>
-                                                    </div>
-                                                )}
-                                                {seriesHeaderStats?.rewatchTotal > 0 && (
-                                                    <div className="series-meta-item">
-                                                        <span className="series-meta-label">Rewatch</span>
-                                                        <span className="series-meta-value">{seriesHeaderStats.rewatchTotal}×</span>
-                                                    </div>
-                                                )}
-                                                {selectedSeriesObj.studios.length > 0 && (
-                                                    <div className="series-meta-item">
-                                                        <span className="series-meta-label">Studio</span>
-                                                        <span className="series-meta-value">{selectedSeriesObj.studios.join(', ')}</span>
-                                                    </div>
-                                                )}
                                             </div>
+
+                                            {/* Batch 3 task 2: interaktivní pás částí série — vyplní prázdné
+                                                místo hlavičky; chip = část + její hodnocení, klik → detail */}
+                                            {selectedSeriesObj.items.length > 0 && (
+                                                <div className="series-header-parts">
+                                                    {selectedSeriesObj.items.map((it, idx) => {
+                                                        const st = seasonStyles[idx % seasonStyles.length]
+                                                        const r = Number(it.rating)
+                                                        return (
+                                                            <Link
+                                                                key={it.name}
+                                                                to={`/anime/${encodeURIComponent(it.name)}`}
+                                                                state={{
+                                                                    fromSeries: selectedSeriesObj.name,
+                                                                    fromViewMode: viewMode
+                                                                }}
+                                                                className="series-header-part-chip"
+                                                                style={{ background: st.bg, borderColor: st.border, color: st.text }}
+                                                                title={`Otevřít detail: ${it.name}`}
+                                                            >
+                                                                <span className="series-part-chip-name">{cleanSeasonLabel(it.name, selectedSeriesObj.name) || it.name}</span>
+                                                                {r > 0 && (
+                                                                    <span className="series-part-chip-rating" style={{ color: ratingVar(r) }}>{fmtFH(r)}</span>
+                                                                )}
+                                                            </Link>
+                                                        )
+                                                    })}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 )}
@@ -3145,7 +3208,7 @@ function AnimeRatings() {
                                                             borderColor: rColor,
                                                             background: `color-mix(in srgb, ${rColor} 12%, transparent)`
                                                         }}>
-                                                            <span className="series-fh-value" style={{ color: rColor, fontSize: '1.4rem' }}>
+                                                            <span className="series-fh-value" style={{ color: rColor }}>
                                                                 {fmtFH(fh)}
                                                             </span>
                                                             <span className="series-fh-outof">/10</span>

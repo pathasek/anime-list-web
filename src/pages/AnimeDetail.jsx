@@ -20,6 +20,8 @@ import { formatReview } from '../utils/formatReview'
 import { getThemeChartColors } from '../utils/chartTheme'
 import { useTheme } from '../components/ThemeProvider'
 import CategoryRatingsPanel from '../components/CategoryRatingsPanel'
+import { useModalScrollLock } from '../utils/useModalScrollLock'
+import { useModalTables } from '../utils/useModalTables'
 import { formatCategoryMarkdown } from '../utils/formatCategoryMarkdown'
 import { RatingInfoButton, EpisodeGuideModal, FinalGuideModal } from '../components/RatingGuideModals'
 
@@ -56,6 +58,8 @@ function AnimeDetail() {
     // „Zpět" pak vyskočí z celého řetězu najednou — na původní pozici seznamu.
     const detailDepth = location.state?.detailDepth || 0
     const nextDetailState = { detailDepth: detailDepth + 1 }
+    const fromSeries = location.state?.fromSeries
+    const fromViewMode = location.state?.fromViewMode
     const [anime, setAnime] = useState(null)
     const [categoryRatings, setCategoryRatings] = useState(null)
     const [episodeRatings, setEpisodeRatings] = useState(null)
@@ -64,7 +68,10 @@ function AnimeDetail() {
     const [note, setNote] = useState(null)
     const [history, setHistory] = useState([])
     const [loading, setLoading] = useState(true)
-    const [titleWrapped, setTitleWrapped] = useState(false)
+    // Batch 3 task 4: západka „titulek se láme" platí jen pro konkrétní anime —
+    // dřív státní boolean přežíval přechody detail→detail a krátké tituly pak
+    // zůstávaly ve wrapped layoutu (badges zbytečně na 2. řádku).
+    const [titleWrappedFor, setTitleWrappedFor] = useState(null)
     const [badgesRow2, setBadgesRow2] = useState(false)  // TAG+STATUS+MAL na 2. řádku, když kolidují s tlačítkem
     const [seriesParts, setSeriesParts] = useState([])       // díly stejné série (task 17)
     const [seriesModalOpen, setSeriesModalOpen] = useState(false)
@@ -76,13 +83,14 @@ function AnimeDetail() {
     const recommendBtnRef = useRef(null)
 
     // Detect if title wraps (for responsive badge layout)
+    const titleWrapped = !!anime && titleWrappedFor === anime.name
     useLayoutEffect(() => {
         const el = titleRef.current;
-        if (!el) return;
+        if (!el || !anime) return;
         const check = () => {
             const lineHeight = parseFloat(getComputedStyle(el).lineHeight) || (1.75 * 16 * 1.3);
             if (el.scrollHeight > lineHeight * 1.2) {
-                setTitleWrapped(true);
+                setTitleWrappedFor(anime.name);
             }
         };
         check();
@@ -477,7 +485,13 @@ function AnimeDetail() {
         <div className="fade-in">
             <button
                 className="btn btn-primary"
-                onClick={() => navigate(-(detailDepth + 1))}
+                onClick={() => {
+                    if (fromSeries) {
+                        navigate('/ratings', { state: { selectedSeries: fromSeries, fromViewMode } })
+                    } else {
+                        navigate(-(detailDepth + 1))
+                    }
+                }}
                 style={{
                     marginBottom: 'var(--spacing-lg)',
                     background: 'var(--accent-primary)',
@@ -511,47 +525,48 @@ function AnimeDetail() {
                         {/* Title Row — podmíněné: krátký = flex, dlouhý = title full-width + badge row s button vpravo */}
                         {titleWrapped ? (
                             <div style={{ marginBottom: 'var(--spacing-md)' }}>
-                                <h2 ref={titleRef} style={{ margin: 0, fontSize: '1.75rem', display: 'inline' }}>{anime.name}</h2>
-                                <span style={{ display: 'inline-block', width: 'var(--spacing-md)' }} />
-                                {/* Task 12: TYP+STATUS+MAL jako atomická skupina — láme se jen
-                                    jako celek, takže nikdy neskončí TYP na 1. a zbytek na 2. řádku */}
-                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--spacing-md)', whiteSpace: 'nowrap', verticalAlign: 'middle' }}>
-                                    <span className={`type-badge ${getTypeBadgeClass(anime.type)}`} style={{ fontSize: '0.8rem' }}>
-                                        {anime.type}
-                                    </span>
-                                    {anime.status && (
-                                        <span className={`status-badge ${anime.status.toLowerCase().replace('!', '')}`}>
-                                            {anime.status}
+                                <div style={{ marginBottom: 'var(--spacing-sm)' }}>
+                                    <h2 ref={titleRef} style={{ margin: 0, fontSize: '1.75rem', flex: '1 1 auto', minWidth: 0 }}>{anime.name}</h2>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 'var(--spacing-md)' }}>
+                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--spacing-md)', whiteSpace: 'nowrap' }}>
+                                        <span className={`type-badge ${getTypeBadgeClass(anime.type)}`} style={{ fontSize: '0.8rem' }}>
+                                            {anime.type}
                                         </span>
-                                    )}
-                                    {anime.mal_url && (
-                                        <a href={anime.mal_url} target="_blank" rel="noopener noreferrer"
-                                            style={{ fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                                            🔗 MAL
-                                        </a>
-                                    )}
-                                </span>
-                                <button
-                                    className="recommend-btn"
-                                    style={{
-                                        display: 'inline-flex', marginTop: 'var(--spacing-sm)', float: 'right', clear: 'both',
-                                        alignItems: 'center', gap: '0.6rem', 
-                                        padding: '0.6rem 1.2rem', fontSize: '0.9rem', fontWeight: 'bold',
-                                        background: 'linear-gradient(135deg, var(--accent-primary), #4f46e5)',
-                                        color: 'white', border: 'none', borderRadius: 'var(--radius-md)',
-                                        boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
-                                        cursor: 'pointer', transition: 'all 0.2s ease',
-                                    }}
-                                    onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(99, 102, 241, 0.6)'; }}
-                                    onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(99, 102, 241, 0.4)'; }}
-                                    onClick={() => navigate('/recommendations', { state: { presetAnime: anime } })}
-                                >
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        <circle cx="11" cy="11" r="8"></circle>
-                                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                    </svg>
-                                    Najít doporučení
-                                </button>
+                                        {anime.status && (
+                                            <span className={`status-badge ${anime.status.toLowerCase().replace('!', '')}`}>
+                                                {anime.status}
+                                            </span>
+                                        )}
+                                        {anime.mal_url && (
+                                            <a href={anime.mal_url} target="_blank" rel="noopener noreferrer"
+                                                style={{ fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                🔗 MAL
+                                            </a>
+                                        )}
+                                    </span>
+                                    <button
+                                        className="recommend-btn"
+                                        style={{
+                                            display: 'inline-flex', flexShrink: 0,
+                                            alignItems: 'center', gap: '0.6rem',
+                                            padding: '0.6rem 1.2rem', fontSize: '0.9rem', fontWeight: 'bold',
+                                            background: 'linear-gradient(135deg, var(--accent-primary), #4f46e5)',
+                                            color: 'white', border: 'none', borderRadius: 'var(--radius-md)',
+                                            boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
+                                            cursor: 'pointer', transition: 'all 0.2s ease',
+                                        }}
+                                        onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(99, 102, 241, 0.6)'; }}
+                                        onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(99, 102, 241, 0.4)'; }}
+                                        onClick={() => navigate('/recommendations', { state: { presetAnime: anime } })}
+                                    >
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <circle cx="11" cy="11" r="8"></circle>
+                                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                        </svg>
+                                        Najít doporučení
+                                    </button>
+                                </div>
                             </div>
                         ) : (() => {
                             // Task 12 + batch 2 task 11: badge skupina je atomická; když by
@@ -580,32 +595,55 @@ function AnimeDetail() {
                                     <div ref={titleRowRef} style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)', flexWrap: 'wrap', marginBottom: badgesRow2 ? 'var(--spacing-sm)' : 'var(--spacing-md)' }}>
                                         <h2 ref={titleRef} style={{ margin: 0, fontSize: '1.75rem' }}>{anime.name}</h2>
                                         {!badgesRow2 && badgeGroup}
-                                        <button
-                                            ref={recommendBtnRef}
-                                            className="recommend-btn"
-                                            style={{
-                                                display: 'inline-flex', alignItems: 'center', gap: '0.6rem',
-                                                padding: '0.6rem 1.2rem', fontSize: '0.9rem', fontWeight: 'bold',
-                                                background: 'linear-gradient(135deg, var(--accent-primary), #4f46e5)',
-                                                color: 'white', border: 'none', borderRadius: 'var(--radius-md)',
-                                                boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
-                                                cursor: 'pointer', transition: 'all 0.2s ease',
-                                                marginLeft: 'auto',
-                                            }}
-                                            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(99, 102, 241, 0.6)'; }}
-                                            onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(99, 102, 241, 0.4)'; }}
-                                            onClick={() => navigate('/recommendations', { state: { presetAnime: anime } })}
-                                        >
-                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                <circle cx="11" cy="11" r="8"></circle>
-                                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                            </svg>
-                                            Najít doporučení
-                                        </button>
+                                        {!badgesRow2 && (
+                                            <button
+                                                ref={recommendBtnRef}
+                                                className="recommend-btn"
+                                                style={{
+                                                    display: 'inline-flex', alignItems: 'center', gap: '0.6rem',
+                                                    padding: '0.6rem 1.2rem', fontSize: '0.9rem', fontWeight: 'bold',
+                                                    background: 'linear-gradient(135deg, var(--accent-primary), #4f46e5)',
+                                                    color: 'white', border: 'none', borderRadius: 'var(--radius-md)',
+                                                    boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
+                                                    cursor: 'pointer', transition: 'all 0.2s ease',
+                                                    marginLeft: 'auto',
+                                                }}
+                                                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(99, 102, 241, 0.6)'; }}
+                                                onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(99, 102, 241, 0.4)'; }}
+                                                onClick={() => navigate('/recommendations', { state: { presetAnime: anime } })}
+                                            >
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                    <circle cx="11" cy="11" r="8"></circle>
+                                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                                </svg>
+                                                Najít doporučení
+                                            </button>
+                                        )}
                                     </div>
                                     {badgesRow2 && (
-                                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 'var(--spacing-md)' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 'var(--spacing-md)', marginBottom: 'var(--spacing-md)' }}>
                                             {badgeGroup}
+                                            <button
+                                                ref={recommendBtnRef}
+                                                className="recommend-btn"
+                                                style={{
+                                                    display: 'inline-flex', alignItems: 'center', gap: '0.6rem',
+                                                    padding: '0.6rem 1.2rem', fontSize: '0.9rem', fontWeight: 'bold',
+                                                    background: 'linear-gradient(135deg, var(--accent-primary), #4f46e5)',
+                                                    color: 'white', border: 'none', borderRadius: 'var(--radius-md)',
+                                                    boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
+                                                    cursor: 'pointer', transition: 'all 0.2s ease',
+                                                }}
+                                                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(99, 102, 241, 0.6)'; }}
+                                                onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(99, 102, 241, 0.4)'; }}
+                                                onClick={() => navigate('/recommendations', { state: { presetAnime: anime } })}
+                                            >
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                    <circle cx="11" cy="11" r="8"></circle>
+                                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                                </svg>
+                                                Najít doporučení
+                                            </button>
                                         </div>
                                     )}
                                 </>
@@ -758,6 +796,15 @@ function AnimeDetail() {
                                         }
                                         return s || p.name
                                     }
+                                    // Batch 3 task 3: krátký název série JEN pro tento badge —
+                                    // říznout na prvním „ -" / „ –" / „: " („Re:Zero -Starting
+                                    // Life in Another World-" → „Re:Zero"). Podtitul za
+                                    // oddělovačem tu jen zbytečně láme řádek; plný název
+                                    // zůstává v title a v modalu se všemi díly.
+                                    const shortSeries = (() => {
+                                        const m = anime.series.match(/^(.{3,}?)(?:\s[-–]|:\s)/)
+                                        return m ? m[1].trim() : anime.series
+                                    })()
                                     return (
                                         <div className="series-nav-badge" style={{ marginLeft: 'auto', alignSelf: 'center' }}>
                                             {prev ? (
@@ -768,9 +815,9 @@ function AnimeDetail() {
                                             ) : (
                                                 <span className="series-nav-chip disabled" title="Toto je první díl série">←</span>
                                             )}
-                                            <button type="button" className="series-nav-name" onClick={() => setSeriesModalOpen(true)} title="Zobrazit všechny díly série">
+                                            <button type="button" className="series-nav-name" onClick={() => setSeriesModalOpen(true)} title={`Zobrazit všechny díly série ${anime.series}`}>
                                                 <span aria-hidden="true">📚</span>
-                                                <span className="series-nav-name-label">{anime.series}</span>
+                                                <span className="series-nav-name-label">{shortSeries}</span>
                                                 <span className="series-nav-count">{idx + 1}/{seriesParts.length}</span>
                                             </button>
                                             {next ? (
@@ -956,18 +1003,7 @@ function SeriesPartsModal({ series, parts, currentName, onClose }) {
     const nextDetailState = { detailDepth: (location.state?.detailDepth || 0) + 1 }
 
     // Zamkne scroll pozadí, dokud je modal otevřený (stejný vzor jako ostatní modaly)
-    useEffect(() => {
-        const html = document.documentElement
-        const overlay = document.querySelector('.anime-detail-overlay')
-        const prevHtml = html.style.overflow
-        const prevOverlay = overlay ? overlay.style.overflow : null
-        html.style.overflow = 'hidden'
-        if (overlay) overlay.style.overflow = 'hidden'
-        return () => {
-            html.style.overflow = prevHtml
-            if (overlay) overlay.style.overflow = prevOverlay
-        }
-    }, [])
+    useModalScrollLock()
 
     // Batch 2 task 10d: chytrý rozsah sledování — sdílené části data se
     // vypisují jen jednou: „8. – 15. 7. 2026", „8. 6. – 3. 7. 2026",
@@ -1053,19 +1089,11 @@ function SeriesPartsModal({ series, parts, currentName, onClose }) {
 
 function EpisodeDetailModal({ activeEpisode, onClose }) {
     // Zamkne scroll pozadí (okno i detailový overlay), dokud je modal otevřený
-    useEffect(() => {
-        if (!activeEpisode) return
-        const html = document.documentElement
-        const overlay = document.querySelector('.anime-detail-overlay')
-        const prevHtml = html.style.overflow
-        const prevOverlay = overlay ? overlay.style.overflow : null
-        html.style.overflow = 'hidden'
-        if (overlay) overlay.style.overflow = 'hidden'
-        return () => {
-            html.style.overflow = prevHtml
-            if (overlay) overlay.style.overflow = prevOverlay
-        }
-    }, [activeEpisode])
+    useModalScrollLock(!!activeEpisode)
+
+    // Tabulky z rozboru: scroll-x fallback, push-off a rohy sticky hlavičky
+    const bodyRef = useRef(null)
+    useModalTables(bodyRef, !!activeEpisode)
 
     if (!activeEpisode) return null
 
@@ -1100,7 +1128,7 @@ function EpisodeDetailModal({ activeEpisode, onClose }) {
                         </svg>
                     </button>
                 </div>
-                <div className="category-detail-modal-body">
+                <div className="category-detail-modal-body" ref={bodyRef}>
                     <div className="category-detail-text-column">
                         {formatCategoryMarkdown(text)}
                     </div>

@@ -40,52 +40,52 @@ export const premiumTooltipConfig = {
 export const excelPalettes = {
     // GrafZanru, AnimeGenreChordChart
     kellysMaxContrast: [
-        '#E6194B', '#46F0F0', '#F58230', '#3CB44B', '#FFFAC8', '#D2F53C', '#008080',
-        '#AA6E28', '#0082C8', '#FABED4', '#F032E6', '#911EB4', '#A3A7FF', '#FFE119', '#9393D1'
+        '#6366f1', '#06b6d4', '#f59e0b', '#10b981', '#ec4899', '#8b5cf6', '#ef4444',
+        '#0ea5e9', '#f43f5e', '#14b8a6', '#f97316', '#a855f7', '#4f46e5', '#22c55e', '#eab308'
     ],
     // GrafTypuPop
-    typesPie: ['#4D93D9', '#7030A0', '#F1A983', '#FFFF00', '#A6A6A6', '#FFC000', '#C00000'],
+    typesPie: ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#64748b', '#10b981', '#ef4444'],
     // GrafHodnoceniDist
-    ratingPie: ['#63BE7B', '#B1D580', '#C9E082', '#FFEB84', '#FCBF7B', '#F8696B'],
+    ratingPie: ['#10b981', '#84cc16', '#a3e635', '#fef08a', '#f97316', '#ef4444'],
     // GrafStatusu
-    statusPie: ['#798DE7', '#9393D1', '#911EB4', '#FCBF7B', '#A6A6A6'],
+    statusPie: ['#6366f1', '#8b5cf6', '#ec4899', '#f59e0b', '#64748b'],
     // GrafAnimeSezony
     seasons: {
-        'Winter': '#A6C9EC',
-        'Spring': '#FFB6C1',
-        'Summer': '#77DD77',
-        'Fall': '#BE5014'
+        'Winter': '#38bdf8', // Sky
+        'Spring': '#f472b6', // Pink
+        'Summer': '#4ade80', // Green
+        'Fall': '#fb923c'    // Orange
     },
     // GrafTypuDist
     scoreGradient: {
-        1: '#F8696B',
-        2: '#FA826F',
-        3: '#FA9473',
-        4: '#FCAB77',
-        5: '#FCBF7B',
-        6: '#FFD57F',
-        7: '#FFEB84',
-        8: '#C9E082',
-        9: '#B1D580',
-        10: '#63BE7B'
+        1: '#ef4444',
+        2: '#f87171',
+        3: '#f97316',
+        4: '#fb923c',
+        5: '#facc15',
+        6: '#a3e635',
+        7: '#4ade80',
+        8: '#22c55e',
+        9: '#10b981',
+        10: '#059669'
     },
     // GrafAnimeVeku
-    ageBar: '#BC9948',
+    ageBar: '#8b5cf6',
     // GrafTypuKombi
-    kombiBar: '#433F7A',
-    kombiLine: '#BC9948',
+    kombiBar: '#6366f1',
+    kombiLine: '#f59e0b',
     // GrafStudiiBest
-    studiosBar: '#13275C',
+    studiosBar: '#3b82f6',
     // GrafTematBest
-    themesBar: '#BF6A88',
+    themesBar: '#ec4899',
     // GrafZanruBest
-    genresBestBar: '#F2D25B',   
+    genresBestBar: '#f59e0b',   
     // AnimeHodnoceniVCaseGraf
-    timelineLine: '#C00000',
-    timelineDecade: '#FFC000',
-    timelineCount: '#1550D8',
+    timelineLine: '#ef4444',
+    timelineDecade: '#f59e0b',
+    timelineCount: '#3b82f6',
     // GrafPrumerVeku
-    avgAgeBar: '#5B9BD5'
+    avgAgeBar: '#10b981'
 };
 
 // 2. Chart.js Custom Plugins

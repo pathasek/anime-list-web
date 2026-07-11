@@ -452,6 +452,9 @@ th {
   cursor: pointer;
   user-select: none;
   white-space: nowrap;
+  /* B3-9: sticky thead potřebuje neprůhledné pozadí na každém th,
+     ne jen na thead — jinak při scrollu prosvítá obsah */
+  background: inherit;
 }
 
 th:hover {
@@ -4515,14 +4518,14 @@ button.fav-ost-row-play:hover {
 .hero-section {
   display: flex;
   align-items: flex-start;
-  gap: var(--spacing-2xl);
+  gap: var(--spacing-md);
   flex-wrap: wrap;
 }
 
 .hero-image-container {
-  flex: 0 1 420px;
+  flex: 0 1 452px;
   width: 100%;
-  max-width: 420px;
+  max-width: 452px;
   min-width: 200px;
   aspect-ratio: 16 / 9;
   border-radius: var(--radius-md);
@@ -4635,6 +4638,9 @@ button.fav-ost-row-play:hover {
   background-color: var(--bg-primary);
   z-index: 2000;
   overflow-y: auto;
+  /* Stejně jako u <html>: rezervovat místo pro scrollbar, aby obsah
+     neposkočil doprava, když modal zamkne scroll a scrollbar zmizí. */
+  scrollbar-gutter: stable;
   overscroll-behavior: contain;
   padding: var(--spacing-xl);
   animation: fadeIn 0.2s ease-out;
@@ -6437,6 +6443,39 @@ button.fav-ost-row-play:hover {
      anywhere zase srážel min. šířku sloupce na jediné písmeno („POS TAVA“) */
   white-space: normal;
   overflow-wrap: normal;
+  /* plynulé (za)hranatění rohů při chycení sticky hlavičky (.is-stuck) */
+  transition: border-radius 0.18s ease;
+}
+
+/* Zaoblení rohů tabulky: wrapper kvůli sticky hlavičce nesmí mít
+   overflow: hidden, takže jeho border-radius neclipuje pozadí buněk —
+   rohy proto zaoblují přímo krajní buňky. Jakmile se hlavička při scrollu
+   „chytne“ (hook useModalTables přidá wrapperu .is-stuck), horní rohy
+   se přes transition plynule srovnají do hranata a po odchycení zpět. */
+.category-detail-table thead th:first-child {
+  border-top-left-radius: calc(var(--radius-md) - 1px);
+}
+
+.category-detail-table thead th:last-child {
+  border-top-right-radius: calc(var(--radius-md) - 1px);
+}
+
+.category-detail-table-wrapper.is-stuck thead th:first-child {
+  border-top-left-radius: 0;
+}
+
+.category-detail-table-wrapper.is-stuck thead th:last-child {
+  border-top-right-radius: 0;
+}
+
+/* Spodní rohy: zaobluje poslední řádek (zebra/hover pozadí je na <td>,
+   aby ho border-radius ořízl — pozadí na <tr> radius buněk ignoruje) */
+.category-detail-table tbody tr:last-child td:first-child {
+  border-bottom-left-radius: calc(var(--radius-md) - 1px);
+}
+
+.category-detail-table tbody tr:last-child td:last-child {
+  border-bottom-right-radius: calc(var(--radius-md) - 1px);
 }
 
 .category-detail-table td {
@@ -6460,15 +6499,15 @@ button.fav-ost-row-play:hover {
   border-bottom: none;
 }
 
-.category-detail-table tbody tr {
+.category-detail-table tbody td {
   transition: background-color var(--transition-fast);
 }
 
-.category-detail-table tbody tr:hover {
+.category-detail-table tbody tr:hover td {
   background: rgba(255, 255, 255, 0.03);
 }
 
-.category-detail-table tbody tr:nth-child(even) {
+.category-detail-table tbody tr:nth-child(even) td {
   background: rgba(255, 255, 255, 0.015);
 }
 
@@ -6838,3 +6877,146 @@ button.fav-ost-row-play:hover {
     max-height: 400px;
     overflow-y: auto;
 }
+
+/* B3-10: Nová sekce rozborů pro anime bez hodnocení */
+.story-review-hero-card {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: 16px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(79, 70, 229, 0.04));
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  margin-bottom: var(--spacing-lg);
+  text-align: left;
+  width: 100%;
+}
+
+.story-review-hero-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-primary);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(79, 70, 229, 0.08));
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.12);
+}
+
+.hero-card-icon {
+  font-size: 2rem;
+}
+
+.hero-card-content {
+  flex: 1;
+}
+
+.hero-card-content h4 {
+  margin: 0 0 4px 0;
+  font-family: 'Outfit', var(--font-family);
+  font-size: 1.05rem;
+  color: var(--text-primary);
+}
+
+.hero-card-content p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.hero-card-action-btn {
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.hero-card-action-btn:hover {
+  background: #4f46e5;
+}
+
+.custom-review-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.custom-review-chip:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-primary);
+  background: var(--bg-hover);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.08);
+}
+
+.episode-review-btn-chip {
+  padding: 8px 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.episode-review-btn-chip:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-primary);
+  background: var(--bg-hover);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.08);
+}
+
+.media-track-btn-flat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  width: 100%;
+}
+
+.media-track-btn-flat:hover {
+  border-color: var(--accent-primary);
+  background: var(--bg-hover);
+}
+
+.media-track-btn-flat span {
+  color: var(--accent-primary);
+}
+
+@media (max-width: 480px) {
+  .story-review-hero-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+  .story-review-hero-card .hero-card-icon {
+    font-size: 1.75rem;
+  }
+  .story-review-hero-card .hero-card-action-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+

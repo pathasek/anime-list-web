@@ -1668,7 +1668,8 @@ function Favorites() {
                                     </button>
                                 )}
                             </h4>
-                            <div className="table-container" style={{ margin: 0, overflow: 'hidden' }}>
+                            {/* Bez overflow: hidden — rozbíjelo by sticky thead (zakotvení hlavičky) */}
+                            <div className="table-container" style={{ margin: 0 }}>
                                 <table style={{ fontSize: '0.8rem', width: '100%' }}>
                                     <thead style={{ background: 'var(--bg-tertiary)' }}><tr><th style={{ width: '32px' }}></th><th>Anime</th><th>Název OST</th></tr></thead>
                                     <tbody>
@@ -1706,7 +1707,8 @@ function Favorites() {
                                     Videoklipy ↗
                                 </a>
                             </div>
-                            <div className="table-container" style={{ margin: 0, overflow: 'hidden' }}>
+                            {/* Bez overflow: hidden — rozbíjelo by sticky thead (zakotvení hlavičky) */}
+                            <div className="table-container" style={{ margin: 0 }}>
                                 <table style={{ fontSize: '0.8rem', width: '100%' }}>
                                     <thead style={{ background: 'var(--bg-tertiary)' }}><tr><th>Anime</th><th>Epizoda</th><th>Scéna</th></tr></thead>
                                     <tbody>

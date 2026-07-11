@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { useModalScrollLock } from '../utils/useModalScrollLock'
 
 function LogWatchingModal({ isOpen, onClose, onSubmit, animeList = [] }) {
     const [formData, setFormData] = useState({
@@ -12,16 +13,7 @@ function LogWatchingModal({ isOpen, onClose, onSubmit, animeList = [] }) {
     const [showSuggestions, setShowSuggestions] = useState(false)
 
     // Lock body scroll when modal is open
-    useEffect(() => {
-        if (isOpen) {
-            document.body.style.overflow = 'hidden'
-        } else {
-            document.body.style.overflow = ''
-        }
-        return () => {
-            document.body.style.overflow = ''
-        }
-    }, [isOpen])
+    useModalScrollLock(isOpen)
 
     if (!isOpen) return null
 

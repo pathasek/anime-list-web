@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { useModalScrollLock } from '../utils/useModalScrollLock'
 
 const defaultAnime = {
     name: '',
@@ -22,16 +23,7 @@ function AddAnimeModal({ isOpen, onClose, onSubmit, editAnime = null }) {
     const [errors, setErrors] = useState({})
 
     // Lock body scroll when modal is open
-    useEffect(() => {
-        if (isOpen) {
-            document.body.style.overflow = 'hidden'
-        } else {
-            document.body.style.overflow = ''
-        }
-        return () => {
-            document.body.style.overflow = ''
-        }
-    }, [isOpen])
+    useModalScrollLock(isOpen)
 
     if (!isOpen) return null
 

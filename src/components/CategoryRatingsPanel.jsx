@@ -17,6 +17,8 @@ import { iconFor } from './categoryIcons'
 import { formatCategoryMarkdown } from '../utils/formatCategoryMarkdown'
 import { RatingInfoButton, CategoryGuideModal } from './RatingGuideModals'
 import { useOstPlayer } from './OstPlayerProvider'
+import { useModalScrollLock } from '../utils/useModalScrollLock'
+import { useModalTables } from '../utils/useModalTables'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip)
 
@@ -319,7 +321,156 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
         }
     }, [computePositions, entries, theme])
 
-    if (!categoryRatings || entries.length === 0) return null
+    const reviews = categoryReviews?.[animeName]
+    const hasCategoryRatings = categoryRatings && entries.length > 0
+
+    if (!hasCategoryRatings) {
+        if (!reviews) return null
+
+        // Czech category list in word files
+        const reviewedCategories = Object.keys(reviews)
+            .filter(key => key !== 'episodes' && key !== 'story' && typeof reviews[key] === 'string' && reviews[key].trim().length > 0)
+        
+        const storyReview = reviews.story
+        const episodeNumbers = Object.keys(reviews.episodes || {})
+            .sort((a, b) => parseInt(a) - parseInt(b))
+
+        const hasAnyContent = reviewedCategories.length > 0 || !!storyReview || episodeNumbers.length > 0
+
+        if (!hasAnyContent) return null
+
+        const openStoryReview = () => {
+            setActiveReview({
+                category: 'Rozbor děje',
+                text: storyReview.text,
+                rating: null,
+                icon: '📖'
+            })
+        }
+
+        return (
+            <div className="card" style={{ marginBottom: 'var(--spacing-xl)' }}>
+                <div className="category-ratings-header" style={{ marginBottom: '20px' }}>
+                    <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        📖 Textové rozbory a analýza
+                    </h3>
+                    <p className="category-ratings-subtitle">
+                        Podrobné textové analýzy děje, vybraných aspektů a epizod z docx rozborů.
+                    </p>
+                </div>
+
+                <div className="ratings-flex-container" style={{ display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'stretch' }}>
+                    {/* Story Review Hero */}
+                    {storyReview?.text && (
+                        <button type="button" className="story-review-hero-card" onClick={openStoryReview}>
+                            <div className="hero-card-icon" aria-hidden="true">📖</div>
+                            <div className="hero-card-content">
+                                <h4>Celkový rozbor děje</h4>
+                                <p>Kliknutím zobrazíte detailní analýzu struktury děje (expozice, konfrontace, rozuzlení).</p>
+                            </div>
+                            <span className="hero-card-action-btn">Zobrazit</span>
+                        </button>
+                    )}
+
+                    {/* Category Reviews Grid */}
+                    {reviewedCategories.length > 0 && (
+                        <div>
+                            <h4 style={{ margin: '0 0 10px 0', fontSize: '0.9rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                Hodnocené aspekty
+                            </h4>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                                {reviewedCategories.map(cat => (
+                                    <button
+                                        key={cat}
+                                        type="button"
+                                        className="custom-review-chip"
+                                        onClick={() => setActiveReview({ category: cat, text: reviews[cat], rating: null })}
+                                    >
+                                        <span aria-hidden="true">{iconFor(cat)}</span>
+                                        <strong>{cat}</strong>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Episode Reviews */}
+                    {episodeNumbers.length > 0 && (
+                        <div>
+                            <h4 style={{ margin: '10px 0 10px 0', fontSize: '0.9rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                Rozbory epizod
+                            </h4>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '8px' }}>
+                                {episodeNumbers.map(epNum => (
+                                    <button
+                                        key={epNum}
+                                        type="button"
+                                        className="episode-review-btn-chip"
+                                        onClick={() => setActiveReview({
+                                            category: `Epizoda ${epNum}`,
+                                            text: reviews.episodes[epNum],
+                                            rating: null,
+                                            icon: '📝'
+                                        })}
+                                    >
+                                        Epizoda {epNum}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Media Players if available */}
+                    {['OP', 'ED', 'OST'].some(cat => media[cat] && media[cat].length > 0) && (
+                        <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '20px', marginTop: '10px' }}>
+                            <h4 style={{ margin: '0 0 12px 0', fontSize: '0.9rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                Doprovodná hudba a znělky
+                            </h4>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '10px' }}>
+                                {['OP', 'ED', 'OST'].map(cat => {
+                                    const tracks = media[cat] || []
+                                    if (tracks.length === 0) return null
+                                    return tracks.map((track, i) => (
+                                        <button
+                                            key={`${cat}-${i}`}
+                                            type="button"
+                                            className="media-track-btn-flat"
+                                            onClick={() => playTrack(track)}
+                                        >
+                                            <span aria-hidden="true">▶</span>
+                                            <div style={{ flex: 1, minWidth: 0, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                                                <strong style={{ fontSize: '0.85rem' }}>{track.song || track.label}</strong>
+                                                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginLeft: '6px' }}>({cat})</span>
+                                                {track.artist && <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textOverflow: 'ellipsis', overflow: 'hidden' }}>{track.artist}</div>}
+                                            </div>
+                                        </button>
+                                    ))
+                                })}
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* OP/ED videoklip v překryvném okně */}
+                <VideoModal media={videoModal} onClose={() => setVideoModal(null)} />
+
+                {/* OST v plovoucím YouTube přehrávači */}
+                <FloatingOstPlayer
+                    key={floatingOst ? (floatingOst.url || floatingOst.ytPlaylistId || 'ost-active') : 'ost-inactive'}
+                    ost={floatingOst}
+                    playlist={media.OST}
+                    onPlayTrack={playTrack}
+                    onClose={() => setFloatingOst(null)}
+                />
+
+                {/* Detailní rozbor konkrétní kategorie */}
+                <CategoryDetailModal 
+                    activeReview={activeReview} 
+                    onClose={() => setActiveReview(null)} 
+                />
+            </div>
+        )
+    }
 
     return (
         <div className="card" style={{ marginBottom: 'var(--spacing-xl)' }}>
@@ -575,6 +726,7 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
 
             {/* OST v plovoucím YouTube přehrávači (zůstane, dokud se neopustí detail) */}
             <FloatingOstPlayer
+                key={floatingOst ? (floatingOst.url || floatingOst.ytPlaylistId || 'ost-active') : 'ost-inactive'}
                 ost={floatingOst}
                 playlist={media.OST}
                 onPlayTrack={playTrack}
@@ -593,69 +745,12 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
 // Modální okno pro detailní textový rozbor kategorie z DOCX
 function CategoryDetailModal({ activeReview, onClose }) {
     // Zamkne scroll pozadí (okno i detailový overlay), dokud je modal otevřený
-    useEffect(() => {
-        if (!activeReview) return
-        const html = document.documentElement
-        const overlay = document.querySelector('.anime-detail-overlay')
-        const prevHtml = html.style.overflow
-        const prevOverlay = overlay ? overlay.style.overflow : null
-        html.style.overflow = 'hidden'
-        if (overlay) overlay.style.overflow = 'hidden'
-        return () => {
-            html.style.overflow = prevHtml
-            if (overlay) overlay.style.overflow = prevOverlay
-        }
-    }, [activeReview])
+    useModalScrollLock(!!activeReview)
 
-    // Chytrý fallback pro tabulky: normálně se buňky zalamují a tabulka se vejde
-    // do šířky (bez horizontálního scrollu). Ale když má tabulka tolik sloupců,
-    // že by na sloupec zbylo míň než ~110 px (zbytečně úzké/vysoké řádky),
-    // radši povolíme horizontální scroll (třída .scroll-x).
+    // Tabulky z rozboru: scroll-x fallback, push-off sticky hlavičky a
+    // zaoblení/hranatění rohů při chycení hlavičky — sdílený hook.
     const bodyRef = useRef(null)
-    useEffect(() => {
-        if (!activeReview) return
-        const body = bodyRef.current
-        if (!body) return
-        const MIN_COL = 110
-        const apply = () => {
-            body.querySelectorAll('.category-detail-table-wrapper').forEach(wrap => {
-                const cols = wrap.querySelectorAll('thead th').length || 1
-                const table = wrap.querySelector('table')
-                // Kromě heuristiky počtu sloupců i reálné přetečení (dlouhá
-                // nezalomitelná slova zvedají min. šířku sloupců)
-                const tooCramped = cols * MIN_COL > wrap.clientWidth ||
-                    (table && table.scrollWidth > wrap.clientWidth + 2)
-                wrap.classList.toggle('scroll-x', tooCramped)
-            })
-        }
-        // Sticky hlavička nemá dojet až na konec tabulky: jakmile horní hrana
-        // POSLEDNÍHO řádku dosáhne spodku hlavičky, hlavička odjíždí nahoru
-        // (drží se tedy nejdéle na předposledním řádku).
-        const baseTop = -parseFloat(getComputedStyle(body).paddingTop || '0')
-        const syncSticky = () => {
-            const bodyTop = body.getBoundingClientRect().top
-            body.querySelectorAll('.category-detail-table-wrapper').forEach(wrap => {
-                const thead = wrap.querySelector('thead')
-                const rows = wrap.querySelectorAll('tbody tr')
-                if (!thead || rows.length === 0) return
-                const headH = thead.getBoundingClientRect().height
-                const lastTop = rows[rows.length - 1].getBoundingClientRect().top
-                const overshoot = (bodyTop + headH) - lastTop
-                const top = (overshoot > 0 ? baseTop - overshoot : baseTop) + 'px'
-                thead.querySelectorAll('th').forEach(th => {
-                    if (th.style.top !== top) th.style.top = top
-                })
-            })
-        }
-        apply()
-        syncSticky()
-        body.addEventListener('scroll', syncSticky, { passive: true })
-        window.addEventListener('resize', apply)
-        return () => {
-            body.removeEventListener('scroll', syncSticky)
-            window.removeEventListener('resize', apply)
-        }
-    }, [activeReview])
+    useModalTables(bodyRef, !!activeReview)
 
     if (!activeReview) return null
 
