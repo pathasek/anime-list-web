@@ -6,7 +6,7 @@ import DashboardGroup from '../components/DashboardGroup'
 const OpEdQuizGame = lazy(() => import('../components/opedquiz/OpEdQuizGame'))
 import { VideoModal } from '../components/CategoryMediaPlayers'
 import { useOstPlayer } from '../components/OstPlayerProvider'
-import { normalizeAnimeKey, extractYoutubeId, extractYoutubePlaylistId, findOpEdVideo } from '../utils/mediaMatch'
+import { normalizeAnimeKey, extractYoutubeId, extractYoutubePlaylistId, findOpEdVideo, animeKeysMatch } from '../utils/mediaMatch'
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -114,10 +114,23 @@ function Favorites() {
             fetch('data/favorites.json?v=' + Date.now()).then(r => r.json()),
             fetch('data/favorites_ost.json?v=' + Date.now()).then(r => r.json()).catch(() => null),
             fetch('data/spotify_images.json?v=' + Date.now()).then(r => r.json()).catch(() => ({})),
-            fetch('data/op_ed_videos.json?v=' + Date.now()).then(r => r.json()).catch(() => null)
+            fetch('data/op_ed_videos.json?v=' + Date.now()).then(r => r.json()).catch(() => null),
+            fetch('data/anime_list.json?v=' + Date.now()).then(r => r.json()).catch(() => [])
         ])
-            .then(([favData, ostData, spotData, opEdData]) => {
-                setFavorites(favData)
+            .then(([favData, ostData, spotData, opEdData, animeListData]) => {
+                const decorated = (favData || []).map(fav => {
+                    const favKey = normalizeAnimeKey(fav.anime_name)
+                    const match = (animeListData || []).find(a => {
+                        const aKey = normalizeAnimeKey(a.name)
+                        return animeKeysMatch(aKey, favKey) || animeKeysMatch(favKey, aKey)
+                    })
+                    const watchDate = match ? (match.end_date || match.start_date || null) : null
+                    return {
+                        ...fav,
+                        watch_date: watchDate
+                    }
+                })
+                setFavorites(decorated)
                 if (ostData) setOstTables(ostData)
                 if (spotData) setSpotifyImages(spotData)
                 if (opEdData && opEdData.videos) setOpEdVideos(opEdData.videos)
@@ -570,6 +583,18 @@ function Favorites() {
                     bVal = parseFloat(b[sortColumn]) || 0
                     return sortDirection === 'asc' ? aVal - bVal : bVal - aVal
                 }
+            })
+        } else {
+            // Default sort: watch_date desc, then original index asc
+            result.sort((a, b) => {
+                const aTime = a.watch_date ? Date.parse(a.watch_date) : 0
+                const bTime = b.watch_date ? Date.parse(b.watch_date) : 0
+                if (bTime !== aTime) {
+                    return bTime - aTime // newest watched first
+                }
+                const aIdx = parseFloat(a.index) || 9999
+                const bIdx = parseFloat(b.index) || 9999
+                return aIdx - bIdx
             })
         }
 
