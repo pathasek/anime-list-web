@@ -700,7 +700,7 @@ function AnimeDetail() {
                                     <div style={{ fontWeight: '500' }}>{anime.episodes || 'N/A'}</div>
                                 </div>
                                 <div>
-                                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Délka epizody</span>
+                                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{anime.type === 'Movie' ? 'Délka filmu' : 'Délka epizody'}</span>
                                     <div style={{ fontWeight: '500' }}>{anime.episode_duration ? `${Math.round(anime.episode_duration)} min` : 'N/A'}</div>
                                 </div>
                                 <div>

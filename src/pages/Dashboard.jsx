@@ -2511,7 +2511,7 @@ function Dashboard() {
                         commentYears: yearCols.map(y => getComment('total_episodes', String(y)))
                     },
                     {
-                        label: 'Prům. délka epizody (min)',
+                        label: 'Prům. délka (min)',
                         all: toCS(getFromStatsData('Průměrná délka', -1)?.replace(',', '.') || all.avgEpDur.toFixed(1)),
                         years: yearCols.map((y, idx) => toCS(getFromStatsData('Průměrná délka', idx)?.replace(',', '.') || (ys[y]?.avgEpDur || 0).toFixed(1)))
                     },
