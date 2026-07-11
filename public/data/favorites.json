@@ -4103,15 +4103,15 @@
     "song": "Tsubasa",
     "author": "Shion Wakayama",
     "language": "JAP",
-    "rating_lyrics": 8.75,
-    "rating_emotion": 8.75,
-    "rating_melody": 9.25,
+    "rating_lyrics": 9.25,
+    "rating_emotion": 9.5,
+    "rating_melody": 9.75,
     "rating_video": 5,
-    "rating_voice": 9,
+    "rating_voice": 9.5,
     "sing_along": 1,
     "has_frisson": false,
-    "rating_avg": 8.15,
-    "rating_final": 8
+    "rating_avg": 8.6,
+    "rating_final": 9
   },
   {
     "index": "243.",
@@ -4196,6 +4196,23 @@
     "sing_along": 1,
     "has_frisson": true,
     "rating_avg": 9.25,
+    "rating_final": 9
+  },
+  {
+    "index": "248.",
+    "anime_name": "Grand Blue Dreaming, S01",
+    "type": "OP",
+    "song": "Grand Blue",
+    "author": "Shounan no Kaze",
+    "language": "JAP (92%) ENG (8%)",
+    "rating_lyrics": 9.25,
+    "rating_emotion": 7.75,
+    "rating_melody": 9.25,
+    "rating_video": 8.75,
+    "rating_voice": 9.5,
+    "sing_along": 8,
+    "has_frisson": false,
+    "rating_avg": 8.9,
     "rating_final": 9
   }
 ]

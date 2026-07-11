@@ -1,8 +1,8 @@
 {
-  "generated": "2026-07-10T21:02:51.608416+00:00",
+  "generated": "2026-07-11T20:41:14.611453+00:00",
   "folder_id": "1oqfgfEFbnkjW92t2HUHU6NS-MdGBdOep",
   "source": "api",
-  "count": 207,
+  "count": 208,
   "videos": [
     {
       "match_key": "86 eighty six s01 part 1",
@@ -1047,6 +1047,18 @@
       "url": "https://drive.usercontent.google.com/download?id=1BhIkbA9gm40xg_GwEyxDnGt4FROt0v45&export=download&confirm=t",
       "file_id": "1BhIkbA9gm40xg_GwEyxDnGt4FROt0v45",
       "filename": "Goblin Slayer, S01, OP, _Rightfully_ by Mili.mp4"
+    },
+    {
+      "match_key": "grand blue dreaming s01",
+      "match_key_base": "grand blue dreaming",
+      "anime_display": "Grand Blue Dreaming, S01",
+      "type": "OP",
+      "ver": null,
+      "song": "Grand Blue",
+      "artist": "Shounan no Kaze",
+      "url": "https://drive.usercontent.google.com/download?id=1ai8S8DA_2dvdC63JK5VBFkS1aDT88RTb&export=download&confirm=t",
+      "file_id": "1ai8S8DA_2dvdC63JK5VBFkS1aDT88RTb",
+      "filename": "Grand Blue Dreaming, S01, OP, _Grand Blue_ by Shounan no Kaze.mp4"
     },
     {
       "match_key": "grimgar ashes and illusions",

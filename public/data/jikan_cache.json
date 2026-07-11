@@ -54244,6 +54244,23 @@
         }
       ],
       "fetchedAt": 1783717436687
+    },
+    "37105": {
+      "animeName": "Grand Blue Dreaming, S01",
+      "episodes": [
+        {
+          "mal_id": 1,
+          "title": "Speciál",
+          "title_japanese": "ぐらんぶる",
+          "aired": "2018-07-14T00:00:00+00:00",
+          "score": 8.45,
+          "filler": false,
+          "recap": false,
+          "url": "https://myanimelist.net/anime/37105/Grand_Blue",
+          "forum_url": null
+        }
+      ],
+      "fetchedAt": 1783802490729
     }
   }
 }
