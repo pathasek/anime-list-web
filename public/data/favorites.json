@@ -4214,5 +4214,39 @@
     "has_frisson": false,
     "rating_avg": 8.9,
     "rating_final": 9
+  },
+  {
+    "index": "249.",
+    "anime_name": "Grand Blue Dreaming, S02",
+    "type": "OP",
+    "song": "Seishun Towa",
+    "author": "Shounan no Kaze; Atarashii Gakkou no Leaders",
+    "language": "JAP",
+    "rating_lyrics": 8.75,
+    "rating_emotion": 7.5,
+    "rating_melody": 8.75,
+    "rating_video": 8.5,
+    "rating_voice": 9,
+    "sing_along": 3,
+    "has_frisson": false,
+    "rating_avg": 8.5,
+    "rating_final": 9
+  },
+  {
+    "index": "250.",
+    "anime_name": "Grand Blue Dreaming, S02",
+    "type": "ED",
+    "song": "Hadaka de Dotsukiai ",
+    "author": "SEAMO; May'n",
+    "language": "JAP",
+    "rating_lyrics": 8.25,
+    "rating_emotion": 7.25,
+    "rating_melody": 8.75,
+    "rating_video": 7.5,
+    "rating_voice": 8.75,
+    "sing_along": 1,
+    "has_frisson": false,
+    "rating_avg": 8.1,
+    "rating_final": 8
   }
 ]

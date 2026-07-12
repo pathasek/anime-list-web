@@ -1,8 +1,8 @@
 {
-  "generated": "2026-07-11T20:41:14.611453+00:00",
+  "generated": "2026-07-12T19:41:02.640277+00:00",
   "folder_id": "1oqfgfEFbnkjW92t2HUHU6NS-MdGBdOep",
   "source": "api",
-  "count": 208,
+  "count": 210,
   "videos": [
     {
       "match_key": "86 eighty six s01 part 1",
@@ -1059,6 +1059,30 @@
       "url": "https://drive.usercontent.google.com/download?id=1ai8S8DA_2dvdC63JK5VBFkS1aDT88RTb&export=download&confirm=t",
       "file_id": "1ai8S8DA_2dvdC63JK5VBFkS1aDT88RTb",
       "filename": "Grand Blue Dreaming, S01, OP, _Grand Blue_ by Shounan no Kaze.mp4"
+    },
+    {
+      "match_key": "grand blue dreaming s02",
+      "match_key_base": "grand blue dreaming",
+      "anime_display": "Grand Blue Dreaming, S02",
+      "type": "ED",
+      "ver": null,
+      "song": "Hadaka de Dotsukiai",
+      "artist": "SEAMO; May'n",
+      "url": "https://drive.usercontent.google.com/download?id=1mKbT7y-rdMkR20jKt-YQgeNH4gsbXDIZ&export=download&confirm=t",
+      "file_id": "1mKbT7y-rdMkR20jKt-YQgeNH4gsbXDIZ",
+      "filename": "Grand Blue Dreaming, S02, ED, _Hadaka de Dotsukiai_ by SEAMO; May'n.mp4"
+    },
+    {
+      "match_key": "grand blue dreaming s02",
+      "match_key_base": "grand blue dreaming",
+      "anime_display": "Grand Blue Dreaming, S02",
+      "type": "OP",
+      "ver": null,
+      "song": "Seishun Towa",
+      "artist": "Shounan no Kaze; Atarashii Gakkou no Leaders",
+      "url": "https://drive.usercontent.google.com/download?id=1roueytUW6LQQuwXrIPDbur7hDVWWjZFH&export=download&confirm=t",
+      "file_id": "1roueytUW6LQQuwXrIPDbur7hDVWWjZFH",
+      "filename": "Grand Blue Dreaming, S02, OP, _Seishun Towa_ by Shounan no Kaze; Atarashii Gakkou no Leaders.mp4"
     },
     {
       "match_key": "grimgar ashes and illusions",

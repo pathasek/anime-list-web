@@ -4477,7 +4477,7 @@
       "Emoce": 9.5,
       "Enjoyment": 9.0,
       "OP": 9.0,
-      "ED": 8.0,
+      "ED": 9.0,
       "OST": 8.5
     }
   },
@@ -4892,7 +4892,7 @@
       "Enjoyment": 8.0,
       "OP": 9.0,
       "ED": 9.0,
-      "OST": 7.5
+      "OST": 8.0
     }
   },
   {
@@ -5286,6 +5286,44 @@
       "Enjoyment": 9.0,
       "OP": 9.0,
       "ED": 7.0,
+      "OST": 8.5
+    }
+  },
+  {
+    "name": "Grand Blue Dreaming, S01",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 7.0,
+      "MC": 7.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 8.5,
+      "Plot": 6.0,
+      "Pacing": 7.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 7.5,
+      "Emoce": 6.0,
+      "Enjoyment": 7.5,
+      "OP": 9.0,
+      "ED": 7.0,
+      "OST": 7.5
+    }
+  },
+  {
+    "name": "Grand Blue Dreaming, S02",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 7.5,
+      "MC": 7.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 8.0,
+      "Plot": 5.5,
+      "Pacing": 6.5,
+      "Story Conclusion": 7.0,
+      "Originalita": 7.0,
+      "Emoce": 5.5,
+      "Enjoyment": 7.0,
+      "OP": 9.0,
+      "ED": 8.0,
       "OST": 8.5
     }
   }
