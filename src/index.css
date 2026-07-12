@@ -6431,10 +6431,12 @@ button.fav-ost-row-play:hover {
   text-align: left;
 }
 
-.category-detail-table th {
+.category-detail-table-wrapper.is-stuck thead {
   position: sticky;
-  top: 0;
   z-index: 2;
+}
+
+.category-detail-table th {
   background: var(--bg-secondary);
   color: var(--text-primary);
   font-weight: 700;

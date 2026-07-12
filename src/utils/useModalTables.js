@@ -34,7 +34,7 @@ export function useModalTables(bodyRef, active) {
             })
         }
 
-        const baseTop = -parseFloat(getComputedStyle(body).paddingTop || '0')
+        const baseTop = -Math.round(parseFloat(getComputedStyle(body).paddingTop || '0'))
         const syncSticky = () => {
             const bodyTop = body.getBoundingClientRect().top
             body.querySelectorAll('.category-detail-table-wrapper').forEach(wrap => {
@@ -44,13 +44,13 @@ export function useModalTables(bodyRef, active) {
                 const headH = thead.getBoundingClientRect().height
                 const lastTop = rows[rows.length - 1].getBoundingClientRect().top
                 const overshoot = (bodyTop + headH) - lastTop
-                const top = (overshoot > 0 ? baseTop - overshoot : baseTop) + 'px'
-                thead.querySelectorAll('th').forEach(th => {
-                    if (th.style.top !== top) th.style.top = top
-                })
+                const topVal = overshoot > 0 ? baseTop - overshoot : baseTop
+                const top = Math.round(topVal) + 'px'
+                if (thead.style.top !== top) thead.style.top = top
                 // Hlavička je „chycená", když ji sticky drží níž, než je její
-                // přirozená pozice u horní hrany wrapperu
-                const stuck = thead.getBoundingClientRect().top - wrap.getBoundingClientRect().top > 2
+                // přirozená pozice u horní hrany wrapperu (top wrapperu vyjel nad top body)
+                // a zároveň ji ještě neodtlačil poslední řádek (overshoot <= 0).
+                const stuck = wrap.getBoundingClientRect().top < bodyTop - 2 && overshoot <= 0
                 wrap.classList.toggle('is-stuck', stuck)
             })
         }
