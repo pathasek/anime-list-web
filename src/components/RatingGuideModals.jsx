@@ -505,7 +505,11 @@ function FhDemo() {
         }
 
         setWa(current)
-        runScenario()
+        // Úvodní prodleva shodná se sparkline v „Jak hodnotím epizody"
+        // (useMorphingValues holdMs = 1700): demo nejdřív chvíli podrží výchozí
+        // stav a teprve pak se rozjede — jinak animace startuje dřív, než ji
+        // divák stihne zaregistrovat.
+        timer = setTimeout(runScenario, 1700)
         return () => { cancelled = true; cancelAnimationFrame(raf); clearTimeout(timer) }
     }, [])
 
