@@ -11176,5 +11176,28 @@
     "series": null,
     "rewatches": [],
     "tags": null
+  },
+  {
+    "index": "487.",
+    "thumbnail": "images/anime/Sword Art Online_ Unanswered butterfly.jpg",
+    "name": "Sword Art Online: Unanswered//butterfly",
+    "type": "Movie",
+    "studio": "Polygon Pictures",
+    "release_date": "2026-07-09T00:00:00",
+    "themes": "Video Game",
+    "genres": "Action; Adventure",
+    "episodes": 1,
+    "episode_duration": 117.767,
+    "rating": 7,
+    "start_date": "2026-07-13T00:00:00",
+    "end_date": "2026-07-13T00:00:00",
+    "rewatch_count": 0,
+    "total_time": 117.767,
+    "dub": "JAP",
+    "status": "FINISHED",
+    "mal_url": "https://myanimelist.net/anime/63736/Sword_Art_Online__Unanswered__butterfly",
+    "series": "Sword Art Online",
+    "rewatches": [],
+    "tags": "Medieval:79:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Virtual World:79:Partly or completely set in the world inside a video game.;Full CGI:79:Almost entirely created with computer-generated imagery.;Swordplay:79:Prominently features the use of swords in combat."
   }
 ]
