@@ -113,23 +113,27 @@ function VideoModalInner({ media, onClose, onNext }) {
             </div>
             <div className={`media-modal-video-wrap${playMode === 'iframe' ? ' is-iframe' : ''}`}>
                 {playMode === 'iframe' && hasFileId ? (
-                    <iframe
-                        src={`https://drive.google.com/file/d/${media.file_id}/preview`}
-                        width="100%"
-                        height="100%"
-                        allow="autoplay; encrypted-media"
-                        allowFullScreen
-                        style={{ border: 'none', display: 'block', background: '#000', width: '100%', height: '100%' }}
-                    />
+                    <div className="media-modal-gdrive-clip">
+                        <iframe
+                            src={`https://drive.google.com/file/d/${media.file_id}/preview`}
+                            width="100%"
+                            height="100%"
+                            allow="autoplay; encrypted-media"
+                            allowFullScreen
+                            style={{ border: 'none', display: 'block', background: '#000', width: '100%', height: '100%' }}
+                        />
+                    </div>
                 ) : (
                     <video
-                        src={media.url}
                         controls
                         autoPlay
                         playsInline
                         style={{ width: '100%', height: '100%', display: 'block', background: '#000' }}
                         onError={onVideoError}
-                    />
+                    >
+                        {media.url && <source src={media.url} type="video/mp4" />}
+                        {hasFileId && <source src={`https://drive.google.com/uc?export=download&id=${media.file_id}`} type="video/mp4" />}
+                    </video>
                 )}
             </div>
         </div>

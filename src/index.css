@@ -3862,7 +3862,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 @media (max-width: 600px) {
   .media-modal-backdrop {
-    padding: 8px;
+    padding: 6px;
   }
   .media-modal {
     width: 100%;
@@ -3870,21 +3870,52 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     border-radius: 12px;
   }
   .media-modal-header {
-    padding: 10px 12px;
+    padding: 8px 12px;
   }
   .media-modal-title {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
   }
   .media-modal-subtitle {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
   }
-  /* GDrive iFrame náhled v mobilním okně vyžaduje vyšší poměr výšky k šířce, 
-     aby horní lišta s vyhledávačem a šipkou [↗] nezasahovala do obličeje/obrazu videa */
   .media-modal-video-wrap.is-iframe {
-    aspect-ratio: 16 / 12;
-    min-height: 250px;
+    aspect-ratio: 16 / 10;
+    min-height: 240px;
+    overflow: hidden;
+    position: relative;
+  }
+  /* Ořezávací maska: fyzicky vytlačí horní lištu Google Drive s ikonou [↗] a časovou osou mimo viditelnou oblast */
+  .media-modal-gdrive-clip {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  .media-modal-gdrive-clip iframe {
+    position: absolute;
+    top: -46px;
+    left: 0;
+    width: 100%;
+    height: calc(100% + 46px) !important;
   }
 }
+
+@media (max-width: 900px) and (orientation: landscape) {
+  .media-modal-backdrop {
+    padding: 4px;
+  }
+  .media-modal {
+    max-height: 98vh;
+  }
+  .media-modal-header {
+    padding: 4px 10px;
+  }
+  .media-modal-video-wrap {
+    aspect-ratio: auto;
+    height: calc(98vh - 40px);
+  }
+}
+
 
 
 /* ===== OST plovoucí YouTube přehrávač ===== */
