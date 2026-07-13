@@ -111,7 +111,7 @@ function VideoModalInner({ media, onClose, onNext }) {
                     </button>
                 </div>
             </div>
-            <div className="media-modal-video-wrap">
+            <div className={`media-modal-video-wrap${playMode === 'iframe' ? ' is-iframe' : ''}`}>
                 {playMode === 'iframe' && hasFileId ? (
                     <iframe
                         src={`https://drive.google.com/file/d/${media.file_id}/preview`}

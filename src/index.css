@@ -3860,6 +3860,33 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   max-height: calc(92vh - 60px);
 }
 
+@media (max-width: 600px) {
+  .media-modal-backdrop {
+    padding: 8px;
+  }
+  .media-modal {
+    width: 100%;
+    max-height: 96vh;
+    border-radius: 12px;
+  }
+  .media-modal-header {
+    padding: 10px 12px;
+  }
+  .media-modal-title {
+    font-size: 0.95rem;
+  }
+  .media-modal-subtitle {
+    font-size: 0.75rem;
+  }
+  /* GDrive iFrame náhled v mobilním okně vyžaduje vyšší poměr výšky k šířce, 
+     aby horní lišta s vyhledávačem a šipkou [↗] nezasahovala do obličeje/obrazu videa */
+  .media-modal-video-wrap.is-iframe {
+    aspect-ratio: 16 / 12;
+    min-height: 250px;
+  }
+}
+
+
 /* ===== OST plovoucí YouTube přehrávač ===== */
 .ost-floating-player {
   position: fixed;
