@@ -2554,4 +2554,9 @@
     flex: 1 1 auto;
     justify-content: center;
   }
+
+  .r2-chip-info {
+    flex-shrink: 0 !important;
+    aspect-ratio: 1 / 1 !important;
+  }
 }

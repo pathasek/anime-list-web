@@ -3898,6 +3898,21 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     width: 100%;
     height: calc(100% + 46px) !important;
   }
+
+  /* Ochrana všech kulatých tlačítek (Play tlačítka, "?" nápovědná tlačítka, ikony v hlavičce) před deformací do oválu na mobilu */
+  .rating-info-btn,
+  .media-play-btn,
+  .fav-table-play-btn,
+  .fav-play-hint,
+  .fav-tile-play-btn,
+  .category-card-play-hint.is-search,
+  .media-icon-btn,
+  .guide-close-btn,
+  .r2-chip-info,
+  .ost-minimized-btn {
+    flex-shrink: 0 !important;
+    aspect-ratio: 1 / 1 !important;
+  }
 }
 
 @media (max-width: 900px) and (orientation: landscape) {
