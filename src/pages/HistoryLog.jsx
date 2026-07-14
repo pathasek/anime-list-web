@@ -777,7 +777,7 @@ function HistoryLog() {
                                         style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.75rem', cursor: 'help' }}
                                         title={`Celkem epizod (${totalStats.episodes}) / Počet aktivních dnů (${totalStats.days}) = ${totalStats.epsPerDay.toFixed(2).replace('.', ',')}`}
                                     >
-                                        <span style={{ color: 'var(--text-muted)' }}>⌀ Ep/den:</span>
+                                        <span style={{ color: 'var(--text-muted)' }}>⌀ EP/den:</span>
                                         <span style={{ fontWeight: 700, color: 'var(--accent-primary)' }}>
                                             {Math.floor(totalStats.epsPerDay)}
                                         </span>
@@ -788,7 +788,7 @@ function HistoryLog() {
                                     >
                                         <span style={{ color: 'var(--text-muted)' }}>⌀ Čas/den:</span>
                                         <span style={{ fontWeight: 700, color: 'var(--accent-amber)' }}>
-                                            {Math.round(totalStats.minsPerDay)} min
+                                            {formatTime(Math.round(totalStats.minsPerDay))}
                                         </span>
                                     </div>
                                     <div 
