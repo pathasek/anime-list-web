@@ -11,7 +11,8 @@ import {
 } from 'chart.js'
 import { useTheme } from './ThemeProvider'
 import { getThemeChartColors } from '../utils/chartTheme'
-import { getMediaForAnime, youtubeSearchUrl } from '../utils/mediaMatch'
+import { getMediaForAnime, youtubeSearchUrl, normalizeAnimeKey } from '../utils/mediaMatch'
+import { fetchAnimeThemes } from '../utils/animeThemesService'
 import { VideoModal, FloatingOstPlayer, ScrollableText } from './CategoryMediaPlayers'
 import { iconFor } from './categoryIcons'
 import { formatCategoryMarkdown } from '../utils/formatCategoryMarkdown'
@@ -72,7 +73,7 @@ function useAccentColor(theme) {
     return useCallback((a) => `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${a})`, [rgb])
 }
 
-function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, animeName, animeSeries, categoryReviews, compactRadar = false }) {
+function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, animeName, animeSeries, categoryReviews, compactRadar = false, malId = null }) {
     const { theme } = useTheme()
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const c = useMemo(() => getThemeChartColors(), [theme])
@@ -114,10 +115,57 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
         }
     }, [])
 
-    const media = useMemo(
-        () => getMediaForAnime(animeName, opEdVideos || [], ostPieces || [], ostWhole || [], animeSeries),
-        [animeName, opEdVideos, ostPieces, ostWhole, animeSeries]
-    )
+    // Plán 6b: ostatní OP/ED z AnimeThemes.moe (jen v detailu anime — malId
+    // posílá pouze AnimeDetail; Favorites a ostatní stránky beze změny)
+    const [atThemes, setAtThemes] = useState([])
+    useEffect(() => {
+        setAtThemes([])
+        if (!malId) return
+        const controller = new AbortController()
+        fetchAnimeThemes(malId, controller.signal)
+            .then(t => setAtThemes(t || []))
+            .catch(() => { })
+        return () => controller.abort()
+    }, [malId])
+
+    const media = useMemo(() => {
+        const base = getMediaForAnime(animeName, opEdVideos || [], ostPieces || [], ostWhole || [], animeSeries)
+        if (!atThemes.length) return base
+
+        // Píseň už pokrytá GDrive verzí (vybranou) se nepřidává znovu — AnimeThemes
+        // doplňuje jen „všechny ostatní" znělky. GDrive zůstává vždy první/hlavní.
+        const covered = new Set(
+            [...base.OP, ...base.ED]
+                .map(t => normalizeAnimeKey(t.song))
+                .filter(Boolean)
+        )
+        const songCovered = (song) => {
+            const key = normalizeAnimeKey(song)
+            if (!key) return false
+            for (const c of covered) {
+                if (c === key || c.includes(key) || key.includes(c)) return true
+            }
+            return false
+        }
+
+        const merged = { ...base, OP: [...base.OP], ED: [...base.ED] }
+        for (const t of atThemes) {
+            if (!merged[t.type]) continue
+            if (songCovered(t.song)) continue
+            merged[t.type].push({
+                kind: 'video',
+                type: t.type,
+                song: t.song,
+                artist: t.artist,
+                label: t.version > 1 ? `${t.label} v${t.version}` : t.label,
+                url: t.url,
+                ytId: null,
+                file_id: null,
+                isExtra: true, // vizuální odlišení od vybraných GDrive klipů
+            })
+        }
+        return merged
+    }, [animeName, opEdVideos, ostPieces, ostWhole, animeSeries, atThemes])
 
     const playTrack = useCallback((t) => {
         if (!t) return
@@ -151,6 +199,16 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
         () => Object.entries(categoryRatings || {}),
         [categoryRatings]
     )
+
+    // Pořadí karet v gridu (2 sloupce, řádky zleva): ..., Enjoyment | OST, OP | ED
+    // — OP je nalevo od ED, OST vedle Enjoymentu. Radar zachovává kanonické pořadí.
+    const CARD_ORDER = ['Animace', 'CGI', 'MC', 'Vedlejší postavy', 'Waifu', 'Plot',
+        'Pacing', 'Story Conclusion', 'Originalita', 'Emoce', 'Enjoyment', 'OST', 'OP', 'ED']
+    const displayEntries = useMemo(() => {
+        const idx = (c) => { const i = CARD_ORDER.indexOf(c); return i === -1 ? CARD_ORDER.length : i }
+        return [...entries].sort((a, b) => idx(a[0]) - idx(b[0]))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [entries])
 
     const chartData = useMemo(() => ({
         labels: entries.map(([cat]) => cat),
@@ -445,13 +503,18 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                                         <button
                                             key={`${cat}-${i}`}
                                             type="button"
-                                            className="media-track-btn-flat"
+                                            className={`media-track-btn-flat${track.isExtra ? ' is-extra' : ''}`}
                                             onClick={() => playTrack(track)}
                                         >
                                             <span aria-hidden="true">▶</span>
                                             <div style={{ flex: 1, minWidth: 0, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
                                                 <strong style={{ fontSize: '0.85rem' }}>{track.song || track.label}</strong>
-                                                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginLeft: '6px' }}>({cat})</span>
+                                                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginLeft: '6px' }}>
+                                                    ({track.isExtra ? track.label : cat})
+                                                </span>
+                                                {track.isExtra && (
+                                                    <span className="media-track-extra-tag">AnimeThemes</span>
+                                                )}
                                                 {track.artist && <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textOverflow: 'ellipsis', overflow: 'hidden' }}>{track.artist}</div>}
                                             </div>
                                         </button>
@@ -506,10 +569,12 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
             <div className="ratings-flex-container">
                 {/* Category cards on the left */}
                 <div className="category-cards-grid">
-                    {entries.map(([cat, rating]) => {
+                    {displayEntries.map(([cat, rating]) => {
                         const isMedia = !!MEDIA_CATS[cat]
                         const tracks = isMedia ? media[cat] : null
                         const hasTracks = tracks && tracks.length > 0
+                        // ⭐ u vybraných (GDrive) klipů má smysl jen, když jsou v seznamu i „ostatní" z AnimeThemes
+                        const hasExtraTracks = hasTracks && tracks.some(t => t.isExtra)
                         const reviewText = categoryReviews && categoryReviews[animeName] && categoryReviews[animeName][cat]
                         const hasReview = !!reviewText
                         // Rozbor děje (u filmů/speciálů bez epizodních rozborů) — druhá akce na kartě Plot
@@ -605,30 +670,37 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                                         {hasTracks ? (
                                             <div className="media-popover-inner">
                                                 {tracks.map((t, i) => (
-                                                    <button
-                                                        key={i}
-                                                        type="button"
-                                                        className="media-track-row"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation()
-                                                            playTrack(t)
-                                                        }}
-                                                        title="Přehrát"
-                                                    >
-                                                        <span className="media-track-badge">{t.label}</span>
-                                                        <span className="media-track-meta">
-                                                            <span className="media-track-song">
-                                                                <ScrollableText text={t.song || cat}>
-                                                                    {t.song || cat}
-                                                                    {t.isBestPiece && (
-                                                                        <span className="best-piece-popover-tag"> (Best Pieces)</span>
-                                                                    )}
-                                                                </ScrollableText>
+                                                    <div key={i} style={{ display: 'contents' }}>
+                                                        {/* Oddělovač před prvním klipem z AnimeThemes (Plán 6b) */}
+                                                        {t.isExtra && (i === 0 || !tracks[i - 1].isExtra) && (
+                                                            <div className="media-popover-divider">Ostatní verze · AnimeThemes.moe</div>
+                                                        )}
+                                                        <button
+                                                            type="button"
+                                                            className={`media-track-row${t.isExtra ? ' is-extra' : ''}`}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation()
+                                                                playTrack(t)
+                                                            }}
+                                                            title={t.isExtra ? 'Přehrát (AnimeThemes.moe)' : 'Přehrát (vybraný klip)'}
+                                                        >
+                                                            <span className={`media-track-badge${t.isExtra ? ' alt' : ''}`}>
+                                                                {!t.isExtra && t.kind === 'video' && hasExtraTracks && '⭐ '}{t.label}
                                                             </span>
-                                                            {t.artist && <span className="media-track-artist">{t.artist}</span>}
-                                                        </span>
-                                                        <span className="media-play-btn"><PlayIcon /></span>
-                                                    </button>
+                                                            <span className="media-track-meta">
+                                                                <span className="media-track-song">
+                                                                    <ScrollableText text={t.song || cat}>
+                                                                        {t.song || cat}
+                                                                        {t.isBestPiece && (
+                                                                            <span className="best-piece-popover-tag"> (Best Pieces)</span>
+                                                                        )}
+                                                                    </ScrollableText>
+                                                                </span>
+                                                                {t.artist && <span className="media-track-artist">{t.artist}</span>}
+                                                            </span>
+                                                            <span className="media-play-btn"><PlayIcon /></span>
+                                                        </button>
+                                                    </div>
                                                 ))}
                                             </div>
                                         ) : (

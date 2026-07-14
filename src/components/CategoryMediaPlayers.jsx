@@ -78,7 +78,7 @@ function VideoModalInner({ media, onClose, onNext }) {
     // 'iframe' = GDrive /preview (cross-origin, nelze ovládat programově)
     const [playMode, setPlayMode] = useState('video')
 
-    const subtitle = [media.label, media.artist].filter(Boolean).join(' · ')
+    const subtitle = [media.label, media.artist, media.isExtra ? 'AnimeThemes.moe' : null].filter(Boolean).join(' · ')
     const hasFileId = !!media.file_id
 
     // Přímý <video> selhal → fallback na iframe (pokud máme file_id)
@@ -131,7 +131,7 @@ function VideoModalInner({ media, onClose, onNext }) {
                         style={{ width: '100%', height: '100%', display: 'block', background: '#000' }}
                         onError={onVideoError}
                     >
-                        {media.url && <source src={media.url} type="video/mp4" />}
+                        {media.url && <source src={media.url} type={/\.webm(\?|$)/i.test(media.url) ? 'video/webm' : 'video/mp4'} />}
                         {hasFileId && <source src={`https://drive.google.com/uc?export=download&id=${media.file_id}`} type="video/mp4" />}
                     </video>
                 )}

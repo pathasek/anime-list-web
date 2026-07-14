@@ -45,8 +45,16 @@ const DEFAULTS = {
     ANILIST_MIN_RANK: 30,
     MAX_RECS_TO_DISPLAY: 16,
 
+    // Plán 6 Ú1: kombinace Jikan × AniList doporučení + tagy ve skóre
+    RELEVANCE_W_TAGS: 16,              // váha AniList tagů (vážený průměr mého hodnocení per tag)
+    ANILIST_MAX_VOTES_FOR_SCORE: 40,   // log-strop hlasů AniList (menší komunita ⇒ nižší strop než MAL 120)
+    AGREEMENT_BONUS: 0.35,             // bonus, když anime doporučují OBA zdroje (podíl slabšího skóre)
+    useAniListRecs: true,              // kombinovat s AniList doporučeními
+
     // PTW filter
     showPTWAnime: false,
+    // Plán 6 Ú1: zobrazit ve výsledcích i už zhlédnutá anime (default skrytá — jako dřív)
+    showWatchedAnime: false,
 }
 
 const ANILIST_API_URL = 'https://graphql.anilist.co'
@@ -97,6 +105,44 @@ async function fetchWithRetry(url, settings, signal) {
         }
     }
     return null
+}
+
+// Plán 6 Ú1: AniList doporučení pro zdrojové anime — jeden GraphQL dotaz vrátí celý
+// seznam včetně počtu hlasů (rating = upvotes−downvotes, ekvivalent Jikan votes).
+async function fetchAnilistRecommendations(malId, signal) {
+    const query = `query ($idMal: Int) {
+        Media(idMal: $idMal, type: ANIME) {
+            recommendations(sort: RATING_DESC, perPage: 25) {
+                nodes { rating mediaRecommendation { idMal type } }
+            }
+        }
+    }`
+    try {
+        const resp = await fetch(ANILIST_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ query, variables: { idMal: malId } }),
+            signal
+        })
+        if (!resp.ok) {
+            console.warn('AniList recommendations API Error:', resp.status)
+            return {}
+        }
+        const json = await resp.json()
+        const nodes = json?.data?.Media?.recommendations?.nodes || []
+        const result = {} // malId -> počet hlasů AniList
+        for (const n of nodes) {
+            const m = n?.mediaRecommendation
+            if (!m?.idMal || m.type !== 'ANIME') continue
+            if ((n.rating || 0) <= 0) continue
+            result[m.idMal] = (result[m.idMal] || 0) + n.rating
+        }
+        return result
+    } catch (err) {
+        if (err.name === 'AbortError') throw err
+        console.warn('AniList recommendations error:', err)
+        return {}
+    }
 }
 
 async function fetchAnilistTagsBatch(malIds, settings, signal) {
@@ -253,10 +299,37 @@ function getLengthScore(episodes, durationStr, settings) {
     return diff >= settings.MAX_PENALTY_RANGE_MIN ? 0 : 1 - diff / settings.MAX_PENALTY_RANGE_MIN
 }
 
-function getVotesScore(votesCount, settings) {
+function getVotesScoreScaled(votesCount, maxVotes) {
     if (votesCount <= 1) return 0
-    if (votesCount >= settings.MAX_VOTES_FOR_SCORE) return 1
-    return Math.log(votesCount) / Math.log(settings.MAX_VOTES_FOR_SCORE)
+    if (votesCount >= maxVotes) return 1
+    return Math.log(votesCount) / Math.log(maxVotes)
+}
+
+function getVotesScore(votesCount, settings) {
+    return getVotesScoreScaled(votesCount, settings.MAX_VOTES_FOR_SCORE)
+}
+
+// Plán 6 Ú1: férová kombinace hlasů obou zdrojů — každý zdroj se normalizuje na vlastní
+// log-škále (různě velké komunity), silnější zdroj dává základ, shoda obou dává bonus.
+function getCombinedVotesScore(jikanVotes, anilistVotes, settings) {
+    const normJ = getVotesScoreScaled(jikanVotes || 0, settings.MAX_VOTES_FOR_SCORE)
+    const normA = getVotesScoreScaled(anilistVotes || 0, settings.ANILIST_MAX_VOTES_FOR_SCORE)
+    return Math.min(1, Math.max(normJ, normA) + settings.AGREEMENT_BONUS * Math.min(normJ, normA))
+}
+
+// Plán 6 Ú1: skóre AniList tagů kandidáta vůči mému tag profilu (vážený průměr mého
+// hodnocení per tag; váha = rank tagu u kandidáta). Bez průniku → neutrální 0.5.
+function getTagScore(tags, userTagRatings) {
+    let sumW = 0, sumWR = 0
+    for (const t of tags || []) {
+        const ur = userTagRatings[t.name]
+        if (ur === undefined) continue
+        const w = (t.rank || 0) / 100
+        if (w <= 0) continue
+        sumW += w
+        sumWR += ur * w
+    }
+    return sumW > 0 ? (sumWR / sumW) / 10 : 0.5
 }
 
 function getPopularityScore(members, settings) {
@@ -281,18 +354,23 @@ function isInPlanToWatch(title, ptwList) {
     return ptwList.some(p => p.name && p.name.toLowerCase().includes(lower))
 }
 
-function calculateRelevance(details, userRatings, votes, ptwList, settings) {
+function calculateRelevance(details, userRatings, votesInfo, ptwList, settings, anilistTags, userTagRatings) {
     const planScore = isInPlanToWatch(
         details.title_english || details.title, ptwList
     ) ? 1 : 0
+
+    const jikanVotes = votesInfo?.jikan || 0
+    const anilistVotes = votesInfo?.anilist || 0
+    const votes = jikanVotes + anilistVotes
 
     const malScoreVal = details.score || 0
     const malScoreNorm = malScoreVal / 10
     const genreThemeScore = getGenreThemeScore(details, userRatings.genreRatings, userRatings.themeRatings)
     const lengthScore = getLengthScore(details.episodes || 0, details.duration, settings)
-    const votesScore = getVotesScore(votes, settings)
+    const votesScore = getCombinedVotesScore(jikanVotes, anilistVotes, settings)
     const popScore = malScoreVal >= settings.MIN_SCORE_FOR_POP_BONUS
         ? getPopularityScore(details.members || 0, settings) : 0
+    const tagScore = getTagScore(anilistTags, userTagRatings || {})
 
     const plan_p = planScore * settings.RELEVANCE_W_IN_PLAN
     const mal_p = malScoreNorm * settings.RELEVANCE_W_MAL_SCORE
@@ -300,8 +378,9 @@ function calculateRelevance(details, userRatings, votes, ptwList, settings) {
     const length_p = lengthScore * settings.RELEVANCE_W_LENGTH
     const votes_p = votesScore * settings.RELEVANCE_W_VOTES
     const pop_p = popScore * settings.RELEVANCE_W_POPULARITY
+    const tags_p = tagScore * (settings.RELEVANCE_W_TAGS || 0)
 
-    const total = plan_p + mal_p + genre_p + length_p + votes_p + pop_p
+    const total = plan_p + mal_p + genre_p + length_p + votes_p + pop_p + tags_p
 
     // Compute human-readable length string like VBA: "5,0 h / 12 EP" or "1 hr 53 min"
     let lengthVal = null
@@ -323,10 +402,19 @@ function calculateRelevance(details, userRatings, votes, ptwList, settings) {
     return {
         total, plan_s: planScore, mal_s_val: malScoreVal, mal_s_norm: malScoreNorm,
         genre_s: genreThemeScore, length_s: lengthScore, length_s_val: lengthVal,
-        votes_s: votesScore, pop_s: popScore,
-        plan_p, mal_p, genre_p, length_p, votes_p, pop_p,
-        votes_c: votes, members_c: details.members || 0,
+        votes_s: votesScore, pop_s: popScore, tags_s: tagScore,
+        plan_p, mal_p, genre_p, length_p, votes_p, pop_p, tags_p,
+        votes_c: votes, votes_jikan: jikanVotes, votes_anilist: anilistVotes,
+        members_c: details.members || 0,
     }
+}
+
+// Plán 6 Ú1: dynamický maximální součet bodů podle aktuálních vah (breakdown „X / max")
+function getMaxRelevance(settings) {
+    return (settings.RELEVANCE_W_IN_PLAN || 0) + (settings.RELEVANCE_W_MAL_SCORE || 0)
+        + (settings.RELEVANCE_W_GENRE_THEME || 0) + (settings.RELEVANCE_W_LENGTH || 0)
+        + (settings.RELEVANCE_W_VOTES || 0) + (settings.RELEVANCE_W_POPULARITY || 0)
+        + (settings.RELEVANCE_W_TAGS || 0)
 }
 
 // ============================================================
@@ -403,9 +491,21 @@ function SettingsModal({ isOpen, onClose, settings, onSave }) {
                     <NumberInput label="Hlasy doporučení (Votes)" field="RELEVANCE_W_VOTES" />
                     <NumberInput label="MAL Skóre" field="RELEVANCE_W_MAL_SCORE" />
                     <NumberInput label="Žánry a témata" field="RELEVANCE_W_GENRE_THEME" />
+                    <NumberInput label="AniList tagy" field="RELEVANCE_W_TAGS" />
                     <NumberInput label="V plánu (PTW bonus)" field="RELEVANCE_W_IN_PLAN" />
                     <NumberInput label="Délka anime" field="RELEVANCE_W_LENGTH" />
                     <NumberInput label="Popularita" field="RELEVANCE_W_POPULARITY" />
+
+                    <div className="rec-settings-section-title">Kombinace zdrojů (Jikan × AniList)</div>
+                    <div className="rec-toggle-row">
+                        <label>Kombinovat s AniList doporučeními</label>
+                        <div
+                            className={`rec-toggle-switch ${local.useAniListRecs ? 'active' : ''}`}
+                            onClick={() => set('useAniListRecs', !local.useAniListRecs)}
+                        />
+                    </div>
+                    <NumberInput label="Max. hlasů AniList (plné skóre)" field="ANILIST_MAX_VOTES_FOR_SCORE" />
+                    <NumberInput label="Bonus za shodu obou zdrojů" field="AGREEMENT_BONUS" step={0.05} />
 
                     <div className="rec-settings-section-title">Nastavení délky</div>
                     <NumberInput label="Ideální počet epizod" field="IDEAL_EPISODES" />
@@ -429,6 +529,13 @@ function SettingsModal({ isOpen, onClose, settings, onSave }) {
                         <div
                             className={`rec-toggle-switch ${local.showPTWAnime ? 'active' : ''}`}
                             onClick={() => set('showPTWAnime', !local.showPTWAnime)}
+                        />
+                    </div>
+                    <div className="rec-toggle-row">
+                        <label>Zobrazit i zhlédnutá anime</label>
+                        <div
+                            className={`rec-toggle-switch ${local.showWatchedAnime ? 'active' : ''}`}
+                            onClick={() => set('showWatchedAnime', !local.showWatchedAnime)}
                         />
                     </div>
                 </div>
@@ -671,7 +778,7 @@ function RelevanceBreakdown({ data, settings, sourceScore }) {
             }}
         >
             <div style={{ marginBottom: '8px', paddingBottom: '4px', borderBottom: '1px dashed #000', fontSize: '0.95rem' }}>
-                Celková Relevance: <strong>{data.total.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})} / 110</strong>
+                Celková Relevance: <strong>{data.total.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})} / {getMaxRelevance(settings)}</strong>
             </div>
 
             <Row 
@@ -702,19 +809,30 @@ function RelevanceBreakdown({ data, settings, sourceScore }) {
                 weight={settings.RELEVANCE_W_LENGTH} 
                 result={data.length_p} 
             />
-            <Row 
+            <Row
                 label={`Hlasy doporučení`}
-                status={`${data.votes_c}x doporučeno`}
-                mult={data.votes_p / settings.RELEVANCE_W_VOTES} 
-                weight={settings.RELEVANCE_W_VOTES} 
-                result={data.votes_p} 
+                status={(data.votes_jikan !== undefined)
+                    ? `MAL ${data.votes_jikan}× · AniList ${data.votes_anilist || 0}×`
+                    : `${data.votes_c}x doporučeno`}
+                mult={data.votes_p / settings.RELEVANCE_W_VOTES}
+                weight={settings.RELEVANCE_W_VOTES}
+                result={data.votes_p}
             />
-            <Row 
+            {data.tags_p !== undefined && settings.RELEVANCE_W_TAGS > 0 && (
+                <Row
+                    label={`AniList tagy`}
+                    status={data.tags_s === 0.5 ? 'Neutrální (bez shody tagů)' : data.tags_p >= settings.RELEVANCE_W_TAGS * 0.85 ? 'Silná shoda s mými tagy' : 'Shoda s mými tagy'}
+                    mult={data.tags_p / settings.RELEVANCE_W_TAGS}
+                    weight={settings.RELEVANCE_W_TAGS}
+                    result={data.tags_p}
+                />
+            )}
+            <Row
                 label={`Popularita`}
                 status={getPopularityTierName(data.members_c, settings)}
-                mult={data.pop_p / settings.RELEVANCE_W_POPULARITY} 
-                weight={settings.RELEVANCE_W_POPULARITY} 
-                result={data.pop_p} 
+                mult={data.pop_p / settings.RELEVANCE_W_POPULARITY}
+                weight={settings.RELEVANCE_W_POPULARITY}
+                result={data.pop_p}
             />
         </div>
     )
@@ -731,7 +849,9 @@ function RecCard({ rec, sourceAnimeId, sourceScore, settings }) {
     const [showStats, setShowStats] = useState(false)
 
     const { relevance, details, anilistData } = rec
-    const score = Math.min(100, Math.max(0, relevance.total))
+    // Plán 6 Ú1: normalizace na dynamické maximum vah (s tagy už není max 110)
+    const maxTotal = getMaxRelevance(settings) || 100
+    const score = Math.min(100, Math.max(0, (relevance.total / maxTotal) * 100))
     const circumference = 2 * Math.PI * 28 // Updated from 20 to 28
     const offset = circumference - (score / 100) * circumference
     const ringColor = getColorGradient(score, 0, 100)
@@ -821,7 +941,19 @@ function RecCard({ rec, sourceAnimeId, sourceScore, settings }) {
                     {details.episodes && <span className="rec-meta-badge">{details.episodes} EP</span>}
                     {rel && <span className="rec-meta-badge">{rel.season_text}</span>}
                     {relevance.plan_s === 1 && <span className="rec-meta-badge ptw">📋 V plánu</span>}
-                    <span className="rec-meta-badge votes">👍 {relevance.votes_c}× doporučeno</span>
+                    {rec.isWatched && (
+                        <span className="rec-meta-badge" style={{ background: 'rgba(52, 211, 153, 0.15)', color: 'var(--accent-emerald)', borderColor: 'rgba(52, 211, 153, 0.4)' }}>
+                            ✅ Zhlédnuto{rec.myRating ? ` · FH ${Math.round(rec.myRating)}/10` : ''}
+                        </span>
+                    )}
+                    <span className="rec-meta-badge votes" title="Počet uživatelských doporučení na MAL a AniList">
+                        👍 {relevance.votes_jikan !== undefined
+                            ? [
+                                relevance.votes_jikan > 0 ? `MAL ${relevance.votes_jikan}×` : null,
+                                relevance.votes_anilist > 0 ? `AniList ${relevance.votes_anilist}×` : null,
+                              ].filter(Boolean).join(' · ') || '0× doporučeno'
+                            : `${relevance.votes_c}× doporučeno`}
+                    </span>
                 </div>
 
                 {/* Synopsis */}
@@ -999,6 +1131,45 @@ function Recommendations() {
         return set
     }, [animeList])
 
+    // Plán 6 Ú1: MAL id → můj záznam (pro badge „Zhlédnuto" s mým hodnocením)
+    const watchedInfo = useMemo(() => {
+        const map = new Map()
+        for (const a of animeList) {
+            const m = a.mal_url?.match(/\/anime\/(\d+)/)
+            if (m) map.set(parseInt(m[1]), a)
+        }
+        return map
+    }, [animeList])
+
+    // Plán 6 Ú1: můj tag profil — vážený průměr hodnocení per AniList tag
+    // (stejný vzorec jako Dashboard: váha = rank/100, jen dokončená a ohodnocená anime;
+    // práh sumWeights ≥ 1.5, aby jeden náhodný výskyt tagu nerozhazoval skóre)
+    const userTagRatings = useMemo(() => {
+        const acc = {}
+        for (const a of animeList) {
+            if (!a.tags) continue
+            const rating = parseFloat(a.rating)
+            const finished = a.end_date && a.end_date !== 'X' && a.end_date !== ''
+            if (!finished || isNaN(rating) || rating < 1 || rating > 10) continue
+            for (const tagEntry of String(a.tags).split(';')) {
+                const parts = tagEntry.split(':')
+                if (parts.length < 2) continue
+                const name = parts[0].trim()
+                const rank = parseInt(parts[1]) || 0
+                if (!name || rank <= 0) continue
+                const w = rank / 100
+                if (!acc[name]) acc[name] = { sw: 0, swr: 0 }
+                acc[name].sw += w
+                acc[name].swr += rating * w
+            }
+        }
+        const out = {}
+        for (const [name, s] of Object.entries(acc)) {
+            if (s.sw >= 1.5) out[name] = s.swr / s.sw
+        }
+        return out
+    }, [animeList])
+
     // Select anime
     const handleSelectAnime = useCallback((anime) => {
         setSelectedAnime(anime)
@@ -1049,21 +1220,40 @@ function Recommendations() {
             if (settings.USE_ADAPTIVE_DELAY) await sleep(settings.INITIAL_DELAY_MS)
             else await sleep(settings.API_DELAY_MS)
 
-            // 2. Get recommendations
-            const recsResp = await fetchWithRetry(
-                `https://api.jikan.moe/v4/anime/${animeId}/recommendations`, settings, signal
-            )
+            // 2. Get recommendations — Jikan + AniList asynchronně naráz (Plán 6 Ú1)
+            const [recsResp, anilistRecs] = await Promise.all([
+                fetchWithRetry(`https://api.jikan.moe/v4/anime/${animeId}/recommendations`, settings, signal),
+                settings.useAniListRecs !== false
+                    ? fetchAnilistRecommendations(animeId, signal)
+                    : Promise.resolve({}),
+            ])
 
-            if (!recsResp?.data?.length) {
+            // Union kandidátů podle MAL id (Jikan pořadí první, pak AniList-only)
+            const candidates = []
+            const seenIds = new Set()
+            for (const item of (recsResp?.data || [])) {
+                const id = item.entry.mal_id
+                if (!id || seenIds.has(id)) continue
+                seenIds.add(id)
+                candidates.push({ malId: id, jikanVotes: item.votes || 0, anilistVotes: anilistRecs[id] || 0 })
+            }
+            for (const [idStr, aVotes] of Object.entries(anilistRecs)) {
+                const id = parseInt(idStr, 10)
+                if (!id || seenIds.has(id)) continue
+                seenIds.add(id)
+                candidates.push({ malId: id, jikanVotes: 0, anilistVotes: aVotes })
+            }
+
+            if (!candidates.length) {
                 setProgress({ current: 0, total: 0, text: 'Žádná doporučení nebyla nalezena.', eta: '' })
                 setIsProcessing(false)
                 return
             }
 
-            const totalRecs = recsResp.data.length
+            const totalRecs = candidates.length
             setProgress({ current: 0, total: totalRecs, text: `Zpracovávám 0 z ${totalRecs} doporučení...`, eta: '' })
 
-            // 3. Process each recommendation
+            // 3. Process each candidate (Jikan detaily — MAL score, members, žánry)
             let results = []
             let avgTime = 0
             const startTime = Date.now()
@@ -1071,12 +1261,12 @@ function Recommendations() {
             for (let i = 0; i < totalRecs; i++) {
                 if (signal.aborted) throw new DOMException('Aborted', 'AbortError')
 
-                const item = recsResp.data[i]
-                const recId = item.entry.mal_id
-                const votes = item.votes
+                const cand = candidates[i]
+                const recId = cand.malId
+                const isWatched = watchedIds.has(recId)
 
-                // Skip already watched
-                if (watchedIds.has(recId)) {
+                // Skip already watched (pokud nejsou v nastavení povolená)
+                if (isWatched && !settings.showWatchedAnime) {
                     setProgress(prev => ({
                         ...prev,
                         current: i + 1,
@@ -1094,15 +1284,16 @@ function Recommendations() {
 
                 if (detailsResp?.data) {
                     const details = detailsResp.data
-                    const relevance = calculateRelevance(details, userRatings, votes, ptwList, settings)
-
-                    // PTW filter: skip anime already in PTW if user disabled showing them
-                    if (!settings.showPTWAnime && relevance.plan_s === 1) {
-                        continue
-                    }
+                    const myEntry = isWatched ? watchedInfo.get(recId) : null
+                    const myRating = myEntry ? parseFloat(myEntry.rating) : null
 
                     results.push({
-                        details, relevance, votes,
+                        details,
+                        relevance: null, // spočítá se až po stažení tagů (vstupují do skóre)
+                        votes: cand.jikanVotes + cand.anilistVotes,
+                        votesInfo: { jikan: cand.jikanVotes, anilist: cand.anilistVotes },
+                        isWatched,
+                        myRating: (myRating && !isNaN(myRating)) ? myRating : null,
                         synopsis: cleanSynopsis(details.synopsis),
                         anilistData: null,
                         sourceScore: sourceScoreVal,
@@ -1128,22 +1319,39 @@ function Recommendations() {
                 else await sleep(settings.API_DELAY_MS)
             }
 
-            // 4. Sort by relevance
-            results.sort((a, b) => b.relevance.total - a.relevance.total)
-
-            // 5. Trim to display limit
-            results = results.slice(0, settings.MAX_RECS_TO_DISPLAY)
-
-            // 6. AniList tags batch
+            // 4. AniList tagy pro VŠECHNY kandidáty před scoringem (tagy vstupují do
+            //    relevance) — po dávkách, ať nepřeteče komplexita GraphQL dotazu
             if (results.length > 0) {
-                setProgress(prev => ({ ...prev, text: `Stahuji AniList tagy pro TOP ${results.length} anime...` }))
+                setProgress(prev => ({ ...prev, text: `Stahuji AniList tagy pro ${results.length} anime...` }))
                 const malIds = results.map(r => r.details.mal_id)
-                const anilistData = await fetchAnilistTagsBatch(malIds, settings, signal)
-
+                const anilistData = {}
+                for (let i = 0; i < malIds.length; i += 15) {
+                    if (signal.aborted) throw new DOMException('Aborted', 'AbortError')
+                    const chunk = malIds.slice(i, i + 15)
+                    Object.assign(anilistData, await fetchAnilistTagsBatch(chunk, settings, signal))
+                    if (i + 15 < malIds.length) await sleep(700)
+                }
                 for (const r of results) {
                     r.anilistData = anilistData[r.details.mal_id] || null
                 }
             }
+
+            // 5. Scoring (včetně kombinovaných hlasů a tag profilu)
+            for (const r of results) {
+                r.relevance = calculateRelevance(
+                    r.details, userRatings, r.votesInfo, ptwList, settings,
+                    r.anilistData?.tags, userTagRatings
+                )
+            }
+
+            // PTW filter: skip anime already in PTW if user disabled showing them
+            if (!settings.showPTWAnime) {
+                results = results.filter(r => r.relevance.plan_s !== 1)
+            }
+
+            // 6. Sort by relevance + trim to display limit
+            results.sort((a, b) => b.relevance.total - a.relevance.total)
+            results = results.slice(0, settings.MAX_RECS_TO_DISPLAY)
 
             // 7. Score statistics are now lazy-loaded on hover (ScoreDistributionTooltip)
 
@@ -1163,7 +1371,7 @@ function Recommendations() {
         } finally {
             setIsProcessing(false)
         }
-    }, [selectedAnime, settings, watchedIds, userRatings, ptwList])
+    }, [selectedAnime, settings, watchedIds, watchedInfo, userRatings, userTagRatings, ptwList])
 
     // Auto run when navigated from detail
     useEffect(() => {

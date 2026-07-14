@@ -24,6 +24,7 @@ import { useModalScrollLock } from '../utils/useModalScrollLock'
 import { useModalTables } from '../utils/useModalTables'
 import { formatCategoryMarkdown } from '../utils/formatCategoryMarkdown'
 import { RatingInfoButton, EpisodeGuideModal, FinalGuideModal } from '../components/RatingGuideModals'
+import { extractMalId } from '../utils/jikanService'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, CategoryScale, LinearScale, BarElement)
 
@@ -887,6 +888,7 @@ function AnimeDetail() {
                 malUrl={anime.mal_url}
                 review={note}
                 categoryReviews={categoryReviews}
+                malId={extractMalId(anime.mal_url)}
             />
 
             {/* Episode Ratings */}

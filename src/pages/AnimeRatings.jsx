@@ -1073,6 +1073,18 @@ function AnimeRatings() {
         return true
     }, [categoryReviews, categoryRatings, selectedSeries])
 
+    // Plán 6 Ú7: klik na buňku kategorie v kompletní tabulce → stejný modal s rozborem
+    // jako v detailu anime (plný název, bez ořezávání série)
+    const openTableCategoryReview = useCallback((animeName, cat, rating) => {
+        const text = categoryReviews?.[animeName]?.[cat]
+        if (!text) return
+        episodeModalRef.current?.open({
+            title: `${animeName} — ${cat}`,
+            text,
+            rating: (rating === undefined || rating === null) ? null : rating
+        })
+    }, [categoryReviews])
+
     const handleRadarCategoryClick = useCallback((cat) => {
         if (compareSeason) {
             openRadarCategoryReview(compareSeason, cat)
@@ -3890,7 +3902,14 @@ function AnimeRatings() {
                                                     >
                                                         <td className="td-anime">
                                                             <span className="td-rank">{idx + 1}.</span>
-                                                            <span className="td-name" title={item.name}>{item.name}</span>
+                                                            <Link
+                                                                to={`/anime/${encodeURIComponent(item.name)}`}
+                                                                className="td-name td-name-link"
+                                                                title={`Otevřít detail anime: ${item.name}`}
+                                                                onClick={(e) => e.stopPropagation()}
+                                                            >
+                                                                {item.name}
+                                                            </Link>
                                                         </td>
                                                         <td className="td-numeric td-fh" style={getHeatmapStyle(item.fh)}>
                                                             {item.fh !== null ? item.fh.toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : '—'}
@@ -3900,8 +3919,18 @@ function AnimeRatings() {
                                                         </td>
                                                         {allCategoryColumns.map(cat => {
                                                             const val = item.categories[cat]
+                                                            const hasReview = !!categoryReviews?.[item.name]?.[cat]
                                                             return (
-                                                                <td key={cat} className="td-numeric heatmap-cell" style={getHeatmapStyle(val)}>
+                                                                <td
+                                                                    key={cat}
+                                                                    className={`td-numeric heatmap-cell${hasReview ? ' heatmap-cell-review' : ''}`}
+                                                                    style={getHeatmapStyle(val)}
+                                                                    title={hasReview ? `Zobrazit rozbor: ${cat}` : undefined}
+                                                                    onClick={hasReview ? (e) => {
+                                                                        e.stopPropagation()
+                                                                        openTableCategoryReview(item.name, cat, (val === undefined) ? null : val)
+                                                                    } : undefined}
+                                                                >
                                                                     {val !== undefined && val !== null
                                                                         ? val.toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 2 })
                                                                         : '—'}

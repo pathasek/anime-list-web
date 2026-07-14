@@ -2271,6 +2271,25 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     min-height: 44px;
   }
 
+  /* Výjimka z touch-target pravidla výše: malá kulatá/čtvercová ikonová tlačítka
+     („?" nápověda, play, zavírání) — min-height: 44px je deformovalo do oválu,
+     protože šířka zůstala malá (Plán 6 Ú4) */
+  .rating-info-btn,
+  .media-play-btn,
+  .fav-table-play-btn,
+  .fav-play-hint,
+  .fav-tile-play-btn,
+  .category-card-play-hint.is-search,
+  .media-icon-btn,
+  .guide-close-btn,
+  .r2-chip-info,
+  .ost-minimized-btn {
+    min-height: 0 !important;
+    min-width: 0 !important;
+    flex-shrink: 0 !important;
+    aspect-ratio: 1 / 1 !important;
+  }
+
   .search-bar {
     flex-direction: column;
     align-items: stretch;
@@ -2976,6 +2995,43 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   border-radius: var(--radius-full);
   min-width: 34px;
   text-align: center;
+}
+
+/* Plán 6b: „ostatní" OP/ED z AnimeThemes.moe — tlumenější badge + oddělovač */
+.media-track-badge.alt {
+  color: var(--text-muted);
+  background: rgba(148, 163, 184, 0.10);
+  border-color: rgba(148, 163, 184, 0.28);
+}
+
+.media-track-row.is-extra {
+  opacity: 0.88;
+}
+
+.media-popover-divider {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 6px 8px 3px;
+  margin-top: 3px;
+  border-top: 1px dashed var(--border-color);
+  white-space: nowrap;
+}
+
+.media-track-extra-tag {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: rgba(148, 163, 184, 0.12);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: var(--radius-full);
+  padding: 1px 6px;
+  margin-left: 6px;
+  vertical-align: 1px;
 }
 
 .media-track-meta {
@@ -3912,6 +3968,8 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   .ost-minimized-btn {
     flex-shrink: 0 !important;
     aspect-ratio: 1 / 1 !important;
+    min-height: 0 !important;
+    min-width: 0 !important;
   }
 }
 
@@ -3928,6 +3986,23 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   .media-modal-video-wrap {
     aspect-ratio: auto;
     height: calc(98vh - 40px);
+  }
+
+  /* Plán 6 Ú3: stejná ořezová maska GDrive lišty jako na portrait mobilu — na
+     telefonu naležato (≤900px landscape) se předtím horní lišta Google Drive
+     (seekbar + tlačítko otevření) kreslila přes video */
+  .media-modal-gdrive-clip {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  .media-modal-gdrive-clip iframe {
+    position: absolute;
+    top: -46px;
+    left: 0;
+    width: 100%;
+    height: calc(100% + 46px) !important;
   }
 }
 

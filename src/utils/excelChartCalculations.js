@@ -344,7 +344,10 @@ export function calculateExcelChartsData(animeList, historyLog) {
                 // Store description and anime mapping for tag selector UI
                 if (description && !tagDescriptions[tagName]) tagDescriptions[tagName] = description;
                 if (!tagAnimeMap[tagName]) tagAnimeMap[tagName] = [];
-                tagAnimeMap[tagName].push({ name: a.name_cz || a.name || a.name_en, rank });
+                // rating u položky: jen dokončená anime s platným hodnocením (pro vážené
+                // hodnocení vybraných tagů v Dashboardu — Plán 6 Ú6)
+                const hasValidRating = isFinished && !isNaN(rating) && rating >= 1 && rating <= 10;
+                tagAnimeMap[tagName].push({ name: a.name_cz || a.name || a.name_en, rank, rating: hasValidRating ? rating : null });
                 // Word cloud: sum all ranks regardless of rating
                 if (!tagRelevance[tagName]) tagRelevance[tagName] = 0;
                 tagRelevance[tagName] += rank;

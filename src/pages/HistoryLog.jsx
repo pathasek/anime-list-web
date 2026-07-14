@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import { loadData, STORAGE_KEYS } from '../utils/dataStore'
+import { useModalScrollLock } from '../utils/useModalScrollLock'
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js'
 import { Bar } from 'react-chartjs-2'
 
@@ -29,6 +30,225 @@ const pluralEpizoda = (n) => {
     return `${n} epizod`
 }
 
+const pluralDen = (n) => (n === 1 ? 'den' : n >= 2 && n <= 4 ? 'dny' : 'dní')
+
+// ============================================================
+// Plán 6 Ú5: Modal s historií streaků
+// ============================================================
+const fmtDateShort = (d) => d.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric', year: '2-digit' })
+
+// Barva streaku podle délky (kratší = tlumená, delší = výraznější)
+const streakColor = (days) => {
+    if (days >= 14) return '#fbbf24'                 // zlatá — výjimečné
+    if (days >= 7) return 'var(--accent-emerald)'    // týden a víc
+    if (days >= 3) return 'var(--accent-amber)'
+    return '#64748b'                                  // 1–2 dny
+}
+
+function StreakHistoryModal({ streaks, onClose }) {
+    useModalScrollLock(true)
+
+    useEffect(() => {
+        const onKey = (e) => { if (e.key === 'Escape') onClose() }
+        document.addEventListener('keydown', onKey)
+        return () => document.removeEventListener('keydown', onKey)
+    }, [onClose])
+
+    const stats = useMemo(() => {
+        if (!streaks.length) return null
+        const totalDays = streaks.reduce((s, x) => s + x.days, 0)
+        const longest = streaks.reduce((a, b) => (b.days > a.days ? b : a))
+        const totalMinutes = streaks.reduce((s, x) => s + x.totalMinutes, 0)
+        return {
+            count: streaks.length,
+            totalDays,
+            avgDays: totalDays / streaks.length,
+            longestDays: longest.days,
+            totalHours: totalMinutes / 60,
+        }
+    }, [streaks])
+
+    // Timeline: řádek per rok, streaky jako pruhy na časové ose roku
+    const yearRows = useMemo(() => {
+        const rows = {}
+        streaks.forEach((s, idx) => {
+            for (let y = s.start.getFullYear(); y <= s.end.getFullYear(); y++) {
+                const yearStart = new Date(y, 0, 1)
+                const yearEnd = new Date(y, 11, 31)
+                const daysInYear = Math.round((new Date(y + 1, 0, 1) - yearStart) / 86400000)
+                const segStart = s.start > yearStart ? s.start : yearStart
+                const segEnd = s.end < yearEnd ? s.end : yearEnd
+                const startDay = Math.round((segStart - yearStart) / 86400000)
+                const segDays = Math.round((segEnd - segStart) / 86400000) + 1
+                if (!rows[y]) rows[y] = []
+                rows[y].push({
+                    streakIdx: idx,
+                    left: (startDay / daysInYear) * 100,
+                    width: Math.max((segDays / daysInYear) * 100, 0.45),
+                    streak: s,
+                })
+            }
+        })
+        return Object.entries(rows)
+            .map(([year, bars]) => ({ year: parseInt(year, 10), bars }))
+            .sort((a, b) => b.year - a.year)
+    }, [streaks])
+
+    const topStreaks = useMemo(() =>
+        [...streaks].sort((a, b) => b.days - a.days || b.end - a.end).slice(0, 10),
+        [streaks])
+
+    const maxDays = stats ? stats.longestDays : 1
+
+    const statCard = (icon, value, label, color) => (
+        <div style={{
+            flex: '1 1 110px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)',
+            borderRadius: 'var(--radius-md)', padding: '10px 12px', textAlign: 'center'
+        }}>
+            <div style={{ fontSize: '1.05rem', fontWeight: 800, color: color || 'var(--text-primary)' }}>{icon} {value}</div>
+            <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: '2px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{label}</div>
+        </div>
+    )
+
+    const fmtHours = (h) => `${h.toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} h`
+
+    return createPortal(
+        <div
+            onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
+            style={{
+                position: 'fixed', inset: 0, zIndex: 100000, background: 'rgba(0,0,0,0.72)',
+                backdropFilter: 'blur(3px)', display: 'flex', alignItems: 'center',
+                justifyContent: 'center', padding: '16px', animation: 'fadeIn 0.18s ease'
+            }}
+        >
+            <div style={{
+                width: 'min(780px, 96vw)', maxHeight: '90vh', overflowY: 'auto',
+                background: 'var(--bg-card)', border: '1px solid var(--border-color)',
+                borderRadius: 'var(--radius-lg)', boxShadow: '0 24px 70px rgba(0,0,0,0.6)',
+                padding: 'var(--spacing-lg)', display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)'
+            }}>
+                {/* Hlavička */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        🔥 Historie streaků
+                        {stats && <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 500 }}>({stats.count} streaků)</span>}
+                    </h3>
+                    <button className="media-icon-btn" title="Zavřít (Esc)" onClick={onClose}>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+
+                {!stats ? (
+                    <div style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '24px' }}>Zatím žádné streaky.</div>
+                ) : (
+                    <>
+                        {/* Souhrn */}
+                        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                            {statCard('📈', stats.count, 'Streaků celkem')}
+                            {statCard('🏆', `${stats.longestDays} ${pluralDen(stats.longestDays)}`, 'Nejdelší', '#fbbf24')}
+                            {statCard('⌀', `${stats.avgDays.toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} dne`, 'Průměrná délka')}
+                            {statCard('📅', stats.totalDays, 'Streak dní celkem', 'var(--accent-emerald)')}
+                            {statCard('⏱️', fmtHours(stats.totalHours), 'Hodin ve streacích', 'var(--accent-amber)')}
+                        </div>
+
+                        {/* Timeline po letech */}
+                        <div>
+                            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600, marginBottom: '8px' }}>
+                                ČASOVÁ OSA STREAKŮ
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                                {yearRows.map(({ year, bars }) => (
+                                    <div key={year} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                        <span style={{ width: '38px', fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 700, textAlign: 'right', flexShrink: 0 }}>{year}</span>
+                                        <div style={{
+                                            position: 'relative', flex: 1, height: '20px',
+                                            background: 'var(--bg-tertiary)', borderRadius: '5px', overflow: 'hidden'
+                                        }}>
+                                            {/* měsíční dělítka */}
+                                            {Array.from({ length: 11 }, (_, i) => (
+                                                <span key={i} style={{
+                                                    position: 'absolute', left: `${((i + 1) / 12) * 100}%`, top: 0, bottom: 0,
+                                                    width: '1px', background: 'rgba(255,255,255,0.06)'
+                                                }} />
+                                            ))}
+                                            {bars.map((b, i) => (
+                                                <span
+                                                    key={i}
+                                                    title={`${fmtDateShort(b.streak.start)} – ${fmtDateShort(b.streak.end)} · ${b.streak.days} ${pluralDen(b.streak.days)} · ${Math.round(b.streak.totalMinutes / 60)} h · ${pluralEpizoda(b.streak.totalEpisodes)}${b.streak.ongoing ? ' · 🔥 probíhá' : ''}`}
+                                                    style={{
+                                                        position: 'absolute', left: `${b.left}%`, width: `${b.width}%`,
+                                                        top: '3px', bottom: '3px', borderRadius: '3px',
+                                                        background: streakColor(b.streak.days),
+                                                        opacity: 0.45 + 0.55 * Math.min(b.streak.days / maxDays, 1),
+                                                        cursor: 'help',
+                                                        boxShadow: b.streak.days === maxDays ? '0 0 6px rgba(251,191,36,0.7)' : 'none'
+                                                    }}
+                                                />
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div style={{ display: 'flex', gap: '14px', marginTop: '8px', fontSize: '0.68rem', color: 'var(--text-muted)', flexWrap: 'wrap' }}>
+                                <span><span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '2px', background: '#64748b', marginRight: '4px', verticalAlign: '-1px' }} />1–2 dny</span>
+                                <span><span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '2px', background: 'var(--accent-amber)', marginRight: '4px', verticalAlign: '-1px' }} />3–6 dní</span>
+                                <span><span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '2px', background: 'var(--accent-emerald)', marginRight: '4px', verticalAlign: '-1px' }} />7–13 dní</span>
+                                <span><span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '2px', background: '#fbbf24', marginRight: '4px', verticalAlign: '-1px' }} />14+ dní</span>
+                            </div>
+                        </div>
+
+                        {/* TOP streaky */}
+                        <div>
+                            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600, marginBottom: '8px' }}>
+                                TOP {topStreaks.length} STREAKŮ
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                {topStreaks.map((s, i) => (
+                                    <div key={`${s.start.getTime()}`} style={{
+                                        background: 'var(--bg-secondary)', border: '1px solid var(--border-color)',
+                                        borderRadius: 'var(--radius-md)', padding: '10px 14px',
+                                        borderLeft: `3px solid ${streakColor(s.days)}`
+                                    }}>
+                                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', flexWrap: 'wrap' }}>
+                                            <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-muted)', width: '22px' }}>
+                                                {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`}
+                                            </span>
+                                            <span style={{ fontWeight: 800, color: streakColor(s.days), fontSize: '1rem' }}>
+                                                {s.days} {pluralDen(s.days)}
+                                            </span>
+                                            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                                                {fmtDateShort(s.start)} – {fmtDateShort(s.end)}
+                                            </span>
+                                            {s.ongoing && <span style={{ fontSize: '0.75rem', color: 'var(--accent-emerald)', fontWeight: 700 }}>🔥 Probíhá</span>}
+                                            <span style={{ marginLeft: 'auto', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                                                {Math.round(s.totalMinutes / 60)} h · {pluralEpizoda(s.totalEpisodes)} · {s.animeCount} anime
+                                            </span>
+                                        </div>
+                                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px', paddingLeft: '32px' }}>
+                                            {s.topAnime && (
+                                                <span>Nejvíc sledováno: <span style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>{s.topAnime[0]}</span> ({Math.round(s.topAnime[1] / 60)} h)</span>
+                                            )}
+                                            {!s.ongoing && (
+                                                <span style={{ display: 'block', marginTop: '2px' }}>
+                                                    Ukončen — poslední den: <span style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>{s.lastDayAnime.join(', ') || '—'}</span>
+                                                    {s.gapAfter !== null && s.gapAfter > 0 && <span>, poté {s.gapAfter} {pluralDen(s.gapAfter)} pauza</span>}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </>
+                )}
+            </div>
+        </div>,
+        document.body
+    )
+}
+
 function HistoryLog() {
     const [historyLog, setHistoryLog] = useState([])
     const [loading, setLoading] = useState(true)
@@ -47,6 +267,7 @@ function HistoryLog() {
     // UI enhancements
     const [highlightedDate, setHighlightedDate] = useState(null)
     const [showScrollTop, setShowScrollTop] = useState(false)
+    const [showStreakHistory, setShowStreakHistory] = useState(false)
     const [visibleCount, setVisibleCount] = useState(() => {
         const saved = sessionStorage.getItem('history_log_visible_count');
         return saved ? parseInt(saved, 10) : 40;
@@ -185,9 +406,11 @@ function HistoryLog() {
     }, [historyLog])
 
     const watchStreak = useMemo(() => {
-        if (!historyLog.length) return { current: 0, longest: 0, currentStart: null, currentEnd: null, longestStart: null, longestEnd: null }
+        if (!historyLog.length) return { current: 0, longest: 0, currentStart: null, currentEnd: null, longestStart: null, longestEnd: null, streaks: [] }
 
         const dailyMinutes = {}
+        // Plán 6 Ú5: detaily dne pro historii streaků (anime + epizody per den)
+        const dailyInfo = {}
         historyLog.forEach(h => {
             if (!h.date) return
             const dateStr = h.date.split('T')[0]
@@ -197,11 +420,17 @@ function HistoryLog() {
             }
             if (!isNaN(mins) && mins > 0) {
                 dailyMinutes[dateStr] = (dailyMinutes[dateStr] || 0) + mins
+                if (!dailyInfo[dateStr]) dailyInfo[dateStr] = { episodes: 0, animeMinutes: {} }
+                const epMatch = h.episodes?.match(/\((\d+)x\)/)
+                if (epMatch) dailyInfo[dateStr].episodes += parseInt(epMatch[1], 10)
+                if (h.name) {
+                    dailyInfo[dateStr].animeMinutes[h.name] = (dailyInfo[dateStr].animeMinutes[h.name] || 0) + mins
+                }
             }
         })
 
         const sortedDates = Object.keys(dailyMinutes).sort()
-        if (sortedDates.length === 0) return { current: 0, longest: 0, currentStart: null, currentEnd: null, longestStart: null, longestEnd: null }
+        if (sortedDates.length === 0) return { current: 0, longest: 0, currentStart: null, currentEnd: null, longestStart: null, longestEnd: null, streaks: [] }
 
         const parseISOLocal = (s) => {
             const [y, m, d] = s.split('-');
@@ -221,10 +450,12 @@ function HistoryLog() {
             return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
         }
 
-        // 1. Longest streak (historical)
+        // 1. Longest streak (historical) + Plán 6 Ú5: kompletní seznam streaků s detaily
         let currentStreak = 0, longestStreak = 0
         let inStreak = false
         let tempStart = null, maxStart = null, maxEnd = null
+        const streaks = []
+        let curDetail = null
 
         for (let d = new Date(minDate); d <= effectiveEndDate; d.setDate(d.getDate() + 1)) {
             const dStr = getLocalISOString(d)
@@ -235,8 +466,21 @@ function HistoryLog() {
                     inStreak = true
                     tempStart = new Date(d)
                     currentStreak = 1
+                    curDetail = { start: new Date(d), end: new Date(d), days: 1, totalMinutes: 0, totalEpisodes: 0, animeMinutes: {}, lastDayAnime: [] }
                 } else {
                     currentStreak++
+                    curDetail.days++
+                    curDetail.end = new Date(d)
+                }
+
+                curDetail.totalMinutes += mins
+                const info = dailyInfo[dStr]
+                if (info) {
+                    curDetail.totalEpisodes += info.episodes
+                    Object.entries(info.animeMinutes).forEach(([name, m]) => {
+                        curDetail.animeMinutes[name] = (curDetail.animeMinutes[name] || 0) + m
+                    })
+                    curDetail.lastDayAnime = Object.keys(info.animeMinutes)
                 }
 
                 if (currentStreak > longestStreak) {
@@ -247,8 +491,30 @@ function HistoryLog() {
             } else {
                 inStreak = false
                 currentStreak = 0
+                if (curDetail) {
+                    streaks.push(curDetail)
+                    curDetail = null
+                }
             }
         }
+        if (curDetail) streaks.push(curDetail)
+
+        // Post-processing streaků: topAnime, počet anime, pauza po streaku, probíhající
+        const DAY_MS = 24 * 60 * 60 * 1000
+        streaks.forEach((s, i) => {
+            const entries = Object.entries(s.animeMinutes)
+            s.animeCount = entries.length
+            s.topAnime = entries.length ? entries.reduce((a, b) => (b[1] > a[1] ? b : a)) : null // [name, minutes]
+            if (i < streaks.length - 1) {
+                s.gapAfter = Math.max(0, Math.round((streaks[i + 1].start - s.end) / DAY_MS) - 1)
+                s.ongoing = false
+            } else {
+                const sinceEnd = Math.round((effectiveEndDate - s.end) / DAY_MS)
+                s.ongoing = sinceEnd <= 1
+                s.gapAfter = s.ongoing ? null : Math.max(0, sinceEnd - 1)
+            }
+            delete s.animeMinutes
+        })
 
         // Handle case where the longest streak is still ongoing at the end of the data
         if (inStreak && currentStreak > longestStreak) {
@@ -292,7 +558,8 @@ function HistoryLog() {
             currentStart: actStart,
             currentEnd: actEnd,
             longestStart: maxStart,
-            longestEnd: maxEnd
+            longestEnd: maxEnd,
+            streaks
         }
     }, [historyLog])
 
@@ -753,6 +1020,18 @@ function HistoryLog() {
                                 </span>
                             )}
                         </div>
+
+                        <div style={{ width: '1px', height: '24px', background: 'var(--border-color)' }} />
+
+                        {/* Plán 6 Ú5: tlačítko historie streaků */}
+                        <button
+                            className="media-icon-btn"
+                            title="Historie streaků"
+                            onClick={() => setShowStreakHistory(true)}
+                            style={{ width: '30px', height: '30px', fontSize: '0.95rem' }}
+                        >
+                            🕐
+                        </button>
                     </div>
                 </div>
 
@@ -1171,6 +1450,14 @@ function HistoryLog() {
                     ↑
                 </button>,
                 document.body
+            )}
+
+            {/* Plán 6 Ú5: modal historie streaků */}
+            {showStreakHistory && (
+                <StreakHistoryModal
+                    streaks={watchStreak.streaks || []}
+                    onClose={() => setShowStreakHistory(false)}
+                />
             )}
         </div>
     )

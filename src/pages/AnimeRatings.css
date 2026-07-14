@@ -2071,6 +2071,36 @@
   color: var(--text-secondary);
 }
 
+/* Plán 6 Ú7: název anime v tabulce = odkaz na detail anime */
+.td-name-link {
+  text-decoration: none;
+  cursor: pointer;
+}
+.td-name-link:hover {
+  color: var(--accent-primary) !important;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Plán 6 Ú7: buňka kategorie s dostupným rozborem — afordance na hover */
+.heatmap-cell-review {
+  cursor: pointer;
+  position: relative;
+}
+.heatmap-cell-review:hover {
+  transform: scale(1.06);
+  box-shadow: inset 0 0 0 1px var(--accent-primary);
+}
+.heatmap-cell-review:hover::after {
+  content: '📄';
+  position: absolute;
+  top: 1px;
+  right: 2px;
+  font-size: 0.55rem;
+  line-height: 1;
+  opacity: 0.85;
+}
+
 .td-numeric {
   text-align: center;
   font-weight: 600;

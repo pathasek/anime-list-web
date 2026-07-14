@@ -1397,6 +1397,61 @@ function Dashboard() {
                 const tagScores = excelData.anilistTags.map(t => t.score);
                 const tagMinX = tagScores.length > 0 ? Math.floor((Math.min(...tagScores) - 0.25) * 4) / 4 : 0;
 
+                // Plán 6 Ú6: vážené hodnocení vybrané kombinace tagů (stejný vzorec jako
+                // Top 20 — Σ(hodnocení × rank/100) / Σ(rank/100) přes anime z aktuálního výběru)
+                let selWeighted = null, selRatedCount = 0
+                if (selectedTags.size > 0 && combinedAnime.length > 0) {
+                    const included = new Set(combinedAnime.map(a => a.name))
+                    let sumW = 0, sumWR = 0
+                    const rated = new Set()
+                    selectedTags.forEach(tn => {
+                        (tagAnimeMap[tn] || []).forEach(a => {
+                            if (!included.has(a.name) || a.rating == null) return
+                            const w = a.rank / 100
+                            sumW += w
+                            sumWR += a.rating * w
+                            rated.add(a.name)
+                        })
+                    })
+                    selRatedCount = rated.size
+                    if (sumW > 0) selWeighted = sumWR / sumW
+                }
+
+                // Plán 6 Ú6: per-bar barvy grafu podle hodnoty (bordó → zlatá) + zvýraznění
+                // vybraných tagů; zaoblené pruhy a hodnoty na konci pruhu
+                const tagBarScale = (f) => {
+                    const c1 = [152, 9, 53], c2 = [251, 191, 36]
+                    const c = c1.map((v, i) => Math.round(v + (c2[i] - v) * f))
+                    return `rgba(${c[0]},${c[1]},${c[2]},0.88)`
+                }
+                const tagMnScore = tagScores.length ? Math.min(...tagScores) : 0
+                const tagMxScore = tagScores.length ? Math.max(...tagScores) : 1
+                const styledTagsData = {
+                    labels: tagsData.labels,
+                    datasets: [{
+                        data: tagsData.datasets[0].data,
+                        backgroundColor: excelData.anilistTags.map(t =>
+                            tagBarScale(tagMxScore > tagMnScore ? (t.score - tagMnScore) / (tagMxScore - tagMnScore) : 1)),
+                        borderColor: excelData.anilistTags.map(t =>
+                            selectedTags.has(t.label) ? '#e2e8f0' : 'transparent'),
+                        borderWidth: 1.5,
+                        borderRadius: 5,
+                        borderSkipped: false,
+                    }]
+                }
+                const tagChartOptions = getOptions(horizontalBarOptionsExcel, 'GrafVazeneTagy', null, {
+                    scales: { x: { min: tagMinX, max: 10, title: { display: true, text: 'Vážený průměr hodnocení', color: '#e2e8f0' }, ticks: { color: '#e2e8f0' } } }
+                })
+                tagChartOptions.plugins.datalabels = {
+                    display: true,
+                    color: '#fff',
+                    anchor: 'end',
+                    align: 'start',
+                    offset: 6,
+                    font: { weight: 'bold', size: 10, family: 'Inter, sans-serif' },
+                    formatter: (v) => v.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                }
+
                 const handleTagClick = (label, e) => {
                     if (e && (e.ctrlKey || e.metaKey)) {
                         setExcludedTags(prev => { const n = new Set(prev); n.has(label) ? n.delete(label) : n.add(label); return n; });
@@ -1454,7 +1509,18 @@ function Dashboard() {
                                     <>
                                         <div className="tag-anime-header">
                                             <h4>{[...selectedTags].join(tagFilterMode === 'and' ? ' ∩ ' : ' ∪ ')}</h4>
-                                            <span className="tag-anime-count">{combinedAnime.length} anime</span>
+                                            <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexShrink: 0 }}>
+                                                {selWeighted !== null && (
+                                                    <span
+                                                        className="tag-anime-count"
+                                                        style={{ color: '#fbbf24', cursor: 'help' }}
+                                                        title={`Vážené hodnocení vybraných tagů — Σ(moje hodnocení × rank/100) / Σ(rank/100) přes ${selRatedCount} hodnocených anime z výběru`}
+                                                    >
+                                                        ⚖️ {selWeighted.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}{selRatedCount < 2 ? ' (málo dat)' : ''}
+                                                    </span>
+                                                )}
+                                                <span className="tag-anime-count">{combinedAnime.length} anime</span>
+                                            </div>
                                         </div>
                                         {excludedTags.size > 0 && (
                                             <div style={{ fontSize: '0.7rem', color: 'var(--accent-red)', marginBottom: '8px', opacity: 0.8 }}>✕ Vyloučeno: {[...excludedTags].join(', ')}</div>
@@ -1482,9 +1548,7 @@ function Dashboard() {
                             <div className="full-chart-wrapper dark-gradient" style={{ maxWidth: 'none', aspectRatio: 'unset', height: '500px' }}>
                                 <div className="chart-title">Top 20 tagů (Vážené hodnocení)</div>
                                 <div className="chart-body">
-                                    <Bar data={tagsData} options={getOptions(horizontalBarOptionsExcel, 'GrafVazeneTagy', null, {
-                                        scales: { x: { min: tagMinX, max: 10, title: { display: true, text: 'Vážený průměr hodnocení', color: '#e2e8f0' }, ticks: { color: '#e2e8f0' } } }
-                                    })} />
+                                    <Bar data={styledTagsData} options={tagChartOptions} />
                                 </div>
                             </div>
                         </div>
