@@ -65,11 +65,30 @@ export async function fetchAnimeThemes(malId, signal) {
                 artist: artists.length ? artists.join(', ') : null,
                 url: best.link,
                 version: bestEntryVersion,
+                _score: videoScore(best),
             })
         }
 
-        themesCache.set(malId, themes)
-        return themes
+        // Dedup TV vs. BD: některá anime (např. Monogatari) mají stejnou znělku
+        // v katalogu dvakrát — jako "OP1" (TV) a "OP1-BD" (bluray). Necháme jen
+        // jednu na píseň: tu s lepším videem (BD/creditless/rozlišení už boduje
+        // videoScore), ale s čitelnějším labelem bez "-BD" suffixu.
+        const songKey = (t) => `${t.type}|${(t.song || t.label).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()}`
+        const bySong = new Map()
+        for (const t of themes) {
+            const key = songKey(t)
+            const prev = bySong.get(key)
+            if (!prev) {
+                bySong.set(key, t)
+            } else if (t._score > prev._score) {
+                if (/-bd\b/i.test(t.label) && !/-bd\b/i.test(prev.label)) t.label = prev.label
+                bySong.set(key, t)
+            }
+        }
+        const deduped = [...bySong.values()].map(({ _score, ...t }) => t)
+
+        themesCache.set(malId, deduped)
+        return deduped
     } catch (err) {
         if (err?.name === 'AbortError') throw err
         console.warn('AnimeThemes API error:', err)

@@ -139,11 +139,23 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                 .map(t => normalizeAnimeKey(t.song))
                 .filter(Boolean)
         )
+        // Tolerantní shoda názvů písní — GDrive soubor a AnimeThemes mívají jinou
+        // romanizaci/zápis (interpunkce, pořadí slov), přesná shoda pak duplicity nechytí.
+        const tokensOf = (k) => k.split(' ').filter(w => w.length > 1)
         const songCovered = (song) => {
             const key = normalizeAnimeKey(song)
             if (!key) return false
+            const keyTokens = tokensOf(key)
             for (const c of covered) {
                 if (c === key || c.includes(key) || key.includes(c)) return true
+                // Překryv slov: ≥60 % tokenů kratšího názvu se vyskytuje v druhém
+                const cTokens = tokensOf(c)
+                if (keyTokens.length && cTokens.length) {
+                    const cSet = new Set(cTokens)
+                    const shared = keyTokens.filter(w => cSet.has(w)).length
+                    const minLen = Math.min(keyTokens.length, cTokens.length)
+                    if (shared >= 2 && shared / minLen >= 0.6) return true
+                }
             }
             return false
         }

@@ -121,7 +121,7 @@ function StreakHistoryModal({ streaks, onClose }) {
                 justifyContent: 'center', padding: '16px', animation: 'fadeIn 0.18s ease'
             }}
         >
-            <div style={{
+            <div className="streak-history-modal" style={{
                 width: 'min(780px, 96vw)', maxHeight: '90vh', overflowY: 'auto',
                 background: 'var(--bg-card)', border: '1px solid var(--border-color)',
                 borderRadius: 'var(--radius-lg)', boxShadow: '0 24px 70px rgba(0,0,0,0.6)',
@@ -227,8 +227,8 @@ function StreakHistoryModal({ streaks, onClose }) {
                                             </span>
                                         </div>
                                         <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px', paddingLeft: '32px' }}>
-                                            {s.topAnime && (
-                                                <span>Nejvíc sledováno: <span style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>{s.topAnime[0]}</span> ({Math.round(s.topAnime[1] / 60)} h)</span>
+                                            {s.topSeries && (
+                                                <span>Nejvíc sledováno: <span style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>{s.topSeries[0]}</span> ({Math.round(s.topSeries[1] / 60)} h)</span>
                                             )}
                                             {!s.ongoing && (
                                                 <span style={{ display: 'block', marginTop: '2px' }}>
@@ -251,6 +251,7 @@ function StreakHistoryModal({ streaks, onClose }) {
 
 function HistoryLog() {
     const [historyLog, setHistoryLog] = useState([])
+    const [animeList, setAnimeList] = useState([])
     const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState(() => sessionStorage.getItem('history_log_search_term') || '')
     const [yearFilter, setYearFilter] = useState(() => sessionStorage.getItem('history_log_year_filter') || 'all')
@@ -358,6 +359,10 @@ function HistoryLog() {
                 console.error('Failed to load data:', err)
                 setLoading(false)
             })
+        // Mapa anime → série pro „Nejvíc sledováno" v historii streaků
+        loadData(STORAGE_KEYS.ANIME_LIST, 'data/anime_list.json')
+            .then(list => setAnimeList(list || []))
+            .catch(() => setAnimeList([]))
     }, [])
 
     // Obnovení pozice scrollu po načtení dat
@@ -407,6 +412,10 @@ function HistoryLog() {
 
     const watchStreak = useMemo(() => {
         if (!historyLog.length) return { current: 0, longest: 0, currentStart: null, currentEnd: null, longestStart: null, longestEnd: null, streaks: [] }
+
+        // Mapa název anime → název série (fallback = samotný název)
+        const seriesByName = {}
+        animeList.forEach(a => { if (a.name) seriesByName[a.name] = a.series || a.name })
 
         const dailyMinutes = {}
         // Plán 6 Ú5: detaily dne pro historii streaků (anime + epizody per den)
@@ -504,7 +513,14 @@ function HistoryLog() {
         streaks.forEach((s, i) => {
             const entries = Object.entries(s.animeMinutes)
             s.animeCount = entries.length
-            s.topAnime = entries.length ? entries.reduce((a, b) => (b[1] > a[1] ? b : a)) : null // [name, minutes]
+            // Nejvíc sledovaná SÉRIE v období streaku (agregace minut přes série)
+            const seriesMinutes = {}
+            entries.forEach(([name, m]) => {
+                const ser = seriesByName[name] || name
+                seriesMinutes[ser] = (seriesMinutes[ser] || 0) + m
+            })
+            const serEntries = Object.entries(seriesMinutes)
+            s.topSeries = serEntries.length ? serEntries.reduce((a, b) => (b[1] > a[1] ? b : a)) : null // [série, minuty]
             if (i < streaks.length - 1) {
                 s.gapAfter = Math.max(0, Math.round((streaks[i + 1].start - s.end) / DAY_MS) - 1)
                 s.ongoing = false
@@ -561,7 +577,7 @@ function HistoryLog() {
             longestEnd: maxEnd,
             streaks
         }
-    }, [historyLog])
+    }, [historyLog, animeList])
 
     const filteredHistory = useMemo(() => {
         let result = [...historyLog]

@@ -73,10 +73,15 @@ export function VideoModal({ media, onClose, onNext }) {
     )
 }
 
+// Klipy jsou SVT-AV1 (webm) — zařízení bez AV1 dekodéru (starší mobily, iOS < A17)
+// přímé <video> nepřehrají, GDrive /preview je pro ně jediná cesta (transkóduje).
+const supportsAv1 = typeof document !== 'undefined' &&
+    document.createElement('video').canPlayType('video/webm; codecs="av01.0.05M.08"') !== ''
+
 function VideoModalInner({ media, onClose, onNext }) {
     // 'video' = přímý <video> s autoPlay (plné ovládání hlasitosti, seekování)
     // 'iframe' = GDrive /preview (cross-origin, nelze ovládat programově)
-    const [playMode, setPlayMode] = useState('video')
+    const [playMode, setPlayMode] = useState(media.file_id && !supportsAv1 ? 'iframe' : 'video')
 
     const subtitle = [media.label, media.artist, media.isExtra ? 'AnimeThemes.moe' : null].filter(Boolean).join(' · ')
     const hasFileId = !!media.file_id
@@ -113,27 +118,23 @@ function VideoModalInner({ media, onClose, onNext }) {
             </div>
             <div className={`media-modal-video-wrap${playMode === 'iframe' ? ' is-iframe' : ''}`}>
                 {playMode === 'iframe' && hasFileId ? (
-                    <div className="media-modal-gdrive-clip">
-                        <iframe
-                            src={`https://drive.google.com/file/d/${media.file_id}/preview`}
-                            width="100%"
-                            height="100%"
-                            allow="autoplay; encrypted-media"
-                            allowFullScreen
-                            style={{ border: 'none', display: 'block', background: '#000', width: '100%', height: '100%' }}
-                        />
-                    </div>
+                    <iframe
+                        src={`https://drive.google.com/file/d/${media.file_id}/preview`}
+                        width="100%"
+                        height="100%"
+                        allow="autoplay; encrypted-media"
+                        allowFullScreen
+                        style={{ border: 'none', display: 'block', background: '#000', width: '100%', height: '100%' }}
+                    />
                 ) : (
                     <video
+                        src={media.url}
                         controls
                         autoPlay
                         playsInline
                         style={{ width: '100%', height: '100%', display: 'block', background: '#000' }}
                         onError={onVideoError}
-                    >
-                        {media.url && <source src={media.url} type={/\.webm(\?|$)/i.test(media.url) ? 'video/webm' : 'video/mp4'} />}
-                        {hasFileId && <source src={`https://drive.google.com/uc?export=download&id=${media.file_id}`} type="video/mp4" />}
-                    </video>
+                    />
                 )}
             </div>
         </div>

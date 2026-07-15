@@ -3902,14 +3902,24 @@ function AnimeRatings() {
                                                     >
                                                         <td className="td-anime">
                                                             <span className="td-rank">{idx + 1}.</span>
-                                                            <Link
-                                                                to={`/anime/${encodeURIComponent(item.name)}`}
+                                                            <span
                                                                 className="td-name td-name-link"
-                                                                title={`Otevřít detail anime: ${item.name}`}
-                                                                onClick={(e) => e.stopPropagation()}
+                                                                role="link"
+                                                                tabIndex={0}
+                                                                title={`Načíst anime výše: ${item.name}`}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation()
+                                                                    openAnimeFromChart(item.name)
+                                                                }}
+                                                                onKeyDown={(e) => {
+                                                                    if (e.key === 'Enter') {
+                                                                        e.stopPropagation()
+                                                                        openAnimeFromChart(item.name)
+                                                                    }
+                                                                }}
                                                             >
                                                                 {item.name}
-                                                            </Link>
+                                                            </span>
                                                         </td>
                                                         <td className="td-numeric td-fh" style={getHeatmapStyle(item.fh)}>
                                                             {item.fh !== null ? item.fh.toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : '—'}

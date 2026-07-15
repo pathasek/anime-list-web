@@ -3920,10 +3920,17 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   .media-modal-backdrop {
     padding: 6px;
   }
+  /* dvh = skutečně viditelná výška (vh na mobilu počítá se schovaným URL barem,
+     modal pak přetékal obrazovku a ovládání videa po tapnutí bylo mimo displej) */
   .media-modal {
     width: 100%;
     max-height: 96vh;
+    max-height: calc(100dvh - 12px);
     border-radius: 12px;
+    overflow-y: auto;
+  }
+  .media-modal-video-wrap {
+    max-height: calc(100dvh - 110px);
   }
   .media-modal-header {
     padding: 8px 12px;
@@ -3934,25 +3941,11 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   .media-modal-subtitle {
     font-size: 0.72rem;
   }
+  /* GDrive iFrame náhled v mobilním okně vyžaduje vyšší poměr výšky k šířce,
+     aby horní lišta s vyhledávačem a šipkou [↗] nezasahovala do obličeje/obrazu videa */
   .media-modal-video-wrap.is-iframe {
-    aspect-ratio: 16 / 10;
-    min-height: 240px;
-    overflow: hidden;
-    position: relative;
-  }
-  /* Ořezávací maska: fyzicky vytlačí horní lištu Google Drive s ikonou [↗] a časovou osou mimo viditelnou oblast */
-  .media-modal-gdrive-clip {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-  }
-  .media-modal-gdrive-clip iframe {
-    position: absolute;
-    top: -46px;
-    left: 0;
-    width: 100%;
-    height: calc(100% + 46px) !important;
+    aspect-ratio: 16 / 12;
+    min-height: 250px;
   }
 
   /* Ochrana všech kulatých tlačítek (Play tlačítka, "?" nápovědná tlačítka, ikony v hlavičce) před deformací do oválu na mobilu */
@@ -3977,32 +3970,21 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   .media-modal-backdrop {
     padding: 4px;
   }
+  /* Player se musí celý vejít na displej (dvh) — dřív byl přes 98vh vyšší než
+     viditelná obrazovka, nešlo se posunout (scroll lock) a ovládání videa
+     zobrazené tapnutím bylo uříznuté mimo displej */
   .media-modal {
     max-height: 98vh;
+    max-height: 100dvh;
+    overflow-y: auto;
   }
   .media-modal-header {
     padding: 4px 10px;
   }
   .media-modal-video-wrap {
-    aspect-ratio: auto;
-    height: calc(98vh - 40px);
-  }
-
-  /* Plán 6 Ú3: stejná ořezová maska GDrive lišty jako na portrait mobilu — na
-     telefonu naležato (≤900px landscape) se předtím horní lišta Google Drive
-     (seekbar + tlačítko otevření) kreslila přes video */
-  .media-modal-gdrive-clip {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-  }
-  .media-modal-gdrive-clip iframe {
-    position: absolute;
-    top: -46px;
-    left: 0;
-    width: 100%;
-    height: calc(100% + 46px) !important;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    max-height: calc(100dvh - 48px);
   }
 }
 
@@ -7195,3 +7177,30 @@ button.fav-ost-row-play:hover {
   }
 }
 
+
+/* Historie streaků — scrollbar uvnitř zaobleného modalu (nevyčnívá z rohů) */
+.streak-history-modal {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(99, 102, 241, 0.35) transparent;
+}
+
+.streak-history-modal::-webkit-scrollbar {
+  width: 10px;
+}
+
+.streak-history-modal::-webkit-scrollbar-track {
+  background: transparent;
+  margin: var(--radius-lg) 0; /* track nezasahuje do zaoblených rohů */
+}
+
+.streak-history-modal::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.35);
+  border-radius: 8px;
+  border: 3px solid transparent; /* odsazení od okraje modalu */
+  background-clip: content-box;
+}
+
+.streak-history-modal::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.55);
+  background-clip: content-box;
+}

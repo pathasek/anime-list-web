@@ -40,8 +40,10 @@ ChartJS.register(
 )
 
 // Chart.js default options for dark theme
-ChartJS.defaults.color = 'var(--text-secondary, #94a3b8)'
-ChartJS.defaults.borderColor = 'var(--border-color, rgba(255, 255, 255, 0.08))'
+// Canvas neumí CSS var() — musí být konkrétní barvy (ThemeProvider je při změně
+// tématu přepíše na světlou/tmavou variantu)
+ChartJS.defaults.color = '#94a3b8'
+ChartJS.defaults.borderColor = 'rgba(255, 255, 255, 0.08)'
 ChartJS.defaults.font.family = "'Outfit', 'Inter', system-ui, -apple-system, sans-serif"
 ChartJS.defaults.font.size = 11
 
@@ -1138,11 +1140,16 @@ function Dashboard() {
         }
 
         if (overrides.scales) {
+            // Klíč y1 přidat jen když opravdu existuje — y1: undefined způsobí
+            // Chart.js chybu "Invalid scale configuration for scale: y1"
+            const mergedY1 = overrides.scales.y1
+                ? { ...opt.scales?.y1, ...overrides.scales.y1 }
+                : opt.scales?.y1
             opt.scales = {
                 ...opt.scales,
                 x: { ...opt.scales?.x, ...overrides.scales.x },
                 y: { ...opt.scales?.y, ...overrides.scales.y },
-                y1: overrides.scales.y1 ? { ...opt.scales?.y1, ...overrides.scales.y1 } : opt.scales?.y1
+                ...(mergedY1 ? { y1: mergedY1 } : {})
             };
         }
         return opt;
@@ -1424,8 +1431,20 @@ function Dashboard() {
                     const c = c1.map((v, i) => Math.round(v + (c2[i] - v) * f))
                     return `rgba(${c[0]},${c[1]},${c[2]},0.88)`
                 }
+                // Popisek osy Y ve stejné barvě jako jeho pruh, jen zesvětlený
+                // (přimíchání bílé), aby zůstal čitelný na tmavém pozadí
+                const tagTickScale = (f) => {
+                    const c1 = [152, 9, 53], c2 = [251, 191, 36]
+                    const c = c1.map((v, i) => {
+                        const base = v + (c2[i] - v) * f
+                        return Math.round(base + (255 - base) * 0.4)
+                    })
+                    return `rgb(${c[0]},${c[1]},${c[2]})`
+                }
                 const tagMnScore = tagScores.length ? Math.min(...tagScores) : 0
                 const tagMxScore = tagScores.length ? Math.max(...tagScores) : 1
+                const tagTickColors = excelData.anilistTags.map(t =>
+                    tagTickScale(tagMxScore > tagMnScore ? (t.score - tagMnScore) / (tagMxScore - tagMnScore) : 1))
                 const styledTagsData = {
                     labels: tagsData.labels,
                     datasets: [{
@@ -1440,7 +1459,21 @@ function Dashboard() {
                     }]
                 }
                 const tagChartOptions = getOptions(horizontalBarOptionsExcel, 'GrafVazeneTagy', null, {
-                    scales: { x: { min: tagMinX, max: 10, title: { display: true, text: 'Vážený průměr hodnocení', color: '#e2e8f0' }, ticks: { color: '#e2e8f0' } } }
+                    scales: {
+                        x: {
+                            min: tagMinX, max: 10,
+                            title: { display: true, text: 'Vážený průměr hodnocení', color: '#94a3b8', font: { size: 11 } },
+                            ticks: { color: '#94a3b8' },
+                            grid: { color: 'rgba(255,255,255,0.06)' }
+                        },
+                        y: {
+                            ticks: {
+                                color: (ctx) => tagTickColors[ctx.index] || '#e2e8f0',
+                                font: { size: 11, weight: 600 }
+                            },
+                            grid: { display: false }
+                        }
+                    }
                 })
                 tagChartOptions.plugins.datalabels = {
                     display: true,

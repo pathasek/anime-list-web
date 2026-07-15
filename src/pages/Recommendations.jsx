@@ -149,7 +149,7 @@ async function fetchAnilistTagsBatch(malIds, settings, signal) {
     if (!malIds.length) return {}
 
     let queryParts = malIds.map((id, i) =>
-        `m${i}: Media(idMal: ${id}, type: ANIME) { idMal format episodes duration season seasonYear tags { name rank description isMediaSpoiler } relations { edges { relationType node { format episodes duration } } } }`
+        `m${i}: Media(idMal: ${id}, type: ANIME) { idMal siteUrl format episodes duration season seasonYear tags { name rank description isMediaSpoiler } relations { edges { relationType node { format episodes duration } } } }`
     )
     const query = `query { ${queryParts.join(' ')} }`
 
@@ -211,7 +211,7 @@ async function fetchAnilistTagsBatch(malIds, settings, signal) {
                 }
             }
 
-            result[media.idMal] = { tags, relations: rel }
+            result[media.idMal] = { tags, relations: rel, siteUrl: media.siteUrl || null }
         }
         return result
     } catch (err) {
@@ -730,17 +730,45 @@ function RelevanceBreakdown({ data, settings, sourceScore }) {
 
     useLayoutEffect(() => {
         if (!tooltipRef.current) return
-        const rect = tooltipRef.current.getBoundingClientRect()
-        let newStyle = { visibility: 'visible' }
-        if (rect.right > window.innerWidth - 10) {
-            newStyle.left = 'auto'
-            newStyle.right = '0'
+        // Umístění přes position:fixed — tooltip je VŽDY celý ve viewportu, bez
+        // scrollbaru (scrollovat v něm nejde: opuštění ringu myší ho zavře).
+        // Preferuje místo vedle ringu, svisle se centruje a přiskřípne k okrajům;
+        // kdyby byl vyšší než obrazovka (malé telefony naležato), zmenší se scale.
+        const el = tooltipRef.current
+        const cellRect = (el.offsetParent || el.parentElement).getBoundingClientRect()
+        const w = el.offsetWidth
+        let h = el.offsetHeight
+        const vw = window.innerWidth
+        const vh = window.innerHeight
+        const margin = 10
+
+        let scale = 1
+        const maxH = vh - 2 * margin
+        if (h > maxH) {
+            scale = maxH / h
+            h = maxH
         }
-        if (rect.top < 10) {
-            newStyle.bottom = 'auto'
-            newStyle.top = 'calc(100% + 8px)'
-        }
-        setPositionStyle(newStyle)
+        const scaledW = w * scale
+
+        let left
+        if (cellRect.right + 8 + scaledW <= vw - margin) left = cellRect.right + 8
+        else if (cellRect.left - 8 - scaledW >= margin) left = cellRect.left - 8 - scaledW
+        else left = Math.max(margin, Math.min(vw - scaledW - margin, cellRect.left + cellRect.width / 2 - scaledW / 2))
+
+        let top = cellRect.top + cellRect.height / 2 - h / 2
+        top = Math.max(margin, Math.min(vh - h - margin, top))
+
+        setPositionStyle({
+            visibility: 'visible',
+            position: 'fixed',
+            left: `${left}px`,
+            top: `${top}px`,
+            right: 'auto',
+            bottom: 'auto',
+            // přebít mobilní CSS translateX(-50%) — fixed souřadnice jsou už finální
+            transform: scale < 1 ? `scale(${scale})` : 'none',
+            transformOrigin: 'top left',
+        })
     }, [])
 
     const fmtScore = sourceScore ? sourceScore.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1}) : 'N/A'
@@ -847,6 +875,25 @@ function RecCard({ rec, sourceAnimeId, sourceScore, settings }) {
     const [showBreakdown, setShowBreakdown] = useState(false)
     const [tagsExpanded, setTagsExpanded] = useState(false)
     const [showStats, setShowStats] = useState(false)
+    const relevanceCellRef = useRef(null)
+
+    // Tooltip relevance se nesmí „zaseknout" otevřený (hlavně dotyková zařízení,
+    // kde mouseleave nikdy nepřijde) — zavřít kliknutím mimo nebo Escape.
+    useEffect(() => {
+        if (!showBreakdown) return
+        const onDocClick = (e) => {
+            if (relevanceCellRef.current && !relevanceCellRef.current.contains(e.target)) {
+                setShowBreakdown(false)
+            }
+        }
+        const onKey = (e) => { if (e.key === 'Escape') setShowBreakdown(false) }
+        document.addEventListener('click', onDocClick)
+        document.addEventListener('keydown', onKey)
+        return () => {
+            document.removeEventListener('click', onDocClick)
+            document.removeEventListener('keydown', onKey)
+        }
+    }, [showBreakdown])
 
     const { relevance, details, anilistData } = rec
     // Plán 6 Ú1: normalizace na dynamické maximum vah (s tagy už není max 110)
@@ -874,13 +921,16 @@ function RecCard({ rec, sourceAnimeId, sourceScore, settings }) {
     // Relations
     const rel = anilistData?.relations
 
-    // User rec review link
+    // User rec review link — textové posudky existují jen na MAL (AniList doporučení
+    // jsou pouze hlasy bez textu), takže odkaz ukazujeme jen když má MAL hlasy.
+    const hasMalRec = relevance.votes_jikan !== undefined ? relevance.votes_jikan > 0 : (relevance.votes_c || 0) > 0
     const recLink = `https://myanimelist.net/recommendations/anime/${sourceAnimeId}-${details.mal_id}`
+    const anilistUrl = anilistData?.siteUrl || null
 
     return (
         <div className="rec-card">
             {/* Relevance Ring */}
-            <div className="rec-relevance-cell" style={{ position: 'relative' }}>
+            <div className="rec-relevance-cell" ref={relevanceCellRef} style={{ position: 'relative' }}>
                 <div className="rec-relevance-ring"
                     onMouseEnter={() => setShowBreakdown(true)}
                     onMouseLeave={() => setShowBreakdown(false)}
@@ -994,12 +1044,19 @@ function RecCard({ rec, sourceAnimeId, sourceScore, settings }) {
 
                 {/* Links */}
                 <div className="rec-links-row">
-                    <a href={recLink} target="_blank" rel="noopener noreferrer" className="rec-link-btn">
-                        👥 Uživatelský posudek
-                    </a>
+                    {hasMalRec && (
+                        <a href={recLink} target="_blank" rel="noopener noreferrer" className="rec-link-btn">
+                            👥 Uživatelský posudek (MAL)
+                        </a>
+                    )}
                     <a href={`https://myanimelist.net/anime/${details.mal_id}`} target="_blank" rel="noopener noreferrer" className="rec-link-btn">
                         🔗 MAL
                     </a>
+                    {anilistUrl && (
+                        <a href={anilistUrl} target="_blank" rel="noopener noreferrer" className="rec-link-btn">
+                            🔗 AniList
+                        </a>
+                    )}
                 </div>
             </div>
         </div>

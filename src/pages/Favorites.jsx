@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, useCallback, lazy, Suspense } from 'react'
 import { createPortal } from 'react-dom'
+import { Link } from 'react-router-dom'
 import DashboardGroup from '../components/DashboardGroup'
 
 // Minihra „Hádej OP/ED“ — izolovaná featura, načítá se lazy až při spuštění
@@ -1328,8 +1329,17 @@ function Favorites() {
                                     {idx + 1}
                                 </td>
                                 <td>
-                                    <div style={{ fontWeight: '500', maxWidth: '220px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={fav.anime_name}>
-                                        {fav.anime_name}
+                                    <div style={{ fontWeight: '500', maxWidth: '220px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                        <Link
+                                            to={`/anime/${encodeURIComponent(fav.anime_name)}`}
+                                            title={`Otevřít detail anime: ${fav.anime_name}`}
+                                            onClick={(e) => e.stopPropagation()}
+                                            style={{ color: 'inherit', textDecoration: 'none' }}
+                                            onMouseEnter={(e) => { e.currentTarget.style.textDecoration = 'underline' }}
+                                            onMouseLeave={(e) => { e.currentTarget.style.textDecoration = 'none' }}
+                                        >
+                                            {fav.anime_name}
+                                        </Link>
                                     </div>
                                 </td>
                                 <td>
@@ -1402,8 +1412,15 @@ function Favorites() {
                                     <div className="mobile-card-title">
                                         <span style={{ color: 'var(--accent-primary)' }}>{fav.song}</span>
                                     </div>
-                                    <div style={{ fontSize: '0.85rem', color: 'var(--text-primary)', fontWeight: '500' }}>
-                                        {fav.anime_name}
+                                    <div style={{ fontSize: '0.85rem', fontWeight: '500' }}>
+                                        <Link
+                                            to={`/anime/${encodeURIComponent(fav.anime_name)}`}
+                                            title={`Otevřít detail anime: ${fav.anime_name}`}
+                                            onClick={(e) => e.stopPropagation()}
+                                            style={{ color: 'var(--text-primary)', textDecoration: 'none' }}
+                                        >
+                                            {fav.anime_name}
+                                        </Link>
                                     </div>
                                 </div>
                                 <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
