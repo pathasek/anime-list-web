@@ -8,7 +8,6 @@ import Favorites from './pages/Favorites'
 import PlanToWatch from './pages/PlanToWatch'
 import AnimeRatings from './pages/AnimeRatings'
 import TopFavorites from './pages/TopFavorites'
-import StatsTree from './pages/StatsTree'
 import Wrapped from './pages/Wrapped'
 import Recommendations from './pages/Recommendations'
 import { ThemeProvider, useTheme } from './components/ThemeProvider'
@@ -48,11 +47,6 @@ const Icons = {
   Chart: () => (
     <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
-    </svg>
-  ),
-  Tree: () => (
-    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14v4h-2v-4a2 2 0 0 1-2-2h-3v-2h3v-2H6V8h3a2 2 0 0 1 2-2v-2h2v2a2 2 0 0 1 2 2h3v2h-3v2h3v2h-3a2 2 0 0 1-2 2z" />
     </svg>
   ),
   Star: () => (
@@ -296,10 +290,6 @@ function AppContent({ stats }) {
             <Icons.Star />
             <span>Recommendations</span>
           </NavLink>
-          <NavLink to="/stats-tree" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
-            <Icons.Tree />
-            <span>Research Tree</span>
-          </NavLink>
           <NavLink to="/wrapped" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
             <span style={{ fontSize: '1.2rem', paddingRight: '0.4rem' }}>🎁</span>
             <span>Anime Wrapped</span>
@@ -338,7 +328,6 @@ function AppContent({ stats }) {
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/plan-to-watch" element={<PlanToWatch />} />
           <Route path="/recommendations" element={<Recommendations />} />
-          <Route path="/stats-tree" element={<StatsTree />} />
           <Route path="/wrapped" element={<Wrapped />} />
         </Routes>
       </main>

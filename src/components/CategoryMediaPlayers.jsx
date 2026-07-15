@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import YouTube from 'react-youtube'
 import { useModalScrollLock } from '../utils/useModalScrollLock'
+import { fetchAnimeThemes } from '../utils/animeThemesService'
+import { normalizeAnimeKey } from '../utils/mediaMatch'
 
 export function ScrollableText({ text, className, children }) {
     const containerRef = useRef(null)
@@ -73,21 +75,53 @@ export function VideoModal({ media, onClose, onNext }) {
     )
 }
 
-// Klipy jsou SVT-AV1 (webm) — zařízení bez AV1 dekodéru (starší mobily, iOS < A17)
-// přímé <video> nepřehrají, GDrive /preview je pro ně jediná cesta (transkóduje).
-const supportsAv1 = typeof document !== 'undefined' &&
-    document.createElement('video').canPlayType('video/webm; codecs="av01.0.05M.08"') !== ''
-
 function VideoModalInner({ media, onClose, onNext }) {
-    // 'video' = přímý <video> s autoPlay (plné ovládání hlasitosti, seekování)
-    // 'iframe' = GDrive /preview (cross-origin, nelze ovládat programově)
-    const [playMode, setPlayMode] = useState(media.file_id && !supportsAv1 ? 'iframe' : 'video')
+    // Pořadí pokusů o přehrání:
+    //   1) 'video'       — přímý <video> stream z GDrive (AV1; plné nativní ovládání)
+    //   2) 'animethemes' — táž znělka z AnimeThemes.moe (VP9/H264 — přehrají i
+    //                      mobily bez AV1 dekodéru, pořád nativní ovládání)
+    //   3) 'iframe'      — GDrive /preview jako poslední záchrana (omezené Drive UI)
+    const [playMode, setPlayMode] = useState('video')
+    const [atUrl, setAtUrl] = useState(null)
 
-    const subtitle = [media.label, media.artist, media.isExtra ? 'AnimeThemes.moe' : null].filter(Boolean).join(' · ')
+    const subtitle = [
+        media.label,
+        media.artist,
+        (media.isExtra || playMode === 'animethemes') ? 'AnimeThemes.moe' : null
+    ].filter(Boolean).join(' · ')
     const hasFileId = !!media.file_id
 
-    // Přímý <video> selhal → fallback na iframe (pokud máme file_id)
-    const onVideoError = () => {
+    const onVideoError = async () => {
+        if (playMode === 'animethemes') {
+            if (hasFileId) setPlayMode('iframe')
+            return
+        }
+        if (playMode !== 'video') return
+
+        // 2) Zkusit náhradní stream z AnimeThemes.moe (potřebujeme MAL id + typ).
+        //    JEN na mobilech/tabletech — na PC se má při selhání přímého streamu
+        //    zůstat u GDrive (preview iframe), tam Drive funguje a chci vlastní verze.
+        const isMobileLike = window.matchMedia('(pointer: coarse)').matches
+            || window.matchMedia('(max-width: 900px)').matches
+        const wantType = (media.type || '').toUpperCase()
+        if (isMobileLike && media.malId && (wantType === 'OP' || wantType === 'ED')) {
+            try {
+                const themes = await fetchAnimeThemes(media.malId)
+                const ofType = (themes || []).filter(t => t.type === wantType && t.url && t.url !== media.url)
+                const songKey = normalizeAnimeKey(media.song)
+                const match = (songKey && ofType.find(t => {
+                    const tk = normalizeAnimeKey(t.song)
+                    return tk && (tk === songKey || tk.includes(songKey) || songKey.includes(tk))
+                })) || (!songKey && ofType.length === 1 ? ofType[0] : null)
+                if (match) {
+                    setAtUrl(match.url)
+                    setPlayMode('animethemes')
+                    return
+                }
+            } catch { /* pokračuje se na iframe */ }
+        }
+
+        // 3) Poslední záchrana — GDrive preview iframe
         if (hasFileId) setPlayMode('iframe')
     }
 
@@ -128,7 +162,8 @@ function VideoModalInner({ media, onClose, onNext }) {
                     />
                 ) : (
                     <video
-                        src={media.url}
+                        key={playMode === 'animethemes' ? atUrl : media.url}
+                        src={playMode === 'animethemes' ? atUrl : media.url}
                         controls
                         autoPlay
                         playsInline

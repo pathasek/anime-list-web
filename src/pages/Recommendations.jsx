@@ -1,6 +1,7 @@
 import { useState, useEffect, useLayoutEffect, useMemo, useCallback, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { pauseBackgroundDownload, resumeBackgroundDownload, fetchWithRetry as jikanFetchWithRetry } from '../utils/jikanService'
 import './recommendations.css'
 
 // ============================================================
@@ -578,15 +579,14 @@ function ScoreDistributionTooltip({ malId }) {
         }
 
         setLoading(true)
-        fetch(`https://api.jikan.moe/v4/anime/${malId}/statistics`)
-            .then(r => {
-                if (!r.ok) throw new Error('API Error')
-                return r.json()
-            })
+        jikanFetchWithRetry(`https://api.jikan.moe/v4/anime/${malId}/statistics`, 3, 'high')
             .then(data => {
-                if (isMounted && data.data) {
+                if (isMounted && data && data.data) {
                     jikanStatsCache[malId] = data.data
                     setStats(data.data)
+                    setLoading(false)
+                } else if (isMounted) {
+                    setError(true)
                     setLoading(false)
                 }
             })
@@ -724,18 +724,19 @@ function ScoreDistributionTooltip({ malId }) {
 // ============================================================
 // RELEVANCE BREAKDOWN TOOLTIP
 // ============================================================
-function RelevanceBreakdown({ data, settings, sourceScore }) {
+function RelevanceBreakdown({ data, settings, sourceScore, anchorRef }) {
     const tooltipRef = useRef(null)
     const [positionStyle, setPositionStyle] = useState({ visibility: 'hidden' })
 
     useLayoutEffect(() => {
-        if (!tooltipRef.current) return
-        // Umístění přes position:fixed — tooltip je VŽDY celý ve viewportu, bez
-        // scrollbaru (scrollovat v něm nejde: opuštění ringu myší ho zavře).
-        // Preferuje místo vedle ringu, svisle se centruje a přiskřípne k okrajům;
-        // kdyby byl vyšší než obrazovka (malé telefony naležato), zmenší se scale.
+        if (!tooltipRef.current || !anchorRef?.current) return
+        // Tooltip je v portálu na <body> a pozicuje se přes position:fixed vůči
+        // ringu (anchorRef). DŮLEŽITÉ: nesmí být potomkem .rec-card — ta má na
+        // hover transform a fixed by se pak počítal vůči kartě, ne viewportu.
+        // Preferuje místo vedle ringu, svisle se centruje, přiskřípne k okrajům;
+        // kdyby byl vyšší než obrazovka (telefon naležato), zmenší se (scale).
         const el = tooltipRef.current
-        const cellRect = (el.offsetParent || el.parentElement).getBoundingClientRect()
+        const cellRect = anchorRef.current.getBoundingClientRect()
         const w = el.offsetWidth
         let h = el.offsetHeight
         const vw = window.innerWidth
@@ -760,16 +761,13 @@ function RelevanceBreakdown({ data, settings, sourceScore }) {
 
         setPositionStyle({
             visibility: 'visible',
-            position: 'fixed',
             left: `${left}px`,
             top: `${top}px`,
-            right: 'auto',
-            bottom: 'auto',
             // přebít mobilní CSS translateX(-50%) — fixed souřadnice jsou už finální
             transform: scale < 1 ? `scale(${scale})` : 'none',
             transformOrigin: 'top left',
         })
-    }, [])
+    }, [anchorRef])
 
     const fmtScore = sourceScore ? sourceScore.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1}) : 'N/A'
     const malCompare = (sourceScore && data.mal_s_val > sourceScore) ? `Má vyšší hodnocení` : `Nemá vyšší hodnocení`
@@ -788,21 +786,27 @@ function RelevanceBreakdown({ data, settings, sourceScore }) {
         </div>
     )
 
-    return (
-        <div 
-            ref={tooltipRef} 
-            className="rec-breakdown-tooltip rec-relevance-tooltip" 
-            style={{ 
-                width: '320px', 
-                padding: '16px', 
-                textAlign: 'left', 
-                background: 'rgba(20, 20, 25, 0.98)', 
-                border: '1px solid var(--border-color)', 
-                color: 'var(--text-primary)', 
+    return createPortal(
+        <div
+            ref={tooltipRef}
+            className="rec-breakdown-tooltip rec-relevance-tooltip"
+            style={{
+                position: 'fixed',
+                left: 0,
+                top: 0,
+                right: 'auto',
+                bottom: 'auto',
+                width: '320px',
+                padding: '16px',
+                textAlign: 'left',
+                background: 'rgba(20, 20, 25, 0.98)',
+                border: '1px solid var(--border-color)',
+                color: 'var(--text-primary)',
                 borderRadius: 'var(--radius-md)',
                 boxShadow: '0 4px 15px rgba(0,0,0,0.5)',
-                pointerEvents: 'none', 
-                ...positionStyle 
+                pointerEvents: 'none',
+                zIndex: 100001,
+                ...positionStyle
             }}
         >
             <div style={{ marginBottom: '8px', paddingBottom: '4px', borderBottom: '1px dashed #000', fontSize: '0.95rem' }}>
@@ -862,7 +866,8 @@ function RelevanceBreakdown({ data, settings, sourceScore }) {
                 weight={settings.RELEVANCE_W_POPULARITY}
                 result={data.pop_p}
             />
-        </div>
+        </div>,
+        document.body
     )
 }
 
@@ -950,7 +955,7 @@ function RecCard({ rec, sourceAnimeId, sourceScore, settings }) {
                 <span className="rec-relevance-label" style={{ color: relevanceLabelColor }}>
                     {relevanceLabel}
                 </span>
-                {showBreakdown && <RelevanceBreakdown data={relevance} settings={settings} sourceScore={sourceScore} />}
+                {showBreakdown && <RelevanceBreakdown data={relevance} settings={settings} sourceScore={sourceScore} anchorRef={relevanceCellRef} />}
             </div>
 
             {/* Poster */}
@@ -1070,6 +1075,14 @@ function RecCard({ rec, sourceAnimeId, sourceScore, settings }) {
 function Recommendations() {
     const location = useLocation()
     const navigate = useNavigate()
+
+    // Pozastaví automatickou synchronizaci Jikanu na pozadí po dobu, kdy je uživatel v záložce Recommendations
+    useEffect(() => {
+        pauseBackgroundDownload()
+        return () => {
+            resumeBackgroundDownload()
+        }
+    }, [])
 
     const [animeList, setAnimeList] = useState([])
     const [showScrollTop, setShowScrollTop] = useState(false)

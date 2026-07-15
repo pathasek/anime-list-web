@@ -91,15 +91,17 @@ function Favorites() {
             return next
         })
     }
-    const [searchTerm, setSearchTerm] = useState('')
-    const [typeFilter, setTypeFilter] = useState('all')
-    const [ratingFilter, setRatingFilter] = useState('all')
-    const [languageFilter, setLanguageFilter] = useState('all')
-    const [sortColumn, setSortColumn] = useState(null)
-    const [sortDirection, setSortDirection] = useState('desc')
+    // Stav tabulky OP/ED se drží v sessionStorage, aby „Zpět" z detailu anime
+    // vrátil uživatele na stejné místo (stejné filtry, řazení i rozbalení)
+    const [searchTerm, setSearchTerm] = useState(() => sessionStorage.getItem('fav_search_term') || '')
+    const [typeFilter, setTypeFilter] = useState(() => sessionStorage.getItem('fav_type_filter') || 'all')
+    const [ratingFilter, setRatingFilter] = useState(() => sessionStorage.getItem('fav_rating_filter') || 'all')
+    const [languageFilter, setLanguageFilter] = useState(() => sessionStorage.getItem('fav_language_filter') || 'all')
+    const [sortColumn, setSortColumn] = useState(() => sessionStorage.getItem('fav_sort_column') || null)
+    const [sortDirection, setSortDirection] = useState(() => sessionStorage.getItem('fav_sort_direction') || 'desc')
     const [showAllRatings, setShowAllRatings] = useState(false)
     const [expandedCardIdx, setExpandedCardIdx] = useState(null)
-    const [isTableExpanded, setIsTableExpanded] = useState(false)
+    const [isTableExpanded, setIsTableExpanded] = useState(() => sessionStorage.getItem('fav_table_expanded') === '1')
     const [ostTables, setOstTables] = useState(null)
     const [spotifyImages, setSpotifyImages] = useState({})
     const [opEdVideos, setOpEdVideos] = useState([])       // Gdrive videa OP/ED (stejná knihovna jako v detailu)
@@ -109,6 +111,42 @@ function Favorites() {
 
     // Czech number formatting: dot → comma
     const toCS = (val) => String(val).replace('.', ',')
+
+    // Persist stavu tabulky (viz inicializace výše)
+    useEffect(() => {
+        sessionStorage.setItem('fav_search_term', searchTerm)
+        sessionStorage.setItem('fav_type_filter', typeFilter)
+        sessionStorage.setItem('fav_rating_filter', ratingFilter)
+        sessionStorage.setItem('fav_language_filter', languageFilter)
+        sessionStorage.setItem('fav_sort_column', sortColumn || '')
+        sessionStorage.setItem('fav_sort_direction', sortDirection)
+        sessionStorage.setItem('fav_table_expanded', isTableExpanded ? '1' : '0')
+    }, [searchTerm, typeFilter, ratingFilter, languageFilter, sortColumn, sortDirection, isTableExpanded])
+
+    // Před odchodem na detail anime si zapamatovat pozici scrollu…
+    const saveScrollForReturn = () => {
+        const mc = document.querySelector('.main-content')
+        const y = Math.max(window.scrollY || 0, mc ? mc.scrollTop : 0)
+        sessionStorage.setItem('favorites_scroll_y', String(Math.round(y)))
+    }
+
+    // …a po návratu („Zpět" v prohlížeči) ji obnovit, jakmile jsou data vykreslená.
+    // Několik pokusů kvůli postupnému načítání obrázků/grafů (posun layoutu).
+    useEffect(() => {
+        if (loading) return
+        const saved = parseInt(sessionStorage.getItem('favorites_scroll_y') || '0', 10)
+        if (!saved) return
+        sessionStorage.removeItem('favorites_scroll_y')
+        const restore = () => {
+            window.scrollTo({ top: saved, behavior: 'instant' })
+            const mc = document.querySelector('.main-content')
+            if (mc) mc.scrollTo({ top: saved, behavior: 'instant' })
+        }
+        requestAnimationFrame(restore)
+        const t1 = setTimeout(restore, 120)
+        const t2 = setTimeout(restore, 450)
+        return () => { clearTimeout(t1); clearTimeout(t2) }
+    }, [loading])
 
     useEffect(() => {
         Promise.all([
@@ -126,9 +164,12 @@ function Favorites() {
                         return animeKeysMatch(aKey, favKey) || animeKeysMatch(favKey, aKey)
                     })
                     const watchDate = match ? (match.end_date || match.start_date || null) : null
+                    // MAL id pro fallback přehrávače na AnimeThemes.moe
+                    const malMatch = (match?.mal_url || '').match(/myanimelist\.net\/anime\/(\d+)/)
                     return {
                         ...fav,
-                        watch_date: watchDate
+                        watch_date: watchDate,
+                        mal_id: malMatch ? parseInt(malMatch[1], 10) : null
                     }
                 })
                 setFavorites(decorated)
@@ -168,7 +209,8 @@ function Favorites() {
             label: v.ver ? `${type} ${v.ver}` : type,
             url: v.url,
             file_id: v.file_id || null,
-            anime_display: v.anime_display || fav.anime_name
+            anime_display: v.anime_display || fav.anime_name,
+            malId: fav.mal_id || null // fallback přehrávače na AnimeThemes.moe
         })
     }, [findVideoFor])
 
@@ -1333,7 +1375,7 @@ function Favorites() {
                                         <Link
                                             to={`/anime/${encodeURIComponent(fav.anime_name)}`}
                                             title={`Otevřít detail anime: ${fav.anime_name}`}
-                                            onClick={(e) => e.stopPropagation()}
+                                            onClick={(e) => { e.stopPropagation(); saveScrollForReturn() }}
                                             style={{ color: 'inherit', textDecoration: 'none' }}
                                             onMouseEnter={(e) => { e.currentTarget.style.textDecoration = 'underline' }}
                                             onMouseLeave={(e) => { e.currentTarget.style.textDecoration = 'none' }}
@@ -1416,7 +1458,7 @@ function Favorites() {
                                         <Link
                                             to={`/anime/${encodeURIComponent(fav.anime_name)}`}
                                             title={`Otevřít detail anime: ${fav.anime_name}`}
-                                            onClick={(e) => e.stopPropagation()}
+                                            onClick={(e) => { e.stopPropagation(); saveScrollForReturn() }}
                                             style={{ color: 'var(--text-primary)', textDecoration: 'none' }}
                                         >
                                             {fav.anime_name}

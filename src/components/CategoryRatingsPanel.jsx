@@ -181,7 +181,9 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
 
     const playTrack = useCallback((t) => {
         if (!t) return
-        if (t.kind === 'video') setVideoModal(t)
+        // malId umožňuje přehrávači fallback na AnimeThemes.moe, když přímý
+        // GDrive stream na zařízení selže (např. mobil bez AV1 dekodéru)
+        if (t.kind === 'video') setVideoModal(t.malId ? t : { ...t, malId })
         else if (t.kind === 'youtube' || t.kind === 'youtube-playlist') {
             if (ostPlayer && typeof ostPlayer.closePlayer === 'function') {
                 ostPlayer.closePlayer()
@@ -189,7 +191,7 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
             setFloatingOst(t)
         }
         else if (t.kind === 'external') window.open(t.url, '_blank', 'noopener')
-    }, [ostPlayer])
+    }, [ostPlayer, malId])
 
     const searchYoutube = useCallback((type) => {
         window.open(youtubeSearchUrl(animeName, type), '_blank', 'noopener')

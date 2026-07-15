@@ -28,6 +28,21 @@ const STORE_CHARACTERS = 'characters'
 // Cancellation flag
 let _downloadCancelled = false
 let _downloadRunning = false
+let _downloadPaused = false
+
+export function pauseBackgroundDownload() {
+    _downloadPaused = true
+    console.log('[Jikan] Background download paused')
+}
+
+export function resumeBackgroundDownload() {
+    _downloadPaused = false
+    console.log('[Jikan] Background download resumed')
+}
+
+export function isBackgroundDownloadPaused() {
+    return _downloadPaused
+}
 
 // ============================================
 // INDEXEDDB SETUP
@@ -183,7 +198,7 @@ function acquireRequestSlot(priority = 'low') {
  * @param {number} retries
  * @returns {Promise<any>}
  */
-async function fetchWithRetry(url, retries = RETRY_MAX, priority = 'low') {
+export async function fetchWithRetry(url, retries = RETRY_MAX, priority = 'low') {
     for (let attempt = 0; attempt <= retries; attempt++) {
         try {
             await acquireRequestSlot(priority)
@@ -421,11 +436,12 @@ export async function startBackgroundDownload(animeList, onProgress) {
             break
         }
 
-        // Check if Excel is running and pause Jikan sync if it is
+        // Check if Excel is running or page requested pause
         let isExcelRunning = await checkIsExcelRunning()
-        if (isExcelRunning) {
-            console.log('[Jikan] Excel is running. Pausing background download.')
-            while (isExcelRunning && !_downloadCancelled) {
+        if (_downloadPaused || isExcelRunning) {
+            const pauseReason = _downloadPaused ? 'Page (Recommendations) active' : 'Excel running'
+            console.log(`[Jikan] Pausing background download (${pauseReason}).`)
+            while ((_downloadPaused || isExcelRunning) && !_downloadCancelled) {
                 if (onProgress) {
                     onProgress({
                         animeName: downloadQueue[i].name,
@@ -433,14 +449,14 @@ export async function startBackgroundDownload(animeList, onProgress) {
                         totalAnime,
                         epIdx: 0,
                         totalEps: 0,
-                        state: 'paused_excel'
+                        state: _downloadPaused ? 'paused_page' : 'paused_excel'
                     })
                 }
-                await delay(10000)
+                await delay(2000)
                 isExcelRunning = await checkIsExcelRunning()
             }
             if (_downloadCancelled) break
-            console.log('[Jikan] Excel closed. Resuming background download.')
+            console.log('[Jikan] Resuming background download.')
         }
 
         const anime = downloadQueue[i]
