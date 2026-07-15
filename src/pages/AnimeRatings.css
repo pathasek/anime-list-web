@@ -201,9 +201,8 @@
   gap: 8px;
 }
 
-/* Poster: pevná šířka, VŽDY přesně 16:9 (žádné roztažení na výšku hlavičky).
-   Dřív mělo align-self:stretch + height:auto, takže se u vysokých hlaviček
-   poster protáhl a object-fit:cover ho nepěkně ořízl. */
+/* Placeholder (🎬) bez obrázku: pevná šířka, přesně 16:9. Skutečný obrázek
+   je nově v .series-header-poster-frame (adaptivní výška, viz níže). */
 .series-header-poster.series-header-poster-xl {
   width: 320px;
   height: auto;
@@ -1116,6 +1115,44 @@
   height: 158px;
 }
 
+/* Adaptivní rámeček posteru (pohled Série i Jednotlivě): 16:9 je jen
+   MINIMUM (aspect-ratio), align-self:stretch dovolí rámečku vyrůst až na
+   výšku hlavičky. Obrázek uvnitř je absolutní (neovlivňuje výšku řádku),
+   vertikálně centrovaný, drží přirozený poměr stran a ořízne se až když
+   se do dostupné výšky nevejde — stejný vzor jako .hero-image-container
+   v detailu anime. Nikdy se neroztahuje NAD přirozenou výšku (to byl
+   dřívější problém align-self:stretch + object-fit:cover na <img>). */
+.series-header-poster-frame {
+  position: relative;
+  align-self: stretch;
+  aspect-ratio: 16 / 9;
+  flex-shrink: 0;
+}
+
+/* Radius/border/stín patří obrázku, ne rámečku — rámeček je roztažený na
+   výšku hlavičky a okolo centrovaného obrázku by jinak zůstal „duchový" rám. */
+.series-header-poster-frame > img {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.series-header-poster-frame-lg {
+  width: 280px;
+}
+
+.series-header-poster-frame-xl {
+  width: 320px;
+}
+
 .series-header-title-row {
   display: flex;
   align-items: center;
@@ -1527,6 +1564,13 @@
     min-height: 0;
     align-self: auto;
     aspect-ratio: 16 / 9;
+    margin-right: 0;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .series-header-poster-frame-lg,
+  .series-header-poster-frame-xl {
+    width: 100%;
     margin-right: 0;
     margin-bottom: var(--spacing-md);
   }
@@ -2536,6 +2580,11 @@
     width: 100%;
     height: auto;
     aspect-ratio: 16 / 9;
+    margin-right: 0;
+  }
+
+  .series-header-poster-frame-lg {
+    width: 100%;
     margin-right: 0;
   }
 

@@ -317,6 +317,183 @@ function AiringEpisodeStats({ malUrl, animeName, historyLog = [], episodeRatings
     )
 }
 
+// ==========================================
+// AIRING CALENDAR — mini dynamický kalendář vysílání pro maximalizované
+// okno Status. Události na dnech: odvysílané díly (Jikan episode list,
+// IndexedDB cache), nejbližší díl a týdenní projekce dalších dílů
+// z pravidelného vysílacího času (broadcast, JST → lokální čas).
+// ==========================================
+const CAL_WEEKDAYS = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne']
+const calDayKey = (d) => `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`
+
+function AiringCalendar({ airingAnime }) {
+    const today = new Date()
+    const [viewYM, setViewYM] = useState({ y: today.getFullYear(), m: today.getMonth() })
+    const [eventsByDay, setEventsByDay] = useState(null) // null = načítám
+
+    useEffect(() => {
+        let cancelled = false
+
+        const load = async () => {
+            const events = {}
+            const push = (date, ev) => {
+                const k = calDayKey(date)
+                if (!events[k]) events[k] = []
+                events[k].push(ev)
+            }
+            const nowTs = Date.now()
+            const PROJECTION_WEEKS = 10
+
+            for (const a of airingAnime) {
+                const malId = extractMalId(a.mal_url)
+                if (!malId) continue
+
+                const [episodes, info] = await Promise.all([
+                    getOrFetchEpisodeList(malId).catch(() => null),
+                    getAnimeInfo(malId).catch(() => null)
+                ])
+                if (cancelled) return
+
+                const nextBroadcast = info?.broadcast ? getNextBroadcastDate(info.broadcast) : null
+                const timeStr = nextBroadcast
+                    ? nextBroadcast.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' })
+                    : null
+
+                // Dny, kde už anime má událost — projekce je nesmí duplikovat
+                const usedDays = new Set()
+                let maxKnownEp = 0
+                let hasKnownFuture = false
+
+                const listed = (episodes || []).filter(ep => ep.aired)
+                    .sort((x, y) => new Date(x.aired) - new Date(y.aired))
+                listed.forEach((ep, idx) => {
+                    const d = new Date(ep.aired)
+                    if (isNaN(d.getTime())) return
+                    const epNum = ep.mal_id || idx + 1
+                    const isPast = d.getTime() <= nowTs
+                    if (!isPast) hasKnownFuture = true
+                    maxKnownEp = Math.max(maxKnownEp, epNum)
+                    usedDays.add(calDayKey(d))
+                    push(d, {
+                        name: a.name,
+                        malUrl: a.mal_url,
+                        ep: epNum,
+                        kind: isPast ? 'aired' : 'next',
+                        title: `${a.name} — EP ${epNum} • ${d.toLocaleDateString('cs-CZ')}${!isPast && timeStr ? ` ${timeStr}` : ''}`
+                    })
+                })
+
+                // Projekce dalších dílů z pravidelného vysílání (týdenní krok).
+                // První projektovaný díl je „další díl", pokud ho už nezná
+                // episode list; zbytek je odhad — celková délka série není
+                // z Jikanu známá, proto jen dopředný horizont.
+                if (nextBroadcast) {
+                    let projected = 0
+                    for (let i = 0; i < PROJECTION_WEEKS; i++) {
+                        const d = new Date(nextBroadcast.getTime() + i * 7 * 24 * 60 * 60 * 1000)
+                        if (usedDays.has(calDayKey(d))) continue
+                        projected++
+                        const epNum = maxKnownEp + projected
+                        const isNext = !hasKnownFuture && projected === 1
+                        push(d, {
+                            name: a.name,
+                            malUrl: a.mal_url,
+                            ep: epNum,
+                            kind: isNext ? 'next' : 'proj',
+                            title: `${a.name} — EP ${epNum}${isNext ? '' : ' (odhad)'} • ${d.toLocaleDateString('cs-CZ')}${timeStr ? ` ${timeStr}` : ''}`
+                        })
+                    }
+                }
+            }
+
+            if (!cancelled) setEventsByDay(events)
+        }
+
+        load()
+        return () => { cancelled = true }
+    }, [airingAnime])
+
+    const { y, m } = viewYM
+    const first = new Date(y, m, 1)
+    const startOffset = (first.getDay() + 6) % 7 // pondělí = první sloupec
+    const daysInMonth = new Date(y, m + 1, 0).getDate()
+    const weeks = Math.ceil((startOffset + daysInMonth) / 7)
+    const todayKey = calDayKey(today)
+    const monthLabel = first.toLocaleDateString('cs-CZ', { month: 'long', year: 'numeric' })
+    const isCurrentMonth = y === today.getFullYear() && m === today.getMonth()
+
+    const shiftMonth = (delta) => setViewYM(({ y, m }) => {
+        const d = new Date(y, m + delta, 1)
+        return { y: d.getFullYear(), m: d.getMonth() }
+    })
+
+    const MAX_CHIPS = 2
+
+    return (
+        <div className="full-chart-wrapper text-list airing-cal-card">
+            <div className="chart-title airing-cal-titlebar">
+                <span>🗓️ Kalendář vysílání</span>
+                <span className="airing-cal-nav">
+                    <button type="button" onClick={() => shiftMonth(-1)} aria-label="Předchozí měsíc">‹</button>
+                    <button
+                        type="button"
+                        className="airing-cal-month"
+                        onClick={() => setViewYM({ y: today.getFullYear(), m: today.getMonth() })}
+                        title={isCurrentMonth ? 'Aktuální měsíc' : 'Zpět na aktuální měsíc'}
+                    >
+                        {monthLabel}
+                    </button>
+                    <button type="button" onClick={() => shiftMonth(1)} aria-label="Další měsíc">›</button>
+                </span>
+            </div>
+
+            <div className="airing-cal-weekdays">
+                {CAL_WEEKDAYS.map(wd => <span key={wd} className="airing-cal-weekday">{wd}</span>)}
+            </div>
+
+            <div className="airing-cal-grid" style={{ gridTemplateRows: `repeat(${weeks}, minmax(0, 1fr))` }}>
+                {Array.from({ length: weeks * 7 }, (_, idx) => {
+                    const dayNum = idx - startOffset + 1
+                    const inMonth = dayNum >= 1 && dayNum <= daysInMonth
+                    const date = new Date(y, m, dayNum)
+                    const key = calDayKey(date)
+                    const evs = (inMonth && eventsByDay?.[key]) || []
+                    const isToday = inMonth && key === todayKey
+                    const extra = evs.slice(MAX_CHIPS)
+                    return (
+                        <div key={idx} className={`airing-cal-cell${inMonth ? '' : ' outside'}${isToday ? ' today' : ''}`}>
+                            {inMonth && <span className="airing-cal-daynum">{dayNum}</span>}
+                            {evs.slice(0, MAX_CHIPS).map((ev, j) => (
+                                <Link
+                                    key={j}
+                                    to={`/anime/${encodeURIComponent(ev.name)}`}
+                                    className={`airing-cal-chip ${ev.kind}`}
+                                    title={ev.title}
+                                >
+                                    <JikanPoster malUrl={ev.malUrl} />
+                                    <span className="airing-cal-chip-ep">EP {ev.ep}</span>
+                                </Link>
+                            ))}
+                            {extra.length > 0 && (
+                                <span className="airing-cal-more" title={extra.map(e => e.title).join('\n')}>
+                                    +{extra.length}
+                                </span>
+                            )}
+                        </div>
+                    )
+                })}
+            </div>
+
+            <div className="airing-cal-legend">
+                {eventsByDay === null && <span className="airing-cal-loading">Načítám vysílací data…</span>}
+                <span><i className="airing-cal-dot aired" />Odvysíláno</span>
+                <span><i className="airing-cal-dot next" />Další díl</span>
+                <span><i className="airing-cal-dot proj" />Odhad (pravidelné vysílání)</span>
+            </div>
+        </div>
+    )
+}
+
 function Dashboard() {
     // Czech number formatting: dot → comma
     const toCS = (val) => String(val).replace('.', ',')
@@ -1781,7 +1958,12 @@ function Dashboard() {
             case 'status':
                 return (
                     <>
-                        {/* Left: Airing Anime with stats */}
+                        {/* Left: mini dynamický kalendář vysílání */}
+                        {sortedAiringAnime && sortedAiringAnime.length > 0 && (
+                            <AiringCalendar airingAnime={sortedAiringAnime} />
+                        )}
+
+                        {/* Middle: Airing Anime with stats */}
                         {sortedAiringAnime && sortedAiringAnime.length > 0 && (
                             <div className="full-chart-wrapper text-list">
                                 <div className="chart-title">📺 Právě sledované ({sortedAiringAnime.length})</div>

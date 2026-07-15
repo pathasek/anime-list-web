@@ -562,6 +562,39 @@ function SettingsModal({ isOpen, onClose, settings, onSave }) {
 // ============================================================
 const jikanStatsCache = {}
 
+// Jikan /anime/{id}/statistics je upstream rozbité (MAL blokuje scraping stats
+// stránek — Jikan vrací 504 BadResponseException i pro nejpopulárnější anime,
+// zatímco ostatní endpointy fungují). Zkusí se jedním pokusem (kdyby zase ožil,
+// MAL data mají přednost) a jinak se spadne na AniList scoreDistribution
+// (skóre 10–100 po desítkách → mapováno na 1–10). Výsledek je normalizovaný na
+// tvar { scores: [{score, votes}], total, source }.
+async function fetchScoreStats(malId) {
+    const jikan = await jikanFetchWithRetry(`https://api.jikan.moe/v4/anime/${malId}/statistics`, 0, 'high')
+    if (jikan?.data?.scores?.length) {
+        return { ...jikan.data, source: 'MAL' }
+    }
+
+    const resp = await fetch('https://graphql.anilist.co', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+            query: 'query ($idMal: Int) { Media(idMal: $idMal, type: ANIME) { stats { scoreDistribution { score amount } } } }',
+            variables: { idMal: malId }
+        })
+    })
+    if (!resp.ok) return null
+    const json = await resp.json()
+    const dist = json?.data?.Media?.stats?.scoreDistribution
+    if (!dist || dist.length === 0) return null
+    const total = dist.reduce((sum, d) => sum + (d.amount || 0), 0)
+    const scores = dist.map(d => ({
+        score: Math.round(d.score / 10),
+        votes: d.amount || 0,
+        percentage: total > 0 ? ((d.amount || 0) / total) * 100 : 0
+    }))
+    return { scores, total, source: 'AniList' }
+}
+
 function ScoreDistributionTooltip({ malId }) {
     const [stats, setStats] = useState(null)
     const [loading, setLoading] = useState(true)
@@ -579,18 +612,18 @@ function ScoreDistributionTooltip({ malId }) {
         }
 
         setLoading(true)
-        jikanFetchWithRetry(`https://api.jikan.moe/v4/anime/${malId}/statistics`, 3, 'high')
+        fetchScoreStats(malId)
             .then(data => {
-                if (isMounted && data && data.data) {
-                    jikanStatsCache[malId] = data.data
-                    setStats(data.data)
+                if (isMounted && data) {
+                    jikanStatsCache[malId] = data
+                    setStats(data)
                     setLoading(false)
                 } else if (isMounted) {
                     setError(true)
                     setLoading(false)
                 }
             })
-            .catch(err => {
+            .catch(() => {
                 if (isMounted) {
                     setError(true)
                     setLoading(false)
@@ -678,7 +711,7 @@ function ScoreDistributionTooltip({ malId }) {
                 }}
             >
                 <div style={{ paddingBottom: '8px', marginBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                    Statistika hodnocení: <span style={{ color: 'var(--text-secondary)', fontWeight: 'normal' }}>({formatNumber(stats.total)} uživatelů)</span>
+                    Statistika hodnocení{stats.source ? ` (${stats.source})` : ''}: <span style={{ color: 'var(--text-secondary)', fontWeight: 'normal' }}>({formatNumber(stats.total)} uživatelů)</span>
                 </div>
                 
                 <div style={{ whiteSpace: 'pre', display: 'flex', flexDirection: 'column' }}>

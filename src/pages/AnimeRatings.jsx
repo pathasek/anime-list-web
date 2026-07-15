@@ -2672,12 +2672,13 @@ function AnimeRatings() {
                                             />
                                         )}
                                         {selectedSeriesObj.thumbnail ? (
-                                            <img
-                                                src={selectedSeriesObj.thumbnail}
-                                                alt={selectedSeriesObj.name}
-                                                className="series-header-poster series-header-poster-lg"
-                                                onError={(e) => { e.target.src = 'placeholder.jpg'; e.target.style.display = 'none'; }}
-                                            />
+                                            <div className="series-header-poster-frame series-header-poster-frame-lg">
+                                                <img
+                                                    src={selectedSeriesObj.thumbnail}
+                                                    alt={selectedSeriesObj.name}
+                                                    onError={(e) => { e.target.src = 'placeholder.jpg'; e.target.style.display = 'none'; }}
+                                                />
+                                            </div>
                                         ) : (
                                             <div className="series-header-poster series-header-poster-lg" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-secondary)', fontSize: '1.5rem' }}>🎬</div>
                                         )}
@@ -3362,12 +3363,13 @@ function AnimeRatings() {
                                             />
                                         )}
                                         {selectedAnimeObj.thumbnail ? (
-                                            <img
-                                                src={selectedAnimeObj.thumbnail.replace(/#/g, '%23')}
-                                                alt={selectedAnimeObj.name}
-                                                className="series-header-poster series-header-poster-xl"
-                                                onError={(e) => { e.target.style.display = 'none'; }}
-                                            />
+                                            <div className="series-header-poster-frame series-header-poster-frame-xl">
+                                                <img
+                                                    src={selectedAnimeObj.thumbnail.replace(/#/g, '%23')}
+                                                    alt={selectedAnimeObj.name}
+                                                    onError={(e) => { e.target.style.display = 'none'; }}
+                                                />
+                                            </div>
                                         ) : (
                                             <div className="series-header-poster series-header-poster-xl" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-secondary)', fontSize: '1.5rem' }}>🎬</div>
                                         )}

@@ -516,7 +516,6 @@ function AnimeDetail() {
                             <img
                                 src={anime.thumbnail.replace(/#/g, '%23')}
                                 alt={anime.name}
-                                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                             />
                         </div>
                     )}

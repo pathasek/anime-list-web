@@ -906,11 +906,221 @@ tr:hover td {
   flex-wrap: wrap;
 }
 
-/* Status group: two-column grid layout */
+/* Status group: kalendář | právě sledované | pending */
 .dashboard-group-content.status-content {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 0.8fr);
   gap: var(--spacing-md);
+  align-items: stretch;
+}
+
+/* ─── Kalendář vysílání (maximalizovaný Status) ─── */
+.airing-cal-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.airing-cal-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  text-align: left;
+}
+
+.airing-cal-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.airing-cal-nav button {
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  padding: 2px 8px;
+  font-size: 0.8rem;
+  line-height: 1.3;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.airing-cal-nav button:hover {
+  background: rgba(99, 102, 241, 0.28);
+  color: var(--text-primary);
+}
+
+.airing-cal-nav .airing-cal-month {
+  min-width: 118px;
+  text-transform: capitalize;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.airing-cal-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.airing-cal-weekday {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.airing-cal-grid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.airing-cal-cell {
+  background: rgba(128, 128, 160, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 3px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.airing-cal-cell.outside {
+  opacity: 0.3;
+  background: transparent;
+  border-style: dashed;
+}
+
+.airing-cal-cell.today {
+  border-color: var(--accent-primary);
+  box-shadow: inset 0 0 0 1px var(--accent-primary), 0 0 10px rgba(99, 102, 241, 0.25);
+}
+
+.airing-cal-daynum {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.airing-cal-cell.today .airing-cal-daynum {
+  color: var(--accent-primary);
+  font-weight: 700;
+}
+
+.airing-cal-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.6rem;
+  border-radius: 4px;
+  padding: 1px 3px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  transition: filter 0.15s ease;
+}
+
+.airing-cal-chip:hover {
+  filter: brightness(1.3);
+}
+
+/* Menší poster jen uvnitř chipů kalendáře */
+.airing-cal-chip .jikan-poster-container {
+  width: 13px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.airing-cal-chip-ep {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+}
+
+.airing-cal-chip.aired {
+  background: rgba(148, 163, 184, 0.1);
+  border-color: rgba(148, 163, 184, 0.18);
+  color: var(--text-muted);
+}
+
+.airing-cal-chip.next {
+  background: rgba(16, 185, 129, 0.16);
+  border-color: rgba(16, 185, 129, 0.45);
+  color: #34d399;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.15);
+}
+
+.airing-cal-chip.proj {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: rgba(99, 102, 241, 0.35);
+  border-style: dashed;
+  color: #818cf8;
+}
+
+.airing-cal-more {
+  font-size: 0.58rem;
+  color: var(--text-muted);
+  cursor: help;
+}
+
+.airing-cal-legend {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 6px;
+  font-size: 0.62rem;
+  color: var(--text-muted);
+}
+
+.airing-cal-legend .airing-cal-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+
+.airing-cal-dot.aired { background: rgba(148, 163, 184, 0.6); }
+.airing-cal-dot.next { background: #34d399; }
+.airing-cal-dot.proj { background: #818cf8; }
+
+.airing-cal-loading {
+  font-style: italic;
+  opacity: 0.8;
+}
+
+/* Užší obrazovky: kalendář přes celou šířku, seznamy pod ním vedle sebe */
+@media (max-width: 1250px) {
+  .dashboard-group-content.status-content {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .status-content .airing-cal-card {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-group-content.status-content {
+    grid-template-columns: 1fr;
+  }
 }
 
 .status-content .full-chart-wrapper.text-list {
@@ -4664,16 +4874,34 @@ button.fav-ost-row-play:hover {
   flex-wrap: wrap;
 }
 
+/* Adaptivní výška hero obrázku: 16:9 je jen MINIMUM (přes aspect-ratio),
+   align-self:stretch dovolí kontejneru vyrůst až na výšku info sloupce.
+   Obrázek uvnitř je absolutní (neovlivňuje výšku řádku), vertikálně
+   centrovaný, drží přirozený poměr stran (height:auto) a ořízne se až
+   když se do dostupné výšky nevejde (max-height + object-fit:cover). */
 .hero-image-container {
   flex: 0 1 452px;
   width: 100%;
   max-width: 452px;
   min-width: 200px;
   aspect-ratio: 16 / 9;
+  align-self: stretch;
+  position: relative;
+}
+
+/* Radius/stín patří obrázku, ne kontejneru — kontejner je roztažený na výšku
+   info sloupce a okolo centrovaného obrázku by jinak zůstal „duchový" rám. */
+.hero-image-container img {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  object-fit: cover;
+  display: block;
   border-radius: var(--radius-md);
-  overflow: hidden;
   box-shadow: var(--shadow-md);
-  align-self: center;
 }
 
 .chart-header-flex {
