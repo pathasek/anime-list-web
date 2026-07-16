@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import YouTube from 'react-youtube'
 import { useModalScrollLock } from '../utils/useModalScrollLock'
 import { fetchAnimeThemes } from '../utils/animeThemesService'
-import { normalizeAnimeKey } from '../utils/mediaMatch'
+import { songsLooselyMatch } from '../utils/mediaMatch'
 
 export function ScrollableText({ text, className, children }) {
     const containerRef = useRef(null)
@@ -75,14 +75,60 @@ export function VideoModal({ media, onClose, onNext }) {
     )
 }
 
+const isMobileLike = () => window.matchMedia('(pointer: coarse)').matches
+    || window.matchMedia('(max-width: 900px)').matches
+
+// Najde na AnimeThemes.moe stejnou znělku (typ OP/ED + tolerantní shoda názvu
+// písně). Vrací URL videa, nebo null když katalog znělku nemá.
+async function findAnimeThemesUrl(media) {
+    const wantType = (media.type || '').toUpperCase()
+    if (!media.malId || (wantType !== 'OP' && wantType !== 'ED')) return null
+    const themes = await fetchAnimeThemes(media.malId)
+    const ofType = (themes || []).filter(t => t.type === wantType && t.url && t.url !== media.url)
+    if (!ofType.length) return null
+    const match = media.song
+        ? ofType.find(t => songsLooselyMatch(t.song, media.song))
+        : (ofType.length === 1 ? ofType[0] : null)
+    return match?.url || null
+}
+
 function VideoModalInner({ media, onClose, onNext }) {
     // Pořadí pokusů o přehrání:
-    //   1) 'video'       — přímý <video> stream z GDrive (AV1; plné nativní ovládání)
-    //   2) 'animethemes' — táž znělka z AnimeThemes.moe (VP9/H264 — přehrají i
-    //                      mobily bez AV1 dekodéru, pořád nativní ovládání)
-    //   3) 'iframe'      — GDrive /preview jako poslední záchrana (omezené Drive UI)
-    const [playMode, setPlayMode] = useState('video')
+    //   PC:    1) 'video' — přímý <video> stream z GDrive (AV1; plné nativní ovládání)
+    //          2) 'iframe' — GDrive /preview jako poslední záchrana (omezené Drive UI)
+    //   Mobil: 1) 'animethemes' — táž znělka z AnimeThemes.moe, hledá se HNED bez
+    //             pokusu o přímý GDrive stream (AV1 + Drive limity na mobilu nefungují;
+    //             VP9/H264 z AnimeThemes přehraje i mobil bez AV1 dekodéru)
+    //          2) 'video' → 3) 'iframe' — jen když AnimeThemes znělku nemá
+    const wantsAtFirst = isMobileLike() && !media.isExtra && !!media.malId
+    const [playMode, setPlayMode] = useState(wantsAtFirst ? 'resolving' : 'video')
     const [atUrl, setAtUrl] = useState(null)
+    // AnimeThemes lookup už jednou selhal → při chybě videa se znovu nezkouší
+    const atFailedRef = useRef(false)
+
+    useEffect(() => {
+        if (!wantsAtFirst) return
+        let cancelled = false
+        findAnimeThemesUrl(media)
+            .then(url => {
+                if (cancelled) return
+                if (url) {
+                    setAtUrl(url)
+                    setPlayMode('animethemes')
+                } else {
+                    atFailedRef.current = true
+                    setPlayMode('video')
+                }
+            })
+            .catch(() => {
+                if (cancelled) return
+                atFailedRef.current = true
+                setPlayMode('video')
+            })
+        return () => { cancelled = true }
+        // media i wantsAtFirst jsou po dobu života komponenty neměnné (key na url/file_id)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const subtitle = [
         media.label,
@@ -98,30 +144,23 @@ function VideoModalInner({ media, onClose, onNext }) {
         }
         if (playMode !== 'video') return
 
-        // 2) Zkusit náhradní stream z AnimeThemes.moe (potřebujeme MAL id + typ).
-        //    JEN na mobilech/tabletech — na PC se má při selhání přímého streamu
-        //    zůstat u GDrive (preview iframe), tam Drive funguje a chci vlastní verze.
-        const isMobileLike = window.matchMedia('(pointer: coarse)').matches
-            || window.matchMedia('(max-width: 900px)').matches
-        const wantType = (media.type || '').toUpperCase()
-        if (isMobileLike && media.malId && (wantType === 'OP' || wantType === 'ED')) {
+        // Náhradní stream z AnimeThemes.moe — JEN na mobilech/tabletech a jen
+        // pokud už lookup jednou neselhal. Na PC se má při selhání přímého
+        // streamu zůstat u GDrive (preview iframe), tam Drive funguje a chci
+        // vlastní verze.
+        if (isMobileLike() && !atFailedRef.current) {
             try {
-                const themes = await fetchAnimeThemes(media.malId)
-                const ofType = (themes || []).filter(t => t.type === wantType && t.url && t.url !== media.url)
-                const songKey = normalizeAnimeKey(media.song)
-                const match = (songKey && ofType.find(t => {
-                    const tk = normalizeAnimeKey(t.song)
-                    return tk && (tk === songKey || tk.includes(songKey) || songKey.includes(tk))
-                })) || (!songKey && ofType.length === 1 ? ofType[0] : null)
-                if (match) {
-                    setAtUrl(match.url)
+                const url = await findAnimeThemesUrl(media)
+                if (url) {
+                    setAtUrl(url)
                     setPlayMode('animethemes')
                     return
                 }
             } catch { /* pokračuje se na iframe */ }
+            atFailedRef.current = true
         }
 
-        // 3) Poslední záchrana — GDrive preview iframe
+        // Poslední záchrana — GDrive preview iframe
         if (hasFileId) setPlayMode('iframe')
     }
 
@@ -152,14 +191,19 @@ function VideoModalInner({ media, onClose, onNext }) {
             </div>
             <div className={`media-modal-video-wrap${playMode === 'iframe' ? ' is-iframe' : ''}`}>
                 {playMode === 'iframe' && hasFileId ? (
-                    <iframe
-                        src={`https://drive.google.com/file/d/${media.file_id}/preview`}
-                        width="100%"
-                        height="100%"
-                        allow="autoplay; encrypted-media"
-                        allowFullScreen
-                        style={{ border: 'none', display: 'block', background: '#000', width: '100%', height: '100%' }}
-                    />
+                    <div className="media-modal-gdrive-clip">
+                        <iframe
+                            src={`https://drive.google.com/file/d/${media.file_id}/preview`}
+                            width="100%"
+                            height="100%"
+                            allow="autoplay; encrypted-media"
+                            allowFullScreen
+                            style={{ border: 'none', display: 'block', background: '#000', width: '100%', height: '100%' }}
+                        />
+                    </div>
+                ) : playMode === 'resolving' ? (
+                    // Krátká pauza, než se dohledá znělka na AnimeThemes (mobil)
+                    <div style={{ width: '100%', height: '100%', background: '#000' }} aria-hidden="true" />
                 ) : (
                     <video
                         key={playMode === 'animethemes' ? atUrl : media.url}

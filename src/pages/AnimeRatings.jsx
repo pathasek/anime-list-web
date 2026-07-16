@@ -3550,6 +3550,7 @@ function AnimeRatings() {
                                     review={selectedAnimeNote}
                                     categoryReviews={categoryReviews}
                                     compactRadar
+                                    malId={extractMalId(selectedAnimeObj?.mal_url)}
                                 />
 
                                 {/* Hodnocení epizod přes celou šířku — hlavička, legenda, AI poznámka

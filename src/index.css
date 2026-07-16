@@ -4151,6 +4151,12 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   background: #000;
   max-height: calc(92vh - 60px);
 }
+/* Obálka GDrive /preview iframu — na PC jen vyplní wrap, na mobilu (media
+   queries níže) navíc funguje jako ořezová maska horní lišty Google Drive */
+.media-modal-gdrive-clip {
+  width: 100%;
+  height: 100%;
+}
 
 @media (max-width: 600px) {
   .media-modal-backdrop {
@@ -4180,8 +4186,23 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   /* GDrive iFrame náhled v mobilním okně vyžaduje vyšší poměr výšky k šířce,
      aby horní lišta s vyhledávačem a šipkou [↗] nezasahovala do obličeje/obrazu videa */
   .media-modal-video-wrap.is-iframe {
-    aspect-ratio: 16 / 12;
-    min-height: 250px;
+    aspect-ratio: 16 / 10;
+    min-height: 240px;
+    overflow: hidden;
+    position: relative;
+  }
+  /* Ořezávací maska: fyzicky vytlačí horní lištu Google Drive s ikonou [↗]
+     a časovou osou mimo viditelnou oblast */
+  .media-modal-gdrive-clip {
+    position: relative;
+    overflow: hidden;
+  }
+  .media-modal-gdrive-clip iframe {
+    position: absolute;
+    top: -46px;
+    left: 0;
+    width: 100%;
+    height: calc(100% + 46px) !important;
   }
 
   /* Ochrana všech kulatých tlačítek (Play tlačítka, "?" nápovědná tlačítka, ikony v hlavičce) před deformací do oválu na mobilu */
@@ -4221,6 +4242,24 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     aspect-ratio: 16 / 9;
     height: auto;
     max-height: calc(100dvh - 48px);
+  }
+  .media-modal-video-wrap.is-iframe {
+    overflow: hidden;
+    position: relative;
+  }
+  /* Plán 6 Ú3: stejná ořezová maska GDrive lišty jako na portrait mobilu — na
+     telefonu naležato (≤900px landscape) se jinak horní lišta Google Drive
+     (seekbar + tlačítko otevření) kreslí přes video */
+  .media-modal-gdrive-clip {
+    position: relative;
+    overflow: hidden;
+  }
+  .media-modal-gdrive-clip iframe {
+    position: absolute;
+    top: -46px;
+    left: 0;
+    width: 100%;
+    height: calc(100% + 46px) !important;
   }
 }
 

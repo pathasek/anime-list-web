@@ -11,7 +11,7 @@ import {
 } from 'chart.js'
 import { useTheme } from './ThemeProvider'
 import { getThemeChartColors } from '../utils/chartTheme'
-import { getMediaForAnime, youtubeSearchUrl, normalizeAnimeKey } from '../utils/mediaMatch'
+import { getMediaForAnime, youtubeSearchUrl, songsLooselyMatch } from '../utils/mediaMatch'
 import { fetchAnimeThemes } from '../utils/animeThemesService'
 import { VideoModal, FloatingOstPlayer, ScrollableText } from './CategoryMediaPlayers'
 import { iconFor } from './categoryIcons'
@@ -73,7 +73,11 @@ function useAccentColor(theme) {
     return useCallback((a) => `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${a})`, [rgb])
 }
 
-function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, animeName, animeSeries, categoryReviews, compactRadar = false, malId = null }) {
+// malId: umožňuje přehrávači (VideoModal) najít znělku na AnimeThemes.moe, když
+//        přímý GDrive stream nejde (mobil) — posílá AnimeDetail i AnimeRatings.
+// showAnimeThemesExtras: navíc přimíchá „Ostatní verze · AnimeThemes.moe" do
+//        seznamu znělek — záměrně JEN detail anime (plán 6b), jinde beze změny.
+function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, animeName, animeSeries, categoryReviews, compactRadar = false, malId = null, showAnimeThemesExtras = false }) {
     const { theme } = useTheme()
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const c = useMemo(() => getThemeChartColors(), [theme])
@@ -115,18 +119,18 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
         }
     }, [])
 
-    // Plán 6b: ostatní OP/ED z AnimeThemes.moe (jen v detailu anime — malId
-    // posílá pouze AnimeDetail; Favorites a ostatní stránky beze změny)
+    // Plán 6b: ostatní OP/ED z AnimeThemes.moe (jen v detailu anime —
+    // showAnimeThemesExtras posílá pouze AnimeDetail; ostatní stránky beze změny)
     const [atThemes, setAtThemes] = useState([])
     useEffect(() => {
         setAtThemes([])
-        if (!malId) return
+        if (!malId || !showAnimeThemesExtras) return
         const controller = new AbortController()
         fetchAnimeThemes(malId, controller.signal)
             .then(t => setAtThemes(t || []))
             .catch(() => { })
         return () => controller.abort()
-    }, [malId])
+    }, [malId, showAnimeThemesExtras])
 
     const media = useMemo(() => {
         const base = getMediaForAnime(animeName, opEdVideos || [], ostPieces || [], ostWhole || [], animeSeries)
@@ -134,31 +138,10 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
 
         // Píseň už pokrytá GDrive verzí (vybranou) se nepřidává znovu — AnimeThemes
         // doplňuje jen „všechny ostatní" znělky. GDrive zůstává vždy první/hlavní.
-        const covered = new Set(
-            [...base.OP, ...base.ED]
-                .map(t => normalizeAnimeKey(t.song))
-                .filter(Boolean)
-        )
-        // Tolerantní shoda názvů písní — GDrive soubor a AnimeThemes mívají jinou
-        // romanizaci/zápis (interpunkce, pořadí slov), přesná shoda pak duplicity nechytí.
-        const tokensOf = (k) => k.split(' ').filter(w => w.length > 1)
-        const songCovered = (song) => {
-            const key = normalizeAnimeKey(song)
-            if (!key) return false
-            const keyTokens = tokensOf(key)
-            for (const c of covered) {
-                if (c === key || c.includes(key) || key.includes(c)) return true
-                // Překryv slov: ≥60 % tokenů kratšího názvu se vyskytuje v druhém
-                const cTokens = tokensOf(c)
-                if (keyTokens.length && cTokens.length) {
-                    const cSet = new Set(cTokens)
-                    const shared = keyTokens.filter(w => cSet.has(w)).length
-                    const minLen = Math.min(keyTokens.length, cTokens.length)
-                    if (shared >= 2 && shared / minLen >= 0.6) return true
-                }
-            }
-            return false
-        }
+        // Tolerantní shoda názvů (songsLooselyMatch) — GDrive soubor a AnimeThemes
+        // mívají jinou romanizaci/zápis, přesná shoda by duplicity nechytila.
+        const coveredSongs = [...base.OP, ...base.ED].map(t => t.song).filter(Boolean)
+        const songCovered = (song) => coveredSongs.some(c => songsLooselyMatch(c, song))
 
         const merged = { ...base, OP: [...base.OP], ED: [...base.ED] }
         for (const t of atThemes) {

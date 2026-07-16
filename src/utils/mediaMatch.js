@@ -13,6 +13,25 @@ export function normalizeAnimeKey(s) {
         .trim()
 }
 
+// Tolerantní shoda názvů písní — GDrive soubor a AnimeThemes mívají jinou
+// romanizaci/zápis (interpunkce, pořadí slov, dlouhé samohlásky). Shoda =
+// přesná/substring normalizovaných klíčů, nebo překryv slov: ≥60 % tokenů
+// kratšího názvu (a aspoň 2 sdílené) se vyskytuje v druhém.
+export function songsLooselyMatch(songA, songB) {
+    const a = normalizeAnimeKey(songA)
+    const b = normalizeAnimeKey(songB)
+    if (!a || !b) return false
+    if (a === b || a.includes(b) || b.includes(a)) return true
+    const tokensOf = (k) => k.split(' ').filter(w => w.length > 1)
+    const aTokens = tokensOf(a)
+    const bTokens = tokensOf(b)
+    if (!aTokens.length || !bTokens.length) return false
+    const bSet = new Set(bTokens)
+    const shared = aTokens.filter(w => bSet.has(w)).length
+    const minLen = Math.min(aTokens.length, bTokens.length)
+    return shared >= 2 && shared / minLen >= 0.6
+}
+
 // Odstraní koncový příznak řady/části z normalizovaného klíče
 // ("... s01", "... season 2", "... part 1") → holý název série.
 function stripSeasonPart(key) {

@@ -888,6 +888,7 @@ function AnimeDetail() {
                 review={note}
                 categoryReviews={categoryReviews}
                 malId={extractMalId(anime.mal_url)}
+                showAnimeThemesExtras
             />
 
             {/* Episode Ratings */}
