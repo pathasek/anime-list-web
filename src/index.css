@@ -1058,6 +1058,14 @@ tr:hover td {
   color: var(--text-muted);
 }
 
+/* Odvysíláno, ale ještě nezhlédnuto — jantarové zvýraznění „máš co dohánět" */
+.airing-cal-chip.unseen {
+  background: rgba(245, 158, 11, 0.14);
+  border-color: rgba(245, 158, 11, 0.45);
+  color: #fbbf24;
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.12);
+}
+
 .airing-cal-chip.next {
   background: rgba(16, 185, 129, 0.16);
   border-color: rgba(16, 185, 129, 0.45);
@@ -1065,8 +1073,16 @@ tr:hover td {
   box-shadow: 0 0 8px rgba(16, 185, 129, 0.15);
 }
 
+/* Potvrzený rozvrh (AniList airingSchedule) — plná linka */
+.airing-cal-chip.plan {
+  background: rgba(99, 102, 241, 0.12);
+  border-color: rgba(99, 102, 241, 0.4);
+  color: #a5b4fc;
+}
+
+/* Odhad z pravidelného vysílání — čárkovaně (bez potvrzeného rozvrhu) */
 .airing-cal-chip.proj {
-  background: rgba(99, 102, 241, 0.1);
+  background: rgba(99, 102, 241, 0.08);
   border-color: rgba(99, 102, 241, 0.35);
   border-style: dashed;
   color: #818cf8;
@@ -1098,8 +1114,10 @@ tr:hover td {
 }
 
 .airing-cal-dot.aired { background: rgba(148, 163, 184, 0.6); }
+.airing-cal-dot.unseen { background: #fbbf24; }
 .airing-cal-dot.next { background: #34d399; }
-.airing-cal-dot.proj { background: #818cf8; }
+.airing-cal-dot.plan { background: #a5b4fc; }
+.airing-cal-dot.proj { background: transparent; border: 1.5px dashed #818cf8; }
 
 .airing-cal-loading {
   font-style: italic;

@@ -1,7 +1,7 @@
 import { useState, useEffect, useLayoutEffect, useMemo, useCallback, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { pauseBackgroundDownload, resumeBackgroundDownload, fetchWithRetry as jikanFetchWithRetry } from '../utils/jikanService'
+import { pauseBackgroundDownload, resumeBackgroundDownload, isExcelRunning, fetchWithRetry as jikanFetchWithRetry } from '../utils/jikanService'
 import './recommendations.css'
 
 // ============================================================
@@ -562,16 +562,29 @@ function SettingsModal({ isOpen, onClose, settings, onSave }) {
 // ============================================================
 const jikanStatsCache = {}
 
-// Jikan /anime/{id}/statistics je upstream rozbité (MAL blokuje scraping stats
-// stránek — Jikan vrací 504 BadResponseException i pro nejpopulárnější anime,
-// zatímco ostatní endpointy fungují). Zkusí se jedním pokusem (kdyby zase ožil,
-// MAL data mají přednost) a jinak se spadne na AniList scoreDistribution
-// (skóre 10–100 po desítkách → mapováno na 1–10). Výsledek je normalizovaný na
-// tvar { scores: [{score, votes}], total, source }.
+// Zdroj rozložení skóre je VŽDY primárně MAL (Jikan /anime/{id}/statistics),
+// stejně jako v původní implementaci (commit 1e215ee). Stav k 07/2026: Jikan
+// vrací 504 „MyAnimeList refuses to connect" i pro nejpopulárnější anime —
+// MAL stats stránka přitom existuje a funguje (ověřeno v prohlížeči, i přes
+// Jikanův URL formát /anime/{id}/jikan/stats). Příčina: MAL/Cloudflare
+// blokuje requesty z Jikan serverů (série jikan-rest issues #595/#607/#610,
+// 05–07/2026); /statistics umírá jako první, protože se scrapuje na vyžádání
+// (ostatní endpointy Jikan servíruje ze své DB cache). Jikan se proto zkouší
+// naplno (retry + backoff) a jakmile blokace pomine, tooltip se automaticky
+// vrátí k MAL datům. AniList scoreDistribution (skóre 10–100 po desítkách →
+// mapováno na 1–10) je jen nouzový, viditelně označený fallback. Circuit
+// breaker: po prvním úplném selhání Jikanu v této session jdou další
+// tooltipsy rovnou na AniList, ať každý hover nečeká sekundy na marný backoff.
+let _jikanStatsDown = false
+
 async function fetchScoreStats(malId) {
-    const jikan = await jikanFetchWithRetry(`https://api.jikan.moe/v4/anime/${malId}/statistics`, 0, 'high')
-    if (jikan?.data?.scores?.length) {
-        return { ...jikan.data, source: 'MAL' }
+    if (!_jikanStatsDown) {
+        const jikan = await jikanFetchWithRetry(`https://api.jikan.moe/v4/anime/${malId}/statistics`, 3, 'high')
+        if (jikan?.data?.scores?.length) {
+            return { ...jikan.data, source: 'MAL' }
+        }
+        _jikanStatsDown = true
+        console.warn('[Stats] Jikan /statistics nedostupné (výpadek Jikan scraperu, MAL stats stránka sama funguje) — přepínám na AniList fallback pro tuto session')
     }
 
     const resp = await fetch('https://graphql.anilist.co', {
@@ -666,92 +679,70 @@ function ScoreDistributionTooltip({ malId }) {
     if (error || !stats || !stats.scores) {
         return (
             <div className="rec-breakdown-tooltip rec-stats-tooltip" style={{ width: '250px', zIndex: 1001, padding: '12px', textAlign: 'center', pointerEvents: 'none' }}>
-                <span style={{ color: 'var(--accent-red)' }}>Statistiky nedostupné</span>
+                <span style={{ color: 'var(--accent-red)' }}>Statistiky nedostupné (MAL i AniList)</span>
             </div>
         )
     }
 
-    try {
-        const scoresMap = {}
-        stats.scores.forEach(s => {
-            scoresMap[s.score] = s
-        })
+    const scoresMap = {}
+    stats.scores.forEach(s => {
+        scoresMap[s.score] = s
+    })
 
-        const totalVotes = stats.total || 1
-        const maxVotesArray = stats.scores.map(s => Number(s.votes) || 0)
-        const maxVotes = Math.max(...maxVotesArray, 1)
-        
-        const formatNumber = (num, noSpaceBehindTis) => {
-            if (num == null) return "0"
-            if (num >= 1000) {
-                const fNum = (num / 1000).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1}).replace(/[\s\u202F\xA0]+$/g, '')
-                return fNum + (noSpaceBehindTis ? ' tis.' : ' tis.')
-            }
-            return num.toLocaleString('cs-CZ').replace(/[\s\u202F\xA0]+$/g, '')
+    const totalVotes = stats.total || 1
+    const maxVotes = Math.max(...stats.scores.map(s => Number(s.votes) || 0), 1)
+
+    const formatNumber = (num) => {
+        if (num == null) return '0'
+        if (num >= 1000) {
+            return (num / 1000).toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).replace(/[\s  ]+$/g, '') + ' tis.'
         }
-
-        const MAX_BAR_WIDTH = 25
-        const barChar = '█'
-
-        return (
-            <div 
-                ref={tooltipRef} 
-                className="rec-breakdown-tooltip rec-stats-tooltip" 
-                style={{ 
-                    width: 'max-content', zIndex: 1001, padding: '16px', 
-                    border: '1px solid var(--border-color)', 
-                    background: 'rgba(20, 20, 25, 0.98)', 
-                    color: 'var(--text-primary)', 
-                    fontFamily: 'Consolas, monospace',
-                    fontSize: '0.9rem', lineHeight: '1.4',
-                    pointerEvents: 'none', 
-                    borderRadius: 'var(--radius-md)',
-                    boxShadow: '0 4px 15px rgba(0,0,0,0.5)',
-                    ...positionStyle 
-                }}
-            >
-                <div style={{ paddingBottom: '8px', marginBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                    Statistika hodnocení{stats.source ? ` (${stats.source})` : ''}: <span style={{ color: 'var(--text-secondary)', fontWeight: 'normal' }}>({formatNumber(stats.total)} uživatelů)</span>
-                </div>
-                
-                <div style={{ whiteSpace: 'pre', display: 'flex', flexDirection: 'column' }}>
-                    {[10, 9, 8, 7, 6, 5, 4, 3, 2, 1].map(scoreVal => {
-                        const row = scoresMap[scoreVal] || { votes: 0, percentage: 0 }
-                        
-                        let barWidth = 0
-                        if (row.votes > 0 && maxVotes > 0) {
-                            barWidth = Math.round((row.votes / maxVotes) * (MAX_BAR_WIDTH - 1)) + 1
-                        }
-                        if (isNaN(barWidth) || barWidth < 0) barWidth = 0
-                        const bar = barChar.repeat(barWidth)
-                        
-                        const valPercent = (totalVotes > 0) ? (row.votes / totalVotes) * 100 : 0
-                        const statsPart = `${valPercent.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1}).replace(/[\s\u202F\xA0]+$/g, '')} % (${formatNumber(row.votes, true)})`
-                        
-                        let padCount = Math.max(MAX_BAR_WIDTH - barWidth + 2, 0)
-                        if (isNaN(padCount)) padCount = 0
-                        const padding = " ".repeat(padCount)
-
-                        return (
-                            <div key={scoreVal} style={{ display: 'flex', alignItems: 'baseline' }}>
-                                {`${scoreVal.toString().padStart(2, ' ')}: `}
-                                <span style={{ color: '#fbbf24', backgroundColor: '#fbbf24', height: '0.8rem', display: 'inline-block', lineHeight: '0.8' }}>{bar}</span>
-                                <span style={{ opacity: 0 }}>{padding}</span>
-                                <span style={{ color: 'var(--text-secondary)', marginLeft: '4px', fontFamily: 'system-ui, -apple-system, sans-serif', fontSize: '0.85rem' }}>{statsPart}</span>
-                            </div>
-                        )
-                    })}
-                </div>
-            </div>
-        )
-    } catch (renderError) {
-        console.error("Score rendering error", renderError)
-        return (
-            <div className="rec-breakdown-tooltip rec-stats-tooltip" style={{ width: '250px', zIndex: 1001, padding: '12px', textAlign: 'center', pointerEvents: 'none', background: 'rgba(20, 20, 25, 0.98)', border: '1px solid var(--border-color)', color: 'var(--accent-red)' }}>
-                Chyba při vykreslování
-            </div>
-        )
+        return num.toLocaleString('cs-CZ').replace(/[\s  ]+$/g, '')
     }
+
+    return (
+        <div
+            ref={tooltipRef}
+            className="rec-breakdown-tooltip rec-stats-tooltip rec-stats-tooltip-v2"
+            style={positionStyle}
+        >
+            <div className="rec-stats-head">
+                <span className="rec-stats-head-label">Statistika hodnocení</span>
+                <span className={`rec-stats-source ${stats.source === 'AniList' ? 'anilist' : 'mal'}`} title={stats.source === 'AniList' ? 'MAL statistiky jsou dočasně nedostupné (Jikan 504) — zobrazuji AniList' : 'Data z MyAnimeList (Jikan)'}>
+                    {stats.source || 'MAL'}
+                </span>
+                <span className="rec-stats-users">{formatNumber(stats.total)} uživatelů</span>
+            </div>
+
+            <div className="rec-stats-rows">
+                {[10, 9, 8, 7, 6, 5, 4, 3, 2, 1].map(scoreVal => {
+                    const row = scoresMap[scoreVal] || { votes: 0 }
+                    const votes = Number(row.votes) || 0
+                    const barPct = (votes / maxVotes) * 100
+                    const valPercent = (votes / totalVotes) * 100
+                    const isTop = votes === maxVotes && votes > 0
+                    return (
+                        <div key={scoreVal} className={`rec-stats-row${isTop ? ' top' : ''}`}>
+                            <span className="rec-stats-score" style={{ color: `var(--rating-${scoreVal})` }}>{scoreVal}</span>
+                            <span className="rec-stats-track">
+                                <span
+                                    className="rec-stats-fill"
+                                    style={{
+                                        width: `${Math.max(barPct, votes > 0 ? 1.5 : 0)}%`,
+                                        background: `linear-gradient(90deg, color-mix(in srgb, var(--rating-${scoreVal}) 45%, transparent), var(--rating-${scoreVal}))`
+                                    }}
+                                />
+                            </span>
+                            <span className="rec-stats-val">
+                                {valPercent.toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).replace(/[\s  ]+$/g, '')} %
+                                <em> ({formatNumber(votes)})</em>
+                            </span>
+                        </div>
+                    )
+                })}
+            </div>
+        </div>
+    )
 }
 
 // ============================================================
@@ -1109,10 +1100,18 @@ function Recommendations() {
     const location = useLocation()
     const navigate = useNavigate()
 
-    // Pozastaví automatickou synchronizaci Jikanu na pozadí po dobu, kdy je uživatel v záložce Recommendations
+    // Pozastaví automatickou synchronizaci Jikanu na pozadí po dobu, kdy je
+    // uživatel v záložce Recommendations. Plnou prioritu má hledání jen
+    // v tomto tabu; po odchodu smí DOBĚHNOUT na pozadí — ale jen když neběží
+    // Excel. Při běžícím Excelu se rozběhnuté hledání zruší, aby měl Excel
+    // update klid.
     useEffect(() => {
         pauseBackgroundDownload()
         return () => {
+            const ctrl = abortRef.current
+            isExcelRunning()
+                .then(running => { if (running && ctrl) ctrl.abort() })
+                .catch(() => { /* endpoint nedostupný ⇒ Excel neběží */ })
             resumeBackgroundDownload()
         }
     }, [])

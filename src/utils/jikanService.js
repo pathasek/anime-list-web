@@ -158,9 +158,20 @@ function delay(ms) {
 let _lastRequestAt = 0
 const _requestQueue = []
 let _queueProcessing = false
+// Po 429 od Jikanu se celá fronta zdrží (cooldown) — hammering dalšími
+// requesty by rate-limit okno jen prodlužoval a zdržoval i prioritní dotazy
+let _cooldownUntil = 0
 
 function processQueue() {
     if (_queueProcessing) return
+
+    // Zrušené požadavky (opuštěný tab/komponenta) se zahodí hned — nesmí
+    // spotřebovat slot ani čas fronty
+    for (let i = _requestQueue.length - 1; i >= 0; i--) {
+        if (_requestQueue[i].signal?.aborted) {
+            _requestQueue.splice(i, 1)[0].resolve(false)
+        }
+    }
     if (_requestQueue.length === 0) return
 
     _queueProcessing = true
@@ -175,19 +186,24 @@ function processQueue() {
     const item = _requestQueue.shift()
     const now = Date.now()
     const timeSinceLast = now - _lastRequestAt
-    const wait = Math.max(0, API_DELAY_MS - timeSinceLast)
+    const wait = Math.max(0, API_DELAY_MS - timeSinceLast, _cooldownUntil - now)
 
     setTimeout(() => {
-        _lastRequestAt = Date.now()
-        item.resolve()
+        if (item.signal?.aborted) {
+            // Zrušeno během čekání — slot se nespotřebuje
+            item.resolve(false)
+        } else {
+            _lastRequestAt = Date.now()
+            item.resolve(true)
+        }
         _queueProcessing = false
         processQueue()
     }, wait)
 }
 
-function acquireRequestSlot(priority = 'low') {
+function acquireRequestSlot(priority = 'low', signal = null) {
     return new Promise((resolve) => {
-        _requestQueue.push({ priority, resolve })
+        _requestQueue.push({ priority, resolve, signal })
         processQueue()
     })
 }
@@ -198,15 +214,18 @@ function acquireRequestSlot(priority = 'low') {
  * @param {number} retries
  * @returns {Promise<any>}
  */
-export async function fetchWithRetry(url, retries = RETRY_MAX, priority = 'low') {
+export async function fetchWithRetry(url, retries = RETRY_MAX, priority = 'low', signal = null) {
     for (let attempt = 0; attempt <= retries; attempt++) {
         try {
-            await acquireRequestSlot(priority)
+            if (signal?.aborted) return null
+            const granted = await acquireRequestSlot(priority, signal)
+            if (granted === false || signal?.aborted) return null
             const response = await fetch(url)
 
-            // Rate limited — wait and retry
+            // Rate limited — wait and retry (a zdržet i celou frontu)
             if (response.status === 429) {
                 const waitMs = RETRY_BASE_MS * Math.pow(2, attempt)
+                _cooldownUntil = Math.max(_cooldownUntil, Date.now() + waitMs)
                 console.warn(`[Jikan] Rate limited (429). Waiting ${waitMs}ms before retry ${attempt + 1}/${retries}`)
                 await delay(waitMs)
                 continue
@@ -247,13 +266,14 @@ export async function fetchWithRetry(url, retries = RETRY_MAX, priority = 'low')
  * @param {number} malId
  * @returns {Promise<object[]|null>}
  */
-async function fetchEpisodeListFromAPI(malId, priority = 'low') {
+async function fetchEpisodeListFromAPI(malId, priority = 'low', signal = null) {
     const allEpisodes = []
     let page = 1
     let hasNextPage = true
 
     while (hasNextPage) {
-        const data = await fetchWithRetry(`${JIKAN_BASE_URL}/anime/${malId}/episodes?page=${page}`, RETRY_MAX, priority)
+        if (signal?.aborted) return null
+        const data = await fetchWithRetry(`${JIKAN_BASE_URL}/anime/${malId}/episodes?page=${page}`, RETRY_MAX, priority, signal)
 
         if (!data || !data.data) {
             if (page === 1) return null // No data at all
@@ -296,20 +316,41 @@ export async function getCachedEpisodeList(malId) {
  * @param {number} malId
  * @returns {Promise<object[]|null>}
  */
-export async function getOrFetchEpisodeList(malId) {
-    if (!malId) return null
+// Dedup souběžných dotazů na tentýž seznam epizod — kalendář a „Právě
+// sledované" žádají stejná malId ve stejný okamžik; bez dedupu by se každý
+// seznam stahoval dvakrát a zbytečně ucpával rate-limit frontu.
+const _epListInflight = new Map()
+
+export function getOrFetchEpisodeList(malId, priority = 'low', signal = null) {
+    if (!malId) return Promise.resolve(null)
+    if (_epListInflight.has(malId)) return _epListInflight.get(malId)
+    const p = _getOrFetchEpisodeList(malId, priority, signal)
+        .finally(() => _epListInflight.delete(malId))
+    _epListInflight.set(malId, p)
+    return p
+}
+
+async function _getOrFetchEpisodeList(malId, priority, signal = null) {
     const cached = await getCachedEpisodeList(malId)
-    
+
     // Invalidate cache if older than 24 hours (86400000 ms)
     const CACHE_TTL = 24 * 60 * 60 * 1000;
     const isExpired = cached && cached.fetchedAt && (Date.now() - cached.fetchedAt > CACHE_TTL);
 
-    if (cached && cached.episodes && cached.episodes.length > 0 && !isExpired) {
+    // I PRÁZDNÝ seznam je platná cache — anime bez epizod na Jikanu se jinak
+    // refetchovalo při každém otevření (a brzdilo frontu ostatním)
+    if (cached && cached.episodes && !isExpired) {
         return cached.episodes
     }
-    
+
     // Fetch from Jikan API
-    const apiEpisodes = await fetchEpisodeListFromAPI(malId)
+    const apiEpisodes = await fetchEpisodeListFromAPI(malId, priority, signal)
+
+    // Zrušený požadavek (odchod z tabu) NENÍ selhání — nesmí zapsat
+    // negativní cache; vrátí se poslední známá data
+    if (signal?.aborted && (!apiEpisodes || apiEpisodes.length === 0)) {
+        return cached?.episodes?.length ? cached.episodes : null
+    }
     if (apiEpisodes && apiEpisodes.length > 0) {
         const episodes = apiEpisodes.map(ep => ({
             mal_id: ep.mal_id,
@@ -322,7 +363,7 @@ export async function getOrFetchEpisodeList(malId) {
             url: ep.url || null,
             forum_url: ep.forum_url || null
         }))
-        
+
         await dbPut(STORE_EPISODE_LISTS, {
             malId,
             episodes,
@@ -330,7 +371,18 @@ export async function getOrFetchEpisodeList(malId) {
         })
         return episodes
     }
-    return null
+
+    // Negativní cache: „nemá epizody / fetch selhal" se uloží jako prázdný
+    // seznam s časem, ať se to nezkouší znovu dřív než za 24 h. Starší
+    // neprázdná cache se tím nepřepisuje (výpadek API nesmí smazat data).
+    if (!cached || !cached.episodes || cached.episodes.length === 0) {
+        await dbPut(STORE_EPISODE_LISTS, {
+            malId,
+            episodes: [],
+            fetchedAt: Date.now()
+        })
+    }
+    return cached?.episodes?.length ? cached.episodes : null
 }
 
 
@@ -351,6 +403,45 @@ export async function getDownloadProgress() {
 // BACKGROUND DOWNLOADER
 // ============================================
 
+// Chytré obnovování cache (helpery, na které se downloader odkazuje od
+// commitu 4a28ee3, ale nikdy nebyly definované — downloader proto padal na
+// ReferenceError u prvního anime a na pozadí se nic nepředstahovalo):
+// mladá anime (< 1 rok od vydání) se přeověřují měsíčně, starší jsou
+// v cache permanentně.
+const EP_FRESH_ANIME_MS = 365 * 24 * 60 * 60 * 1000  // hranice „mladého" anime
+const EP_RECHECK_MS = 30 * 24 * 60 * 60 * 1000       // interval přeověření
+
+/** Stáří anime v ms od data vydání (Infinity, když datum chybí/je rozbité) */
+function animeAgeMs(releaseDate) {
+    if (!releaseDate) return Infinity
+    const t = new Date(releaseDate).getTime()
+    return isNaN(t) ? Infinity : Date.now() - t
+}
+
+/**
+ * Rozhodne, jestli se má cache záznam obnovit z API. Stará anime nikdy
+ * (permanentní cache), mladá po uplynutí EP_RECHECK_MS od posledního
+ * ověření — interval se prodlužuje podle unchangedStreak (počtu ověření
+ * beze změny), ať se stabilní seznamy nestahují zbytečně.
+ */
+function shouldRefreshRecord(record, ageMs, freshThresholdMs) {
+    if (!record) return true
+    if (ageMs > freshThresholdMs) return false
+    const last = record.lastRefreshedAt || record.fetchedAt || 0
+    const backoff = Math.min((record.unchangedStreak || 0) + 1, 6)
+    return Date.now() - last > EP_RECHECK_MS * backoff
+}
+
+/** Otisk obsahu pro detekci změn mezi refreshi (unchangedStreak) */
+function contentSignature(value) {
+    const s = JSON.stringify(value)
+    let h = 0
+    for (let i = 0; i < s.length; i++) {
+        h = (h * 31 + s.charCodeAt(i)) | 0
+    }
+    return String(h)
+}
+
 /**
  * Save download progress to IndexedDB
  */
@@ -361,6 +452,15 @@ async function saveDownloadProgress(progress) {
         // Non-critical, just log
         console.warn('[Jikan] Failed to save progress:', e)
     }
+}
+
+/**
+ * Veřejná kontrola „běží Excel?" pro interaktivní komponenty: při odchodu
+ * z tabu smí jejich rozdělané dotazy doběhnout na pozadí JEN když Excel
+ * neběží — jinak se ruší, aby měl Excel update klid.
+ */
+export async function isExcelRunning() {
+    return checkIsExcelRunning()
 }
 
 async function checkIsExcelRunning() {
@@ -429,6 +529,7 @@ export async function startBackgroundDownload(animeList, onProgress) {
 
     console.log(`[Jikan] Background download starting. ${totalAnime} anime to process (starting from #${startAnimeIdx + 1}).`)
 
+    try {
     for (let i = startAnimeIdx; i < totalAnime; i++) {
         if (_downloadCancelled) {
             console.log('[Jikan] Download cancelled.')
@@ -531,6 +632,11 @@ export async function startBackgroundDownload(animeList, onProgress) {
         await saveDownloadProgress({ state: 'complete', totalAnime, timestamp: Date.now() })
         console.log(`[Jikan] Background download complete. ${totalAnime} anime processed.`)
     }
+    } catch (e) {
+        // Neočekávaná chyba nesmí downloader nechat „viset" (_downloadRunning
+        // by zůstalo true a už by nikdy nešel spustit znovu)
+        console.error('[Jikan] Background download crashed:', e)
+    }
 
     _downloadRunning = false
 
@@ -607,7 +713,7 @@ function getMetadataCache() {
  * @param {number} malId
  * @returns {Promise<object|null>}
  */
-export async function getAnimeInfo(malId, priority = 'high') {
+export async function getAnimeInfo(malId, priority = 'high', signal = null) {
     if (!malId) return null;
 
     // Check pre-fetched global static cache first
@@ -635,7 +741,7 @@ export async function getAnimeInfo(malId, priority = 'high') {
 
     try {
         const url = `${JIKAN_BASE_URL}/anime/${malId}`
-        const res = await fetchWithRetry(url, RETRY_MAX, priority)
+        const res = await fetchWithRetry(url, RETRY_MAX, priority, signal)
         if (res && res.data) {
             const info = {
                 imageUrl: res.data.images?.jpg?.image_url || null,

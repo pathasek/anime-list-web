@@ -421,6 +421,115 @@
     right: 0;
 }
 
+/* Přepracovaný tooltip statistiky hodnocení — skutečné CSS bary s barvami
+   hodnocení (--rating-N) místo ASCII bloků */
+.rec-stats-tooltip-v2 {
+    width: 340px;
+    z-index: 1001;
+    padding: 14px 16px;
+    background: rgba(17, 17, 23, 0.98);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
+    pointer-events: none;
+    color: var(--text-primary);
+}
+
+.rec-stats-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.rec-stats-source {
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    padding: 1px 7px;
+    border-radius: var(--radius-full);
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.rec-stats-source.mal {
+    background: #2e51a2; /* MAL modrá */
+}
+
+.rec-stats-source.anilist {
+    background: #3db4f2; /* AniList modrá */
+    color: #0b1622;
+}
+
+.rec-stats-users {
+    margin-left: auto;
+    font-size: 0.72rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.rec-stats-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.rec-stats-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    line-height: 1.35;
+}
+
+.rec-stats-row.top .rec-stats-val {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.rec-stats-score {
+    width: 18px;
+    text-align: right;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+}
+
+.rec-stats-track {
+    flex: 1;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.rec-stats-fill {
+    display: block;
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.35s ease;
+}
+
+.rec-stats-val {
+    width: 108px;
+    text-align: right;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.rec-stats-val em {
+    font-style: normal;
+    color: var(--text-muted);
+    font-size: 0.9em;
+}
+
 .rec-breakdown-row {
     display: flex;
     justify-content: space-between;

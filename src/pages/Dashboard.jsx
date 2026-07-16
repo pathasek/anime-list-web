@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef, Fragment } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigationType } from 'react-router-dom'
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -22,7 +22,7 @@ import AnimeGenreChordChart from '../components/charts/AnimeGenreChordChart'
 import SpiralWordCloud from '../components/charts/SpiralWordCloud'
 import { calculateExcelChartsData } from '../utils/excelChartCalculations'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
-import { extractMalId, getAnimeInfo, getOrFetchEpisodeList, getNextBroadcastDate } from '../utils/jikanService'
+import { extractMalId, getAnimeInfo, getOrFetchEpisodeList, getCachedEpisodeList, getNextBroadcastDate, isExcelRunning } from '../utils/jikanService'
 
 // Register Chart.js components
 ChartJS.register(
@@ -174,25 +174,53 @@ function JikanPoster({ malUrl, size = 'small' }) {
 // ==========================================
 // AIRING EPISODE STATS (async episode data)
 // ==========================================
+
+// Poslední známá podoba statistik „Právě sledované" v localStorage — po
+// refreshi stránky se ukáže hned a na pozadí se jen tiše obnoví, žádné
+// mazání a „Načítám…" napříč celou sekcí.
+const AIRING_STATS_TTL = 15 * 60 * 1000
+const airingStatsKey = (malId) => `jikan_airing_stats_${malId}`
+
+function loadAiringStats(malId) {
+    try {
+        const raw = localStorage.getItem(airingStatsKey(malId))
+        if (raw) return JSON.parse(raw)
+    } catch { /* poškozený záznam — načte se z API */ }
+    return null
+}
+
+function saveAiringStats(malId, stats) {
+    try { localStorage.setItem(airingStatsKey(malId), JSON.stringify({ stats, at: Date.now() })) } catch { /* quota */ }
+}
+
 function AiringEpisodeStats({ malUrl, animeName, historyLog = [], episodeRatings = [] }) {
     // Stejný vzor jako JikanPoster: loading odvozený z malId při renderu,
     // efekt nevolá setState synchronně (react-hooks/set-state-in-effect).
     const malId = malUrl ? extractMalId(malUrl) : null
-    const [stats, setStats] = useState(null)
-    const [loading, setLoading] = useState(!!malId)
+    const [stats, setStats] = useState(() => (malId && loadAiringStats(malId)?.stats) || null)
+    const [loading, setLoading] = useState(() => !!malId && !loadAiringStats(malId)?.stats)
     const [prevMalId, setPrevMalId] = useState(malId)
     if (prevMalId !== malId) {
         setPrevMalId(malId)
-        setStats(null)
-        setLoading(!!malId)
+        const cached = malId ? loadAiringStats(malId)?.stats : null
+        setStats(cached || null)
+        setLoading(!!malId && !cached)
     }
 
     useEffect(() => {
         if (!malId) return
 
-        let cancelled = false
-        getOrFetchEpisodeList(malId).then(episodes => {
-            if (cancelled) return;
+        // Čerstvá cache → nefetchovat; starší je už vykreslená a jen se
+        // na pozadí tiše přepíše novými daty
+        const cached = loadAiringStats(malId)
+        if (cached && Date.now() - cached.at < AIRING_STATS_TTL) return
+
+        // Po odchodu z Dashboardu smí dotaz doběhnout a uložit se do cache —
+        // ale JEN když neběží Excel; při běžícím Excelu se zruší (viz cleanup)
+        const controller = new AbortController()
+        const signal = controller.signal
+        getOrFetchEpisodeList(malId, 'high', signal).then(episodes => {
+            if (signal.aborted) return;
 
             // 1. Gather release date details from Jikan API
             const now = new Date()
@@ -233,8 +261,8 @@ function AiringEpisodeStats({ malUrl, animeName, historyLog = [], episodeRatings
             let formattedLast = lastEp?.aired ? new Date(lastEp.aired).toLocaleString('cs-CZ', { weekday: 'short', day: 'numeric', month: 'numeric' }) : null
 
             // Overwrite with accurate broadcast info from API instead of Jikan episode midnight dates
-            getAnimeInfo(malId).then(info => {
-                if (cancelled) return;
+            getAnimeInfo(malId, 'high', signal).then(info => {
+                if (signal.aborted) return;
                 if (info && info.broadcast) {
                     exactNextDate = getNextBroadcastDate(info.broadcast)
                     if (exactNextDate) {
@@ -251,7 +279,7 @@ function AiringEpisodeStats({ malUrl, animeName, historyLog = [], episodeRatings
                     }
                 }
 
-                setStats({
+                const statsObj = {
                     avgScore,
                     lastScore,
                     lastEpDate: formattedLast,
@@ -259,12 +287,13 @@ function AiringEpisodeStats({ malUrl, animeName, historyLog = [], episodeRatings
                     totalEps: episodes ? episodes.length : 0,
                     airedCount: aired.length,
                     broadcast: localBroadcast
-                })
-                
+                }
+                saveAiringStats(malId, statsObj)
+                setStats(statsObj)
                 setLoading(false)
             }).catch(() => {
-                if (!cancelled) {
-                    setStats({
+                if (!signal.aborted) {
+                    const statsObj = {
                         avgScore,
                         lastScore,
                         lastEpDate: formattedLast,
@@ -272,13 +301,20 @@ function AiringEpisodeStats({ malUrl, animeName, historyLog = [], episodeRatings
                         totalEps: episodes ? episodes.length : 0,
                         airedCount: aired.length,
                         broadcast: null
-                    })
+                    }
+                    saveAiringStats(malId, statsObj)
+                    setStats(statsObj)
                     setLoading(false)
                 }
             })
-        }).catch(() => { if (!cancelled) setLoading(false) })
+        }).catch(() => { if (!signal.aborted) setLoading(false) })
 
-        return () => { cancelled = true }
+        return () => {
+            // Odchod z tabu: abort JEN když běží Excel — jinak nechat doběhnout
+            isExcelRunning()
+                .then(running => { if (running) controller.abort() })
+                .catch(() => { /* endpoint nedostupný ⇒ Excel neběží */ })
+        }
     }, [malId, animeName, historyLog])
 
     if (loading) return <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', opacity: 0.5 }}>Načítám…</span>
@@ -319,99 +355,265 @@ function AiringEpisodeStats({ malUrl, animeName, historyLog = [], episodeRatings
 
 // ==========================================
 // AIRING CALENDAR — mini dynamický kalendář vysílání pro maximalizované
-// okno Status. Události na dnech: odvysílané díly (Jikan episode list,
-// IndexedDB cache), nejbližší díl a týdenní projekce dalších dílů
-// z pravidelného vysílacího času (broadcast, JST → lokální čas).
+// okno Status. Události na dnech:
+//   aired  = odvysíláno a zhlédnuto (Jikan episode list, IndexedDB cache)
+//   unseen = odvysíláno, ale ještě nezhlédnuto (podle watchedEps z listu)
+//   next   = nejbližší budoucí díl
+//   plan   = potvrzený rozvrh z AniList airingSchedule (přesné číslo + čas)
+//   proj   = odhad z pravidelného vysílacího času (jen bez AniList rozvrhu)
 // ==========================================
 const CAL_WEEKDAYS = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne']
 const calDayKey = (d) => `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`
 
+// Cache událostí: module-level + localStorage, takže poslední známá podoba
+// kalendáře přežije i refresh stránky. Po startu se vykreslí okamžitě a data
+// se pak obnovují POSTUPNĚ anime po anime — nic se nemaže, chipy se tiše
+// přepisují, jak přicházejí čerstvá data.
+const CAL_CACHE_TTL = 10 * 60 * 1000
+const CAL_LS_KEY = 'dashboard-cal-events-v2'
+let _airingCalCache = null // { key, at, animeEvents: { [name]: ev[] } }
+
+function loadCalCache() {
+    if (_airingCalCache) return _airingCalCache
+    try {
+        const raw = localStorage.getItem(CAL_LS_KEY)
+        if (raw) _airingCalCache = JSON.parse(raw)
+    } catch { /* poškozený záznam — začne se od nuly */ }
+    return _airingCalCache
+}
+
+function saveCalCache(cache) {
+    _airingCalCache = cache
+    try { localStorage.setItem(CAL_LS_KEY, JSON.stringify(cache)) } catch { /* quota */ }
+}
+
+// Přesný rozvrh epizod z AniList — airingSchedule má reálná čísla dílů
+// a unix časy vysílání. Ptáme se na ODVYSÍLANÉ i budoucí díly: Jikan
+// /episodes má u probíhajících sérií zpoždění i u odvysílaných (proto dřív
+// v kalendáři chyběly díly z posledních dnů). Jeden batch GraphQL dotaz pro
+// všechna anime; AniList kuriozita (viz plán 7): pokud jediné idMal na
+// AniListu neexistuje, celý batch vrátí 404 + data:null → rozpad na
+// jednotlivé dotazy.
+async function fetchAnilistSchedules(malIds, signal = null) {
+    if (!malIds.length) return {}
+    const mediaQuery = (id, alias) =>
+        `${alias}: Media(idMal: ${id}, type: ANIME) { idMal episodes ` +
+        `airedSchedule: airingSchedule(notYetAired: false, perPage: 50) { pageInfo { hasNextPage } nodes { episode airingAt } } ` +
+        `upcomingSchedule: airingSchedule(notYetAired: true, perPage: 16) { nodes { episode airingAt } } }`
+    const runQuery = async (body) => {
+        const resp = await fetch('https://graphql.anilist.co', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ query: `query { ${body} }` }),
+            signal
+        })
+        const json = await resp.json().catch(() => null)
+        return json?.data || null
+    }
+    const out = {}
+    const collect = (data) => {
+        for (const k of Object.keys(data || {})) {
+            const m = data[k]
+            if (m?.idMal) out[m.idMal] = m
+        }
+    }
+    try {
+        const data = await runQuery(malIds.map((id, i) => mediaQuery(id, `m${i}`)).join(' '))
+        if (data) {
+            collect(data)
+            return out
+        }
+        for (const id of malIds) {
+            collect(await runQuery(mediaQuery(id, 'm0')).catch(() => null))
+        }
+    } catch {
+        // AniList nedostupný — kalendář se obejde broadcast projekcí
+    }
+    return out
+}
+
+// Sestaví události jednoho anime. Zdroje v pořadí přesnosti:
+// 1) AniList airingSchedule (odvysílané i budoucí — přesná čísla dílů a časy;
+//    aired část se ignoruje jen u >50dílných long-runnerů, kde 1. stránka
+//    obsahuje nejstarší díly),
+// 2) Jikan episode list (doplní díly, které AniList rozvrh nezná),
+// 3) projekce z pravidelného vysílání (jen když neexistuje žádný budoucí
+//    rozvrh; čísluje od max(známý, zhlédnutý) + 1).
+function buildAnimeEvents(a, episodes, info, schedule, nowTs) {
+    const watched = parseInt(a.watchedEps) || 0
+    const fmtTime = (d) => d.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' })
+    const fmtDate = (d) => d.toLocaleDateString('cs-CZ')
+
+    // číslo dílu → { ts, exact }; AniList má přednost (přesné časy)
+    const epMap = new Map()
+    const airedSched = schedule?.airedSchedule
+    if (airedSched?.nodes?.length && !airedSched.pageInfo?.hasNextPage) {
+        airedSched.nodes.forEach(n => {
+            if (n?.airingAt) epMap.set(n.episode, { ts: n.airingAt * 1000, exact: true })
+        })
+    }
+    ;(schedule?.upcomingSchedule?.nodes || []).forEach(n => {
+        if (n?.airingAt) epMap.set(n.episode, { ts: n.airingAt * 1000, exact: true })
+    })
+    ;(episodes || []).forEach((ep, idx) => {
+        const epNum = ep.mal_id || idx + 1
+        if (epMap.has(epNum) || !ep.aired) return
+        const t = new Date(ep.aired).getTime()
+        if (!isNaN(t)) epMap.set(epNum, { ts: t, exact: false })
+    })
+
+    const events = []
+    const usedDays = new Set()
+    const upcoming = []
+    let maxEp = 0
+    for (const [epNum, rec] of [...epMap.entries()].sort((x, y) => x[1].ts - y[1].ts)) {
+        maxEp = Math.max(maxEp, epNum)
+        const d = new Date(rec.ts)
+        usedDays.add(calDayKey(d))
+        if (rec.ts > nowTs) {
+            upcoming.push({ epNum, rec, d })
+        } else {
+            const kind = epNum <= watched ? 'aired' : 'unseen'
+            events.push({
+                day: calDayKey(d), ts: rec.ts, name: a.name, malUrl: a.mal_url, ep: epNum, kind,
+                title: `${a.name} — EP ${epNum} • ${fmtDate(d)}${rec.exact ? ` ${fmtTime(d)}` : ''}`
+                    + (kind === 'unseen' ? ' • odvysíláno, nezhlédnuto' : '')
+            })
+        }
+    }
+    upcoming.forEach((u, i) => {
+        events.push({
+            day: calDayKey(u.d), ts: u.rec.ts, name: a.name, malUrl: a.mal_url, ep: u.epNum,
+            kind: i === 0 ? 'next' : 'plan',
+            title: `${a.name} — EP ${u.epNum} • ${fmtDate(u.d)}${u.rec.exact ? ` ${fmtTime(u.d)}` : ''}`
+        })
+    })
+
+    const nextBroadcast = info?.broadcast ? getNextBroadcastDate(info.broadcast) : null
+    if (upcoming.length === 0 && nextBroadcast) {
+        const base = Math.max(maxEp, watched)
+        let projected = 0
+        for (let i = 0; i < 10; i++) {
+            const d = new Date(nextBroadcast.getTime() + i * 7 * 24 * 60 * 60 * 1000)
+            if (usedDays.has(calDayKey(d))) continue
+            projected++
+            const epNum = base + projected
+            events.push({
+                day: calDayKey(d), ts: d.getTime(), name: a.name, malUrl: a.mal_url, ep: epNum,
+                kind: projected === 1 ? 'next' : 'proj',
+                title: `${a.name} — EP ${epNum}${projected === 1 ? '' : ' (odhad)'} • ${fmtDate(d)} ${fmtTime(d)}`
+            })
+        }
+    }
+    return events
+}
+
 function AiringCalendar({ airingAnime }) {
     const today = new Date()
     const [viewYM, setViewYM] = useState({ y: today.getFullYear(), m: today.getMonth() })
-    const [eventsByDay, setEventsByDay] = useState(null) // null = načítám
+    // Klíč je seřazený, protože pořadí seznamu se mění asynchronně
+    // (airingSortKeys) a nesmí zneplatnit cache.
+    const cacheKey = airingAnime.map(a => `${a.name}:${a.watchedEps || 0}`).sort().join('|')
+    // Poslední známá podoba se ukáže OKAMŽITĚ (i po refreshi stránky, i když
+    // je „stará") — refresh ji pak anime po anime tiše přepíše.
+    const [animeEvents, setAnimeEvents] = useState(() => loadCalCache()?.animeEvents || null)
+
+    // airingAnime přes ref: načítací efekt závisí jen na cacheKey, aby ho
+    // asynchronní přerovnání seznamu (stejný obsah, jiné pořadí)
+    // nerestartovalo v půlce. Ref se aktualizuje v efektu deklarovaném PŘED
+    // načítacím efektem — ve stejném commitu proběhne dřív.
+    const airingRef = useRef(airingAnime)
+    useEffect(() => {
+        airingRef.current = airingAnime
+    }, [airingAnime])
 
     useEffect(() => {
-        let cancelled = false
+        // Plná priorita platí, dokud je uživatel v Dashboardu s rozbaleným
+        // Statusem. Po odchodu smí rozdělaná aktualizace DOBĚHNOUT na pozadí
+        // a uložit se do cache (příští návštěva je hned čerstvá) — ale JEN
+        // když neběží Excel; při běžícím Excelu se zruší (abort projde až
+        // do rate-limit fronty), aby měl Excel update klid.
+        const controller = new AbortController()
+        const signal = controller.signal
+        const cached = loadCalCache()
+        if (cached && cached.key === cacheKey && Date.now() - cached.at < CAL_CACHE_TTL) return
 
         const load = async () => {
-            const events = {}
-            const push = (date, ev) => {
-                const k = calDayKey(date)
-                if (!events[k]) events[k] = []
-                events[k].push(ev)
-            }
+            const list = airingRef.current
             const nowTs = Date.now()
-            const PROJECTION_WEEKS = 10
+            const malIds = list.map(a => extractMalId(a.mal_url)).filter(Boolean)
+            const schedules = await fetchAnilistSchedules(malIds, signal).catch(() => ({}))
+            if (signal.aborted) return
 
-            for (const a of airingAnime) {
+            // Začíná se od poslední známé podoby — jen se vyhodí anime,
+            // která už nejsou ve sledovaných; zbytek zůstává viditelný,
+            // dokud ho nepřepíšou čerstvá data.
+            const next = { ...(loadCalCache()?.animeEvents || {}) }
+            const names = new Set(list.map(a => a.name))
+            for (const k of Object.keys(next)) {
+                if (!names.has(k)) delete next[k]
+            }
+
+            // FÁZE 1 — bez sítě: AniList rozvrh (1 dotaz výše) + episode
+            // listy z IndexedDB + info z localStorage/statické cache.
+            // Celý kalendář se vykreslí hned; síť přijde až ve fázi 2.
+            const EP_LIST_TTL = 24 * 60 * 60 * 1000
+            const staleQueue = []
+            for (const a of list) {
                 const malId = extractMalId(a.mal_url)
                 if (!malId) continue
-
-                const [episodes, info] = await Promise.all([
-                    getOrFetchEpisodeList(malId).catch(() => null),
-                    getAnimeInfo(malId).catch(() => null)
+                const [cachedList, info] = await Promise.all([
+                    getCachedEpisodeList(malId).catch(() => null),
+                    getAnimeInfo(malId, 'high', signal).catch(() => null)
                 ])
-                if (cancelled) return
-
-                const nextBroadcast = info?.broadcast ? getNextBroadcastDate(info.broadcast) : null
-                const timeStr = nextBroadcast
-                    ? nextBroadcast.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' })
-                    : null
-
-                // Dny, kde už anime má událost — projekce je nesmí duplikovat
-                const usedDays = new Set()
-                let maxKnownEp = 0
-                let hasKnownFuture = false
-
-                const listed = (episodes || []).filter(ep => ep.aired)
-                    .sort((x, y) => new Date(x.aired) - new Date(y.aired))
-                listed.forEach((ep, idx) => {
-                    const d = new Date(ep.aired)
-                    if (isNaN(d.getTime())) return
-                    const epNum = ep.mal_id || idx + 1
-                    const isPast = d.getTime() <= nowTs
-                    if (!isPast) hasKnownFuture = true
-                    maxKnownEp = Math.max(maxKnownEp, epNum)
-                    usedDays.add(calDayKey(d))
-                    push(d, {
-                        name: a.name,
-                        malUrl: a.mal_url,
-                        ep: epNum,
-                        kind: isPast ? 'aired' : 'next',
-                        title: `${a.name} — EP ${epNum} • ${d.toLocaleDateString('cs-CZ')}${!isPast && timeStr ? ` ${timeStr}` : ''}`
-                    })
-                })
-
-                // Projekce dalších dílů z pravidelného vysílání (týdenní krok).
-                // První projektovaný díl je „další díl", pokud ho už nezná
-                // episode list; zbytek je odhad — celková délka série není
-                // z Jikanu známá, proto jen dopředný horizont.
-                if (nextBroadcast) {
-                    let projected = 0
-                    for (let i = 0; i < PROJECTION_WEEKS; i++) {
-                        const d = new Date(nextBroadcast.getTime() + i * 7 * 24 * 60 * 60 * 1000)
-                        if (usedDays.has(calDayKey(d))) continue
-                        projected++
-                        const epNum = maxKnownEp + projected
-                        const isNext = !hasKnownFuture && projected === 1
-                        push(d, {
-                            name: a.name,
-                            malUrl: a.mal_url,
-                            ep: epNum,
-                            kind: isNext ? 'next' : 'proj',
-                            title: `${a.name} — EP ${epNum}${isNext ? '' : ' (odhad)'} • ${d.toLocaleDateString('cs-CZ')}${timeStr ? ` ${timeStr}` : ''}`
-                        })
-                    }
+                if (signal.aborted) return
+                next[a.name] = buildAnimeEvents(a, cachedList?.episodes || null, info, schedules[malId], nowTs)
+                if (!cachedList?.fetchedAt || nowTs - cachedList.fetchedAt > EP_LIST_TTL) {
+                    staleQueue.push({ a, malId, info })
                 }
             }
+            setAnimeEvents({ ...next })
 
-            if (!cancelled) setEventsByDay(events)
+            // FÁZE 2 — sekvenční síťové doplnění jen zastaralých seznamů;
+            // každé dokončené anime hned tiše přepíše své chipy (nic nebliká,
+            // nic se nemaže). Priorita 'high' předbíhá downloader i při
+            // zavřeném Excelu; downloader sám při otevřeném Excelu stojí.
+            // Po odchodu z Dashboardu (bez abortu) smyčka dojede na pozadí —
+            // setAnimeEvents je pak neškodné no-op, ale cache se uloží.
+            for (const { a, malId, info } of staleQueue) {
+                const episodes = await getOrFetchEpisodeList(malId, 'high', signal).catch(() => null)
+                if (signal.aborted) return
+                next[a.name] = buildAnimeEvents(a, episodes, info, schedules[malId], nowTs)
+                setAnimeEvents({ ...next })
+            }
+            saveCalCache({ key: cacheKey, at: Date.now(), animeEvents: next })
         }
 
         load()
-        return () => { cancelled = true }
-    }, [airingAnime])
+        return () => {
+            // Odchod z tabu: abort JEN když běží Excel — jinak nechat doběhnout
+            isExcelRunning()
+                .then(running => { if (running) controller.abort() })
+                .catch(() => { /* endpoint nedostupný ⇒ Excel neběží */ })
+        }
+    }, [cacheKey])
+
+    // Sloučení per-anime událostí na dny; v rámci dne mají přednost důležité
+    // druhy (nezhlédnuté a další díl), pak chronologicky
+    const eventsByDay = useMemo(() => {
+        const PRIORITY = { unseen: 0, next: 1, plan: 2, proj: 3, aired: 4 }
+        const byDay = {}
+        for (const evs of Object.values(animeEvents || {})) {
+            for (const ev of evs) {
+                if (!byDay[ev.day]) byDay[ev.day] = []
+                byDay[ev.day].push(ev)
+            }
+        }
+        for (const day of Object.keys(byDay)) {
+            byDay[day].sort((x, y) => (PRIORITY[x.kind] - PRIORITY[y.kind]) || (x.ts - y.ts))
+        }
+        return byDay
+    }, [animeEvents])
 
     const { y, m } = viewYM
     const first = new Date(y, m, 1)
@@ -457,7 +659,7 @@ function AiringCalendar({ airingAnime }) {
                     const inMonth = dayNum >= 1 && dayNum <= daysInMonth
                     const date = new Date(y, m, dayNum)
                     const key = calDayKey(date)
-                    const evs = (inMonth && eventsByDay?.[key]) || []
+                    const evs = (inMonth && eventsByDay[key]) || []
                     const isToday = inMonth && key === todayKey
                     const extra = evs.slice(MAX_CHIPS)
                     return (
@@ -485,10 +687,12 @@ function AiringCalendar({ airingAnime }) {
             </div>
 
             <div className="airing-cal-legend">
-                {eventsByDay === null && <span className="airing-cal-loading">Načítám vysílací data…</span>}
-                <span><i className="airing-cal-dot aired" />Odvysíláno</span>
+                {animeEvents === null && <span className="airing-cal-loading">Načítám vysílací data…</span>}
+                <span><i className="airing-cal-dot aired" />Zhlédnuto</span>
+                <span><i className="airing-cal-dot unseen" />Odvysíláno · nezhlédnuto</span>
                 <span><i className="airing-cal-dot next" />Další díl</span>
-                <span><i className="airing-cal-dot proj" />Odhad (pravidelné vysílání)</span>
+                <span><i className="airing-cal-dot plan" />Naplánováno</span>
+                <span><i className="airing-cal-dot proj" />Odhad</span>
             </div>
         </div>
     )
@@ -513,8 +717,16 @@ function Dashboard() {
     const [tagSearchQuery, setTagSearchQuery] = useState('')
     const [tagFilterMode, setTagFilterMode] = useState('or')
 
-    // Group expansion state — dub starts expanded
-    const [expandedGroups, setExpandedGroups] = useState(new Set(['dub']))
+    // Group expansion state — dub starts expanded.
+    // Rozbalené skupiny přežívají odchod na detail v sessionStorage, takže
+    // „Zpět" z detailu vrátí Dashboard přesně jak byl (např. otevřený kalendář).
+    const [expandedGroups, setExpandedGroups] = useState(() => {
+        try {
+            const saved = sessionStorage.getItem('dashboard-expanded-groups')
+            if (saved) return new Set(JSON.parse(saved))
+        } catch { /* poškozený záznam — použije se default */ }
+        return new Set(['dub'])
+    })
     const toggleGroup = (id) => {
         setExpandedGroups(prev => {
             const next = new Set(prev)
@@ -523,9 +735,73 @@ function Dashboard() {
             } else {
                 next.add(id)
             }
+            try { sessionStorage.setItem('dashboard-expanded-groups', JSON.stringify([...next])) } catch { /* quota */ }
             return next
         })
     }
+
+    // Návrat „do minulosti": při odchodu z Dashboardu se uloží scroll pozice
+    // a při POP navigaci (tlačítko zpět) se po vykreslení obnoví. Dopředná
+    // navigace (klik v menu) začíná nahoře jako dřív.
+    const navigationType = useNavigationType()
+    // Při POP (zpět) se NEJDŘÍV musí obnovit uložená pozice a teprve pak smí
+    // listener ukládat: prohlížeč totiž při přechodu scroll ořízne na 0
+    // (stránka je zprvu krátká) a ten scroll event by uloženou pozici přepsal
+    // nulou dřív, než se stihne použít.
+    const scrollRestorePending = useRef(navigationType === 'POP')
+    useEffect(() => {
+        // Průběžné ukládání (throttle přes rAF) — při unmountu už je scroll
+        // prohlížečem oříznutý na 0, takže jednorázové uložení v cleanupu
+        // by vždy zapsalo 0.
+        let raf = null
+        const onScroll = () => {
+            if (raf || scrollRestorePending.current) return
+            raf = requestAnimationFrame(() => {
+                raf = null
+                if (!scrollRestorePending.current) {
+                    try { sessionStorage.setItem('dashboard-scroll', String(document.documentElement.scrollTop || 0)) } catch { /* quota */ }
+                }
+            })
+        }
+        window.addEventListener('scroll', onScroll, { passive: true })
+        return () => {
+            window.removeEventListener('scroll', onScroll)
+            if (raf) cancelAnimationFrame(raf)
+        }
+    }, [])
+    useEffect(() => {
+        if (loading) return
+        const saved = parseInt(sessionStorage.getItem('dashboard-scroll') || '0', 10)
+        if (navigationType !== 'POP' || !saved) {
+            scrollRestorePending.current = false
+            return
+        }
+        // Výška stránky roste postupně (skupiny, grafy, obrázky) — zkouší se
+        // každých 100 ms až ~2,5 s, dokud stránka nedoroste k cílové pozici.
+        // Manuální scroll uživatele (kolečko/dotyk) obnovu okamžitě ukončí.
+        const el = document.documentElement
+        const finish = () => {
+            clearInterval(iv)
+            scrollRestorePending.current = false
+        }
+        const tryRestore = () => {
+            el.scrollTo({ top: saved, behavior: 'instant' })
+            return el.scrollHeight - el.clientHeight >= saved || Math.abs(el.scrollTop - saved) < 2
+        }
+        let attempts = 0
+        const iv = setInterval(() => {
+            attempts++
+            if (tryRestore() || attempts >= 25) finish()
+        }, 100)
+        if (tryRestore()) finish()
+        window.addEventListener('wheel', finish, { once: true, passive: true })
+        window.addEventListener('touchstart', finish, { once: true, passive: true })
+        return () => {
+            finish()
+            window.removeEventListener('wheel', finish)
+            window.removeEventListener('touchstart', finish)
+        }
+    }, [loading, navigationType])
 
     const [statsData, setStatsData] = useState(null) // Stats from stats.json (with comments)
     const [episodeRatings, setEpisodeRatings] = useState([])
