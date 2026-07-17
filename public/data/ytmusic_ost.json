@@ -1,5 +1,5 @@
 {
- "generated": 1784300161281,
+ "generated": 1784315958353,
  "albums": [
   {
    "match_key": "86 eighty six s01 part 1",
@@ -1716,6 +1716,14 @@
    "duration": "1 hour, 52 minutes",
    "playlist_id": "OLAK5uy_n0Olq7xxswVL29JaQHPnkqO-yi3FtndQI",
    "thumbnail": "https://yt3.googleusercontent.com/TabHjG63hAE1tDchWpJMzNVHH1QguyjWjfbgX9IWdQio_MiZrXHiRdBvWMe1l1VdD0Z0V81cn7AtxUod=w544-h544-l90-rj"
+  },
+  {
+   "match_key": "saga of tanya the evil s01",
+   "anime_name": "Saga of Tanya the Evil, S01",
+   "confidence": "override",
+   "album_title": "Saga of Tanya the Evil, S01 OST",
+   "artists": "OST",
+   "playlist_id": "PLADJQcbNFhwbJv68rHt_6JmHlgBIsWKl1"
   },
   {
    "match_key": "saga of tanya the evil the movie",
