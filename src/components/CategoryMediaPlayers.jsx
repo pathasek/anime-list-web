@@ -230,6 +230,9 @@ export function FloatingOstPlayer({ ost, playlist, onPlayTrack, onClose }) {
     const [playlistTracks, setPlaylistTracks] = useState([])
     const [currentPlaylistIndex, setCurrentPlaylistIndex] = useState(-1)
 
+    const userActionRef = useRef(false)
+    const lastPosRef = useRef(-1)
+
     if (!ost) return null
 
     const visibleTracks = (playlist || []).filter(t => t.kind === 'youtube')
@@ -246,6 +249,10 @@ export function FloatingOstPlayer({ ost, playlist, onPlayTrack, onClose }) {
         },
     }
 
+    const toggleShuffle = () => {
+        setIsShuffle(prev => !prev)
+    }
+
     const onPlayerReady = (event) => {
         const p = event.target
         setPlayer(p)
@@ -258,7 +265,10 @@ export function FloatingOstPlayer({ ost, playlist, onPlayTrack, onClose }) {
                 song: `Skladba ${index + 1}`,
             }))
             setPlaylistTracks(initialTracks)
-            setCurrentPlaylistIndex(p.getPlaylistIndex())
+            const initialPos = p.getPlaylistIndex()
+            setCurrentPlaylistIndex(initialPos)
+            userActionRef.current = true
+            lastPosRef.current = initialPos
             
             // Asynchronne nacteme nazvy skladeb z noembed
             ids.forEach((id) => {
@@ -277,13 +287,39 @@ export function FloatingOstPlayer({ ost, playlist, onPlayTrack, onClose }) {
     const onPlayerStateChange = (event) => {
         const p = event.target
         if (ost.kind === 'youtube-playlist') {
-            setCurrentPlaylistIndex(p.getPlaylistIndex())
+            const pos = p.getPlaylistIndex()
+            setCurrentPlaylistIndex(pos)
+
+            // State 1 = PLAYING
+            if (event.data === 1) {
+                if (userActionRef.current) {
+                    userActionRef.current = false
+                    lastPosRef.current = pos
+                } else if (isShuffle && pos !== lastPosRef.current && lastPosRef.current !== -1) {
+                    // YouTube auto-advanced naturally to next track (pos = lastPosRef + 1),
+                    // but Shuffle is ON -> intercept and play a random track instead!
+                    const ids = p.getPlaylist() || playlistTracks.map(t => t.ytId)
+                    if (ids.length > 1) {
+                        let randomIndex = lastPosRef.current
+                        while (randomIndex === lastPosRef.current) {
+                            randomIndex = Math.floor(Math.random() * ids.length)
+                        }
+                        userActionRef.current = true
+                        lastPosRef.current = randomIndex
+                        p.playVideoAt(randomIndex)
+                    }
+                } else {
+                    lastPosRef.current = pos
+                }
+            }
         }
     }
 
     const handleTrackClick = (track, index) => {
         if (ost.kind === 'youtube-playlist') {
             if (player) {
+                userActionRef.current = true
+                lastPosRef.current = index
                 player.playVideoAt(index)
             }
         } else {
@@ -293,8 +329,25 @@ export function FloatingOstPlayer({ ost, playlist, onPlayTrack, onClose }) {
 
     const playNext = () => {
         if (ost.kind === 'youtube-playlist') {
-            if (player && typeof player.nextVideo === 'function') {
-                player.nextVideo()
+            if (player) {
+                if (isShuffle) {
+                    const ids = player.getPlaylist() || playlistTracks.map(t => t.ytId)
+                    if (ids.length > 1) {
+                        const currentIndex = player.getPlaylistIndex()
+                        let randomIndex = currentIndex
+                        while (randomIndex === currentIndex) {
+                            randomIndex = Math.floor(Math.random() * ids.length)
+                        }
+                        userActionRef.current = true
+                        lastPosRef.current = randomIndex
+                        player.playVideoAt(randomIndex)
+                        return
+                    }
+                }
+                if (typeof player.nextVideo === 'function') {
+                    userActionRef.current = true
+                    player.nextVideo()
+                }
             }
             return
         }
@@ -330,17 +383,7 @@ export function FloatingOstPlayer({ ost, playlist, onPlayTrack, onClose }) {
 
     const handleEnd = () => {
         if (ost.kind === 'youtube-playlist') {
-            if (isShuffle && player) {
-                const ids = player.getPlaylist() || []
-                if (ids.length > 1) {
-                    const currentIndex = player.getPlaylistIndex()
-                    let randomIndex = currentIndex
-                    while (randomIndex === currentIndex) {
-                        randomIndex = Math.floor(Math.random() * ids.length)
-                    }
-                    player.playVideoAt(randomIndex)
-                }
-            }
+            // YouTube playlist auto-advance is handled inside onPlayerStateChange
             return
         }
         playNext()
@@ -421,7 +464,7 @@ export function FloatingOstPlayer({ ost, playlist, onPlayTrack, onClose }) {
                                 <button
                                     type="button"
                                     className={`ost-shuffle-btn${isShuffle ? ' active' : ''}`}
-                                    onClick={() => setIsShuffle(!isShuffle)}
+                                    onClick={toggleShuffle}
                                     title={isShuffle ? "Vypnout náhodné přehrávání" : "Zapnout náhodné přehrávání"}
                                 >
                                     🔀 Shuffle

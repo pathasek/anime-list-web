@@ -40,6 +40,8 @@ export default function FavoritesOstPlayer({ mode, tracks = [], groups = [], ini
     const [tracksByGroup, setTracksByGroup] = useState({})   // { groupIdx: [{ytId, song}] }
     const [expandedGroups, setExpandedGroups] = useState(() => new Set([initialIndex]))
     const pendingTrackRef = useRef(null) // index skladby, která se má pustit po načtení playlistu
+    const userActionRef = useRef(false)
+    const lastPosRef = useRef(-1)
 
     const activeListRef = useRef(null)
 
@@ -64,6 +66,10 @@ export default function FavoritesOstPlayer({ mode, tracks = [], groups = [], ini
         },
     }
 
+    const toggleShuffle = () => {
+        setIsShuffle(prev => !prev)
+    }
+
     // ---- pieces: navigace ----
     const playNextPiece = () => {
         if (tracks.length <= 1) return
@@ -78,8 +84,23 @@ export default function FavoritesOstPlayer({ mode, tracks = [], groups = [], ini
 
     const playNext = () => {
         if (isWhole) {
-            if (player && typeof player.nextVideo === 'function') {
-                player.nextVideo()
+            if (player) {
+                if (isShuffle) {
+                    const ids = player.getPlaylist() || (tracksByGroup[groupIdx] || []).map(t => t.ytId)
+                    if (ids.length > 1) {
+                        const pos = player.getPlaylistIndex()
+                        let next = pos
+                        while (next === pos) next = Math.floor(Math.random() * ids.length)
+                        userActionRef.current = true
+                        lastPosRef.current = next
+                        player.playVideoAt(next)
+                        return
+                    }
+                }
+                if (typeof player.nextVideo === 'function') {
+                    userActionRef.current = true
+                    player.nextVideo()
+                }
             }
         } else {
             playNextPiece()
@@ -95,12 +116,19 @@ export default function FavoritesOstPlayer({ mode, tracks = [], groups = [], ini
         const ids = p.getPlaylist() || []
         const initialTracks = ids.map((id, i) => ({ ytId: id, song: `Skladba ${i + 1}` }))
         setTracksByGroup(prev => ({ ...prev, [groupIdx]: initialTracks }))
-        setPlaylistPos(p.getPlaylistIndex())
+        const pos = p.getPlaylistIndex()
+        setPlaylistPos(pos)
+        userActionRef.current = true
+        lastPosRef.current = pos
 
         if (pendingTrackRef.current !== null) {
             const idx = pendingTrackRef.current
             pendingTrackRef.current = null
-            if (idx >= 0 && idx < ids.length) p.playVideoAt(idx)
+            if (idx >= 0 && idx < ids.length) {
+                userActionRef.current = true
+                lastPosRef.current = idx
+                p.playVideoAt(idx)
+            }
         }
 
         // Názvy skladeb dotáhneme asynchronně přes noembed
@@ -124,7 +152,29 @@ export default function FavoritesOstPlayer({ mode, tracks = [], groups = [], ini
 
     const onPlayerStateChange = (event) => {
         if (!isWhole) return
-        setPlaylistPos(event.target.getPlaylistIndex())
+        const p = event.target
+        const pos = p.getPlaylistIndex()
+        setPlaylistPos(pos)
+
+        if (event.data === 1) { // PLAYING
+            if (userActionRef.current) {
+                userActionRef.current = false
+                lastPosRef.current = pos
+            } else if (isShuffle && pos !== lastPosRef.current && lastPosRef.current !== -1) {
+                const ids = p.getPlaylist() || (tracksByGroup[groupIdx] || []).map(t => t.ytId)
+                if (ids.length > 1) {
+                    let next = lastPosRef.current
+                    while (next === lastPosRef.current) {
+                        next = Math.floor(Math.random() * ids.length)
+                    }
+                    userActionRef.current = true
+                    lastPosRef.current = next
+                    p.playVideoAt(next)
+                }
+            } else {
+                lastPosRef.current = pos
+            }
+        }
     }
 
     const handleEnd = () => {
@@ -132,19 +182,15 @@ export default function FavoritesOstPlayer({ mode, tracks = [], groups = [], ini
             playNextPiece()
             return
         }
-        // whole: konec skladby uvnitř playlistu řeší YouTube sám (auto-advance).
-        // Shuffle uvnitř playlistu / přechod na další skupinu po poslední skladbě:
+        // Auto-advance inside whole playlist is handled by onPlayerStateChange.
+        // If at the end of playlist without shuffle, advance to next group:
         if (!player) return
-        const ids = player.getPlaylist() || []
-        const pos = player.getPlaylistIndex()
-        if (isShuffle && ids.length > 1) {
-            let next = pos
-            while (next === pos) next = Math.floor(Math.random() * ids.length)
-            player.playVideoAt(next)
-            return
-        }
-        if (pos >= ids.length - 1 && groups.length > 1) {
-            activateGroup((groupIdx + 1) % groups.length)
+        if (!isShuffle) {
+            const ids = player.getPlaylist() || []
+            const pos = player.getPlaylistIndex()
+            if (pos >= ids.length - 1 && groups.length > 1) {
+                activateGroup((groupIdx + 1) % groups.length)
+            }
         }
     }
 
@@ -168,7 +214,11 @@ export default function FavoritesOstPlayer({ mode, tracks = [], groups = [], ini
 
     const handleGroupTrackClick = (gIdx, tIdx) => {
         if (gIdx === groupIdx) {
-            if (player) player.playVideoAt(tIdx)
+            if (player) {
+                userActionRef.current = true
+                lastPosRef.current = tIdx
+                player.playVideoAt(tIdx)
+            }
         } else {
             activateGroup(gIdx, tIdx)
         }
@@ -250,7 +300,7 @@ export default function FavoritesOstPlayer({ mode, tracks = [], groups = [], ini
                                 <button
                                     type="button"
                                     className={`ost-shuffle-btn${isShuffle ? ' active' : ''}`}
-                                    onClick={() => setIsShuffle(!isShuffle)}
+                                    onClick={toggleShuffle}
                                     title={isShuffle ? 'Vypnout náhodné přehrávání' : 'Zapnout náhodné přehrávání'}
                                 >
                                     🔀 Shuffle
@@ -301,7 +351,7 @@ export default function FavoritesOstPlayer({ mode, tracks = [], groups = [], ini
                                 <button
                                     type="button"
                                     className={`ost-shuffle-btn${isShuffle ? ' active' : ''}`}
-                                    onClick={() => setIsShuffle(!isShuffle)}
+                                    onClick={toggleShuffle}
                                     title={isShuffle ? 'Vypnout náhodné přehrávání' : 'Zapnout náhodné přehrávání (uvnitř playlistu)'}
                                 >
                                     🔀 Shuffle
