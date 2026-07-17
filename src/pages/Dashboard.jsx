@@ -1948,6 +1948,21 @@ function Dashboard() {
                     }
                 };
 
+                tagChartOptions.onClick = (e, elements) => {
+                    if (elements && elements.length > 0) {
+                        const index = elements[0].index
+                        const label = tagsData?.labels?.[index]
+                        if (label) {
+                            handleTagClick(label, e.native || e)
+                        }
+                    }
+                }
+                tagChartOptions.onHover = (e, elements) => {
+                    if (e && e.native && e.native.target) {
+                        e.native.target.style.cursor = elements.length ? 'pointer' : 'default'
+                    }
+                }
+
                 const handleWcClick = (label) => {
                     setSelectedTags(prev => { const n = new Set(prev); n.has(label) ? n.delete(label) : n.add(label); return n; });
                     setExcludedTags(prev => { const n = new Set(prev); n.delete(label); return n; });
