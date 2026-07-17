@@ -11,7 +11,7 @@ import {
 } from 'chart.js'
 import { useTheme } from './ThemeProvider'
 import { getThemeChartColors } from '../utils/chartTheme'
-import { getMediaForAnime, youtubeSearchUrl, songsLooselyMatch } from '../utils/mediaMatch'
+import { getMediaForAnime, youtubeSearchUrl, songsLooselyMatch, normalizeAnimeKey, animeKeysMatch } from '../utils/mediaMatch'
 import { fetchAnimeThemes } from '../utils/animeThemesService'
 import { VideoModal, FloatingOstPlayer, ScrollableText } from './CategoryMediaPlayers'
 import { iconFor } from './categoryIcons'
@@ -30,6 +30,7 @@ const MEDIA_CATS = { OP: true, ED: true, OST: true }
 let cachedOpEdVideos = null
 let cachedOstPieces = null
 let cachedOstWhole = null
+let cachedYtmusicOst = null // celá OST alba z YT Music (build_ytmusic_ost.py)
 
 const PlayIcon = () => (
     <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -88,6 +89,7 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
     const [opEdVideos, setOpEdVideos] = useState(cachedOpEdVideos)
     const [ostPieces, setOstPieces] = useState(cachedOstPieces)
     const [ostWhole, setOstWhole] = useState(cachedOstWhole)
+    const [ytmusicOst, setYtmusicOst] = useState(cachedYtmusicOst)
     const [activeReview, setActiveReview] = useState(null) // { category, text, rating }
     
     const [videoModal, setVideoModal] = useState(null)   // OP/ED video (Drive) v překryvném okně
@@ -104,18 +106,24 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
         if (cachedOstPieces === null) {
             fetch('data/favorites_ost.json?v=' + Date.now())
                 .then(r => (r.ok ? r.json() : null))
-                .then(d => { 
-                    cachedOstPieces = (d && d.pieces) || []; 
+                .then(d => {
+                    cachedOstPieces = (d && d.pieces) || [];
                     cachedOstWhole = (d && d.whole) || [];
                     setOstPieces(cachedOstPieces)
                     setOstWhole(cachedOstWhole)
                 })
-                .catch(() => { 
-                    cachedOstPieces = []; 
+                .catch(() => {
+                    cachedOstPieces = [];
                     cachedOstWhole = [];
                     setOstPieces([])
                     setOstWhole([])
                 })
+        }
+        if (cachedYtmusicOst === null) {
+            fetch('data/ytmusic_ost.json?v=' + Date.now())
+                .then(r => (r.ok ? r.json() : null))
+                .then(d => { cachedYtmusicOst = (d && d.albums) || []; setYtmusicOst(cachedYtmusicOst) })
+                .catch(() => { cachedYtmusicOst = []; setYtmusicOst([]) })
         }
     }, [])
 
@@ -132,9 +140,20 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
         return () => controller.abort()
     }, [malId, showAnimeThemesExtras])
 
+    // Celé OST album z YT Music (ytmusic_ost.json) — stejný vzor jako AnimeThemes
+    // extras: jen v detailu anime (showAnimeThemesExtras), fav playlisty vždy první.
+    const ytOstAlbum = useMemo(() => {
+        if (!showAnimeThemesExtras || !ytmusicOst?.length) return null
+        const key = normalizeAnimeKey(animeName)
+        const seriesKey = animeSeries ? normalizeAnimeKey(animeSeries) : null
+        return ytmusicOst.find(a =>
+            animeKeysMatch(a.match_key, key) || (seriesKey && animeKeysMatch(a.match_key, seriesKey))
+        ) || null
+    }, [showAnimeThemesExtras, ytmusicOst, animeName, animeSeries])
+
     const media = useMemo(() => {
         const base = getMediaForAnime(animeName, opEdVideos || [], ostPieces || [], ostWhole || [], animeSeries)
-        if (!atThemes.length) return base
+        if (!atThemes.length && !ytOstAlbum) return base
 
         // Píseň už pokrytá GDrive verzí (vybranou) se nepřidává znovu — AnimeThemes
         // doplňuje jen „všechny ostatní" znělky. GDrive zůstává vždy první/hlavní.
@@ -143,7 +162,7 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
         const coveredSongs = [...base.OP, ...base.ED].map(t => t.song).filter(Boolean)
         const songCovered = (song) => coveredSongs.some(c => songsLooselyMatch(c, song))
 
-        const merged = { ...base, OP: [...base.OP], ED: [...base.ED] }
+        const merged = { ...base, OP: [...base.OP], ED: [...base.ED], OST: [...base.OST] }
         for (const t of atThemes) {
             if (!merged[t.type]) continue
             if (songCovered(t.song)) continue
@@ -159,8 +178,28 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                 isExtra: true, // vizuální odlišení od vybraných GDrive klipů
             })
         }
+
+        // Celé OST album (auto-generovaný YT playlist OLAK5uy_...) jako "extra"
+        // za mými fav skladbami/playlisty — nepřidávat, pokud fav "Celý playlist"
+        // odkazuje na tentýž YT playlist.
+        if (ytOstAlbum?.playlist_id && !merged.OST.some(t => t.ytPlaylistId === ytOstAlbum.playlist_id)) {
+            const meta = [ytOstAlbum.year, ytOstAlbum.track_count ? `${ytOstAlbum.track_count} skladeb` : null]
+                .filter(Boolean).join(' · ')
+            merged.OST.push({
+                kind: 'youtube-playlist',
+                type: 'OST',
+                song: ytOstAlbum.album_title,
+                artist: [ytOstAlbum.artists, meta].filter(Boolean).join(' · ') || null,
+                label: 'Celé OST',
+                url: `https://www.youtube.com/playlist?list=${ytOstAlbum.playlist_id}`,
+                ytPlaylistId: ytOstAlbum.playlist_id,
+                isExtra: true,
+                extraTag: 'YT Music',
+                extraDivider: 'Celé OST album · YouTube Music',
+            })
+        }
         return merged
-    }, [animeName, opEdVideos, ostPieces, ostWhole, animeSeries, atThemes])
+    }, [animeName, opEdVideos, ostPieces, ostWhole, animeSeries, atThemes, ytOstAlbum])
 
     const playTrack = useCallback((t) => {
         if (!t) return
@@ -510,7 +549,7 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                                                     ({track.isExtra ? track.label : cat})
                                                 </span>
                                                 {track.isExtra && (
-                                                    <span className="media-track-extra-tag">AnimeThemes</span>
+                                                    <span className="media-track-extra-tag">{track.extraTag || 'AnimeThemes'}</span>
                                                 )}
                                                 {track.artist && <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textOverflow: 'ellipsis', overflow: 'hidden' }}>{track.artist}</div>}
                                             </div>
@@ -668,9 +707,9 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                                             <div className="media-popover-inner">
                                                 {tracks.map((t, i) => (
                                                     <div key={i} style={{ display: 'contents' }}>
-                                                        {/* Oddělovač před prvním klipem z AnimeThemes (Plán 6b) */}
+                                                        {/* Oddělovač před prvním extra klipem (AnimeThemes / YT Music OST) */}
                                                         {t.isExtra && (i === 0 || !tracks[i - 1].isExtra) && (
-                                                            <div className="media-popover-divider">Ostatní verze · AnimeThemes.moe</div>
+                                                            <div className="media-popover-divider">{t.extraDivider || 'Ostatní verze · AnimeThemes.moe'}</div>
                                                         )}
                                                         <button
                                                             type="button"
@@ -679,10 +718,10 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                                                                 e.stopPropagation()
                                                                 playTrack(t)
                                                             }}
-                                                            title={t.isExtra ? 'Přehrát (AnimeThemes.moe)' : 'Přehrát (vybraný klip)'}
+                                                            title={t.isExtra ? `Přehrát (${t.extraTag || 'AnimeThemes.moe'})` : 'Přehrát (vybraný klip)'}
                                                         >
                                                             <span className={`media-track-badge${t.isExtra ? ' alt' : ''}`}>
-                                                                {!t.isExtra && t.kind === 'video' && hasExtraTracks && '⭐ '}{t.label}
+                                                                {!t.isExtra && hasExtraTracks && (t.kind === 'video' || t.type === 'OST') && '⭐ '}{t.label}
                                                             </span>
                                                             <span className="media-track-meta">
                                                                 <span className="media-track-song">

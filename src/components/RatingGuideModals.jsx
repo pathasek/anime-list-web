@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { iconFor } from './categoryIcons'
 import { useModalScrollLock } from '../utils/useModalScrollLock'
+import { useRatingGuide } from '../utils/ratingGuide'
 
 // ---- Animační hook: plynulý morphing mezi "pózami" hodnot ------------------
 // Drží holdMs, pak morphMs plynule interpoluje na další pózu (ease-in-out).
@@ -222,9 +223,11 @@ function GuideShell({ open, onClose, icon, title, subtitle, children, wide = fal
 }
 
 // ============================================================
-// 1) PRŮVODCE KATEGORIEMI  (mock texty)
+// 1) PRŮVODCE KATEGORIEMI
 // ============================================================
-// th = mock prahy [≤ 6, 7–8, 9–10]
+// Texty níže jsou fallback — primárně se načítají z data/rating_guide.json
+// (WORD dokument „Hodnocení - Průvodce (WEB).docx" na ploše).
+// th = prahy [≤ 6, 7–8, 9–10]
 const CATEGORY_GUIDE = [
     { cat: 'Animace', text: 'Plynulost pohybu, sakuga momenty a konzistence kreseb napříč epizodami. Statické záběry snesu, pokud kompenzují atmosférou.', tags: ['plynulost', 'sakuga', 'konzistence'], th: ['kostrbatá', 'čistá práce', 'sakuga svátek'] },
     { cat: 'CGI', text: 'Jak dobře 3D prvky zapadají do 2D scén — stínování, framerate a jestli CGI neruší imerzi. Dobré CGI si člověk skoro nevšimne.', tags: ['integrace', 'stínování'], th: ['ruší imerzi', 'splývá s 2D', 'k nerozeznání'] },
@@ -249,6 +252,23 @@ const CAT_TH_ZONES = [
 ]
 
 export function CategoryGuideModal({ open, onClose, weights }) {
+    const guide = useRatingGuide()
+    const introText = guide?.categories?.intro || (
+        'Každou kategorii hodnotím na škále 1–10 s krokem 0,5. Vážený průměr (WA) pak ' +
+        'kombinuje všechny kategorie podle vah — kategorie, na kterých mi u daného anime ' +
+        'záleží víc, mají větší slovo.'
+    )
+    // Překrytí textů z WORD dokumentu přes fallback konstanty (vzhled zůstává v kódu)
+    const items = CATEGORY_GUIDE.map(item => {
+        const g = guide?.categories?.items?.[item.cat]
+        if (!g) return item
+        return {
+            ...item,
+            text: g.text || item.text,
+            th: Array.isArray(g.th) && g.th.length === 3 ? g.th : item.th,
+            tags: Array.isArray(g.tags) && g.tags.length ? g.tags : item.tags,
+        }
+    })
     return (
         <GuideShell
             open={open}
@@ -261,16 +281,12 @@ export function CategoryGuideModal({ open, onClose, weights }) {
             <div className="guide-cat-hero">
                 <div className="guide-cat-hero-scale">
                     <ScaleBarSVG />
-                    <p className="guide-intro">
-                        Každou kategorii hodnotím na škále 1–10 s krokem 0,5. Vážený průměr (WA) pak
-                        kombinuje všechny kategorie podle vah — kategorie, na kterých mi u daného anime
-                        záleží víc, mají větší slovo. {/* mock text */}
-                    </p>
+                    <p className="guide-intro">{introText}</p>
                 </div>
                 <RadarMiniSVG />
             </div>
             <div className="guide-cat-grid">
-                {CATEGORY_GUIDE.map(({ cat, text, tags, th }) => (
+                {items.map(({ cat, text, tags, th }) => (
                     <div key={cat} className="guide-cat-card">
                         <div className="guide-cat-head">
                             <span className="guide-cat-icon">{iconFor(cat)}</span>
@@ -300,8 +316,9 @@ export function CategoryGuideModal({ open, onClose, weights }) {
 }
 
 // ============================================================
-// 2) PRŮVODCE HODNOCENÍM EPIZOD  (mock texty)
+// 2) PRŮVODCE HODNOCENÍM EPIZOD
 // ============================================================
+// Texty = fallback, primárně z data/rating_guide.json (WORD na ploše)
 const EPISODE_TIERS = [
     { name: 'Absolute Cinema', range: '10', color: 'rgb(29, 161, 242)', text: 'Epizoda, u které jsem zapomněl dýchat. Perfektní režie, animace i emoce — moment, kvůli kterému se anime sleduje.' },
     { name: 'Awesome', range: '9 – 9,75', color: 'rgb(24, 106, 59)', text: 'Výjimečná epizoda s vrcholem, zvratem nebo payoff momentem, který dlouho rezonuje. Jen kousek od dokonalosti.' },
@@ -312,6 +329,15 @@ const EPISODE_TIERS = [
 ]
 
 export function EpisodeGuideModal({ open, onClose }) {
+    const guide = useRatingGuide()
+    const introText = guide?.episodes?.intro || (
+        'Hodnotím čerstvý dojem: co epizoda udělala s příběhem, postavami a se mnou. ' +
+        'Krok 0,25 mi dovoluje jemně odlišit epizody uvnitř stejného tieru.'
+    )
+    const tiers = EPISODE_TIERS.map(t => ({
+        ...t,
+        text: guide?.episodes?.tiers?.[t.name] || t.text,
+    }))
     return (
         <GuideShell
             open={open}
@@ -327,12 +353,9 @@ export function EpisodeGuideModal({ open, onClose }) {
             subtitle="Každá epizoda dostává známku s krokem 0,25 hned po zhlédnutí — barva bodu v grafu odpovídá tieru."
         >
             <EpisodeSparkSVG />
-            <p className="guide-intro">
-                Hodnotím čerstvý dojem: co epizoda udělala s příběhem, postavami a se mnou.
-                Krok 0,25 mi dovoluje jemně odlišit epizody uvnitř stejného tieru. {/* mock text */}
-            </p>
+            <p className="guide-intro">{introText}</p>
             <div className="guide-tier-list">
-                {EPISODE_TIERS.map(t => (
+                {tiers.map(t => (
                     <div key={t.name} className="guide-tier-row" style={{ '--tier-color': t.color }}>
                         <span className="guide-tier-dot" />
                         <div className="guide-tier-meta">
@@ -350,8 +373,9 @@ export function EpisodeGuideModal({ open, onClose }) {
 }
 
 // ============================================================
-// 3) PRŮVODCE FINÁLNÍM HODNOCENÍM (FH 5–10)  (mock texty)
+// 3) PRŮVODCE FINÁLNÍM HODNOCENÍM (FH 5–10)
 // ============================================================
+// Texty = fallback, primárně z data/rating_guide.json (WORD na ploše)
 const FINAL_LEVELS = [
     { v: 10, name: 'Masterpiece', text: 'Absolutní špička a osobní top. Anime, které mě zasáhlo ve všech kategoriích a přemýšlím o něm ještě dlouho po dokoukání.' },
     { v: 9, name: 'Amazing', text: 'Výjimečný zážitek s drobnými kazy. Doporučuji každému bez váhání a vracím se k němu ve vzpomínkách.' },
@@ -566,6 +590,19 @@ function FhDemo() {
 }
 
 export function FinalGuideModal({ open, onClose }) {
+    const guide = useRatingGuide()
+    const introText = guide?.final?.intro || (
+        'FH vychází z váženého průměru kategorií (WA), ale poslední slovo má vždy celkový dojem. ' +
+        'Anime s WA 7,6 tak může skončit na 7 i na 8 podle toho, co ve mně zůstalo po závěrečné ' +
+        'epizodě. Velkou roli přitom hrají kategorie s vysokou váhou. Když jich několik trefí ' +
+        '10/10, dokážou vytáhnout FH na 10/10 i u anime s průměrem epizod 8,9 a WA 9,3. ' +
+        'Funguje to ale i opačně: pokud právě ty důležité kategorie dostanou jen 5/10, ' +
+        'spadne anime s průměrem 5,9 rovnou na FH 5/10.'
+    )
+    const levels = FINAL_LEVELS.map(l => ({
+        ...l,
+        text: guide?.final?.levels?.[String(l.v)] || l.text,
+    }))
     return (
         <GuideShell
             open={open}
@@ -581,17 +618,10 @@ export function FinalGuideModal({ open, onClose }) {
             subtitle="Celkové skóre anime na šesti úrovních od 5 do 10 — víc než matematika je to celkový pocit."
         >
             <ScaleBarSVG />
-            <p className="guide-intro">
-                FH vychází z váženého průměru kategorií (WA), ale poslední slovo má vždy celkový dojem.
-                Anime s WA 7,6 tak může skončit na 7 i na 8 podle toho, co ve mně zůstalo po závěrečné
-                epizodě. Velkou roli přitom hrají kategorie s vysokou váhou. Když jich několik trefí
-                10/10, dokážou vytáhnout FH na 10/10 i u anime s průměrem epizod 8,9 a WA 9,3.
-                Funguje to ale i opačně: pokud právě ty důležité kategorie dostanou jen 5/10,
-                spadne anime s průměrem 5,9 rovnou na FH 5/10.
-            </p>
+            <p className="guide-intro">{introText}</p>
             <FhDemo />
             <div className="guide-fh-list">
-                {FINAL_LEVELS.map(l => (
+                {levels.map(l => (
                     <div key={l.v} className="guide-fh-row" style={{ '--fh-color': `var(--rating-${l.v})` }}>
                         <span className="guide-fh-circle">
                             {l.v}

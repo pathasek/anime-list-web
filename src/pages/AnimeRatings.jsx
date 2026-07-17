@@ -24,6 +24,7 @@ import CategoryRadar from '../components/CategoryRadar'
 import InfoIcon from '../components/InfoIcon'
 import { useModalScrollLock } from '../utils/useModalScrollLock'
 import { useModalTables } from '../utils/useModalTables'
+import { useRatingGuide } from '../utils/ratingGuide'
 
 // Cache pro AI rozbory kategorií/epizod (category_texts.json — víc MB, načíst jen jednou)
 let cachedCategoryTexts = null
@@ -190,7 +191,8 @@ const R2_GROUPS = [
 ]
 
 // Task 2: detailnější popis mého hodnocení jednotlivých kategorií.
-// Zatím MOCK texty — struktura je připravená, reálný obsah se doplní později.
+// Fallback texty — primárně se „Pojetí" načítá z data/rating_guide.json
+// (WORD dokument „Hodnocení - Průvodce (WEB).docx" na ploše).
 const CATEGORY_PHILOSOPHY_MOCK = {
     'Animace': 'Plynulost pohybu, konzistence modelů, sakuga momenty a celková vizuální řemeslnost. Zajímá mě, jak animace slouží vyprávění — ne jen kolik snímků má souboj.',
     'CGI': 'Jak se 3D prvky snáší s 2D estetikou. Dobré CGI si nevšimnu, špatné mě vytrhne ze scény. Hodnotím integraci, ne samotnou existenci.',
@@ -451,6 +453,15 @@ function AnimeRatings() {
 
     // ---- CUSTOM IMAGES ----
     const customImages = useCustomImages()
+
+    // Texty „Moje pojetí kategorie" z WORD dokumentu (rating_guide.json);
+    // fallback = CATEGORY_PHILOSOPHY_MOCK s poznámkou o pracovním textu
+    const ratingGuide = useRatingGuide()
+    const philosophyTextFor = useCallback((cat) => {
+        const fromDoc = ratingGuide?.categories?.items?.[cat]?.philosophy
+        if (fromDoc) return fromDoc
+        return `${CATEGORY_PHILOSOPHY_MOCK[cat] || 'Popis se připravuje.'}\n\n*(Zatím pracovní text — detailní popis doplním.)*`
+    }, [ratingGuide])
 
     const location = useLocation()
 
@@ -3725,7 +3736,7 @@ function AnimeRatings() {
                                                                         e.stopPropagation()
                                                                         episodeModalRef.current?.open({
                                                                             title: `Moje pojetí: ${cat}`,
-                                                                            text: `${CATEGORY_PHILOSOPHY_MOCK[cat] || 'Popis se připravuje.'}\n\n*(Zatím pracovní text — detailní popis doplním.)*`,
+                                                                            text: philosophyTextFor(cat),
                                                                             rating: null
                                                                         })
                                                                     }}
@@ -3735,7 +3746,7 @@ function AnimeRatings() {
                                                                             e.stopPropagation()
                                                                             episodeModalRef.current?.open({
                                                                                 title: `Moje pojetí: ${cat}`,
-                                                                                text: `${CATEGORY_PHILOSOPHY_MOCK[cat] || 'Popis se připravuje.'}\n\n*(Zatím pracovní text — detailní popis doplním.)*`,
+                                                                                text: philosophyTextFor(cat),
                                                                                 rating: null
                                                                             })
                                                                         }

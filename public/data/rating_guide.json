@@ -1,0 +1,214 @@
+{
+  "categories": {
+    "intro": "Každou kategorii hodnotím na škále 1–10 s krokem 0,5. Vážený průměr (WA) pak kombinuje všechny kategorie podle vah — kategorie, na kterých mi u daného anime záleží víc, mají větší slovo.",
+    "items": {
+      "Animace": {
+        "text": "Plynulost pohybu, sakuga momenty a konzistence kreseb napříč epizodami. Statické záběry snesu, pokud kompenzují atmosférou.",
+        "philosophy": "Plynulost pohybu, konzistence modelů, sakuga momenty a celková vizuální řemeslnost. Zajímá mě, jak animace slouží vyprávění — ne jen kolik snímků má souboj.",
+        "th": [
+          "kostrbatá",
+          "čistá práce",
+          "sakuga svátek"
+        ],
+        "tags": [
+          "plynulost",
+          "sakuga",
+          "konzistence"
+        ]
+      },
+      "CGI": {
+        "text": "Jak dobře 3D prvky zapadají do 2D scén — stínování, framerate a jestli CGI neruší imerzi. Dobré CGI si člověk skoro nevšimne.",
+        "philosophy": "Jak se 3D prvky snáší s 2D estetikou. Dobré CGI si nevšimnu, špatné mě vytrhne ze scény. Hodnotím integraci, ne samotnou existenci.",
+        "th": [
+          "ruší imerzi",
+          "splývá s 2D",
+          "k nerozeznání"
+        ],
+        "tags": [
+          "integrace",
+          "stínování"
+        ]
+      },
+      "MC": {
+        "text": "Motivace, vývoj a charisma hlavní postavy. Chci hrdinovi fandit, chápat jeho rozhodnutí a vidět, jak ho příběh mění.",
+        "philosophy": "Hloubka, motivace a vývoj hlavní postavy. Musí činit rozhodnutí, která dávají smysl v rámci jejího charakteru — a nést jejich následky.",
+        "th": [
+          "nevýrazný",
+          "fandím mu",
+          "nezapomenutelný"
+        ],
+        "tags": [
+          "vývoj",
+          "motivace",
+          "charisma"
+        ]
+      },
+      "Vedlejší postavy": {
+        "text": "Hloubka vedlejšího obsazení — vlastní motivace, chemie s MC a jestli si zaslouží čas na obrazovce, který dostávají.",
+        "philosophy": "Mají vlastní cíle, nebo jen orbitují kolem MC? Silný vedlejší ansámbl dokáže vytáhnout i průměrný příběh.",
+        "th": [
+          "jen kulisy",
+          "žijí si svým",
+          "kradou scény"
+        ],
+        "tags": [
+          "hloubka",
+          "chemie"
+        ]
+      },
+      "Waifu": {
+        "text": "Výrazné ženské postavy: design, osobnost a zapamatovatelnost. Postava, na kterou si vzpomenu i měsíce po dokoukání.",
+        "philosophy": "Subjektivní kategorie — charisma, chemie s ostatními a zapamatovatelnost oblíbených postav.",
+        "th": [
+          "zapomenutelná",
+          "výrazná",
+          "ikonická"
+        ],
+        "tags": [
+          "design",
+          "osobnost"
+        ]
+      },
+      "Plot": {
+        "text": "Logika světa, konzistence pravidel a síla zápletky. Trestám díry v příběhu a laciné deus ex machina zvraty.",
+        "philosophy": "Struktura, logika a soudržnost příběhu. Odpouštím pomalé rozjezdy, neodpouštím díry a deus ex machina.",
+        "th": [
+          "děravý",
+          "drží pohromadě",
+          "promyšlený"
+        ],
+        "tags": [
+          "konzistence",
+          "zvraty"
+        ]
+      },
+      "Pacing": {
+        "text": "Tempo vyprávění — rozložení vrcholů, hluchá místa a jestli mě anime nutí pustit další díl. Filler stahuje dolů.",
+        "philosophy": "Tempo vyprávění — kdy zrychlit, kdy nechat scénu dýchat. Filler a zbytečné rekapitulace srážejí dolů.",
+        "th": [
+          "vleče se",
+          "plyne",
+          "nepustí mě"
+        ],
+        "tags": [
+          "tempo",
+          "gradace"
+        ]
+      },
+      "Story Conclusion": {
+        "text": "Uzavření dějových linek a síla závěru. Dobrý konec dokáže zvednout celé anime, useknutý „read the manga“ ho potopí.",
+        "philosophy": "Jak série zakončí, co rozehrála. Otevřený konec může být záměr, nedotažený konec je chyba.",
+        "th": [
+          "useknutý",
+          "důstojný",
+          "perfektní tečka"
+        ],
+        "tags": [
+          "závěr",
+          "uzavření linek"
+        ]
+      },
+      "Originalita": {
+        "text": "Nové nápady, tvůrčí odvaha a práce s klišé. Ocením i chytré přetočení známých tropů, ne jen absolutní novinky.",
+        "philosophy": "Nový nápad, nebo alespoň svěží uchopení žánrových klišé. Poctivé řemeslo bez originality může být pořád skvělé — ale tady se hodnotí ta jiskra navíc.",
+        "th": [
+          "klišé",
+          "svěží prvky",
+          "unikát"
+        ],
+        "tags": [
+          "nápady",
+          "odvaha"
+        ]
+      },
+      "Emoce": {
+        "text": "Kolik ve mně anime skutečně vyvolalo — gradace, katarze, husí kůže. Hodnotím upřímnost emocí, ne lacinou manipulaci.",
+        "philosophy": "Dokázalo mě to rozesmát, dojmout, nebo mi zrychlit tep? Emocionální zásah je pro mě jeden z nejsilnějších ukazatelů kvality.",
+        "th": [
+          "chladné",
+          "zasáhnou",
+          "husí kůže"
+        ],
+        "tags": [
+          "katarze",
+          "gradace"
+        ]
+      },
+      "Enjoyment": {
+        "text": "Čistá zábava bez filtru: jak moc jsem se těšil na další epizodu a jak často jsem u toho zapomínal na čas.",
+        "philosophy": "Čistá radost ze sledování — jak moc jsem se těšil na další díl, bez ohledu na objektivní kvality.",
+        "th": [
+          "přemáhám se",
+          "baví mě",
+          "binge"
+        ],
+        "tags": [
+          "zábava",
+          "binge faktor"
+        ]
+      },
+      "OP": {
+        "text": "Openingová znělka — song, vizuál a jak dobře naladí na epizodu. Bonus, když se OP vyvíjí s příběhem.",
+        "philosophy": "Openingová znělka — hudba, střih, vizuál a jak dobře nastavuje tón série.",
+        "th": [
+          "přeskakuji",
+          "nechám hrát",
+          "na repeat"
+        ],
+        "tags": [
+          "song",
+          "vizuál"
+        ]
+      },
+      "ED": {
+        "text": "Ending — nálada po epizodě a jestli funguje jako tečka. Skvělý ED po těžké epizodě umí zvednout celý dojem.",
+        "philosophy": "Endingová znělka — často podceňovaná; dobrý ED umí dovyprávět epizodu a nechat ji doznít.",
+        "th": [
+          "přeskakuji",
+          "nechám dohrát",
+          "na repeat"
+        ],
+        "tags": [
+          "nálada",
+          "tečka"
+        ]
+      },
+      "OST": {
+        "text": "Soundtrack ve scénách: zapamatovatelné motivy, načasování a jestli hudba nese emoce klíčových momentů.",
+        "philosophy": "Soundtrack v epizodách — jak hudba podpírá scény a jestli obstojí i samostatně mimo obraz.",
+        "th": [
+          "neslyším ji",
+          "podpírá scény",
+          "poslouchám i mimo"
+        ],
+        "tags": [
+          "motivy",
+          "načasování"
+        ]
+      }
+    }
+  },
+  "episodes": {
+    "intro": "Hodnotím čerstvý dojem: co epizoda udělala s příběhem, postavami a se mnou. Krok 0,25 mi dovoluje jemně odlišit epizody uvnitř stejného tieru.",
+    "tiers": {
+      "Absolute Cinema": "Epizoda, u které jsem zapomněl dýchat. Perfektní režie, animace i emoce — moment, kvůli kterému se anime sleduje.",
+      "Awesome": "Výjimečná epizoda s vrcholem, zvratem nebo payoff momentem, který dlouho rezonuje. Jen kousek od dokonalosti.",
+      "Great": "Silná epizoda, která výrazně posouvá příběh nebo postavy. Žádná hluchá pasáž, chci hned pustit další díl.",
+      "Good": "Solidní standard dobrého anime. Funguje, baví, ale nemá moment, který by přesáhl rámec epizody.",
+      "Regular": "Průměrná, spíš přechodová epizoda — setup, oddech nebo pomalejší tempo. Nezklame, ale ani nenadchne.",
+      "Bad": "Epizoda, která mě vyloženě nebavila — filler, nelogičnosti nebo rozbité tempo. Naštěstí vzácnost."
+    }
+  },
+  "final": {
+    "intro": "FH vychází z váženého průměru kategorií (WA), ale poslední slovo má vždy celkový dojem. Anime s WA 7,6 tak může skončit na 7 i na 8 podle toho, co ve mně zůstalo po závěrečné epizodě. Velkou roli přitom hrají kategorie s vysokou váhou. Když jich několik trefí 10/10, dokážou vytáhnout FH na 10/10 i u anime s průměrem epizod 8,9 a WA 9,3. Funguje to ale i opačně: pokud právě ty důležité kategorie dostanou jen 5/10, spadne anime s průměrem 5,9 rovnou na FH 5/10.",
+    "levels": {
+      "10": "Absolutní špička a osobní top. Anime, které mě zasáhlo ve všech kategoriích a přemýšlím o něm ještě dlouho po dokoukání.",
+      "9": "Výjimečný zážitek s drobnými kazy. Doporučuji každému bez váhání a vracím se k němu ve vzpomínkách.",
+      "8": "Skvělé anime, které výrazně převyšuje průměr. Pár slabších míst, ale celek si pamatuji a rád doporučím.",
+      "7": "Dobré anime, u kterého jsem se bavil, ale k příběhu jsem úplně nepřilnul. Solidní volba, ne srdcovka.",
+      "6": "Slušný průměr — něco funguje, něco skřípe. Dokoukal jsem bez lítosti, ale podruhé už se vracet nebudu.",
+      "5": "Podprůměr. Anime s promarněným potenciálem nebo problémy, které převážily světlé momenty. Dokoukáno spíš ze setrvačnosti."
+    }
+  },
+  "generated": 1784295506172
+}

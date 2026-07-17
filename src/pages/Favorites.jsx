@@ -1688,6 +1688,9 @@ function Favorites() {
                                     </button>
                                 )}
                             </h4>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', margin: '-8px 0 14px' }}>
+                                Seřazeno podle mého žebříčku — #1 je nejlepší OST jako celek
+                            </div>
                             <div style={{
                                 display: 'grid',
                                 gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
@@ -1704,10 +1707,17 @@ function Favorites() {
                                         if (matchKey) imgSrc = spotifyImages[matchKey];
                                     }
                                     const groupIdx = wholeGroups.findIndex(g => g.name === w.anime_name);
+                                    // Pořadí v žebříčku (sortedWhole je seřazené podle "order") —
+                                    // top 3 dostávají medailové barvy badge i rámečku dlaždice
+                                    const rank = i + 1;
+                                    const rankBorder = rank === 1 ? 'rgba(212, 160, 23, 0.55)'
+                                        : rank === 2 ? 'rgba(151, 163, 181, 0.55)'
+                                            : rank === 3 ? 'rgba(160, 90, 44, 0.55)'
+                                                : 'var(--border-color)';
                                     return (
-                                        <div key={i} title={w.anime_name} className="fav-ost-tile" style={{ background: 'var(--bg-tertiary)', borderRadius: '8px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '12px', transition: 'all 0.2s', border: '1px solid var(--border-color)' }}
+                                        <div key={i} title={`#${rank} ${w.anime_name}`} className="fav-ost-tile" style={{ background: 'var(--bg-tertiary)', borderRadius: '8px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '12px', transition: 'all 0.2s', border: `1px solid ${rankBorder}` }}
                                             onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.borderColor = w.spotify_url ? '#1DB954' : 'var(--accent-primary)'; }}
-                                            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'var(--border-color)'; }}
+                                            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = rankBorder; }}
                                         >
                                             <div
                                                 style={{ width: '100%', aspectRatio: '1/1', borderRadius: '4px', overflow: 'hidden', background: 'var(--bg-primary)', position: 'relative', boxShadow: '0 4px 12px rgba(0,0,0,0.2)', cursor: groupIdx >= 0 ? 'pointer' : 'default' }}
@@ -1719,6 +1729,9 @@ function Favorites() {
                                                 ) : (
                                                     <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', color: 'var(--text-muted)' }}>♪</div>
                                                 )}
+                                                <div className={`fav-tile-rank${rank <= 3 ? ` rank-${rank}` : ''}`} title={`#${rank} v mém žebříčku`}>
+                                                    {rank <= 3 ? `#${rank}` : rank}
+                                                </div>
                                                 {groupIdx >= 0 && (
                                                     <button
                                                         type="button"
