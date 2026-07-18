@@ -11209,18 +11209,18 @@
     "release_date": null,
     "themes": null,
     "genres": null,
-    "episodes": null,
-    "episode_duration": null,
-    "rating": null,
-    "start_date": null,
-    "end_date": null,
+    "episodes": 13,
+    "episode_duration": 23.857,
+    "rating": "X",
+    "start_date": "2026-07-18T00:00:00",
+    "end_date": "X",
     "rewatch_count": 0,
-    "total_time": 0,
-    "dub": null,
+    "total_time": 310.14099999999996,
+    "dub": "ENG",
     "status": "PENDING",
     "mal_url": "https://myanimelist.net/anime/34572/Black_Clover",
     "series": "Black Clover",
     "rewatches": [],
-    "tags": null
+    "tags": "Magic:97:Prominently features magical elements or the use of magic.;Shounen:95:Target demographic is teenage and young adult males.;Found Family:90:Features a group of characters with no biological relations that are united in a group providing social support.;Male Protagonist:86:Main character is male.;Super Power:83:Prominently features characters with special abilities that allow them to do what would normally be physically or logically impossible.;Ensemble Cast:83:Features a large cast of characters with (almost) equal screen time and importance to the plot.;Orphan:81:Prominently features a character that is an orphan.;Demons:80:Prominently features malevolent otherworldly creatures.;Medieval:80:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Politics:79:Centers around politics, politicians, or government activities.;Love Triangle:79:Centered around romantic feelings between more than two people. Includes all love polygons.;Estranged Family:79:At least one family member of the MC intentionally distances themselves or a family distances themselves from a person related to the MC.;Class Struggle:73:Contains conflict born between the different social classes. Generally between an dominant elite and a suffering oppressed group.;Swordplay:71:Prominently features the use of swords in combat.;Bullying:70:Prominently features the use of force for intimidation, often in a school setting.;Episodic:70:Features story arcs that are loosely tied or lack an overarching plot.;War:70:Partly or completely set during wartime.;Heterosexual:70:Prominently features a romance between a man and a woman, not inherently sexual.;Cultivation:63:Features characters using training, often martial arts-related, and other special methods to cultivate qi (a component of traditional Chinese philosophy, described as \"life force\") and gain strength or immortality.;Kuudere:62:Prominently features a character who generally retains a cold, blunt and cynical exterior, but once one gets to know them, they have a very warm and loving interior.;Disability:61:A work that features one or more characters with a physical, mental, cognitive, or developmental condition that impairs, interferes with, or limits the person's ability to engage in certain tasks or actions.;Henshin:60:Prominently features character or costume transformations which often grant special abilities.;Curses:60:Features a character, object or area that has been cursed, usually by a malevolent supernatural force.;Tsundere:59:Prominently features a character who acts cold and hostile in order to mask warmer emotions.;Travel:56:Centers around character(s) moving between places a significant distance apart.;Food:55:Centers around cooking or food appraisal.;Nun:55:Prominently features a character who is a nun.;Espionage:52:Prominently features characters infiltrating an organization in order to steal sensitive information.;Coming of Age:50:Centers around a character's transition from childhood to adulthood.;Suicide:48:The act or an instance of taking or attempting to take one's own life voluntarily and intentionally.;Philosophy:46:Relating or devoted to the study of the fundamental nature of knowledge, reality, and existence.;Nudity:46:Features a character wearing no clothing or exposing intimate body parts.;Dungeon:44:Prominently features a dungeon environment.;Tomboy:42:Features a girl who exhibits characteristics or behaviors considered in many cultures to be typical of boys."
   }
 ]

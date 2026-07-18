@@ -54261,6 +54261,57 @@
         }
       ],
       "fetchedAt": 1783802490729
+    },
+    "59983": {
+      "animeName": "Wistoria: Wand and Sword, S02",
+      "episodes": [
+        {
+          "mal_id": 1,
+          "title": "Speciál",
+          "title_japanese": "杖と剣のウィストリア Season 2",
+          "aired": "2026-04-12T00:00:00+00:00",
+          "score": 8.2,
+          "filler": false,
+          "recap": false,
+          "url": "https://myanimelist.net/anime/59983/Tsue_to_Tsurugi_no_Wistoria_Season_2",
+          "forum_url": null
+        }
+      ],
+      "fetchedAt": 1784404633255
+    },
+    "62542": {
+      "animeName": "Grand Blue Dreaming, S03",
+      "episodes": [
+        {
+          "mal_id": 1,
+          "title": "Speciál",
+          "title_japanese": "ぐらんぶる Season 3",
+          "aired": "2026-07-07T00:00:00+00:00",
+          "score": 8.41,
+          "filler": false,
+          "recap": false,
+          "url": "https://myanimelist.net/anime/62542/Grand_Blue_Season_3",
+          "forum_url": null
+        }
+      ],
+      "fetchedAt": 1784404640476
+    },
+    "34572": {
+      "animeName": "Black Clover, S01",
+      "episodes": [
+        {
+          "mal_id": 1,
+          "title": "Speciál",
+          "title_japanese": "ブラッククローバー",
+          "aired": "2017-10-03T00:00:00+00:00",
+          "score": 8.14,
+          "filler": false,
+          "recap": false,
+          "url": "https://myanimelist.net/anime/34572/Black_Clover",
+          "forum_url": null
+        }
+      ],
+      "fetchedAt": 1784404647693
     }
   }
 }
