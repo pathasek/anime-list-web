@@ -1,0 +1,419 @@
+/* „Cesta Anime“ — izolované styly (Plán 9, Ú3) */
+
+/* Mezery drží rytmus dashboardu — stejných 24 px jako gap mřížky skupin */
+.aj-card {
+    margin-bottom: var(--spacing-lg);
+    overflow: hidden;
+    /* Karta se nikdy nesmí podílet na šířce stránky — timeline scrolluje uvnitř */
+    min-width: 0;
+    max-width: 100%;
+}
+
+.aj-header {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: var(--spacing-md);
+}
+.aj-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    color: var(--accent-primary);
+}
+.aj-subtitle {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    align-self: center;
+    white-space: nowrap;
+}
+.aj-header-actions {
+    margin-left: auto;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+.aj-max-btn,
+.aj-nav-btn {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    border-radius: var(--radius-md);
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: color .15s, border-color .15s;
+}
+.aj-max-btn:hover,
+.aj-nav-btn:hover {
+    color: var(--accent-primary);
+    border-color: var(--accent-primary);
+}
+.aj-nav-btn { font-size: 1rem; line-height: 1; padding: 3px 10px; }
+
+/* Odznak aktivního „časového cestování" (Dashboard, Plán 9, Ú3) */
+.tt-badge {
+    background: rgba(251, 191, 36, .15);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, .35);
+    border-radius: 999px;
+    padding: 2px 10px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    cursor: help;
+}
+
+/* ── Minimalizovaný pás ─────────────────────────────────────────────
+   Kompaktní jednořádková lišta ve výšce původního řádku filtru.
+   Kolečka plují po diagonále a na obou koncích mizí do stínu. */
+.aj-mini-card {
+    padding: 6px 14px;
+    margin-bottom: var(--spacing-lg);
+}
+.aj-mini-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.aj-title-sm {
+    font-size: 0.95rem;
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+.aj-mini-band {
+    position: relative;
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 52px;
+    overflow: hidden;
+    /* Stín na obou koncích — kolečka vplouvají a vyplouvají z tmy */
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+}
+.aj-mini-track {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+    width: max-content;
+    height: 100%;
+    animation-name: aj-drift;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    will-change: transform;
+}
+.aj-mini-band:hover .aj-mini-track { animation-play-state: paused; }
+
+@keyframes aj-drift {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+/* Kolečko měsíce — diagonální schod se opakuje po 4 (jako Excel timeline) */
+.aj-orb {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    white-space: nowrap;
+    transform: translateY(calc(var(--step) * -7px + 10px));
+    transition: color .15s;
+}
+.aj-orb:hover { color: var(--accent-primary); }
+.aj-orb-img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .35);
+    transition: border-color .15s, transform .15s;
+}
+.aj-orb:hover .aj-orb-img {
+    border-color: var(--accent-primary);
+    transform: scale(1.12);
+}
+.aj-orb-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.aj-orb-ph { font-size: 0.8rem; opacity: .5; }
+.aj-orb-text b { color: #34d399; font-weight: 700; }
+
+@media (prefers-reduced-motion: reduce) {
+    .aj-mini-track { animation: none; }
+    .aj-mini-band { overflow-x: auto; }
+    .aj-orb { transform: none; }
+}
+
+/* ── Maximalizovaná timeline (výška odvozená z viewportu, aby se vešla do okna) ── */
+.aj-timeline {
+    display: flex;
+    gap: var(--spacing-md);
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, .12) transparent;
+}
+.aj-timeline::-webkit-scrollbar { height: 5px; }
+.aj-timeline::-webkit-scrollbar-track { background: transparent; }
+.aj-timeline::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, .12);
+    border-radius: 999px;
+}
+.aj-timeline::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, .25); }
+.aj-year-divider {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    color: var(--text-muted);
+    font-weight: 800;
+    letter-spacing: 2px;
+    border-right: 2px dashed var(--border-color);
+    padding-left: 4px;
+}
+
+.aj-month-card {
+    /* 5 karet vedle sebe: viewport − sidebar 260 − scrollbar-gutter 17
+       − main-padding 64 − card-padding+border 52 − 4×gap 64 = 457 ≈ 460 */
+    --aj-card-w: clamp(240px, calc((100vw - 460px) / 5), 320px);
+    flex: 0 0 var(--aj-card-w);
+    width: var(--aj-card-w);
+    /* Odečteme header (~60px), padding karty (~24px) a padding stránky (~80px)
+       aby se měsíční karta přesně vešla do maximalizovaného okna bez ořezu. */
+    height: calc(100vh - 180px);
+    min-height: 420px;
+    max-height: 600px;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 10px 12px;
+    scroll-snap-align: start;
+    overflow: hidden;
+}
+.aj-month-head {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+.aj-month-name {
+    font-weight: 700;
+    color: var(--text-primary);
+    text-transform: capitalize;
+}
+.aj-month-plus {
+    color: #34d399;
+    font-weight: 800;
+}
+.aj-month-total {
+    margin-left: auto;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    white-space: nowrap;
+}
+
+/* Nejlepší anime — obrázek s překryvem */
+.aj-best {
+    position: relative;
+    display: block;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    flex: 0 0 auto;
+    background: var(--bg-tertiary, rgba(0,0,0,.2));
+}
+.aj-best img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .25s;
+}
+.aj-best:hover img { transform: scale(1.04); }
+.aj-best-ph {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-size: 2rem;
+    opacity: .5;
+}
+.aj-best-overlay {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 18px 10px 8px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, .85));
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.aj-best-label {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #fbbf24;
+    font-weight: 700;
+}
+.aj-best-name {
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.88rem;
+    line-height: 1.2;
+}
+.aj-best-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #fff;
+    font-size: 0.78rem;
+}
+.aj-badge {
+    font-size: 0.58rem;
+    font-weight: 800;
+    letter-spacing: .5px;
+    padding: 1px 6px;
+    border-radius: 4px;
+}
+.aj-badge.series { background: rgba(99, 102, 241, .85); color: #fff; }
+.aj-badge.standalone { background: rgba(148, 163, 184, .85); color: #0f172a; }
+.aj-reason { cursor: help; }
+
+/* Fakta (Nejdelší / Nakoukáno) */
+.aj-facts {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin: 8px 0 6px;
+}
+.aj-fact {
+    display: flex;
+    gap: 6px;
+    font-size: 0.76rem;
+    min-width: 0;
+}
+.aj-fact-label {
+    color: var(--text-muted);
+    flex: 0 0 auto;
+}
+.aj-fact-value {
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.aj-fact-value b { color: var(--text-primary); }
+
+/* Chips skupin */
+.aj-chip-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    overflow-y: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, .1) transparent;
+}
+.aj-chip-rows::-webkit-scrollbar { width: 4px; }
+.aj-chip-rows::-webkit-scrollbar-track { background: transparent; }
+.aj-chip-rows::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, .1);
+    border-radius: 999px;
+}
+.aj-chip-rows::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, .22); }
+.aj-chip-row {
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+    font-size: 0.72rem;
+}
+.aj-chip-label {
+    flex: 0 0 48px;
+    color: var(--text-muted);
+    padding-top: 2px;
+}
+.aj-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+.aj-chip {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    padding: 1px 7px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+.aj-chip b { color: var(--accent-primary); font-weight: 700; }
+
+/* Strip posterů měsíce */
+.aj-strip {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    flex: 0 0 auto;
+    padding-top: 6px;
+    margin-top: 4px;
+    border-top: 1px solid var(--border-color);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, .08) transparent;
+}
+.aj-strip::-webkit-scrollbar { height: 3px; }
+.aj-strip::-webkit-scrollbar-track { background: transparent; }
+.aj-strip::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, .08);
+    border-radius: 999px;
+}
+.aj-strip::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, .18); }
+.aj-strip-item {
+    flex: 0 0 34px;
+    width: 34px;
+    height: 48px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--bg-primary);
+    transition: transform .15s;
+}
+.aj-strip-item:hover { transform: translateY(-2px); }
+.aj-strip-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.aj-strip-ph {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-size: 0.8rem;
+    opacity: .4;
+}
+
+@media (max-width: 768px) {
+    .aj-month-card {
+        flex-basis: 260px;
+        width: 260px;
+        min-height: 360px;
+    }
+    .aj-subtitle { display: none; }
+}

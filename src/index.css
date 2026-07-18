@@ -230,6 +230,11 @@ a:hover {
 
 .main-content {
   flex: 1;
+  /* min-width: 0 — bez něj má flex položka min-width: auto a široký obsah
+     (např. horizontální timeline) ji roztáhne na plnou šířku okna; spolu
+     s margin-left 260px pak obsah přeteče o šířku sidebaru a overflow-x
+     clip uřízne pravou stranu stránky */
+  min-width: 0;
   margin-left: 260px;
   padding: var(--spacing-xl);
   background: var(--bg-primary);
@@ -2285,21 +2290,27 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 /* ─── Scrollbar ─── */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-light);
+  background: rgba(255, 255, 255, .15);
   border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-primary);
+  background: rgba(255, 255, 255, .3);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, .15) transparent;
 }
 
 /* ─── Animations ─── */

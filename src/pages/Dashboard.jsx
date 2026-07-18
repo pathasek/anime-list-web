@@ -16,6 +16,7 @@ import { Chart, Bar, Pie, Doughnut, Line } from 'react-chartjs-2'
 
 import DashboardGroup from '../components/DashboardGroup'
 import InfoIcon from '../components/InfoIcon'
+import AnimeJourney from '../components/AnimeJourney'
 import { buildChartOptions } from '../utils/chartSettings'
 import { excelPalettes, excelImageBackgroundPlugin, decadeFloatingLabelsPlugin, premiumTooltipConfig, createHorizontalGradient } from '../utils/excelStyles'
 import AnimeGenreChordChart from '../components/charts/AnimeGenreChordChart'
@@ -888,8 +889,12 @@ function Dashboard() {
         const latestYear = sortedYearsAll.length > 0 ? sortedYearsAll[sortedYearsAll.length - 1] : new Date().getFullYear()
 
         // Apply filters
-        const filteredAnimeList = animeList.filter(a => isInTimeRange(a.start_date || a.release_date))
+        // „Cestování časem" (Plán 9, Ú3): rozhoduje datum DOKONČENÍ — stav
+        // k datu T1 = anime, která jsem do té doby dokoukal. Stejný základ
+        // používá Cesta Anime i Excel timeline (sloupec M).
+        const filteredAnimeList = animeList.filter(a => isInTimeRange(a.end_date || a.start_date || a.release_date))
         const filteredHistoryLog = historyLog.filter(h => isInTimeRange(h.date))
+        const isFiltered = timeFilter !== 'all'
 
         const list = filteredAnimeList
         const log = filteredHistoryLog
@@ -918,10 +923,19 @@ function Dashboard() {
         }
 
         // Per-year detailed stats
+        // Nefiltrovaný pohled si drží původní základ (start_date) kvůli shodě
+        // s Excelem; „cestování časem" níže počítá podle data dokončení.
         const yearStats = {}
         sortedYearsAll.forEach(y => {
             const yearAnime = animeList.filter(a => getYear(a.start_date) === y)
             yearStats[y] = computeYearStats(yearAnime)
+        })
+
+        // Roční statistiky oříznuté filtrem — při „cestování časem" musí i
+        // roční sloupce končit datem filtru (jinak by rok přesáhl celkový součet)
+        const yearStatsFiltered = {}
+        sortedYearsAll.forEach(y => {
+            yearStatsFiltered[y] = computeYearStats(filteredAnimeList.filter(a => getYear(a.end_date || a.start_date) === y))
         })
 
         // Overall (all time) stats — computed from ALL anime, not filtered
@@ -1092,8 +1106,11 @@ function Dashboard() {
             dubs,
             avgRatingByType,
             yearStats,
+            yearStatsFiltered,
             allTimeStats,
             filteredStats,
+            isFiltered,
+            filteredList: list,
             excelData
         }
     }, [animeList, historyLog, timeFilter, customRange])
@@ -2975,7 +2992,39 @@ function Dashboard() {
 
         <div className="fade-in">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-xl)' }}>
-                <h2 style={{ margin: 0 }}>Dashboard</h2>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
+                    <h2 style={{ margin: 0 }}>Dashboard</h2>
+                    {/* Časový filtr přesunut z vlastního řádku k nadpisu (Plán 9, Ú3) */}
+                    <div className="time-filter" style={{ margin: 0, padding: '4px 10px' }} title="Časové období filtruje grafy a Cestu Anime">
+                        <label style={{ margin: 0 }}>📅</label>
+                        <select
+                            value={timeFilter}
+                            onChange={e => setTimeFilter(e.target.value)}
+                            className="select"
+                        >
+                            <option value="all">Vše</option>
+                            {stats.sortedYears.map(y => (
+                                <option key={y} value={String(y)}>{y}</option>
+                            ))}
+                            <option value="custom">Vlastní rozsah</option>
+                        </select>
+                        {timeFilter === 'custom' && (
+                            <>
+                                <input
+                                    type="date"
+                                    value={customRange.start}
+                                    onChange={e => setCustomRange(prev => ({ ...prev, start: e.target.value }))}
+                                />
+                                <span>—</span>
+                                <input
+                                    type="date"
+                                    value={customRange.end}
+                                    onChange={e => setCustomRange(prev => ({ ...prev, end: e.target.value }))}
+                                />
+                            </>
+                        )}
+                    </div>
+                </div>
                 <a
                     href="https://notebooklm.google.com/notebook/54e7fa34-caef-4aeb-a895-ea57e56845ea"
                     target="_blank"
@@ -2996,37 +3045,6 @@ function Dashboard() {
                 </a>
             </div>
 
-            {/* Time Filter */}
-            <div className="time-filter">
-                <label title="Časové období aktualizuje grafy">📅 Časový filtr (pro grafy):</label>
-                <select
-                    value={timeFilter}
-                    onChange={e => setTimeFilter(e.target.value)}
-                    className="select"
-                >
-                    <option value="all">Vše</option>
-                    {stats.sortedYears.map(y => (
-                        <option key={y} value={String(y)}>{y}</option>
-                    ))}
-                    <option value="custom">Vlastní rozsah</option>
-                </select>
-                {timeFilter === 'custom' && (
-                    <>
-                        <input
-                            type="date"
-                            value={customRange.start}
-                            onChange={e => setCustomRange(prev => ({ ...prev, start: e.target.value }))}
-                        />
-                        <span>—</span>
-                        <input
-                            type="date"
-                            value={customRange.end}
-                            onChange={e => setCustomRange(prev => ({ ...prev, end: e.target.value }))}
-                        />
-                    </>
-                )}
-            </div>
-
             {/* Stats Table — Excel-style */}
             {(() => {
                 const formatMins = (mins) => {
@@ -3040,11 +3058,25 @@ function Dashboard() {
                     const hours = Math.round(totalH % 24)
                     return `${days} dní ${hours} hodin`
                 }
-                const yearCols = stats.sortedYears.slice(-3)
-                const all = stats.allTimeStats
-                const ys = stats.yearStats
+                // Při aktivním filtru: sloupec „Za celou dobu" = stav k datu
+                // filtru (time travel), roční sloupce jen roky v rozsahu.
+                const rangeYears = (() => {
+                    if (!stats.isFiltered) return stats.sortedYears
+                    if (timeFilter === 'custom') {
+                        const s = customRange.start ? new Date(customRange.start).getFullYear() : -Infinity
+                        const e = customRange.end ? new Date(customRange.end).getFullYear() : Infinity
+                        return stats.sortedYears.filter(y => y >= s && y <= e)
+                    }
+                    const y = parseInt(timeFilter)
+                    return isNaN(y) ? stats.sortedYears : stats.sortedYears.filter(x => x === y)
+                })()
+                const yearCols = rangeYears.slice(-3)
+                const all = stats.isFiltered ? stats.filteredStats : stats.allTimeStats
+                const ys = stats.isFiltered ? stats.yearStatsFiltered : stats.yearStats
                 const getYear = (dateStr) => { if (!dateStr) return null; return new Date(dateStr).getFullYear() }
                 const getFromStatsData = (label, yearIdx) => {
+                    // Statické hodnoty z Excelu platí jen pro nefiltrovaný pohled
+                    if (stats.isFiltered) return null
                     if (!statsData || !statsData.dashboard_table) return null
                     const row = statsData.dashboard_table.find(r => r[0].toLowerCase().includes(label.toLowerCase()))
                     if (!row) return null
@@ -3099,15 +3131,25 @@ function Dashboard() {
                     },
                     {
                         label: 'Průměrné hodnocení', all: toCS(stats.avgRating), years: yearCols.map(y => {
-                            const yAnime = animeList.filter(a => getYear(a.start_date) === y).filter(a => a.rating && !isNaN(parseFloat(a.rating)))
+                            const base = stats.isFiltered ? stats.filteredList : animeList
+                            const yAnime = base
+                                .filter(a => getYear(stats.isFiltered ? (a.end_date || a.start_date) : a.start_date) === y)
+                                .filter(a => a.rating && !isNaN(parseFloat(a.rating)))
                             return yAnime.length ? toCS((yAnime.reduce((s, a) => s + parseFloat(a.rating), 0) / yAnime.length).toFixed(2)) : '-'
                         })
                     }
                 ]
 
                 return (
-                    <div className="card" style={{ marginBottom: 'var(--spacing-xl)' }}>
-                        <h3 style={{ marginBottom: 'var(--spacing-md)', display: 'flex', alignItems: 'center', gap: '8px' }}>📊 Sledovaní Anime — Data projekt</h3>
+                    <div className="card" style={{ marginBottom: 'var(--spacing-lg)' }}>
+                        <h3 style={{ marginBottom: 'var(--spacing-md)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            📊 Sledovaní Anime — Data projekt
+                            {stats.isFiltered && (
+                                <span className="tt-badge" title="Aktivní časový filtr — hodnoty ukazují stav ke konci zvoleného období, jako by dnešek byl tehdy">
+                                    ⏳ stav k období
+                                </span>
+                            )}
+                        </h3>
 
                         {/* DESKTOP TABLE */}
                         <div className="hide-mobile" style={{ overflowX: 'auto' }}>
@@ -3266,6 +3308,23 @@ function Dashboard() {
                 )
             })()}
 
+
+            {/* Cesta Anime — web verze Excel LIST_Watch_Overview (Plán 9, Ú3) */}
+            <AnimeJourney
+                animeList={animeList}
+                historyLog={historyLog}
+                episodeRatings={episodeRatings}
+                range={(() => {
+                    if (timeFilter === 'custom') {
+                        const end = customRange.end ? new Date(customRange.end) : null
+                        if (end) end.setHours(23, 59, 59, 999)
+                        return { start: customRange.start ? new Date(customRange.start) : null, end }
+                    }
+                    const y = parseInt(timeFilter)
+                    if (!isNaN(y)) return { start: new Date(y, 0, 1), end: new Date(y, 11, 31, 23, 59, 59) }
+                    return null
+                })()}
+            />
 
             {/* ═══════════════════════════════════════════ */}
             {/* DASHBOARD GROUPS GRID                      */}

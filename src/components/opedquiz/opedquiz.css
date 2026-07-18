@@ -134,6 +134,24 @@
   color: var(--text-primary);
 }
 
+/* Přepínač zdroje skladeb: celý katalog AnimeThemes vs. oblíbená knihovna */
+.opq-source-select {
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.opq-round-btn.wide {
+  padding: 6px 14px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.opq-source-note {
+  margin: 0 0 4px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
 .opq-start-btn {
   background: linear-gradient(135deg, #7c3aed, #db2777);
   border: none;
@@ -271,62 +289,6 @@
   width: 80px;
   accent-color: var(--accent-primary);
   flex-shrink: 0;
-}
-
-/* Fallback přehrávač: GDrive iframe rozmazaný proti spoilerům.
-   Blur vrstva má pointer-events:none → kliky (▶/⏸) projdou do iframu,
-   ale vizuál je nerozpoznatelný. Horní pruh (název souboru!) je neprůhledný. */
-.opq-iframe-wrap {
-  position: relative;
-  width: min(360px, 100%);
-  aspect-ratio: 16 / 9;
-  margin: 0 auto;
-  border-radius: var(--radius-md, 10px);
-  overflow: hidden;
-  border: 1px solid var(--border-color);
-  background: #000;
-}
-
-.opq-iframe-wrap iframe {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
-}
-
-.opq-iframe-topcover {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 26%;
-  background: #0a0a12;
-  z-index: 2;
-}
-
-.opq-iframe-blur {
-  position: absolute;
-  inset: 0;
-  backdrop-filter: blur(32px) saturate(0.6);
-  -webkit-backdrop-filter: blur(32px) saturate(0.6);
-  background: rgba(8, 8, 16, 0.4);
-  pointer-events: none;
-  z-index: 3;
-}
-
-.opq-iframe-hint {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 6px;
-  text-align: center;
-  font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.85);
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
-  pointer-events: none;
-  z-index: 4;
-  padding: 0 10px;
 }
 
 .opq-question {

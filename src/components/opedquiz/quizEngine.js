@@ -43,43 +43,132 @@ export function shuffle(arr) {
 
 const sample = (arr, n) => shuffle(arr).slice(0, n)
 
+// Normalizace názvu písně pro párování AnimeThemes ↔ GDrive knihovna
+const songKeyOf = (s) => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+
 /**
- * Postaví hratelný pool skladeb z GDrive knihovny OP/ED.
- * Deduplikuje verze (v1/v2 téže znělky) a obohatí o metadata z anime listu
- * (přesný název, série, tagy pro podobnostní distraktory).
+ * Postaví hratelný pool skladeb z katalogu AnimeThemes (Plán 9, Ú1).
+ *
+ * `mode`:
+ *   'all'       — celý katalog: všechny OP/ED všech anime v listu.
+ *   'favorites' — jen znělky, které mám v GDrive knihovně (op_ed_videos.json),
+ *                 ale přehrávané taky z AnimeThemes (audio-only stopa).
+ *                 Co se nepodaří spárovat, zůstane na přímém GDrive URL.
+ *
+ * Metadata (přesný název, série, tagy pro podobnostní distraktory) se berou
+ * z anime listu — u AnimeThemes přes MAL id, u GDrive přes fuzzy matcher.
  */
-export function buildPool(videos, animeList) {
-    const metas = (animeList || []).map(a => ({ a, key: normalizeAnimeKey(a.name) }))
-    const findMeta = (matchKey) => {
+export function buildPool({ themes, videos, animeList, mode = 'all' }) {
+    const byMalId = new Map()
+    const metas = []
+    for (const a of animeList || []) {
+        const m = /\/anime\/(\d+)/.exec(a.mal_url || '')
+        if (m) byMalId.set(Number(m[1]), a)
+        metas.push({ a, key: normalizeAnimeKey(a.name) })
+    }
+    const findMetaByName = (matchKey) => {
         const hit = metas.find(m => animeKeysMatch(matchKey, m.key))
         return hit ? hit.a : null
     }
 
+    // Znělky z AnimeThemes → základ poolu
     const seen = new Set()
     const pool = []
+    for (const t of themes || []) {
+        const type = (t.type || '').toUpperCase()
+        if (type !== 'OP' && type !== 'ED') continue
+        const url = t.audio_url || t.video_url
+        if (!url) continue
+
+        const meta = byMalId.get(t.mal_id)
+        const animeName = meta?.name || t.anime_name
+        if (!animeName) continue
+
+        const dedup = `${t.mal_id}|${type}|${songKeyOf(t.song || t.label)}`
+        if (seen.has(dedup)) continue
+        seen.add(dedup)
+
+        pool.push({
+            id: dedup,
+            url,
+            malId: t.mal_id,
+            label: t.label || null,                     // 'OP1', 'ED2-BD'…
+            type,                                       // 'OP' | 'ED'
+            song: (t.song || '').trim() || null,
+            artist: (t.artist || '').trim() || null,
+            animeName,
+            series: meta?.series || t.series || null,
+            base: normalizeAnimeKey(meta?.series || animeName),
+            tags: tagSetOf(meta),
+        })
+    }
+
+    if (mode !== 'favorites') return pool
+
+    // Režim „Oblíbené": ponech jen znělky, které mám v GDrive knihovně,
+    // ale přehrávej je z AnimeThemes (audio-only stopa).
+    const byAnimeType = new Map()
+    for (const t of pool) {
+        const k = `${normalizeAnimeKey(t.animeName)}|${t.type}`
+        if (!byAnimeType.has(k)) byAnimeType.set(k, [])
+        byAnimeType.get(k).push(t)
+    }
+    const seqOf = (label) => {
+        const m = /(\d+)/.exec(label || '')
+        return m ? Number(m[1]) : null
+    }
+
+    const favPool = []
+    const used = new Set()
     for (const v of videos || []) {
         const type = (v.type || '').toUpperCase()
         if (type !== 'OP' && type !== 'ED') continue
         if (!v.url) continue
-        const dedup = `${v.match_key}|${type}|${normalizeAnimeKey(v.song)}`
-        if (seen.has(dedup)) continue
-        seen.add(dedup)
+        const meta = findMetaByName(v.match_key)
+        const animeName = meta?.name || v.anime_display
+        if (!animeName) continue
 
-        const meta = findMeta(v.match_key)
-        pool.push({
-            id: dedup,
+        const cands = byAnimeType.get(`${normalizeAnimeKey(animeName)}|${type}`) || []
+        const songKey = songKeyOf(v.song)
+
+        // 1) shoda podle názvu písně
+        let hit = songKey ? cands.find(c => songKeyOf(c.song) === songKey) : null
+
+        // 2) záloha podle pořadí znělky — tentýž song má v obou zdrojích často
+        //    jiný název (GDrive „My War" vs AnimeThemes „Boku no Sensou").
+        //    Pořadí bereme z GDrive pole `ver`; když chybí a anime má jen
+        //    jednu znělku daného typu, je jednoznačná.
+        if (!hit) {
+            const seq = v.ver ? Number(v.ver) : (cands.length === 1 ? seqOf(cands[0].label) : null)
+            if (seq !== null && !Number.isNaN(seq)) hit = cands.find(c => seqOf(c.label) === seq)
+        }
+
+        if (hit) {
+            if (used.has(hit.id)) continue      // dvě GDrive verze téže znělky
+            used.add(hit.id)
+            favPool.push(hit)
+            continue
+        }
+
+        // 3) AnimeThemes znělku nezná → přímé GDrive URL, ať se neztratí
+        const key = `${normalizeAnimeKey(animeName)}|${type}|${songKey}`
+        if (used.has(key)) continue
+        used.add(key)
+        favPool.push({
+            id: `gd|${key}`,
             url: v.url,
-            fileId: v.file_id || null,
-            type,                                        // 'OP' | 'ED'
+            malId: null,
+            label: null,
+            type,
             song: (v.song || '').trim() || null,
             artist: (v.artist || '').trim() || null,
-            animeName: meta?.name || v.anime_display,    // preferuj přesný název z listu
+            animeName,
             series: meta?.series || null,
             base: v.match_key_base || v.match_key,
             tags: tagSetOf(meta),
         })
     }
-    return pool
+    return favPool
 }
 
 /**

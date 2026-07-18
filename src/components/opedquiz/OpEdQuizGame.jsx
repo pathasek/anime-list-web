@@ -1,7 +1,9 @@
 // Minihra „Hádej OP/ED“ — izolovaná featura (vlastní data, logika i styly).
-// Pustí se jen zvuk znělky (video je skryté, aby vizuál neprozradil anime)
-// a hádá se anime + bonusy: typ (OP/ED), interpret a název písničky.
-import { useState, useEffect, useRef, useCallback } from 'react'
+// Přehrává se jen zvuk znělky (audio-only stopa z AnimeThemes) a hádá se
+// anime + bonusy: typ (OP/ED), interpret a název písničky.
+// Plán 9, Ú1: zdrojem je katalog AnimeThemes (animethemes_op_ed.json) —
+// buď všechny znělky všech anime v listu, nebo jen moje oblíbené z GDrive.
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import { POINTS, buildPool, generateGame } from './quizEngine'
 import { useModalScrollLock } from '../../utils/useModalScrollLock'
@@ -12,6 +14,7 @@ import './opedquiz.css'
 const ROUND_CHOICES = [5, 10, 15, Infinity]
 
 const VOLUME_KEY = 'opq-volume'
+const SOURCE_KEY = 'opq-source'   // 'all' | 'favorites'
 
 const emptyPicks = () => ({ anime: null, type: null, artist: null, song: null })
 const emptyStats = () => ({
@@ -37,8 +40,13 @@ function rankFor(pct) {
 }
 
 export default function OpEdQuizGame({ onClose }) {
-    const [data, setData] = useState(null)          // { pool, animeList }
+    const [raw, setRaw] = useState(null)            // { themes, videos, animeList }
     const [loadError, setLoadError] = useState(null)
+    // Zdroj skladeb — volba přežívá mezi hrami
+    const [source, setSource] = useState(() => {
+        const s = localStorage.getItem(SOURCE_KEY)
+        return s === 'favorites' ? 'favorites' : 'all'
+    })
     const [phase, setPhase] = useState('intro')     // intro | round | results
     const [roundCount, setRoundCount] = useState(10)
     const [game, setGame] = useState(null)          // { rounds, spares }
@@ -56,12 +64,7 @@ export default function OpEdQuizGame({ onClose }) {
     // počítá jen z kol, na která hráč skutečně odpovídal
     const [playedMax, setPlayedMax] = useState(0)
     const [notice, setNotice] = useState(null)
-    // 'video' = skrytý <video> s přímým URL (žádný vizuál, plné ovládání).
-    // 'iframe' = fallback: GDrive preview rozmazaný proti spoilerům — přímé
-    // stažení vyžaduje Google cookies / veřejný soubor a někde selže.
-    const [playMode, setPlayMode] = useState('video')
-    const directBrokenRef = useRef(false)
-    const videoRef = useRef(null)
+    const mediaRef = useRef(null)
 
     // Zrcadla stavu pro handlery mimo render cyklus (onError přehrávače) —
     // žádné side-effecty uvnitř setState updaterů (StrictMode je spouští 2×).
@@ -78,17 +81,25 @@ export default function OpEdQuizGame({ onClose }) {
     useEffect(() => {
         let cancelled = false
         Promise.all([
-            fetch('data/op_ed_videos.json?v=' + Date.now()).then(r => r.json()),
+            fetch('data/animethemes_op_ed.json?v=' + Date.now()).then(r => r.json()).catch(() => null),
+            fetch('data/op_ed_videos.json?v=' + Date.now()).then(r => r.json()).catch(() => null),
             fetch('data/anime_list.json?v=' + Date.now()).then(r => r.json()),
         ])
-            .then(([opEd, animeList]) => {
+            .then(([themesJson, opEd, animeList]) => {
                 if (cancelled) return
-                const pool = buildPool(opEd?.videos, animeList)
-                setData({ pool, animeList })
+                setRaw({ themes: themesJson?.themes || [], videos: opEd?.videos || [], animeList })
             })
             .catch(() => { if (!cancelled) setLoadError('Nepodařilo se načíst data pro hru.') })
         return () => { cancelled = true }
     }, [])
+
+    // Pool se přepočítá při změně zdroje (Všechny ↔ Oblíbené)
+    const data = useMemo(() => {
+        if (!raw) return null
+        return { pool: buildPool({ ...raw, mode: source }), animeList: raw.animeList }
+    }, [raw, source])
+
+    useEffect(() => { localStorage.setItem(SOURCE_KEY, source) }, [source])
 
     // Zámek scrollu pozadí (stejný vzor jako ostatní modaly v aplikaci)
     useModalScrollLock()
@@ -100,10 +111,10 @@ export default function OpEdQuizGame({ onClose }) {
         return () => window.removeEventListener('keydown', onKey)
     }, [onClose])
 
-    useEffect(() => () => { videoRef.current?.pause() }, [])
+    useEffect(() => () => { mediaRef.current?.pause() }, [])
 
     useEffect(() => {
-        if (videoRef.current) videoRef.current.volume = volume
+        if (mediaRef.current) mediaRef.current.volume = volume
         localStorage.setItem(VOLUME_KEY, String(volume))
     }, [volume, idx, phase])
 
@@ -111,11 +122,7 @@ export default function OpEdQuizGame({ onClose }) {
     useEffect(() => {
         if (phase !== 'round') return
         setAudio({ playing: false, time: 0, dur: 0, error: false })
-        const r = gameRef.current?.rounds?.[idxRef.current]
-        const useIframe = directBrokenRef.current && !!r?.track?.fileId
-        setPlayMode(useIframe ? 'iframe' : 'video')
-        if (useIframe) return
-        const v = videoRef.current
+        const v = mediaRef.current
         if (v) {
             v.currentTime = 0
             v.volume = volume
@@ -158,12 +165,12 @@ export default function OpEdQuizGame({ onClose }) {
     }, [])
 
     const endGame = useCallback(() => {
-        videoRef.current?.pause()
+        mediaRef.current?.pause()
         setPhase('results')
     }, [])
 
     const next = useCallback(() => {
-        videoRef.current?.pause()
+        mediaRef.current?.pause()
         setNotice(null)
         if (!game) return
         if (idx + 1 >= game.rounds.length) {
@@ -174,17 +181,10 @@ export default function OpEdQuizGame({ onClose }) {
         }
     }, [game, idx])
 
-    // Přímé přehrávání selhalo → přepnout na rozmazaný GDrive iframe.
-    // Bez file_id (nelze iframe) zkusit náhradní kolo; když ani to nejde, skip.
+    // Skladbu se nepodařilo přehrát (výpadek AnimeThemes apod.) → nahradit
+    // náhradním kolem; když žádné nezbývá, nabídnout přeskočení.
     const onAudioError = useCallback(() => {
         const g = gameRef.current
-        const r = g?.rounds?.[idxRef.current]
-        if (r?.track?.fileId) {
-            directBrokenRef.current = true
-            setPlayMode('iframe')
-            setNotice('Přímé přehrávání nejde — použit rozmazaný Drive přehrávač. Klikni do něj pro ▶.')
-            return
-        }
         if (!g || picksRef.current.anime !== null || g.spares.length === 0) {
             setAudio(a => ({ ...a, error: true }))
             return
@@ -198,14 +198,14 @@ export default function OpEdQuizGame({ onClose }) {
     }, [])
 
     const togglePlay = () => {
-        const v = videoRef.current
+        const v = mediaRef.current
         if (!v) return
         if (v.paused) v.play().catch(() => {})
         else v.pause()
     }
 
     const restartTrack = () => {
-        const v = videoRef.current
+        const v = mediaRef.current
         if (!v) return
         v.currentTime = 0
         v.play().catch(() => {})
@@ -266,6 +266,30 @@ export default function OpEdQuizGame({ onClose }) {
                             Pozor: v možnostech jsou podobná anime (dle tagů) a občas se hádá
                             i konkrétní <b>část série</b>. 😈
                         </p>
+                        <div className="opq-rounds-select opq-source-select">
+                            <span>Zdroj:</span>
+                            <button
+                                type="button"
+                                className={`opq-round-btn wide${source === 'all' ? ' active' : ''}`}
+                                onClick={() => setSource('all')}
+                                title="Všechny OP/ED znělky všech anime v listu (katalog AnimeThemes.moe)"
+                            >
+                                🌐 Všechny OP/ED
+                            </button>
+                            <button
+                                type="button"
+                                className={`opq-round-btn wide${source === 'favorites' ? ' active' : ''}`}
+                                onClick={() => setSource('favorites')}
+                                title="Jen znělky z mé oblíbené knihovny"
+                            >
+                                ⭐ Oblíbené OP/ED
+                            </button>
+                        </div>
+                        <p className="opq-source-note">
+                            {source === 'all'
+                                ? 'Hraje se ze všech znělek všech anime v tvém listu — i těch, které nemáš v oblíbených.'
+                                : 'Hraje se jen z tvé vybrané knihovny oblíbených znělek.'}
+                        </p>
                         <div className="opq-rounds-select">
                             <span>Počet kol:</span>
                             {ROUND_CHOICES.map(n => (
@@ -307,66 +331,44 @@ export default function OpEdQuizGame({ onClose }) {
                             )}
                         </div>
 
-                        {playMode === 'iframe' ? (
-                            /* Fallback: GDrive preview rozmazaný proti spoilerům.
-                               Kliknutí projdou skrz blur (▶/⏸), horní pruh s názvem
-                               souboru je překrytý neprůhledně. */
-                            <div className="opq-iframe-wrap">
-                                <iframe
-                                    key={round.track.id}
-                                    src={`https://drive.google.com/file/d/${round.track.fileId}/preview`}
-                                    allow="autoplay"
-                                    title="Přehrávač znělky (rozmazaný proti spoilerům)"
-                                />
-                                <span className="opq-iframe-topcover" aria-hidden="true" />
-                                <span className="opq-iframe-blur" aria-hidden="true" />
-                                <div className="opq-iframe-hint">
-                                    🔒 Rozmazáno proti spoilerům — klikni do přehrávače pro ▶ / ⏸
-                                </div>
+                        {/* Audio-only stopa z AnimeThemes — žádný vizuál, který by prozradil anime */}
+                        <audio
+                            key={round.track.id}
+                            ref={mediaRef}
+                            src={round.track.url}
+                            preload="auto"
+                            onPlay={() => setAudio(a => ({ ...a, playing: true }))}
+                            onPause={() => setAudio(a => ({ ...a, playing: false }))}
+                            onTimeUpdate={e => setAudio(a => ({ ...a, time: e.target.currentTime }))}
+                            onLoadedMetadata={e => setAudio(a => ({ ...a, dur: e.target.duration }))}
+                            onEnded={() => setAudio(a => ({ ...a, playing: false }))}
+                            onError={onAudioError}
+                        />
+
+                        <div className="opq-player">
+                            <button type="button" className="opq-play-btn" onClick={togglePlay}>
+                                {audio.playing ? '⏸' : '▶'}
+                            </button>
+                            <button type="button" className="opq-replay-btn" title="Od začátku" onClick={restartTrack}>↻</button>
+                            <div className={`opq-visualizer${audio.playing ? ' playing' : ''}`} aria-hidden="true">
+                                {Array.from({ length: 14 }).map((_, i) => <span key={i} style={{ animationDelay: `${(i % 7) * 0.13}s` }} />)}
                             </div>
-                        ) : (
-                            <>
-                                {/* Skrytý přehrávač — jen zvuk, vizuál by prozradil anime */}
-                                <video
-                                    key={round.track.id}
-                                    ref={videoRef}
-                                    src={round.track.url}
-                                    preload="auto"
-                                    style={{ display: 'none' }}
-                                    onPlay={() => setAudio(a => ({ ...a, playing: true }))}
-                                    onPause={() => setAudio(a => ({ ...a, playing: false }))}
-                                    onTimeUpdate={e => setAudio(a => ({ ...a, time: e.target.currentTime }))}
-                                    onLoadedMetadata={e => setAudio(a => ({ ...a, dur: e.target.duration }))}
-                                    onEnded={() => setAudio(a => ({ ...a, playing: false }))}
-                                    onError={onAudioError}
-                                />
+                            <span className="opq-time">{fmtTime(audio.time)} / {fmtTime(audio.dur)}</span>
+                            <input
+                                type="range"
+                                className="opq-volume"
+                                min="0" max="1" step="0.05"
+                                value={volume}
+                                onChange={e => setVolume(parseFloat(e.target.value))}
+                                title="Hlasitost"
+                            />
+                        </div>
 
-                                <div className="opq-player">
-                                    <button type="button" className="opq-play-btn" onClick={togglePlay}>
-                                        {audio.playing ? '⏸' : '▶'}
-                                    </button>
-                                    <button type="button" className="opq-replay-btn" title="Od začátku" onClick={restartTrack}>↻</button>
-                                    <div className={`opq-visualizer${audio.playing ? ' playing' : ''}`} aria-hidden="true">
-                                        {Array.from({ length: 14 }).map((_, i) => <span key={i} style={{ animationDelay: `${(i % 7) * 0.13}s` }} />)}
-                                    </div>
-                                    <span className="opq-time">{fmtTime(audio.time)} / {fmtTime(audio.dur)}</span>
-                                    <input
-                                        type="range"
-                                        className="opq-volume"
-                                        min="0" max="1" step="0.05"
-                                        value={volume}
-                                        onChange={e => setVolume(parseFloat(e.target.value))}
-                                        title="Hlasitost"
-                                    />
-                                </div>
-
-                                {audio.error && (
-                                    <div className="opq-error">
-                                        Skladbu se nepodařilo přehrát. 😢
-                                        <button type="button" className="opq-skip-btn" onClick={next}>Přeskočit kolo →</button>
-                                    </div>
-                                )}
-                            </>
+                        {audio.error && (
+                            <div className="opq-error">
+                                Skladbu se nepodařilo přehrát. 😢
+                                <button type="button" className="opq-skip-btn" onClick={next}>Přeskočit kolo →</button>
+                            </div>
                         )}
                         {notice && <div className="opq-notice">{notice}</div>}
 
