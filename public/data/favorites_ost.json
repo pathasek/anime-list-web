@@ -1377,6 +1377,30 @@
       "anime_url": null,
       "ost_name": "Reach for the Rainbow",
       "ost_url": "https://youtu.be/KkNoUiPPsRA?si=37DK-BQZqE-yblm6"
+    },
+    {
+      "anime_name": "Wistoria: Wand and Sword, S02",
+      "anime_url": null,
+      "ost_name": "Magia Vander",
+      "ost_url": "https://youtu.be/ITB0TVJ1K-c?si=slajgj2-WT7064GP"
+    },
+    {
+      "anime_name": "Wistoria: Wand and Sword, S02",
+      "anime_url": null,
+      "ost_name": "Training",
+      "ost_url": "https://youtu.be/k3ZTm90Npu0?si=Nkftie39NblPR7f-"
+    },
+    {
+      "anime_name": "Wistoria: Wand and Sword, S01",
+      "anime_url": null,
+      "ost_name": "Sion's Theme",
+      "ost_url": "https://youtu.be/MEX-f99Lsb8?si=GLcMXFxMpQiIEVuw"
+    },
+    {
+      "anime_name": "Wistoria: Wand and Sword, S01",
+      "anime_url": null,
+      "ost_name": "Rigarden Magical Academy",
+      "ost_url": "https://youtu.be/x7KyE8s7Fqw?si=IYCJlfknr0te6aMt"
     }
   ],
   "whole": [
@@ -1616,6 +1640,15 @@
     },
     {
       "order": "27.",
+      "anime_name": "Wistoria: Wand and Sword",
+      "anime_url": null,
+      "yt_playlist": "YT Playlist",
+      "yt_url": "https://youtube.com/playlist?list=OLAK5uy_klDVo00BU37Th5Ld2aN-YzsxYpvX79CAM&si=GZdMHZLcccTwQZAa",
+      "spotify_playlist": "Spotify",
+      "spotify_url": "https://open.spotify.com/playlist/2XPdD3BLdrVkAg1KVS9ET0?si=f1a463366f124217&pt=bde3ae09df27eeb22a67c34ea3271528"
+    },
+    {
+      "order": "28.",
       "anime_name": "Ranking of Kings",
       "anime_url": null,
       "yt_playlist": "YT Playlist",
@@ -1624,7 +1657,7 @@
       "spotify_url": "https://open.spotify.com/playlist/2w7ehjUiYqGs9qj6BLQlLR?si=2d4dc0dea36f4811&pt=e39803ff7f103293e5be15c771b26d3e"
     },
     {
-      "order": "28.",
+      "order": "29.",
       "anime_name": "Somali and the Forest Spirit",
       "anime_url": null,
       "yt_playlist": "YT Playlist",
@@ -1633,7 +1666,7 @@
       "spotify_url": "https://open.spotify.com/playlist/2HV2Hh4YuXnLSppb1wuUzg?si=8016eb31af294b10&pt=02dd03a2c3a6d9f00ca956baeba25565"
     },
     {
-      "order": "29.",
+      "order": "30.",
       "anime_name": "Tsukimichi -Moonlit Fantasy-",
       "anime_url": null,
       "yt_playlist": "YT Playlist",
