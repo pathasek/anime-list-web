@@ -101,7 +101,10 @@ function Favorites() {
     const [sortDirection, setSortDirection] = useState(() => sessionStorage.getItem('fav_sort_direction') || 'desc')
     const [showAllRatings, setShowAllRatings] = useState(false)
     const [expandedCardIdx, setExpandedCardIdx] = useState(null)
-    const [isTableExpanded, setIsTableExpanded] = useState(() => sessionStorage.getItem('fav_table_expanded') === '1')
+    const [isTableExpanded, setIsTableExpanded] = useState(() => {
+        // Rozbalení tabulky si pamatujeme pouze při návratu z detailu anime (existuje-li v paměti favorites_scroll_y)
+        return Boolean(sessionStorage.getItem('favorites_scroll_y') && sessionStorage.getItem('fav_table_expanded') === '1')
+    })
     const [ostTables, setOstTables] = useState(null)
     const [spotifyImages, setSpotifyImages] = useState({})
     const [opEdVideos, setOpEdVideos] = useState([])       // Gdrive videa OP/ED (stejná knihovna jako v detailu)
@@ -120,14 +123,14 @@ function Favorites() {
         sessionStorage.setItem('fav_language_filter', languageFilter)
         sessionStorage.setItem('fav_sort_column', sortColumn || '')
         sessionStorage.setItem('fav_sort_direction', sortDirection)
-        sessionStorage.setItem('fav_table_expanded', isTableExpanded ? '1' : '0')
-    }, [searchTerm, typeFilter, ratingFilter, languageFilter, sortColumn, sortDirection, isTableExpanded])
+    }, [searchTerm, typeFilter, ratingFilter, languageFilter, sortColumn, sortDirection])
 
-    // Před odchodem na detail anime si zapamatovat pozici scrollu…
+    // Před odchodem na detail anime si zapamatovat pozici scrollu a stav rozbalení…
     const saveScrollForReturn = () => {
         const mc = document.querySelector('.main-content')
         const y = Math.max(window.scrollY || 0, mc ? mc.scrollTop : 0)
         sessionStorage.setItem('favorites_scroll_y', String(Math.round(y)))
+        sessionStorage.setItem('fav_table_expanded', isTableExpanded ? '1' : '0')
     }
 
     // …a po návratu („Zpět" v prohlížeči) ji obnovit, jakmile jsou data vykreslená.
