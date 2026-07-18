@@ -180,9 +180,10 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
         }
 
         // Celé OST album (auto-generovaný YT playlist OLAK5uy_...) jako "extra"
-        // za mými fav skladbami/playlisty — nepřidávat, pokud fav "Celý playlist"
-        // odkazuje na tentýž YT playlist.
-        if (ytOstAlbum?.playlist_id && !merged.OST.some(t => t.ytPlaylistId === ytOstAlbum.playlist_id)) {
+        // za mými fav skladbami/playlisty — nepřidávat, pokud už uživatel má v fav
+        // ručně zadaný celý playlist (YT nebo Spotify), ani pokud odkazuje na tentýž YT playlist.
+        const hasUserWholePlaylist = merged.OST.some(t => t.kind === 'youtube-playlist' || t.kind === 'external' || t.label === 'Celý playlist')
+        if (ytOstAlbum?.playlist_id && !hasUserWholePlaylist && !merged.OST.some(t => t.ytPlaylistId === ytOstAlbum.playlist_id)) {
             const meta = [ytOstAlbum.year, ytOstAlbum.track_count ? `${ytOstAlbum.track_count} skladeb` : null]
                 .filter(Boolean).join(' · ')
             merged.OST.push({
