@@ -50267,6 +50267,40 @@
       ],
       "fetchedAt": 1780174287913
     },
+    "62352": {
+      "animeName": "Chainsaw Man: The Compilation",
+      "episodes": [
+        {
+          "mal_id": 1,
+          "title": "Speciál",
+          "title_japanese": "チェンソーマン 総集篇",
+          "aired": "2025-09-05T00:00:00+00:00",
+          "score": 7.79,
+          "filler": false,
+          "recap": false,
+          "url": "https://myanimelist.net/anime/62352/Chainsaw_Man_Recap",
+          "forum_url": null
+        }
+      ],
+      "fetchedAt": 1780174297161
+    },
+    "40295": {
+      "animeName": "Another World",
+      "episodes": [
+        {
+          "mal_id": 1,
+          "title": "Speciál",
+          "title_japanese": "アナザー・ワールド",
+          "aired": "2019-09-13T00:00:00+00:00",
+          "score": 7.09,
+          "filler": false,
+          "recap": false,
+          "url": "https://myanimelist.net/anime/40295/Another_World",
+          "forum_url": null
+        }
+      ],
+      "fetchedAt": 1780174299819
+    },
     "54463": {
       "animeName": "Vinland Saga, S02: Drowning in the Shadow",
       "episodes": [
@@ -50317,6 +50351,23 @@
         }
       ],
       "fetchedAt": 1780174339904
+    },
+    "41053": {
+      "animeName": "Dorohedoro: Bonus Curse or Extra Evil",
+      "episodes": [
+        {
+          "mal_id": 1,
+          "title": "Speciál",
+          "title_japanese": "ドロヘドロ 魔のおまけ",
+          "aired": "2020-06-17T00:00:00+00:00",
+          "score": 7.11,
+          "filler": false,
+          "recap": false,
+          "url": "https://myanimelist.net/anime/41053/Dorohedoro__Ma_no_Omake",
+          "forum_url": null
+        }
+      ],
+      "fetchedAt": 1780174341462
     },
     "56671": {
       "animeName": "Burn the Witch #0.8",
@@ -53865,6 +53916,23 @@
       ],
       "fetchedAt": 1782770370925
     },
+    "59193": {
+      "animeName": "Mushoku Tensei: Jobless Reincarnation, S03",
+      "episodes": [
+        {
+          "mal_id": 1,
+          "title": "Speciál",
+          "title_japanese": "無職転生 III ～異世界行ったら本気だす～",
+          "aired": "2026-07-04T00:00:00+00:00",
+          "score": 9.05,
+          "filler": false,
+          "recap": false,
+          "url": "https://myanimelist.net/anime/59193/Mushoku_Tensei_III__Isekai_Ittara_Honki_Dasu",
+          "forum_url": null
+        }
+      ],
+      "fetchedAt": 1783279112357
+    },
     "33502": {
       "animeName": "WorldEnd: What do you do at the end of the world? Are you busy? Will you save us?",
       "episodes": [
@@ -54177,6 +54245,40 @@
       ],
       "fetchedAt": 1783717436687
     },
+    "37105": {
+      "animeName": "Grand Blue Dreaming, S01",
+      "episodes": [
+        {
+          "mal_id": 1,
+          "title": "Speciál",
+          "title_japanese": "ぐらんぶる",
+          "aired": "2018-07-14T00:00:00+00:00",
+          "score": 8.45,
+          "filler": false,
+          "recap": false,
+          "url": "https://myanimelist.net/anime/37105/Grand_Blue",
+          "forum_url": null
+        }
+      ],
+      "fetchedAt": 1783802490729
+    },
+    "59983": {
+      "animeName": "Wistoria: Wand and Sword, S02",
+      "episodes": [
+        {
+          "mal_id": 1,
+          "title": "Speciál",
+          "title_japanese": "杖と剣のウィストリア Season 2",
+          "aired": "2026-04-12T00:00:00+00:00",
+          "score": 8.2,
+          "filler": false,
+          "recap": false,
+          "url": "https://myanimelist.net/anime/59983/Tsue_to_Tsurugi_no_Wistoria_Season_2",
+          "forum_url": null
+        }
+      ],
+      "fetchedAt": 1784404633255
+    },
     "62542": {
       "animeName": "Grand Blue Dreaming, S03",
       "episodes": [
@@ -54194,22 +54296,22 @@
       ],
       "fetchedAt": 1784404640476
     },
-    "59193": {
-      "animeName": "Mushoku Tensei: Jobless Reincarnation, S03",
+    "34572": {
+      "animeName": "Black Clover, S01",
       "episodes": [
         {
           "mal_id": 1,
           "title": "Speciál",
-          "title_japanese": "無職転生 III ～異世界行ったら本気だす～",
-          "aired": "2026-07-06T00:00:00+00:00",
-          "score": 8.91,
+          "title_japanese": "ブラッククローバー",
+          "aired": "2017-10-03T00:00:00+00:00",
+          "score": 8.14,
           "filler": false,
           "recap": false,
-          "url": "https://myanimelist.net/anime/59193/Mushoku_Tensei_III__Isekai_Ittara_Honki_Dasu",
+          "url": "https://myanimelist.net/anime/34572/Black_Clover",
           "forum_url": null
         }
       ],
-      "fetchedAt": 1784408045399
+      "fetchedAt": 1784404647693
     }
   }
 }
