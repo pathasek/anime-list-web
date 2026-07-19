@@ -8,6 +8,7 @@ export const customSeasonOrders = {
         "That Time I Got Reincarnated as a Slime, S02 Part 2",
         "That Time I Got Reincarnated as a Slime: The Movie - Scarlet Bond",
         "That Time I Got Reincarnated as a Slime, S03",
+        "That Time I Got Reincarnated as a Slime the Movie: Tears of the Azure Sea",
         "That Time I Got Reincarnated as a Slime, S04"
     ],
     "Steins;Gate": [
