@@ -64,12 +64,42 @@ function cleanJikanEpTitle(title, animeName, seriesName) {
     return t
 }
 
+export function getDocxEpisode(entry, epNum) {
+    if (!entry || !entry.episodes || epNum === null || epNum === undefined) return null
+    const key = String(epNum)
+    if (entry.episodes[key]) return entry.episodes[key]
+
+    // Fallback pro rozdělené sezóny: DOCX má nadpisy s absolutním číslováním
+    // (EP 38–49), web se ptá na relativní číslo v rámci části (EP 1–12).
+    // Pozičně mapovat smíme JEN když klíče tvoří souvislou řadu posunutou
+    // od 1 — u řídkých klíčů (chybějící rozbory, souhrnné nadpisy „EP 6-13")
+    // by poziční mapování vrátilo rozbor CIZÍ epizody, což je horší než
+    // poctivé „rozbor není k dispozici".
+    const sortedKeys = Object.keys(entry.episodes)
+        .map(k => ({ raw: k, num: parseInt(k, 10) }))
+        .filter(k => !isNaN(k.num))
+        .sort((a, b) => a.num - b.num)
+
+    if (sortedKeys.length === 0) return null
+    const offset = sortedKeys[0].num
+    if (offset <= 1) return null
+    const contiguous = sortedKeys.every((k, i) => k.num === offset + i)
+    if (!contiguous) return null
+
+    const n = parseInt(epNum, 10)
+    if (!isNaN(n) && n > 0 && n <= sortedKeys.length) {
+        return entry.episodes[sortedKeys[n - 1].raw] || null
+    }
+    return null
+}
+
 // Fallback řetěz pro zobrazený titul epizody: Jikan (očištěný) → DOCX rozbor
 // (bez „Epizoda N:" prefixu a „(Premiéra …)" dovětku) → „Epizoda N".
 function episodeDisplayTitle(ep, seriesName, categoryReviews) {
     const cleaned = cleanJikanEpTitle(ep.title, ep.animeName, seriesName)
     if (cleaned) return cleaned
-    const docx = categoryReviews?.[ep.animeName]?.episodes?.[ep.mal_id]?.title
+    const docxEp = getDocxEpisode(categoryReviews?.[ep.animeName], ep.mal_id)
+    const docx = docxEp?.title
     if (docx) {
         const stripped = docx
             .replace(/^Epizoda\s*\d+\s*:\s*/i, '')
@@ -513,7 +543,7 @@ function AnimeRatings() {
         const entry = categoryReviews[selectedTimelineEp.animeName]
         if (!entry) return null
         const m = String(selectedTimelineEp.epName || '').match(/EP\s*(\d+)/i)
-        if (m) return entry.episodes?.[parseInt(m[1], 10)] || null
+        if (m) return getDocxEpisode(entry, parseInt(m[1], 10)) || null
         // story title je jen nadpis sekce („1. Shrnutí děje“) — jako titul
         // panelu se nehodí, proto isStory
         return entry.story ? { ...entry.story, isStory: true } : null
@@ -1675,7 +1705,7 @@ function AnimeRatings() {
                             const ep = seriesTimelineData.episodes[item.dataIndex]
                             if (!ep) return ''
                             const m = String(ep.epName || '').match(/EP\s*(\d+)/i)
-                            const docxEp = m ? categoryReviews?.[ep.animeName]?.episodes?.[parseInt(m[1], 10)] : null
+                            const docxEp = m ? getDocxEpisode(categoryReviews?.[ep.animeName], parseInt(m[1], 10)) : null
                             return docxEp?.title ? `📝 ${docxEp.title}` : ''
                         },
                         label: (ctx) => {

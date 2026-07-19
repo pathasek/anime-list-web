@@ -25,3 +25,5 @@ dist-ssr
 
 # Partial cache files
 .*_cache_partial.json
+__pycache__/
+*.pyc

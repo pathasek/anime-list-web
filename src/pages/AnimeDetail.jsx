@@ -23,6 +23,7 @@ import CategoryRatingsPanel from '../components/CategoryRatingsPanel'
 import { useModalScrollLock } from '../utils/useModalScrollLock'
 import { useModalTables } from '../utils/useModalTables'
 import { formatCategoryMarkdown } from '../utils/formatCategoryMarkdown'
+import { getDocxEpisode } from './AnimeRatings'
 import { RatingInfoButton, EpisodeGuideModal, FinalGuideModal } from '../components/RatingGuideModals'
 import { extractMalId } from '../utils/jikanService'
 
@@ -317,7 +318,7 @@ function AnimeDetail() {
             if (elements && elements.length > 0 && episodeRatings && categoryReviews && anime) {
                 const index = elements[0].index;
                 const epNum = index + 1;
-                const docxEp = categoryReviews[anime.name]?.episodes?.[epNum];
+                const docxEp = getDocxEpisode(categoryReviews[anime.name], epNum);
                 if (docxEp) {
                     setActiveEpisode({
                         episodeNumber: epNum,
@@ -332,7 +333,7 @@ function AnimeDetail() {
             if (event && event.native && event.native.target) {
                 if (chartElement.length && categoryReviews && anime) {
                     const idx = chartElement[0].index;
-                    const hasDocx = !!categoryReviews[anime.name]?.episodes?.[idx + 1];
+                    const hasDocx = !!getDocxEpisode(categoryReviews[anime.name], idx + 1);
                     event.native.target.style.cursor = hasDocx ? 'pointer' : 'default';
                 } else {
                     event.native.target.style.cursor = 'default';
@@ -376,7 +377,7 @@ function AnimeDetail() {
                     title: (context) => {
                         if (context && context[0] && categoryReviews && anime) {
                             const idx = context[0].dataIndex;
-                            const docxEp = categoryReviews[anime.name]?.episodes?.[idx + 1];
+                            const docxEp = getDocxEpisode(categoryReviews[anime.name], idx + 1);
                             return docxEp ? `📝 ${docxEp.title}` : `Epizoda ${idx + 1}`;
                         }
                         return '';
