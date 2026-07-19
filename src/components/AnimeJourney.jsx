@@ -89,11 +89,9 @@ function StripPoster({ anime }) {
     })
 
     useEffect(() => {
+        // Bez malId zůstává počáteční hodnota z useState (thumbnail) — nic neřešíme.
+        if (!malId) return
         let cancelled = false
-        if (!malId) {
-            setSrc(anime?.thumbnail || null)
-            return
-        }
         resolvePoster(malId, anime?.thumbnail).then(url => {
             if (!cancelled && url) setSrc(url)
         })
@@ -173,19 +171,22 @@ function MonthCard({ m }) {
             )}
 
             <div className="aj-facts">
-                {m.longest && (
-                    <div className="aj-fact">
-                        <span className="aj-fact-label">Nejdelší</span>
-                        <span className="aj-fact-value" title={m.longest.name}>
-                            {m.longest.name} <b>({m.longest.hoursText})</b>
-                        </span>
-                    </div>
-                )}
+                {m.longest && (() => {
+                    const meta = `${m.longest.hoursText}${m.longest.eps > 0 ? ` / ${m.longest.eps} EP` : ''}`
+                    return (
+                        <div className="aj-fact">
+                            <span className="aj-fact-label">Nejdelší</span>
+                            <span className="aj-fact-value" title={`${m.longest.name} — ${meta}`}>
+                                {m.longest.name} <b>({meta})</b>
+                            </span>
+                        </div>
+                    )
+                })()}
                 {m.watchedMins > 0 && (
                     <div className="aj-fact">
                         <span className="aj-fact-label">Nakoukáno</span>
-                        <span className="aj-fact-value" title="Skutečně zhlédnutý čas v měsíci (z History logu) — počítá i rozkoukaná anime">
-                            <b>{fmtHours(m.watchedMins)}</b>
+                        <span className="aj-fact-value" title="Skutečně zhlédnutý čas a počet epizod v měsíci (z History logu) — počítá i rozkoukaná anime">
+                            <b>{fmtHours(m.watchedMins)}{m.watchedEps > 0 ? ` / ${m.watchedEps} EP` : ''}</b>
                         </span>
                     </div>
                 )}

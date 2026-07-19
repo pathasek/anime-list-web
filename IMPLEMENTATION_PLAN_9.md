@@ -45,6 +45,22 @@ Lint 0 chyb, produkční build projde (6 s).
 **Nové soubory:** `src/utils/journeyCalculations.js` (čisté výpočty),
 `src/components/AnimeJourney.jsx` (+ `animeJourney.css`).
 
+**Doplněno 2026-07-19 — počty epizod na kartách:** karta v maximalizovaném
+stavu ukazuje u „Nakoukáno“ i počet epizod měsíce (`82,9 h / 199 EP`) a u
+„Nejdelší“ počet epizod nejdelšího anime/série (`The Beast Player Erin
+(18 h / 50 EP)`). Výpočet: měsíční epizody z history logu parsováním `(Nx)`
+(`watchedEpsByMonth`), epizody nejdelšího = součet `episodes` členů série
+(`longest.eps`). Tooltip u „Nejdelší“ nově obsahuje i čas+epizody
+(`{název} — {h} / {EP}`), ne jen název — řeší čitelnost useknutých dlouhých
+názvů. Ověřeno: květen 2026 = 199 EP / 82,9 h, Beast Player Erin 50 EP.
+
+**Napojení AnimeThemes na pipeline (2026-07-19):** `download_animethemes_cache.py`
+je zavěšen v `export_data.py` (ř. 1244–1250, před git push, vzor
+`download_jikan_cache`/`build_ytmusic_ost`). Běh bez argumentů je inkrementální
+přes `.animethemes_cache_partial.json` — stáhne jen nově přidaná anime, jinak
+0 requestů a jen přestaví JSON. Partial cache je v rootu appky, do gitu se
+nedostane (push bere jen `public/data/*` a `public/images/*`).
+
 **Minimalizovaný stav — redesign na žádost uživatele (2026-07-18):** původní
 pás všech měsíců byl moc vysoký a dlouhý. Nyní **jeden kompaktní řádek 66 px**
 (nahrazuje výšku smazaného řádku filtru): nadpis vlevo, uprostřed nekonečně

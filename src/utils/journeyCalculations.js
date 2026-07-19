@@ -113,13 +113,17 @@ export function buildJourney({ animeList, historyLog, top10Names = [], hmNames =
         monthly.get(key).push(a)
     }
 
-    // Nakoukané minuty po měsících z history logu ("143 min (2,4 hod)")
+    // Nakoukané minuty a epizody po měsících z history logu
+    // (time "143 min (2,4 hod)", episodes "(6x) EP 7-12")
     const watchedByMonth = new Map()
+    const watchedEpsByMonth = new Map()
     for (const h of historyLog || []) {
         const key = monthKeyOf(h.date)
         if (!key) continue
         const m = /(\d+)\s*min/.exec(h.time || '')
         if (m) watchedByMonth.set(key, (watchedByMonth.get(key) || 0) + parseInt(m[1], 10))
+        const e = /\((\d+)x\)/.exec(h.episodes || '')
+        if (e) watchedEpsByMonth.set(key, (watchedEpsByMonth.get(key) || 0) + parseInt(e[1], 10))
     }
 
     const sortedKeys = [...monthly.keys()].sort()
@@ -279,13 +283,17 @@ export function buildJourney({ animeList, historyLog, top10Names = [], hmNames =
         }
 
         // ── Nejdelší anime (VŽDY z celého měsíce, ne HM podmnožiny — VBA oprava) ──
+        // Série sčítá minuty i epizody svých dílů v měsíci.
         const durBySeries = new Map()
         let longest = null
         for (const a of monthAll) {
             const d = durOf(a)
+            const eps = num(a.episodes) || 0
             const sk = lc(a.series)
-            if (sk) durBySeries.set(sk, { name: a.series, mins: (durBySeries.get(sk)?.mins || 0) + d })
-            else if (!longest || d > longest.mins) longest = { name: a.name, mins: d }
+            if (sk) {
+                const prev = durBySeries.get(sk) || { name: a.series, mins: 0, eps: 0 }
+                durBySeries.set(sk, { name: a.series, mins: prev.mins + d, eps: prev.eps + eps })
+            } else if (!longest || d > longest.mins) longest = { name: a.name, mins: d, eps }
         }
         for (const s of durBySeries.values()) if (!longest || s.mins > longest.mins) longest = s
 
@@ -302,6 +310,7 @@ export function buildJourney({ animeList, historyLog, top10Names = [], hmNames =
             best,
             longest: longest ? { ...longest, hoursText: fmtHours(longest.mins) } : null,
             watchedMins: watchedByMonth.get(key) || 0,
+            watchedEps: watchedEpsByMonth.get(key) || 0,
             types, genres, themes, tags,
             items: [...monthAll].sort((a, b) => {
                 const da = a.end_date ? new Date(a.end_date).getTime() : 0
