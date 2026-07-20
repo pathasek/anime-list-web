@@ -13,6 +13,8 @@ import './animeJourney.css'
 // Cache pro postery v paměti (zkrátí re-rendery)
 const posterMemoryCache = {}
 
+const pluralDilo = (n) => (n === 1 ? '1 dílo' : n >= 2 && n <= 4 ? `${n} díla` : `${n} děl`)
+
 async function fetchAniListCover(malId) {
     if (!malId) return null
     try {
@@ -148,6 +150,18 @@ function MonthCard({ m }) {
             <div className="aj-month-head">
                 <span className="aj-month-name">{m.label}</span>
                 <span className="aj-month-plus">+{m.plusCount}</span>
+                {m.rewatchStats?.count > 0 && (
+                    <span
+                        title={`Rewatch (${pluralDilo(m.rewatchStats.count)}): ${m.rewatchStats.eps} EP / ${m.rewatchStats.hoursText}`}
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', marginLeft: '2px', cursor: 'help', fontSize: '0.82rem' }}
+                    >
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent-amber)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginTop: '-1px' }}>
+                            <polyline points="1 4 1 10 7 10"></polyline>
+                            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                        </svg>
+                        <b style={{ color: 'var(--accent-amber)' }}>{m.rewatchStats.count}</b>
+                    </span>
+                )}
                 <span className="aj-month-total">celkem {m.runningTotal}</span>
             </div>
 
@@ -173,18 +187,27 @@ function MonthCard({ m }) {
             <div className="aj-facts">
                 {m.longest && (() => {
                     const meta = `${m.longest.hoursText}${m.longest.eps > 0 ? ` / ${m.longest.eps} EP` : ''}`
+                    const targetName = m.longest.firstName || m.longest.name
                     return (
                         <div className="aj-fact">
                             <span className="aj-fact-label">Nejdelší</span>
                             <span className="aj-fact-value" title={`${m.longest.name} — ${meta}`}>
-                                {m.longest.name} <b>({meta})</b>
+                                <Link
+                                    to={`/anime/${encodeURIComponent(targetName)}`}
+                                    style={{ color: 'inherit', textDecoration: 'none' }}
+                                    onMouseEnter={e => e.target.style.textDecoration = 'underline'}
+                                    onMouseLeave={e => e.target.style.textDecoration = 'none'}
+                                >
+                                    {m.longest.name}
+                                </Link>{' '}
+                                <b>({meta})</b>
                             </span>
                         </div>
                     )
                 })()}
                 {m.watchedMins > 0 && (
                     <div className="aj-fact">
-                        <span className="aj-fact-label">Nakoukáno</span>
+                        <span className="aj-fact-label">Nakoukáno celkem</span>
                         <span className="aj-fact-value" title="Skutečně zhlédnutý čas a počet epizod v měsíci (z History logu) — počítá i rozkoukaná anime">
                             <b>{fmtHours(m.watchedMins)}{m.watchedEps > 0 ? ` / ${m.watchedEps} EP` : ''}</b>
                         </span>

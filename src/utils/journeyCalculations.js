@@ -117,13 +117,33 @@ export function buildJourney({ animeList, historyLog, top10Names = [], hmNames =
     // (time "143 min (2,4 hod)", episodes "(6x) EP 7-12")
     const watchedByMonth = new Map()
     const watchedEpsByMonth = new Map()
+    const rewatchEpsByMonth = new Map()
+    const rewatchMinsByMonth = new Map()
+    const rewatchTitlesByMonth = new Map()
+
     for (const h of historyLog || []) {
         const key = monthKeyOf(h.date)
         if (!key) continue
-        const m = /(\d+)\s*min/.exec(h.time || '')
-        if (m) watchedByMonth.set(key, (watchedByMonth.get(key) || 0) + parseInt(m[1], 10))
-        const e = /\((\d+)x\)/.exec(h.episodes || '')
-        if (e) watchedEpsByMonth.set(key, (watchedEpsByMonth.get(key) || 0) + parseInt(e[1], 10))
+        const mins = (() => {
+            const m = /(\d+)\s*min/.exec(h.time || '')
+            return m ? parseInt(m[1], 10) : 0
+        })()
+        if (mins) watchedByMonth.set(key, (watchedByMonth.get(key) || 0) + mins)
+
+        const eps = (() => {
+            const e = /\((\d+)x\)/.exec(h.episodes || '')
+            return e ? parseInt(e[1], 10) : 0
+        })()
+        if (eps) watchedEpsByMonth.set(key, (watchedEpsByMonth.get(key) || 0) + eps)
+
+        if (h.rewatch) {
+            if (eps) rewatchEpsByMonth.set(key, (rewatchEpsByMonth.get(key) || 0) + eps)
+            if (mins) rewatchMinsByMonth.set(key, (rewatchMinsByMonth.get(key) || 0) + mins)
+            if (h.name) {
+                if (!rewatchTitlesByMonth.has(key)) rewatchTitlesByMonth.set(key, new Set())
+                rewatchTitlesByMonth.get(key).add(h.name)
+            }
+        }
     }
 
     const sortedKeys = [...monthly.keys()].sort()
@@ -291,9 +311,9 @@ export function buildJourney({ animeList, historyLog, top10Names = [], hmNames =
             const eps = num(a.episodes) || 0
             const sk = lc(a.series)
             if (sk) {
-                const prev = durBySeries.get(sk) || { name: a.series, mins: 0, eps: 0 }
-                durBySeries.set(sk, { name: a.series, mins: prev.mins + d, eps: prev.eps + eps })
-            } else if (!longest || d > longest.mins) longest = { name: a.name, mins: d, eps }
+                const prev = durBySeries.get(sk) || { name: a.series, mins: 0, eps: 0, firstName: a.name }
+                durBySeries.set(sk, { name: a.series, mins: prev.mins + d, eps: prev.eps + eps, firstName: prev.firstName })
+            } else if (!longest || d > longest.mins) longest = { name: a.name, mins: d, eps, firstName: a.name }
         }
         for (const s of durBySeries.values()) if (!longest || s.mins > longest.mins) longest = s
 
@@ -311,6 +331,12 @@ export function buildJourney({ animeList, historyLog, top10Names = [], hmNames =
             longest: longest ? { ...longest, hoursText: fmtHours(longest.mins) } : null,
             watchedMins: watchedByMonth.get(key) || 0,
             watchedEps: watchedEpsByMonth.get(key) || 0,
+            rewatchStats: {
+                count: rewatchTitlesByMonth.get(key)?.size || 0,
+                eps: rewatchEpsByMonth.get(key) || 0,
+                mins: rewatchMinsByMonth.get(key) || 0,
+                hoursText: fmtHours(rewatchMinsByMonth.get(key) || 0)
+            },
             types, genres, themes, tags,
             items: [...monthAll].sort((a, b) => {
                 const da = a.end_date ? new Date(a.end_date).getTime() : 0
