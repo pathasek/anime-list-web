@@ -176,6 +176,7 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                 ytId: null,
                 file_id: null,
                 isExtra: true, // vizuální odlišení od vybraných GDrive klipů
+                anime_display: animeName,
             })
         }
 

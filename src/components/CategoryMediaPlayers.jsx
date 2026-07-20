@@ -130,7 +130,9 @@ function VideoModalInner({ media, onClose, onNext }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    const animeTitle = media.anime_display || media.anime_name || media.animeTitle || null
     const subtitle = [
+        animeTitle,
         media.label,
         media.artist,
         (media.isExtra || playMode === 'animethemes') ? 'AnimeThemes.moe' : null

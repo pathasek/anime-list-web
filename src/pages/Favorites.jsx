@@ -214,7 +214,7 @@ function Favorites() {
             label: v.ver ? `${type} ${v.ver}` : type,
             url: v.url,
             file_id: v.file_id || null,
-            anime_display: v.anime_display || fav.anime_name,
+            anime_display: fav.anime_name || v.anime_display,
             malId: fav.mal_id || null // fallback přehrávače na AnimeThemes.moe
         })
     }, [findVideoFor])

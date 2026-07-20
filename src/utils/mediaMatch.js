@@ -163,6 +163,7 @@ export function getMediaForAnime(animeName, opEdVideos, ostPieces, ostWhole, ani
             url: v.url,
             ytId: null,
             file_id: v.file_id || null,
+            anime_display: animeName || v.anime_display || null,
         })
     }
 
