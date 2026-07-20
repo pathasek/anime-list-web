@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback, lazy, Suspense } from 'react'
+import { useState, useEffect, useMemo, useCallback, useRef, lazy, Suspense } from 'react'
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import DashboardGroup from '../components/DashboardGroup'
@@ -111,6 +111,7 @@ function Favorites() {
     const [videoModal, setVideoModal] = useState(null)     // přehrávané OP/ED video v modálu
     const [quizOpen, setQuizOpen] = useState(false)         // minihra „Hádej OP/ED“
     const { openPlayer } = useOstPlayer()                  // globální OST přehrávač (přežívá navigaci)
+    const animeListRef = useRef([])                         // pro dohledání watch_date u OST pieces
 
     // Czech number formatting: dot → comma
     const toCS = (val) => String(val).replace('.', ',')
@@ -160,6 +161,7 @@ function Favorites() {
             fetch('data/anime_list.json?v=' + Date.now()).then(r => r.json()).catch(() => [])
         ])
             .then(([favData, ostData, spotData, opEdData, animeListData]) => {
+                animeListRef.current = animeListData || []
                 const decorated = (favData || []).map(fav => {
                     const favKey = normalizeAnimeKey(fav.anime_name)
                     const match = (animeListData || []).find(a => {
@@ -237,7 +239,14 @@ function Favorites() {
             .map(p => {
                 const ytId = extractYoutubeId(p.ost_url)
                 if (!ytId) return null
-                return { anime: p.anime_name, song: p.ost_name, ytId }
+                // Dohledání watch_date z anime_list pro řazení
+                const pieceKey = normalizeAnimeKey(p.anime_name)
+                const match = animeListRef.current.find(a => {
+                    const aKey = normalizeAnimeKey(a.name)
+                    return animeKeysMatch(aKey, pieceKey) || animeKeysMatch(pieceKey, aKey)
+                })
+                const watchDate = match ? (match.end_date || match.start_date || null) : null
+                return { anime: p.anime_name, song: p.ost_name, ytId, watch_date: watchDate }
             })
             .filter(Boolean)
     }, [ostTables])

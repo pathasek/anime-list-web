@@ -4327,6 +4327,12 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   color: var(--text-primary);
   flex: 1;
 }
+.ost-floating-title-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
 .ost-floating-badge {
   flex-shrink: 0;
   font-size: 0.6rem;
@@ -4577,7 +4583,9 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 .ost-playlist-item-title {
   min-width: 0;
   flex: 1;
-  display: flex;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* ==== OST přehrávač pro stránku Favourite OP/ED/OST ==== */
@@ -4688,6 +4696,12 @@ button.fav-ost-row-play:hover {
   text-align: left;
   cursor: pointer;
   padding: 2px 0;
+}
+.fav-ost-group-name-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 .fav-ost-group.active .fav-ost-group-name {
   color: var(--accent-primary);

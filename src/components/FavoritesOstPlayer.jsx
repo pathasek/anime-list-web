@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import YouTube from 'react-youtube'
-import { ScrollableText } from './CategoryMediaPlayers'
 
 // ============================================================
 // Plovoucí OST přehrávač pro stránku Favourite OP/ED/OST.
@@ -29,6 +28,7 @@ export default function FavoritesOstPlayer({ mode, tracks = [], groups = [], ini
     const isMinimized = minimizedProp !== undefined ? minimizedProp : internalMinimized
     const setIsMinimized = onMinimizeChange !== undefined ? onMinimizeChange : setInternalMinimized
     const [isShuffle, setIsShuffle] = useState(false)
+    const [sortOrder, setSortOrder] = useState('none') // 'none' | 'newest' | 'oldest'
 
     // ---- pieces mode ----
     const [trackIdx, setTrackIdx] = useState(mode === 'pieces' ? initialIndex : 0)
@@ -70,6 +70,40 @@ export default function FavoritesOstPlayer({ mode, tracks = [], groups = [], ini
         setIsShuffle(prev => !prev)
     }
 
+    const toggleSort = () => {
+        setSortOrder(prev => {
+            if (prev === 'none') return 'newest'
+            if (prev === 'newest') return 'oldest'
+            return 'none'
+        })
+    }
+
+    // Seřazené tracky podle watch_date (pouze pro pieces mód)
+    const sortedTracks = useMemo(() => {
+        if (sortOrder === 'none' || isWhole) return tracks
+        const withDates = tracks.map((t, i) => ({ ...t, _origIndex: i }))
+        withDates.sort((a, b) => {
+            const dateA = a.watch_date || '0000-00-00'
+            const dateB = b.watch_date || '0000-00-00'
+            if (sortOrder === 'newest') return dateB.localeCompare(dateA)
+            return dateA.localeCompare(dateB)
+        })
+        return withDates
+    }, [tracks, sortOrder, isWhole])
+
+    // Ikona pro tlačítko řazení
+    const sortIcon = sortOrder === 'newest'
+        ? '🔽'
+        : sortOrder === 'oldest'
+            ? '🔼'
+            : '🔄'
+
+    const sortTitle = sortOrder === 'newest'
+        ? 'Seřazeno: nejnovější první'
+        : sortOrder === 'oldest'
+            ? 'Seřazeno: nejstarší první'
+            : 'Seřadit podle data zhlédnutí'
+
     // ---- pieces: navigace ----
     const playNextPiece = () => {
         if (tracks.length <= 1) return
@@ -77,6 +111,11 @@ export default function FavoritesOstPlayer({ mode, tracks = [], groups = [], ini
             let next = trackIdx
             while (next === trackIdx) next = Math.floor(Math.random() * tracks.length)
             setTrackIdx(next)
+        } else if (sortOrder !== 'none') {
+            // Respektovat seřazené pořadí
+            const sortedIdx = sortedTracks.findIndex(t => (t._origIndex ?? 0) === trackIdx)
+            const nextSorted = (sortedIdx + 1) % sortedTracks.length
+            setTrackIdx(sortedTracks[nextSorted]._origIndex)
         } else {
             setTrackIdx((trackIdx + 1) % tracks.length)
         }
@@ -251,7 +290,7 @@ export default function FavoritesOstPlayer({ mode, tracks = [], groups = [], ini
                 <div className="ost-floating-header">
                     <span className="ost-floating-title" title={headerTitle}>
                         <span className="ost-floating-badge">{headerBadge}</span>
-                        <ScrollableText text={headerTitle}>{headerTitle}</ScrollableText>
+                        <span className="ost-floating-title-text">{headerTitle}</span>
                     </span>
                     <div className="ost-floating-controls">
                         <button
@@ -291,11 +330,11 @@ export default function FavoritesOstPlayer({ mode, tracks = [], groups = [], ini
                             <div style={{ display: 'flex', gap: '6px' }}>
                                 <button
                                     type="button"
-                                    className="ost-shuffle-btn"
-                                    onClick={playNext}
-                                    title="Přehrát další skladbu"
+                                    className={`ost-shuffle-btn ost-sort-btn${sortOrder !== 'none' ? ' active' : ''}`}
+                                    onClick={toggleSort}
+                                    title={sortTitle}
                                 >
-                                    ⏭️ Next song
+                                    {sortIcon} Seřadit
                                 </button>
                                 <button
                                     type="button"
@@ -305,24 +344,31 @@ export default function FavoritesOstPlayer({ mode, tracks = [], groups = [], ini
                                 >
                                     🔀 Shuffle
                                 </button>
+                                <button
+                                    type="button"
+                                    className="ost-shuffle-btn"
+                                    onClick={playNext}
+                                    title="Přehrát další skladbu"
+                                >
+                                    ⏭️ Next song
+                                </button>
                             </div>
                         </div>
                         <div className="ost-playlist-list fav-ost-list" ref={activeListRef}>
-                            {tracks.map((t, i) => {
-                                const isActive = i === trackIdx
+                            {sortedTracks.map((t, i) => {
+                                const origIdx = sortOrder !== 'none' ? (t._origIndex ?? i) : i
+                                const isActive = origIdx === trackIdx
                                 return (
                                     <button
-                                        key={`${t.ytId}-${i}`}
+                                        key={`${t.ytId}-${origIdx}`}
                                         type="button"
                                         className={`ost-playlist-item${isActive ? ' active' : ''}`}
-                                        onClick={() => setTrackIdx(i)}
+                                        onClick={() => setTrackIdx(origIdx)}
                                         disabled={isActive}
                                     >
                                         <span className="ost-playlist-item-num">{i + 1}.</span>
                                         <span className="ost-playlist-item-title" title={`${t.anime} – ${t.song}`}>
-                                            <ScrollableText text={`${t.anime} – ${t.song}`}>
-                                                <b>{t.anime}</b> – {t.song}
-                                            </ScrollableText>
+                                            <b>{t.anime}</b> – {t.song}
                                         </span>
                                         <span className="fav-ost-row-play" title="Přehrát">
                                             {isActive ? '♪' : <PlaySmallIcon />}
@@ -342,19 +388,19 @@ export default function FavoritesOstPlayer({ mode, tracks = [], groups = [], ini
                             <div style={{ display: 'flex', gap: '6px' }}>
                                 <button
                                     type="button"
-                                    className="ost-shuffle-btn"
-                                    onClick={playNext}
-                                    title="Přehrát další skladbu"
-                                >
-                                    ⏭️ Next song
-                                </button>
-                                <button
-                                    type="button"
                                     className={`ost-shuffle-btn${isShuffle ? ' active' : ''}`}
                                     onClick={toggleShuffle}
                                     title={isShuffle ? 'Vypnout náhodné přehrávání' : 'Zapnout náhodné přehrávání (uvnitř playlistu)'}
                                 >
                                     🔀 Shuffle
+                                </button>
+                                <button
+                                    type="button"
+                                    className="ost-shuffle-btn"
+                                    onClick={playNext}
+                                    title="Přehrát další skladbu"
+                                >
+                                    ⏭️ Next song
                                 </button>
                             </div>
                         </div>
@@ -380,7 +426,7 @@ export default function FavoritesOstPlayer({ mode, tracks = [], groups = [], ini
                                                 onClick={() => (isActiveGroup ? toggleGroupExpand(gIdx) : activateGroup(gIdx))}
                                                 title={isActiveGroup ? g.name : `Přehrát playlist: ${g.name}`}
                                             >
-                                                <ScrollableText text={g.name}>{g.name}</ScrollableText>
+                                                <span className="fav-ost-group-name-text">{g.name}</span>
                                                 {gTracks && <span className="fav-ost-group-count">({gTracks.length})</span>}
                                             </button>
                                             <button
@@ -406,7 +452,7 @@ export default function FavoritesOstPlayer({ mode, tracks = [], groups = [], ini
                                                         >
                                                             <span className="ost-playlist-item-num">{tIdx + 1}.</span>
                                                             <span className="ost-playlist-item-title" title={t.song}>
-                                                                <ScrollableText text={t.song}>{t.song}</ScrollableText>
+                                                                {t.song}
                                                             </span>
                                                             <span className="fav-ost-row-play" title="Přehrát">
                                                                 {isActiveTrack ? '♪' : <PlaySmallIcon />}
