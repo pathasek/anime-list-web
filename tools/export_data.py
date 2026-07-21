@@ -486,13 +486,17 @@ def export_ost_tables(wb, wb_formulas=None):
             "ost_name": ost, "ost_url": ost_link
         })
         
-    # Table_FAV_OST_WHOLE: AH(34), AI(35), AJ(36)
+    # Table_FAV_OST_WHOLE: AG(33)=Pořadí (order), AH(34)=anime, AI(35)=YT, AJ(36)=Spotify
+    # POZOR: pole "order" je NUTNÉ — frontend (Favorites.jsx) podle něj řadí "OST Only (As a Whole)";
+    # bez něj spadne na abecední řazení (localeCompare). AG obsahuje '01.', '02.', ...
     for row in range(3, ws.max_row + 1):
+        order_val, _ = get_val_and_link(row, 33)
         anime, anime_link = get_val_and_link(row, 34)
         if not anime: continue
         yt, yt_link = get_val_and_link(row, 35)
         spotify, spotify_link = get_val_and_link(row, 36)
         data["whole"].append({
+            "order": order_val,
             "anime_name": anime, "anime_url": anime_link,
             "yt_playlist": yt, "yt_url": yt_link,
             "spotify_playlist": spotify, "spotify_url": spotify_link

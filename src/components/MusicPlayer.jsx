@@ -29,7 +29,8 @@ export default function MusicPlayer({ animeData, selectedYear }) {
 
     // Load full list from public/data/favorites_ost.json
     useEffect(() => {
-        fetch('/data/favorites_ost.json')
+        // Relativní cesta (ne '/data/...') — jinak se rozbije pod subcestou GitHub Pages
+        fetch('data/favorites_ost.json')
             .then(r => r.json())
             .then(data => {
                 if (data && data.pieces) {

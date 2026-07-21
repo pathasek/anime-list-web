@@ -3040,7 +3040,7 @@ function Dashboard() {
                         className="echidna-avatar"
                     />
                     <div className="notebook-btn">
-                        🤖 NotebookLM Chatbot
+                        ✦ Echidna – Gemini Notebook
                     </div>
                 </a>
             </div>
