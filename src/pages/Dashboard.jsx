@@ -254,6 +254,21 @@ function AiringEpisodeStats({ malUrl, animeName, historyLog = [], episodeRatings
         setLoading(!!malId && !cached)
     }
 
+    // Ø / Last skóre se počítají JEN z episodeRatings (žádná síť) — přes memo,
+    // takže se přepočítají OKAMŽITĚ při každé změně hodnocení, nezávisle na
+    // 15min TTL cache Jikan dat níže. (Dřív byly součástí async efektu, který
+    // se do TTL nespustil, takže se skóre aktualizovalo se zpožděním.)
+    const liveScores = useMemo(() => {
+        const animeRatingsObj = episodeRatings.find(r => r.name && r.name.toLowerCase() === animeName.toLowerCase())
+        const userRatings = (animeRatingsObj?.episodes || [])
+            .map(e => parseFloat(e.rating))
+            .filter(r => !isNaN(r) && r > 0)
+        return {
+            avgScore: userRatings.length ? userRatings.reduce((s, r) => s + r, 0) / userRatings.length : null,
+            lastScore: userRatings.length ? userRatings[userRatings.length - 1] : null,
+        }
+    }, [episodeRatings, animeName])
+
     useEffect(() => {
         if (!malId) return
 
@@ -281,23 +296,8 @@ function AiringEpisodeStats({ malUrl, animeName, historyLog = [], episodeRatings
             const lastEp = aired.length > 0 ? aired[aired.length - 1] : null
             const nextEp = upcoming.length > 0 ? upcoming[0] : null
 
-            // 2. Gather user's OWN ratings from episodeRatings
-            // episodeRatings is like [{ name: "Jujutsu Kaisen, S01", episodes: [{episode: "EP 1", rating: 8.75}, ...] }]
-            const animeRatingsObj = episodeRatings.find(r => r.name && r.name.toLowerCase() === animeName.toLowerCase())
-            let userRatings = []
-            if (animeRatingsObj && animeRatingsObj.episodes) {
-                userRatings = animeRatingsObj.episodes
-                    .map(e => parseFloat(e.rating))
-                    .filter(r => !isNaN(r) && r > 0)
-            }
-
-            const avgScore = userRatings.length > 0
-                ? (userRatings.reduce((sum, r) => sum + r, 0) / userRatings.length)
-                : null
-            const lastScore = userRatings.length > 0
-                ? userRatings[userRatings.length - 1]
-                : null
-
+            // Ø / Last skóre už tento efekt nepočítá — dělá to memo `liveScores`
+            // výše (okamžitě z episodeRatings, bez sítě). Tady jen Jikan data.
             const formatLocal = (dateObj) => {
                 return dateObj.toLocaleString('cs-CZ', { weekday: 'short', day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' })
             }
@@ -327,8 +327,6 @@ function AiringEpisodeStats({ malUrl, animeName, historyLog = [], episodeRatings
                 }
 
                 const statsObj = {
-                    avgScore,
-                    lastScore,
                     lastEpDate: formattedLast,
                     nextEpDate: formattedNext,
                     totalEps: episodes ? episodes.length : 0,
@@ -341,8 +339,6 @@ function AiringEpisodeStats({ malUrl, animeName, historyLog = [], episodeRatings
             }).catch(() => {
                 if (!signal.aborted) {
                     const statsObj = {
-                        avgScore,
-                        lastScore,
                         lastEpDate: formattedLast,
                         nextEpDate: formattedNext,
                         totalEps: episodes ? episodes.length : 0,
@@ -364,33 +360,36 @@ function AiringEpisodeStats({ malUrl, animeName, historyLog = [], episodeRatings
         }
     }, [malId, animeName, historyLog])
 
-    if (loading) return <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', opacity: 0.5 }}>Načítám…</span>
-    if (!stats) return null
+    // Skóre (bez sítě) se ukážou hned; „Načítám…" jen když není ani skóre ani
+    // cache Jikan dat. Datumy/broadcast se doplní, až dojedou z Jikanu.
+    const hasScores = liveScores.avgScore !== null || liveScores.lastScore !== null
+    if (!hasScores && loading) return <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', opacity: 0.5 }}>Načítám…</span>
+    if (!hasScores && !stats) return null
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', width: '100%' }}>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 8px', fontSize: '0.62rem', color: 'var(--text-muted)', marginTop: '1px' }}>
-                {stats.avgScore !== null && (
+                {liveScores.avgScore !== null && (
                     <span title="Tvůj průměr hodnocení sledovaných dílů">
-                        ⭐ Ø {stats.avgScore.toFixed(2).replace('.', ',')}
+                        ⭐ Ø {liveScores.avgScore.toFixed(2).replace('.', ',')}
                     </span>
                 )}
-                {stats.lastScore !== null && (
+                {liveScores.lastScore !== null && (
                     <span title="Tvůj poslední hodnocený díl">
-                        📊 Last: {stats.lastScore.toFixed(1).replace('.', ',')}
+                        📊 Last: {liveScores.lastScore.toFixed(1).replace('.', ',')}
                     </span>
                 )}
-                {stats.lastEpDate && (
+                {stats?.lastEpDate && (
                     <span title="Datum poslední epizody (Jikan)">
                         📅 {stats.lastEpDate}
                     </span>
                 )}
-                {stats.nextEpDate && (
+                {stats?.nextEpDate && (
                     <span title="Datum příští epizody (Jikan)" style={{ color: '#34d399' }}>
                         ⏭️ {stats.nextEpDate}
                     </span>
                 )}
-                {stats.broadcast && (
+                {stats?.broadcast && (
                     <span title="Pravidelný čas vysílání (Jikan)" style={{ color: '#818cf8' }}>
                         📡 {stats.broadcast}
                     </span>
@@ -589,8 +588,12 @@ function AiringCalendar({ airingAnime }) {
             const list = airingRef.current
             const nowTs = Date.now()
             const malIds = list.map(a => extractMalId(a.mal_url)).filter(Boolean)
-            const schedules = await fetchAnilistSchedules(malIds, signal).catch(() => ({}))
-            if (signal.aborted) return
+
+            // AniList rozvrh se stahuje NA POZADÍ — nečeká se na něj před prvním
+            // vykreslením (to byl hlavní důvod „lagu": celý kalendář čekal na
+            // jeden síťový GraphQL dotaz). Kalendář se ukáže hned z lokální
+            // cache a rozvrh ho pak jen zpřesní.
+            const schedulesPromise = fetchAnilistSchedules(malIds, signal).catch(() => ({}))
 
             // Začíná se od poslední známé podoby — jen se vyhodí anime,
             // která už nejsou ve sledovaných; zbytek zůstává viditelný,
@@ -601,11 +604,16 @@ function AiringCalendar({ airingAnime }) {
                 if (!names.has(k)) delete next[k]
             }
 
-            // FÁZE 1 — bez sítě: AniList rozvrh (1 dotaz výše) + episode
-            // listy z IndexedDB + info z localStorage/statické cache.
-            // Celý kalendář se vykreslí hned; síť přijde až ve fázi 2.
+            // FÁZE 1 — bez čekání na síť: episode listy z IndexedDB + info
+            // z localStorage/statické cache. Každé anime se vykreslí HNED,
+            // jak se spočítá (žádné čekání na celý batch ani na AniList
+            // rozvrh) — proto se maximalizovaný Status naplní naráz, ne po
+            // jednom titulu. Rozvrh (přesné časy budoucích dílů) se doplní
+            // v druhé fázi. Cache episode listů se přechová pro přepočet.
             const EP_LIST_TTL = 24 * 60 * 60 * 1000
             const staleQueue = []
+            const cachedByMal = {}
+            const infoByMal = {}
             for (const a of list) {
                 const malId = extractMalId(a.mal_url)
                 if (!malId) continue
@@ -614,10 +622,23 @@ function AiringCalendar({ airingAnime }) {
                     getAnimeInfo(malId, 'high', signal).catch(() => null)
                 ])
                 if (signal.aborted) return
-                next[a.name] = buildAnimeEvents(a, cachedList?.episodes || null, info, schedules[malId], nowTs)
+                cachedByMal[malId] = cachedList
+                infoByMal[malId] = info
+                next[a.name] = buildAnimeEvents(a, cachedList?.episodes || null, info, null, nowTs)
+                setAnimeEvents({ ...next })
                 if (!cachedList?.fetchedAt || nowTs - cachedList.fetchedAt > EP_LIST_TTL) {
                     staleQueue.push({ a, malId, info })
                 }
+            }
+
+            // FÁZE 1b — jakmile dorazí AniList rozvrh, přepočítej všechna
+            // anime s přesnými čísly a časy budoucích dílů (jeden batch update).
+            const schedules = await schedulesPromise
+            if (signal.aborted) return
+            for (const a of list) {
+                const malId = extractMalId(a.mal_url)
+                if (!malId || !schedules[malId]) continue
+                next[a.name] = buildAnimeEvents(a, cachedByMal[malId]?.episodes || null, infoByMal[malId], schedules[malId], nowTs)
             }
             setAnimeEvents({ ...next })
 

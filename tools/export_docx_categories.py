@@ -1,6 +1,7 @@
 import os
 import re
 import json
+import unicodedata
 from docx import Document
 from docx.text.paragraph import Paragraph
 from docx.table import Table
@@ -154,8 +155,9 @@ HEADING_MAP = {
 def clean_file_name(name: str) -> str:
     s = name
     s = s.replace(":", "_").replace("/", " ").replace("\\", "")
-    for char in ['*', '?', '"', '<', '>', '|']:
+    for char in ['*', '?', '"', "'", '<', '>', '|', '`']:
         s = s.replace(char, "")
+    s = re.sub(r'\s+', ' ', s)
     return s.strip()
 
 def map_heading_to_category(text: str) -> str:
@@ -290,16 +292,45 @@ def extract_markdown_text(paragraph) -> str:
         
     return md_text
 
+# ── Rozbor děje („story") pro filmy / 1EP / speciály ────────────────────────
+# Tyhle docx mají PŘED kategoriemi (Animace…) sekci „Shrnutí Děje" místo
+# epizodních nadpisů „EP N". Zachytíme ji jako story = {title, text} → na webu
+# se u kategorie Plot ukáže tlačítko „Děj". `story` a `episodes` se vzájemně
+# vylučují: jakmile se objeví „EP N" nadpis, jde o epizodní docx a rozpracovaný
+# story režim se zahodí.
+def _norm_heading(text):
+    t = re.sub(r'^[\d\.\)\s]+', '', text.strip())
+    t = re.sub(r'^\s*(?:č[aá]st|cast|part)\s+[ivxlcdm\d]+\s*[:\-–]?\s*', '', t, flags=re.I)
+    return ''.join(c for c in unicodedata.normalize('NFKD', t) if not unicodedata.combining(c)).lower()
+
+_STORY_RE = re.compile(r'shrnut|narativni\s+syntez|narativni\s+a\s+scenick|podrobna\s+analyza\s+narativni|hloubkova\s+rekonstrukce\s+narativ|dejova\s+expozice|narativni\s+rekonstrukc|narativni\s+architektura|detailni\s+narativni')
+# Nadpis dokumentu (ne sekce Shrnutí) — vyloučit, ať detektor nechytá titulek
+_TITLE_RE = re.compile(r'analyticka\s+(?:studie|zprava)|komplexni\s+analyt|komplexni\s+dekonstrukce')
+# Přechod na sekci kategorií („Deskriptivní analýza komponentů") = konec story
+_COMPONENT_RE = re.compile(r'deskriptivni\s+analyz|deskriptivni\s+.*komponent|analyza\s+komponent|popisna\s+analyz')
+
+def _matches_story_heading(text):
+    h = _norm_heading(text)
+    if _TITLE_RE.search(h):
+        return False
+    return bool(_STORY_RE.search(h))
+
+def _matches_component_heading(text):
+    return bool(_COMPONENT_RE.search(_norm_heading(text)))
+
+
 def parse_docx_categories(docx_path: str) -> dict[str, any]:
     doc = Document(docx_path)
     categories = {}
     episodes = {}
-    
+
     current_cat = None
     current_ep_num = None
     current_ep_title = None
     current_paragraphs = []
-    
+    current_story_title = None
+    story = None
+
     list_counters = {}
     list_base_ilvl = {}
 
@@ -310,42 +341,54 @@ def parse_docx_categories(docx_path: str) -> dict[str, any]:
             text = block.text.strip()
             if text:
                 list_type, num_id, ilvl = _resolve_list_format(block, doc)
-                
+
                 is_cat_heading = False
                 if list_type is None and is_bold_heading(block):
                     is_cat_heading = True
-                
+                cat = map_heading_to_category(text) if is_cat_heading else None
+
                 is_ep_heading = False
                 matched_ep_num = None
+                para_is_bold = all(r.bold for r in block.runs if r.text.strip()) if block.runs else False
                 if list_type is None and not is_cat_heading:
-                    is_bold = all(r.bold for r in block.runs if r.text.strip()) if block.runs else False
-                    if is_bold:
+                    if para_is_bold:
                         ep_match = re.search(r'^\s*(?:\d+\.\s+)?\b(EP|Epizoda)\s*(\d+)', text, re.IGNORECASE)
                         if ep_match:
                             is_ep_heading = True
                             matched_ep_num = ep_match.group(2)
-                
-                if is_cat_heading:
-                    cat = map_heading_to_category(text)
-                    if cat == "Animace":
-                        if current_ep_num and current_paragraphs:
-                            episodes[current_ep_num] = {
-                                "title": current_ep_title,
-                                "text": "\n".join(current_paragraphs).strip()
-                            }
-                            current_ep_num = None
-                            current_ep_title = None
-                        has_started = True
-                    
-                    if has_started:
-                        if current_cat and current_paragraphs:
-                            categories[current_cat] = "\n".join(current_paragraphs).strip()
-                        current_cat = cat
-                        current_paragraphs = []
-                        list_counters.clear()
-                        list_base_ilvl.clear()
-                
+
+                # Detekce začátku sekce „Shrnutí Děje" (jen před kategoriemi,
+                # jen když ještě neběží epizody ani story)
+                is_story_heading = False
+                if (list_type is None and not is_ep_heading and not has_started
+                        and current_story_title is None and current_ep_num is None and story is None
+                        and para_is_bold and cat != "Animace" and _matches_story_heading(text)):
+                    is_story_heading = True
+                story_active = (not has_started) and (current_story_title is not None)
+
+                if is_cat_heading and cat == "Animace":
+                    if current_ep_num and current_paragraphs:
+                        episodes[current_ep_num] = {
+                            "title": current_ep_title,
+                            "text": "\n".join(current_paragraphs).strip()
+                        }
+                        current_ep_num = None
+                        current_ep_title = None
+                    if current_story_title is not None and current_paragraphs and story is None:
+                        story = {"title": current_story_title, "text": "\n".join(current_paragraphs).strip()}
+                        current_story_title = None
+                    has_started = True
+                    if current_cat and current_paragraphs:
+                        categories[current_cat] = "\n".join(current_paragraphs).strip()
+                    current_cat = cat
+                    current_paragraphs = []
+                    list_counters.clear()
+                    list_base_ilvl.clear()
+
                 elif is_ep_heading and not has_started:
+                    # EP nadpis => epizodní docx: zahoď případný story režim
+                    # (story a episodes se vzájemně vylučují).
+                    current_story_title = None
                     if current_ep_num and current_paragraphs:
                         episodes[current_ep_num] = {
                             "title": current_ep_title,
@@ -356,21 +399,70 @@ def parse_docx_categories(docx_path: str) -> dict[str, any]:
                     current_paragraphs = []
                     list_counters.clear()
                     list_base_ilvl.clear()
-                
+
+                elif story_active:
+                    # Uvnitř „Shrnutí Děje": vše je narativní obsah až do sekce
+                    # „Deskriptivní analýza komponentů" nebo do „Animace" (výše).
+                    # I nadpisy mapující na kategorii (např. „1.3 Závěr") jsou tu
+                    # obsahem děje, ne kategorií.
+                    if para_is_bold and len(text) < 120 and _matches_component_heading(text):
+                        if current_paragraphs and story is None:
+                            story = {"title": current_story_title, "text": "\n".join(current_paragraphs).strip()}
+                        current_story_title = None
+                        current_paragraphs = []
+                        list_counters.clear()
+                        list_base_ilvl.clear()
+                    else:
+                        md_text = extract_markdown_text(block)
+                        if not md_text.strip():
+                            md_text = text
+                        if num_id is not None:
+                            if num_id not in list_base_ilvl:
+                                list_base_ilvl[num_id] = ilvl
+                            relative_ilvl = ilvl - list_base_ilvl[num_id]
+                        else:
+                            relative_ilvl = 0
+                        indent = "    " * max(0, relative_ilvl)
+                        if list_type == 'bullet':
+                            md_text = f"{indent}- {md_text}"
+                        elif list_type == 'decimal':
+                            key = (num_id, ilvl)
+                            if key not in list_counters:
+                                list_counters[key] = 1
+                            else:
+                                list_counters[key] += 1
+                            md_text = f"{indent}{list_counters[key]}. {md_text}"
+                        current_paragraphs.append(md_text)
+
+                elif is_story_heading:
+                    current_story_title = text
+                    current_paragraphs = []
+                    list_counters.clear()
+                    list_base_ilvl.clear()
+
+                elif is_cat_heading:
+                    if has_started:
+                        if current_cat and current_paragraphs:
+                            categories[current_cat] = "\n".join(current_paragraphs).strip()
+                        current_cat = cat
+                        current_paragraphs = []
+                        list_counters.clear()
+                        list_base_ilvl.clear()
+
                 elif (has_started and current_cat is not None) or (not has_started and current_ep_num is not None):
                     md_text = extract_markdown_text(block)
                     if not md_text.strip():
                         md_text = text
-                        
+
                     if num_id is not None:
                         if num_id not in list_base_ilvl:
                             list_base_ilvl[num_id] = ilvl
                         relative_ilvl = ilvl - list_base_ilvl[num_id]
                     else:
                         relative_ilvl = 0
-                        
+
                     indent = "    " * max(0, relative_ilvl)
-                    
+
                     if list_type == 'bullet':
                         md_text = f"{indent}- {md_text}"
                     elif list_type == 'decimal':
@@ -380,9 +472,9 @@ def parse_docx_categories(docx_path: str) -> dict[str, any]:
                         else:
                             list_counters[key] += 1
                         md_text = f"{indent}{list_counters[key]}. {md_text}"
-                        
+
                     current_paragraphs.append(md_text)
-                    
+
         elif isinstance(block, Table):
             if has_started and current_cat is not None:
                 table_text = "\n[TABULKA_START]\n"
@@ -391,17 +483,23 @@ def parse_docx_categories(docx_path: str) -> dict[str, any]:
                     table_text += "| " + " | ".join(row_data) + " |\n"
                 table_text += "[TABULKA_KONEC]\n"
                 current_paragraphs.append(table_text)
-            elif not has_started and current_ep_num is not None:
+            elif not has_started and (current_ep_num is not None or current_story_title is not None):
                 table_text = "\n[TABULKA_START]\n"
                 for row in block.rows:
                     row_data = [cell.text.strip().replace('\n', ' ') for cell in row.cells]
                     table_text += "| " + " | ".join(row_data) + " |\n"
                 table_text += "[TABULKA_KONEC]\n"
                 current_paragraphs.append(table_text)
-            
+
     if current_cat and current_paragraphs:
         categories[current_cat] = "\n".join(current_paragraphs).strip()
-        
+
+    # Story bez ukončovací sekce (došla až do konce dokumentu)
+    if current_story_title is not None and current_paragraphs and story is None:
+        story = {"title": current_story_title, "text": "\n".join(current_paragraphs).strip()}
+    if story:
+        categories["story"] = story
+
     if episodes:
         int_keys = sorted([int(k) for k in episodes.keys() if k.isdigit()])
         if int_keys and int_keys[0] > 1:
@@ -417,17 +515,43 @@ def parse_docx_categories(docx_path: str) -> dict[str, any]:
 def main():
     print("Spouštím export DOCX rozborů...")
     
-    # Load all anime names from the web rating file to map them properly
+    # Načteme názvy anime ze DVOU zdrojů a sjednotíme je:
+    #   1) category_ratings.json — anime s kategoriálním hodnocením (~296)
+    #   2) anime_list.json — KOMPLETNÍ seznam všech titulů (~488), vč. jednotlivých
+    #      řad, filmů a OVA, které mají vlastní DOCX rozbor, ale nemají samostatné
+    #      kategoriální hodnocení (to je sdílené pod hlavní sérií).
+    # Bez anime_list se ~178 rozborů (Attack on Titan po řadách, filmy Fate/Evangelion,
+    # DanMachi sezóny, KonoSuba filmy atd.) nikdy nespárovalo — každý titul teď
+    # dostane svůj vlastní rozbor, když k němu DOCX existuje.
     ratings_file = os.path.join(APP_ROOT, "public", "data", "category_ratings.json")
+    list_file = os.path.join(APP_ROOT, "public", "data", "anime_list.json")
     if not os.path.exists(ratings_file):
         print(f"Chyba: Soubor {ratings_file} neexistuje! Spusťte nejdřív hlavní export.")
         return
-        
+
+    all_anime_names = []
+    seen_names = set()
+
+    def add_names(names):
+        for n in names:
+            if n and n not in seen_names:
+                seen_names.add(n)
+                all_anime_names.append(n)
+
     with open(ratings_file, 'r', encoding='utf-8') as f:
-        anime_items = json.load(f)
-        
-    all_anime_names = [item['name'] for item in anime_items]
-    print(f"Načteno {len(all_anime_names)} anime z webového seznamu.")
+        rating_items = json.load(f)
+    add_names(item['name'] for item in rating_items)
+    rating_count = len(all_anime_names)
+
+    if os.path.exists(list_file):
+        with open(list_file, 'r', encoding='utf-8') as f:
+            list_items = json.load(f)
+        add_names(item['name'] for item in list_items)
+    else:
+        print(f"Varování: {list_file} neexistuje — použije se jen category_ratings.json.")
+
+    print(f"Načteno {len(all_anime_names)} anime "
+          f"({rating_count} z hodnocení + {len(all_anime_names) - rating_count} navíc z anime_list).")
     
     result = {}
     parsed_count = 0

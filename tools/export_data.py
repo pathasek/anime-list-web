@@ -191,6 +191,11 @@ def export_anime_list(wb, wb_comments=None):
         
         anime_name_str = str(anime.get("name", "")).strip()
         anime["tags"] = tags_cache.get(anime_name_str)
+        # Fallback: pokud se tagy nenašly podle jména (např. uživatel přejmenoval
+        # "Witch Hat Atelier" → "Witch Hat Atelier, S01"), zkusíme název série
+        if not anime["tags"] and anime.get("series"):
+            series_str = str(anime["series"]).strip()
+            anime["tags"] = tags_cache.get(series_str)
         
         data.append(anime)
     
@@ -1124,9 +1129,14 @@ def main():
         
         print("Exporting Top Favorites & Characters...")
         top_favorites = export_top_favorites(file_path, output_dir) # Use original file_path for COM, wb is internal memory
-        with open(os.path.join(output_dir, "top_favorites.json"), "w", encoding="utf-8") as f:
-            json.dump(top_favorites, f, ensure_ascii=False, indent=2)
-        print(f"  Exported Top 10 Anime: {len(top_favorites['top10_anime'])}, HM Anime: {len(top_favorites['hm_anime'])}, Top 10 Chars: {len(top_favorites['top10_chars'])}")
+        json_tf_path = os.path.join(output_dir, "top_favorites.json")
+        has_items = any(len(top_favorites.get(k, [])) > 0 for k in ["top10_anime", "hm_anime", "top10_chars"])
+        if has_items or not os.path.exists(json_tf_path):
+            with open(json_tf_path, "w", encoding="utf-8") as f:
+                json.dump(top_favorites, f, ensure_ascii=False, indent=2)
+            print(f"  Exported Top 10 Anime: {len(top_favorites['top10_anime'])}, HM Anime: {len(top_favorites['hm_anime'])}, Top 10 Chars: {len(top_favorites['top10_chars'])}")
+        else:
+            print("  Warning: Top Favorites extraction returned 0 items, preserving existing top_favorites.json cache.")
     
         # Export metadata for version checking
         print("Exporting Metadata...")

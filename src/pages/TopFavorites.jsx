@@ -171,12 +171,26 @@ const TopFavorites = () => {
         );
     };
 
+    const hasData = (data.top10_anime && data.top10_anime.length > 0) ||
+                    (data.hm_anime && data.hm_anime.length > 0) ||
+                    (data.top10_chars && data.top10_chars.length > 0);
+
     return (
         <div className="top-favorites-page fade-in">
             <div className="favorites-content">
-                {renderSection('TOP 10 Anime', data.top10_anime, true)}
-                {renderSection('Honourable Mentions', data.hm_anime, true, true)}
-                {renderSection('TOP 10 Characters', data.top10_chars, false)}
+                {hasData ? (
+                    <>
+                        {renderSection('TOP 10 Anime', data.top10_anime, true)}
+                        {renderSection('Honourable Mentions', data.hm_anime, true, true)}
+                        {renderSection('TOP 10 Characters', data.top10_chars, false)}
+                    </>
+                ) : (
+                    <div className="no-favorites" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
+                        <span style={{ fontSize: '3rem', display: 'block', marginBottom: '1rem' }}>🏆</span>
+                        <h2>Žádné oblíbené položky nebyla načteny</h2>
+                        <p>Zkontrolujte prosím soubor <code>data/top_favorites.json</code> v projektu.</p>
+                    </div>
+                )}
             </div>
         </div>
     );

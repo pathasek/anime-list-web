@@ -71,7 +71,11 @@ function catAvgOf(name, categoryByName) {
 function epMaxOf(name, episodesByName) {
     const eps = episodesByName.get(lc(name))
     if (!eps || !eps.length) return null
-    return Math.max(...eps.map(e => num(e.rating)).filter(v => v !== null))
+    // Filtrovat PŘED Math.max — jinak by seznam samých null ratingů dal
+    // Math.max(...[]) === -Infinity, což `epMax || 0` (u tiebreakeru) nezachytí
+    // (-Infinity je truthy) a rozbilo by řazení kandidátů.
+    const vals = eps.map(e => num(e.rating)).filter(v => v !== null)
+    return vals.length ? Math.max(...vals) : null
 }
 // Detail entity (série = průměr členů; vyžaduje detail u VŠECH členů — jinak null,
 // aby se nesrovnávalo číslo proti „nic“). Žádný datum-cutoff: rozhoduje jen data.
