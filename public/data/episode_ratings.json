@@ -12982,6 +12982,59 @@
     ]
   },
   {
+    "name": "The Beginning After the End, S02",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 5.75
+      },
+      {
+        "episode": "EP 3",
+        "rating": 5.25
+      },
+      {
+        "episode": "EP 4",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 6",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 7",
+        "rating": 6.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 10",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 6.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 6.5
+      }
+    ]
+  },
+  {
     "name": "Daemons of the Shadow Realm",
     "episodes": [
       {
@@ -13110,6 +13163,10 @@
       {
         "episode": "EP 1",
         "rating": 7.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 7.75
       }
     ]
   },
@@ -13157,6 +13214,14 @@
       {
         "episode": "EP 1",
         "rating": 7.0
+      },
+      {
+        "episode": "EP 2",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.75
       }
     ]
   },
@@ -13170,6 +13235,10 @@
       {
         "episode": "EP 2",
         "rating": 6.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 5.75
       }
     ]
   },
@@ -13200,6 +13269,14 @@
     "episodes": [
       {
         "episode": "EP 1",
+        "rating": 6.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 6.5
+      },
+      {
+        "episode": "EP 3",
         "rating": 6.75
       }
     ]
@@ -13335,59 +13412,6 @@
     ]
   },
   {
-    "name": "The Beginning After the End, S02",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 6.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 5.75
-      },
-      {
-        "episode": "EP 3",
-        "rating": 5.25
-      },
-      {
-        "episode": "EP 4",
-        "rating": 6.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 6.25
-      },
-      {
-        "episode": "EP 6",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 7",
-        "rating": 6.0
-      },
-      {
-        "episode": "EP 8",
-        "rating": 6.25
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 10",
-        "rating": 7.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 6.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 6.5
-      }
-    ]
-  },
-  {
     "name": "Petals of Reincarnation",
     "episodes": [
       {
@@ -13498,7 +13522,7 @@
     ]
   },
   {
-    "name": "Witch Hat Atelier",
+    "name": "Witch Hat Atelier, S01",
     "episodes": [
       {
         "episode": "EP 1",

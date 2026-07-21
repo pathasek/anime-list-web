@@ -1,5 +1,5 @@
 {
- "generated": "2026-07-21T00:41:25",
+ "generated": "2026-07-21T16:39:23",
  "source": "AnimeThemes.moe API",
  "anime_count": 401,
  "count": 1074,
@@ -11182,8 +11182,8 @@
   },
   {
    "mal_id": 51553,
-   "anime_name": "Witch Hat Atelier",
-   "series": null,
+   "anime_name": "Witch Hat Atelier, S01",
+   "series": "Witch Hat Atelier",
    "type": "OP",
    "label": "OP1",
    "song": "Kaze no Anthem",
@@ -11193,8 +11193,8 @@
   },
   {
    "mal_id": 51553,
-   "anime_name": "Witch Hat Atelier",
-   "series": null,
+   "anime_name": "Witch Hat Atelier, S01",
+   "series": "Witch Hat Atelier",
    "type": "ED",
    "label": "ED1",
    "song": "Tada Utsukushii Noroi",
@@ -11204,8 +11204,8 @@
   },
   {
    "mal_id": 51553,
-   "anime_name": "Witch Hat Atelier",
-   "series": null,
+   "anime_name": "Witch Hat Atelier, S01",
+   "series": "Witch Hat Atelier",
    "type": "ED",
    "label": "ED2",
    "song": "Yoru ni Ukabu",
@@ -11215,8 +11215,8 @@
   },
   {
    "mal_id": 51553,
-   "anime_name": "Witch Hat Atelier",
-   "series": null,
+   "anime_name": "Witch Hat Atelier, S01",
+   "series": "Witch Hat Atelier",
    "type": "ED",
    "label": "ED3",
    "song": "Hikari",
