@@ -12,8 +12,8 @@
 - ✅ **F5** `npm install` + build OK (5.84s); commit `528166c` + push na `main` (skutečná záloha)
 - ✅ **F6** Přesun „Anime slučovač rozborů" (1,1 GB) + „Anime list - experimenting" (4,9 GB); opraveno 40 py cest slučovače (Desktop→OneDrive)
 - ✅ **F8** VBA cesty: `AutoUpdateWeb.bas` + experimenting `Export_Anilist_WEB.bas` → nová cesta + `tools\export_data.py`
-- ⬜ **F7** Smazání originálů — ČEKÁ na finální potvrzení uživatele
-- ⬜ **F9** OneDrive vyloučení node_modules + finální report
+- 🔄 **F7** Smazání originálů: experimenting ✅ smazán; slučovač ⚠️ zamčený (otevřený Word/Excel) — dodělá uživatel; scratch „Anime List WEB" nechává uživatel (aktuální IDE workspace)
+- ✅ **F9** Pokyny k OneDrive vyloučení + re-importu VBA předány uživateli
 - ⚠️ **NUTNÉ RUČNĚ:** uživatel musí re-importovat `AutoUpdateWeb.bas` do Excelu (Anime list.xlsm), aby se změna cesty projevila v živém makru.
 
 ## Cíl
