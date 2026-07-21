@@ -26,6 +26,13 @@ def clean_string(s):
     cleaned = re.sub(r'[^a-zA-Z0-9]', '', s)
     return cleaned.lower()
 
+def strip_season_suffix(name):
+    """Odstraní koncové označení sezóny/části, aby 'X, S01' napárovalo obrázek 'X'.
+    (Např. 'Bocchi the Rock!, S01' -> 'Bocchi the Rock!' -> obrázek 'Bocchi the Rock!.jpg'.)"""
+    n = re.sub(r'[,\s]*\bS(?:eason)?\s*\d+\b(?:[,\s]*\bPart\s*\d+\b)?\s*$', '', name, flags=re.I)
+    n = re.sub(r'[,\s]*\bPart\s*\d+\b\s*$', '', n, flags=re.I)
+    return n.strip(' ,')
+
 def main():
     print("=" * 50)
     print("Mapping images from folder (Robust Match)")
@@ -61,11 +68,16 @@ def main():
         cleaned_name = clean_string(name)
         
         match_filename = source_files_map.get(cleaned_name)
-        
-        # If no strict match, try checking if one string contains the other (for safety)
+
+        # Fallback: obrázek bez sezónního sufixu (řeší 'X, S01' vs obrázek 'X').
+        # Interpunkce (vč. '!') je už odstraněná v clean_string, takže tohle
+        # řeší zbývající případy jako Bocchi the Rock!.
         if not match_filename:
-             # Try simple normalization (removing strict punctuation only)
-             pass 
+            base = strip_season_suffix(name)
+            if base and base != name:
+                match_filename = source_files_map.get(clean_string(base))
+                if match_filename:
+                    print(f"  [fallback bez sezóny] {name} -> {match_filename}")
 
         if match_filename:
             # Copy file to public/images/anime

@@ -129,27 +129,57 @@ const GROUPS_CONFIG = [
 // ==========================================
 // JIKAN POSTER HELPER (async image loading)
 // ==========================================
+// Synchronní čtení už jednou staženého posteru (localStorage jikan_anime_info_<id>
+// + in-memory memo). Díky tomu se poster ukáže OKAMŽITĚ při (re)mountu — žádné
+// bliknutí placeholderu „…" při rozbalení Statusu / re-renderu kalendáře.
+const _posterMemCache = {} // malId -> { small, large }
+function getCachedPoster(malId, size) {
+    if (!malId) return null
+    let memo = _posterMemCache[malId]
+    if (!memo) {
+        try {
+            const raw = localStorage.getItem(`jikan_anime_info_${malId}`)
+            if (raw) {
+                const p = JSON.parse(raw)
+                memo = { small: p.imageUrl || null, large: p.largeImageUrl || p.imageUrl || null }
+                if (memo.small || memo.large) _posterMemCache[malId] = memo
+            }
+        } catch { /* poškozený záznam */ }
+    }
+    if (!memo) return null
+    return size === 'large' ? (memo.large || memo.small) : (memo.small || memo.large)
+}
+
 function JikanPoster({ malUrl, size = 'small' }) {
     // malId je odvozený z props — loading se inicializuje/resetuje podle něj
     // při renderu, takže efekt nemusí volat setState synchronně
     // (react-hooks/set-state-in-effect).
     const malId = malUrl ? extractMalId(malUrl) : null
-    const [imageUrl, setImageUrl] = useState(null)
-    const [loading, setLoading] = useState(!!malId)
+    const cachedImg = getCachedPoster(malId, size)
+    const [imageUrl, setImageUrl] = useState(cachedImg)
+    const [loading, setLoading] = useState(!!malId && !cachedImg)
     const [prevMalId, setPrevMalId] = useState(malId)
     if (prevMalId !== malId) {
+        // Změna anime: nový poster ber rovnou z cache (bez bliknutí),
+        // async doběhne jen když v cache není.
         setPrevMalId(malId)
-        setImageUrl(null)
-        setLoading(!!malId)
+        const c = getCachedPoster(malId, size)
+        setImageUrl(c)
+        setLoading(!!malId && !c)
     }
 
     useEffect(() => {
         if (!malId) return
+        // Už máme poster z cache → nic nenačítáme (kalendář nebliká).
+        if (getCachedPoster(malId, size)) return
 
         let cancelled = false
         getAnimeInfo(malId).then(info => {
-            if (!cancelled && info) {
-                setImageUrl(size === 'large' ? (info.largeImageUrl || info.imageUrl) : info.imageUrl)
+            if (info) {
+                const small = info.imageUrl || null
+                const large = info.largeImageUrl || info.imageUrl || null
+                _posterMemCache[malId] = { small, large }
+                if (!cancelled) setImageUrl(size === 'large' ? large : small)
             }
             if (!cancelled) setLoading(false)
         })
@@ -666,9 +696,9 @@ function AiringCalendar({ airingAnime }) {
                     return (
                         <div key={idx} className={`airing-cal-cell${inMonth ? '' : ' outside'}${isToday ? ' today' : ''}`}>
                             {inMonth && <span className="airing-cal-daynum">{dayNum}</span>}
-                            {evs.slice(0, MAX_CHIPS).map((ev, j) => (
+                            {evs.slice(0, MAX_CHIPS).map((ev) => (
                                 <Link
-                                    key={j}
+                                    key={`${ev.name}|${ev.kind}|${ev.ep}`}
                                     to={`/anime/${encodeURIComponent(ev.name)}`}
                                     className={`airing-cal-chip ${ev.kind}`}
                                     title={ev.title}
