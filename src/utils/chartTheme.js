@@ -4,7 +4,7 @@ function isLightTheme() {
   try {
     const stored = localStorage.getItem('anime-list-theme');
     if (stored) return LIGHT_THEMES.includes(stored);
-  } catch {}
+  } catch { /* localStorage nedostupné */ }
   if (typeof document !== 'undefined') {
     const attr = document.documentElement.getAttribute('data-theme') || '';
     return LIGHT_THEMES.includes(attr);

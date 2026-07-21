@@ -23,7 +23,7 @@ import CategoryRatingsPanel from '../components/CategoryRatingsPanel'
 import { useModalScrollLock } from '../utils/useModalScrollLock'
 import { useModalTables } from '../utils/useModalTables'
 import { formatCategoryMarkdown } from '../utils/formatCategoryMarkdown'
-import { getDocxEpisode } from './AnimeRatings'
+import { getDocxEpisode } from '../utils/docxEpisode'
 import { RatingInfoButton, EpisodeGuideModal, FinalGuideModal } from '../components/RatingGuideModals'
 import { extractMalId } from '../utils/jikanService'
 
@@ -309,24 +309,36 @@ function AnimeDetail() {
         return { epChartMin: dynMin, epChartMax: dynMax }
     }, [episodeRatings])
 
+    // Epizody, které mají faktický rozbor (jen mezi nimi se dá v modalu
+    // přepínat tlačítky ◀ ▶ / šipkami). Pořadí podle čísla epizody.
+    const navigableEpisodes = useMemo(() => {
+        if (!episodeRatings || !categoryReviews || !anime) return []
+        const entry = categoryReviews[anime.name]
+        const list = []
+        for (let i = 0; i < episodeRatings.length; i++) {
+            if (getDocxEpisode(entry, i + 1)) list.push(i + 1)
+        }
+        return list
+    }, [episodeRatings, categoryReviews, anime])
 
+    const openEpisodeModal = (epNum) => {
+        if (!episodeRatings || !categoryReviews || !anime) return
+        const docxEp = getDocxEpisode(categoryReviews[anime.name], epNum)
+        if (!docxEp) return
+        setActiveEpisode({
+            episodeNumber: epNum,
+            title: docxEp.title,
+            text: docxEp.text,
+            rating: episodeRatings[epNum - 1]?.rating
+        })
+    }
 
     const barOptions = {
         responsive: true,
         maintainAspectRatio: false,
         onClick: (event, elements) => {
-            if (elements && elements.length > 0 && episodeRatings && categoryReviews && anime) {
-                const index = elements[0].index;
-                const epNum = index + 1;
-                const docxEp = getDocxEpisode(categoryReviews[anime.name], epNum);
-                if (docxEp) {
-                    setActiveEpisode({
-                        episodeNumber: epNum,
-                        title: docxEp.title,
-                        text: docxEp.text,
-                        rating: episodeRatings[index]?.rating
-                    });
-                }
+            if (elements && elements.length > 0) {
+                openEpisodeModal(elements[0].index + 1);
             }
         },
         onHover: (event, chartElement) => {
@@ -985,7 +997,7 @@ function AnimeDetail() {
             {/* Průvodce hodnocením epizod a finálním hodnocením */}
             <EpisodeGuideModal open={epGuideOpen} onClose={() => setEpGuideOpen(false)} />
             <FinalGuideModal open={fhGuideOpen} onClose={() => setFhGuideOpen(false)} />
-            <EpisodeDetailModal activeEpisode={activeEpisode} onClose={() => setActiveEpisode(null)} />
+            <EpisodeDetailModal activeEpisode={activeEpisode} episodes={navigableEpisodes} onSelect={openEpisodeModal} onClose={() => setActiveEpisode(null)} />
             {seriesModalOpen && anime?.series && (
                 <SeriesPartsModal
                     series={anime.series}
@@ -1034,8 +1046,10 @@ function SeriesPartsModal({ series, parts, currentName, onClose }) {
                 <div className="category-detail-modal-header">
                     <div className="category-detail-modal-title">
                         <span className="category-card-icon">📚</span>
-                        <span>{series}</span>
-                        <span className="category-detail-modal-score" style={{ whiteSpace: 'nowrap' }}>{parts.length} {partsWord}</span>
+                        <div className="category-detail-modal-title-content">
+                            <span>{series}</span>
+                            <span className="category-detail-modal-score" style={{ whiteSpace: 'nowrap' }}>{parts.length} {partsWord}</span>
+                        </div>
                     </div>
                     <button type="button" className="category-detail-modal-close" onClick={onClose} aria-label="Zavřít">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -1090,7 +1104,7 @@ function SeriesPartsModal({ series, parts, currentName, onClose }) {
     )
 }
 
-function EpisodeDetailModal({ activeEpisode, onClose }) {
+function EpisodeDetailModal({ activeEpisode, episodes = [], onSelect, onClose }) {
     // Zamkne scroll pozadí (okno i detailový overlay), dokud je modal otevřený
     useModalScrollLock(!!activeEpisode)
 
@@ -1098,9 +1112,26 @@ function EpisodeDetailModal({ activeEpisode, onClose }) {
     const bodyRef = useRef(null)
     useModalTables(bodyRef, !!activeEpisode)
 
+    // Prev/next mezi epizodami, které mají rozbor
+    const curIdx = activeEpisode ? episodes.indexOf(activeEpisode.episodeNumber) : -1
+    const prevEp = curIdx > 0 ? episodes[curIdx - 1] : null
+    const nextEp = curIdx >= 0 && curIdx < episodes.length - 1 ? episodes[curIdx + 1] : null
+
+    // Šipky ← → přepínají epizody (a body scrollujeme na začátek)
+    useEffect(() => {
+        if (!activeEpisode) return
+        const onKey = (e) => {
+            if (e.key === 'ArrowLeft' && prevEp && onSelect) { onSelect(prevEp); bodyRef.current?.scrollTo(0, 0) }
+            else if (e.key === 'ArrowRight' && nextEp && onSelect) { onSelect(nextEp); bodyRef.current?.scrollTo(0, 0) }
+        }
+        window.addEventListener('keydown', onKey)
+        return () => window.removeEventListener('keydown', onKey)
+    }, [activeEpisode, prevEp, nextEp, onSelect])
+
     if (!activeEpisode) return null
 
     const { title, text, rating } = activeEpisode
+    const go = (ep) => { if (ep && onSelect) { onSelect(ep); bodyRef.current?.scrollTo(0, 0) } }
 
     const handleOverlayClick = (e) => {
         if (e.target === e.currentTarget) {
@@ -1119,11 +1150,20 @@ function EpisodeDetailModal({ activeEpisode, onClose }) {
                 <div className="category-detail-modal-header">
                     <div className="category-detail-modal-title">
                         <span className="category-card-icon">📝</span>
-                        <span>{title}</span>
-                        {rating !== undefined && rating !== null && (
-                            <span className="category-detail-modal-score">{fmtRating(rating)}/10</span>
-                        )}
+                        <div className="category-detail-modal-title-content">
+                            <span>{title}</span>
+                            {rating !== undefined && rating !== null && (
+                                <span className="category-detail-modal-score">{fmtRating(rating)}/10</span>
+                            )}
+                        </div>
                     </div>
+                    {episodes.length > 1 && curIdx >= 0 && (
+                        <div className="modal-ep-nav" title="Přepínat epizody s rozborem lze i šipkami ← →">
+                            <button type="button" className="modal-ep-nav-btn" onClick={() => go(prevEp)} disabled={!prevEp} aria-label="Předchozí epizoda" title={prevEp ? `Epizoda ${prevEp}` : 'První s rozborem'}>◀</button>
+                            <span className="modal-ep-nav-pos">{curIdx + 1}/{episodes.length}</span>
+                            <button type="button" className="modal-ep-nav-btn" onClick={() => go(nextEp)} disabled={!nextEp} aria-label="Další epizoda" title={nextEp ? `Epizoda ${nextEp}` : 'Poslední s rozborem'}>▶</button>
+                        </div>
+                    )}
                     <button type="button" className="category-detail-modal-close" onClick={onClose} aria-label="Zavřít">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <line x1="18" y1="6" x2="6" y2="18" />

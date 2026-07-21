@@ -10,6 +10,9 @@ import FavoritesOstPlayer from './FavoritesOstPlayer'
 
 const OstPlayerContext = createContext(null)
 
+// Provider a jeho hook záměrně v jednom souboru (běžný React pattern) →
+// fast-refresh varování je nerelevantní.
+// eslint-disable-next-line react-refresh/only-export-components
 export const useOstPlayer = () => useContext(OstPlayerContext)
 
 export function OstPlayerProvider({ children }) {

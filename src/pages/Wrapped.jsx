@@ -144,6 +144,8 @@ export default function Wrapped() {
         return Array.from(yearsSet).sort((a, b) => b - a);
     }, [historyLog]);
 
+    const TOTAL_SLIDES = 20;
+
     // Handle slide change resets
     const handleNextSlide = () => {
         setProgress(0);
@@ -214,8 +216,6 @@ export default function Wrapped() {
     // ----------------------------------------------------
     // SLIDE CONTENT DEFINITIONS
     // ----------------------------------------------------
-    const TOTAL_SLIDES = 20;
-
     const slideBgs = [
         'bg-slide-intro',      // 0: Intro
         'bg-slide-time',       // 1: Total Time Watched

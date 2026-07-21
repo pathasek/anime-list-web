@@ -18,7 +18,7 @@ const defaultOstList = [
 const extractYoutubeId = (url) => {
     if (!url) return null;
     // Matches youtu.be/<id> or youtube.com/watch?v=<id> or youtube.com/embed/<id>
-    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?\/\s]+)/);
+    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?/\s]+)/);
     return match ? match[1] : null;
 };
 

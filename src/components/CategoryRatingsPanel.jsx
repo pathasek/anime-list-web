@@ -248,6 +248,25 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [entries])
 
+    // Kategorie s textovým rozborem, v pořadí karet (CARD_ORDER) — mezi nimi lze
+    // v modalu přepínat ◀ ▶ / šipkami. OP/ED rozbor nemají (popis je v OST) →
+    // vypadnou; OST tak zůstává poslední.
+    const navigableCategories = useMemo(() => {
+        const rev = categoryReviews?.[animeName]
+        if (!rev) return []
+        return displayEntries
+            .filter(([cat]) => typeof rev[cat] === 'string' && rev[cat].trim().length > 0)
+            .map(([cat]) => cat)
+    }, [displayEntries, categoryReviews, animeName])
+
+    const openCategoryReview = (cat) => {
+        const rev = categoryReviews?.[animeName]
+        const text = rev?.[cat]
+        if (!text) return
+        const found = entries.find(([c]) => c === cat)
+        setActiveReview({ category: cat, text, rating: found ? found[1] : null })
+    }
+
     const chartData = useMemo(() => ({
         labels: entries.map(([cat]) => cat),
         datasets: [{
@@ -576,9 +595,11 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                 />
 
                 {/* Detailní rozbor konkrétní kategorie */}
-                <CategoryDetailModal 
-                    activeReview={activeReview} 
-                    onClose={() => setActiveReview(null)} 
+                <CategoryDetailModal
+                    activeReview={activeReview}
+                    categories={reviewedCategories}
+                    onSelect={(cat) => setActiveReview({ category: cat, text: reviews[cat], rating: null })}
+                    onClose={() => setActiveReview(null)}
                 />
             </div>
         )
@@ -855,16 +876,18 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
             />
 
             {/* Detailní rozbor konkrétní kategorie */}
-            <CategoryDetailModal 
-                activeReview={activeReview} 
-                onClose={() => setActiveReview(null)} 
+            <CategoryDetailModal
+                activeReview={activeReview}
+                categories={navigableCategories}
+                onSelect={openCategoryReview}
+                onClose={() => setActiveReview(null)}
             />
         </div>
     )
 }
 
 // Modální okno pro detailní textový rozbor kategorie z DOCX
-function CategoryDetailModal({ activeReview, onClose }) {
+function CategoryDetailModal({ activeReview, categories = [], onSelect, onClose }) {
     // Zamkne scroll pozadí (okno i detailový overlay), dokud je modal otevřený
     useModalScrollLock(!!activeReview)
 
@@ -872,6 +895,23 @@ function CategoryDetailModal({ activeReview, onClose }) {
     // zaoblení/hranatění rohů při chycení hlavičky — sdílený hook.
     const bodyRef = useRef(null)
     useModalTables(bodyRef, !!activeReview)
+
+    // Prev/next mezi kategoriemi, které mají rozbor (pořadí = CARD_ORDER)
+    const curIdx = activeReview ? categories.indexOf(activeReview.category) : -1
+    const prevCat = curIdx > 0 ? categories[curIdx - 1] : null
+    const nextCat = curIdx >= 0 && curIdx < categories.length - 1 ? categories[curIdx + 1] : null
+    const go = (cat) => { if (cat && onSelect) { onSelect(cat); bodyRef.current?.scrollTo(0, 0) } }
+
+    useEffect(() => {
+        if (!activeReview) return
+        const onKey = (e) => {
+            if (e.key === 'ArrowLeft' && prevCat) go(prevCat)
+            else if (e.key === 'ArrowRight' && nextCat) go(nextCat)
+        }
+        window.addEventListener('keydown', onKey)
+        return () => window.removeEventListener('keydown', onKey)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [activeReview, prevCat, nextCat])
 
     if (!activeReview) return null
 
@@ -889,11 +929,20 @@ function CategoryDetailModal({ activeReview, onClose }) {
                 <div className="category-detail-modal-header">
                     <div className="category-detail-modal-title">
                         <span className="category-card-icon">{icon || iconFor(category)}</span>
-                        <span>{category}</span>
-                        {rating !== null && rating !== undefined && (
-                            <span className="category-detail-modal-score">{fmtRating(rating)}/10</span>
-                        )}
+                        <div className="category-detail-modal-title-content">
+                            <span>{category}</span>
+                            {rating !== null && rating !== undefined && (
+                                <span className="category-detail-modal-score">{fmtRating(rating)}/10</span>
+                            )}
+                        </div>
                     </div>
+                    {categories.length > 1 && curIdx >= 0 && (
+                        <div className="modal-ep-nav" title="Přepínat kategorie s rozborem lze i šipkami ← →">
+                            <button type="button" className="modal-ep-nav-btn" onClick={() => go(prevCat)} disabled={!prevCat} aria-label="Předchozí kategorie" title={prevCat || 'První'}>◀</button>
+                            <span className="modal-ep-nav-pos">{curIdx + 1}/{categories.length}</span>
+                            <button type="button" className="modal-ep-nav-btn" onClick={() => go(nextCat)} disabled={!nextCat} aria-label="Další kategorie" title={nextCat || 'Poslední'}>▶</button>
+                        </div>
+                    )}
                     <button type="button" className="category-detail-modal-close" onClick={onClose} aria-label="Zavřít">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <line x1="18" y1="6" x2="6" y2="18" />

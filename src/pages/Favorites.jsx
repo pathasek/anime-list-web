@@ -71,7 +71,7 @@ function Favorites() {
     const [showScrollTop, setShowScrollTop] = useState(false)
 
     useEffect(() => {
-        const handleScroll = (e) => {
+        const handleScroll = () => {
             const currentY = window.scrollY || document.documentElement.scrollTop;
             setShowScrollTop(currentY > 1000);
         };
@@ -99,7 +99,6 @@ function Favorites() {
     const [languageFilter, setLanguageFilter] = useState(() => sessionStorage.getItem('fav_language_filter') || 'all')
     const [sortColumn, setSortColumn] = useState(() => sessionStorage.getItem('fav_sort_column') || null)
     const [sortDirection, setSortDirection] = useState(() => sessionStorage.getItem('fav_sort_direction') || 'desc')
-    const [showAllRatings, setShowAllRatings] = useState(false)
     const [expandedCardIdx, setExpandedCardIdx] = useState(null)
     const [isTableExpanded, setIsTableExpanded] = useState(() => {
         // Rozbalení tabulky si pamatujeme pouze při návratu z detailu anime (existuje-li v paměti favorites_scroll_y)
@@ -1712,8 +1711,8 @@ function Favorites() {
                                     let imgSrc = null;
                                     if (spotifyImages) {
                                         const matchKey = Object.keys(spotifyImages).find(k => {
-                                            const cleanW = w.anime_name?.replace(/[:\/_\-]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase() || "";
-                                            const cleanK = k.replace(/[:\/_\-]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase() || "";
+                                            const cleanW = w.anime_name?.replace(/[:/_-]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase() || "";
+                                            const cleanK = k.replace(/[:/_-]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase() || "";
                                             return cleanW.includes(cleanK) || cleanK.includes(cleanW);
                                         });
                                         if (matchKey) imgSrc = spotifyImages[matchKey];

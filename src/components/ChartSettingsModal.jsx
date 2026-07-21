@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import {
     colorPalettes,
-    chartSizes,
     getChartSettings,
     saveChartSettings
 } from '../utils/chartSettings'

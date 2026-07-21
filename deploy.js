@@ -25,11 +25,11 @@ try {
   try {
     // Try to create and checkout branch
     execSync('git checkout -b gh-pages', { cwd: distDir, stdio: 'ignore' });
-  } catch (e) {
+  } catch {
     // If it already exists, just checkout
     try {
       execSync('git checkout gh-pages', { cwd: distDir, stdio: 'ignore' });
-    } catch (checkoutErr) {
+    } catch {
       console.warn('Could not checkout gh-pages branch, continuing on current branch...');
     }
   }

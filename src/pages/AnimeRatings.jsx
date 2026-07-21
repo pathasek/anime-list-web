@@ -25,6 +25,7 @@ import InfoIcon from '../components/InfoIcon'
 import { useModalScrollLock } from '../utils/useModalScrollLock'
 import { useModalTables } from '../utils/useModalTables'
 import { useRatingGuide } from '../utils/ratingGuide'
+import { getDocxEpisode } from '../utils/docxEpisode'
 
 // Cache pro AI rozbory kategorií/epizod (category_texts.json — víc MB, načíst jen jednou)
 let cachedCategoryTexts = null
@@ -62,35 +63,6 @@ function cleanJikanEpTitle(title, animeName, seriesName) {
         }
     }
     return t
-}
-
-export function getDocxEpisode(entry, epNum) {
-    if (!entry || !entry.episodes || epNum === null || epNum === undefined) return null
-    const key = String(epNum)
-    if (entry.episodes[key]) return entry.episodes[key]
-
-    // Fallback pro rozdělené sezóny: DOCX má nadpisy s absolutním číslováním
-    // (EP 38–49), web se ptá na relativní číslo v rámci části (EP 1–12).
-    // Pozičně mapovat smíme JEN když klíče tvoří souvislou řadu posunutou
-    // od 1 — u řídkých klíčů (chybějící rozbory, souhrnné nadpisy „EP 6-13")
-    // by poziční mapování vrátilo rozbor CIZÍ epizody, což je horší než
-    // poctivé „rozbor není k dispozici".
-    const sortedKeys = Object.keys(entry.episodes)
-        .map(k => ({ raw: k, num: parseInt(k, 10) }))
-        .filter(k => !isNaN(k.num))
-        .sort((a, b) => a.num - b.num)
-
-    if (sortedKeys.length === 0) return null
-    const offset = sortedKeys[0].num
-    if (offset <= 1) return null
-    const contiguous = sortedKeys.every((k, i) => k.num === offset + i)
-    if (!contiguous) return null
-
-    const n = parseInt(epNum, 10)
-    if (!isNaN(n) && n > 0 && n <= sortedKeys.length) {
-        return entry.episodes[sortedKeys[n - 1].raw] || null
-    }
-    return null
 }
 
 // Fallback řetěz pro zobrazený titul epizody: Jikan (očištěný) → DOCX rozbor
@@ -142,11 +114,31 @@ function Deferred({ children, placeholderHeight = 600 }) {
 // NEvyvolá re-render celé (těžké) stránky → žádný lag při otevírání/zavírání.
 const EpisodeModalHost = forwardRef(function EpisodeModalHost(_props, ref) {
     const [active, setActive] = useState(null)
-    useImperativeHandle(ref, () => ({ open: (ep) => setActive(ep) }), [])
+    // open(payload, nav?) — nav = { items:[id…], current:id, onSelect:(id)=>void }
+    // umožní přepínat ◀ ▶ / šipkami mezi epizodami nebo kategoriemi.
+    useImperativeHandle(ref, () => ({ open: (ep, nav = null) => setActive({ ...ep, __nav: nav }) }), [])
     useModalScrollLock(!!active)
     // Tabulky z rozboru: scroll-x fallback, push-off a rohy sticky hlavičky
     const bodyRef = useRef(null)
     useModalTables(bodyRef, !!active)
+
+    const nav = active?.__nav
+    const navIdx = nav ? nav.items.indexOf(nav.current) : -1
+    const navPrev = navIdx > 0 ? nav.items[navIdx - 1] : null
+    const navNext = navIdx >= 0 && navIdx < nav.items.length - 1 ? nav.items[navIdx + 1] : null
+    const goNav = (id) => { if (id !== null && id !== undefined && nav?.onSelect) { nav.onSelect(id); bodyRef.current?.scrollTo(0, 0) } }
+
+    useEffect(() => {
+        if (!active || !nav) return
+        const onKey = (e) => {
+            if (e.key === 'ArrowLeft' && navPrev !== null && navPrev !== undefined) goNav(navPrev)
+            else if (e.key === 'ArrowRight' && navNext !== null && navNext !== undefined) goNav(navNext)
+        }
+        window.addEventListener('keydown', onKey)
+        return () => window.removeEventListener('keydown', onKey)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [active, navPrev, navNext])
+
     if (!active) return null
 
     const { title, text, rating } = active
@@ -160,11 +152,20 @@ const EpisodeModalHost = forwardRef(function EpisodeModalHost(_props, ref) {
                 <div className="category-detail-modal-header">
                     <div className="category-detail-modal-title">
                         <span className="category-card-icon">📝</span>
-                        <span>{title}</span>
-                        {rating !== undefined && rating !== null && (
-                            <span className="category-detail-modal-score">{fmtR(rating)}/10</span>
-                        )}
+                        <div className="category-detail-modal-title-content">
+                            <span>{title}</span>
+                            {rating !== undefined && rating !== null && (
+                                <span className="category-detail-modal-score">{fmtR(rating)}/10</span>
+                            )}
+                        </div>
                     </div>
+                    {nav && nav.items.length > 1 && navIdx >= 0 && (
+                        <div className="modal-ep-nav" title="Přepínat lze i šipkami ← →">
+                            <button type="button" className="modal-ep-nav-btn" onClick={() => goNav(navPrev)} disabled={navPrev === null || navPrev === undefined} aria-label="Předchozí">◀</button>
+                            <span className="modal-ep-nav-pos">{navIdx + 1}/{nav.items.length}</span>
+                            <button type="button" className="modal-ep-nav-btn" onClick={() => goNav(navNext)} disabled={navNext === null || navNext === undefined} aria-label="Další">▶</button>
+                        </div>
+                    )}
                     <button type="button" className="category-detail-modal-close" onClick={close} aria-label="Zavřít">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <line x1="18" y1="6" x2="6" y2="18" />
@@ -1103,28 +1104,53 @@ function AnimeRatings() {
     const [radarPartChooser, setRadarPartChooser] = useState(null) // { cat, parts: [names] } | null
 
     const openRadarCategoryReview = useCallback((animeName, cat) => {
-        const text = categoryReviews?.[animeName]?.[cat]
+        const rev = categoryReviews?.[animeName]
+        const text = rev?.[cat]
         if (!text) return false
-        const rating = categoryRatings.find(cr => cr.name === animeName)?.categories?.[cat]
-        episodeModalRef.current?.open({
-            title: `${cleanSeasonLabel(animeName, selectedSeries)} — ${cat}`,
-            text,
-            rating: (rating === undefined) ? null : rating
-        })
+        const availableCats = rev ? Object.keys(rev).filter(k => k !== 'episodes' && k !== 'story' && typeof rev[k] === 'string' && rev[k].trim().length > 0) : []
+        const animeData = categoryRatings.find(cr => cr.name === animeName)
+        const openCat = (targetCat) => {
+            const cText = rev?.[targetCat]
+            if (!cText) return
+            const cRating = animeData?.categories?.[targetCat] ?? null
+            episodeModalRef.current?.open({
+                title: `${cleanSeasonLabel(animeName, selectedSeries)} — ${targetCat}`,
+                text: cText,
+                rating: (cRating === undefined) ? null : cRating
+            }, availableCats.length > 1 ? {
+                items: availableCats,
+                current: targetCat,
+                onSelect: (nextCat) => openCat(nextCat)
+            } : null)
+        }
+        openCat(cat)
         return true
     }, [categoryReviews, categoryRatings, selectedSeries])
 
     // Plán 6 Ú7: klik na buňku kategorie v kompletní tabulce → stejný modal s rozborem
     // jako v detailu anime (plný název, bez ořezávání série)
     const openTableCategoryReview = useCallback((animeName, cat, rating) => {
-        const text = categoryReviews?.[animeName]?.[cat]
+        const rev = categoryReviews?.[animeName]
+        const text = rev?.[cat]
         if (!text) return
-        episodeModalRef.current?.open({
-            title: `${animeName} — ${cat}`,
-            text,
-            rating: (rating === undefined || rating === null) ? null : rating
-        })
-    }, [categoryReviews])
+        const availableCats = rev ? Object.keys(rev).filter(k => k !== 'episodes' && k !== 'story' && typeof rev[k] === 'string' && rev[k].trim().length > 0) : []
+        const animeData = categoryRatings.find(cr => cr.name === animeName)
+        const openCat = (targetCat) => {
+            const cText = rev?.[targetCat]
+            if (!cText) return
+            const cRating = targetCat === cat ? rating : (animeData?.categories?.[targetCat] ?? null)
+            episodeModalRef.current?.open({
+                title: `${animeName} — ${targetCat}`,
+                text: cText,
+                rating: (cRating === undefined || cRating === null) ? null : cRating
+            }, availableCats.length > 1 ? {
+                items: availableCats,
+                current: targetCat,
+                onSelect: (nextCat) => openCat(nextCat)
+            } : null)
+        }
+        openCat(cat)
+    }, [categoryReviews, categoryRatings])
 
     const handleRadarCategoryClick = useCallback((cat) => {
         if (compareSeason) {
@@ -1869,25 +1895,42 @@ function AnimeRatings() {
         responsive: true, maintainAspectRatio: false, animation: false,
         // Klik na bod epizody otevře její AI rozbor (imperativně — bez re-renderu stránky)
         onClick: (event, elements) => {
-            if (elements && elements.length > 0 && selectedAnimeEpisodes && selectedEpisodeReviews) {
+            if (elements && elements.length > 0 && selectedAnimeEpisodes && selectedAnimeTitle) {
                 const index = elements[0].index
                 const epNum = index + 1
-                const docxEp = selectedEpisodeReviews[epNum]
+                const entry = categoryReviews?.[selectedAnimeTitle]
+                const docxEp = getDocxEpisode(entry, epNum)
                 if (docxEp) {
-                    episodeModalRef.current?.open({
-                        episodeNumber: epNum,
-                        title: docxEp.title,
-                        text: docxEp.text,
-                        rating: selectedAnimeEpisodes[index]?.rating
-                    })
+                    const reviewedEps = []
+                    for (let i = 0; i < selectedAnimeEpisodes.length; i++) {
+                        if (getDocxEpisode(entry, i + 1)) reviewedEps.push(i + 1)
+                    }
+                    
+                    const openEp = (num) => {
+                        const ep = getDocxEpisode(entry, num)
+                        if (!ep) return
+                        const epRating = selectedAnimeEpisodes[num - 1]?.rating ?? null
+                        episodeModalRef.current?.open({
+                            episodeNumber: num,
+                            title: ep.title,
+                            text: ep.text,
+                            rating: epRating
+                        }, reviewedEps.length > 1 ? {
+                            items: reviewedEps,
+                            current: num,
+                            onSelect: (targetNum) => openEp(targetNum)
+                        } : null)
+                    }
+                    openEp(epNum)
                 }
             }
         },
         onHover: (event, chartElement) => {
             if (event && event.native && event.native.target) {
-                if (chartElement.length && selectedEpisodeReviews) {
+                if (chartElement.length && categoryReviews && selectedAnimeTitle) {
                     const idx = chartElement[0].index
-                    event.native.target.style.cursor = selectedEpisodeReviews[idx + 1] ? 'pointer' : 'default'
+                    const hasRev = !!getDocxEpisode(categoryReviews[selectedAnimeTitle], idx + 1)
+                    event.native.target.style.cursor = hasRev ? 'pointer' : 'default'
                 } else {
                     event.native.target.style.cursor = 'default'
                 }
@@ -1905,17 +1948,12 @@ function AnimeRatings() {
                 ticks: {
                     color: c.textMuted,
                     font: { size: 10 },
-                    stepSize: 0.5,
-                    callback: (value) => {
-                        if (value > 10) return ''
-                        return value.toFixed(1).replace('.', ',')
-                    }
+                    callback: (value) => value.toFixed(1).replace('.', ',')
                 },
                 grid: {
-                    color: (context) => {
-                        if (context.tick && context.tick.value > 10) return 'transparent';
-                        return c.grid;
-                    }
+                    display: true,
+                    color: c.grid,
+                    borderDash: [5, 5]
                 }
             },
             x: { ticks: { color: c.textMuted, font: { size: 10 } }, grid: { display: false } }
@@ -1925,9 +1963,9 @@ function AnimeRatings() {
             tooltip: {
                 callbacks: {
                     title: (context) => {
-                        if (context && context[0] && selectedEpisodeReviews) {
+                        if (context && context[0] && categoryReviews && selectedAnimeTitle) {
                             const idx = context[0].dataIndex
-                            const docxEp = selectedEpisodeReviews[idx + 1]
+                            const docxEp = getDocxEpisode(categoryReviews[selectedAnimeTitle], idx + 1)
                             return docxEp ? `📝 ${docxEp.title}` : `Epizoda ${idx + 1}`
                         }
                         return ''

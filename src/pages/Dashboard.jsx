@@ -150,6 +150,22 @@ function getCachedPoster(malId, size) {
     return size === 'large' ? (memo.large || memo.small) : (memo.small || memo.large)
 }
 
+// Přednačtení + DEKÓDOVÁNÍ posterů do paměti prohlížeče. Fresh <img> při
+// (re)mountu jinak ukáže prázdné místo, než se obrázek načte+dekóduje (i z disk
+// cache je load asynchronní) — to je to bliknutí při maximalizaci Statusu.
+// Držíme referenci na dekódovaný Image objekt → obrázek zůstane v paměti-cache
+// a nový <img decoding="sync"> se stejným src se vykreslí ve STEJNÉM snímku.
+const _imgWarm = new Map() // url -> Image
+function warmPoster(url) {
+    if (!url || _imgWarm.has(url)) return
+    const im = new Image()
+    im.decoding = 'async'
+    im.src = url
+    _imgWarm.set(url, im)
+    // decode() drží dekódovaný bitmap v paměti (ne jen HTTP cache) → bez bliknutí
+    if (im.decode) im.decode().catch(() => { /* ještě se nenačetl / CORS — nevadí */ })
+}
+
 function JikanPoster({ malUrl, size = 'small' }) {
     // malId je odvozený z props — loading se inicializuje/resetuje podle něj
     // při renderu, takže efekt nemusí volat setState synchronně
@@ -191,7 +207,7 @@ function JikanPoster({ malUrl, size = 'small' }) {
     return (
         <div className="jikan-poster-container" style={dims}>
             {imageUrl ? (
-                <img src={imageUrl} alt="" className="jikan-poster-img" loading="lazy" />
+                <img src={imageUrl} alt="" className="jikan-poster-img" decoding="sync" />
             ) : loading ? (
                 <span className="jikan-poster-placeholder">…</span>
             ) : (
@@ -1162,7 +1178,14 @@ function Dashboard() {
                     // Fetch anime info which has the actual broadcast string
                     const info = await getAnimeInfo(malId);
                     if (cancelled) return;
-                    
+
+                    // Nahřej postery do cache dopředu → maximalizace Statusu
+                    // (kalendář = malý, seznam „Právě sledované" = velký) bez bliknutí.
+                    if (info) {
+                        warmPoster(info.imageUrl);
+                        warmPoster(info.largeImageUrl);
+                    }
+
                     if (info && info.broadcast) {
                         const nextBroadcast = getNextBroadcastDate(info.broadcast);
                         if (nextBroadcast) {
@@ -1193,6 +1216,20 @@ function Dashboard() {
         };
         fetchSortKeys();
         return () => { cancelled = true; };
+    }, [stats?.excelData?.airingAnime]);
+
+    // Postery airing anime nahřej HNED z localStorage (ne až po getAnimeInfo) —
+    // aby byly dekódované v paměti dřív, než uživatel maximalizuje Status, a
+    // kalendář se pak vykreslil bez bliknutí prázdných chipů.
+    useEffect(() => {
+        const list = stats?.excelData?.airingAnime;
+        if (!list) return;
+        for (const a of list) {
+            const malId = extractMalId(a.mal_url);
+            if (!malId) continue;
+            warmPoster(getCachedPoster(malId, 'small'));
+            warmPoster(getCachedPoster(malId, 'large'));
+        }
     }, [stats?.excelData?.airingAnime]);
 
     const sortedAiringAnime = useMemo(() => {

@@ -5,6 +5,12 @@
 export function formatCategoryMarkdown(text) {
     if (!text) return null
 
+    // Odstranění nežádoucích technických sekcí (např. "Část 2: Deskriptivní analýza..." a cokoliv pod ní)
+    const part2Idx = text.search(/Část\s*2\s*:/i)
+    if (part2Idx !== -1) {
+        text = text.substring(0, part2Idx).trim()
+    }
+
     const lines = text.split('\n')
     const elements = []
     let inTable = false

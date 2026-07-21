@@ -3,7 +3,6 @@ import ChartSettingsModal from './ChartSettingsModal'
 import {
     getChartSettings,
     chartSizes,
-    colorPalettes,
     applyPalette,
     buildChartOptions
 } from '../utils/chartSettings'

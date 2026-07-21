@@ -1,14 +1,7 @@
 // utils/excelChartCalculations.js
 
-export function calculateExcelChartsData(animeList, historyLog) {
+export function calculateExcelChartsData(animeList, _historyLog) {
     if (!animeList || !animeList.length) return null;
-
-    // Helper: Excel sum function for ratings
-    const avgScore = (items) => {
-        const rated = items.filter(a => a.rating && !isNaN(parseFloat(a.rating)));
-        if (!rated.length) return 0;
-        return rated.reduce((s, a) => s + parseFloat(a.rating), 0) / rated.length;
-    };
 
     // 1. GrafTypuPop (Pie) & 2. GrafTypuKombi & 3. GrafTypuDist
     const typesDist = {};

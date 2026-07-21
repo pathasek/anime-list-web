@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import { loadData, STORAGE_KEYS } from '../utils/dataStore'
 import { useModalScrollLock } from '../utils/useModalScrollLock'
+import { useTheme } from '../components/ThemeProvider'
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js'
 import { Bar } from 'react-chartjs-2'
 
@@ -250,6 +251,7 @@ function StreakHistoryModal({ streaks, onClose }) {
 }
 
 function HistoryLog() {
+    const { theme } = useTheme()
     const [historyLog, setHistoryLog] = useState([])
     const [animeList, setAnimeList] = useState([])
     const [loading, setLoading] = useState(true)
@@ -260,7 +262,7 @@ function HistoryLog() {
         try {
             const saved = sessionStorage.getItem('history_log_date_range');
             return saved ? JSON.parse(saved) : { start: '', end: '' };
-        } catch (e) {
+        } catch {
             return { start: '', end: '' };
         }
     })
@@ -616,6 +618,12 @@ function HistoryLog() {
     const chartData = useMemo(() => {
         if (!filteredHistory.length) return null
 
+        // Barva sloupců podle aktuálního tématu (canvas neumí CSS proměnné → resolve).
+        // theme je v deps, aby se přebarvilo při přepnutí tématu.
+        const barColor = (typeof document !== 'undefined'
+            ? getComputedStyle(document.documentElement).getPropertyValue('--accent-primary').trim()
+            : '') || 'rgba(99, 102, 241, 0.8)'
+
         const dailyEps = {}
         let minDate = null
         let maxDate = null
@@ -675,12 +683,12 @@ function HistoryLog() {
                 {
                     label: 'Zhlédnuté epizody',
                     data,
-                    backgroundColor: 'rgba(99, 102, 241, 0.8)',
+                    backgroundColor: barColor,
                     borderRadius: 4,
                 }
             ]
         }
-    }, [filteredHistory])
+    }, [filteredHistory, theme])
 
     // Generate heatmap data (last 52 weeks = 364 days)
     const heatmapData = useMemo(() => {
@@ -729,6 +737,38 @@ function HistoryLog() {
         }
         return columns;
     }, [historyLog]);
+
+    // Staty přímo z heatmapData (stejné roční okno = jeden zdroj pravdy).
+    // Záměrně NEduplikují graf (⌀ EP/den, aktivní dny) ani streaky (🔥/🏆/🕐):
+    // ukazují extrémy a týdenní rytmus, které jinde nejsou.
+    const heatmapStats = useMemo(() => {
+        const cells = heatmapData.flat();
+        if (!cells.length) return null;
+
+        // Nejaktivnější den
+        let peak = cells[0];
+        for (const c of cells) if (c.eps > peak.eps) peak = c;
+
+        // Rozložení podle dne v týdnu (Po..Ne)
+        const WD = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
+        const wdTot = [0, 0, 0, 0, 0, 0, 0];
+        const wdCnt = [0, 0, 0, 0, 0, 0, 0];
+        for (const c of cells) {
+            const i = (c.date.getDay() + 6) % 7; // Po=0 … Ne=6
+            wdTot[i] += c.eps;
+            wdCnt[i] += 1;
+        }
+        let bestWd = 0;
+        for (let i = 1; i < 7; i++) if (wdTot[i] > wdTot[bestWd]) bestWd = i;
+        const wdMax = Math.max(...wdTot, 1);
+
+        return {
+            peak: peak.eps > 0 ? peak : null,
+            bestWd: WD[bestWd],
+            bestWdAvg: wdCnt[bestWd] ? wdTot[bestWd] / wdCnt[bestWd] : 0,
+            wdDist: wdTot.map((t, i) => ({ name: WD[i], v: t, h: t / wdMax })),
+        };
+    }, [heatmapData]);
 
     const chartRef = useRef(null)
 
@@ -932,7 +972,20 @@ function HistoryLog() {
             totalDaysInRange = Math.round((last - first) / (1000 * 60 * 60 * 24)) + 1
         }
 
-        return { episodes, time, days, totalDaysInRange, epsPerDay, minsPerDay }
+        // Nejaktivnější měsíc (v aktuálně filtrovaném rozsahu) — pro staty grafu
+        const monthly = {}
+        groupedHistory.forEach(group => {
+            if (!group.date) return
+            const mk = group.date.substring(0, 7)
+            monthly[mk] = (monthly[mk] || 0) + group.totalEpisodes
+        })
+        let bestMonth = null
+        for (const [k, v] of Object.entries(monthly)) if (!bestMonth || v > bestMonth.v) bestMonth = { k, v }
+        const bestMonthObj = bestMonth
+            ? { label: new Date(`${bestMonth.k}-01T12:00:00`).toLocaleDateString('cs-CZ', { month: 'long', year: 'numeric' }), eps: bestMonth.v }
+            : null
+
+        return { episodes, time, days, totalDaysInRange, epsPerDay, minsPerDay, bestMonth: bestMonthObj }
     }, [groupedHistory])
 
     const scrollToDate = (dateStr) => {
@@ -977,7 +1030,7 @@ function HistoryLog() {
     return (
         <div className="fade-in" style={{ opacity: isRestoringScroll ? 0 : 1, transition: 'opacity 0.2s' }}>
             {/* Header and Streaks */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)', marginBottom: 'var(--spacing-xl)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)', marginBottom: 'var(--spacing-lg)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--spacing-lg)' }}>
                     <h2 style={{ margin: 0 }}>
                         History Log
@@ -1086,6 +1139,16 @@ function HistoryLog() {
                                             {formatTime(Math.round(totalStats.minsPerDay))}
                                         </span>
                                     </div>
+                                    {totalStats.bestMonth && (
+                                        <div
+                                            style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.75rem', cursor: 'help' }}
+                                            title={`Měsíc s nejvíce zhlédnutými epizodami v tomto rozsahu (${totalStats.bestMonth.eps} EP)`}
+                                        >
+                                            <span style={{ color: 'var(--text-muted)' }}>Nej. měsíc:</span>
+                                            <span style={{ fontWeight: 700, color: 'var(--accent-primary)' }}>{totalStats.bestMonth.label}</span>
+                                            <span style={{ color: 'var(--text-muted)' }}>{totalStats.bestMonth.eps} EP</span>
+                                        </div>
+                                    )}
                                     <div 
                                         style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.75rem', cursor: 'help' }}
                                         title={`Sledováno v ${totalStats.days} dnech z celkových ${totalStats.totalDaysInRange} kalendářních dnů v tomto období.`}
@@ -1096,7 +1159,7 @@ function HistoryLog() {
                                 </div>
                             </div>
                             <div style={{ flex: 1, position: 'relative', minHeight: '180px' }}>
-                                <Bar ref={chartRef} options={chartOptions} data={chartData} />
+                                <Bar ref={chartRef} key={theme?.name || theme?.id || (theme?.isLight ? 'light' : 'dark')} options={chartOptions} data={chartData} />
                             </div>
                         </div>
                     ) : (
@@ -1117,8 +1180,48 @@ function HistoryLog() {
                         minHeight: '220px',
                         overflow: 'hidden' // Prevent full container scroll if possible
                     }}>
-                        <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '8px', fontWeight: '500' }}>
-                            HEATMAPA AKTIVITY ZA POSLEDNÍ ROK
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '6px 16px', marginBottom: '8px' }}>
+                            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: '500' }}>
+                                HEATMAPA AKTIVITY ZA POSLEDNÍ ROK
+                            </div>
+                            {heatmapStats && (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap', fontSize: '0.75rem' }}>
+                                    {heatmapStats.peak && (
+                                        <div
+                                            style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}
+                                            title={`Nejvíc epizod za jeden den — ${heatmapStats.peak.date.toLocaleDateString('cs-CZ')} (klik = skok na den)`}
+                                            onClick={() => scrollToDate(heatmapStats.peak.dateStr)}
+                                        >
+                                            <span style={{ color: 'var(--text-muted)' }}>Nej. den:</span>
+                                            <span style={{ fontWeight: 700, color: 'var(--accent-emerald)' }}>{heatmapStats.peak.eps} EP</span>
+                                            <span style={{ color: 'var(--text-muted)' }}>{heatmapStats.peak.date.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric' })}</span>
+                                        </div>
+                                    )}
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }} title="Ve který den v týdnu koukáš nejvíc (průměr epizod na daný den)">
+                                        <span style={{ color: 'var(--text-muted)' }}>Nej. v týdnu:</span>
+                                        <span style={{ fontWeight: 700, color: 'var(--accent-amber)' }}>{heatmapStats.bestWd}</span>
+                                        <span style={{ color: 'var(--text-muted)' }}>⌀ {Math.round(heatmapStats.bestWdAvg)}</span>
+                                    </div>
+                                    <div style={{ width: '1px', height: '16px', background: 'var(--border-color)' }} />
+                                    <div
+                                        style={{ display: 'flex', alignItems: 'flex-end', gap: '2px', height: '18px' }}
+                                        title={`Rozložení epizod podle dne v týdnu:\n${heatmapStats.wdDist.map(d => `${d.name}: ${d.v} EP`).join('\n')}`}
+                                    >
+                                        {heatmapStats.wdDist.map(d => (
+                                            <div
+                                                key={d.name}
+                                                style={{
+                                                    width: '5px',
+                                                    height: `${Math.max(2, Math.round(d.h * 18))}px`,
+                                                    background: 'var(--accent-primary)',
+                                                    opacity: 0.35 + 0.65 * d.h,
+                                                    borderRadius: '1px'
+                                                }}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         <div style={{ display: 'flex', flexDirection: 'column', flex: 1, overflowX: 'auto', paddingBottom: '4px', paddingTop: '8px' }}>

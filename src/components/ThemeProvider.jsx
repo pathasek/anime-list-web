@@ -18,6 +18,9 @@ const STORAGE_KEY = 'anime-list-theme';
 
 const ThemeContext = createContext();
 
+// Provider a jeho hook žijí záměrně v jednom souboru (běžný React pattern).
+// Fast-refresh varování je tím pádem nerelevantní.
+// eslint-disable-next-line react-refresh/only-export-components
 export function useTheme() {
     return useContext(ThemeContext);
 }
@@ -25,13 +28,20 @@ export function useTheme() {
 export function ThemeProvider({ children }) {
     const [theme, setThemeState] = useState(() => {
         try {
-            return localStorage.getItem(STORAGE_KEY) || 'neon-dark';
+            const saved = localStorage.getItem(STORAGE_KEY) || 'neon-dark';
+            if (typeof document !== 'undefined') {
+                document.documentElement.setAttribute('data-theme', saved);
+            }
+            return saved;
         } catch {
             return 'neon-dark';
         }
     });
 
     const setTheme = useCallback((newTheme) => {
+        if (typeof document !== 'undefined') {
+            document.documentElement.setAttribute('data-theme', newTheme);
+        }
         setThemeState(newTheme);
         try {
             localStorage.setItem(STORAGE_KEY, newTheme);
@@ -50,7 +60,7 @@ export function ThemeProvider({ children }) {
                     Chart.defaults.color = isLight ? '#333' : '#fff';
                     Chart.defaults.borderColor = isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)';
                 }).catch(() => {});
-            } catch {}
+            } catch { /* chart.js se nenačetl — theme defaults se přeskočí */ }
         }
 
         return () => {

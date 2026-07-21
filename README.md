@@ -1,16 +1,66 @@
-# React + Vite
+# 🏮 Anime List Web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplikace **Anime List Web** je interaktivní a vizuálně bohaté webové centrum určené pro sledování, analýzu a detailní hodnocení anime seriálů a filmů. Nabízí pokročilé statistiky, analytické grafy, AI textové rozbory epizod a široké možnosti přizpůsobení.
 
-Currently, two official plugins are available:
+![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?style=flat&logo=vite&logoColor=white)
+![React](https://img.shields.io/badge/React-19.2-61DAFB?style=flat&logo=react&logoColor=black)
+![Chart.js](https://img.shields.io/badge/Chart.js-4.5-FF6384?style=flat&logo=chartdotjs&logoColor=white)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## ✨ Hlavní funkce a vlastnosti
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- 📊 **Dashboard & Kompletní Analytika**: Interaktivní přehled o celkovém počtu zhlédnutých epizod, času sledování, rozložení podle žánrů, typů a animačních studií.
+- 🎯 **Detailní hodnocení (Anime Ratings)**: Pokročilé možnosti srovnávání titulů podle kategorií (Animace, Plot, Pacing, Postavy, OST atd.), radarové grafy, vyhlašování TOP žebříčků a sledování dynamických trendů.
+- 📅 **Historický log & Heatmapa (History Log)**: 
+  - Roční heatmapa aktivity sledování podle jednotlivých dnů.
+  - Sledování a vyhodnocování nejdělších i aktuálních **streaků** zhlédnutých dnů.
+  - Přehled rozložení podle dnů v týdnu a nejúspěšnějších měsíců.
+- 📝 **AI Rozbory epizod a kategorií**:
+  - Podrobné faktické a narativní rozbory z vygenerovaných DOCX analýz.
+  - Interaktivní modal okna s plynulou tlačítkovou (◄/►) i klávesnicovou (`←` `→`) navigací mezi epizodami.
+- 🎨 **9 Vizuálních témat**:
+  - Dynamické přepínání vzhledu (*Neon Dark*, *Cyberpunk*, *Emerald Forest*, *Re:Zero*, *Scarlet Outline*, *Retro 8-bit*, *Obsidian Grey*, *Pastel Light*, *Excel Classic*).
+  - Okamžitá synchronizace barevných palet grafů s vybraným tématem.
+- 🎵 **OST & Media Player**: Integrované přehrávání OP/ED znělek a hudebních ukázek přímo u jednotlivých rozborů.
+- 🎁 **Personalizovaný Anime Wrapped & Doporučení**: Osobní výroční rekapitulace sledování s inteligentními doporučeními dalších anime.
+- 📌 **Plánovač sledování (Plan to Watch)**: Přehledná správa priorit a plánovaných sérií k vidění.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🛠️ Použité technologie
+
+- **Frontend**: React 19, Vite, React Router DOM
+- **Vizualizace dat**: Chart.js, React-Chartjs-2, Chartjs-Plugin-Datalabels, D3 Cloud
+- **Styling**: Custom CSS variables, moderní skleněný/neonový design systém, responsive grid layout
+- **Deployment**: Automated GitHub Pages script (`gh-pages`)
+
+---
+
+## 🚀 Lokální spuštění a vývoj
+
+1. Klonování repozitáře:
+```bash
+git clone https://github.com/macou/Anime_List.git
+cd Anime_List/anime-list-web
+```
+
+2. Instalace závislostí:
+```bash
+npm install
+```
+
+3. Spuštění vývojářského serveru:
+```bash
+npm run dev
+```
+
+4. Produkční build:
+```bash
+npm run build
+```
+
+5. Nasazení na GitHub Pages:
+```bash
+npm run deploy
+```

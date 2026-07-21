@@ -104,16 +104,16 @@ function AnimeList() {
     // Try to initialize from memory/localStorage cache synchronously for instant back-navigation.
     // The raw cached array is remembered so the async revalidation below can tell
     // whether the server has newer data (loadData returns a different reference).
-    const initialCacheRef = useRef(null)
-    const [animeList, setAnimeList] = useState(() => {
-        const cached = getCachedData(STORAGE_KEYS.ANIME_LIST)
-        if (cached) {
-            initialCacheRef.current = cached
-            return cached.map((item, idx) => ({ ...item, originalIndex: idx + 1 }))
-        }
-        return []
-    })
-    const [loading, setLoading] = useState(() => !getCachedData(STORAGE_KEYS.ANIME_LIST))
+    // Cache načteme jednou (ne zvlášť v každém inicializátoru) a ref jí rovnou
+    // inicializujeme — žádný zápis do ref.current během renderu (react-hooks/refs).
+    const initialCache = getCachedData(STORAGE_KEYS.ANIME_LIST)
+    const initialCacheRef = useRef(initialCache)
+    const [animeList, setAnimeList] = useState(() =>
+        initialCache
+            ? initialCache.map((item, idx) => ({ ...item, originalIndex: idx + 1 }))
+            : []
+    )
+    const [loading, setLoading] = useState(!initialCache)
     const [searchTerm, setSearchTerm] = useState('')
     const [sortConfig, setSortConfig] = useState({ key: 'default', direction: 'asc' })
     const defaultFilters = {
@@ -136,7 +136,7 @@ function AnimeList() {
                 const parsed = JSON.parse(saved)
                 // Merge with defaults to ensure all keys exist (prevents crash from older localStorage versions)
                 return { ...defaultFilters, ...parsed }
-            } catch (e) { }
+            } catch { /* starší/poškozený formát localStorage → defaulty */ }
         }
         return { ...defaultFilters }
     })
@@ -153,7 +153,7 @@ function AnimeList() {
 
     // Scroll listener to update scroll position dynamically
     useEffect(() => {
-        const handleScroll = (e) => {
+        const handleScroll = () => {
             const currentY = window.scrollY || document.documentElement.scrollTop;
             setShowScrollTop(currentY > 1000);
 
@@ -543,6 +543,11 @@ function AnimeList() {
         return () => observer.disconnect()
     }, [filteredList.length])
 
+    // Uloženo při dočasném zúžení na jednu sérii (toggleSeriesFilter) — deklarováno
+    // před efekty/handlery, které je čtou (react-hooks/immutability).
+    const [savedScrollPos, setSavedScrollPos] = useState(0)
+    const [savedDisplayCount, setSavedDisplayCount] = useState(null)
+
     // Reset displayCount when search term, sorting, or series filter changes
     useEffect(() => {
         if (savedDisplayCount !== null) {
@@ -627,9 +632,6 @@ function AnimeList() {
         if (!anime) return ''
         return anime.series || anime.name || ''
     }
-
-    const [savedScrollPos, setSavedScrollPos] = useState(0)
-    const [savedDisplayCount, setSavedDisplayCount] = useState(null)
 
     const toggleSeriesFilter = (anime) => {
         const baseName = extractSeriesBaseName(anime)

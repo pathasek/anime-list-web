@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react'
+import { useRef } from 'react'
 
 /**
  * DashboardGroup — collapsible group card for the Dashboard.
@@ -17,14 +17,6 @@ import { useRef, useEffect, useState } from 'react'
  */
 function DashboardGroup({ id, title, icon, isExpanded, onToggle, alwaysExpanded = false, fullWidth = false, customPreview = false, previewContent, headerExtra, children }) {
     const contentRef = useRef(null)
-    const [contentHeight, setContentHeight] = useState(0)
-
-    // Measure content height for smooth animation
-    useEffect(() => {
-        if (contentRef.current) {
-            setContentHeight(contentRef.current.scrollHeight)
-        }
-    }, [isExpanded, children])
 
     const showExpanded = isExpanded || alwaysExpanded
 

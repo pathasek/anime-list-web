@@ -87,18 +87,6 @@ function parseEpisodeCount(epsStr) {
 }
 
 /**
- * Parses time spent string like "72 min (1,2 hod)" to minutes
- * @param {string} timeStr 
- * @returns {number}
- */
-function parseMinutes(timeStr) {
-    if (!timeStr) return 0;
-    const str = String(timeStr).trim();
-    const match = str.match(/(\d+)\s*min/i);
-    return match ? parseInt(match[1], 10) : 0;
-}
-
-/**
  * Calculates wrapped statistics for a given year.
  * @param {object[]} animeList 
  * @param {object[]} historyLog 
@@ -524,7 +512,7 @@ export function calculateWrappedData(animeList, historyLog, statsJson, jikanCach
             if (localCached) {
                 try {
                     communityScore = JSON.parse(localCached).score;
-                } catch {}
+                } catch { /* poškozený localStorage záznam */ }
             }
             
             // Fallback 2: Check memory/jikanCache file

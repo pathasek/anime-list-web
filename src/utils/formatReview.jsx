@@ -108,8 +108,6 @@ export function formatReview(text, animeName) {
       parts.push(...highlightAnimeName(beforeText, namesToMatch, parts.length === 0));
     }
 
-    const fullMatch = match[0];
-
     // Check if it's an FH match (FH groups: 5=prefix, 6=score)
     if (match[6] !== undefined) {
       // FH match

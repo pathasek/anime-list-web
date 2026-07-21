@@ -1,6 +1,6 @@
 import { useState, useEffect, useLayoutEffect, useMemo, useCallback, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { pauseBackgroundDownload, resumeBackgroundDownload, isExcelRunning, fetchWithRetry as jikanFetchWithRetry } from '../utils/jikanService'
 import './recommendations.css'
 
@@ -306,10 +306,6 @@ function getVotesScoreScaled(votesCount, maxVotes) {
     return Math.log(votesCount) / Math.log(maxVotes)
 }
 
-function getVotesScore(votesCount, settings) {
-    return getVotesScoreScaled(votesCount, settings.MAX_VOTES_FOR_SCORE)
-}
-
 // Plán 6 Ú1: férová kombinace hlasů obou zdrojů — každý zdroj se normalizuje na vlastní
 // log-škále (různě velké komunity), silnější zdroj dává základ, shoda obou dává bonus.
 function getCombinedVotesScore(jikanVotes, anilistVotes, settings) {
@@ -453,6 +449,18 @@ function cleanSynopsis(text) {
 // ============================================================
 // SETTINGS MODAL COMPONENT
 // ============================================================
+// Řádek číselného nastavení. Na modulové úrovni (ne uvnitř SettingsModal), aby se
+// nevytvářela nová komponenta při každém renderu (react-hooks/static-components).
+function NumberInput({ label, field, step = 1, local, set }) {
+    return (
+        <div className="rec-settings-row">
+            <label>{label}</label>
+            <input type="number" value={local[field]} step={step}
+                onChange={e => set(field, parseFloat(e.target.value) || 0)} />
+        </div>
+    )
+}
+
 function SettingsModal({ isOpen, onClose, settings, onSave }) {
     const [local, setLocal] = useState({ ...settings })
 
@@ -471,14 +479,6 @@ function SettingsModal({ isOpen, onClose, settings, onSave }) {
         onClose()
     }
 
-    const NumberInput = ({ label, field, step = 1 }) => (
-        <div className="rec-settings-row">
-            <label>{label}</label>
-            <input type="number" value={local[field]} step={step}
-                onChange={e => set(field, parseFloat(e.target.value) || 0)} />
-        </div>
-    )
-
     return createPortal(
         <div className="rec-settings-overlay" onClick={e => { if (e.target === e.currentTarget) onClose() }}>
             <div className="rec-settings-modal">
@@ -489,13 +489,13 @@ function SettingsModal({ isOpen, onClose, settings, onSave }) {
 
                 <div className="rec-settings-body">
                     <div className="rec-settings-section-title">Váhy faktorů relevance</div>
-                    <NumberInput label="Hlasy doporučení (Votes)" field="RELEVANCE_W_VOTES" />
-                    <NumberInput label="MAL Skóre" field="RELEVANCE_W_MAL_SCORE" />
-                    <NumberInput label="Žánry a témata" field="RELEVANCE_W_GENRE_THEME" />
-                    <NumberInput label="AniList tagy" field="RELEVANCE_W_TAGS" />
-                    <NumberInput label="V plánu (PTW bonus)" field="RELEVANCE_W_IN_PLAN" />
-                    <NumberInput label="Délka anime" field="RELEVANCE_W_LENGTH" />
-                    <NumberInput label="Popularita" field="RELEVANCE_W_POPULARITY" />
+                    <NumberInput local={local} set={set} label="Hlasy doporučení (Votes)" field="RELEVANCE_W_VOTES" />
+                    <NumberInput local={local} set={set} label="MAL Skóre" field="RELEVANCE_W_MAL_SCORE" />
+                    <NumberInput local={local} set={set} label="Žánry a témata" field="RELEVANCE_W_GENRE_THEME" />
+                    <NumberInput local={local} set={set} label="AniList tagy" field="RELEVANCE_W_TAGS" />
+                    <NumberInput local={local} set={set} label="V plánu (PTW bonus)" field="RELEVANCE_W_IN_PLAN" />
+                    <NumberInput local={local} set={set} label="Délka anime" field="RELEVANCE_W_LENGTH" />
+                    <NumberInput local={local} set={set} label="Popularita" field="RELEVANCE_W_POPULARITY" />
 
                     <div className="rec-settings-section-title">Kombinace zdrojů (Jikan × AniList)</div>
                     <div className="rec-toggle-row">
@@ -505,26 +505,26 @@ function SettingsModal({ isOpen, onClose, settings, onSave }) {
                             onClick={() => set('useAniListRecs', !local.useAniListRecs)}
                         />
                     </div>
-                    <NumberInput label="Max. hlasů AniList (plné skóre)" field="ANILIST_MAX_VOTES_FOR_SCORE" />
-                    <NumberInput label="Bonus za shodu obou zdrojů" field="AGREEMENT_BONUS" step={0.05} />
+                    <NumberInput local={local} set={set} label="Max. hlasů AniList (plné skóre)" field="ANILIST_MAX_VOTES_FOR_SCORE" />
+                    <NumberInput local={local} set={set} label="Bonus za shodu obou zdrojů" field="AGREEMENT_BONUS" step={0.05} />
 
                     <div className="rec-settings-section-title">Nastavení délky</div>
-                    <NumberInput label="Ideální počet epizod" field="IDEAL_EPISODES" />
-                    <NumberInput label="Ideální délka ep. (min)" field="IDEAL_DURATION_MIN" />
-                    <NumberInput label="Max. penalizace (min)" field="MAX_PENALTY_RANGE_MIN" />
+                    <NumberInput local={local} set={set} label="Ideální počet epizod" field="IDEAL_EPISODES" />
+                    <NumberInput local={local} set={set} label="Ideální délka ep. (min)" field="IDEAL_DURATION_MIN" />
+                    <NumberInput local={local} set={set} label="Max. penalizace (min)" field="MAX_PENALTY_RANGE_MIN" />
 
                     <div className="rec-settings-section-title">Nastavení popularity</div>
-                    <NumberInput label="Hidden gem ultra (< členů)" field="POP_TIER1_ULTRA" step={1000} />
-                    <NumberInput label="Hidden gem (< členů)" field="POP_TIER2_HIDDEN" step={1000} />
-                    <NumberInput label="Normal (< členů)" field="POP_TIER3_NORMAL" step={10000} />
-                    <NumberInput label="Quite known (< členů)" field="POP_TIER4_KNOWN" step={10000} />
+                    <NumberInput local={local} set={set} label="Hidden gem ultra (< členů)" field="POP_TIER1_ULTRA" step={1000} />
+                    <NumberInput local={local} set={set} label="Hidden gem (< členů)" field="POP_TIER2_HIDDEN" step={1000} />
+                    <NumberInput local={local} set={set} label="Normal (< členů)" field="POP_TIER3_NORMAL" step={10000} />
+                    <NumberInput local={local} set={set} label="Quite known (< členů)" field="POP_TIER4_KNOWN" step={10000} />
 
                     <div className="rec-settings-section-title">Hlasy</div>
-                    <NumberInput label="Max. hlasů pro plné skóre" field="MAX_VOTES_FOR_SCORE" />
-                    <NumberInput label="Min. skóre pro pop. bonus" field="MIN_SCORE_FOR_POP_BONUS" step={0.1} />
+                    <NumberInput local={local} set={set} label="Max. hlasů pro plné skóre" field="MAX_VOTES_FOR_SCORE" />
+                    <NumberInput local={local} set={set} label="Min. skóre pro pop. bonus" field="MIN_SCORE_FOR_POP_BONUS" step={0.1} />
 
                     <div className="rec-settings-section-title">Zobrazení</div>
-                    <NumberInput label="Max. zobrazených doporučení" field="MAX_RECS_TO_DISPLAY" />
+                    <NumberInput local={local} set={set} label="Max. zobrazených doporučení" field="MAX_RECS_TO_DISPLAY" />
                     <div className="rec-toggle-row">
                         <label>Zobrazit anime, co jsou v PTW</label>
                         <div
@@ -695,9 +695,9 @@ function ScoreDistributionTooltip({ malId }) {
     const formatNumber = (num) => {
         if (num == null) return '0'
         if (num >= 1000) {
-            return (num / 1000).toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).replace(/[\s  ]+$/g, '') + ' tis.'
+            return (num / 1000).toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).replace(/[\s\u00A0\u202F]+$/g, '') + ' tis.'
         }
-        return num.toLocaleString('cs-CZ').replace(/[\s  ]+$/g, '')
+        return num.toLocaleString('cs-CZ').replace(/[\s\u00A0\u202F]+$/g, '')
     }
 
     return (
@@ -734,7 +734,7 @@ function ScoreDistributionTooltip({ malId }) {
                                 />
                             </span>
                             <span className="rec-stats-val">
-                                {valPercent.toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).replace(/[\s  ]+$/g, '')} %
+                                {valPercent.toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).replace(/[\s\u00A0\u202F]+$/g, '')} %
                                 <em> ({formatNumber(votes)})</em>
                             </span>
                         </div>
@@ -748,6 +748,21 @@ function ScoreDistributionTooltip({ malId }) {
 // ============================================================
 // RELEVANCE BREAKDOWN TOOLTIP
 // ============================================================
+// Řádek rozpadu relevance. Na modulové úrovni (čistě prezentační, jen props),
+// aby se nevytvářela komponenta při renderu (react-hooks/static-components).
+function Row({ label, status, mult, weight, result }) {
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '12px' }}>
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '2px' }}>
+                {label}: <i style={{ color: 'var(--text-muted)' }}>({status})</i>
+            </span>
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-primary)' }}>
+                ({(mult || 0).toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})} * {weight}) = <strong style={{ color: '#fbbf24' }}>{(result || 0).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})} b.</strong>
+            </span>
+        </div>
+    )
+}
+
 function RelevanceBreakdown({ data, settings, sourceScore, anchorRef }) {
     const tooltipRef = useRef(null)
     const [positionStyle, setPositionStyle] = useState({ visibility: 'hidden' })
@@ -793,22 +808,10 @@ function RelevanceBreakdown({ data, settings, sourceScore, anchorRef }) {
         })
     }, [anchorRef])
 
-    const fmtScore = sourceScore ? sourceScore.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1}) : 'N/A'
     const malCompare = (sourceScore && data.mal_s_val > sourceScore) ? `Má vyšší hodnocení` : `Nemá vyšší hodnocení`
     
     // Use pre-computed length string from calculateRelevance (e.g. "5,0 h / 12 EP")
     const lengthStr = data.length_s_val || 'Neznámá'
-    
-    const Row = ({ label, status, mult, weight, result }) => (
-        <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '12px' }}>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '2px' }}>
-                {label}: <i style={{ color: 'var(--text-muted)' }}>({status})</i>
-            </span>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-primary)' }}>
-                ({(mult || 0).toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})} * {weight}) = <strong style={{ color: '#fbbf24' }}>{(result || 0).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})} b.</strong>
-            </span>
-        </div>
-    )
 
     return createPortal(
         <div
@@ -1098,7 +1101,6 @@ function RecCard({ rec, sourceAnimeId, sourceScore, settings }) {
 // ============================================================
 function Recommendations() {
     const location = useLocation()
-    const navigate = useNavigate()
 
     // Pozastaví automatickou synchronizaci Jikanu na pozadí po dobu, kdy je
     // uživatel v záložce Recommendations. Plnou prioritu má hledání jen
@@ -1120,7 +1122,7 @@ function Recommendations() {
     const [showScrollTop, setShowScrollTop] = useState(false)
 
     useEffect(() => {
-        const handleScroll = (e) => {
+        const handleScroll = () => {
             const currentY = window.scrollY || document.documentElement.scrollTop;
             setShowScrollTop(currentY > 1000);
         };
@@ -1613,7 +1615,7 @@ function Recommendations() {
             {/* Results */}
             {recommendations.length > 0 && (
                 <div className="rec-cards-grid">
-                    {recommendations.map((rec, idx) => {
+                    {recommendations.map((rec) => {
                         const malIdMatch = selectedAnime?.mal_url?.match(/\/anime\/(\d+)/)
                         const sourceId = malIdMatch ? parseInt(malIdMatch[1]) : 0
                         return (

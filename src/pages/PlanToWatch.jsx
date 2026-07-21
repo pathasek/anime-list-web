@@ -6,7 +6,7 @@ function PlanToWatch() {
     const [showScrollTop, setShowScrollTop] = useState(false)
 
     useEffect(() => {
-        const handleScroll = (e) => {
+        const handleScroll = () => {
             const currentY = window.scrollY || document.documentElement.scrollTop;
             setShowScrollTop(currentY > 1000);
         };
