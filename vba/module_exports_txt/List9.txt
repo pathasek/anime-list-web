@@ -1,0 +1,52 @@
+﻿Private Sub Worksheet_Change(ByVal Target As Range)
+    If Not Intersect(Target, Me.Range("E2")) Is Nothing Then
+        Dim fullText As String
+        fullText = Target.Value
+
+        If fullText = "" Then Exit Sub
+        
+        Application.EnableEvents = False
+        
+        Dim wsHelper As Worksheet
+        Dim matchRow As Long
+        Dim animeID As Long
+        Dim animeTitle As String
+        
+        On Error Resume Next
+        Set wsHelper = ThisWorkbook.Sheets("MAL Cache + Interactive Rating")
+        If wsHelper Is Nothing Then
+            MsgBox "Pomocný list 'MAL Cache + Interactive Rating' nebyl nalezen.", vbCritical
+            GoTo ReEnableEvents
+        End If
+
+        ' OPRAVA ZDE: Hledáme PŘESNOU shodu s celým textem z dropdownu
+        matchRow = Application.WorksheetFunction.match(fullText, wsHelper.Range("BT:BT"), 0)
+        
+        If err.Number = 0 Then
+            ' "Očistíme" text a necháme jen název AŽ TEĎ, když máme shodu
+            animeTitle = Trim(Split(fullText, "|")(0))
+            Target.Value = animeTitle
+            
+            animeID = wsHelper.Cells(matchRow, "BU").Value
+            
+            ' Smažeme staré odkazy a přidáme nový
+            Me.Hyperlinks.Add Anchor:=Target, Address:="https://myanimelist.net/anime/" & animeID, TextToDisplay:=animeTitle
+            
+            ' Aplikujeme požadované formátování
+            With Target.Font
+                .Bold = True
+                .Italic = True
+                .size = 14
+                .Color = vbBlack
+                .Underline = xlUnderlineStyleNone
+            End With
+        Else
+            ' Pokud by z nějakého důvodu shoda nebyla nalezena, jen očistíme text
+            Target.Value = Trim(Split(fullText, "|")(0))
+        End If
+        On Error GoTo 0
+
+ReEnableEvents:
+        Application.EnableEvents = True
+    End If
+End Sub

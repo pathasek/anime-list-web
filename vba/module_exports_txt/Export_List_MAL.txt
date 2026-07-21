@@ -1,0 +1,637 @@
+﻿Option Explicit
+
+' Globální proměnná pro Cache (Slovník: ID -> Skóre)
+Dim scoreCache As Object
+
+Sub ExportToMALXML()
+    ' ==============================================================================
+    ' FINÁLNÍ VERZE: CACHE V LISTU "MAL Cache + Interactive Rating" (AS:AT)
+    '
+    ' LOGIKA UPDATE:
+    ' 1. WATCHING: Vždy 1 (aby se propisovaly nové epizody).
+    ' 2. PTW:
+    '    - Pokud je v Cache -> 0 (neměnit historii).
+    '    - Pokud není v Cache (nové) -> 1 (přidat).
+    ' 3. COMPLETED:
+    '    - Pokud se změnilo skóre oproti Cache -> 1.
+    '    - Pokud je anime právě dokončeno (dnes) -> 1.
+    '    - Jinak -> 0 (chrání historii).
+    ' ==============================================================================
+    
+    Dim ws As Worksheet
+    Dim xmlStr As String
+    Dim i As Long, lastRow As Long
+    Dim animeCount As Integer
+    animeCount = 0
+    
+    Application.ScreenUpdating = False
+    Application.Calculation = xlCalculationManual ' Vypne přepočítávání vzorců
+    Application.EnableEvents = False
+    
+    ' 1. Načtení paměti z listu "MAL Cache + Interactive Rating" (sloupce AS:AT)
+    LoadScoreCache
+    
+    ' Pomocný slovník pro uložení NOVÉHO stavu paměti (který se na konci uloží)
+    Dim newScoreCache As Object
+    Set newScoreCache = CreateObject("Scripting.Dictionary")
+    
+    ' Proměnné pro XML a logiku
+    Dim animeTitle As String, animeID As String
+    Dim myScore As String, myStatus As String
+    Dim dateStart As String, dateFinish As String
+    Dim episodesWatched As String, rewatchCount As String
+    Dim rawScore As Variant, linkText As String
+    Dim myTags As String
+    Dim updateFlag As String
+    Dim scoreChanged As Boolean
+    Dim isInCache As Boolean
+    
+    ' HLAVIČKA XML
+    xmlStr = "<?xml version=""1.0"" encoding=""UTF-8""?>" & vbCrLf
+    xmlStr = xmlStr & "<myanimelist>" & vbCrLf
+    xmlStr = xmlStr & "  <myinfo>" & vbCrLf
+    xmlStr = xmlStr & "    <user_id>000000</user_id>" & vbCrLf
+    xmlStr = xmlStr & "    <user_name>ExportUser</user_name>" & vbCrLf
+    xmlStr = xmlStr & "    <user_export_type>1</user_export_type>" & vbCrLf
+    xmlStr = xmlStr & "  </myinfo>" & vbCrLf
+
+    ' ==============================================================================
+    ' FÁZE 1: PTW LIST ("ANIME PLAN TO WATCH + FUTURES")
+    ' ==============================================================================
+    On Error Resume Next
+    Set ws = Nothing
+    Set ws = ThisWorkbook.Sheets("ANIME PLAN TO WATCH + FUTURES")
+    On Error GoTo 0
+    
+    If Not ws Is Nothing Then
+        lastRow = ws.Cells(ws.Rows.count, "G").End(xlUp).row
+        Dim foundIDs As Collection, singleID As Variant
+        Dim searchName As String, cleanName As String, skipItem As Boolean
+        
+        If lastRow >= 2 Then
+            Debug.Print "--- PTW EXPORT ---"
+            For i = 2 To lastRow
+                searchName = ws.Range("G" & i).Value
+                cleanName = CleanSearchName(searchName)
+                
+                skipItem = False
+                If Len(cleanName) <= 1 Or cleanName = "Název" Or cleanName = "InterestStacks" Then skipItem = True
+                If InStr(1, cleanName, "Anime, co vypadají", vbTextCompare) > 0 Then skipItem = True
+                If InStr(1, cleanName, "Short Completed Anime", vbTextCompare) > 0 Then skipItem = True
+                
+                If skipItem = False Then
+                    Application.StatusBar = "PTW Export (" & i & "/" & lastRow & "): " & cleanName
+                    Set foundIDs = GetMALIDsFromAniList(cleanName)
+                    
+                    If foundIDs.count > 0 Then
+                        For Each singleID In foundIDs
+                            animeID = CStr(singleID)
+                            animeCount = animeCount + 1
+                            
+                            ' Uložení do nové cache (PTW má vždy skóre "0")
+                            If Not newScoreCache.Exists(animeID) Then newScoreCache.Add animeID, "0"
+                            
+                            ' === SMART LOGIKA PRO PTW ===
+                            ' Pokud už ID známe z minula, neaktualizujeme (update=0).
+                            ' Pokud je nové, aktualizujeme (update=1).
+                            If scoreCache.Exists(animeID) Then
+                                updateFlag = "0"
+                            Else
+                                updateFlag = "1"
+                            End If
+                            
+                            xmlStr = xmlStr & GenerateAnimeNode(animeID, "API_IMPORT_" & CleanXML(cleanName), "0", "0000-00-00", "0000-00-00", "0", "Plan to Watch", "0", "Plan to Watch", updateFlag)
+                            DoEvents
+                        Next singleID
+                    End If
+                End If
+            Next i
+        End If
+    End If
+
+    ' ==============================================================================
+    ' FÁZE 2: HLAVNÍ LIST ("ANIME LIST")
+    ' ==============================================================================
+    On Error Resume Next
+    Set ws = ThisWorkbook.Sheets("ANIME LIST")
+    On Error GoTo 0
+    
+    If Not ws Is Nothing Then
+        lastRow = ws.Cells(ws.Rows.count, "C").End(xlUp).row
+        If lastRow >= 2 Then
+            ' --- ŘAZENÍ (Bubble Sort) ---
+            Dim sortArr() As Variant
+            Dim count As Long, rawDate As Variant
+            ReDim sortArr(1 To (lastRow - 1), 1 To 2)
+            count = 1
+            For i = 2 To lastRow
+                sortArr(count, 1) = i
+                rawDate = ws.Range("M" & i).Value
+                If IsDate(rawDate) Then sortArr(count, 2) = CDbl(CDate(rawDate)) Else sortArr(count, 2) = 99999999999#
+                count = count + 1
+            Next i
+            
+            Dim x As Long, y As Long, tempRow As Long, tempVal As Double
+            For x = 1 To UBound(sortArr) - 1
+                For y = x + 1 To UBound(sortArr)
+                    If sortArr(x, 2) > sortArr(y, 2) Then
+                        tempRow = sortArr(x, 1): tempVal = sortArr(x, 2)
+                        sortArr(x, 1) = sortArr(y, 1): sortArr(x, 2) = sortArr(y, 2)
+                        sortArr(y, 1) = tempRow: sortArr(y, 2) = tempVal
+                    End If
+                Next y
+            Next x
+            ' -------------------------------------
+            
+            Dim k As Long, realRow As Long
+            For k = 1 To UBound(sortArr)
+                realRow = sortArr(k, 1)
+                
+                ' Získání ID
+                animeTitle = CleanXML(ws.Range("C" & realRow).Value)
+                animeID = "0"
+                If ws.Range("C" & realRow).Hyperlinks.count > 0 Then
+                    linkText = ws.Range("C" & realRow).Hyperlinks(1).Address
+                    animeID = GetAnimeIDFromLink(linkText)
+                End If
+                If animeID = "0" And InStr(1, ws.Range("C" & realRow).Value, "myanimelist.net/anime/") > 0 Then
+                    animeID = GetAnimeIDFromLink(ws.Range("C" & realRow).Value)
+                End If
+                
+                If animeID <> "0" Then
+                    animeCount = animeCount + 1
+                    
+                    ' Data
+                    rawScore = ws.Range("K" & realRow).Value
+                    If IsNumeric(rawScore) And rawScore >= 1 And rawScore <= 10 Then myScore = CStr(rawScore) Else myScore = "0"
+                    
+                    ' Uložení do nové paměti pro příští běh
+                    ' (Pokud už ID existuje z PTW fáze, přepíšeme ho aktuálním skóre, což je správně)
+                    If newScoreCache.Exists(animeID) Then
+                        newScoreCache(animeID) = myScore
+                    Else
+                        newScoreCache.Add animeID, myScore
+                    End If
+                    
+                    dateStart = FormatMALDate(ws.Range("L" & realRow).Value)
+                    dateFinish = FormatMALDate(ws.Range("M" & realRow).Value)
+                    episodesWatched = CStr(ws.Range("I" & realRow).Value)
+                    If episodesWatched = "" Then episodesWatched = "0"
+                    rewatchCount = CStr(ws.Range("N" & realRow).Value)
+                    If rewatchCount = "" Or Not IsNumeric(rewatchCount) Then rewatchCount = "0"
+                    
+                    ' Status logic
+                    If dateFinish <> "" And dateFinish <> "0000-00-00" Then
+                        myStatus = "Completed"
+                    ElseIf dateStart <> "" And dateStart <> "0000-00-00" Then
+                        myStatus = "Watching"
+                    Else
+                        myStatus = "Plan to Watch"
+                    End If
+                    
+                    ' Tagy (Jazyk)
+                    myTags = CreateSmartTags(ws.Range("P" & realRow).Value, "", "")
+
+                    ' === SMART UPDATE LOGIKA (HLAVNÍ LIST) - OPRAVENÁ ===
+                    scoreChanged = False
+                    isInCache = scoreCache.Exists(animeID)
+                    
+                    Dim oldScore As String
+                    If isInCache Then
+                        oldScore = scoreCache(animeID)
+                        If oldScore <> myScore Then scoreChanged = True
+                    Else
+                        oldScore = "-1" ' Indikátor, že v cache nebylo
+                    End If
+                    
+                    If myStatus = "Watching" Then
+                        ' Watching: Vždy aktualizovat (mění se epizody)
+                        updateFlag = "1"
+                        
+                    ElseIf myStatus = "Completed" Then
+                        ' Completed logika:
+                        If Not isInCache Then
+                            ' 1. Pokud anime není v paměti (nové nebo přesunuté z netrackovaného PTW), VŽDY update
+                            updateFlag = "1"
+                        ElseIf oldScore = "0" And myScore <> "0" Then
+                            ' 2. Pokud bylo v cache se skóre 0 (PTW) a teď má skóre -> update
+                            updateFlag = "1"
+                        ElseIf scoreChanged = True Then
+                            ' 3. Pokud se změnilo skóre
+                            updateFlag = "1"
+                        ElseIf dateFinish = Format(Date, "yyyy-mm-dd") Then
+                            ' 4. Pokud bylo dokončeno právě dnes
+                            updateFlag = "1"
+                        Else
+                            ' Jinak neaktualizovat (chráníme datum historie na MAL)
+                            updateFlag = "0"
+                        End If
+                        
+                    Else
+                        ' PTW v hlavním listu
+                        If isInCache Then updateFlag = "0" Else updateFlag = "1"
+                    End If
+                    
+                    xmlStr = xmlStr & GenerateAnimeNode(animeID, animeTitle, episodesWatched, dateStart, dateFinish, myScore, myStatus, rewatchCount, myTags, updateFlag)
+                End If
+            Next k
+        End If
+    End If
+
+    ' UKONČENÍ XML
+    xmlStr = xmlStr & "</myanimelist>"
+    
+' ==============================================================================
+    ' FÁZE 3: ULOŽENÍ SOUBORU (SPECIFICKÁ CESTA)
+    ' Cíl: C:\Users\macou\Desktop\Anime list - experimenting
+    ' ==============================================================================
+    Dim fso As Object
+    Dim folderPath As String, FileName As String, fullPath As String
+    
+    ' 1. Nastavení tvé specifické cesty
+    folderPath = "C:\Users\macou\Desktop\Anime list - experimenting\"
+    
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    
+    ' 2. Kontrola existence složky (pokud neexistuje, zkusíme ji vytvořit)
+    If Not fso.FolderExists(folderPath) Then
+        On Error Resume Next
+        fso.CreateFolder folderPath
+        On Error GoTo 0
+        
+        ' Pokud se vytvoření nepovedlo (např. špatná cesta), fallback na Plochu
+        If Not fso.FolderExists(folderPath) Then
+            MsgBox "Cílová složka neexistuje a nepodařilo se ji vytvořit:" & vbCrLf & _
+                   folderPath & vbCrLf & vbCrLf & _
+                   "Soubor bude uložen na Plochu.", vbExclamation
+            folderPath = CreateObject("WScript.Shell").SpecialFolders("Desktop") & Application.PathSeparator
+        End If
+    End If
+    
+    ' 3. Definice názvu souboru
+    FileName = Format(Date, "dd.mm.yyyy") & "_Anime_List_Export.xml"
+    fullPath = folderPath & FileName
+    
+    ' 4. Kontrola zámku souboru (pokud je otevřený, vytvoříme kopii s časem)
+    If fso.fileExists(fullPath) Then
+        On Error Resume Next
+        fso.DeleteFile fullPath, True
+        If err.Number <> 0 Then
+            FileName = Format(Date, "dd.mm.yyyy") & "_Anime_List_Export_" & Format(Time, "hhmmss") & ".xml"
+            fullPath = folderPath & FileName
+            err.Clear
+        End If
+        On Error GoTo 0
+    End If
+
+    ' 5. Uložení přes ADODB Stream (UTF-8)
+    Dim adoStream As Object
+    Set adoStream = CreateObject("ADODB.Stream")
+    
+    On Error GoTo ErrorHandler
+    With adoStream
+        .Type = 2             ' adTypeText
+        .Charset = "utf-8"    ' Vynucení UTF-8
+        .Open
+        .WriteText xmlStr
+        .SaveToFile fullPath, 2 ' 2 = adSaveCreateOverWrite
+        .Close
+    End With
+    
+    ' !!! ZDE JE TA OPRAVA !!!
+    ' Uložíme aktuální stav do Excelu pro příště
+    SaveScoreCache newScoreCache
+    ' !!!!!!!!!!!!!!!!!!!!!!!!
+    
+    Application.StatusBar = False
+    MsgBox "Hotovo! Soubor uložen zde:" & vbCrLf & vbCrLf & fullPath, vbInformation
+    Exit Sub
+
+ErrorHandler:
+    Application.StatusBar = False
+    MsgBox "CHYBA PŘI UKLÁDÁNÍ: " & err.Description & vbCrLf & "Cesta: " & fullPath, vbCritical
+End Sub
+
+' ==========================================
+' POMOCNÉ FUNKCE PRO XML
+' ==========================================
+Function GenerateAnimeNode(ID As String, title As String, eps As String, dStart As String, dFinish As String, score As String, status As String, rew As String, tags As String, update As String) As String
+    Dim s As String
+    s = "  <anime>" & vbCrLf
+    s = s & "    <series_animedb_id>" & ID & "</series_animedb_id>" & vbCrLf
+    s = s & "    <series_title><![CDATA[" & title & "]]></series_title>" & vbCrLf
+    s = s & "    <my_watched_episodes>" & eps & "</my_watched_episodes>" & vbCrLf
+    s = s & "    <my_start_date>" & dStart & "</my_start_date>" & vbCrLf
+    s = s & "    <my_finish_date>" & dFinish & "</my_finish_date>" & vbCrLf
+    s = s & "    <my_score>" & score & "</my_score>" & vbCrLf
+    s = s & "    <my_status>" & status & "</my_status>" & vbCrLf
+    s = s & "    <my_times_watched>" & rew & "</my_times_watched>" & vbCrLf
+    s = s & "    <my_tags><![CDATA[" & tags & "]]></my_tags>" & vbCrLf
+    s = s & "    <update_on_import>" & update & "</update_on_import>" & vbCrLf
+    s = s & "  </anime>" & vbCrLf
+    GenerateAnimeNode = s
+End Function
+
+' ==========================================
+' FUNKCE PRO PRÁCI S PAMĚTÍ (AS:AT)
+' ==========================================
+Sub LoadScoreCache()
+    Set scoreCache = CreateObject("Scripting.Dictionary")
+    Dim wsCache As Worksheet
+    
+    On Error Resume Next
+    Set wsCache = ThisWorkbook.Sheets("MAL Cache + Interactive Rating")
+    On Error GoTo 0
+    
+    If wsCache Is Nothing Then
+        MsgBox "CHYBA: List 'MAL Cache + Interactive Rating' nebyl nalezen! Cache nebude fungovat.", vbCritical
+        Exit Sub
+    End If
+    
+    Dim lastRow As Long, i As Long
+    ' Hledáme poslední řádek ve sloupci AS (45. sloupec)
+    lastRow = wsCache.Cells(wsCache.Rows.count, "AS").End(xlUp).row
+    
+    If lastRow < 2 Then Exit Sub ' Předpokládáme, že řádek 1 je hlavička nebo prázdný
+    
+    Dim arr As Variant
+    ' Načteme AS2:AT(lastRow) do pole pro rychlost
+    arr = wsCache.Range("AS2:AT" & lastRow).Value
+    
+    For i = 1 To UBound(arr, 1)
+        If Not IsEmpty(arr(i, 1)) Then
+            scoreCache(CStr(arr(i, 1))) = CStr(arr(i, 2))
+        End If
+    Next i
+End Sub
+
+Sub SaveScoreCache(newCache As Object)
+    Dim wsCache As Worksheet
+    On Error Resume Next
+    Set wsCache = ThisWorkbook.Sheets("MAL Cache + Interactive Rating")
+    On Error GoTo 0
+    
+    If wsCache Is Nothing Then Exit Sub ' Chyba už byla hlášena v Load
+    
+    ' Vymazání staré cache (sloupce AS a AT, od řádku 2 dolů)
+    Dim lastRow As Long
+    lastRow = wsCache.Cells(wsCache.Rows.count, "AS").End(xlUp).row
+    If lastRow >= 2 Then
+        wsCache.Range("AS2:AT" & lastRow).ClearContents
+    End If
+    
+    If newCache.count > 0 Then
+        Dim keys As Variant, items As Variant
+        keys = newCache.keys
+        items = newCache.items
+        
+        ' Rychlý zápis polem
+        Dim arr() As Variant
+        ReDim arr(1 To newCache.count, 1 To 2)
+        
+        Dim i As Long
+        For i = 0 To newCache.count - 1
+            arr(i + 1, 1) = keys(i)
+            arr(i + 1, 2) = items(i)
+        Next i
+        
+        ' Zápis do AS2:AT...
+        wsCache.Range("AS2").Resize(newCache.count, 2).Value = arr
+    End If
+    
+    ' Na úplný konec (před Exit Sub a ErrorHandler):
+    Application.ScreenUpdating = True
+    Application.Calculation = xlCalculationAutomatic
+    Application.EnableEvents = True
+    
+End Sub
+
+' ==========================================
+' ZBYTEK TVÝCH PŮVODNÍCH FUNKCÍ
+' (CreateSmartTags, CleanXML, API funkce...)
+' SEM VLOŽ VŠECHNY OSTATNÍ FUNKCE, KTERÉ JSI MĚL V PŮVODNÍM KÓDU
+' ==========================================
+Function CreateSmartTags(langStr As String, studioStr As String, themeStr As String) As String
+    ' UPRAVENÁ VERZE: Vrací pouze Jazyk (Dub/Sub). Studio a Témata jsou ignorována.
+    
+    Dim parts() As String
+    Dim p As Variant
+    Dim finalTags As String
+    Dim langTag As String
+    
+    finalTags = ""
+    
+    ' 1. Zpracování jazyka
+    If Trim(langStr) <> "" Then
+        parts = Split(langStr, ";")
+        For Each p In parts
+            p = Trim(p)
+            If p <> "" Then
+                Select Case UCase(p)
+                    Case "CZ"
+                        langTag = "CZ Dub"
+                    Case "ENG"
+                        langTag = "ENG Dub"
+                    Case Else
+                        ' Pro JAP, CHN, KOR a ostatní
+                        langTag = p & " Dub (ENG Sub)"
+                End Select
+                
+                If finalTags = "" Then
+                    finalTags = langTag
+                Else
+                    finalTags = finalTags & ", " & langTag
+                End If
+            End If
+        Next p
+    End If
+    
+    ' Studio a Témata byly odstraněny, vracíme jen jazyk.
+    CreateSmartTags = finalTags
+End Function
+
+Function CleanXML(txt As String) As String
+    Dim Temp As String
+    Temp = txt
+    Temp = Replace(Temp, "&", "&amp;")
+    Temp = Replace(Temp, "<", "&lt;")
+    Temp = Replace(Temp, ">", "&gt;")
+    Temp = Replace(Temp, """", "&quot;")
+    Temp = Replace(Temp, "'", "&apos;")
+    CleanXML = Temp
+End Function
+
+Function FormatMALDate(val As Variant) As String
+    If IsDate(val) Then
+        FormatMALDate = Format(val, "yyyy-mm-dd")
+    Else
+        FormatMALDate = "0000-00-00"
+    End If
+End Function
+
+Function GetAnimeIDFromLink(hyperlinkAddress As String) As String
+    Dim parts() As String
+    Dim i As Integer
+    parts = Split(hyperlinkAddress, "/")
+    For i = LBound(parts) To UBound(parts) - 1
+        If LCase(parts(i)) = "anime" Then
+            If IsNumeric(parts(i + 1)) Then
+                GetAnimeIDFromLink = parts(i + 1)
+                Exit Function
+            End If
+        End If
+    Next i
+    GetAnimeIDFromLink = "0"
+End Function
+
+' === ZDE MUSÍŠ NECHAT I ZBYTEK SVÝCH API FUNKCÍ (GetMALIDsFromAniList atd.) ===
+' === POKUD JE POTŘEBUJEŠ, ZKOPÍRUJ JE Z PŘEDCHOZÍHO MODULU ===
+
+' ==========================================
+' API FUNKCE (ANILIST -> MAL)
+' ==========================================
+Function GetMALIDsFromAniList(searchTitle As String) As Collection
+    Dim xmlHttp As Object
+    Dim jsonResponse As String
+    Dim resultColl As New Collection
+    Dim query As String, payload As String
+    
+    Dim rawNodes() As String
+    Dim i As Long
+    Dim nodeText As String
+    Dim tempID As String, tempFormat As String, tempType As String, tempTitle As String
+    
+    If Trim(searchTitle) = "" Then
+        Set GetMALIDsFromAniList = resultColl
+        Exit Function
+    End If
+
+    query = "query ($search: String) { " & _
+            "  Media (search: $search, type: ANIME, sort: SEARCH_MATCH) { " & _
+            "    idMal format type title { romaji } " & _
+            "    relations { edges { relationType node { idMal format type title { romaji } } } } " & _
+            "  } }"
+
+    payload = "{""query"":""" & CleanQueryForJSON(query) & """, ""variables"":{""search"":""" & CleanJSONString(searchTitle) & """}}"
+
+    On Error Resume Next
+    Set xmlHttp = CreateObject("MSXML2.XMLHTTP")
+    If xmlHttp Is Nothing Then Set xmlHttp = CreateObject("WinHttp.WinHttpRequest.5.1")
+    On Error GoTo 0
+
+    If xmlHttp Is Nothing Then Exit Function
+
+    With xmlHttp
+        .Open "POST", "https://graphql.anilist.co", False
+        .setRequestHeader "Content-Type", "application/json"
+        .setRequestHeader "Accept", "application/json"
+        .sEnd payload
+        jsonResponse = .responseText
+    End With
+
+    rawNodes = Split(jsonResponse, """idMal""")
+    
+    For i = 1 To UBound(rawNodes)
+        nodeText = rawNodes(i)
+        tempID = GetValueFromFragment(nodeText, ":", ",")
+        tempFormat = GetJsonValue(nodeText, """format""")
+        tempType = GetJsonValue(nodeText, """type""")
+        tempTitle = GetJsonValue(nodeText, """romaji""")
+        
+        Dim isValid As Boolean
+        isValid = True
+        If tempID = "0" Or tempID = "" Or tempID = "null" Then isValid = False
+        If tempType <> "" And UCase(tempType) <> "ANIME" Then isValid = False
+        If UCase(tempFormat) = "MUSIC" Then isValid = False
+        If InStr(1, tempTitle, "PV", vbTextCompare) > 0 Then isValid = False
+        If InStr(1, tempTitle, "Recap", vbTextCompare) > 0 Then isValid = False
+        If InStr(1, tempTitle, "Summary", vbTextCompare) > 0 Then isValid = False
+        If InStr(1, tempTitle, "Music Video", vbTextCompare) > 0 Then isValid = False
+        
+        If isValid Then
+            On Error Resume Next
+            resultColl.Add tempID, CStr(tempID)
+            On Error GoTo 0
+        End If
+    Next i
+    
+    Set GetMALIDsFromAniList = resultColl
+End Function
+
+Function GetValueFromFragment(txt As String, startChar As String, endChar As String) As String
+    Dim p1 As Long, p2 As Long
+    p1 = InStr(1, txt, startChar)
+    If p1 > 0 Then
+        p1 = p1 + Len(startChar)
+        p2 = InStr(p1, txt, endChar)
+        If p2 > 0 Then
+            GetValueFromFragment = Trim(Mid(txt, p1, p2 - p1))
+            Exit Function
+        End If
+    End If
+    GetValueFromFragment = ""
+End Function
+
+Function GetJsonValue(txt As String, key As String) As String
+    Dim p1 As Long, p2 As Long
+    p1 = InStr(1, txt, key)
+    If p1 = 0 Then
+        GetJsonValue = ""
+        Exit Function
+    End If
+    p1 = InStr(p1, txt, ":") + 1
+    Dim charCheck As String
+    Do
+        charCheck = Mid(txt, p1, 1)
+        If charCheck <> " " And charCheck <> vbCr And charCheck <> vbLf Then Exit Do
+        p1 = p1 + 1
+    Loop
+    If charCheck = """" Then
+        p1 = p1 + 1
+        p2 = InStr(p1, txt, """")
+    Else
+        p2 = p1
+        Do
+            If Mid(txt, p2, 1) = "," Or Mid(txt, p2, 1) = "}" Then Exit Do
+            p2 = p2 + 1
+        Loop
+    End If
+    If p2 > p1 Then
+        GetJsonValue = Mid(txt, p1, p2 - p1)
+    Else
+        GetJsonValue = ""
+    End If
+End Function
+
+Function CleanJSONString(txt As String) As String
+    Dim Temp As String
+    Temp = txt
+    Temp = Replace(Temp, "\", "\\")
+    Temp = Replace(Temp, """", "\""")
+    CleanJSONString = Temp
+End Function
+
+Function CleanQueryForJSON(qry As String) As String
+    Dim Temp As String
+    Temp = Replace(qry, vbCrLf, " ")
+    Temp = Replace(Temp, vbNewLine, " ")
+    Temp = Replace(Temp, """", "\""")
+    CleanQueryForJSON = Temp
+End Function
+
+Function CleanSearchName(txt As String) As String
+    Dim Temp As String
+    Temp = txt
+    Temp = Replace(Temp, " (zbytek)", "")
+    Temp = Replace(Temp, " (série)", "")
+    Temp = Replace(Temp, " série", "")
+    Temp = Replace(Temp, " + OVAs", "")
+    Temp = Replace(Temp, " + S02", "")
+    Temp = Replace(Temp, ", S01 + S02", "")
+    Temp = Replace(Temp, " Stages", "")
+    Temp = Replace(Temp, " (existuje několik verzí)", "")
+    Temp = Replace(Temp, "(2011 ver)", "(2011)")
+    Temp = Replace(Temp, "Cosmic Horror/Lovecraftian story", "")
+    CleanSearchName = Trim(Temp)
+End Function
+

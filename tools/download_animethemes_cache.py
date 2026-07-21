@@ -25,8 +25,10 @@ import urllib.request
 
 API = 'https://api.animethemes.moe/anime'
 HERE = os.path.dirname(os.path.abspath(__file__))
-ANIME_LIST = os.path.join(HERE, 'public', 'data', 'anime_list.json')
-OUT_PATH = os.path.join(HERE, 'public', 'data', 'animethemes_op_ed.json')
+# Skript žije v anime-list-web/tools/ → data jsou o úroveň výš (public/data); partial cache zůstává vedle skriptu
+APP_ROOT = os.path.dirname(HERE)
+ANIME_LIST = os.path.join(APP_ROOT, 'public', 'data', 'anime_list.json')
+OUT_PATH = os.path.join(APP_ROOT, 'public', 'data', 'animethemes_op_ed.json')
 PARTIAL_PATH = os.path.join(HERE, '.animethemes_cache_partial.json')
 
 BATCH_SIZE = 10          # kolik MAL id v jednom dotazu

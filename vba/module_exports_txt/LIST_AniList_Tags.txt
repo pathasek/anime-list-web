@@ -1,0 +1,1364 @@
+﻿Option Explicit
+
+' --- Deklarace pro API ---
+#If VBA7 Then
+    Public Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As LongPtr)
+#Else
+    Public Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
+#End If
+
+' ===================================================================================
+' == UŽIVATELSKÉ NASTAVENÍ MODULU ==
+' ===================================================================================
+' --- Nastavení listů ---
+Private Const ANIME_SHEET_NAME As String = "ANIME LIST"
+Private Const MAL_ID_COLUMN As String = "C" ' Sloupec s Názvem a MAL ID odkazem
+Private Const RELEASE_DATE_COLUMN As String = "F" ' Sloupec s datem vydání
+Private Const TAG_OUTPUT_COLUMN As String = "G" ' Sloupec "Témata", kam vložíme poznámku
+
+' --- Nastavení pro Cache ---
+Private Const CACHE_SHEET_NAME As String = "MAL Cache + Interactive Rating"
+Private Const CACHE_START_COLUMN As String = "BX" ' Odsud začne zápis cache
+Private Const ANILIST_CACHE_EXPIRY_DAYS As Long = 365
+
+' --- Nastavení pro AniList API ---
+Private Const ANILIST_API_URL As String = "https://graphql.anilist.co"
+Private Const ANILIST_INCLUDE_SPOILERS As Boolean = False
+Private Const ANILIST_MIN_RANK As Long = 30
+Private Const ANILIST_CHUNK_SIZE As Long = 20
+
+' --- Nastavení pro Word Cloud (Add-on) ---
+Private Const WC_OUTPUT_SHEET As String = "OBECNÉ INFORMACE"
+Private Const WC_DATA_SHEET As String = "MAL Cache + Interactive Rating"
+Private Const WC_DATA_WORD_COL As String = "CC"
+Private Const WC_DATA_COUNT_COL As String = "CD"
+Private Const WC_SHAPE_PREFIX As String = "WC_Tag_"
+Private Const WC_BACKGROUND_NAME As String = "WC_Tag_Background"
+Private Const WC_MIN_RELEVANCE_SCORE As Long = 100
+Private Const WC_MIN_FONT_SIZE As Long = 14
+Private Const WC_MAX_FONT_SIZE As Long = 72
+Private Const WC_COLOR_THRESHOLD As Long = 500
+Private Const CACHE_TAGS_OFFSET As Long = 2
+Private Const WC_MAX_WORDS_TO_DRAW As Long = 180
+
+' --- Nastavení pro DB Popisů Tagů (Tooltipy) ---
+Private Const TAG_DB_COL_NAME As String = "BP" ' Sloupec pro název tagu
+Private Const TAG_DB_COL_DESC As String = "BQ" ' Sloupec pro popis
+Private dictTagDescriptions As Object ' Globální cache pro rychlé čtení
+
+' --- Nastavení pro filtraci duplicit ---
+Private Const FILTER_MAL_DUPLICATES As Boolean = True
+Private Const FILTER_IGNORE_LIST As String = "boys love|girls love"
+Private Const TAG_BLACKLIST_MARKER As String = "[[BLACKLIST]]"
+
+' --- Pro rychlý kolizní test ---
+Private Const WC_OVERLAP_RECENT_N As Long = 200
+
+' --- Globální proměnné pro Word Cloud ---
+Private wcSheet As Worksheet
+Private wcShpNameCounter As Long
+
+' --- Nastavení pro Pivot Table ---
+Private Const PIVOT_DATA_SHEET As String = "MAL Cache + Interactive Rating"
+Private Const PIVOT_DATA_START_COL As String = "CG"
+Private Const PIVOT_TABLE_NAME As String = "tbl_TagPivotData"
+
+' --- Nastavení pro API limity ---
+Private Const RETRY_DELAY_BASE_MS As Long = 800
+Private Const MAX_RETRIES As Long = 3
+Private Const SINGLE_REQUEST_DELAY_MS As Long = 800
+
+' --- Spatial Hash (Mřížka) ---
+Private Const SH_CELL_SIZE As Long = 60
+Private shGrid() As Object
+Private shCols As Long, shRows As Long
+Private shLeft As Single, shTop As Single
+' ===================================================================================
+
+'————————————————————————————
+' Tlačítko
+'————————————————————————————
+Public Sub VytvorTlacitkoAnilistTagy()
+    On Error GoTo ErrBtnTagy
+    Dim ws As Worksheet, btn As Shape, rng As Range
+    Set ws = ThisWorkbook.Sheets("OBECNÉ INFORMACE")
+    
+    On Error Resume Next: ws.Shapes("btnAktualizaceAnilistTagy").Delete: On Error GoTo ErrBtnTagy
+    
+    Set rng = ws.Range("BJ1")
+    rng.ColumnWidth = 27.14
+    rng.RowHeight = 24.75
+    
+    Set btn = ws.Shapes.AddShape(msoShapeRectangle, rng.left, rng.top, rng.Width, rng.Height)
+    With btn
+        .Name = "btnAktualizaceAnilistTagy"
+        .OnAction = "AktualizovatTagyZAnilistu"
+        .Fill.Solid: .Fill.ForeColor.RGB = RGB(71, 211, 89)
+        With .line: .Visible = msoTrue: .weight = 1.5: .ForeColor.RGB = RGB(0, 0, 0): End With
+        With .TextFrame2
+            .VerticalAnchor = msoAnchorMiddle
+            .HorizontalAnchor = msoAnchorCenter
+            .WordWrap = False
+            .TextRange.text = "Aktualizovat AniList Tagy"
+            With .TextRange.Font: .Name = "Aptos Narrow": .size = 11: .Bold = True: End With
+            With .TextRange.Font.Fill: .Visible = msoTrue: .Solid: .ForeColor.RGB = RGB(0, 0, 0): End With
+        End With
+        .Placement = xlMoveAndSize
+    End With
+    
+    Exit Sub
+ErrBtnTagy:
+    MsgBox "Chyba při tvorbě tlačítka: " & err.Description, vbCritical
+End Sub
+
+' ===================================================================================
+' == HLAVNÍ MAKRO ==
+' ===================================================================================
+Public Sub AktualizovatTagyZAnilistu_Silent()
+    Call AktualizovatTagyZAnilistu(True)
+End Sub
+
+Public Sub AktualizovatTagyZAnilistu(Optional ByVal SilentMode As Boolean = False)
+    Dim ws As Worksheet, wsCache As Worksheet
+    Dim lastRow As Long, i As Long
+    Dim malID As Long
+    Dim animeName As String
+    Dim releaseDate As Date
+    Dim tagData As Object
+    Dim targetCell As Range
+    Dim statusBarText As String
+    Dim processedCount As Long: processedCount = 0
+    Dim failedCount As Long: failedCount = 0
+    Dim cacheUsedCount As Long: cacheUsedCount = 0
+    Dim skippedTouchCount As Long: skippedTouchCount = 0
+    Dim skippedUnfinished As Long: skippedUnfinished = 0
+
+    Dim idChunk As Object: Set idChunk = CreateObject("System.Collections.ArrayList")
+    Dim malIdToRow As Object: Set malIdToRow = CreateObject("Scripting.Dictionary")
+    Dim malIdToName As Object: Set malIdToName = CreateObject("Scripting.Dictionary")
+    Dim chunkCount As Long: chunkCount = 1
+    Dim cacheDict As Object
+    
+    Dim linkDict As Object
+    Set linkDict = CreateObject("Scripting.Dictionary")
+    Dim hl As Hyperlink
+
+    On Error GoTo ErrorHandler
+
+    ' === OPTIMALIZACE 1: Vypnutí všeho, co zdržuje ===
+    With Application
+        .ScreenUpdating = False
+        .Calculation = xlCalculationManual ' Klíčové pro rychlost!
+        .EnableEvents = False
+        .Cursor = xlWait
+        statusBarText = .StatusBar
+    End With
+
+    Set ws = ThisWorkbook.Sheets(ANIME_SHEET_NAME)
+    If ws Is Nothing Then MsgBox "List '" & ANIME_SHEET_NAME & "' nebyl nalezen.", vbCritical: GoTo Cleanup
+
+    On Error Resume Next
+    Set wsCache = ThisWorkbook.Sheets(CACHE_SHEET_NAME)
+    On Error GoTo ErrorHandler
+    If wsCache Is Nothing Then MsgBox "Cache list '" & CACHE_SHEET_NAME & "' nebyl nalezen.", vbCritical: GoTo Cleanup
+
+    lastRow = ws.Cells(ws.Rows.count, MAL_ID_COLUMN).End(xlUp).row
+    If lastRow < 2 Then MsgBox "Na listu '" & ANIME_SHEET_NAME & "' nebyla nalezena žádná data.", vbInformation: GoTo Cleanup
+
+    Application.StatusBar = "Krok 1/4: Načítám cache..."
+    Set cacheDict = LoadCache(wsCache)
+
+    Application.StatusBar = "Krok 2/4: Procházím seznam (Batch Read)..."
+    Dim idsToFetch As Object: Set idsToFetch = CreateObject("System.Collections.ArrayList")
+    
+    ' === OPTIMALIZACE 2: Načtení dat do pole v paměti ===
+    Dim dataArr As Variant
+    dataArr = ws.Range("C2:M" & lastRow).Value2
+    
+    Dim cID As Variant, cReleaseDate As Variant, cFinish As Variant
+    Dim currentRow As Long
+    
+    Application.StatusBar = "Optimalizace: Mapuji odkazy..."
+    ' Místo sahání na každou buňku zvlášť, projedeme kolekci Hyperlinks jednou
+    For Each hl In ws.Hyperlinks
+        ' Uložíme si adresu odkazu pod klíčem čísla řádku
+        If hl.Range.Column = ws.Range(MAL_ID_COLUMN & "1").Column Then
+            linkDict(hl.Range.row) = hl.Address
+        End If
+    Next hl
+    
+    Dim expiryDate As Date
+    expiryDate = Date - ANILIST_CACHE_EXPIRY_DAYS
+    
+    For i = 1 To UBound(dataArr, 1)
+        currentRow = i + 1 ' Pole začíná řádkem 2
+        
+        cID = dataArr(i, 1)             ' Sloupec C
+        cReleaseDate = dataArr(i, 4)    ' Sloupec F
+        cFinish = dataArr(i, 11)        ' Sloupec M
+        
+        malID = 0
+        
+        If Not IsEmpty(cFinish) Then
+             Dim rawUrl As String
+             malID = 0
+             If linkDict.Exists(currentRow) Then
+                rawUrl = linkDict(currentRow)
+                ' Zde jen rychlá extrakce ID z textového řetězce rawUrl (Split)
+                Dim urlParts() As String
+                urlParts = Split(rawUrl, "/")
+                If UBound(urlParts) >= 4 And IsNumeric(urlParts(4)) Then
+                    malID = CLng(urlParts(4))
+                End If
+             End If
+             animeName = CStr(cID)
+             
+             If malID > 0 Then
+                ' Pokud cFinish (sloupec M) není prázdný, považujeme anime za dokončené
+                ' Data už máme v paměti, nemusíme volat Dictionary
+                If Len(CStr(cFinish)) > 0 Then
+                    
+                    Dim needsFetch As Boolean: needsFetch = False
+                    Dim knownRow As Long: knownRow = 0
+                    
+                    If cacheDict.Exists(malID) Then
+                        knownRow = cacheDict(malID)("Row")
+                        
+                        ' --- NOVÉ: Kontrola Blacklistu ---
+    If cacheDict(malID)("Tags") = TAG_BLACKLIST_MARKER Then
+        needsFetch = False ' Navždy ignorovat
+    Else
+                        Dim cacheDate As Date: cacheDate = cacheDict(malID)("Date")
+                        
+                        Dim isNewAnime As Boolean
+                        If IsNumeric(cReleaseDate) Then releaseDate = CDate(cReleaseDate) Else releaseDate = Date
+                        isNewAnime = (releaseDate > expiryDate)
+                        
+                        If (isNewAnime And DateDiff("d", cacheDate, Date) > 30) Then
+                            needsFetch = True
+                        Else
+                            If Not HasComment(ws.Cells(currentRow, TAG_OUTPUT_COLUMN)) Then
+                                Dim tagsList As Object
+                                Set tagsList = ParseCacheStringToTagsList(cacheDict(malID)("Tags"))
+                                Call FormatAnilistCommentForList(ws.Cells(currentRow, TAG_OUTPUT_COLUMN), animeName, tagsList)
+                                Set tagsList = Nothing
+                                cacheUsedCount = cacheUsedCount + 1
+                            Else
+                                skippedTouchCount = skippedTouchCount + 1
+                            End If
+                        End If
+                    End If
+                    Else
+                        needsFetch = True
+                    End If
+                    
+                    If needsFetch Then
+                        idsToFetch.Add malID
+                        If Not malIdToRow.Exists(malID) Then
+                            malIdToRow.Add malID, currentRow
+                            malIdToName.Add malID, animeName
+                        End If
+                    End If
+                Else
+                    skippedUnfinished = skippedUnfinished + 1
+                End If
+             End If
+        End If
+    Next i
+
+    If idsToFetch.count = 0 Then
+        GoTo AfterDownload
+    End If
+
+    Dim totalProcessed As Long: totalProcessed = 0
+    Dim idKey As Variant
+    Dim kRow As Long
+
+    For Each idKey In idsToFetch
+        malID = CLng(idKey)
+        idChunk.Add malID
+        totalProcessed = totalProcessed + 1
+
+        If (idChunk.count >= ANILIST_CHUNK_SIZE) Or (totalProcessed = idsToFetch.count) Then
+            Application.StatusBar = "Krok 3/4: Stahuji dávku " & chunkCount & "..."
+            Set tagData = FetchAnilistTags_Batch(idChunk.ToArray)
+
+            If Not tagData Is Nothing Then
+                Dim innerKey As Variant, currentId As Long
+                For Each innerKey In tagData.keys
+                    currentId = CLng(innerKey)
+                    If malIdToRow.Exists(currentId) Then
+                        Set tagsList = tagData(currentId)
+                        
+                        Call FormatAnilistCommentForList(ws.Cells(malIdToRow(currentId), TAG_OUTPUT_COLUMN), malIdToName(currentId), tagsList)
+                        
+                        ' Optimalizace zápisu
+                        kRow = 0
+                        If cacheDict.Exists(currentId) Then kRow = cacheDict(currentId)("Row")
+                        Call UpdateCacheSheet(wsCache, currentId, malIdToName(currentId), tagsList, kRow)
+                        
+                        processedCount = processedCount + 1
+                    End If
+                Next innerKey
+Else
+    ' Fallback - Dávka selhala, jedeme po jednom a hledáme viníka
+    Dim singleID As Variant
+    Application.StatusBar = "Krok 3/4: Dávka selhala, hledám neexistující Anime..."
+    
+    For Each singleID In idChunk
+        malID = CLng(singleID)
+        Set tagData = FetchAnilistTags_Batch(Array(malID))
+        
+        kRow = 0
+        If cacheDict.Exists(malID) Then kRow = cacheDict(malID)("Row")
+        
+        ' Pokud tagData obsahuje ID, znamená to úspěch (i když je seznam tagů prázdný)
+        If Not tagData Is Nothing Then
+            If tagData.count > 0 Then
+                ' ÚSPĚCH: ID existuje
+                Dim tL As Object: Set tL = tagData(malID)
+                Call FormatAnilistCommentForList(ws.Cells(malIdToRow(malID), TAG_OUTPUT_COLUMN), malIdToName(malID), tL)
+                
+                ' Zde je nutné poslat String, protože UpdateCacheSheet očekává (Variant/String)
+                ' Musíme lehce upravit UpdateCacheSheet, viz bod 4 níže,
+                ' NEBO tady udělat konverzi ručně, pokud jsme UpdateCacheSheet nezměnili.
+                ' Předpokládám, že použiješ úpravu UpdateCacheSheet z bodu 4.
+                Call UpdateCacheSheet(wsCache, malID, malIdToName(malID), tL, kRow)
+                
+                processedCount = processedCount + 1
+            Else
+                ' CHYBA 404: API vrátilo prázdný objekt = ID neexistuje -> BLACKLIST
+                Call UpdateCacheSheet(wsCache, malID, malIdToName(malID), TAG_BLACKLIST_MARKER, kRow)
+                failedCount = failedCount + 1
+            End If
+        Else
+            ' CHYBA SÍTĚ/JINÁ: Také raději blacklistnout nebo zkusit příště?
+            ' Pokud funkce vrací Nothing, je to obvykle hard error.
+            ' Pro jistotu blacklistneme, ať to nebrzdí příště.
+            Call UpdateCacheSheet(wsCache, malID, malIdToName(malID), TAG_BLACKLIST_MARKER, kRow)
+            failedCount = failedCount + 1
+        End If
+        
+        Sleep SINGLE_REQUEST_DELAY_MS
+    Next singleID
+End If
+
+            idChunk.Clear
+            Set tagData = Nothing
+            chunkCount = chunkCount + 1
+        End If
+    Next idKey
+
+AfterDownload:
+    Application.StatusBar = "Krok 4/4: Připravuji data pro kontingenční tabulku..."
+    Call PripravitPivotDataProTagy
+    
+    Application.StatusBar = "Krok 5/5: Generuji graf vážených tagů..."
+    Call VytvorGrafVazenychTagu
+    
+    Dim lastGenStr As String, resp As VbMsgBoxResult
+    On Error Resume Next
+    If wsCache Is Nothing Then
+        lastGenStr = "(nelze zjistit)"
+    ElseIf IsDate(wsCache.Range("CN4").Value) Then
+        lastGenStr = Format(wsCache.Range("CN4").Value, "dd.mm.yyyy HH:nn")
+    Else
+        lastGenStr = CStr(wsCache.Range("CN4").Value)
+    End If
+    On Error GoTo 0
+
+    If Not SilentMode Then
+        resp = MsgBox("Chceš teď vygenerovat Word Cloud?" & vbCrLf & "Poslední generace: " & lastGenStr, _
+                      vbQuestion + vbYesNo, "Word Cloud")
+        If resp = vbYes Then Call GenerovatTagCloud(False)
+    End If
+
+Cleanup:
+    With Application
+        .StatusBar = False
+        .Cursor = xlDefault
+        .Calculation = xlCalculationAutomatic ' Nutné vrátit zpět!
+        .EnableEvents = True
+        .ScreenUpdating = True
+    End With
+    Exit Sub
+
+ErrorHandler:
+    MsgBox "Došlo k neočekávané chybě:" & vbCrLf & vbCrLf & "Chyba č. " & err.Number & " - " & err.Description
+    Resume Cleanup
+End Sub
+
+Private Function HasComment(ByVal C As Range) As Boolean
+    On Error Resume Next
+    HasComment = Not (C.Comment Is Nothing)
+    On Error GoTo 0
+End Function
+
+' ===================================================================================
+' == POMOCNÉ FUNKCE (API & CACHE) ==
+' ===================================================================================
+
+Private Function GetMalIdFromLink(ByRef targetCell As Range) As Long
+    Dim urlParts() As String
+    GetMalIdFromLink = 0
+    On Error Resume Next
+    If targetCell.Hyperlinks.count > 0 Then
+        urlParts = Split(targetCell.Hyperlinks(1).Address, "/")
+        If UBound(urlParts) >= 4 And IsNumeric(urlParts(4)) Then
+            GetMalIdFromLink = CLng(urlParts(4))
+        End If
+    End If
+    On Error GoTo 0
+End Function
+
+Private Function FetchAnilistTags_Batch(ByVal malIds As Variant) As Object
+    Dim http As Object, query As String, payload As String, i As Long
+    Dim resultDict As Object: Set resultDict = CreateObject("Scripting.Dictionary")
+    ' Pomocný slovník pro sběr popisů (Název -> Popis)
+    Dim descBatch As Object: Set descBatch = CreateObject("Scripting.Dictionary")
+    
+    Dim attempt As Long, lastStatus As Long, retryAfterHdr As String, delayMs As Long
+
+    On Error GoTo ErrorHandler
+    If Not IsArray(malIds) Then Set FetchAnilistTags_Batch = resultDict: Exit Function
+    If UBound(malIds) < LBound(malIds) Then Set FetchAnilistTags_Batch = resultDict: Exit Function
+
+    query = "query {"
+    For i = LBound(malIds) To UBound(malIds)
+        ' UPRAVENO: Přidáno pole 'description' do dotazu
+        query = query & " m" & i & ": Media(idMal: " & malIds(i) & ", type: ANIME) { idMal title { english romaji } tags { name rank description isMediaSpoiler } }"
+    Next i
+    query = query & " }"
+    
+    ' Ošetření uvozovek v JSON payloadu
+    payload = "{" & Chr(34) & "query" & Chr(34) & ":" & Chr(34) & query & Chr(34) & "}"
+
+    For attempt = 1 To MAX_RETRIES
+        Set http = CreateObject("WinHttp.WinHttpRequest.5.1")
+        http.Open "POST", ANILIST_API_URL, False
+        http.setRequestHeader "Content-Type", "application/json"
+        http.setRequestHeader "Accept", "application/json"
+        On Error Resume Next
+        http.sEnd payload
+        http.waitForResponse (5)
+        On Error GoTo ErrorHandler
+        lastStatus = http.status
+
+        If lastStatus = 200 Then
+            Exit For
+        ElseIf lastStatus = 404 Then
+            Set http = Nothing: Exit For
+        ElseIf lastStatus = 429 Then
+            retryAfterHdr = "": On Error Resume Next: retryAfterHdr = http.getResponseHeader("Retry-After"): On Error GoTo ErrorHandler
+            If Len(retryAfterHdr) > 0 Then delayMs = CLng(val(retryAfterHdr)) * 1000 Else delayMs = 3000
+            Set http = Nothing: If attempt < MAX_RETRIES Then Sleep delayMs
+        Else
+            Set http = Nothing: If attempt < MAX_RETRIES Then Sleep RETRY_DELAY_BASE_MS * (2 ^ (attempt - 1))
+        End If
+    Next attempt
+
+    If http Is Nothing Or lastStatus <> 200 Then Set FetchAnilistTags_Batch = Nothing: Exit Function
+
+    Dim jsonResponse As Object: Set jsonResponse = JsonConverter.ParseJson(http.responseText)
+    If Not jsonResponse.Exists("data") Then GoTo ErrorHandler
+    Dim data As Object: Set data = jsonResponse("data")
+    Dim recKey As Variant
+
+    For Each recKey In data.keys
+        Dim recData As Object: Set recData = data(recKey)
+        If recData Is Nothing Then
+            Dim idx As Long: idx = CLng(Mid$(CStr(recKey), 2))
+            Dim missingId As Long: missingId = CLng(malIds(idx))
+            If Not resultDict.Exists(missingId) Then resultDict.Add missingId, CreateObject("System.Collections.ArrayList")
+        Else
+            Dim thisMalId As Long: thisMalId = recData("idMal")
+            Dim tagsList As Object: Set tagsList = CreateObject("System.Collections.ArrayList")
+            Dim tag As Variant
+            
+            For Each tag In recData("tags")
+                If CLng(tag("rank")) >= ANILIST_MIN_RANK Then
+                    If ANILIST_INCLUDE_SPOILERS Or (Not ANILIST_INCLUDE_SPOILERS And Not CBool(tag("isMediaSpoiler"))) Then
+                        Dim tagName As String: tagName = CStr(tag("name"))
+                        Dim skipTag As Boolean: skipTag = False
+                        If FILTER_MAL_DUPLICATES Then If InStr(1, FILTER_IGNORE_LIST, "|" & LCase(tagName) & "|") > 0 Then skipTag = True
+                        
+                        If Not skipTag Then
+                            Dim tagInfo As Object: Set tagInfo = CreateObject("Scripting.Dictionary")
+                            tagInfo("name") = tagName
+                            tagInfo("rank") = CLng(tag("rank"))
+                            tagsList.Add tagInfo
+                            
+                            ' UPRAVENO: Sběr popisu do pomocného slovníku
+                            If Not IsNull(tag("description")) Then
+                                If Not descBatch.Exists(tagName) Then
+                                    descBatch(tagName) = CStr(tag("description"))
+                                End If
+                            End If
+                        End If
+                    End If
+                End If
+            Next tag
+            
+            ' Sort desc (beze změny)
+            Dim swapped As Boolean, j As Long, Temp As Variant
+            Do
+                swapped = False
+                For j = 0 To tagsList.count - 2
+                    If tagsList(j)("rank") < tagsList(j + 1)("rank") Then
+                        Set Temp = tagsList(j): Set tagsList(j) = tagsList(j + 1): Set tagsList(j + 1) = Temp: swapped = True
+                    End If
+                Next j
+            Loop While swapped
+            
+            If Not resultDict.Exists(thisMalId) Then resultDict.Add thisMalId, tagsList
+        End If
+    Next recKey
+
+    ' UPRAVENO: Uložení nových popisů do databáze (Cache list)
+    Call SaveNewTagDescriptions(descBatch)
+
+ErrorHandler:
+    Set http = Nothing
+    Set FetchAnilistTags_Batch = resultDict
+End Function
+
+' ===================================================================================
+' == NOVÉ POMOCNÉ FUNKCE PRO CACHE ==
+' ===================================================================================
+
+Private Function LoadCache(wsCache As Worksheet) As Object
+    ' Optimalizace: Cache + Index řádku
+    Dim dict As Object: Set dict = CreateObject("Scripting.Dictionary")
+    Dim lastCacheRow As Long
+    Dim cacheData As Variant
+    Dim i As Long, malID As Long
+    
+    lastCacheRow = wsCache.Cells(wsCache.Rows.count, CACHE_START_COLUMN).End(xlUp).row
+    If lastCacheRow < 2 Then Set LoadCache = dict: Exit Function
+    
+    cacheData = wsCache.Range(CACHE_START_COLUMN & "2").Resize(lastCacheRow - 1, 4).Value2
+    
+    For i = 1 To UBound(cacheData, 1)
+        If IsNumeric(cacheData(i, 1)) Then
+            malID = CLng(cacheData(i, 1))
+            If Not dict.Exists(malID) Then
+                Dim entry As Object: Set entry = CreateObject("Scripting.Dictionary")
+                entry("Name") = CStr(cacheData(i, 2))
+                entry("Tags") = CStr(cacheData(i, 3))
+                entry("Date") = CDate(cacheData(i, 4))
+                entry("Row") = i + 1
+                dict.Add malID, entry
+            End If
+        End If
+    Next i
+    Set LoadCache = dict
+End Function
+
+Private Sub UpdateCacheSheet(wsCache As Worksheet, malID As Long, animeName As String, tagsInput As Variant, Optional knownRow As Long = 0)
+    ' Optimalizace: Přímý zápis na řádek
+    Dim targetRow As Long, saveString As String
+    
+    ' Rozlišení, zda jde o Blacklist (String) nebo seznam tagů (Object)
+    If VarType(tagsInput) = vbString Then
+        saveString = CStr(tagsInput)
+    Else
+        saveString = ConvertTagsListToSaveString(tagsInput)
+    End If
+    
+    If knownRow > 0 Then targetRow = knownRow Else targetRow = wsCache.Cells(wsCache.Rows.count, CACHE_START_COLUMN).End(xlUp).row + 1
+    
+    With wsCache
+        .Cells(targetRow, CACHE_START_COLUMN).Value2 = malID
+        .Cells(targetRow, CACHE_START_COLUMN).Offset(0, 1).Value2 = animeName
+        .Cells(targetRow, CACHE_START_COLUMN).Offset(0, 2).Value2 = saveString
+        .Cells(targetRow, CACHE_START_COLUMN).Offset(0, 3).Value2 = Date
+    End With
+End Sub
+
+Private Function ConvertTagsListToSaveString(tagsList As Variant) As String
+    If tagsList Is Nothing Then Exit Function
+    If tagsList.count = 0 Then Exit Function
+    Dim parts As Object: Set parts = CreateObject("System.Collections.ArrayList")
+    Dim tagInfo As Variant
+    For Each tagInfo In tagsList
+        parts.Add tagInfo("name") & ":" & tagInfo("rank")
+    Next tagInfo
+    ConvertTagsListToSaveString = Join(parts.ToArray, ";")
+End Function
+
+Private Function ParseCacheStringToTagsList(ByVal cacheString As String) As Object
+    Dim tagsList As Object: Set tagsList = CreateObject("System.Collections.ArrayList")
+    If cacheString = "" Then Set ParseCacheStringToTagsList = tagsList: Exit Function
+    Dim tagsArr As Variant: tagsArr = Split(cacheString, ";")
+    Dim parts As Variant, i As Long
+    For i = LBound(tagsArr) To UBound(tagsArr)
+        parts = Split(tagsArr(i), ":")
+        If UBound(parts) = 1 Then
+            Dim tagInfo As Object: Set tagInfo = CreateObject("Scripting.Dictionary")
+            tagInfo("name") = CStr(parts(0))
+            tagInfo("rank") = CLng(parts(1))
+            tagsList.Add tagInfo
+        End If
+    Next i
+    Set ParseCacheStringToTagsList = tagsList
+End Function
+
+' ===================================================================================
+' == FORMÁTOVÁNÍ POZNÁMKY ==
+' ===================================================================================
+Private Sub FormatAnilistCommentForList(ByRef targetCell As Range, ByVal animeTitle As String, ByVal tagsList As Object)
+    On Error Resume Next
+    Dim tier1 As Object: Set tier1 = CreateObject("System.Collections.ArrayList")
+    Dim tier2 As Object: Set tier2 = CreateObject("System.Collections.ArrayList")
+    Dim tier3 As Object: Set tier3 = CreateObject("System.Collections.ArrayList")
+    
+    Dim tagInfo As Variant
+    For Each tagInfo In tagsList
+        Dim rank As Long: rank = tagInfo("rank")
+        Dim Name As String: Name = tagInfo("name")
+        If rank >= 80 Then tier1.Add Name Else If rank >= 60 Then tier2.Add Name Else If rank >= ANILIST_MIN_RANK Then tier3.Add Name
+    Next tagInfo
+    
+    Dim spoilerText As String
+    If ANILIST_INCLUDE_SPOILERS Then spoilerText = " (w/ spoilers)" Else spoilerText = " (w/o spoilers)"
+    
+    Dim part1 As String: part1 = "AniList Custom Tags" & spoilerText & " - "
+    Dim part2 As String: part2 = animeTitle
+    Dim headerLine As String: headerLine = part1 & part2
+    Dim tier1Label As String: tier1Label = "100% - 80%:"
+    Dim tier2Label As String: tier2Label = "79% - 60%:"
+    Dim tier3Label As String: tier3Label = "59% - 30%:"
+    
+    Dim commentText As String: commentText = headerLine
+    If tier1.count > 0 Then commentText = commentText & vbCrLf & tier1Label & " " & Join(tier1.ToArray, ", ")
+    If tier2.count > 0 Then commentText = commentText & vbCrLf & tier2Label & " " & Join(tier2.ToArray, ", ")
+    If tier3.count > 0 Then commentText = commentText & vbCrLf & tier3Label & " " & Join(tier3.ToArray, ", ")
+
+    targetCell.ClearComments
+    targetCell.AddComment commentText
+    
+    With targetCell.Comment.Shape.TextFrame
+        .AutoSize = True
+        .Characters.Font.Name = "Arial"
+        .Characters.Font.size = 9
+        .Characters(1, Len(part1)).Font.Bold = True
+        .Characters(1, Len(part1)).Font.Italic = False
+        .Characters(Len(part1) + 1, Len(part2)).Font.Bold = True
+        .Characters(Len(part1) + 1, Len(part2)).Font.Italic = True
+        
+        Dim startPos As Long
+        startPos = InStr(1, commentText, tier1Label)
+        If startPos > 0 Then
+            .Characters(startPos, Len(tier1Label)).Font.Bold = True
+            .Characters(startPos, Len(tier1Label)).Font.Underline = xlUnderlineStyleSingle
+        End If
+        startPos = InStr(1, commentText, tier2Label)
+        If startPos > 0 Then
+            .Characters(startPos, Len(tier2Label)).Font.Bold = True
+            .Characters(startPos, Len(tier2Label)).Font.Underline = xlUnderlineStyleSingle
+        End If
+        startPos = InStr(1, commentText, tier3Label)
+        If startPos > 0 Then
+            .Characters(startPos, Len(tier3Label)).Font.Bold = True
+            .Characters(startPos, Len(tier3Label)).Font.Underline = xlUnderlineStyleSingle
+        End If
+    End With
+    Set tier1 = Nothing: Set tier2 = Nothing: Set tier3 = Nothing
+End Sub
+
+' ===================================================================================
+' == WORD CLOUD ADD-ON ==
+' ===================================================================================
+Public Sub GenerovatTagCloud(Optional ByVal ShowPrompt As Boolean = True)
+    Dim wsCache As Worksheet, wsOut As Worksheet
+    Dim lastGenStr As String, resp As VbMsgBoxResult, StartTime As Double, SecondsElapsed As Double
+    Dim bgShape As Shape
+    
+    ' --- UPRAVENO: Načtení popisů do paměti ---
+    Call InitTagDescriptionCache
+    ' ------------------------------------------
+    
+    On Error Resume Next
+    Set wsCache = ThisWorkbook.Sheets(CACHE_SHEET_NAME)
+    Set wsOut = ThisWorkbook.Sheets(WC_OUTPUT_SHEET)
+    On Error GoTo 0
+    
+    If wsCache Is Nothing Then lastGenStr = "(nelze zjistit)" Else If IsDate(wsCache.Range("CN4").Value) Then lastGenStr = Format(wsCache.Range("CN4").Value, "dd.mm.yyyy HH:nn") Else lastGenStr = "(nikdy)"
+    
+    If ShowPrompt Then
+        resp = MsgBox("Vygenerovat Word Cloud?" & vbCrLf & "Poslední generace: " & lastGenStr, vbQuestion + vbYesNo, "Word Cloud")
+        If resp <> vbYes Then Exit Sub
+    End If
+    
+    StartTime = Timer
+    Application.ScreenUpdating = False
+    
+    Call maint
+    If wsOut Is Nothing Then MsgBox "List '" & WC_OUTPUT_SHEET & "' nebyl nalezen.", vbCritical: Exit Sub
+    Set bgShape = CreateWordCloudBackground(wsOut)
+    If bgShape Is Nothing Then Exit Sub
+    
+    Call VytvoritSamotnyCloud(bgShape)
+    
+    Application.ScreenUpdating = True
+    SecondsElapsed = Round(Timer - StartTime, 2)
+    On Error Resume Next
+    If Not wsCache Is Nothing Then
+        wsCache.Range("CN4").Value = Now
+        wsCache.Range("CN4").NumberFormat = "dd.mm.yyyy hh:mm"
+    End If
+    On Error GoTo 0
+    If ShowPrompt Then MsgBox "Word Cloud byl úspěšně vygenerován za " & SecondsElapsed & " sekund.", vbInformation
+End Sub
+
+Private Function CreateWordCloudBackground(ByVal ws As Worksheet) As Shape
+    Dim topCell As Range, btmCell As Range
+    Dim bgLeft As Single, bgTop As Single, bgWidth As Single, bgHeight As Single
+    On Error Resume Next
+    Set topCell = ws.Range("AZ3"): Set btmCell = ws.Range("BK13")
+    If topCell Is Nothing Or btmCell Is Nothing Then Exit Function
+    On Error GoTo 0
+    bgLeft = topCell.left: bgTop = topCell.top
+    bgWidth = (btmCell.left + btmCell.Width) - bgLeft: bgHeight = (btmCell.top + btmCell.Height) - bgTop
+    Set CreateWordCloudBackground = ws.Shapes.AddShape(msoShapeRectangle, bgLeft, bgTop, bgWidth, bgHeight)
+    With CreateWordCloudBackground
+        .Name = WC_BACKGROUND_NAME: .Fill.Visible = msoTrue: .Fill.ForeColor.RGB = RGB(191, 191, 191): .Fill.Transparency = 0
+        .line.Visible = msoTrue: .line.ForeColor.RGB = RGB(0, 0, 0): .line.weight = 1.5: .ZOrder msoSendToBack
+    End With
+End Function
+
+Private Sub PripravitDataProTagCloud()
+    ' (Stejná logika jako předtím, je OK)
+    Dim wsCache As Worksheet, wsData As Worksheet, dictRelevance As Object
+    Dim lastCacheRow As Long, i As Long, cacheData As Variant
+    Dim tagString As String, tagsArr As Variant, parts As Variant
+    Dim tagName As String, tagRank As Long, tagKey As Variant
+    Dim sortData As Variant, r As Long
+    
+    On Error Resume Next
+    Set wsCache = ThisWorkbook.Sheets(CACHE_SHEET_NAME)
+    Set wsData = ThisWorkbook.Sheets(WC_DATA_SHEET)
+    On Error GoTo 0
+    
+    Set dictRelevance = CreateObject("Scripting.Dictionary")
+    dictRelevance.CompareMode = vbTextCompare
+    lastCacheRow = wsCache.Cells(wsCache.Rows.count, CACHE_START_COLUMN).End(xlUp).row
+    If lastCacheRow < 2 Then Exit Sub
+    
+    cacheData = wsCache.Range(wsCache.Cells(2, CACHE_START_COLUMN).Offset(0, CACHE_TAGS_OFFSET), wsCache.Cells(lastCacheRow, CACHE_START_COLUMN).Offset(0, CACHE_TAGS_OFFSET)).Value
+    For i = LBound(cacheData, 1) To UBound(cacheData, 1)
+        tagString = CStr(cacheData(i, 1))
+        If tagString <> "" Then
+            tagsArr = Split(tagString, ";")
+            For Each tagKey In tagsArr
+                parts = Split(tagKey, ":")
+                If UBound(parts) = 1 Then
+                    tagName = CStr(parts(0)): tagRank = CLng(parts(1))
+                    dictRelevance(tagName) = dictRelevance(tagName) + tagRank
+                End If
+            Next tagKey
+        End If
+    Next i
+    
+    If dictRelevance.count = 0 Then Exit Sub
+    ReDim sortData(0 To dictRelevance.count - 1, 0 To 1)
+    r = 0
+    For Each tagKey In dictRelevance.keys
+        sortData(r, 0) = tagKey: sortData(r, 1) = dictRelevance(tagKey): r = r + 1
+    Next tagKey
+    
+    Call QuickSortArray(sortData, , , 1)
+    
+    Dim firstDataRow As Long: firstDataRow = 2
+    Dim lastOldRow As Long
+    lastOldRow = Application.Max(wsData.Cells(wsData.Rows.count, WC_DATA_WORD_COL).End(xlUp).row, wsData.Cells(wsData.Rows.count, WC_DATA_COUNT_COL).End(xlUp).row)
+    If lastOldRow >= firstDataRow Then
+        wsData.Range(wsData.Cells(firstDataRow, WC_DATA_WORD_COL), wsData.Cells(lastOldRow, WC_DATA_WORD_COL)).ClearContents
+        wsData.Range(wsData.Cells(firstDataRow, WC_DATA_COUNT_COL), wsData.Cells(lastOldRow, WC_DATA_COUNT_COL)).ClearContents
+    End If
+    
+    r = firstDataRow
+    For i = UBound(sortData, 1) To LBound(sortData, 1) Step -1
+        If sortData(i, 1) >= WC_MIN_RELEVANCE_SCORE Then
+            wsData.Cells(r, WC_DATA_WORD_COL).Value = sortData(i, 0)
+            wsData.Cells(r, WC_DATA_COUNT_COL).Value = sortData(i, 1)
+            r = r + 1
+        End If
+    Next i
+End Sub
+
+Private Sub VytvoritSamotnyCloud(ByVal bgShape As Shape)
+    Dim i As Long, curWord As String, xP As Long, yP As Long
+    Dim bgTop As Single, bgLeft As Single, bgWidth As Single, bgHeight As Single
+    
+    bgTop = bgShape.top + 5: bgLeft = bgShape.left + 5
+    bgWidth = bgShape.Width - 10: bgHeight = bgShape.Height - 10
+    If bgWidth < 0 Then bgWidth = 0
+    If bgHeight < 0 Then bgHeight = 0
+    
+    Call InitSpatialGrid(bgShape)
+    wcShpNameCounter = 1
+    
+    On Error Resume Next: Set wcSheet = ThisWorkbook.Sheets(WC_OUTPUT_SHEET): On Error GoTo 0
+    Randomize Timer
+    
+    Dim topWords As Variant: topWords = GetTopKWordsFromData(WC_MAX_WORDS_TO_DRAW)
+    If IsEmpty(topWords) Then MsgBox "Žádná data pro Cloud.", vbInformation: Exit Sub
+    
+    Dim itcount As Long, wordsDrawn As Long: wordsDrawn = 0
+    Dim newTop As Single, newLeft As Single, wordShape As Shape
+    Dim w As String, s As Long
+    
+    For i = LBound(topWords, 1) To UBound(topWords, 1)
+        w = CStr(topWords(i, 1)): s = CLng(topWords(i, 2))
+        curWord = addWord(w, s, yP, xP)
+        If containsTalls(w) Then wcSheet.Shapes(curWord).Height = Int(wcSheet.Shapes(curWord).Height * 1.15)
+        
+        itcount = 0
+        Set wordShape = wcSheet.Shapes(curWord)
+        Do
+            itcount = itcount + 1
+            newTop = bgTop + Int(Rnd() * (bgHeight - wordShape.Height))
+            newLeft = bgLeft + Int(Rnd() * (bgWidth - wordShape.Width))
+            If newTop < bgTop Then newTop = bgTop
+            If newLeft < bgLeft Then newLeft = bgLeft
+            wordShape.top = newTop: wordShape.left = newLeft
+            
+            If itcount > 3000 Then wordShape.Delete: Exit Do
+        Loop While overlaptest(wordShape)
+        
+        If itcount <= 3000 Then
+            wordsDrawn = wordsDrawn + 1
+            Call AddToSpatialGrid(wordShape)
+            If wordsDrawn >= WC_MAX_WORDS_TO_DRAW Then Exit For
+        End If
+    Next i
+End Sub
+
+Private Function addWord(rword As String, rScore As Long, rTop, rLeft) As String
+    Dim currAdd As Object, rSize As Integer, rColor As Long
+    
+    ' Získání popisu z paměti
+    Dim tipText As String: tipText = ""
+    If Not dictTagDescriptions Is Nothing Then
+        If dictTagDescriptions.Exists(rword) Then
+            tipText = CleanDescriptionForTooltip(dictTagDescriptions(rword))
+        End If
+    End If
+    
+    Select Case rScore
+        Case Is > 10000: rSize = 72: rColor = RGB(230, 0, 0)
+        Case Is > 6000: rSize = 48: rColor = RGB(255, 100, 0)
+        Case Is > 3000: rSize = 32: rColor = RGB(60, 60, 60)
+        Case Is > 1000: rSize = 22: rColor = RGB(100, 100, 100)
+        Case Else: rSize = 14: rColor = RGB(150, 150, 150)
+    End Select
+    
+    Set currAdd = wcSheet.Shapes.AddTextbox(msoTextOrientationHorizontal, rLeft, rTop, 120, 80)
+    
+    With wcSheet.Shapes(currAdd.Name)
+        .TextFrame.Characters.text = rword
+        .TextFrame.Characters.Font.size = rSize
+        .TextFrame.Characters.Font.Color = rColor
+        .TextFrame.AutoSize = msoAutoSizeShapeToFitText
+        .line.Visible = msoFalse
+        
+        ' UPRAVENO: Průhledná výplň pro lepší klikatelnost a tooltip
+        .Fill.Visible = msoTrue
+        .Fill.ForeColor.RGB = RGB(255, 255, 255)
+        .Fill.Transparency = 1 ' 100% průhlednost = neviditelné, ale existující pro myš
+        
+        ' UPRAVENO: Přidání Tooltipu (pokud existuje popis)
+        If Len(tipText) > 0 Then
+            wcSheet.Hyperlinks.Add Anchor:=wcSheet.Shapes(currAdd.Name), Address:="", subAddress:="", ScreenTip:=tipText
+        End If
+
+        .TextFrame.VerticalOverflow = xlOartVerticalOverflowOverflow
+        .TextFrame.HorizontalOverflow = xlOartHorizontalOverflowOverflow
+        .TextFrame.VerticalAlignment = xlVAlignCenter
+        .TextFrame.MarginLeft = 1: .TextFrame.MarginRight = 1: .TextFrame.MarginTop = 0: .TextFrame.MarginBottom = 0
+        
+        If containsTalls(rword) Then .Height = .Height * 0.57 Else .Height = .Height * 0.4
+        .top = rTop
+        
+        wcShpNameCounter = wcShpNameCounter + 1
+        currAdd.Name = WC_SHAPE_PREFIX & wcShpNameCounter
+        addWord = currAdd.Name
+    End With
+    
+End Function
+
+Private Function GetTopKWordsFromData(ByVal k As Long) As Variant
+    Dim ws As Worksheet: Set ws = ThisWorkbook.Sheets(WC_DATA_SHEET)
+    Dim lastRow As Long: lastRow = ws.Cells(ws.Rows.count, WC_DATA_WORD_COL).End(xlUp).row
+    If lastRow < 2 Then Exit Function
+    Dim n As Long: n = lastRow - 1
+    Dim sortData() As Variant: ReDim sortData(0 To n - 1, 0 To 1)
+    Dim r As Long, idx As Long: idx = 0
+    For r = 2 To lastRow
+        If Len(ws.Cells(r, WC_DATA_WORD_COL).Value) > 0 And IsNumeric(ws.Cells(r, WC_DATA_COUNT_COL).Value) Then
+            sortData(idx, 0) = CStr(ws.Cells(r, WC_DATA_WORD_COL).Value)
+            sortData(idx, 1) = CLng(ws.Cells(r, WC_DATA_COUNT_COL).Value)
+            idx = idx + 1
+        End If
+    Next r
+    If idx = 0 Then Exit Function
+    If idx < n Then ReDim Preserve sortData(0 To idx - 1, 0 To 1)
+    Call QuickSortArray(sortData, , , 1)
+    Dim takeN As Long: takeN = Application.Min(k, UBound(sortData, 1) + 1)
+    Dim outArr() As Variant: ReDim outArr(1 To takeN, 1 To 2)
+    Dim i As Long, src As Long: src = UBound(sortData, 1)
+    For i = 1 To takeN
+        outArr(i, 1) = sortData(src, 0): outArr(i, 2) = sortData(src, 1): src = src - 1
+    Next i
+    GetTopKWordsFromData = outArr
+End Function
+
+' --- Spatial Hash ---
+Private Sub InitSpatialGrid(ByVal bgShape As Shape)
+    Dim w As Single, h As Single, C As Long, r As Long
+    shLeft = bgShape.left: shTop = bgShape.top: w = bgShape.Width: h = bgShape.Height
+    shCols = Application.WorksheetFunction.RoundUp(w / SH_CELL_SIZE, 0)
+    shRows = Application.WorksheetFunction.RoundUp(h / SH_CELL_SIZE, 0)
+    ReDim shGrid(0 To shCols, 0 To shRows)
+    For C = 0 To shCols: For r = 0 To shRows: Set shGrid(C, r) = New Collection: Next r: Next C
+End Sub
+
+Private Sub AddToSpatialGrid(ByVal shp As Shape)
+    Dim c1 As Long, c2 As Long, r1 As Long, r2 As Long, C As Long, r As Long
+    Call GetGridBounds(shp, c1, c2, r1, r2)
+    For C = c1 To c2: For r = r1 To r2: shGrid(C, r).Add shp: Next r: Next C
+End Sub
+
+Private Sub GetGridBounds(ByVal shp As Shape, ByRef c1 As Long, ByRef c2 As Long, ByRef r1 As Long, ByRef r2 As Long)
+    Dim l As Single, t As Single, ri As Single, bo As Single
+    l = shp.left - shLeft: t = shp.top - shTop: ri = l + shp.Width: bo = t + shp.Height
+    c1 = Int(l / SH_CELL_SIZE): r1 = Int(t / SH_CELL_SIZE): c2 = Int(ri / SH_CELL_SIZE): r2 = Int(bo / SH_CELL_SIZE)
+    If c1 < 0 Then c1 = 0
+    If r1 < 0 Then r1 = 0
+    If c2 > shCols Then c2 = shCols
+    If r2 > shRows Then r2 = shRows
+End Sub
+
+Private Function ShapesOverlap(oSh1 As Shape, oSh2 As Shape) As Boolean
+    Dim L1 As Single, r1 As Single, t1 As Single, B1 As Single
+    Dim L2 As Single, r2 As Single, t2 As Single, B2 As Single
+    L1 = oSh1.left: r1 = L1 + oSh1.Width: t1 = oSh1.top: B1 = t1 + oSh1.Height
+    L2 = oSh2.left: r2 = L2 + oSh2.Width: t2 = oSh2.top: B2 = t2 + oSh2.Height
+    If L1 < r2 And r1 > L2 And t1 < B2 And B1 > t2 Then ShapesOverlap = True
+End Function
+
+Private Function overlaptest(shape1 As Shape) As Boolean
+    Dim c1 As Long, c2 As Long, r1 As Long, r2 As Long, C As Long, r As Long
+    Dim cellColl As Collection, candidate As Shape
+    Call GetGridBounds(shape1, c1, c2, r1, r2)
+    For C = c1 To c2
+        For r = r1 To r2
+            Set cellColl = shGrid(C, r)
+            If cellColl.count > 0 Then
+                For Each candidate In cellColl
+                    If candidate.Name <> WC_BACKGROUND_NAME Then
+                        If ShapesOverlap(shape1, candidate) Then overlaptest = True: Exit Function
+                    End If
+                Next candidate
+            End If
+        Next r
+    Next C
+    overlaptest = False
+End Function
+
+Private Sub maint()
+    Dim shp As Shape
+    On Error Resume Next: Set wcSheet = ThisWorkbook.Sheets(WC_OUTPUT_SHEET)
+    If wcSheet Is Nothing Then Exit Sub
+    For Each shp In wcSheet.Shapes
+        If left(shp.Name, Len(WC_SHAPE_PREFIX)) = WC_SHAPE_PREFIX Then shp.Delete
+    Next shp
+    On Error GoTo 0
+End Sub
+
+Private Function containsTalls(rword As String) As Boolean
+    If InStr(rword, "t") Or InStr(rword, "l") Or InStr(rword, "k") Or InStr(rword, "h") Or InStr(rword, "d") Or InStr(rword, "b") Then containsTalls = True
+End Function
+
+Public Sub QuickSortArray(ByRef SortArray As Variant, Optional lngMin As Long = -1, Optional lngMax As Long = -1, Optional lngColumn As Long = 0)
+    On Error Resume Next
+    Dim i As Long, j As Long, varMid As Variant, arrRowTemp As Variant, lngColTemp As Long
+    If IsEmpty(SortArray) Then Exit Sub
+    If lngMin = -1 Then lngMin = LBound(SortArray, 1)
+    If lngMax = -1 Then lngMax = UBound(SortArray, 1)
+    If lngMin >= lngMax Then Exit Sub
+    i = lngMin: j = lngMax: varMid = SortArray((lngMin + lngMax) \ 2, lngColumn)
+    While i <= j
+        While SortArray(i, lngColumn) < varMid And i < lngMax: i = i + 1: Wend
+        While varMid < SortArray(j, lngColumn) And j > lngMin: j = j - 1: Wend
+        If i <= j Then
+            ReDim arrRowTemp(LBound(SortArray, 2) To UBound(SortArray, 2))
+            For lngColTemp = LBound(SortArray, 2) To UBound(SortArray, 2)
+                arrRowTemp(lngColTemp) = SortArray(i, lngColTemp)
+                SortArray(i, lngColTemp) = SortArray(j, lngColTemp)
+                SortArray(j, lngColTemp) = arrRowTemp(lngColTemp)
+            Next lngColTemp
+            Erase arrRowTemp: i = i + 1: j = j - 1
+        End If
+    Wend
+    If (lngMin < j) Then Call QuickSortArray(SortArray, lngMin, j, lngColumn)
+    If (i < lngMax) Then Call QuickSortArray(SortArray, i, lngMax, lngColumn)
+End Sub
+
+' === NOVÁ POMOCNÁ FUNKCE PRO PIVOT TABLE ===
+' Slouží pro rychlé zjištění statusu dokončení jen v proceduře PripravitPivotDataProTagy
+Private Function GetFinishedAnimeDict() As Object
+    Dim d As Object: Set d = CreateObject("Scripting.Dictionary")
+    Dim ws As Worksheet: Set ws = ThisWorkbook.Sheets(ANIME_SHEET_NAME)
+    Dim lastRow As Long: lastRow = ws.Cells(ws.Rows.count, MAL_ID_COLUMN).End(xlUp).row
+    ' Načteme sloupec M (Finish) do pole pro rychlost
+    ' M je 13. sloupec? Pokud je A=1, M=13. Pokud tabulka zacina na A.
+    ' Zde predpokladame standardni A1 layout.
+    Dim finishArr As Variant
+    finishArr = ws.Range("M1:M" & lastRow).Value2
+    
+    Dim hl As Hyperlink, r As Long, urlParts() As String, malID As Long
+    
+    For Each hl In ws.Hyperlinks
+        If hl.Range.Column = ws.Range(MAL_ID_COLUMN & "1").Column Then
+            r = hl.Range.row
+            If r <= UBound(finishArr, 1) Then
+                If Len(CStr(finishArr(r, 1))) > 0 Then
+                    ' Extrakce ID
+                    urlParts = Split(hl.Address, "/")
+                    If UBound(urlParts) >= 4 And IsNumeric(urlParts(4)) Then
+                         malID = CLng(urlParts(4))
+                         d(malID) = True
+                    End If
+                End If
+            End If
+        End If
+    Next hl
+    Set GetFinishedAnimeDict = d
+End Function
+
+Public Sub PripravitPivotDataProTagy()
+    Dim ws As Worksheet, wsCache As Worksheet
+    Dim lastCacheRow As Long, cacheData As Variant, startCell As Range, lo As ListObject
+    Dim dataRows As Long, r As Long, i As Long, tblRange As Range
+    
+    Dim malID As Long, animeName As String, tagString As String
+    Dim tagsArr As Variant, tagKey As Variant, parts As Variant
+    Dim finishedDict As Object
+    
+    Application.ScreenUpdating = False
+    Application.Calculation = xlCalculationManual
+
+    On Error Resume Next
+    Set ws = ThisWorkbook.Sheets(PIVOT_DATA_SHEET)
+    Set wsCache = ThisWorkbook.Sheets(CACHE_SHEET_NAME)
+    On Error GoTo 0
+    If ws Is Nothing Or wsCache Is Nothing Then GoTo Cleanup
+
+    ' Zde použijeme optimalizovaný lokální slovník
+    Set finishedDict = GetFinishedAnimeDict()
+
+    Set startCell = ws.Range(PIVOT_DATA_START_COL & "1")
+    lastCacheRow = wsCache.Cells(wsCache.Rows.count, CACHE_START_COLUMN).End(xlUp).row
+    If lastCacheRow < 2 Then GoTo Cleanup
+    cacheData = wsCache.Range(wsCache.Cells(2, CACHE_START_COLUMN), wsCache.Cells(lastCacheRow, CACHE_START_COLUMN).Offset(0, CACHE_TAGS_OFFSET)).Value
+
+    dataRows = 0
+    For i = 1 To UBound(cacheData, 1)
+        If IsNumeric(cacheData(i, 1)) Then
+            malID = CLng(cacheData(i, 1))
+            ' Zde kontrolujeme přes slovník, ne přes cFinish
+            If finishedDict.Exists(malID) Then
+                If Len(CStr(cacheData(i, 3))) > 0 Then
+                    tagsArr = Split(CStr(cacheData(i, 3)), ";")
+                    For Each tagKey In tagsArr
+                        parts = Split(tagKey, ":")
+                        If UBound(parts) = 1 Then If IsNumeric(parts(1)) Then dataRows = dataRows + 1
+                    Next tagKey
+                End If
+            End If
+        End If
+    Next i
+
+    startCell.Value = "Pivot_Anime": startCell.Offset(0, 1).Value = "Pivot_Tag": startCell.Offset(0, 2).Value = "Pivot_Rank"
+    On Error Resume Next: Set lo = ws.ListObjects(PIVOT_TABLE_NAME): On Error GoTo 0
+    If lo Is Nothing Then
+        Set tblRange = ws.Range(startCell, startCell.Offset(Application.Max(1, dataRows), 2))
+        Set lo = ws.ListObjects.Add(xlSrcRange, tblRange, , xlYes)
+        lo.Name = PIVOT_TABLE_NAME
+    Else
+        If Not lo.DataBodyRange Is Nothing Then lo.DataBodyRange.ClearContents
+        On Error Resume Next: lo.Resize ws.Range(startCell, startCell.Offset(1, 2)): On Error GoTo 0
+        lo.Resize ws.Range(startCell, startCell.Offset(Application.Max(1, dataRows), 2))
+    End If
+
+    If dataRows > 0 Then
+        Dim arrData() As Variant: ReDim arrData(1 To dataRows, 1 To 3)
+        r = 1
+        For i = 1 To UBound(cacheData, 1)
+            If IsNumeric(cacheData(i, 1)) Then
+                malID = CLng(cacheData(i, 1))
+                ' Zde kontrolujeme přes slovník
+                If finishedDict.Exists(malID) Then
+                    animeName = CStr(cacheData(i, 2)): tagString = CStr(cacheData(i, 3))
+                    If Len(tagString) > 0 Then
+                        tagsArr = Split(tagString, ";")
+                        For Each tagKey In tagsArr
+                            parts = Split(tagKey, ":")
+                            If UBound(parts) = 1 Then
+                                If IsNumeric(parts(1)) Then
+                                    arrData(r, 1) = animeName: arrData(r, 2) = CStr(parts(0)): arrData(r, 3) = CLng(parts(1))
+                                    r = r + 1
+                                End If
+                            End If
+                        Next tagKey
+                    End If
+                End If
+            End If
+        Next i
+        startCell.Offset(1, 0).Resize(dataRows, 3).Value = arrData
+    End If
+    lo.Range.Columns.AutoFit
+Cleanup:
+    Application.Calculation = xlCalculationAutomatic: Application.ScreenUpdating = True
+End Sub
+
+'====================================================================================================
+'== GRAF: OPTIMALIZOVANÁ VERZE S ARRAY READ
+'====================================================================================================
+
+Public Sub VytvorGrafVazenychTagu()
+    Dim wsData As Worksheet, wsCache As Worksheet, wsCiel As Worksheet
+    Dim dictSumaVah As Object, dictSumaVazenychHodnoceni As Object
+    Dim cacheDict As Object
+    Dim lastDataRow As Long, i As Long, malID As Long
+    Dim hodnoceni As Variant, vaha As Double
+    Dim tagString As String, tagsArr As Variant, tagKey As Variant, parts As Variant
+    Dim tagName As String, tagRank As Long
+    
+    ' === OPTIMALIZACE: Načteme sloupec hodnocení A status do pole ===
+    Dim ratingAndFinishArr As Variant
+    Dim cFinish As Variant
+    
+    Set dictSumaVah = CreateObject("Scripting.Dictionary"): dictSumaVah.CompareMode = vbTextCompare
+    Set dictSumaVazenychHodnoceni = CreateObject("Scripting.Dictionary"): dictSumaVazenychHodnoceni.CompareMode = vbTextCompare
+    
+    Application.ScreenUpdating = False
+    On Error GoTo ChybaGrafuTagu
+
+    Set wsData = ThisWorkbook.Sheets(ANIME_SHEET_NAME)
+    Set wsCache = ThisWorkbook.Sheets(CACHE_SHEET_NAME)
+    Set wsCiel = ThisWorkbook.Sheets(WC_OUTPUT_SHEET)
+    
+    Set cacheDict = LoadCache(wsCache)
+    
+    If cacheDict.count = 0 Then MsgBox "Cache je prázdná.", vbExclamation: GoTo CleanupGrafTagu
+    
+    lastDataRow = wsData.Cells(wsData.Rows.count, MAL_ID_COLUMN).End(xlUp).row
+    
+    ' Načteme sloupec hodnocení (K) a Finish (M) najednou (K:M)
+    If lastDataRow < 2 Then GoTo CleanupGrafTagu
+    ratingAndFinishArr = wsData.Range("K2:M" & lastDataRow).Value2
+    
+    For i = 1 To UBound(ratingAndFinishArr, 1)
+        hodnoceni = ratingAndFinishArr(i, 1) ' Sloupec K
+        cFinish = ratingAndFinishArr(i, 3)   ' Sloupec M
+        
+        If IsNumeric(hodnoceni) And hodnoceni >= 1 And hodnoceni <= 10 Then
+            malID = GetMalIdFromLink(wsData.Cells(i + 1, MAL_ID_COLUMN)) ' i+1 protože pole začíná na řádku 2
+            
+            ' Zde již cFinish existuje (načetli jsme ho do pole)
+            If Len(CStr(cFinish)) > 0 Then
+                If cacheDict.Exists(malID) Then
+                    tagString = cacheDict(malID)("Tags")
+                    If tagString <> "" Then
+                        tagsArr = Split(tagString, ";")
+                        For Each tagKey In tagsArr
+                            parts = Split(tagKey, ":")
+                            
+                            ' === OPRAVA CHYBY SUBSCRIPT OUT OF RANGE ===
+                            ' Původní kód s "And" způsoboval pád u [[BLACKLIST]],
+                            ' protože VBA vyhodnocuje obě strany podmínky.
+                            If UBound(parts) = 1 Then
+                                If IsNumeric(parts(1)) Then
+                                    tagName = CStr(parts(0))
+                                    tagRank = CLng(parts(1))
+                                    vaha = tagRank / 100
+                                    dictSumaVah(tagName) = dictSumaVah(tagName) + vaha
+                                    dictSumaVazenychHodnoceni(tagName) = dictSumaVazenychHodnoceni(tagName) + (CDbl(hodnoceni) * vaha)
+                                End If
+                            End If
+                            ' ===========================================
+                            
+                        Next tagKey
+                    End If
+                End If
+            End If
+        End If
+    Next i
+
+    Const MIN_SUMA_VAH As Double = 3#
+    Dim finalScores As Object: Set finalScores = CreateObject("Scripting.Dictionary")
+    Dim key As Variant
+    
+    For Each key In dictSumaVah.keys
+        If dictSumaVah(key) >= MIN_SUMA_VAH Then
+            finalScores(key) = dictSumaVazenychHodnoceni(key) / dictSumaVah(key)
+        End If
+    Next key
+    
+    If finalScores.count = 0 Then GoTo CleanupGrafTagu
+
+    Dim sortedList As Object: Set sortedList = SortDictionaryByValue(finalScores, False)
+    Dim topCount As Long: topCount = Application.Min(20, sortedList.count)
+    Dim kategorie() As String: ReDim kategorie(1 To topCount)
+    Dim hodnoty() As Double: ReDim hodnoty(1 To topCount)
+    Dim j As Long
+    
+    For j = 1 To topCount
+        kategorie(j) = sortedList(j - 1)(0)
+        hodnoty(j) = sortedList(j - 1)(1)
+    Next j
+    Call ReverseArrayInPlace(kategorie)
+    Call ReverseArrayInPlace(hodnoty)
+
+    Dim chtObj As ChartObject, cht As Chart, grafNazev As String: grafNazev = "GrafVazeneTagy"
+    On Error Resume Next: Set chtObj = wsCiel.ChartObjects(grafNazev): On Error GoTo ChybaGrafuTagu
+    
+    If chtObj Is Nothing Then
+        Dim rngKotva As Range: Set rngKotva = wsCiel.Range("AY14")
+        Set chtObj = wsCiel.ChartObjects.Add(rngKotva.left, rngKotva.top, 450, 300)
+        chtObj.Name = grafNazev
+        Set cht = chtObj.Chart
+        With cht
+            .ChartType = xlBarClustered: .HasLegend = False: .HasTitle = True
+            If .SeriesCollection.count = 0 Then .SeriesCollection.NewSeries
+            With .SeriesCollection(1): .Format.Fill.ForeColor.RGB = RGB(46, 117, 182): .ApplyDataLabels: .DataLabels.Format.TextFrame2.TextRange.Font.Fill.ForeColor.RGB = RGB(0, 0, 0): End With
+            With .Axes(xlValue): .MinimumScale = 0: .MaximumScale = 10: .HasTitle = True: .AxisTitle.text = "Vážené průměrné hodnocení": End With
+            .Axes(xlCategory).TickLabels.Font.size = 10
+        End With
+    End If
+
+    Set cht = chtObj.Chart
+    With cht
+        .ChartTitle.text = "Top " & topCount & " AniList tagů (Vážené hodnocení)"
+        .Axes(xlCategory).Crosses = xlMaximum
+        With .Axes(xlValue): .MinimumScaleIsAuto = True: .MaximumScale = 10: End With
+        If .SeriesCollection.count = 0 Then .SeriesCollection.NewSeries
+        With .SeriesCollection(1)
+            .values = hodnoty: .XValues = kategorie: .ApplyDataLabels: .DataLabels.NumberFormatLinked = False
+        End With
+    End With
+
+CleanupGrafTagu:
+    Application.ScreenUpdating = True
+    Exit Sub
+ChybaGrafuTagu:
+    MsgBox "Chyba grafu: " & err.Description, vbCritical
+    Resume CleanupGrafTagu
+End Sub
+
+Private Function SortDictionaryByValue(dict As Object, ByVal ascending As Boolean) As Object
+    Dim list As Object: Set list = CreateObject("System.Collections.ArrayList")
+    Dim key As Variant: For Each key In dict.keys: list.Add Array(key, dict(key)): Next key
+    Dim i As Long, j As Long, Temp As Variant, condition As Boolean
+    If list.count < 2 Then Set SortDictionaryByValue = list: Exit Function
+    For i = 0 To list.count - 2
+        For j = i + 1 To list.count - 1
+            If ascending Then condition = (list(i)(1) > list(j)(1)) Else condition = (list(i)(1) < list(j)(1))
+            If condition Then Temp = list(j): list(j) = list(i): list(i) = Temp
+        Next j
+    Next i
+    Set SortDictionaryByValue = list
+End Function
+
+Private Sub ReverseArrayInPlace(ByRef arr As Variant)
+    Dim i As Long, j As Long, Temp As Variant
+    i = LBound(arr): j = UBound(arr)
+    Do While i < j: Temp = arr(i): arr(i) = arr(j): arr(j) = Temp: i = i + 1: j = j - 1: Loop
+End Sub
+
+
+' ===================================================================================
+' == SPRÁVA POPISŮ TAGŮ (TOOLTIP DB) ==
+' ===================================================================================
+Private Sub InitTagDescriptionCache()
+    ' Načte celou databázi popisů do paměti (BP:BQ)
+    Dim wsCache As Worksheet
+    Dim lastRow As Long, data As Variant, i As Long
+    
+    Set dictTagDescriptions = CreateObject("Scripting.Dictionary")
+    dictTagDescriptions.CompareMode = vbTextCompare
+    
+    On Error Resume Next
+    Set wsCache = ThisWorkbook.Sheets(CACHE_SHEET_NAME)
+    On Error GoTo 0
+    If wsCache Is Nothing Then Exit Sub
+    
+    lastRow = wsCache.Cells(wsCache.Rows.count, TAG_DB_COL_NAME).End(xlUp).row
+    If lastRow < 2 Then Exit Sub
+    
+    ' Načteme data najednou do pole (rychlost)
+    data = wsCache.Range(TAG_DB_COL_NAME & "2:" & TAG_DB_COL_DESC & lastRow).Value2
+    
+    For i = 1 To UBound(data, 1)
+        If Not IsEmpty(data(i, 1)) Then
+            ' Klíč = Název tagu, Hodnota = Popis
+            dictTagDescriptions(CStr(data(i, 1))) = CStr(data(i, 2))
+        End If
+    Next i
+End Sub
+
+Private Sub SaveNewTagDescriptions(ByVal newTagsDict As Object)
+    ' Uloží nové popisy na list, pokud tam ještě nejsou
+    If newTagsDict Is Nothing Then Exit Sub
+    If newTagsDict.count = 0 Then Exit Sub
+    
+    Dim wsCache As Worksheet
+    Dim lastRow As Long, key As Variant
+    Dim updateArr As Object
+    Set updateArr = CreateObject("System.Collections.ArrayList")
+    
+    ' Nejdřív načteme aktuální stav, abychom nezapisovali duplicity
+    If dictTagDescriptions Is Nothing Then Call InitTagDescriptionCache
+    
+    For Each key In newTagsDict.keys
+        If Not dictTagDescriptions.Exists(key) Then
+            dictTagDescriptions.Add key, newTagsDict(key) ' Přidat do paměti
+            updateArr.Add Array(key, newTagsDict(key))    ' Přidat do fronty na zápis
+        End If
+    Next key
+    
+    If updateArr.count = 0 Then Exit Sub
+    
+    ' Zápis na list
+    Set wsCache = ThisWorkbook.Sheets(CACHE_SHEET_NAME)
+    lastRow = wsCache.Cells(wsCache.Rows.count, TAG_DB_COL_NAME).End(xlUp).row + 1
+    
+    Dim finalArr() As Variant
+    ReDim finalArr(1 To updateArr.count, 1 To 2)
+    Dim i As Long
+    
+    For i = 0 To updateArr.count - 1
+        finalArr(i + 1, 1) = updateArr(i)(0)
+        finalArr(i + 1, 2) = updateArr(i)(1)
+    Next i
+    
+    wsCache.Cells(lastRow, TAG_DB_COL_NAME).Resize(updateArr.count, 2).Value2 = finalArr
+End Sub
+
+Private Function CleanDescriptionForTooltip(ByVal txt As String) As String
+    ' Očistí text pro ScreenTip (max 255 znaků, žádné enterry)
+    Dim res As String
+    res = Replace(txt, vbCrLf, " ")
+    res = Replace(res, vbCr, " ")
+    res = Replace(res, vbLf, " ")
+    res = Replace(res, "  ", " ") ' Odstranit dvojité mezery
+    
+    If Len(res) > 250 Then
+        res = left(res, 250) & "..."
+    End If
+    CleanDescriptionForTooltip = res
+End Function
+

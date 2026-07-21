@@ -1,0 +1,168 @@
+﻿Option Explicit
+
+' ======================================================================================
+' HLAVNÍ SPOUŠTĚCÍ MAKRO
+' ======================================================================================
+Sub SpustitVsechnaPrejmenovani()
+    Call RenameImagesByColumnC
+    Call RenameCommentsByColumns
+End Sub
+
+' ======================================================================================
+' 1. PŘEJMENOVÁNÍ OBRÁZKŮ
+' ======================================================================================
+Sub RenameImagesByColumnC()
+    Dim ws As Worksheet
+    Dim shp As Shape
+    Dim animeName As String
+    Dim cleanName As String
+    Dim rowNum As Long
+    Dim countRenamed As Long
+    
+    On Error Resume Next
+    Set ws = ThisWorkbook.Sheets("ANIME LIST")
+    On Error GoTo 0
+    
+    If ws Is Nothing Then Exit Sub
+    
+    countRenamed = 0
+    
+    For Each shp In ws.Shapes
+        If shp.Type = 13 Or shp.Type = 11 Then ' msoPicture nebo msoLinkedPicture
+            If shp.TopLeftCell.Column = 2 Then ' Sloupec B
+                rowNum = shp.TopLeftCell.row
+                animeName = Trim(CStr(ws.Cells(rowNum, 3).Value))
+                
+                If Len(animeName) > 0 Then
+                    ' Použijeme čistící funkci
+                    cleanName = CleanNameForShape(animeName)
+                    
+                    On Error Resume Next
+                    shp.Name = cleanName
+                    If err.Number = 0 Then countRenamed = countRenamed + 1
+                    On Error GoTo 0
+                End If
+            End If
+        End If
+    Next shp
+    
+    MsgBox "Obrázky přejmenovány: " & countRenamed, vbInformation
+End Sub
+
+' ======================================================================================
+' 2. PŘEJMENOVÁNÍ KOMENTÁŘŮ (Tvoje původní logika + čištění znaků)
+' ======================================================================================
+Sub RenameCommentsByColumns()
+    Dim ws As Worksheet
+    Dim lastRow As Long
+    Dim i As Long
+    Dim animeName As String
+    Dim cleanName As String
+    Dim countRenamed As Long
+    
+    On Error Resume Next
+    Set ws = ThisWorkbook.Sheets("ANIME LIST")
+    On Error GoTo 0
+    
+    If ws Is Nothing Then Exit Sub
+    
+    lastRow = ws.Cells(ws.Rows.count, "C").End(xlUp).row
+    
+    Application.ScreenUpdating = False
+    countRenamed = 0
+    
+    Debug.Print "--- ZAČÁTEK PŘEJMENOVÁNÍ (UNIKÁTNÍ NÁZVY) ---"
+    
+    For i = 2 To lastRow
+        animeName = Trim(CStr(ws.Cells(i, "C").Value))
+        
+        If Len(animeName) > 0 Then
+            cleanName = CleanNameForShape(animeName)
+            If Len(cleanName) > 30 Then cleanName = left(cleanName, 30)
+            
+            ' PŘIDÁVÁME ČÍSLO ŘÁDKU PRO UNIKÁTNOST (_i)
+            
+            ' 1) Sloupec G
+            Call RenameCommentInCell(ws.Cells(i, "G"), cleanName & "_Tags_" & i)
+            
+            ' 2) Sloupec I
+            Call RenameCommentInCell(ws.Cells(i, "I"), cleanName & "_EpHist_" & i)
+            
+            ' 3) Sloupec K
+            Call RenameCommentInCell(ws.Cells(i, "K"), cleanName & "_Review_" & i)
+            
+            ' 4) Sloupec N
+            Call RenameCommentInCell(ws.Cells(i, "N"), cleanName & "_Rewatch_" & i)
+            
+            ' 5) Sloupec Q
+            Call RenameCommentInCell(ws.Cells(i, "Q"), cleanName & "_Status_" & i)
+            
+            ' 6) Sloupec P
+            Call RenameCommentInCell(ws.Cells(i, "P"), cleanName & "_Dub_" & i)
+            
+            ' 7) Sloupec C
+            Call RenameCommentInCell(ws.Cells(i, "C"), cleanName & "_Name_" & i)
+            
+            ' 8) Sloupec L a M
+            Call RenameCommentInCell(ws.Cells(i, "L"), cleanName & "_Date_" & i)
+            Call RenameCommentInCell(ws.Cells(i, "M"), cleanName & "_Date_" & i)
+            
+            countRenamed = countRenamed + 1
+        End If
+    Next i
+    
+    Application.ScreenUpdating = True
+    MsgBox "Hotovo! Komentáře mají nyní unikátní názvy.", vbInformation
+End Sub
+
+Private Sub RenameCommentInCell(targetCell As Range, newName As String)
+    On Error Resume Next
+    If Not targetCell.Comment Is Nothing Then
+        ' Zkusíme nastavit název
+        targetCell.Comment.Shape.Name = newName
+        
+        ' Kontrola, jestli se to povedlo (pro ladění)
+        If err.Number <> 0 Then
+            Debug.Print "CHYBA na řádku " & targetCell.row & " (" & targetCell.Address & "): Nelze přejmenovat na '" & newName & "'"
+            err.Clear
+        End If
+    End If
+    On Error GoTo 0
+End Sub
+
+Private Function CleanNameForShape(ByVal rawName As String) As String
+    Dim tempName As String
+    Dim i As Integer
+    Dim validChars As String
+    Dim char As String
+    
+    ' Povolíme jen písmena, čísla a podtržítko. Vše ostatní vyhodíme.
+    ' To je nejbezpečnější metoda.
+    validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
+    tempName = ""
+    
+    For i = 1 To Len(rawName)
+        char = Mid(rawName, i, 1)
+        ' Nahradíme mezeru podtržítkem
+        If char = " " Then
+            tempName = tempName & "_"
+        ' Pokud je znak v povoleném seznamu, přidáme ho
+        ElseIf InStr(validChars, char) > 0 Then
+            tempName = tempName & char
+        ' Jinak nahradíme podtržítkem (pro jistotu, aby se neslepila slova)
+        Else
+            tempName = tempName & "_"
+        End If
+    Next i
+    
+    ' Odstraníme zdvojená podtržítka
+    Do While InStr(tempName, "__") > 0
+        tempName = Replace(tempName, "__", "_")
+    Loop
+    
+    ' Odstraníme podtržítka na začátku a konci
+    If left(tempName, 1) = "_" Then tempName = Mid(tempName, 2)
+    If Right(tempName, 1) = "_" Then tempName = left(tempName, Len(tempName) - 1)
+    
+    CleanNameForShape = tempName
+End Function

@@ -42,7 +42,9 @@ MIN_INTERVAL_S = 1.0 / RATE_PER_SECOND
 
 # Paths
 script_dir = os.path.dirname(os.path.abspath(__file__))
-public_data_dir = os.path.join(script_dir, "public", "data")
+# Skript žije v anime-list-web/tools/ → data jsou o úroveň výš v anime-list-web/public/data
+app_root = os.path.dirname(script_dir)
+public_data_dir = os.path.join(app_root, "public", "data")
 anime_list_path = os.path.join(public_data_dir, "anime_list.json")
 jikan_cache_path = os.path.join(public_data_dir, "jikan_cache.json")
 

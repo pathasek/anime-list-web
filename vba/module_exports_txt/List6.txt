@@ -1,0 +1,135 @@
+Option Explicit
+
+Private Sub TextBox1_Change()
+End Sub
+
+Private Sub txtPoznamky_Change()
+End Sub
+
+Private Sub Worksheet_Activate()
+    ' POJISTKA: Vždy nejprve obnovíme události v Excelu (pro případ, že byly zablokované chybou z jiného makra)
+    Application.EnableEvents = True
+    
+    ' Aktualizace Airing Reminder přehledu při přepnutí na tento list
+    On Error Resume Next
+    UpdateAiringReminder
+    On Error GoTo 0
+End Sub
+
+' **************************************************************************************************
+' * HLAVNÍ UDÁLOST LISTU: ŘÍDÍ VŠE PO VÝBĚRU ANIME V BUŇCE A1                                    *
+' **************************************************************************************************
+Private Sub Worksheet_Change(ByVal Target As Range)
+    ' 1. Kontrola: Změna proběhla v buňce A1
+    If Not Intersect(Target, Me.Range("A1")) Is Nothing Then
+        
+        Dim fullText As String
+        fullText = Target.Value
+        
+        ' Pokud je buňka prázdná, nic neděláme
+        If Len(Trim(fullText)) = 0 Then Exit Sub
+
+        ' BEZPEČNOSTNÍ POJISTKA: Jakákoli chyba předá řízení bloku CleanUp, kde se EnableEvents VŽDY zapne zpět!
+        On Error GoTo CleanUp
+        Application.EnableEvents = False ' Vypnout události pro zabránění zacyklení
+        
+        Dim animeName As String
+        ' Pokud text obsahuje svislítko, vezmeme část před ním
+        If InStr(1, fullText, " | ") > 0 Then
+            animeName = Trim(Split(fullText, " | ")(0))
+        Else
+            animeName = Trim(fullText)
+        End If
+        
+        ' Zapíšeme čistý název zpět do buňky
+        Target.Value = animeName
+        
+        ' --- B) VYTVOŘENÍ ODKAZU A FORMÁTOVÁNÍ (APTOS NARROW, 18, KURZÍVA, BÍLÁ, #002060) ---
+        Call NastavitHyperlinkProA1(Target, animeName)
+        
+        ' --- C) DALŠÍ AUTOMATIZACE (Epizody, AI, Poznámky) ---
+        
+        ' 1. Kontrola epizod (Jikan API)
+        If Application.WorksheetFunction.CountA(Me.Range("B3:B50")) = 0 Then
+            On Error Resume Next
+            AutoFillEpisodesFromMAL
+            On Error GoTo CleanUp
+        End If
+        
+        ' 2. Aktualizace Gemini Promptu
+        On Error Resume Next
+        AktualizujGeminiPrompt animeName
+        On Error GoTo CleanUp
+        
+        ' 3. Předvyplnění poznámek
+        On Error Resume Next
+        PredvyplnitSablonyPoznamek
+        On Error GoTo CleanUp
+        
+        ' 4. Aktualizace Dropdownu
+        On Error Resume Next
+        Call UpdateAdvancedDropdownForReview
+        On Error GoTo CleanUp
+        
+        ' 5. Přímá aktualizace Airing Reminderu po změně A1
+        On Error Resume Next
+        UpdateAiringReminder
+        On Error GoTo CleanUp
+
+CleanUp:
+        ' VŽDY GARANTUJEME ZAPNUTÍ UDÁLOSTÍ ZPĚT
+        Application.EnableEvents = True
+    End If
+End Sub
+
+' **************************************************************************************************
+' * POMOCNÁ PROCEDURA: VYTVOŘÍ PROKLIK A NASTAVÍ DESIGN                                            *
+' **************************************************************************************************
+Private Sub NastavitHyperlinkProA1(ByVal Target As Range, ByVal animeName As String)
+    Dim wsList As Worksheet
+    Dim foundRange As Range
+    
+    ' Ošetření chyby listu
+    On Error Resume Next
+    Set wsList = ThisWorkbook.Sheets("ANIME LIST")
+    On Error GoTo 0
+    
+    If wsList Is Nothing Then Exit Sub
+    
+    ' 1. Najít Anime v seznamu
+    On Error Resume Next
+    Set foundRange = wsList.Columns("C:C").Find(What:=animeName, LookIn:=xlValues, LookAt:=xlWhole, MatchCase:=False)
+    On Error GoTo 0
+    
+    ' 2. Logika odkazu
+    If Not foundRange Is Nothing Then
+        ' Smažeme staré odkazy
+        Target.Hyperlinks.Delete
+        
+        ' Přidáme nový odkaz
+        Me.Hyperlinks.Add Anchor:=Target, _
+                          Address:="", _
+                          subAddress:="'" & wsList.Name & "'!" & foundRange.Address, _
+                          ScreenTip:="Přejít na záznam v ANIME LIST", _
+                          TextToDisplay:=animeName
+    Else
+        ' Pokud nenalezeno, jen smažeme odkaz (text zůstane)
+        Target.Hyperlinks.Delete
+    End If
+    
+    ' 3. APLIKACE POŽADOVANÉHO DESIGNU
+    With Target
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .Interior.Color = RGB(0, 32, 96) ' HEX #002060
+    End With
+    
+    With Target.Font
+        .Name = "Aptos Narrow"      ' Font
+        .size = 18                  ' Velikost
+        .Bold = True                ' Tučně
+        .Italic = True              ' Kurzíva
+        .Color = vbWhite            ' Bílá barva
+        .Underline = xlUnderlineStyleNone ' Bez podtržení
+    End With
+End Sub

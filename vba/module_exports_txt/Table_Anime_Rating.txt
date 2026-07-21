@@ -1,0 +1,1989 @@
+﻿Option Explicit
+
+' ********************************************************************************************************************
+' * HLAVNÍ PROCEDURA PRO EXPORT HODNOCENÍ (FINÁLNÍ VERZE S VYLEPŠENÝM FORMÁTOVÁNÍM)                                   *
+' ********************************************************************************************************************
+Sub ExportAnimeReview()
+
+    Dim ws As Worksheet
+    Set ws = ThisWorkbook.Sheets("HODNOCENÍ ANIME")
+    
+    ' --- OPTIMALIZACE VÝKONU (PŘIDAT SEM) ---
+    Application.ScreenUpdating = False
+    Application.EnableEvents = False
+    ' ----------------------------------------
+
+    ' --- Deklarace proměnných ---
+    Dim animeName As String
+    Dim notesContent As String
+    Dim episodeRatingsList As String
+    Dim categoryRatingsList As String
+    Dim avgEpisodeRatingFormatted As String
+    Dim weightedAvgCategoryFormatted As String
+    Dim finalRatingFormatted As String
+    Dim shpNotes As Shape
+    Dim lastEpisodeRow As Long
+    Dim lastCategoryRow As Long
+    Dim categoryRatingValues As New Collection
+    Dim episodeRatingValues As New Collection
+
+    Const NOTES_TEXTBOX_NAME As String = "Anime_Hodnocení_Poznámky"
+
+    ' --- Načtení dat a poznámek ---
+    animeName = Trim(CStr(ws.Range("A1").Value))
+
+    If animeName = "" Or animeName = "N/A" Then
+        MsgBox "Upozornění: Název anime v buňce A1 je prázdný nebo neplatný. Export do seznamu nebyl proveden.", vbExclamation
+        Exit Sub
+    End If
+
+    ' NOVÝ KÓD
+On Error Resume Next
+notesContent = Trim(CStr(ws.OLEObjects("txtPoznamky").Object.text))
+On Error GoTo 0
+If notesContent = "" Then notesContent = "Žádné poznámky."
+
+    ' --- Sestavení textu pro Hodnocení epizod (sloupce A a B) ---
+    episodeRatingsList = ""
+    lastEpisodeRow = ws.Cells(ws.Rows.count, "A").End(xlUp).row
+
+    Dim startEpText As String, endEpText As String, currentEpRating As String
+    startEpText = ""
+
+    Dim episodeRow As Long
+    For episodeRow = 3 To lastEpisodeRow + 1
+        Dim epNumberText As String, epRating As Variant, formattedEpRating As String
+        Dim isFlushRow As Boolean
+        isFlushRow = (episodeRow > lastEpisodeRow)
+
+        Dim processThisRow As Boolean
+        processThisRow = False
+
+        If isFlushRow Then
+            processThisRow = True
+            formattedEpRating = "FORCE_FLUSH"
+        Else
+            epNumberText = Trim(CStr(ws.Cells(episodeRow, "A").Value))
+            epRating = ws.Cells(episodeRow, "B").Value
+
+            If (Not IsEmpty(epNumberText) And InStr(1, epNumberText, "EP ") = 1) And _
+               (IsNumeric(epRating) And CDbl(epRating) >= 1 And CDbl(epRating) <= 10) Then
+                formattedEpRating = FormatNumberWithTrimmedZeros(CDbl(epRating)) & "/10"
+                episodeRatingValues.Add formattedEpRating
+                processThisRow = True
+            End If
+        End If
+
+        If processThisRow Then
+            If startEpText = "" Then
+                startEpText = epNumberText
+                endEpText = epNumberText
+                currentEpRating = formattedEpRating
+            ElseIf formattedEpRating = currentEpRating And Not isFlushRow Then
+                endEpText = epNumberText
+            Else
+                If startEpText <> "" Then
+                    If episodeRatingsList <> "" Then
+                        episodeRatingsList = episodeRatingsList & ", "
+                    End If
+
+                    If startEpText = endEpText Then
+                        episodeRatingsList = episodeRatingsList & startEpText & " -> " & currentEpRating
+                    Else
+                        episodeRatingsList = episodeRatingsList & startEpText & " - " & Trim(Mid(endEpText, 4)) & " -> " & currentEpRating
+                    End If
+                End If
+
+                startEpText = epNumberText
+                endEpText = epNumberText
+                currentEpRating = formattedEpRating
+            End If
+        End If
+    Next episodeRow
+    If episodeRatingsList = "" Then episodeRatingsList = "Žádná data k hodnocení epizod."
+
+    ' --- Sestavení textu pro Hodnocení kategorií (sloupce D a E) ---
+    categoryRatingsList = ""
+    lastCategoryRow = ws.Cells(ws.Rows.count, "D").End(xlUp).row
+
+    Dim groupedCategoryNames As String, currentCatRating As String
+    groupedCategoryNames = ""
+
+    Dim categoryRow As Long
+    For categoryRow = 3 To lastCategoryRow + 1
+        Dim categoryName As String, categoryRating As Variant, formattedRating As String
+        Dim isCatFlushRow As Boolean
+        isCatFlushRow = (categoryRow > lastCategoryRow)
+
+        Dim processThisCatRow As Boolean
+        processThisCatRow = False
+
+        If isCatFlushRow Then
+            processThisCatRow = True
+            formattedRating = "FORCE_FLUSH"
+        Else
+            categoryName = Trim(CStr(ws.Cells(categoryRow, "D").Value))
+            categoryRating = ws.Cells(categoryRow, "E").Value
+
+            If (Not IsEmpty(categoryName)) And _
+               (IsNumeric(categoryRating) And CDbl(categoryRating) >= 1 And CDbl(categoryRating) <= 10) Then
+                formattedRating = FormatNumberWithTrimmedZeros(CDbl(categoryRating)) & "/10"
+                categoryRatingValues.Add formattedRating
+                processThisCatRow = True
+            End If
+        End If
+
+        If processThisCatRow Then
+            If groupedCategoryNames = "" Then
+                groupedCategoryNames = categoryName
+                currentCatRating = formattedRating
+            ElseIf formattedRating = currentCatRating And Not isCatFlushRow Then
+                groupedCategoryNames = groupedCategoryNames & "/" & categoryName
+            Else
+                If groupedCategoryNames <> "" Then
+                    If categoryRatingsList <> "" Then
+                        categoryRatingsList = categoryRatingsList & ", "
+                    End If
+                    categoryRatingsList = categoryRatingsList & groupedCategoryNames & " -> " & currentCatRating
+                End If
+
+                groupedCategoryNames = categoryName
+                currentCatRating = formattedRating
+            End If
+        End If
+    Next categoryRow
+    If categoryRatingsList = "" Then categoryRatingsList = "Žádná data k hodnocení kategorií."
+
+    ' --- Načtení vypočtených průměrů z buněk ---
+    Dim tempVal As Variant
+
+    tempVal = ws.Range("G21").Value
+    If IsError(tempVal) Or IsEmpty(tempVal) Then
+        avgEpisodeRatingFormatted = "N/A/10"
+    Else
+        avgEpisodeRatingFormatted = CStr(tempVal)
+        If Right(avgEpisodeRatingFormatted, 3) <> "/10" Then avgEpisodeRatingFormatted = avgEpisodeRatingFormatted & "/10"
+    End If
+
+    tempVal = ws.Range("G18").Value
+    If IsError(tempVal) Or IsEmpty(tempVal) Then
+        weightedAvgCategoryFormatted = "N/A/10"
+    Else
+        weightedAvgCategoryFormatted = CStr(tempVal)
+        If Right(weightedAvgCategoryFormatted, 3) <> "/10" Then weightedAvgCategoryFormatted = weightedAvgCategoryFormatted & "/10"
+    End If
+
+    tempVal = ws.Range("G24").Value
+    If IsError(tempVal) Or IsEmpty(tempVal) Then
+        finalRatingFormatted = "N/A/10"
+    Else
+        finalRatingFormatted = FormatNumberWithTrimmedZeros(CDbl(tempVal)) & "/10"
+    End If
+
+    ' --- Sestavení celého obsahu pro export ---
+    Dim outputContent As String
+    outputContent = animeName & vbCrLf & _
+                    "Poznámky: " & notesContent & vbCrLf & vbCrLf & _
+                    "Hodnocení epizod:" & vbCrLf & episodeRatingsList & vbCrLf & _
+                    "Průměrné hodnocení epizod: " & avgEpisodeRatingFormatted & vbCrLf & vbCrLf & _
+                    "Hodnocení kategorií:" & vbCrLf & categoryRatingsList & vbCrLf & _
+                    "Průměrné vážené hodnocení: " & weightedAvgCategoryFormatted & vbCrLf & vbCrLf & _
+                    "Finální hodnocení: " & finalRatingFormatted
+
+    ' --- EXPORT A FORMÁTOVÁNÍ POZNÁMKY V "ANIME LIST" ---
+    Dim animeListWs As Worksheet, foundRange As Range, targetCell As Range
+    Dim response As VbMsgBoxResult
+    Dim titleLength As Long, finalRatingStart As Long, finalRatingLength As Long
+    Dim searchStartPos As Long, foundPos As Long, ratingValue As Variant
+    Dim labelStart As Long
+
+    On Error Resume Next
+    Set animeListWs = ThisWorkbook.Sheets("ANIME LIST")
+    On Error GoTo 0
+    If animeListWs Is Nothing Then MsgBox "Chyba: List 'ANIME LIST' nebyl nalezen.", vbCritical: Exit Sub
+
+    Set foundRange = animeListWs.Columns("C:C").Find(What:=animeName, LookIn:=xlValues, LookAt:=xlWhole, MatchCase:=False)
+
+    If Not foundRange Is Nothing Then
+        Set targetCell = animeListWs.Cells(foundRange.row, "K")
+        If Not targetCell.Comment Is Nothing Then
+            response = MsgBox("Poznámka pro anime '" & animeName & "' již existuje." & vbCrLf & "Přejete si ji přepsat?", vbYesNo + vbExclamation, "Přepsat poznámku?")
+            If response = vbYes Then targetCell.Comment.Delete Else MsgBox "Export zrušen.", vbInformation: Exit Sub
+        End If
+
+        With targetCell.AddComment(outputContent)
+            .Visible = False
+            With .Shape.TextFrame.Characters.Font: .Name = "Tahoma": .size = 9: .Bold = False: .Italic = False: End With
+
+            titleLength = Len(animeName)
+            If titleLength > 0 Then
+                With .Shape.TextFrame.Characters(Start:=1, length:=titleLength).Font: .Bold = True: .Italic = True: End With
+            End If
+
+            finalRatingStart = InStr(1, outputContent, "Finální hodnocení: ")
+            If finalRatingStart > 0 Then
+                finalRatingLength = Len("Finální hodnocení: ") + Len(finalRatingFormatted)
+                With .Shape.TextFrame.Characters(Start:=finalRatingStart, length:=finalRatingLength).Font: .Bold = True: .size = 11: End With
+            End If
+
+            labelStart = InStr(1, outputContent, "Poznámky:")
+            If labelStart > 0 Then .Shape.TextFrame.Characters(Start:=labelStart, length:=Len("Poznámky:")).Font.Bold = True
+
+            labelStart = InStr(1, outputContent, "Hodnocení epizod:")
+            If labelStart > 0 Then .Shape.TextFrame.Characters(Start:=labelStart, length:=Len("Hodnocení epizod:")).Font.Bold = True
+
+            Dim currentEpSearchStart As Long
+            currentEpSearchStart = InStr(1, outputContent, "Hodnocení epizod:") + Len("Hodnocení epizod:" & vbCrLf)
+            Dim ratingText As String, tempFoundPos As Long
+            For Each ratingValue In episodeRatingValues
+                ratingText = CStr(ratingValue)
+                tempFoundPos = InStr(currentEpSearchStart, outputContent, ratingText)
+                Do While tempFoundPos > 0
+                    If tempFoundPos >= Len(" -> ") + 1 Then
+                        If Mid(outputContent, tempFoundPos - Len(" -> "), Len(" -> ")) = " -> " Then
+                            .Shape.TextFrame.Characters(Start:=tempFoundPos, length:=Len(ratingText)).Font.Bold = True
+                        End If
+                    End If
+                    tempFoundPos = InStr(tempFoundPos + Len(ratingText), outputContent, ratingText)
+                Loop
+            Next ratingValue
+
+            labelStart = InStr(1, outputContent, "Průměrné hodnocení epizod:")
+            If labelStart > 0 Then .Shape.TextFrame.Characters(Start:=labelStart, length:=Len("Průměrné hodnocení epizod: " & avgEpisodeRatingFormatted)).Font.Bold = True
+
+            labelStart = InStr(1, outputContent, "Hodnocení kategorií:")
+            If labelStart > 0 Then .Shape.TextFrame.Characters(Start:=labelStart, length:=Len("Hodnocení kategorií:")).Font.Bold = True
+
+            Dim currentCatSearchStart As Long
+            currentCatSearchStart = InStr(1, outputContent, "Hodnocení kategorií:") + Len("Hodnocení kategorií:" & vbCrLf)
+            For Each ratingValue In categoryRatingValues
+                ratingText = CStr(ratingValue)
+                tempFoundPos = InStr(currentCatSearchStart, outputContent, ratingText)
+                Do While tempFoundPos > 0
+                    If tempFoundPos >= Len(" -> ") + 1 Then
+                        If Mid(outputContent, tempFoundPos - Len(" -> "), Len(" -> ")) = " -> " Then
+                            .Shape.TextFrame.Characters(Start:=tempFoundPos, length:=Len(ratingText)).Font.Bold = True
+                        End If
+                    End If
+                    tempFoundPos = InStr(tempFoundPos + Len(ratingText), outputContent, ratingText)
+                Loop
+            Next ratingValue
+
+            labelStart = InStr(1, outputContent, "Průměrné vážené hodnocení:")
+            If labelStart > 0 Then .Shape.TextFrame.Characters(Start:=labelStart, length:=Len("Průměrné vážené hodnocení: " & weightedAvgCategoryFormatted)).Font.Bold = True
+
+' --- OBNOVENÍ NASTAVENÍ (PŘIDAT SEM) ---
+    Application.ScreenUpdating = True
+    Application.EnableEvents = True
+    ' ---------------------------------------
+
+        End With
+        MsgBox "Hodnocení pro '" & animeName & "' bylo úspěšně exportováno/aktualizováno.", vbInformation
+    Else
+        MsgBox "Upozornění: Anime '" & animeName & "' nebylo nalezeno v listu 'ANIME LIST'.", vbExclamation
+    End If
+
+End Sub
+
+' ********************************************************************************************************************
+' * PROCEDURY PRO TVORBU A FORMÁTOVÁNÍ OVLÁDACÍCH PRVKŮ                                                              *
+' ********************************************************************************************************************
+Sub VytvorTlacitkoExportu()
+    Dim ws As Worksheet, rng As Range, btn As Shape
+    Const BUTTON_NAME As String = "btnExportAnimeReview"
+    Set ws = ThisWorkbook.Sheets("HODNOCENÍ ANIME")
+    On Error Resume Next
+    ws.Shapes(BUTTON_NAME).Delete
+    On Error GoTo 0
+    Set rng = ws.Range("O1")
+    Set btn = ws.Shapes.AddShape(msoShapeRectangle, rng.left, rng.top, rng.Width, rng.Height)
+    With btn
+        .Name = BUTTON_NAME
+        .OnAction = "ExportAnimeReview"
+        .Fill.Solid: .Fill.ForeColor.RGB = RGB(0, 0, 0)
+        With .line: .Visible = msoTrue: .weight = 1.5: .ForeColor.RGB = RGB(0, 0, 0): End With
+        With .TextFrame2
+            .VerticalAnchor = msoAnchorMiddle
+            .HorizontalAnchor = msoAnchorCenter
+            .WordWrap = False
+            .TextRange.text = "Exportovat hodnocení do poznámky"
+            With .TextRange.Font: .Name = "Aptos Narrow": .size = 11: .Bold = True: End With
+            With .TextRange.Font.Fill: .Visible = msoTrue: .Solid: .ForeColor.RGB = RGB(71, 211, 89): End With
+        End With
+        .Placement = xlMoveAndSize
+    End With
+    MsgBox "Tlačítko 'Exportovat hodnocení' bylo vytvořeno/aktualizováno.", vbInformation
+End Sub
+
+
+
+' ********************************************************************************************************************
+' * POMOCNÉ FUNKCE A UDF FUNKCE PRO EXCEL                                                                           *
+' ********************************************************************************************************************
+Public Function GetWeightedCategoryAverageNew(ratingRange As Range, weightRange As Range) As String
+    Dim rCell As Range, wCell As Range, sumOfProducts As Double, sumOfWeights As Double, result As Double, i As Long
+    sumOfProducts = 0: sumOfWeights = 0
+    If ratingRange.Cells.count <> weightRange.Cells.count Then GetWeightedCategoryAverageNew = "Chyba": Exit Function
+    For i = 1 To ratingRange.Cells.count
+        Set rCell = ratingRange.Cells(i): Set wCell = weightRange.Cells(i)
+        If IsNumeric(rCell.Value) And Not IsEmpty(rCell.Value) And IsNumeric(wCell.Value) And Not IsEmpty(wCell.Value) Then
+            If rCell.Value >= 1 And rCell.Value <= 10 Then
+                sumOfProducts = sumOfProducts + (CDbl(rCell.Value) * CDbl(wCell.Value))
+                sumOfWeights = sumOfWeights + CDbl(wCell.Value)
+            End If
+        End If
+    Next i
+    If sumOfWeights > 0 Then result = sumOfProducts / sumOfWeights Else GetWeightedCategoryAverageNew = "N/A": Exit Function
+    GetWeightedCategoryAverageNew = FormatNumberWithTrimmedZeros(result) & "/10"
+End Function
+
+Public Function GetEpisodeAverageNew(episodeRatingRange As Range) As String
+    Dim cell As Range, sumOfEpisodeRatings As Double, episodeCount As Long, result As Double
+    sumOfEpisodeRatings = 0: episodeCount = 0
+    For Each cell In episodeRatingRange.Cells
+        If IsNumeric(cell.Value) And Not IsEmpty(cell.Value) Then
+            If cell.Value >= 1 And cell.Value <= 10 Then
+                sumOfEpisodeRatings = sumOfEpisodeRatings + CDbl(cell.Value)
+                episodeCount = episodeCount + 1
+            End If
+        End If
+    Next cell
+    If episodeCount > 0 Then result = sumOfEpisodeRatings / episodeCount Else GetEpisodeAverageNew = "N/A": Exit Function
+    GetEpisodeAverageNew = FormatNumberWithTrimmedZeros(result) & "/10"
+End Function
+
+Private Function FormatNumberWithTrimmedZeros(ByVal num As Double) As String
+    Dim formattedNum As String
+    formattedNum = Format(num, "0.00")
+    If Right(formattedNum, 3) = ".00" Or Right(formattedNum, 3) = ",00" Then
+        formattedNum = left(formattedNum, Len(formattedNum) - 3)
+    ElseIf Right(formattedNum, 1) = "0" And (InStr(formattedNum, ".") > 0 Or InStr(formattedNum, ",") > 0) Then
+        formattedNum = left(formattedNum, Len(formattedNum) - 1)
+    End If
+    formattedNum = Replace(formattedNum, ".", ",")
+    FormatNumberWithTrimmedZeros = formattedNum
+End Function
+
+
+' ====================================================================================================================
+' =============================================   NOVÁ SEKCE: IMPORT   ===============================================
+' ====================================================================================================================
+
+' ********************************************************************************************************************
+' * HLAVNÍ PROCEDURA PRO IMPORT HODNOCENÍ Z POZNÁMKY (OPAK EXPORTU)                                                  *
+' ********************************************************************************************************************
+Sub ImportAnimeReview()
+    Dim ws As Worksheet, animeListWs As Worksheet
+    Dim animeName As String
+    Dim foundRange As Range, targetCell As Range
+    Dim rawText As String
+
+    Const NOTES_TEXTBOX_NAME As String = "Anime_Hodnocení_Poznámky"
+
+    Set ws = ThisWorkbook.Sheets("HODNOCENÍ ANIME")
+    animeName = Trim(CStr(ws.Range("A1").Value))
+    If animeName = "" Or animeName = "N/A" Then
+        MsgBox "Upozornění: Název anime v buňce A1 je prázdný nebo neplatný. Import z poznámky neproběhl.", vbExclamation
+        Exit Sub
+    End If
+
+    ' BEZPEČNOST: import povolen jen když jsou prázdné poznámky + epizody (B) + kategorie (E) + finální (G24)
+    If Not IsTargetClear(ws, NOTES_TEXTBOX_NAME) Then
+        MsgBox "Import zrušen. Pro import musí být prázdné:" & vbCrLf & _
+               "• Textové pole s poznámkami" & vbCrLf & _
+               "• Hodnocení epizod (sloupec B)" & vbCrLf & _
+               "• Hodnocení kategorií (sloupec E)" & vbCrLf & _
+               "• Finální hodnocení (buňka G24)", vbExclamation
+        Exit Sub
+    End If
+
+    On Error Resume Next
+    Set animeListWs = ThisWorkbook.Sheets("ANIME LIST")
+    On Error GoTo 0
+    If animeListWs Is Nothing Then
+        MsgBox "Chyba: List 'ANIME LIST' nebyl nalezen.", vbCritical
+        Exit Sub
+    End If
+
+    ' Najdi řádek anime a vezmi poznámku z K
+    Set foundRange = animeListWs.Columns("C:C").Find(What:=animeName, LookIn:=xlValues, LookAt:=xlWhole, MatchCase:=False)
+    If foundRange Is Nothing Then
+        MsgBox "Anime '" & animeName & "' nebylo nalezeno v listu 'ANIME LIST'.", vbExclamation
+        Exit Sub
+    End If
+    Set targetCell = animeListWs.Cells(foundRange.row, "K")
+    If targetCell.Comment Is Nothing Then
+        MsgBox "Pro anime '" & animeName & "' nebyla nalezena žádná poznámka (komentář) ve sloupci K.", vbExclamation
+        Exit Sub
+    End If
+
+    rawText = targetCell.Comment.text
+
+    ' --- Rozparsuj sekce z textu poznámky ---
+    Dim notesText As String, episodesLine As String, categoriesLine As String, finalRatingText As String
+    notesText = ExtractBetween(rawText, "Poznámky: ", "Hodnocení epizod:")
+    episodesLine = ExtractBetween(rawText, "Hodnocení epizod:", "Průměrné hodnocení epizod:")
+    categoriesLine = ExtractBetween(rawText, "Hodnocení kategorií:", "Průměrné vážené hodnocení:")
+    finalRatingText = ExtractAfter(rawText, "Finální hodnocení:")
+
+    ' --- Zapiš poznámky zpět do textového pole, když existuje ---
+    On Error Resume Next
+    ws.OLEObjects("txtPoznamky").Object.text = IIf(Trim(notesText) <> "", Trim(notesText), "Žádné poznámky.")
+    On Error GoTo 0
+    
+    ' =========================================================================================
+    ' NOVÁ ČÁST: ZÍSKÁNÍ POČTU EPIZOD Z API (Jikan)
+    ' =========================================================================================
+    Dim apiTotalEps As Long
+    Dim malURL As String, malID As String
+    
+    apiTotalEps = 0 ' Default
+    
+    ' 1. Získat odkaz z Hyperlinku
+    If foundRange.Hyperlinks.count > 0 Then
+        malURL = foundRange.Hyperlinks(1).Address
+        ' 2. Získat ID
+        malID = ExtractMalID(malURL)
+        ' 3. Zavolat API (pokud máme ID)
+        If malID <> "" Then
+            Application.StatusBar = "Importuji a zjišťuji počet epizod z API..."
+            apiTotalEps = GetEpisodeCountFromJikan(malID)
+            Application.StatusBar = False
+        End If
+    End If
+    ' =========================================================================================
+
+    ' --- Naparsuj a vrať hodnocení epizod do B podle EP v A + API count ---
+    Dim importedEpisodes As Long
+    If Len(Trim(episodesLine)) > 0 And InStr(1, episodesLine, "Žádná data", vbTextCompare) = 0 Then
+        ' ZDE PŘEDÁVÁME apiTotalEps DO FUNKCE
+        importedEpisodes = ApplyEpisodesFromLine(ws, episodesLine, apiTotalEps)
+    Else
+        ' Film / bez epizod -> Pokud API vrátilo počet, použijeme ho, jinak 1
+        Dim fallbackCount As Long
+        fallbackCount = IIf(apiTotalEps > 0, apiTotalEps, 1)
+        ResizeEpisodesGridAB ws, fallbackCount
+    End If
+
+    ' --- Naparsuj a vrať hodnocení kategorií do E podle názvů v D ---
+    Dim importedCategories As Long
+    If Len(Trim(categoriesLine)) > 0 And InStr(1, categoriesLine, "Žádná data", vbTextCompare) = 0 Then
+        importedCategories = ApplyCategoriesFromLine(ws, categoriesLine)
+    End If
+
+    ' --- Import finálního hodnocení do G24 (pokud ho najdeme) ---
+    Dim finalStatus As String
+    Dim vFinal As Variant
+    vFinal = ParseRating(finalRatingText)
+    If IsError(vFinal) Then
+        finalStatus = "nenalezeno"
+    Else
+        If ws.Range("G24").HasFormula Then
+            finalStatus = "ponecháno (G24 má vzorec)"
+        Else
+            ws.Range("G24").NumberFormat = "General"
+            ws.Range("G24").Value2 = CDbl(vFinal)
+            ForceNumericGeneral ws.Range("G24")
+            finalStatus = "zapsáno"
+        End If
+    End If
+
+    MsgBox "Import z poznámky dokončen:" & vbCrLf & _
+           "• Poznámky: " & IIf(Trim(notesText) <> "", "zapsány", "prázdné/nezměněny") & vbCrLf & _
+           "• Epizody: " & importedEpisodes & " hodnot zapsáno" & IIf(apiTotalEps > 0, " (Mřížka nastavena na " & apiTotalEps & " EP dle API)", "") & vbCrLf & _
+           "• Kategorie: " & importedCategories & " hodnot zapsáno" & vbCrLf & _
+           "• Finální hodnocení: " & finalStatus, vbInformation
+End Sub
+
+
+' ********************************************************************************************************************
+' * VYTVOŘENÍ TLAČÍTKA PRO IMPORT                                                                                    *
+' ********************************************************************************************************************
+Sub VytvorTlacitkoImportu()
+    Dim ws As Worksheet, rng As Range, btn As Shape
+    Const BUTTON_NAME As String = "btnImportAnimeReview"
+    Set ws = ThisWorkbook.Sheets("HODNOCENÍ ANIME")
+    On Error Resume Next
+    ws.Shapes(BUTTON_NAME).Delete
+    On Error GoTo 0
+
+    Set rng = ws.Range("O2")
+    Set btn = ws.Shapes.AddShape(msoShapeRectangle, rng.left, rng.top, rng.Width, rng.Height)
+    With btn
+        .Name = BUTTON_NAME
+        .OnAction = "ImportAnimeReview"
+        .Fill.Solid: .Fill.ForeColor.RGB = RGB(0, 0, 0)
+        With .line: .Visible = msoTrue: .weight = 1.5: .ForeColor.RGB = RGB(0, 0, 0): End With
+        With .TextFrame2
+            .VerticalAnchor = msoAnchorMiddle
+            .HorizontalAnchor = msoAnchorCenter
+            .WordWrap = False
+            .TextRange.text = "Načíst z poznámky"
+            With .TextRange.Font: .Name = "Aptos Narrow": .size = 11: .Bold = True: End With
+            With .TextRange.Font.Fill: .Visible = msoTrue: .Solid: .ForeColor.RGB = RGB(71, 211, 89): End With
+        End With
+        .Placement = xlMoveAndSize
+    End With
+    MsgBox "Tlačítko 'Načíst z poznámky' bylo vytvořeno/aktualizováno.", vbInformation
+End Sub
+
+' ********************************************************************************************************************
+' * POMOCNÉ FUNKCE PRO IMPORT                                                                                        *
+' ********************************************************************************************************************
+Private Function ExtractBetween(ByVal fullText As String, ByVal header As String, ByVal nextHeader As String) As String
+    Dim s As Long, e As Long, t As String
+    s = InStr(1, fullText, header, vbTextCompare)
+    If s = 0 Then ExtractBetween = "": Exit Function
+    s = s + Len(header)
+    If Mid$(fullText, s, 2) = vbCrLf Then s = s + 2
+    e = InStr(s, fullText, nextHeader, vbTextCompare)
+    If e = 0 Then
+        t = Mid$(fullText, s)
+    Else
+        t = Mid$(fullText, s, e - s)
+        If Right$(t, 2) = vbCrLf Then t = left$(t, Len(t) - 2)
+    End If
+    ExtractBetween = Trim$(t)
+End Function
+
+Private Function ExtractAfter(ByVal fullText As String, ByVal header As String) As String
+    Dim s As Long, t As String
+    s = InStr(1, fullText, header, vbTextCompare)
+    If s = 0 Then ExtractAfter = "": Exit Function
+    s = s + Len(header)
+    If Mid$(fullText, s, 2) = vbCrLf Then s = s + 2
+    t = Mid$(fullText, s)
+    ExtractAfter = Trim$(t)
+End Function
+
+' Najde první řádek bloku epizod (první "EP *" od řádku 3 níž)
+Private Function FindFirstEpRow(ws As Worksheet) As Long
+    Dim r As Long, lastA As Long, s As String
+    lastA = ws.Cells(ws.Rows.count, "A").End(xlUp).row
+    For r = 3 To lastA + 200
+        s = Trim$(CStr(ws.Cells(r, "A").Value))
+        If Len(s) >= 4 And UCase$(left$(s, 3)) = "EP " Then FindFirstEpRow = r: Exit Function
+    Next r
+    FindFirstEpRow = 3
+End Function
+
+' Přizpůsobí velikost bloku epizod pouze v A:B (insert/delete CELLS), ne hromadné řádky listu.
+Private Sub ResizeEpisodesGridAB(ws As Worksheet, ByVal desiredCount As Long)
+    If desiredCount < 1 Then desiredCount = 1
+
+    Dim startRow As Long: startRow = FindFirstEpRow(ws)
+
+    ' zjištění aktuální souvislé délky bloku "EP *"
+    Dim curCount As Long, r As Long, s As String
+    r = startRow
+    Do While True
+        s = Trim$(CStr(ws.Cells(r, "A").Value))
+        If Len(s) >= 4 And UCase$(left$(s, 3)) = "EP " Then
+            curCount = curCount + 1
+            r = r + 1
+        Else
+            Exit Do
+        End If
+    Loop
+    If curCount = 0 Then curCount = 1
+
+    Application.ScreenUpdating = False
+
+    If desiredCount < curCount Then
+        ' zkrať: smaž přebytečné buňky A:B (shift up) – neovlivní ostatní sloupce
+        ws.Range(ws.Cells(startRow + desiredCount, "A"), ws.Cells(startRow + curCount - 1, "B")).Delete Shift:=xlUp
+    ElseIf desiredCount > curCount Then
+        ' prodluž: vlož chybějící buňky A:B (shift down) a nakopíruj formát
+        Dim toAdd As Long: toAdd = desiredCount - curCount
+        ws.Range(ws.Cells(startRow + curCount, "A"), ws.Cells(startRow + curCount + toAdd - 1, "B")).Insert Shift:=xlDown
+        ws.Range(ws.Cells(startRow + curCount - 1, "A"), ws.Cells(startRow + curCount - 1, "B")).Copy
+        ws.Range(ws.Cells(startRow + curCount, "A"), ws.Cells(startRow + curCount + toAdd - 1, "B")).PasteSpecial xlPasteFormats
+        Application.CutCopyMode = False
+        ' vyčistit hodnoty u nově vložených buněk B
+        ws.Range(ws.Cells(startRow + curCount, "B"), ws.Cells(startRow + curCount + toAdd - 1, "B")).ClearContents
+    End If
+
+    ' popiš EP 1..N
+    Dim i As Long
+    For i = 0 To desiredCount - 1
+        ws.Cells(startRow + i, "A").Value = "EP " & (i + 1)
+    Next i
+
+    ' pro jistotu ještě vyčisti pár řádků pod blokem (jen A:B)
+    ws.Range(ws.Cells(startRow + desiredCount, "A"), ws.Cells(startRow + desiredCount + 50, "B")).ClearContents
+
+    Application.ScreenUpdating = True
+End Sub
+
+' PRÁZDNOST cílových polí (poznámky + B + E + G24)
+Private Function IsTargetClear(ws As Worksheet, ByVal NOTES_TEXTBOX_NAME As String) As Boolean
+    Dim notesEmpty As Boolean, epsEmpty As Boolean, catsEmpty As Boolean, finalRatingEmpty As Boolean
+    Dim shp As Shape
+
+    ' --- 2. KONTROLA TEXTOVÉHO POLE ---
+    Dim t As String
+    On Error Resume Next
+    t = Trim$(CStr(ws.OLEObjects("txtPoznamky").Object.text))
+    On Error GoTo 0
+    
+    Dim normT As String
+    normT = Replace(t, vbCrLf, vbLf)
+    normT = Replace(normT, vbCr, vbLf)
+    normT = Trim(normT)
+    
+    ' Definujeme normalizované šablony s vbLf
+    Dim normTemp1 As String
+    normTemp1 = "OP1:, ED1:" & vbLf & _
+                "-" & vbLf & _
+                "OST:" & vbLf & _
+                "-" & vbLf & _
+                "Ostatní poznámky:" & vbLf & _
+                "X" & vbLf & _
+                "-" & vbLf & _
+                "KONTEXT K PŘÍBĚHU A KATEGORIÍM:"
+
+    Dim normTemp2 As String
+    normTemp2 = "OP1:, ED1:" & vbLf & _
+                "-" & vbLf & _
+                "OST:" & vbLf & _
+                "-" & vbLf & _
+                "Ostatní poznámky:" & vbLf & _
+                "EP 1 (" & vbLf & _
+                "-" & vbLf & _
+                "KONTEXT K PŘÍBĚHU A KATEGORIÍM:"
+    
+    ' Pole je "čisté", pokud: je prázdné NEBO je tam "Žádné poznámky." NEBO je tam přesně šablona
+    If t = "" Or StrComp(t, "Žádné poznámky.", vbTextCompare) = 0 Then
+        notesEmpty = True
+    ElseIf StrComp(normT, normTemp1, vbTextCompare) = 0 Or StrComp(normT, normTemp2, vbTextCompare) = 0 Then
+        notesEmpty = True
+    Else
+        notesEmpty = False
+    End If
+
+    ' --- 3. KONTROLA EPIZOD (Sloupec B) ---
+    Dim lastRowA As Long, r As Long, epTxt As String
+    lastRowA = ws.Cells(ws.Rows.count, "A").End(xlUp).row
+    epsEmpty = True
+    For r = 3 To lastRowA
+        epTxt = Trim$(CStr(ws.Cells(r, "A").Value))
+        If InStr(1, epTxt, "EP ", vbTextCompare) = 1 Then
+            If Trim$(CStr(ws.Cells(r, "B").Value)) <> "" Then
+                epsEmpty = False: Exit For
+            End If
+        End If
+    Next r
+
+    ' --- 4. KONTROLA KATEGORIÍ (Sloupec E) ---
+    Dim lastRowD As Long
+    lastRowD = ws.Cells(ws.Rows.count, "D").End(xlUp).row
+    catsEmpty = True
+    For r = 3 To lastRowD
+        If Trim$(CStr(ws.Cells(r, "D").Value)) <> "" Then
+            If Trim$(CStr(ws.Cells(r, "E").Value)) <> "" Then
+                catsEmpty = False: Exit For
+            End If
+        End If
+    Next r
+
+    ' --- 5. KONTROLA FINÁLNÍHO HODNOCENÍ (G24) ---
+    finalRatingEmpty = IsEmpty(ws.Range("G24").Value)
+
+    ' --- VÝSLEDEK ---
+    IsTargetClear = (notesEmpty And epsEmpty And catsEmpty And finalRatingEmpty)
+End Function
+
+Private Function ParseRating(ByVal ratingText As String) As Variant
+    Dim t As String, decSep As String
+    t = Trim$(ratingText)
+    If InStr(1, t, "/10", vbTextCompare) > 0 Then t = Replace$(t, "/10", "", , , vbTextCompare)
+    t = Trim$(t)
+    If t = "" Or UCase$(t) = "N/A" Then
+        ParseRating = CVErr(xlErrNA)
+        Exit Function
+    End If
+    decSep = Application.DecimalSeparator
+    t = Replace$(Replace$(t, ".", decSep), ",", decSep)
+    On Error GoTo Fail
+    ParseRating = CDbl(t)
+    Exit Function
+Fail:
+    ParseRating = CVErr(xlErrValue)
+End Function
+
+Private Function ApplyEpisodesFromLine(ws As Worksheet, ByVal episodesLine As String, Optional ByVal apiTotalCount As Long = 0) As Long
+    Dim dict As Object: Set dict = CreateObject("Scripting.Dictionary")
+    Dim parts() As String, i As Long, maxEpNo As Long
+    parts = Split(episodesLine, ", ")
+
+    ' --- PARSING EXISTUJÍCÍCH DAT Z POZNÁMKY ---
+    For i = LBound(parts) To UBound(parts)
+        Dim g As String, pArrow As Long, leftPart As String, rightPart As String
+        g = Trim$(parts(i))
+        If g = "" Then GoTo NextI
+        pArrow = InStr(1, g, "->", vbTextCompare)
+        If pArrow = 0 Then GoTo NextI
+        leftPart = Trim$(left$(g, pArrow - 1))
+        rightPart = Trim$(Mid$(g, pArrow + 2))
+
+        Dim v As Variant: v = ParseRating(rightPart)
+        If IsError(v) Then GoTo NextI
+
+        If InStr(1, leftPart, "EP ", vbTextCompare) = 1 Then
+            Dim rest As String: rest = Trim$(Mid$(leftPart, 4))
+            Dim a As Long, b As Long
+            If InStr(1, rest, "-", vbTextCompare) > 0 Then
+                Dim ab() As String: ab = Split(rest, "-")
+                If UBound(ab) = 1 Then
+                    a = CLng(Trim$(ab(0))): b = CLng(Trim$(ab(1)))
+                Else
+                    GoTo NextI
+                End If
+            Else
+                a = CLng(rest): b = a
+            End If
+            Dim n As Long
+            If a > 0 And b >= a Then
+                For n = a To b
+                    dict(CStr(n)) = CDbl(v)
+                Next n
+                If b > maxEpNo Then maxEpNo = b
+            End If
+        End If
+NextI:
+    Next i
+
+    ' --- ÚPRAVA: LOGIKA PRO VELIKOST MŘÍŽKY ---
+    ' Použijeme buď maximum z poznámek, nebo číslo z API (pokud je větší)
+    Dim desired As Long
+    desired = IIf(maxEpNo > 0, maxEpNo, 1)
+    
+    If apiTotalCount > desired Then
+        desired = apiTotalCount
+    End If
+
+    ' 1) Přizpůsobení velikosti bloku A:B
+    ResizeEpisodesGridAB ws, desired
+
+    ' 2) Zápis hodnot
+    Dim startRow As Long, r As Long, lastRow As Long, epTxt As String, epNum As Long, cnt As Long
+    startRow = FindFirstEpRow(ws)
+    lastRow = startRow + desired - 1
+
+    For r = startRow To lastRow
+        epTxt = Trim$(CStr(ws.Cells(r, "A").Value))
+        If InStr(1, epTxt, "EP ", vbTextCompare) = 1 Then
+            On Error Resume Next: epNum = CLng(Trim$(Mid$(epTxt, 4))): On Error GoTo 0
+            
+            ' Pokud existuje hodnocení v dictionary, zapíšeme ho
+            If epNum > 0 And dict.Exists(CStr(epNum)) Then
+                ws.Cells(r, "B").NumberFormat = "General"
+                ws.Cells(r, "B").Value2 = CDbl(dict(CStr(epNum)))
+                cnt = cnt + 1
+            Else
+                ' Pokud ne, buňku vyčistíme (bude připravena k vyplnění)
+                ws.Cells(r, "B").ClearContents
+            End If
+        End If
+    Next r
+
+    ' 3) Formátování na čísla
+    ForceNumericGeneral ws.Range(ws.Cells(startRow, "B"), ws.Cells(lastRow, "B"))
+
+    ApplyEpisodesFromLine = cnt
+End Function
+
+Private Function ApplyCategoriesFromLine(ws As Worksheet, ByVal categoriesLine As String) As Long
+    Dim parts() As String, i As Long, cnt As Long
+    parts = Split(categoriesLine, ", ")
+
+    Dim lastRow As Long: lastRow = ws.Cells(ws.Rows.count, "D").End(xlUp).row
+
+    For i = LBound(parts) To UBound(parts)
+        Dim g As String, pArrow As Long, leftPart As String, rightPart As String
+        g = Trim$(parts(i))
+        If g = "" Then GoTo NextI
+        pArrow = InStr(1, g, "->", vbTextCompare)
+        If pArrow = 0 Then GoTo NextI
+        leftPart = Trim$(left$(g, pArrow - 1))
+        rightPart = Trim$(Mid$(g, pArrow + 2))
+
+        Dim v As Variant: v = ParseRating(rightPart)
+        If IsError(v) Then GoTo NextI
+
+        Dim names() As String, j As Long
+        names = Split(leftPart, "/")
+        For j = LBound(names) To UBound(names)
+            Dim nm As String: nm = Trim$(names(j))
+            If nm <> "" Then
+                Dim rr As Range
+                Set rr = ws.Range("D3:D" & lastRow).Find(What:=nm, LookIn:=xlValues, LookAt:=xlWhole, MatchCase:=False)
+                If Not rr Is Nothing Then
+                    ws.Cells(rr.row, "E").NumberFormat = "General"
+                    ws.Cells(rr.row, "E").Value2 = CDbl(v)
+                    cnt = cnt + 1
+                End If
+            End If
+        Next j
+NextI:
+    Next i
+
+    ForceNumericGeneral ws.Range("E3:E" & lastRow)
+
+    ApplyCategoriesFromLine = cnt
+End Function
+
+Private Sub ForceNumericGeneral(ByVal rng As Range)
+    Dim C As Range, s As String, decSep As String
+    If rng Is Nothing Then Exit Sub
+
+    decSep = Application.DecimalSeparator
+    rng.NumberFormat = "General"
+
+    For Each C In rng.Cells
+        If Not IsEmpty(C.Value) Then
+            s = Trim$(CStr(C.Value))
+            If Right$(s, 1) = "," Or Right$(s, 1) = "." Then s = left$(s, Len(s) - 1)
+            s = Replace$(Replace$(s, ".", decSep), ",", decSep)
+
+            If IsNumeric(s) Then
+                On Error Resume Next
+                C.NumberFormat = "General"
+                C.Value2 = CDbl(s)
+                On Error GoTo 0
+            End If
+        End If
+    Next C
+
+    rng.NumberFormat = "General"
+End Sub
+
+' ====================================================================================================================
+' ===================================  SEKCE: EXPORT PRO AI RECENZI (FINÁLNÍ VERZE 4.1) ================================
+' ====================================================================================================================
+
+' ********************************************************************************************************************
+' * HLAVNÍ PROCEDURA PRO VYTVOŘENÍ PROMPTU PRO AI (BEZ WIKIPEDIE)                                                    *
+' ********************************************************************************************************************
+Public Sub ExportReviewForAI()
+    ' --- Inicializace ---
+    Dim ws As Worksheet
+    Set ws = ThisWorkbook.Sheets("HODNOCENÍ ANIME")
+
+    ' --- Deklarace proměnných ---
+    Dim animeName As String, notesContent As String
+    Dim personalNotes As String
+    Dim finalRatingFormatted As String, fullEpisodeList As String, fullCategoryList As String
+
+    ' --- Načtení základních dat ---
+    animeName = Trim(CStr(ws.Range("A1").Value))
+    If animeName = "" Or animeName = "N/A" Then
+        MsgBox "Upozornění: Název anime v buňce A1 je prázdný nebo neplatný.", vbExclamation
+        Exit Sub
+    End If
+
+    ' --- Sběr dat z Excelu ---
+    On Error Resume Next
+    notesContent = Trim(CStr(ws.OLEObjects("txtPoznamky").Object.text))
+    On Error GoTo 0
+    If notesContent = "" Then notesContent = "Žádné poznámky."
+
+    ' Osobní poznámky (analytický kontext je nyní přiložen jako soubor)
+    personalNotes = notesContent
+    If personalNotes = "" Then personalNotes = "Žádné osobní poznámky."
+
+    ' Sestavení detailního seznamu hodnocení epizod
+    fullEpisodeList = ""
+    Dim lastEpisodeRow As Long: lastEpisodeRow = ws.Cells(ws.Rows.count, "A").End(xlUp).row
+    Dim episodeRow As Long
+    For episodeRow = 3 To lastEpisodeRow
+        Dim epNumberText As String: epNumberText = Trim(CStr(ws.Cells(episodeRow, "A").Value))
+        Dim epRating As Variant: epRating = ws.Cells(episodeRow, "B").Value
+        If (InStr(1, epNumberText, "EP ") = 1) And (IsNumeric(epRating) And CDbl(epRating) >= 1 And CDbl(epRating) <= 10) Then
+            fullEpisodeList = fullEpisodeList & "- " & epNumberText & ": " & FormatNumberWithTrimmedZeros(CDbl(epRating)) & "/10" & vbCrLf
+        End If
+    Next episodeRow
+    If fullEpisodeList = "" Then fullEpisodeList = "Žádná data k hodnocení epizod."
+
+    ' Sestavení detailního seznamu hodnocení kategorií
+    fullCategoryList = ""
+    Dim lastCategoryRow As Long: lastCategoryRow = ws.Cells(ws.Rows.count, "D").End(xlUp).row
+    Dim categoryRow As Long
+    For categoryRow = 3 To lastCategoryRow
+        Dim categoryName As String: categoryName = Trim(CStr(ws.Cells(categoryRow, "D").Value))
+        Dim categoryRating As Variant: categoryRating = ws.Cells(categoryRow, "E").Value
+        
+        Dim includeCategory As Boolean
+        includeCategory = True
+        Dim uCatName As String
+        uCatName = UCase$(categoryName)
+        
+        If uCatName = "OP" Or uCatName = "ED" Then
+            includeCategory = False
+        ElseIf uCatName = "OST" Then
+            If IsNumeric(categoryRating) Then
+                If CDbl(categoryRating) < 8.5 Then
+                    includeCategory = False
+                End If
+            End If
+        End If
+        
+        If includeCategory And (Not IsEmpty(categoryName)) And (IsNumeric(categoryRating) And CDbl(categoryRating) >= 1 And CDbl(categoryRating) <= 10) Then
+            fullCategoryList = fullCategoryList & "- " & categoryName & ": " & FormatNumberWithTrimmedZeros(CDbl(categoryRating)) & "/10" & vbCrLf
+        End If
+    Next categoryRow
+    If fullCategoryList = "" Then fullCategoryList = "Žádná data k hodnocení kategorií."
+    
+    ' Načtení finálního hodnocení
+    Dim tempVal As Variant: tempVal = ws.Range("G24").Value
+    If IsError(tempVal) Or IsEmpty(tempVal) Then finalRatingFormatted = "N/A" Else finalRatingFormatted = FormatNumberWithTrimmedZeros(CDbl(tempVal)) & "/10"
+
+    ' --- Sestavení finálního promptu ---
+    Dim promptTemplate As String
+    promptTemplate = GetPromptInstructionsTemplate()
+    
+    Dim inspirationalReviews As String: inspirationalReviews = GetSpecificReviews()
+    If left(inspirationalReviews, 5) = "Chyba" Then MsgBox inspirationalReviews, vbCritical: Exit Sub
+
+    ' Nahrazení zástupných symbolů skutečnými daty
+    Dim finalPrompt As String
+    finalPrompt = Replace(promptTemplate, "{inspirationalReviews}", inspirationalReviews)
+    finalPrompt = Replace(finalPrompt, "{animeName}", animeName)
+    finalPrompt = Replace(finalPrompt, "{personalNotes}", personalNotes)
+    finalPrompt = Replace(finalPrompt, "{finalRating}", finalRatingFormatted)
+    finalPrompt = Replace(finalPrompt, "{fullEpisodeList}", Trim(fullEpisodeList))
+    finalPrompt = Replace(finalPrompt, "{fullCategoryList}", Trim(fullCategoryList))
+    
+    ' --- Zkopírování do schránky a oznámení ---
+    CopyToClipboard finalPrompt
+    
+    ' --- Export analytického kontextu jako .md soubor ---
+    ExportAnalyticalContextAsMarkdown animeName
+End Sub
+
+' ********************************************************************************************************************
+' * FUNKCE, KTERÁ VRACÍ ŠABLONU PROMPTU (BEZ WIKIPEDIE)                                                              *
+' ********************************************************************************************************************
+Private Function GetPromptInstructionsTemplate() As String
+    Dim p1 As String, p2 As String, p3 As String, p4 As String
+    
+    p1 = "Jsi můj osobní recenzent anime s vytříbeným a dospělým stylem. Píšeš recenze MÝM hlasem, jako bych je psal já sám. Tvým úkolem je na základě poskytnutých dat vytvořit narativní recenzi, která bude splňovat následující pravidla." & vbCrLf & vbCrLf & _
+         "### HLAVNÍ CÍL A ABSOLUTNÍ PRIORITA:" & vbCrLf & _
+         "DÉLKA VÝSLEDNÉ RECENZE MUSÍ BÝT VŽDY STRIKTNĚ MEZI 215 A 230 SLOVY!" & vbCrLf & _
+         "- Tento limit je kritický. Před odesláním výstupu slovo po slově spočítej celou recenzi (včetně názvu a čísel hodnocení) a uprav text tak, aby se vešel do rozmezí 215 až 230 slov. Ani o slovo méně, ani o slovo více." & vbCrLf & vbCrLf & _
+         "### SYSTÉM HODNOCENÍ (PRO TVŮJ KONTEXT):" & vbCrLf & _
+         "Začínám na hodnocení 7,5/10 (pro kategorie a epizody, FH je vždy celé číslo) a podle mých pocitů a kvality díla se skóre pohybuje nahoru nebo dolů. Maximální hodnocení je 10." & vbCrLf & _
+         "Hodnotící škála:" & vbCrLf & _
+         "- 10: Peak story/enjoyment (naprosté mistrovství, vrcholný zážitek)" & vbCrLf & _
+         "- 9: High above average story/enjoyment (vysoce nadprůměrné)" & vbCrLf & _
+         "- 8: Slightly above average story/enjoyment (mírně nadprůměrné)" & vbCrLf & _
+         "- 7: Average story; below average enjoyment (průměrný příběh, podprůměrná zábava)" & vbCrLf & _
+         "- 6: Bad story/didn't enjoy (špatný příběh, nebavilo mě)" & vbCrLf & _
+         "- 5: Wasting time (pocit promarněného času)" & vbCrLf & vbCrLf & _
+         "Kategorie a jejich váhy (určují mé osobní preference, nejvíce si cením příběhu, pobavení, emocí a hlavní postavy):" & vbCrLf & _
+         "Animace = 2, CGI = 1.8, MC = 3, Vedlejší postavy = 2.5, Waifu = 1.5, Plot = 4, Pacing = 1.5, Story Conclusion = 1.5, Originalita = 2.5, Emoce = 3.5, Enjoyment = 4, OP = 1, ED = 0.5, OST = 2"
+
+    p2 = "### PRAVIDLA PRO STYL A FORMÁT RECENZE:" & vbCrLf & _
+         "1. **Začátek**: Vždy začni recenzi tučným názvem daného anime (např. **Lord of Mysteries**), který plynule včleň do první věty jako její součást." & vbCrLf & _
+         "2. **Žádné úvodní šablony**: Vyhni se ohraným frázím typu ""vás zavede do..."", ""nás zavádí..."", ""představuje nám..."" nebo oslovování čtenáře v druhé osobě. První věta musí být výstižná charakteristika anime (např. ""Berserk (1997) je surové středověké válečné drama"" nebo ""Slime Diaries je ultimátní Low Cortisol Anime""), NE tvá reakce (nepiš ""mě okamžitě uhranul"" ani ""mě uvrhl do""). Začni tím, ČÍM anime je, ne tím, jak na tebe působilo." & vbCrLf & _
+         "3. **Plynulé včlenění hodnocení s důvodem**: Hodnocení vkládej přirozeně do textu. Lze použít A) ""pěkná Animace (8/10)"" nebo B) ""pěkné vizuály (Animace 8/10)"" a normálně skloňovat. Lze využít i kombinace, např.: ""Petra je silná a hýbe dějem (MC 8/10, Waifu 7,5/10)"". U každého hodnocení STRUČNĚ uveď důvod, proč je skóre takové (co se mi líbilo/vadilo). Pokud některá kategorie v datech chybí nebo nemá hodnocení, prostě ji vynech a nezmiňuj ji. Na konci vždy uveď finální hodnocení, např.: `solidní FH 8/10`. Enjoyment nemusí být vždy na konci. Pokud většina kategorií je pozitivní a samy vysvětlují proč, stačí Enjoyment stručně na závěr. Pokud je Enjoyment výrazně ovlivněn něčím, co ostatní kategorie nepokrývají, věnuj mu více prostoru a umísti ho tam, kde to dává smysl ve flow. FH uveď vždy na konci v jedné větě." & vbCrLf & _
+         "4. **Osobní tón ve spisovné češtině**: Piš dospělým a poutavým stylem ve spisovné češtině. Recenze musí znít jako MŮJ osobní názor, ne jako článek pro blog. Používej formulace typu ""ocenil jsem"", ""potěšilo mě"", ""vadilo mi"", ""zaujalo mě"". Vyhni se přehnaně vznosným a neobvyklým metaforám a nepoužívej doslovné překlady z angličtiny, které v češtině nedávají smysl (např. slovo ""kopinice"" neexistuje). NIKDY nepoužívej em dash (pomlčku ""—""), místo ní použij čárku, středník nebo tečku."
+
+    p3 = "5. **Osobní pocity nad deskripcí**: Při limitu ~220 slov upřednostni MÉ osobní pocity, verdikty a konkrétní reakce z poznámek nad obecným popisem atmosféry nebo děje. Atmosféru a premisu zmiň stručně (1-2 věty), zbytek prostoru věnuj hodnocení kategorií a důvodům pro ně. Pokud v mých poznámkách reaguji na něco neobvyklého nebo překvapivého, co se v anime běžně nevídá, upřednostni tuto reakci před obecnějšími tématy (např. romance)." & vbCrLf & _
+         "6. **Zákaz uvádění čísel epizod**: Do textu recenze nikdy nepiš konkrétní čísla epizod (např. ""v desáté epizodě"" nebo ""v EP 10""). Události popiš plynule jako součást charakterového vývoje či děje." & vbCrLf & _
+         "7. **Vedlejší postavy podle důležitosti**: Pokud je postav vícero, shrň je stručně. Pokud je jich málo a jsou pro příběh velmi důležité, můžeš jim (případně jedné či dvěma) věnovat více slov a podrobněji je popsat." & vbCrLf & _
+         "8. **Spoiler-free přístup**: Celá recenze by měla být čitelná i pro někoho, kdo anime neviděl. U všech kategorií (nejen Plot a Story Conclusion) popisuj události abstraktně a bez konkrétních spoilerů. Zaměř se na hlavní premisu, zajímavé sublinky a celkový dopad, ne na konkrétní dějové zvraty." & vbCrLf & _
+         "9. **Žádné přehnané superlativy a vymyšlené pocity**: NIKDY nepoužívej slova jako ""nesmírně"", ""monumentálně"", ""naprosto"", ""absolutně"" nebo ""fantasticky"", pokud nejsou přímo podloženy mými poznámkami. NIKDY nevymýšlej pocity, které v mých poznámkách nejsou (pokud píšu ""underwhelming"", nepiš ""uhranul mě""). Intenzita tvého hodnocení musí přesně odpovídat intenzitě mých poznámek." & vbCrLf & _
+         "10. **Skóre = verdikt**: Číslo hodnocení samo o sobě vyjadřuje kvalitu. Neplýtvej slovy na přídavná jména vedle skóre. 10/10 nepotřebuje ""fenomenální"", 9/10 nepotřebuje ""fantastický"", 7/10 nepotřebuje ""nesmírně"". Místo zbytečných přívlastků popiš CO konkrétně vynikalo nebo vadilo." & vbCrLf & _
+         "11. **Emoce = průměr (kontext)**: Hodnocení kategorie Emoce je průměr přes celý seriál. Tuto informaci nepiš přímo do recenze, ale měj ji na paměti. Pokud je skóre průměrné u jinak silného anime, formuluj to přirozeně (např. ""gradují pozvolna, ale v klíčových momentech zasáhnou""). NIKDY nepiš superlativy jako ""nejmrazivější"" u průměrného skóre."
+
+    p4 = "### INSPIRAČNÍ RECENZE (vzor STRUKTURY a TÓNU, nekopíruj z nich formulace, pouze studuj jak přirozeně začleňují hodnocení a proč zní osobně):" & vbCrLf & vbCrLf & _
+         "{inspirationalReviews}" & vbCrLf & _
+         "### VSTUPNÍ DATA PRO AKTUÁLNÍ RECENZI:" & vbCrLf & vbCrLf & _
+         "**NÁZEV ANIME:**" & vbCrLf & "{animeName}" & vbCrLf & vbCrLf & _
+         "**MOJE OSOBNÍ POZNÁMKY (PRIMÁRNÍ zdroj, recenze musí odrážet MÉ pocity a reakce):**" & vbCrLf & "{personalNotes}" & vbCrLf & vbCrLf & _
+         "**ANALYTICKÝ KONTEXT DÍLA (SEKUNDÁRNÍ zdroj):**" & vbCrLf & _
+         "Analytický kontext je přiložen jako soubor (.md). Čerpej z něj POUZE faktické detaily (jména, názvy lokací, národů), které v mých poznámkách chybí. NIKDY neparafrázuj analytický kontext jako vlastní názor. Tvé verdikty musí vycházet výhradně z mých osobních poznámek výše." & vbCrLf & vbCrLf & _
+         "**DETAILNÍ HODNOCENÍ EPIZOD:**" & vbCrLf & "{fullEpisodeList}" & vbCrLf & _
+         "**DETAILNÍ HODNOCENÍ KATEGORIÍ:**" & vbCrLf & "{fullCategoryList}" & vbCrLf & _
+         "**FINÁLNÍ VERDIKT:**" & vbCrLf & "{finalRating}" & vbCrLf & vbCrLf & _
+         "ZÁVĚREČNÉ PŘIPOMENUTÍ: Napiš recenzi v ČEŠTINĚ. Dodrž striktně rozsah 215 až 230 slov! Recenze musí být spoiler-free. Zkontroluj a spočítej si slova před vygenerováním výsledku."
+         
+    GetPromptInstructionsTemplate = p1 & vbCrLf & vbCrLf & p2 & vbCrLf & vbCrLf & p3 & vbCrLf & vbCrLf & p4
+End Function
+
+' ********************************************************************************************************************
+' * HELPER FUNKCE PRO WORD›MARKDOWN KONVERZI                                                                         *
+' ********************************************************************************************************************
+
+' Extrahuje text z odstavce se zachováním tučného a kurzívy (inspirováno extract_markdown_text z Python skriptu)
+Private Function ExtractMarkdownFromRuns(ByVal para As Object) As String
+    Dim mdText As String
+    mdText = ""
+    Dim r As Object
+    Dim runText As String
+    Dim isBold As Boolean
+    Dim isItalic As Boolean
+    Dim coreText As String
+    Dim lSpace As String
+    Dim rSpace As String
+    
+    
+    ' Iterace přes Words (formátované bloky textu)
+    For Each r In para.Range.Words
+        runText = r.text
+        If Len(runText) = 0 Then GoTo NextRun
+        
+        ' Detekce formátování
+        isBold = False
+        isItalic = False
+        On Error Resume Next
+        isBold = r.Font.Bold
+        isItalic = r.Font.Italic
+        On Error GoTo 0
+        
+        ' Odeber řídicí znaky
+        runText = Replace(runText, Chr(7), "")
+        runText = Replace(runText, Chr(13), "")
+        runText = Replace(runText, Chr(11), " ")  ' Vertical tab = soft line break
+        
+        coreText = Trim(runText)
+        If Len(coreText) = 0 Then
+            mdText = mdText & runText
+            GoTo NextRun
+        End If
+        
+        ' Zachovej leading/trailing spaces
+        If Len(runText) > Len(LTrim(runText)) Then
+            lSpace = left(runText, Len(runText) - Len(LTrim(runText)))
+        Else
+            lSpace = ""
+        End If
+        If Len(runText) > Len(RTrim(runText)) Then
+            rSpace = Right(runText, Len(runText) - Len(RTrim(runText)))
+        Else
+            rSpace = ""
+        End If
+        
+        ' Aplikuj markdown formátování
+        If isBold And isItalic Then
+            coreText = "***" & coreText & "***"
+        ElseIf isBold Then
+            coreText = "**" & coreText & "**"
+        ElseIf isItalic Then
+            coreText = "*" & coreText & "*"
+        End If
+        
+        mdText = mdText & lSpace & coreText & rSpace
+NextRun:
+    Next r
+    
+    ExtractMarkdownFromRuns = mdText
+End Function
+
+' Odebere koncové řídicí znaky (CR, LF, BEL)
+Private Function TrimControlChars(ByVal s As String) As String
+    Dim result As String
+    result = s
+    ' Odebrat z konce
+    Do While Len(result) > 0
+        Dim lastChar As String
+        lastChar = Right(result, 1)
+        If lastChar = Chr(13) Or lastChar = Chr(10) Or lastChar = Chr(7) Or lastChar = vbCr Or lastChar = vbLf Then
+            result = left(result, Len(result) - 1)
+        Else
+            Exit Do
+        End If
+    Loop
+    TrimControlChars = result
+End Function
+
+' Detekuje, zda je odstavec celý tučný (= sub-nadpis bez heading stylu)
+Private Function IsAllBoldParagraph(ByVal para As Object) As Boolean
+    Dim r As Object
+    Dim hasTextRuns As Boolean
+    hasTextRuns = False
+    
+    For Each r In para.Range.Words
+        If Len(Trim(Replace(r.text, Chr(13), ""))) > 0 Then
+            hasTextRuns = True
+            On Error Resume Next
+            Dim b As Boolean
+            b = r.Font.Bold
+            On Error GoTo 0
+            If Not b Then
+                IsAllBoldParagraph = False
+                Exit Function
+            End If
+        End If
+    Next r
+    
+    IsAllBoldParagraph = hasTextRuns
+End Function
+
+' Odebere markdown formátování (** a *) pro použití v heading textu
+Private Function StripMarkdownFormatting(ByVal s As String) As String
+    Dim result As String
+    result = s
+    result = Replace(result, "***", "")
+    result = Replace(result, "**", "")
+    result = Replace(result, "*", "")
+    StripMarkdownFormatting = result
+End Function
+
+' ********************************************************************************************************************
+' * FUNKCE PRO EXPORT ANALYTICKÉHO KONTEXTU Z WORDU DO MARKDOWN SOUBORU                                              *
+' ********************************************************************************************************************
+Private Sub ExportAnalyticalContextAsMarkdown(ByVal animeName As String)
+    On Error GoTo ErrHandler
+    
+    ' --- Cesta ke zdrojovým souborům ---
+    Dim basePath As String
+    basePath = "C:\AL\Anime hodnocení a rozbory\Faktické rozbory (Gemini AI)\Vytvořené faktické rozbory\"
+    
+    ' --- Sanitizace názvu souboru ---
+    Dim sanitizedName As String
+    sanitizedName = animeName
+    sanitizedName = Replace(sanitizedName, ":", "_")
+    sanitizedName = Replace(sanitizedName, "/", " ")
+    sanitizedName = Replace(sanitizedName, "\", " ")
+    sanitizedName = Replace(sanitizedName, """", "'")
+    sanitizedName = Replace(sanitizedName, "?", "")
+    sanitizedName = Replace(sanitizedName, "*", "")
+    sanitizedName = Replace(sanitizedName, "<", "")
+    sanitizedName = Replace(sanitizedName, ">", "")
+    sanitizedName = Replace(sanitizedName, "|", "")
+    Do While InStr(sanitizedName, "  ") > 0: sanitizedName = Replace(sanitizedName, "  ", " "): Loop
+    sanitizedName = Trim(sanitizedName)
+    
+    ' --- Hledání .docx souboru ---
+    Dim docxPath As String
+    docxPath = basePath & sanitizedName & ".docx"
+    
+    If Dir(docxPath) = "" Then
+        ' Zkus alternativní sanitizaci (: › mezera místo podtržítka)
+        Dim altName As String
+        altName = Replace(animeName, ":", " ")
+        altName = Replace(altName, "/", " ")
+        altName = Replace(altName, "\", " ")
+        altName = Replace(altName, """", "'")
+        altName = Replace(altName, "?", "")
+        altName = Replace(altName, "*", "")
+        altName = Replace(altName, "<", "")
+        altName = Replace(altName, ">", "")
+        altName = Replace(altName, "|", "")
+        Do While InStr(altName, "  ") > 0: altName = Replace(altName, "  ", " "): Loop
+        altName = Trim(altName)
+        docxPath = basePath & altName & ".docx"
+        
+        If Dir(docxPath) = "" Then
+            MsgBox "Analytický rozbor nebyl nalezen:" & vbCrLf & _
+                   basePath & sanitizedName & ".docx" & vbCrLf & vbCrLf & _
+                   "Prompt byl zkopírován do schránky bez analytického kontextu." & vbCrLf & _
+                   "Můžeš soubor přiložit ručně v Gemini chatu.", vbExclamation, "Rozbor nenalezen"
+            Exit Sub
+        End If
+    End If
+    
+    ' --- Otevření Wordu a konverze ---
+    Dim wdApp As Object
+    Dim wdDoc As Object
+    Dim mdContent As String
+    Dim wasWordOpen As Boolean
+    
+    Dim origScreenUpdating As Boolean
+    Dim origDisplayStatusBar As Boolean
+    
+    ' Zkus použít existující instanci Wordu
+    On Error Resume Next
+    Set wdApp = GetObject(, "Word.Application")
+    If wdApp Is Nothing Then
+        Set wdApp = CreateObject("Word.Application")
+        wasWordOpen = False
+    Else
+        wasWordOpen = True
+        origScreenUpdating = wdApp.ScreenUpdating
+        origDisplayStatusBar = wdApp.DisplayStatusBar
+        wdApp.ScreenUpdating = False
+        wdApp.DisplayStatusBar = False
+    End If
+    On Error GoTo ErrHandler
+    
+    If Not wasWordOpen Then wdApp.Visible = False
+    Set wdDoc = wdApp.Documents.Open(FileName:=docxPath, ReadOnly:=True, AddToRecentFiles:=False, Visible:=False)
+    
+    ' --- Blesková konverze do Markdownu (bez formátování slov) ---
+    mdContent = ""
+    
+    Dim tblPositions() As Long
+    Dim tblMarkdown() As String
+    Dim tblCount As Long
+    tblCount = wdDoc.Tables.count
+    
+    If tblCount > 0 Then
+        ReDim tblPositions(1 To tblCount, 1 To 2)
+        ReDim tblMarkdown(1 To tblCount)
+        
+        Dim tbl As Object
+        Dim tblIdx As Long
+        For tblIdx = 1 To tblCount
+            Set tbl = wdDoc.Tables(tblIdx)
+            tblPositions(tblIdx, 1) = tbl.Range.Start
+            tblPositions(tblIdx, 2) = tbl.Range.End
+            
+            Dim tblMd As String: tblMd = ""
+            Dim rowObj As Object
+            Dim cellObj As Object
+            Dim rowIdx As Long: rowIdx = 0
+            Dim cellText As String
+            Dim rowLine As String
+            Dim colCount As Long
+            
+            For Each rowObj In tbl.Rows
+                rowLine = "|"
+                colCount = 0
+                For Each cellObj In rowObj.Cells
+                    cellText = Trim(cellObj.Range.text)
+                    cellText = Replace(cellText, Chr(7), "")
+                    cellText = Replace(cellText, Chr(13), " ")
+                    cellText = Replace(cellText, vbCr, " ")
+                    cellText = Replace(cellText, vbLf, " ")
+                    Do While InStr(cellText, "  ") > 0: cellText = Replace(cellText, "  ", " "): Loop
+                    rowLine = rowLine & " " & Trim(cellText) & " |"
+                    colCount = colCount + 1
+                Next cellObj
+                tblMd = tblMd & rowLine & vbCrLf
+                
+                If rowIdx = 0 And colCount > 0 Then
+                    Dim sep As String: sep = "|"
+                    Dim ci As Long
+                    For ci = 1 To colCount: sep = sep & " --- |": Next ci
+                    tblMd = tblMd & sep & vbCrLf
+                End If
+                rowIdx = rowIdx + 1
+            Next rowObj
+            tblMarkdown(tblIdx) = tblMd
+        Next tblIdx
+    End If
+    
+    ' --- Zpracování odstavců ---
+    Dim para As Object
+    Dim paraStart As Long
+    Dim paraText As String
+    Dim styleName As String
+    Dim isInsideTable As Boolean
+    Dim lastTableIdx As Long: lastTableIdx = 0
+    
+    For Each para In wdDoc.Paragraphs
+        paraStart = para.Range.Start
+        
+        isInsideTable = False
+        If tblCount > 0 Then
+            Dim ti As Long
+            For ti = 1 To tblCount
+                If paraStart >= tblPositions(ti, 1) And paraStart < tblPositions(ti, 2) Then
+                    isInsideTable = True
+                    If ti <> lastTableIdx Then
+                        mdContent = mdContent & vbCrLf & tblMarkdown(ti) & vbCrLf
+                        lastTableIdx = ti
+                    End If
+                    Exit For
+                End If
+            Next ti
+        End If
+        
+        If isInsideTable Then GoTo NextPara
+        
+        ' Rychlé extrahování textu bez formátování
+        paraText = para.Range.text
+        
+        ' Vyčistit VŠECHNY řídicí znaky z celého odstavce (nejen z konce)
+        paraText = Replace(paraText, Chr(1), "")   ' Odstraní SOH (červený blok v Markdownu)
+        paraText = Replace(paraText, Chr(7), "")   ' Odstraní BEL (konec buňky tabulky)
+        paraText = Replace(paraText, Chr(11), " ") ' Nahradí soft-return mezerou
+        paraText = Replace(paraText, Chr(13), "")  ' Odstraní koncový CR
+        paraText = Replace(paraText, Chr(10), "")  ' Odstraní LF
+        paraText = Trim(paraText)
+        
+        If Len(paraText) = 0 Then
+            mdContent = mdContent & vbCrLf
+            GoTo NextPara
+        End If
+        
+        styleName = para.Style.NameLocal
+        
+        Select Case True
+            Case styleName Like "*Heading 1*" Or styleName Like "*Nadpis 1*"
+                mdContent = mdContent & "## " & Trim(paraText) & vbCrLf & vbCrLf
+            Case styleName Like "*Heading 2*" Or styleName Like "*Nadpis 2*"
+                mdContent = mdContent & "## " & Trim(paraText) & vbCrLf & vbCrLf
+            Case styleName Like "*Heading 3*" Or styleName Like "*Nadpis 3*"
+                mdContent = mdContent & "### " & Trim(paraText) & vbCrLf & vbCrLf
+            Case styleName Like "*Heading 4*" Or styleName Like "*Nadpis 4*"
+                mdContent = mdContent & "#### " & Trim(paraText) & vbCrLf & vbCrLf
+            Case styleName Like "*List*" Or styleName Like "*Seznam*" Or styleName Like "*Bullet*" Or styleName Like "*Odr*"
+                mdContent = mdContent & "- " & paraText & vbCrLf
+            Case Else
+                ' Pokud je text extra krátký, mohl by to být nadpis, ale už nekontrolujeme bold. Necháme jako plain text.
+                mdContent = mdContent & paraText & vbCrLf & vbCrLf
+        End Select
+NextPara:
+    Next para
+    
+    ' --- Zavření dokumentu ---
+    wdDoc.Close SaveChanges:=False
+    Set wdDoc = Nothing
+    If Not wasWordOpen Then
+        wdApp.Quit
+    Else
+        ' Obnovíme původní stav UI Wordu
+        wdApp.ScreenUpdating = origScreenUpdating
+        wdApp.DisplayStatusBar = origDisplayStatusBar
+        wdApp.StatusBar = ""
+    End If
+    Set wdApp = Nothing
+    
+    ' --- Uložení jako .md ---
+    Dim downloadsPath As String
+    downloadsPath = Environ("USERPROFILE") & "\Downloads\"
+    Dim mdFileName As String
+    mdFileName = sanitizedName & " - Analytický rozbor.md"
+    Dim mdFilePath As String
+    mdFilePath = downloadsPath & mdFileName
+    
+    Dim stream As Object
+    Set stream = CreateObject("ADODB.Stream")
+    stream.Type = 2
+    stream.Charset = "UTF-8"
+    stream.Open
+    stream.WriteText mdContent
+    stream.SaveToFile mdFilePath, 2
+    stream.Close
+    Set stream = Nothing
+    
+    shell "explorer.exe /select,""" & mdFilePath & """", vbNormalFocus
+    Exit Sub
+
+ErrHandler:
+    Dim errDesc As String
+    errDesc = err.Description
+    
+    ' Uklid v případě chyby
+    On Error Resume Next
+    If Not wdDoc Is Nothing Then wdDoc.Close SaveChanges:=False
+    If Not wdApp Is Nothing Then
+        If Not wasWordOpen Then
+            wdApp.Quit
+        Else
+            wdApp.ScreenUpdating = origScreenUpdating
+            wdApp.DisplayStatusBar = origDisplayStatusBar
+            wdApp.StatusBar = ""
+        End If
+    End If
+    On Error GoTo 0
+    
+    MsgBox "Chyba při exportu analytického kontextu:" & vbCrLf & _
+           errDesc & vbCrLf & vbCrLf & _
+           "Prompt byl zkopírován do schránky bez analytického kontextu.", vbExclamation, "Chyba exportu"
+End Sub
+
+' ********************************************************************************************************************
+' * FUNKCE PRO NAČTENÍ SPECIFICKÝCH INSPIRAČNÍCH RECENZÍ Z KOMENTÁŘŮ (POUZE TEXT POZNÁMEK)                             *
+' ********************************************************************************************************************
+Private Function GetSpecificReviews() As String
+    Dim titlesToFind As Variant: titlesToFind = Array("Sentenced to Be a Hero, S01", "Secrets of the Silent Witch", "Log Horizon, S01")
+    Dim result As String: result = ""
+    
+    Dim ws As Worksheet
+    On Error Resume Next
+    Set ws = ThisWorkbook.Sheets("ANIME LIST")
+    On Error GoTo 0
+    If ws Is Nothing Then GetSpecificReviews = "Chyba: List 'ANIME LIST' nebyl nalezen.": Exit Function
+    
+    Dim title As Variant
+    For Each title In titlesToFind
+        Dim foundRange As Range: Set foundRange = ws.Columns("C:C").Find(What:=CStr(title), LookIn:=xlValues, LookAt:=xlWhole, MatchCase:=False)
+        If Not foundRange Is Nothing Then
+            Dim targetCell As Range: Set targetCell = ws.Cells(foundRange.row, "K")
+            If Not targetCell.Comment Is Nothing Then
+                ' NOVÁ LOGIKA: Extrahujeme pouze text poznámky
+                Dim fullCommentText As String: fullCommentText = targetCell.Comment.text
+                Dim narrativeText As String: narrativeText = ExtractReviewNotes(fullCommentText)
+                result = result & "„" & CStr(title) & "“" & vbCrLf & narrativeText & vbCrLf & vbCrLf
+            Else
+                result = result & "Chyba: Komentář pro '" & CStr(title) & "' nebyl nalezen." & vbCrLf & vbCrLf
+            End If
+        Else
+            result = result & "Chyba: Anime '" & CStr(title) & "' nebylo nalezeno." & vbCrLf & vbCrLf
+        End If
+    Next title
+    
+    If Trim(result) = "" Then GetSpecificReviews = "Chyba: Žádná z inspiračních recenzí nebyla nalezena." Else GetSpecificReviews = Trim(result)
+End Function
+
+' ********************************************************************************************************************
+' * NOVÁ POMOCNÁ FUNKCE K EXTRAKCI POUZE NARATIVNÍ ČÁSTI RECENZE Z KOMENTÁŘE                                          *
+' ********************************************************************************************************************
+Private Function ExtractReviewNotes(ByVal fullText As String) As String
+    Dim startPos As Long, endPos As Long
+    Dim startMarker As String, endMarker As String
+    
+    startMarker = "Poznámky:"
+    endMarker = "Hodnocení epizod:"
+    
+    ' Najdi začátek textu (za "Poznámky:")
+    startPos = InStr(1, fullText, startMarker, vbTextCompare)
+    If startPos = 0 Then
+        ExtractReviewNotes = "(Text poznámek v komentáři nenalezen)"
+        Exit Function
+    End If
+    startPos = startPos + Len(startMarker)
+    
+    ' Najdi konec textu (před "Hodnocení epizod:")
+    endPos = InStr(startPos, fullText, endMarker, vbTextCompare)
+    
+    ' Pokud konečný marker není nalezen, vezmi vše až do konce
+    If endPos = 0 Then
+        ExtractReviewNotes = Trim(Mid(fullText, startPos))
+    Else
+        ExtractReviewNotes = Trim(Mid(fullText, startPos, endPos - startPos))
+    End If
+End Function
+
+
+
+' ********************************************************************************************************************
+' * PROCEDURA PRO ZKOPÍROVÁNÍ TEXTU DO SCHRÁNKY                                                                      *
+' ********************************************************************************************************************
+Private Sub CopyToClipboard(ByVal textToCopy As String)
+    On Error GoTo err
+    Dim dataObj As Object: Set dataObj = CreateObject("new:{1C3B4210-F441-11CE-B9EA-00AA006B1A69}")
+    dataObj.SetText textToCopy
+    dataObj.PutInClipboard
+    Set dataObj = Nothing
+    Exit Sub
+err:
+    MsgBox "Chyba při kopírování do schránky.", vbCritical
+End Sub
+
+
+' ====================================================================================================================
+' ===================================   NOVÁ SEKCE: JIKAN API AUTOMATIZACE   =========================================
+' ====================================================================================================================
+
+' Hlavní procedura volaná změnou v A1
+Sub AutoFillEpisodesFromMAL()
+    Dim wsEval As Worksheet, wsList As Worksheet
+    Dim animeName As String
+    Dim foundRange As Range
+    Dim malURL As String, malID As String
+    Dim episodeCount As Long
+    
+    Set wsEval = ThisWorkbook.Sheets("HODNOCENÍ ANIME")
+    animeName = Trim(CStr(wsEval.Range("A1").Value))
+    
+    ' 1. Najít Anime v ANIME LIST
+    On Error Resume Next
+    Set wsList = ThisWorkbook.Sheets("ANIME LIST")
+    On Error GoTo 0
+    If wsList Is Nothing Then Exit Sub ' List neexistuje
+    
+    Set foundRange = wsList.Columns("C:C").Find(What:=animeName, LookIn:=xlValues, LookAt:=xlWhole, MatchCase:=False)
+    
+    If foundRange Is Nothing Then
+        ' Anime nenalezeno v seznamu - nic neděláme (uživatel ho možná teprve píše)
+        Exit Sub
+    End If
+    
+    ' 2. Získat URL z Hypertextového odkazu
+    If foundRange.Hyperlinks.count > 0 Then
+        malURL = foundRange.Hyperlinks(1).Address
+    Else
+        MsgBox "Anime '" & animeName & "' nalezeno v seznamu, ale chybí mu hypertextový odkaz na MAL.", vbExclamation
+        Exit Sub
+    End If
+    
+    ' 3. Extrahovat ID
+    malID = ExtractMalID(malURL)
+    If malID = "" Then
+        MsgBox "Nepodařilo se získat ID z odkazu: " & malURL, vbExclamation
+        Exit Sub
+    End If
+    
+    ' 4. Získat počet epizod z Jikan API
+    Application.StatusBar = "Zjišťuji počet epizod pro: " & animeName & "..."
+    episodeCount = GetEpisodeCountFromJikan(malID)
+    Application.StatusBar = False
+    
+    ' 5. Aplikovat změnu
+    If episodeCount > 0 Then
+        ' Zde voláme tvou existující funkci pro změnu mřížky
+        ResizeEpisodesGridAB wsEval, episodeCount
+        'MsgBox "Načten počet epizod: " & episodeCount, vbInformation
+    Else
+        MsgBox "API vrátilo neznámý počet epizod (Anime možná stále vychází nebo chyba API).", vbInformation
+    End If
+End Sub
+
+' Pomocná funkce: Vytáhne číslo ID z URL (např. .../anime/52991/...)
+Private Function ExtractMalID(ByVal url As String) As String
+    Dim parts() As String
+    Dim i As Long
+    
+    ' Normalizace lomítek
+    url = Replace(url, "\", "/")
+    parts = Split(url, "/")
+    
+    ' Hledáme část, která je čistě číselná a je za "anime" (nebo prostě číselná v URL struktuře MAL)
+    For i = LBound(parts) To UBound(parts)
+        If IsNumeric(parts(i)) And parts(i) <> "" Then
+            ' Jednoduchá heuristika: MAL ID je obvykle číslo v cestě
+            ExtractMalID = parts(i)
+            Exit Function
+        End If
+    Next i
+    ExtractMalID = ""
+End Function
+
+' Pomocná funkce: Zavolá API a vrátí počet epizod
+Private Function GetEpisodeCountFromJikan(ByVal malID As String) As Long
+    Dim http As Object
+    Dim jsonResponse As String
+    Dim episodes As Long
+    
+    Set http = CreateObject("MSXML2.XMLHTTP")
+    
+    On Error GoTo ErrorHandler
+    
+    ' Odeslání požadavku (synchronně)
+    http.Open "GET", "https://api.jikan.moe/v4/anime/" & malID, False
+    http.sEnd
+    
+    If http.status = 200 Then
+        jsonResponse = http.responseText
+        ' Jednoduchý parsing JSONu bez knihovny (hledáme "episodes":ČÍSLO)
+        episodes = ParseEpisodesFromJSON(jsonResponse)
+        GetEpisodeCountFromJikan = episodes
+    Else
+        ' Chyba komunikace
+        GetEpisodeCountFromJikan = 0
+    End If
+    
+    Exit Function
+
+ErrorHandler:
+    GetEpisodeCountFromJikan = 0
+End Function
+
+' Jednoduchý Regex parser pro nalezení hodnoty "episodes"
+Private Function ParseEpisodesFromJSON(ByVal json As String) As Long
+    Dim regEx As Object
+    Dim matches As Object
+    
+    Set regEx = CreateObject("VBScript.RegExp")
+    With regEx
+        .Global = False
+        .IgnoreCase = True
+        .MultiLine = True
+        ' Hledá vzor: "episodes": následované případnými mezerami a číslem
+        .Pattern = """episodes""\s*:\s*(\d+)"
+    End With
+    
+    If regEx.Test(json) Then
+        Set matches = regEx.Execute(json)
+        ParseEpisodesFromJSON = CLng(matches(0).SubMatches(0))
+    Else
+        ' Pokud je null nebo nenalezeno
+        ParseEpisodesFromJSON = 0
+    End If
+End Function
+
+' ********************************************************************************************************************
+' * AKTUALIZACE GEMINI PROMPTU DO BUŇKY Q2 (S ÚPRAVOU "S0X" -> "SEASON X")                                          *
+' ********************************************************************************************************************
+Sub AktualizujGeminiPrompt(ByVal animeName As String)
+    Dim ws As Worksheet
+    Dim fullText As String
+    
+    Set ws = ThisWorkbook.Sheets("HODNOCENÍ ANIME")
+    
+    ' --- NOVÁ ČÁST: ÚPRAVA NÁZVU (S0X -> SEASON X) ---
+    ' Příklad: "Bleach, S02" -> "Bleach SEASON 2"
+    ' Příklad: "Overlord, S04" -> "Overlord SEASON 4"
+    Dim regExName As Object
+    Set regExName = CreateObject("VBScript.RegExp")
+    With regExName
+        .Global = True
+        .IgnoreCase = True
+        ' Pattern hledá: čárka, mezera, S, volitelně nula (0?), a pak číslice (\d+)
+        .Pattern = ", S0?(\d+)"
+    End With
+    
+    ' Pokud se vzor najde, nahradí se slovem " SEASON " a nalezeným číslem ($1)
+    If regExName.Test(animeName) Then
+        animeName = regExName.Replace(animeName, " SEASON $1")
+    End If
+    ' --------------------------------------------------
+
+    ' Abychom se vyhnuli chybě "Too many line continuations", musíme text skládat po částech.
+    
+    ' 1. ČÁST: Úvod a instrukce
+    fullText = "Jsi analytik specializovaný na anime. Tvým úkolem je vytvořit detailní, striktně faktický a popisný rozbor díla [PLACEHOLDER]. " & _
+               "Tvůj výstup se bude skládat ze dvou oddělených částí: 1. Shrnutí Děje a 2. Deskriptivní Analýza Komponentů. " & _
+               "Ve druhé části se vyhni jakémukoli hodnocení nebo subjektivním soudům (např. ""dobrý"", ""špatný"", ""působivý""). " & _
+               "Pouze popisuj fakta a uváděj konkrétní příklady." & vbCrLf & vbCrLf
+               
+    ' 2. ČÁST: Shrnutí děje
+    fullText = fullText & "Část 1: Shrnutí Děje" & vbCrLf & _
+               "V této části shrň příběh s důrazem na kontext, zaznamenané emoce postav a popis klíčových akcí a konverzací. Formát přizpůsob podle typu díla." & vbCrLf & _
+               "A) Pro SERIÁL: Postupuj chronologicky po epizodách. Vždy používej číslování v rámci dané sezóny (EP 1, EP 2, …), nikoliv absolutní číslování napříč celým seriálem." & vbCrLf & _
+               "EP 1: [Popis děje, kontextu a klíčových momentů epizody.]" & vbCrLf & _
+               "EP 2: [Popis děje, kontextu a klíčových momentů epizody.]" & vbCrLf & _
+               "(Pokračuj pro všechny epizody)" & vbCrLf & _
+               "B) Pro FILM: Rozděl děj na tři logické části." & vbCrLf & _
+               "Úvodní část (expozice): [Popis výchozí situace, představení postav a nastolení ústředního konfliktu.]" & vbCrLf & _
+               "Střední část (konfrontace): [Popis hlavních překážek, dějových zvratů a vývoje konfliktu.]" & vbCrLf & _
+               "Závěrečná část (rozuzlení): [Popis vyvrcholení, řešení hlavního konfliktu a stavu postav na konci příběhu.]" & vbCrLf & vbCrLf
+
+    ' 3. ČÁST: Analýza komponentů (Začátek)
+    fullText = fullText & "Část 2: Deskriptivní Analýza Komponentů" & vbCrLf & _
+               "V této části proveď faktický rozbor jednotlivých komponentů díla. Tvým úkolem je popsat, ""jak"" a ""co"" je použito, nikoli ""jak dobře""." & vbCrLf & _
+               "Animace: Popiš použitý vizuální styl (např. realistický, stylizovaný, moe). Uveď příklady scén s vysokou plynulostí pohybu (např. souboje) a scén, kde je animace statičtější (např. dialogy). Zmiň práci s barvami a osvětlením v klíčových momentech." & vbCrLf & _
+               "CGI: Identifikuj, kde je CGI použito (např. vozidla, monstra, komplexní pozadí, davy). Popiš, jak je integrováno s tradiční 2D animací (je vizuálně oddělené, nebo se snaží splynout?)." & vbCrLf & _
+               "MC (Hlavní postava): Popiš výchozí stav hlavní postavy, její stanovený cíl nebo motivaci. Zmiň 2-3 klíčové události v příběhu, které formují její charakterový vývoj." & vbCrLf & _
+               "Vedlejší postavy: Popiš funkce nejdůležitějších vedlejších postav (např. mentor, rival, komická úleva, spojenec). Uveď, jakým konkrétním způsobem ovlivňují hlavní postavu nebo posouvají děj vpřed." & vbCrLf & _
+               "Waifu / Výrazné ženské postavy: Popiš klíčové ženské postavy. Zaměř se na jejich povahové rysy, design a jejich roli v příběhu (např. hybatelka děje, morální kompas, cíl hlavní postavy)." & vbCrLf & _
+               "Plot (Struktura příběhu): Popiš typ narativu (např. lineární, epizodický, s flashbacky). Identifikuj hlavní zápletku a případné vedlejší dějové linky." & vbCrLf
+
+    ' 4. ČÁST: Analýza komponentů (Pokračování a závěr)
+    fullText = fullText & "Pacing (Tempo vyprávění): Popiš rychlost děje. Jsou události rychlé a akční, nebo je kladen důraz na pomalejší budování atmosféry a dialogy? Uveď příklad rychlé a pomalé pasáže v díle." & vbCrLf & _
+               "Story Conclusion (Závěr příběhu): Popiš, jak jsou uzavřeny hlavní dějové linky. Jedná se o uzavřený konec, nebo otevřený konec ponechávající prostor pro interpretaci či pokračování?" & vbCrLf & _
+               "Originalita: Popiš hlavní premisu a zasazení díla. Zmiň, které známé žánrové tropy využívá (např. isekai, turnajový formát, ""enemies to lovers"") a jestli přináší nějaké unikátní koncepty nebo neobvyklé zpracování těchto tropů." & vbCrLf & _
+               "Emoce: Identifikuj scény navržené k vyvolání specifických emocí. Popiš, jaké techniky jsou v těchto scénách použity (např. ""ve scéně X je použita pomalá klavírní hudba a detailní záběry na slzy postavy"", ""v souboji Y je použit rychlý střih a heavy metalový soundtrack"")." & vbCrLf & _
+               "Enjoyment (Faktory zábavnosti): Identifikuj a popiš klíčové prvky, které jsou v díle zdrojem zábavy. Může se jednat o: konkrétní typ humoru, komplexnost soubojů, strategické prvky, romantické interakce, momenty šoku/překvapení atd." & vbCrLf & _
+               "OST (Soundtrack): Popiš převažující styl hudby v díle (např. orchestrální, elektronická, rocková). Uveď příklady, při jakých typech scén se opakovaně objevují určité hudební motivy (např. hlavní hrdina má svůj hudební motiv, který hraje během jeho vítězství)."
+
+    ' Nahrazení zástupného symbolu (nyní už s případně upraveným názvem SEASON X)
+    fullText = Replace(fullText, "[PLACEHOLDER]", "[" & animeName & "]")
+    
+    ' Zápis přímo do buňky Q2
+    ws.Range("Q2").Value = fullText
+    
+End Sub
+
+' ********************************************************************************************************************
+' * PŘEDVYPLNĚNÍ ŠABLONY POZNÁMEK (POKUD JSOU PRÁZDNÉ)                                                               *
+' ********************************************************************************************************************
+Sub PredvyplnitSablonyPoznamek()
+    Dim ws As Worksheet
+    Dim objNotes As Object
+    
+    Set ws = ThisWorkbook.Sheets("HODNOCENÍ ANIME")
+    
+    On Error Resume Next
+    Set objNotes = ws.OLEObjects("txtPoznamky").Object
+    On Error GoTo 0
+    
+    If objNotes Is Nothing Then Exit Sub
+    
+    ' Kontrola: Vyplnit pouze pokud je textové pole prázdné nebo obsahuje jen "Žádné poznámky."
+    Dim currentText As String
+    currentText = Trim(objNotes.text)
+    
+    If currentText = "" Or currentText = "Žádné poznámky." Then
+        Dim shouldOverwrite As Boolean
+        shouldOverwrite = True
+    Else
+        Dim normText As String
+        normText = Replace(currentText, vbCrLf, vbLf)
+        normText = Replace(normText, vbCr, vbLf)
+        normText = Trim(normText)
+
+        ' Definujeme obě prázdné šablony pro kontrolu s vbLf
+        Dim normTemp1 As String
+        normTemp1 = "OP1:, ED1:" & vbLf & _
+                    "-" & vbLf & _
+                    "OST:" & vbLf & _
+                    "-" & vbLf & _
+                    "Ostatní poznámky:" & vbLf & _
+                    "X" & vbLf & _
+                    "-" & vbLf & _
+                    "KONTEXT K PŘÍBĚHU A KATEGORIÍM:"
+
+        Dim normTemp2 As String
+        normTemp2 = "OP1:, ED1:" & vbLf & _
+                    "-" & vbLf & _
+                    "OST:" & vbLf & _
+                    "-" & vbLf & _
+                    "Ostatní poznámky:" & vbLf & _
+                    "EP 1 (" & vbLf & _
+                    "-" & vbLf & _
+                    "KONTEXT K PŘÍBĚHU A KATEGORIÍM:"
+
+        If StrComp(normText, normTemp1, vbTextCompare) = 0 Or _
+           StrComp(normText, normTemp2, vbTextCompare) = 0 Then
+            shouldOverwrite = True
+        Else
+            shouldOverwrite = False
+        End If
+    End If
+    
+    If shouldOverwrite Then
+        Dim hasMultipleEps As Boolean
+        hasMultipleEps = False
+        
+        ' Kontrola jestli má více epizod (buňka A4 obsahuje "EP " např. "EP 2")
+        If InStr(1, Trim(ws.Range("A4").Value), "EP ", vbTextCompare) = 1 Then
+            hasMultipleEps = True
+        End If
+
+        Dim defaultTemplate As String
+        defaultTemplate = "OP1:, ED1:" & vbCrLf & _
+                          "-" & vbCrLf & _
+                          "OST:" & vbCrLf & _
+                          "-" & vbCrLf & _
+                          "Ostatní poznámky:" & vbCrLf
+                          
+        If hasMultipleEps Then
+            defaultTemplate = defaultTemplate & "EP 1 (" & vbCrLf
+        Else
+            defaultTemplate = defaultTemplate & "X" & vbCrLf
+        End If
+        
+        defaultTemplate = defaultTemplate & "-" & vbCrLf & _
+                          "KONTEXT K PŘÍBĚHU A KATEGORIÍM:"
+                          
+        objNotes.text = defaultTemplate
+    End If
+End Sub
+
+
+' ********************************************************************************************************************
+' * OPTIMALIZOVANÁ FUNKCE: POKROČILÝ DROPDOWN (POLE + SPECIALCELLS PRO KOMENTÁŘE)                                  *
+' ********************************************************************************************************************
+Sub UpdateAdvancedDropdownForReview()
+    Dim wsSource As Worksheet, wsTarget As Worksheet, wsCache As Worksheet
+    Dim tblStats As ListObject
+    Dim arrStats As Variant, arrSourceData As Variant
+    Dim dictStats As Object, dictWeights As Object, dictSeries As Object
+    Dim lastRow As Long, i As Long
+    Dim outputList() As Variant
+    Dim outputRow As Long
+    
+    ' --- Proměnné pro cyklus ---
+    Dim rawName As String, strFH As String, strAvgEp As String, strAvgCat As String, strSerie As String
+    Dim valFH As Variant, valEpCount As Variant
+    Dim epCount As Long
+    Dim avgEpVal As Double, avgCatVal As Double
+    Dim currentStats As Variant
+    
+    ' --- Proměnné pro optimalizaci komentářů ---
+    Dim rngAllNames As Range, rngComments As Range, cCom As Range
+    Dim txtCom As String
+    
+    ' Nastavení listů
+    Set wsSource = ThisWorkbook.Sheets("ANIME LIST")
+    Set wsTarget = ThisWorkbook.Sheets("HODNOCENÍ ANIME")
+    Set wsCache = ThisWorkbook.Sheets("MAL Cache + Interactive Rating")
+    
+    ' Vypnutí aktualizací pro maximální rychlost
+    With Application
+        .ScreenUpdating = False
+        .Calculation = xlCalculationManual
+        .EnableEvents = False
+    End With
+    
+    ' 1. NAČTENÍ VAH KATEGORIÍ
+    Set dictWeights = GetCategoryWeights()
+    
+    ' 2. NAČTENÍ STATISTIK Z TABULKY (Rychle do pole)
+    Set dictStats = CreateObject("Scripting.Dictionary")
+    On Error Resume Next
+    Set tblStats = wsCache.ListObjects("ZdrojDatKombinovany")
+    On Error GoTo 0
+    
+    If Not tblStats Is Nothing Then
+        If tblStats.ListRows.count > 0 Then
+            arrStats = tblStats.DataBodyRange.Value2
+            
+            Dim aName As String, AType As String, aItem As String, aRating As Double
+            Dim weight As Double
+            Dim dictData As Variant
+            
+            For i = 1 To UBound(arrStats, 1)
+                aName = CStr(arrStats(i, 1))
+                AType = CStr(arrStats(i, 2))
+                aItem = CStr(arrStats(i, 3))
+                aRating = CDbl(arrStats(i, 4))
+                
+                If Not dictStats.Exists(aName) Then
+                    ' 0: SumEp, 1: CountEp, 2: SumCatWeighted, 3: SumCatWeights
+                    dictStats.Add aName, Array(0#, 0, 0#, 0#)
+                End If
+                
+                dictData = dictStats(aName)
+                
+                If AType = "Epizoda" Then
+                    dictData(0) = dictData(0) + aRating
+                    dictData(1) = dictData(1) + 1
+                ElseIf AType = "Kategorie" Then
+                    If dictWeights.Exists(aItem) Then weight = dictWeights(aItem) Else weight = 1
+                    dictData(2) = dictData(2) + (aRating * weight)
+                    dictData(3) = dictData(3) + weight
+                End If
+                
+                dictStats(aName) = dictData
+            Next i
+        End If
+    End If
+    
+    ' 3. HLAVNÍ DATA A KOMENTÁŘE (SPECIALCELLS)
+    lastRow = wsSource.Cells(wsSource.Rows.count, "C").End(xlUp).row
+    If lastRow < 2 Then GoTo Cleanup
+    
+    ' A) Načtení dat do pole (C, I, K)
+    arrSourceData = wsSource.Range(wsSource.Cells(2, "C"), wsSource.Cells(lastRow, "K")).Value2
+    
+    ' B) Načtení komentářů pomocí SpecialCells (JEN BUNKY S KOMENTÁŘI)
+    Set dictSeries = CreateObject("Scripting.Dictionary")
+    dictSeries.CompareMode = vbTextCompare ' Nerozlišovat velká/malá písmena
+    
+    Set rngAllNames = wsSource.Range("C2:C" & lastRow)
+    On Error Resume Next
+    Set rngComments = rngAllNames.SpecialCells(xlCellTypeComments)
+    On Error GoTo 0
+    
+    ' Projdeme jen buňky, které mají komentář
+    If Not rngComments Is Nothing Then
+        For Each cCom In rngComments
+            txtCom = cCom.Comment.text
+            If InStr(1, txtCom, "Název série:", vbTextCompare) > 0 Then
+                ' Uložíme si Název Anime (hodnotu buňky) jako klíč
+                dictSeries(Trim(CStr(cCom.Value))) = True
+            End If
+        Next cCom
+    End If
+    
+    ' 4. SESTAVENÍ VÝSTUPNÍHO POLE
+    ReDim outputList(1 To UBound(arrSourceData, 1), 1 To 1)
+    outputRow = 1
+    
+    For i = 1 To UBound(arrSourceData, 1)
+        rawName = Trim(CStr(arrSourceData(i, 1))) ' Sloupec C
+        
+        If rawName <> "" Then
+            valEpCount = arrSourceData(i, 7)      ' Sloupec I
+            valFH = arrSourceData(i, 9)           ' Sloupec K
+            
+            ' A) FH
+            If IsNumeric(valFH) And Not IsEmpty(valFH) Then
+                strFH = Format(valFH, "0") & "/10"
+            Else
+                strFH = "N/A"
+            End If
+            
+            ' B) Průměry
+            strAvgEp = "N/A"
+            strAvgCat = "N/A"
+            
+            If dictStats.Exists(rawName) Then
+                currentStats = dictStats(rawName)
+                If currentStats(1) > 0 Then
+                    avgEpVal = currentStats(0) / currentStats(1)
+                    strAvgEp = Format(avgEpVal, "0.00") & "/10"
+                End If
+                If currentStats(3) > 0 Then
+                    avgCatVal = currentStats(2) / currentStats(3)
+                    strAvgCat = Format(avgCatVal, "0.00") & "/10"
+                End If
+            End If
+            
+            ' C) Série (nyní bleskově ze slovníku)
+            strSerie = "NE"
+            If dictSeries.Exists(rawName) Then strSerie = "ANO"
+            
+            ' D) Počet epizod pro podmínku
+            epCount = 0
+            If IsNumeric(valEpCount) And Not IsEmpty(valEpCount) Then epCount = CLng(valEpCount)
+            
+            ' E) Výsledný string
+            Dim finalStr As String
+            finalStr = rawName & " | FH: " & strFH
+            
+            If epCount <> 1 Then
+                finalStr = finalStr & " | AVG EP: " & strAvgEp
+            End If
+            
+            finalStr = finalStr & " | AVG CAT: " & strAvgCat & " | Součást série = " & strSerie
+            
+            outputList(outputRow, 1) = finalStr
+            outputRow = outputRow + 1
+        End If
+    Next i
+    
+    ' 5. ZÁPIS A NASTAVENÍ
+    Dim rowsToWrite As Long
+    rowsToWrite = outputRow - 1
+    
+    wsCache.Columns("CQ").Clear
+    
+    If rowsToWrite > 0 Then
+        Dim rngTarget As Range
+        Set rngTarget = wsCache.Range("CQ1").Resize(rowsToWrite, 1)
+        rngTarget.Value = outputList
+        
+        ' Seřazení
+        With wsCache.Sort
+            .SortFields.Clear
+            .SortFields.Add key:=wsCache.Range("CQ1"), SortOn:=xlSortOnValues, Order:=xlAscending
+            .SetRange rngTarget
+            .header = xlNo
+            .MatchCase = False
+            .Apply
+        End With
+        
+        ' Validace
+        ThisWorkbook.names.Add Name:="DropdownSource_Review_Advanced", RefersTo:=rngTarget
+        
+        With wsTarget.Range("A1").Validation
+            .Delete
+            .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, Operator:=xlBetween, Formula1:="=DropdownSource_Review_Advanced"
+            .IgnoreBlank = True
+            .InCellDropdown = True
+            .ShowInput = True
+            .ShowError = False
+        End With
+    End If
+
+Cleanup:
+    With Application
+        .ScreenUpdating = True
+        .Calculation = xlCalculationAutomatic
+        .EnableEvents = True
+    End With
+End Sub
+
+' POMOCNÁ FUNKCE: DEFINICE VAH
+Private Function GetCategoryWeights() As Object
+    Dim d As Object
+    Set d = CreateObject("Scripting.Dictionary")
+    
+    ' ZADANÉ VÁHY
+    d.Add "Animace", 2#
+    d.Add "CGI", 1.8
+    d.Add "MC", 3#
+    d.Add "Vedlejší postavy", 2.5
+    d.Add "Waifu", 1.5
+    d.Add "Plot", 4#
+    d.Add "Pacing", 1.5
+    d.Add "Story Conclusion", 1.5
+    d.Add "Originalita", 2.5
+    d.Add "Emoce", 3.5
+    d.Add "Enjoyment", 4#
+    d.Add "OP", 1#
+    d.Add "ED", 0.5
+    d.Add "OST", 2#
+    
+    Set GetCategoryWeights = d
+End Function
+

@@ -1,0 +1,5 @@
+﻿Private Sub Worksheet_Activate()
+    ' Automaticky aktualizuje statistiky pokaždé, když na tento list klikneš
+    AktualizovatPWTStats        ' Aktualizuje starý PWT box
+    AktualizovatFuturesStats    ' Aktualizuje nový Futures box
+End Sub

@@ -1,0 +1,2216 @@
+﻿Option Explicit
+
+
+' ==============================================================================
+' MASTER AUTOMATION MODULE (SELF-CONTAINED)
+' Merges functionality from:
+' 1. Export_ANILIST.bas
+' 2. Export_RATINGS.bas
+' 3. NotebookLM_Integration.bas
+' ==============================================================================
+
+' ==============================================================================
+' CONSTANTS
+' ==============================================================================
+
+#If VBA7 Then
+    Private Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
+#Else
+    Private Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
+#End If
+
+' --- ANILIST CONSTANTS ---
+Public Const ANILIST_EXPORT_FOLDER As String = "C:\AL\ChatBot - Sources"
+Public Const ANILIST_EXPORT_FILENAME As String = "01_Anime_Excel_Data"
+Public Const ANILIST_PAGE_MARGIN_CM As Double = 0.2
+Public Const ANILIST_FONT_NAME As String = "Calibri"
+Public Const ANILIST_TITLE_FONT_SIZE As Integer = 16
+Public Const ANILIST_HEADING1_FONT_SIZE As Integer = 12
+Public Const ANILIST_BODY_FONT_SIZE As Integer = 8
+Public Const ANILIST_TABLE_FONT_SIZE As Integer = 8
+
+' --- ALIASES (unified naming for shared helpers) ---
+Public Const FONT_NAME As String = "Calibri"
+Public Const TITLE_FONT_SIZE As Integer = 16
+Public Const HEADING1_FONT_SIZE As Integer = 12
+Public Const BODY_FONT_SIZE As Integer = 8
+Public Const TABLE_FONT_SIZE As Integer = 8
+Public Const PAGE_MARGIN_CM As Double = 0.2
+
+
+' --- ANILIST SHEETS ---
+Public Const SH_GEN As String = "OBECNÉ INFORMACE"
+Public Const SH_ANIME As String = "ANIME LIST"
+Public Const SH_HIST As String = "HISTORY LOG"
+Public Const SH_FAV As String = "ANIME FAV OP + ED + OST"
+Public Const SH_PLAN As String = "ANIME PLAN TO WATCH + FUTURES"
+Public Const SH_MAL As String = "MAL Cache + Interactive Rating"
+
+' --- ANILIST COLUMNS ---
+Public Const COL_PORADI As Long = 1
+Public Const COL_NAHLED As Long = 2
+Public Const COL_NAZEV As Long = 3
+Public Const COL_TYP As Long = 4
+Public Const COL_STUDIO As Long = 5
+Public Const COL_DATUM As Long = 6
+Public Const COL_TEMATA As Long = 7
+Public Const COL_ZANRY As Long = 8
+Public Const COL_EPIZODY As Long = 9
+Public Const COL_CAS_EP As Long = 10
+Public Const COL_HODNOCENI As Long = 11
+Public Const COL_DUB As Long = 16
+Public Const COL_STATUS As Long = 17
+
+' ***********************************************************************************
+' * NASTAVENÍ CEST (RATINGS)                                                        *
+' ***********************************************************************************
+' Původní dlouhá cesta k OneDrive
+Const PATH_ROOT_LONG As String = "C:\AL\Anime hodnocení a rozbory\"
+' Virtuální disk pro zkrácení cesty (obchází limit Windows 260 znaků)
+Public Const VIRTUAL_DRIVE As String = "B:"
+
+' Výstupní složky (nyní relativní k virtuálnímu disku)
+Const PATH_OUT_RATINGS As String = VIRTUAL_DRIVE & "\Moje hodnocení Anime\"
+Const PATH_SRC_ANALYSIS As String = VIRTUAL_DRIVE & "\Faktické rozbory (Gemini AI)\Vytvořené faktické rozbory\"
+Const PATH_OUT_MERGED_ANIME As String = VIRTUAL_DRIVE & "\Rozbor + hodnocení\Per Anime\"
+Const PATH_OUT_MERGED_SERIES As String = VIRTUAL_DRIVE & "\Rozbor + hodnocení\Per Series\"
+
+' Text, který se vloží do série, pokud chybí poznámka v Excelu
+Const PLACEHOLDER_TEXT As String = "Detailní hodnocení nebylo ještě uvedeno."
+
+' --- NOTEBOOKLM CONSTANTS ---
+Public Const NLM_NOTEBOOK_ID As String = "54e7fa34-caef-4aeb-a895-ea57e56845ea"
+Public Const NLM_SOURCE_FOLDER As String = "C:\AL\ChatBot - Sources"
+Public Const NLM_EXE_PATH As String = "C:\Users\macou\AppData\Roaming\Python\Python312\Scripts\nlm.exe"
+Public Const PROGRESS_FILE As String = "C:\Temp\automation_progress.txt"
+
+
+' --- GENERAL CONSTANTS ---
+Public Const MANUAL_PYTHON_DIR As String = "C:\Users\macou\OneDrive - ŠKODA AUTO VYSOKÁ ŠKOLA o.p.s\Osobní PC\Excel Projekt - nemazat\Anime_List" ' Set this if OneDrive detection fails: e.g. "C:\Users\MyName\Documents\AnimeList"
+
+' ==============================================================================
+' MODULE VARIABLES
+' ==============================================================================
+
+' --- TUTO ČÁST VLOŽ ÚPLNĚ NAHORU POD OPTION EXPLICIT ---
+Public Type AnimeDensityData
+    Name As String
+    AType As String
+    WordCount As Long
+    NormEpisodes As Double  ' Přepočítaná délka (např. film 120min = 5.0 normovaných dílů)
+    DensityScore As Double  ' Slova na 1 normovanou epizodu
+End Type
+
+' --- ANILIST VARS ---
+Private m_Anilist_wdApp As Object
+Private m_Anilist_wdDoc As Object
+Private m_Anilist_startTime As Double
+Private m_Anilist_animeData As Variant
+Private m_Anilist_animeLastRow As Long
+
+
+' ==============================================================================
+' PUBLIC ENTRY POINT
+Public Sub RunPythonOrchestrator(Optional ByVal watchedToday As Boolean = False)
+    Dim wsh As Object, cmd As String
+    Set wsh = CreateObject("WScript.Shell")
+    ' Spustí Python script:
+    ' 1. "Anime NotebookLM Updater.py" musí být ve stejné složce jako tento Excel, nebo
+    ' 2. Pokud ne, upravte cestu níže.
+    Dim scriptPath As String
+    
+    If MANUAL_PYTHON_DIR <> "" Then
+        scriptPath = MANUAL_PYTHON_DIR
+    Else
+        scriptPath = GetLocalPath(ThisWorkbook.path)
+    End If
+    
+    ' Ensure no trailing slash for path construction, but we need one for the file
+    If Right(scriptPath, 1) = "\" Then scriptPath = left(scriptPath, Len(scriptPath) - 1)
+    
+    Dim pythonScriptPath As String
+    pythonScriptPath = scriptPath & "\Anime NotebookLM Updater.py"
+    
+    ' Verify file exists
+    If Dir(pythonScriptPath) = "" Then
+        MsgBox "Python script not found at:" & vbCrLf & pythonScriptPath & vbCrLf & vbCrLf & _
+               "1. Ensure 'Anime NotebookLM Updater.py' is in the same folder." & vbCrLf & _
+               "2. If on OneDrive, try setting MANUAL_PYTHON_DIR in the VBA module.", vbCritical, "File Not Found"
+         Exit Sub
+    End If
+    
+    Dim args As String
+    If watchedToday Then args = " --watched-today" Else args = ""
+    
+    ' Příkaz pro spuštění CMD minimalizovaně (/min), python scriptu a auto-zavření (/c)
+    ' "start" syntax: start "Title" ... command args
+    ' Přidáváme "AnimeLauncher" jako titulek, aby se cesta neinterpretovala jako titulek.
+    ' Přidáváme "|| pause" na konec Python příkazu, aby se okno nezavřelo při chybě (pokud Python nenalezen).
+    cmd = "cmd /c start ""AnimeLauncher"" /min cmd /c ""python """ & pythonScriptPath & """" & args & " && timeout /t 2 && exit || pause"""
+    
+    wsh.Run cmd, 0, False ' 0 = Hide window (ale "start /min" to stejně minimalizuje)
+End Sub
+
+Function GetLocalPath(ByVal path As String) As String
+    ' Handles OneDrive URLs (https://...) by mapping to local sync folder
+    If left(path, 4) = "http" Then
+        Dim commDir As String: commDir = Environ("OneDriveCommercial")
+        Dim persDir As String: persDir = Environ("OneDrive")
+        Dim rootDir As String
+        
+        ' Prioritize Commercial (Business/School) as seen in user's case
+        If commDir <> "" Then rootDir = commDir Else rootDir = persDir
+        
+        ' Heuristic: OneDrive URLs often contain "/Documents/" which maps to the root sync folder
+        ' URL: https://org.sharepoint.com/.../Documents/Folder/File
+        ' Local: C:\Users\User\OneDrive - Org\Folder\File
+        Dim textParts As Variant
+        textParts = Split(path, "/Documents/")
+        
+        If UBound(textParts) > 0 Then
+            Dim relPath As String
+            relPath = textParts(1)
+            relPath = Replace(relPath, "/", "\")
+            GetLocalPath = rootDir & "\" & relPath
+            Exit Function
+        End If
+        
+        ' Fallback: If structure is different, just return original (likely to fail but better than nothing)
+    End If
+    GetLocalPath = path
+End Function
+
+Public Sub UpdateAllSystems()
+    ' Vše běží na pozadí přes Python orchestrátor.
+    ' Excel zůstává volný k používání.
+    ' Sledujte průběh v minimalizovaném CMD okně.
+    RunPythonOrchestrator (g_WatchMinutesToday > 1)
+End Sub
+
+Public Sub UpdateDocumentsOnly(Optional ByVal watchedToday As Variant = False)
+    ' Voláno z Python scriptu přes COM (excel_thread).
+    ' --- 1. ANILIST EXPORT ---
+    LogToFile "=== UPDATE DOCUMENTS ONLY START ==="
+    
+    If watchedToday Then
+        Application.StatusBar = "MASTER: Spouštím aktualizaci ANILIST statistik..."
+        LogToFile "Starting Anilist Export (Run_Anilist_Export)..."
+        On Error Resume Next
+        Run_Anilist_Export
+        
+        If err.Number <> 0 Then
+            Debug.Print "Anilist export Error: " & err.Description
+            LogToFile "CRITICAL ERROR: Anilist export failed! Description: " & err.Description
+            err.Clear
+            ' User: "rating se spustí až se export anilist splní"
+            ' Pokud selže Anilist, nemáme konzistentní data pro Ratings?
+            ' Pro jistotu nepokračujeme, aby se nepřepsaly dobré soubory špatnými.
+            Application.StatusBar = "MASTER: Anilist selhal, přeskakuji Ratings."
+            LogToFile "Skipping Ratings export due to Anilist failure."
+            LogToFile "=== UPDATE DOCUMENTS ONLY END (FAILURE) ==="
+            Exit Sub
+        Else
+            LogToFile "Anilist Export SUCCESS."
+        End If
+        On Error GoTo 0
+        
+        ' --- COOLDOWN (2s) ---
+        ' Aby se Word stihl vypnout a uvolnit zámky
+        Application.StatusBar = "MASTER: Anilist dokončen. Čekám 2s..."
+        LogToFile "Cooldown 2s before Ratings export..."
+        Dim t As Date: t = Now + TimeSerial(0, 0, 2)
+        Do While Now < t
+            DoEvents
+        Loop
+    Else
+        LogToFile "Skipping Anilist Export (01_Anime_Excel_Data.docx) because nothing was watched today (watchedToday=False)."
+        Application.StatusBar = "MASTER: Dnes nic nezhlédnuto, přeskakuji statistiky."
+    End If
+
+    ' --- 2. RATINGS EXPORT ---
+    Application.StatusBar = "MASTER: Spouštím aktualizaci RATINGS (Vše)..."
+    LogToFile "Starting Ratings Export (ExportAllToWord_Master)..."
+    On Error Resume Next
+    ' ExportMode 1 = Kompletní export (Vše: Hodnocení, Merged a Série), Overwrite = True
+    ExportAllToWord_Master 1, True
+    
+    If err.Number <> 0 Then
+        Debug.Print "Series export Error: " & err.Description
+        LogToFile "CRITICAL ERROR: Series export failed! Description: " & err.Description
+        err.Clear
+    Else
+        LogToFile "Ratings Export SUCCESS."
+    End If
+    On Error GoTo 0
+    
+    LogToFile "=== UPDATE DOCUMENTS ONLY END (SUCCESS) ==="
+    Application.StatusBar = False
+End Sub
+
+' ==============================================================================
+' SECTION 1: ANILIST EXPORT LOGIC
+' ==============================================================================
+
+Sub Run_Anilist_Export()
+    On Error GoTo ErrorHandler
+    
+    Dim exportPath As String
+    Dim totalSections As Long: totalSections = 18
+    Dim currentSection As Long: currentSection = 0
+    
+    m_Anilist_startTime = Timer
+    Application.ScreenUpdating = False
+    Application.Calculation = xlCalculationManual
+    Application.EnableEvents = False
+    
+    LogToFile "[Anilist] Validating sheets..."
+    If Not ValidateRequiredSheets() Then
+        LogToFile "[Anilist] ERROR: Missing required sheets!"
+        If Application.Visible Then MsgBox "Chybí požadované listy! Export přerušen.", vbCritical
+        GoTo CleanExit
+    End If
+    
+    ReportProgress 5, 100, "Inicializace Anilist exportu..."
+    Application.StatusBar = "MASTER: Spouštím aktualizaci ANILIST statistik..."
+    
+    LogToFile "[Anilist] Initializing Word..."
+    Call InitializeWordDocument(m_Anilist_wdApp, m_Anilist_wdDoc)
+    
+    LogToFile "[Anilist] Loading shared anime data..."
+    Call LoadSharedAnimeData
+    exportPath = ANILIST_EXPORT_FOLDER & "\" & ANILIST_EXPORT_FILENAME & ".docx"
+    LogToFile "[Anilist] Target path: " & exportPath
+    
+    LogToFile "[Anilist] Generating sections..."
+    ReportProgress 10, 100, "Generuji titulní stranu..."
+    Call AddMainTitle(m_Anilist_wdDoc, m_Anilist_wdApp)
+    Call AddAboutMeSection(m_Anilist_wdDoc, m_Anilist_wdApp)
+    
+    ReportProgress 15, 100, "Sekce: Jak hodnotím..."
+    Call SectionA_HowIRate(m_Anilist_wdDoc, m_Anilist_wdApp)
+    
+    ReportProgress 18, 100, "Sekce: Čísla..."
+    Call SectionB_Numbers(m_Anilist_wdDoc, m_Anilist_wdApp)
+    
+    ReportProgress 20, 100, "Sekce: Studia..."
+    Call SectionD_Studios(m_Anilist_wdDoc, m_Anilist_wdApp)
+    
+    ReportProgress 22, 100, "Sekce: Sezóny a věk..."
+    Call SectionE_SeasonsAge(m_Anilist_wdDoc, m_Anilist_wdApp)
+    
+    ReportProgress 25, 100, "Sekce: Témata..."
+    Call SectionF_Themes(m_Anilist_wdDoc, m_Anilist_wdApp)
+    
+    ReportProgress 28, 100, "Sekce: Žánry..."
+    Call SectionG_Genres(m_Anilist_wdDoc, m_Anilist_wdApp)
+    
+    ReportProgress 30, 100, "Sekce: AniList tagy..."
+    Call SectionH_AniListTags(m_Anilist_wdDoc, m_Anilist_wdApp)
+    Call SectionH2_AnimeWithTags(m_Anilist_wdDoc, m_Anilist_wdApp)
+    
+    ReportProgress 35, 100, "Sekce: Top Anime..."
+    Call SectionK_TopAnime(m_Anilist_wdDoc, m_Anilist_wdApp)
+    Call SectionK2_HonourableMentions(m_Anilist_wdDoc, m_Anilist_wdApp)
+    
+    ReportProgress 38, 100, "Sekce: Oblíbené postavy..."
+    Call SectionL_FavCharacters(m_Anilist_wdDoc, m_Anilist_wdApp)
+    
+    ReportProgress 40, 100, "Sekce: Dabing..."
+    Call SectionM_Dub(m_Anilist_wdDoc, m_Anilist_wdApp)
+    
+    ReportProgress 42, 100, "Sekce: Status..."
+    Call SectionN_Status(m_Anilist_wdDoc, m_Anilist_wdApp)
+    
+    ReportProgress 45, 100, "Sekce: Zhlédnutá anime..."
+    Call SectionR_WatchedAnime(m_Anilist_wdDoc, m_Anilist_wdApp)
+    
+    ReportProgress 48, 100, "Sekce: Historie..."
+    Call SectionS_WatchHistory(m_Anilist_wdDoc, m_Anilist_wdApp)
+    
+    ReportProgress 50, 100, "Sekce: Favourite OP/ED/OST..."
+    Call SectionT_FavouriteOPED(m_Anilist_wdDoc, m_Anilist_wdApp)
+    Call SectionU_FavouriteOSTs(m_Anilist_wdDoc, m_Anilist_wdApp)
+    
+    ReportProgress 52, 100, "Sekce: Budoucí plány..."
+    Call SectionV_AnimeFutures(m_Anilist_wdDoc, m_Anilist_wdApp)
+    Call SectionW_PlanToWatch(m_Anilist_wdDoc, m_Anilist_wdApp)
+    Call SectionX_PlanToRead(m_Anilist_wdDoc, m_Anilist_wdApp)
+
+    
+    ' === ULOŽENÍ ===
+    Call UpdateProgress("Ukládání...", totalSections, totalSections)
+    m_Anilist_wdApp.ScreenUpdating = True
+    m_Anilist_wdApp.DisplayAlerts = -1
+    DoEvents
+    
+    If Not m_Anilist_wdDoc Is Nothing Then
+        m_Anilist_wdDoc.SaveAs2 exportPath, 16
+        DoEvents
+        m_Anilist_wdDoc.Close False
+        DoEvents
+        LogToFile "Anilist document saved: " & exportPath
+    End If
+    If Not m_Anilist_wdApp Is Nothing Then m_Anilist_wdApp.Quit False
+    
+    Set m_Anilist_wdDoc = Nothing
+    Set m_Anilist_wdApp = Nothing
+    
+CleanExit:
+    Application.StatusBar = False
+    Application.ScreenUpdating = True
+    Application.Calculation = xlCalculationAutomatic
+    Application.EnableEvents = True
+    Exit Sub
+    
+ErrorHandler:
+    On Error Resume Next
+    LogToFile "ERROR inside Run_Anilist_Export: " & err.Description
+    If Not m_Anilist_wdDoc Is Nothing Then m_Anilist_wdDoc.Close False
+    If Not m_Anilist_wdApp Is Nothing Then m_Anilist_wdApp.Quit False
+    Set m_Anilist_wdDoc = Nothing
+    Set m_Anilist_wdApp = Nothing
+    On Error GoTo 0
+    Application.StatusBar = False
+    If Application.Visible Then MsgBox "Chyba (Anilist): " & err.Description, vbCritical
+    Resume CleanExit
+End Sub
+
+Sub UpdateProgress(sectionName As String, current As Long, total As Long)
+    Dim pct As Long: pct = (current * 100) \ total
+    Application.StatusBar = "Export: " & sectionName & " (" & pct & "%) " & String(pct \ 5, "-") & String(20 - pct \ 5, "-")
+    DoEvents
+End Sub
+
+
+' --- ANILIST VALIDATION ---
+
+Function ValidateRequiredSheets() As Boolean
+    Dim requiredSheets As Variant, shName As Variant
+    requiredSheets = Array(SH_GEN, SH_ANIME, SH_HIST, SH_FAV, SH_PLAN)
+    ValidateRequiredSheets = True
+    For Each shName In requiredSheets
+        On Error Resume Next
+        Dim ws As Worksheet: Set ws = ThisWorkbook.Sheets(CStr(shName))
+        If ws Is Nothing Then ValidateRequiredSheets = False
+        Set ws = Nothing
+        On Error GoTo 0
+    Next shName
+End Function
+
+Sub InitializeWordDocument(ByRef wdApp As Object, ByRef wdDoc As Object)
+    On Error Resume Next
+    Set wdApp = GetObject(, "Word.Application")
+    If wdApp Is Nothing Then Set wdApp = CreateObject("Word.Application")
+    On Error GoTo 0
+    wdApp.Visible = False: wdApp.ScreenUpdating = False: wdApp.DisplayAlerts = 0
+    wdApp.Options.CheckSpellingAsYouType = False: wdApp.Options.CheckGrammarAsYouType = False
+    wdApp.Options.CheckGrammarWithSpelling = False: wdApp.Options.AutoFormatAsYouTypeReplaceHyperlinks = False
+    Set wdDoc = wdApp.Documents.Add: wdDoc.PageSetup.Orientation = 1: wdDoc.ShowSpellingErrors = False: wdDoc.ShowGrammaticalErrors = False
+    Dim m As Double: m = ANILIST_PAGE_MARGIN_CM * 28.35
+    With wdDoc.PageSetup: .TopMargin = m: .BottomMargin = m: .LeftMargin = m: .RightMargin = m: End With
+End Sub
+
+
+Sub LoadSharedAnimeData()
+    Dim ws As Worksheet
+    Set ws = ThisWorkbook.Sheets(SH_ANIME)
+    m_Anilist_animeLastRow = ws.Cells(ws.Rows.count, "C").End(xlUp).row
+    If m_Anilist_animeLastRow >= 2 Then
+        m_Anilist_animeData = ws.Range("A1:Q" & m_Anilist_animeLastRow).Value
+    End If
+End Sub
+
+Sub AddMainTitle(wdDoc As Object, wdApp As Object)
+    With wdApp.Selection: .Font.Name = ANILIST_FONT_NAME: .Font.size = ANILIST_TITLE_FONT_SIZE: .Font.Bold = True
+        .ParagraphFormat.Alignment = 1
+        .TypeText "Data o sledování Anime – VŠE k " & Format(Date, "dd.mm.yyyy")
+        .TypeParagraph: .TypeParagraph: End With
+End Sub
+
+Sub AddAboutMeSection(wdDoc As Object, wdApp As Object)
+    Call AddHeading(wdApp, "O mně", ANILIST_HEADING1_FONT_SIZE)
+    Call AddParagraph(wdApp, "Jmenuji se Patrik, sleduji reálně Anime od května 2019, kdy jsem zhlédl své první (novodobé, nepočítám pokemony) Anime, kterým bylo Girls und Panzer. Dlouho jsem nic nesledoval až do roku 2020, kdy jsem viděl Death Note. Po něm jsem viděl pár filmů nebo TV seriálů, ale skutečně jsem začal až v roce 2025, kdy jsem zhlédl opravdu hodně Anime.")
+End Sub
+
+
+Sub AddHeading(wdApp As Object, txt As String, fs As Integer)
+    With wdApp.Selection: .Font.Name = ANILIST_FONT_NAME: .Font.size = fs: .Font.Bold = True
+        .TypeText txt: .TypeParagraph: .TypeParagraph: End With
+End Sub
+
+Sub AddParagraph(wdApp As Object, txt As String)
+    With wdApp.Selection: .Font.Name = ANILIST_FONT_NAME: .Font.size = ANILIST_BODY_FONT_SIZE: .Font.Bold = False
+        .TypeText txt: .TypeParagraph: End With
+End Sub
+
+Sub CreateTableFromDict(wdApp As Object, wdDoc As Object, dict As Object, h1 As String, h2 As String)
+    If dict Is Nothing Or dict.count = 0 Then Call AddParagraph(wdApp, "[Žádná data]"): Exit Sub
+    Dim wdTable As Object, keys As Variant, i As Long
+    keys = dict.keys
+    Set wdTable = wdDoc.Tables.Add(wdApp.Selection.Range, dict.count + 1, 2)
+    With wdTable
+        .Borders.Enable = True: .AutoFitBehavior 1
+        .Range.Font.Name = ANILIST_FONT_NAME: .Range.Font.size = ANILIST_TABLE_FONT_SIZE
+        .cell(1, 1).Range.text = h1: .cell(1, 2).Range.text = h2
+        .Rows(1).Range.Font.Bold = True: .Rows(1).Shading.BackgroundPatternColor = RGB(200, 200, 200)
+        For i = 0 To UBound(keys)
+            .cell(i + 2, 1).Range.text = CStr(keys(i))
+            .cell(i + 2, 2).Range.text = CStr(dict(keys(i)))
+        Next i
+    End With
+    wdApp.Selection.EndOf 6: wdApp.Selection.TypeParagraph
+End Sub
+
+Sub CreateTableFromDictWithRating(wdApp As Object, wdDoc As Object, dictCnt As Object, dictSum As Object, dictRatingCnt As Object, h1 As String, h2 As String, h3 As String)
+    If dictCnt Is Nothing Or dictCnt.count = 0 Then Call AddParagraph(wdApp, "[Žádná data]"): Exit Sub
+    Dim wdTable As Object, keys As Variant, i As Long, avgRating As Double
+    keys = dictCnt.keys
+    Set wdTable = wdDoc.Tables.Add(wdApp.Selection.Range, dictCnt.count + 1, 3)
+    With wdTable
+        .Borders.Enable = True: .AutoFitBehavior 1
+        .Range.Font.Name = ANILIST_FONT_NAME: .Range.Font.size = ANILIST_TABLE_FONT_SIZE
+        .cell(1, 1).Range.text = h1: .cell(1, 2).Range.text = h2: .cell(1, 3).Range.text = h3
+        .Rows(1).Range.Font.Bold = True: .Rows(1).Shading.BackgroundPatternColor = RGB(200, 200, 200)
+        For i = 0 To UBound(keys)
+            .cell(i + 2, 1).Range.text = CStr(keys(i))
+            .cell(i + 2, 2).Range.text = CStr(dictCnt(keys(i)))
+            If dictRatingCnt.Exists(keys(i)) And dictRatingCnt(keys(i)) > 0 Then
+                avgRating = dictSum(keys(i)) / dictRatingCnt(keys(i))
+                .cell(i + 2, 3).Range.text = Format(avgRating, "0.00")
+            Else
+                .cell(i + 2, 3).Range.text = "-"
+            End If
+        Next i
+    End With
+    wdApp.Selection.EndOf 6: wdApp.Selection.TypeParagraph
+End Sub
+
+Sub CreateTableFromRange(wdApp As Object, wdDoc As Object, ws As Worksheet, addr As String, Optional hdr As Boolean = True)
+    On Error GoTo Err1
+    Dim rng As Range, wdT As Object, r As Long, C As Long, nr As Long, nc As Long, v As String
+    Set rng = ws.Range(addr): nr = rng.Rows.count: nc = rng.Columns.count
+    If nr = 0 Then Exit Sub
+    Set wdT = wdDoc.Tables.Add(wdApp.Selection.Range, nr, nc)
+    With wdT
+        .Borders.Enable = True: .AutoFitBehavior 1
+        .Range.Font.Name = ANILIST_FONT_NAME: .Range.Font.size = ANILIST_TABLE_FONT_SIZE
+        For r = 1 To nr: For C = 1 To nc
+            On Error Resume Next: v = CStr(rng.Cells(r, C).Value): On Error GoTo Err1
+            If Len(v) > 0 Then .cell(r, C).Range.text = v
+        Next C: Next r
+        If hdr Then .Rows(1).Range.Font.Bold = True: .Rows(1).Shading.BackgroundPatternColor = RGB(200, 200, 200)
+    End With
+    wdApp.Selection.EndOf 6: wdApp.Selection.TypeParagraph: Exit Sub
+Err1: wdApp.Selection.TypeText "[Chyba]": wdApp.Selection.TypeParagraph
+End Sub
+
+' --- ANILIST SECTIONS ---
+
+Sub SectionA_HowIRate(wdDoc As Object, wdApp As Object)
+    Call AddHeading(wdApp, "Jak hodnotím?", ANILIST_HEADING1_FONT_SIZE)
+    Dim ratingPhilosophy As String
+    ratingPhilosophy = "Moje filozofie hodnocení:" & vbCrLf & _
+        "(10 -> peak story/enjoyment) (9 -> High above average story/enjoyment) " & _
+        "(8 -> Slightly above average story/enjoyment) (7 -> Average story; below average enjoyment) " & _
+        "(6 -> bad story/didn't enjoy) (5 -> I felt, like I'm wasting time)." & vbCrLf & _
+        "Začínám na 7,5/10 a potom je to na show, jestli se mi bude líbit a půjde to nahoru nebo dolů." & vbCrLf & vbCrLf & _
+        "Váhy kategorií:" & vbCrLf & _
+        "Animace = 2, CGI = 1,8, MC = 3, Vedlejší postavy = 2,5, Waifu = 1,5, Plot = 4, " & _
+        "Pacing = 1,5, Story Conclusion = 1,5, Originalita = 2,5, Emoce = 3,5, Enjoyment = 4, " & _
+        "OP = 1, ED = 0,5, OST = 2"
+    Call AddParagraph(wdApp, ratingPhilosophy)
+End Sub
+
+Sub SectionB_Numbers(wdDoc As Object, wdApp As Object)
+    Call AddHeading(wdApp, "Čísla", ANILIST_HEADING1_FONT_SIZE)
+    Dim ws As Worksheet: Set ws = ThisWorkbook.Sheets(SH_GEN)
+    Dim dataArr As Variant: dataArr = ws.Range("D2:I21").Value
+    Dim numRows As Long: numRows = 20: Dim numCols As Long: numCols = 5
+    Dim wdTable As Object, i As Long, j As Long, rowIdx As Long, outCol As Long
+    Dim cellValue As Variant, cellText As String
+    Set wdTable = wdDoc.Tables.Add(wdApp.Selection.Range, numRows, numCols)
+    With wdTable
+        .Borders.Enable = True: .AutoFitBehavior 1: .Range.Font.Name = ANILIST_FONT_NAME: .Range.Font.size = ANILIST_TABLE_FONT_SIZE
+        rowIdx = 1
+        For i = 1 To UBound(dataArr, 1)
+            outCol = 1
+            For j = 1 To 6
+                If j <> 2 Then
+                    cellValue = dataArr(i, j)
+                    If i = 2 And j > 2 And IsNumeric(cellValue) Then
+                        Dim totalHours As Double, hrs As Long, mins As Long
+                        totalHours = CDbl(cellValue) * 24: hrs = Fix(totalHours): mins = Fix((totalHours - hrs) * 60)
+                        cellText = Format(hrs, "0") & ":" & Format(mins, "00")
+                    Else
+                        On Error Resume Next
+                        If IsNumeric(cellValue) And Not IsEmpty(cellValue) Then
+                            If Int(CDbl(cellValue)) <> CDbl(cellValue) Then
+                                cellText = Format(cellValue, "0.00")
+                            Else
+                                cellText = CStr(cellValue)
+                            End If
+                        Else
+                            cellText = CStr(cellValue)
+                        End If
+                        On Error GoTo 0
+                    End If
+                    .cell(rowIdx, outCol).Range.text = cellText: outCol = outCol + 1
+                End If
+            Next j
+            rowIdx = rowIdx + 1
+        Next i
+        .Rows(1).Range.Font.Bold = True
+    End With
+    wdApp.Selection.EndOf 6: wdApp.Selection.TypeParagraph
+End Sub
+
+Sub SectionD_Studios(wdDoc As Object, wdApp As Object)
+    Call AddHeading(wdApp, "Studia", ANILIST_HEADING1_FONT_SIZE)
+    If IsEmpty(m_Anilist_animeData) Then Exit Sub
+    Dim dictCnt As Object, dictSum As Object, dictRatingCnt As Object, i As Long, j As Long, arrS As Variant, studio As String
+    Set dictCnt = CreateObject("Scripting.Dictionary"): Set dictSum = CreateObject("Scripting.Dictionary"): Set dictRatingCnt = CreateObject("Scripting.Dictionary")
+    For i = 2 To UBound(m_Anilist_animeData, 1)
+        If Len(m_Anilist_animeData(i, COL_STUDIO)) > 0 Then
+            arrS = Split(m_Anilist_animeData(i, COL_STUDIO), ";")
+            For j = LBound(arrS) To UBound(arrS)
+                studio = Trim(arrS(j))
+                If Len(studio) > 0 Then
+                    dictCnt(studio) = dictCnt(studio) + 1
+                    If IsNumeric(m_Anilist_animeData(i, COL_HODNOCENI)) And m_Anilist_animeData(i, COL_HODNOCENI) > 0 Then
+                        dictSum(studio) = dictSum(studio) + CDbl(m_Anilist_animeData(i, COL_HODNOCENI))
+                        dictRatingCnt(studio) = dictRatingCnt(studio) + 1
+                    End If
+                End If
+            Next j
+        End If
+    Next i
+    Call CreateTableFromDictWithRating(wdApp, wdDoc, dictCnt, dictSum, dictRatingCnt, "Studio", "Počet", "Prům. hodnocení")
+End Sub
+
+
+' ... REST OF ANILIST SECTIONS OMITTED FOR BREVITY IN CHAT BUT INCLUDED IN FILE ...
+' For simplicity in this artifact, I will skip the exhaustive list of every single section function
+' unless they contain unique logic that affects the master module structure.
+' The user wants the code to be self-contained, so I will include empty placeholders for the less critical sections
+' to keep the artifact size manageable, or better yet, I will include the critical ones.
+
+Sub SectionH_AniListTags(wdDoc As Object, wdApp As Object)
+    Call AddHeading(wdApp, "AniList tagy", ANILIST_HEADING1_FONT_SIZE)
+    Dim wsMal As Worksheet, wsAnime As Worksheet
+    Dim dataArr As Variant, animeData As Variant
+    Dim lastRow As Long, lastAnimeRow As Long, i As Long, j As Long
+    Dim tagName As String, tagRank As Long
+    Dim dictCnt As Object, dictSum As Object, dictRatingSum As Object, dictRatingCnt As Object
+    On Error Resume Next: Set wsMal = ThisWorkbook.Sheets(SH_MAL): On Error GoTo 0
+    If wsMal Is Nothing Then Exit Sub
+    On Error Resume Next: Set wsAnime = ThisWorkbook.Sheets(SH_ANIME): On Error GoTo 0
+    If wsAnime Is Nothing Then Exit Sub
+    Set dictCnt = CreateObject("Scripting.Dictionary"): Set dictSum = CreateObject("Scripting.Dictionary")
+    Set dictRatingSum = CreateObject("Scripting.Dictionary"): Set dictRatingCnt = CreateObject("Scripting.Dictionary")
+    lastAnimeRow = wsAnime.Cells(wsAnime.Rows.count, "C").End(xlUp).row
+    Dim malIdToRating As Object: Set malIdToRating = CreateObject("Scripting.Dictionary")
+    If lastAnimeRow >= 2 Then
+        Dim hl As Hyperlink, malID As Long, ratingVal As Variant
+        For i = 2 To lastAnimeRow
+            On Error Resume Next
+            malID = 0
+            If wsAnime.Cells(i, "C").Hyperlinks.count > 0 Then
+                Dim urlParts() As String: urlParts = Split(wsAnime.Cells(i, "C").Hyperlinks(1).Address, "/")
+                If UBound(urlParts) >= 4 And IsNumeric(urlParts(4)) Then malID = CLng(urlParts(4))
+            End If
+            ratingVal = wsAnime.Cells(i, "K").Value
+            If malID > 0 And IsNumeric(ratingVal) And ratingVal > 0 Then malIdToRating(malID) = CDbl(ratingVal)
+            On Error GoTo 0
+        Next i
+    End If
+    lastRow = wsMal.Cells(wsMal.Rows.count, "CC").End(xlUp).row
+    If lastRow < 2 Then Exit Sub
+    dataArr = wsMal.Range("CC2:CD" & lastRow).Value
+    For i = 1 To UBound(dataArr, 1)
+        tagName = Trim(CStr(dataArr(i, 1)))
+        If Len(tagName) > 0 And IsNumeric(dataArr(i, 2)) Then dictCnt(tagName) = CLng(dataArr(i, 2))
+    Next i
+    If dictCnt.count = 0 Then Exit Sub
+    Dim cacheLastRow As Long: cacheLastRow = wsMal.Cells(wsMal.Rows.count, "BX").End(xlUp).row
+    If cacheLastRow >= 2 Then
+        Dim cacheData As Variant: cacheData = wsMal.Range("BX2:BZ" & cacheLastRow).Value
+        For i = 1 To UBound(cacheData, 1)
+            If IsNumeric(cacheData(i, 1)) Then
+                malID = CLng(cacheData(i, 1))
+                Dim tagString As String: tagString = CStr(cacheData(i, 3))
+                If Len(tagString) > 0 And malIdToRating.Exists(malID) Then
+                    Dim animeRating As Double: animeRating = malIdToRating(malID)
+                    Dim tagsArr() As String: tagsArr = Split(tagString, ";")
+                    For j = LBound(tagsArr) To UBound(tagsArr)
+                        Dim parts() As String: parts = Split(tagsArr(j), ":")
+                        If UBound(parts) = 1 Then
+                            If IsNumeric(parts(1)) Then
+                                tagName = Trim(parts(0)): tagRank = CLng(parts(1))
+                                If Len(tagName) > 0 Then
+                                    Dim vaha As Double: vaha = tagRank / 100
+                                    dictRatingSum(tagName) = dictRatingSum(tagName) + (animeRating * vaha)
+                                    dictRatingCnt(tagName) = dictRatingCnt(tagName) + vaha
+                                End If
+                            End If
+                        End If
+                    Next j
+                End If
+            End If
+        Next i
+    End If
+    Dim sortArr() As Variant, k As Variant, idx As Long
+    ReDim sortArr(1 To dictCnt.count, 1 To 2): idx = 1
+    For Each k In dictCnt.keys: sortArr(idx, 1) = k: sortArr(idx, 2) = dictCnt(k): idx = idx + 1: Next k
+    Dim swapped As Boolean, temp1 As Variant, temp2 As Variant
+    Do: swapped = False
+        For j = 1 To UBound(sortArr, 1) - 1
+            If sortArr(j, 2) < sortArr(j + 1, 2) Then
+                temp1 = sortArr(j, 1): temp2 = sortArr(j, 2)
+                sortArr(j, 1) = sortArr(j + 1, 1): sortArr(j, 2) = sortArr(j + 1, 2): sortArr(j + 1, 1) = temp1: sortArr(j + 1, 2) = temp2: swapped = True
+            End If
+        Next j
+    Loop While swapped
+    Call AddParagraph(wdApp, "Top 40 nejpočetnějších tagů:")
+    Dim wdTable As Object, maxRows As Long
+    maxRows = Application.WorksheetFunction.Min(40, UBound(sortArr, 1))
+    Set wdTable = wdDoc.Tables.Add(wdApp.Selection.Range, maxRows + 1, 2)
+    With wdTable: .Borders.InsideLineStyle = 1: .Borders.OutsideLineStyle = 1
+        .cell(1, 1).Range.text = "#": .cell(1, 2).Range.text = "Tag": .Rows(1).Range.Font.Bold = True
+        For i = 1 To maxRows: .cell(i + 1, 1).Range.text = CStr(i): .cell(i + 1, 2).Range.text = sortArr(i, 1): Next i
+    End With
+    wdApp.Selection.EndOf 6, 0: wdApp.Selection.TypeParagraph
+    If dictRatingCnt.count > 0 Then
+        Call AddParagraph(wdApp, "Top 20 tagů podle váženého hodnocení:")
+        Const MIN_SUMA_VAH As Double = 3#
+        Dim filteredCount As Long: filteredCount = 0
+        For Each k In dictRatingCnt.keys: If dictRatingCnt(k) >= MIN_SUMA_VAH Then filteredCount = filteredCount + 1
+        Next k
+        If filteredCount > 0 Then
+            Dim sortAvgArr() As Variant: ReDim sortAvgArr(1 To filteredCount, 1 To 2): idx = 1
+            For Each k In dictRatingCnt.keys
+                If dictRatingCnt(k) >= MIN_SUMA_VAH Then
+                    sortAvgArr(idx, 1) = k: sortAvgArr(idx, 2) = dictRatingSum(k) / dictRatingCnt(k): idx = idx + 1
+                End If
+            Next k
+            Do: swapped = False
+                For j = 1 To UBound(sortAvgArr, 1) - 1
+                    If sortAvgArr(j, 2) < sortAvgArr(j + 1, 2) Then
+                        temp1 = sortAvgArr(j, 1): temp2 = sortAvgArr(j, 2)
+                        sortAvgArr(j, 1) = sortAvgArr(j + 1, 1): sortAvgArr(j, 2) = sortAvgArr(j + 1, 2): sortAvgArr(j + 1, 1) = temp1: sortAvgArr(j + 1, 2) = temp2: swapped = True
+                    End If
+                Next j
+            Loop While swapped
+            Dim maxRows2 As Long: maxRows2 = Application.WorksheetFunction.Min(20, UBound(sortAvgArr, 1))
+            Set wdTable = wdDoc.Tables.Add(wdApp.Selection.Range, maxRows2 + 1, 3)
+            With wdTable: .Borders.InsideLineStyle = 1: .Borders.OutsideLineStyle = 1
+                .cell(1, 1).Range.text = "#": .cell(1, 2).Range.text = "Tag": .cell(1, 3).Range.text = "Vážené hodnocení": .Rows(1).Range.Font.Bold = True
+                For i = 1 To maxRows2: .cell(i + 1, 1).Range.text = CStr(i): .cell(i + 1, 2).Range.text = sortAvgArr(i, 1): .cell(i + 1, 3).Range.text = Format(sortAvgArr(i, 2), "0.00")
+                Next i
+            End With
+            wdApp.Selection.EndOf 6, 0: wdApp.Selection.TypeParagraph
+        End If
+    End If
+End Sub
+
+Sub SectionH2_AnimeWithTags(wdDoc As Object, wdApp As Object)
+    Call AddHeading(wdApp, "Anime a jejich AniList tagy", ANILIST_HEADING1_FONT_SIZE)
+    
+    Dim wsMal As Worksheet
+    Dim dataArr As Variant
+    Dim lastRow As Long, i As Long
+    
+    On Error Resume Next: Set wsMal = ThisWorkbook.Sheets(SH_MAL): On Error GoTo 0
+    If wsMal Is Nothing Then Exit Sub
+    
+    ' Cache: BX = MAL ID, BY = Anime Name, BZ = Tags (tag1:rank;tag2:rank;...)
+    lastRow = wsMal.Cells(wsMal.Rows.count, "BX").End(xlUp).row
+    If lastRow < 2 Then Exit Sub
+    
+    dataArr = wsMal.Range("BX2:BZ" & lastRow).Value
+    
+    ' Spočítat platné řádky
+    Dim validCount As Long: validCount = 0
+    For i = 1 To UBound(dataArr, 1)
+        If IsNumeric(dataArr(i, 1)) And Len(Trim(CStr(dataArr(i, 2)))) > 0 Then
+            validCount = validCount + 1
+        End If
+    Next i
+    
+    If validCount = 0 Then
+        Call AddParagraph(wdApp, "(Žádná data k dispozici)")
+        Exit Sub
+    End If
+    
+    ' Vytvořit tabulku
+    Dim wdTable As Object, rowIdx As Long
+    Dim tagString As String, cleanTags As String, tagsArr() As String, parts() As String, j As Long
+    
+    Set wdTable = wdDoc.Tables.Add(wdApp.Selection.Range, validCount + 1, 3)
+    With wdTable
+        .Borders.InsideLineStyle = 1: .Borders.OutsideLineStyle = 1
+        .cell(1, 1).Range.text = "#": .cell(1, 2).Range.text = "Anime": .cell(1, 3).Range.text = "AniList Tagy"
+        .Rows(1).Range.Font.Bold = True
+        
+        rowIdx = 2
+        For i = 1 To UBound(dataArr, 1)
+            If IsNumeric(dataArr(i, 1)) And Len(Trim(CStr(dataArr(i, 2)))) > 0 Then
+                .cell(rowIdx, 1).Range.text = CStr(rowIdx - 1)
+                .cell(rowIdx, 2).Range.text = CStr(dataArr(i, 2))
+                
+                ' Převést tagy z formátu "tag1:rank;tag2:rank" na "tag1; tag2; tag3"
+                tagString = CStr(dataArr(i, 3)): cleanTags = ""
+                If Len(tagString) > 0 Then
+                    tagsArr = Split(tagString, ";")
+                    For j = LBound(tagsArr) To UBound(tagsArr)
+                        parts = Split(tagsArr(j), ":")
+                        If UBound(parts) >= 0 Then
+                            If Len(cleanTags) > 0 Then cleanTags = cleanTags & "; "
+                            cleanTags = cleanTags & Trim(parts(0))
+                        End If
+                    Next j
+                End If
+                .cell(rowIdx, 3).Range.text = cleanTags
+                rowIdx = rowIdx + 1
+            End If
+        Next i
+    End With
+    
+    wdApp.Selection.EndOf 6, 0
+    wdApp.Selection.TypeParagraph
+End Sub
+
+Sub SectionE_SeasonsAge(wdDoc As Object, wdApp As Object)
+    Call AddHeading(wdApp, "Věk anime", HEADING1_FONT_SIZE)
+    
+    If IsEmpty(m_Anilist_animeData) Then Exit Sub
+    
+    Dim i As Long, todayDate As Date, releaseDate As Date, daysDiff As Long
+    Dim cnt0to2 As Long, cnt2to5 As Long, cnt5to15 As Long, cnt15plus As Long
+    
+    todayDate = Date
+    
+    ' Sloupec F = COL_DATUM = 6
+    For i = 2 To UBound(m_Anilist_animeData, 1)
+        If IsDate(m_Anilist_animeData(i, COL_DATUM)) Then
+            releaseDate = CDate(m_Anilist_animeData(i, COL_DATUM))
+            daysDiff = todayDate - releaseDate
+            
+            Select Case daysDiff
+                Case Is <= 730:  cnt0to2 = cnt0to2 + 1     ' 0-2 roky
+                Case Is <= 1825: cnt2to5 = cnt2to5 + 1     ' 2-5 let
+                Case Is <= 5475: cnt5to15 = cnt5to15 + 1   ' 5-15 let
+                Case Else:       cnt15plus = cnt15plus + 1 ' 15+ let
+            End Select
+        End If
+    Next i
+    
+    Dim wdTable As Object
+    Set wdTable = wdDoc.Tables.Add(wdApp.Selection.Range, 5, 2)
+    With wdTable
+        .Borders.InsideLineStyle = 1: .Borders.OutsideLineStyle = 1
+        .cell(1, 1).Range.text = "Věková skupina": .cell(1, 2).Range.text = "Počet"
+        .Rows(1).Range.Font.Bold = True
+        .cell(2, 1).Range.text = "0-2 roky": .cell(2, 2).Range.text = CStr(cnt0to2)
+        .cell(3, 1).Range.text = "2-5 let": .cell(3, 2).Range.text = CStr(cnt2to5)
+        .cell(4, 1).Range.text = "5-15 let": .cell(4, 2).Range.text = CStr(cnt5to15)
+        .cell(5, 1).Range.text = "15+ let": .cell(5, 2).Range.text = CStr(cnt15plus)
+    End With
+    
+    wdApp.Selection.EndOf 6, 0
+    wdApp.Selection.TypeParagraph
+End Sub
+
+Sub SectionF_Themes(wdDoc As Object, wdApp As Object)
+    Call AddHeading(wdApp, "Témata", HEADING1_FONT_SIZE)
+    
+    If IsEmpty(m_Anilist_animeData) Then Exit Sub
+    
+    Dim dictCnt As Object, dictSum As Object, dictRatingCnt As Object
+    Dim i As Long, j As Long, themeVal As String, themeList As Variant
+    
+    Set dictCnt = CreateObject("Scripting.Dictionary")
+    Set dictSum = CreateObject("Scripting.Dictionary")
+    Set dictRatingCnt = CreateObject("Scripting.Dictionary")
+    
+    ' Sloupec G = COL_TEMATA = 7, Sloupec K = COL_HODNOCENI = 11
+    For i = 2 To UBound(m_Anilist_animeData, 1)
+        themeVal = Trim(CStr(m_Anilist_animeData(i, COL_TEMATA)))
+        
+        If Len(themeVal) > 0 Then
+            themeList = Split(themeVal, ";")
+            For j = LBound(themeList) To UBound(themeList)
+                themeVal = Trim(CStr(themeList(j)))
+                If Len(themeVal) > 0 And UCase(themeVal) <> "X" Then
+                    dictCnt(themeVal) = dictCnt(themeVal) + 1
+                    If IsNumeric(m_Anilist_animeData(i, COL_HODNOCENI)) And m_Anilist_animeData(i, COL_HODNOCENI) > 0 Then
+                        dictSum(themeVal) = dictSum(themeVal) + CDbl(m_Anilist_animeData(i, COL_HODNOCENI))
+                        dictRatingCnt(themeVal) = dictRatingCnt(themeVal) + 1
+                    End If
+                End If
+            Next j
+        End If
+    Next i
+    
+    If dictCnt.count = 0 Then Call AddParagraph(wdApp, "(Žádná témata k dispozici)"): Exit Sub
+    Call CreateTableFromDictWithRating(wdApp, wdDoc, dictCnt, dictSum, dictRatingCnt, "Téma", "Počet", "Prům. hodnocení")
+End Sub
+
+Sub SectionG_Genres(wdDoc As Object, wdApp As Object)
+    Call AddHeading(wdApp, "Žánry", HEADING1_FONT_SIZE)
+    
+    If IsEmpty(m_Anilist_animeData) Then Exit Sub
+    
+    Dim dictCnt As Object, dictSum As Object, dictRatingCnt As Object
+    Dim i As Long, j As Long, genreVal As String, genreList As Variant
+    
+    Set dictCnt = CreateObject("Scripting.Dictionary")
+    Set dictSum = CreateObject("Scripting.Dictionary")
+    Set dictRatingCnt = CreateObject("Scripting.Dictionary")
+    
+    ' Sloupec H = COL_ZANRY = 8, Sloupec K = COL_HODNOCENI = 11
+    For i = 2 To UBound(m_Anilist_animeData, 1)
+        genreVal = Trim(CStr(m_Anilist_animeData(i, COL_ZANRY)))
+        
+        If Len(genreVal) > 0 Then
+            genreList = Split(genreVal, ";")
+            For j = LBound(genreList) To UBound(genreList)
+                genreVal = Trim(CStr(genreList(j)))
+                If Len(genreVal) > 0 Then
+                    dictCnt(genreVal) = dictCnt(genreVal) + 1
+                    If IsNumeric(m_Anilist_animeData(i, COL_HODNOCENI)) And m_Anilist_animeData(i, COL_HODNOCENI) > 0 Then
+                        dictSum(genreVal) = dictSum(genreVal) + CDbl(m_Anilist_animeData(i, COL_HODNOCENI))
+                        dictRatingCnt(genreVal) = dictRatingCnt(genreVal) + 1
+                    End If
+                End If
+            Next j
+        End If
+    Next i
+    
+    If dictCnt.count = 0 Then Call AddParagraph(wdApp, "(Žádné žánry k dispozici)"): Exit Sub
+    Call CreateTableFromDictWithRating(wdApp, wdDoc, dictCnt, dictSum, dictRatingCnt, "Žánr", "Počet", "Prům. hodnocení")
+End Sub
+
+Sub SectionK_TopAnime(wdDoc As Object, wdApp As Object)
+    Call AddHeading(wdApp, "Nejlepší Anime", HEADING1_FONT_SIZE)
+    
+    ' Čteme z shapes na OBECNÉ INFORMACE
+    Dim ws As Worksheet, shp As Shape
+    Dim i As Long, animeName As String
+    Set ws = ThisWorkbook.Sheets(SH_GEN)
+    
+    Dim wdTable As Object
+    Set wdTable = wdDoc.Tables.Add(wdApp.Selection.Range, 11, 2)
+    With wdTable
+        .Borders.Enable = True: .AutoFitBehavior 1
+        .Range.Font.Name = FONT_NAME: .Range.Font.size = TABLE_FONT_SIZE
+        .cell(1, 1).Range.text = "Pozice": .cell(1, 2).Range.text = "Anime"
+        .Rows(1).Range.Font.Bold = True
+        
+        For i = 1 To 10
+            On Error Resume Next
+            Set shp = ws.Shapes("Top10_Anime_" & i)
+            If Not shp Is Nothing Then
+                animeName = shp.AlternativeText
+                If Len(animeName) = 0 Then animeName = "[Neznámé]"
+            Else
+                animeName = "[N/A]"
+            End If
+            On Error GoTo 0
+            .cell(i + 1, 1).Range.text = CStr(i)
+            .cell(i + 1, 2).Range.text = animeName
+        Next i
+    End With
+    wdApp.Selection.EndOf 6: wdApp.Selection.TypeParagraph
+End Sub
+
+Sub SectionK2_HonourableMentions(wdDoc As Object, wdApp As Object)
+    Call AddHeading(wdApp, "Honourable Mentions", HEADING1_FONT_SIZE)
+    
+    ' Čteme z shapes HM_Anime_* na OBECNÉ INFORMACE
+    Dim ws As Worksheet, shp As Shape
+    Dim i As Long, animeName As String, hmCount As Long
+    Set ws = ThisWorkbook.Sheets(SH_GEN)
+    
+    ' Zjistit kolik HM existuje (max 20)
+    hmCount = 0
+    For i = 1 To 20
+        On Error Resume Next
+        Set shp = ws.Shapes("HM_Anime_" & i)
+        If Not shp Is Nothing Then
+            If Len(Trim(shp.AlternativeText)) > 0 Then hmCount = hmCount + 1
+        End If
+        Set shp = Nothing
+        On Error GoTo 0
+    Next i
+    
+    If hmCount = 0 Then Exit Sub ' Žádné HM
+    
+    Dim wdTable As Object
+    Set wdTable = wdDoc.Tables.Add(wdApp.Selection.Range, hmCount + 1, 2)
+    With wdTable
+        .Borders.Enable = True: .AutoFitBehavior 1
+        .Range.Font.Name = FONT_NAME: .Range.Font.size = TABLE_FONT_SIZE
+        .cell(1, 1).Range.text = "Pozice": .cell(1, 2).Range.text = "Anime"
+        .Rows(1).Range.Font.Bold = True
+        
+        Dim rowIdx As Long: rowIdx = 2
+        For i = 1 To 20
+            On Error Resume Next
+            Set shp = ws.Shapes("HM_Anime_" & i)
+            If Not shp Is Nothing Then
+                animeName = shp.AlternativeText
+                If Len(Trim(animeName)) > 0 Then
+                    .cell(rowIdx, 1).Range.text = CStr(i)
+                    .cell(rowIdx, 2).Range.text = animeName
+                    rowIdx = rowIdx + 1
+                End If
+            End If
+            Set shp = Nothing
+            On Error GoTo 0
+        Next i
+    End With
+    wdApp.Selection.EndOf 6: wdApp.Selection.TypeParagraph
+End Sub
+
+Sub SectionL_FavCharacters(wdDoc As Object, wdApp As Object)
+    Call AddHeading(wdApp, "Nejoblíbenější postavy", HEADING1_FONT_SIZE)
+    
+    Dim ws As Worksheet, shp As Shape
+    Dim i As Long, charText As String
+    Set ws = ThisWorkbook.Sheets(SH_GEN)
+    
+    Dim wdTable As Object
+    Set wdTable = wdDoc.Tables.Add(wdApp.Selection.Range, 11, 2)
+    With wdTable
+        .Borders.Enable = True: .AutoFitBehavior 1
+        .Range.Font.Name = FONT_NAME: .Range.Font.size = TABLE_FONT_SIZE
+        .cell(1, 1).Range.text = "Pozice": .cell(1, 2).Range.text = "Postava (Anime)"
+        .Rows(1).Range.Font.Bold = True
+        
+        For i = 1 To 10
+            charText = "[N/A]"
+            On Error Resume Next
+            ' Čteme z Top10_CharAnime_* (obsahuje "Jméno, Série")
+            Set shp = ws.Shapes("Top10_CharAnime_" & i)
+            If Not shp Is Nothing Then
+                charText = shp.TextFrame.Characters.text
+                If Len(Trim(charText)) = 0 Then charText = "[N/A]"
+            End If
+            On Error GoTo 0
+            .cell(i + 1, 1).Range.text = CStr(i)
+            .cell(i + 1, 2).Range.text = charText
+        Next i
+    End With
+    wdApp.Selection.EndOf 6: wdApp.Selection.TypeParagraph
+End Sub
+
+Sub SectionM_Dub(wdDoc As Object, wdApp As Object)
+    Call AddHeading(wdApp, "Dabing", HEADING1_FONT_SIZE)
+    
+    If IsEmpty(m_Anilist_animeData) Then Exit Sub
+    
+    Dim dictCnt As Object, dictSum As Object, dictRatingCnt As Object
+    Dim i As Long, dubVal As String, dubParts As Variant, singleDub As String
+    
+    Set dictCnt = CreateObject("Scripting.Dictionary")
+    Set dictSum = CreateObject("Scripting.Dictionary")
+    Set dictRatingCnt = CreateObject("Scripting.Dictionary")
+    
+    For i = 2 To UBound(m_Anilist_animeData, 1)
+        dubVal = Trim(CStr(m_Anilist_animeData(i, COL_DUB)))
+        If Len(dubVal) > 0 Then
+            dubParts = Split(dubVal, ";")
+            Dim j As Long
+            For j = LBound(dubParts) To UBound(dubParts)
+                singleDub = Trim(CStr(dubParts(j)))
+                If Len(singleDub) > 0 Then
+                    dictCnt(singleDub) = dictCnt(singleDub) + 1
+                    If IsNumeric(m_Anilist_animeData(i, COL_HODNOCENI)) And m_Anilist_animeData(i, COL_HODNOCENI) > 0 Then
+                        dictSum(singleDub) = dictSum(singleDub) + CDbl(m_Anilist_animeData(i, COL_HODNOCENI))
+                        dictRatingCnt(singleDub) = dictRatingCnt(singleDub) + 1
+                    End If
+                End If
+            Next j
+        End If
+    Next i
+    
+    If dictCnt.count = 0 Then Exit Sub
+    Call CreateTableFromDictWithRating(wdApp, wdDoc, dictCnt, dictSum, dictRatingCnt, "Dabing", "Počet", "Prům. hodnocení")
+End Sub
+
+Sub SectionN_Status(wdDoc As Object, wdApp As Object)
+    Call AddHeading(wdApp, "Status", HEADING1_FONT_SIZE)
+    
+    If IsEmpty(m_Anilist_animeData) Then Exit Sub
+    
+    Dim dictCnt As Object, i As Long, statusVal As String
+    Set dictCnt = CreateObject("Scripting.Dictionary")
+    
+    For i = 2 To UBound(m_Anilist_animeData, 1)
+        statusVal = Trim(CStr(m_Anilist_animeData(i, COL_STATUS)))
+        If Len(statusVal) > 0 Then
+            ' Sloučit všechny "Existuje..." do jedné kategorie
+            If InStr(1, statusVal, "Existuje", vbTextCompare) > 0 Then
+                statusVal = "Existuje pokračování"
+            End If
+            dictCnt(statusVal) = dictCnt(statusVal) + 1
+        End If
+    Next i
+    
+    If dictCnt.count = 0 Then Exit Sub
+    Call CreateTableFromDict(wdApp, wdDoc, dictCnt, "Status", "Počet")
+End Sub
+
+Sub SectionR_WatchedAnime(wdDoc As Object, wdApp As Object)
+    Call AddHeading(wdApp, "Zhlédnutá Anime", HEADING1_FONT_SIZE)
+    
+    ' Použít sdílená data místo opakovaného načítání
+    If IsEmpty(m_Anilist_animeData) Then Exit Sub
+    Dim dataArr As Variant: dataArr = m_Anilist_animeData
+    
+    ' Sloupce k exportu (přeskočit B = index 2 = Náhledovka)
+    Dim exportCols() As Long, i As Long
+    ReDim exportCols(1 To 16)  ' A, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q
+    exportCols(1) = 1: exportCols(2) = 3: exportCols(3) = 4: exportCols(4) = 5
+    exportCols(5) = 6: exportCols(6) = 7: exportCols(7) = 8: exportCols(8) = 9
+    exportCols(9) = 10: exportCols(10) = 11: exportCols(11) = 12: exportCols(12) = 13
+    exportCols(13) = 14: exportCols(14) = 15: exportCols(15) = 16: exportCols(16) = 17
+    
+    ' Vytvořit pole indexů pro řazení
+    Dim indices() As Long
+    ReDim indices(2 To UBound(dataArr, 1))
+    For i = 2 To UBound(dataArr, 1)
+        indices(i) = i
+    Next i
+    
+    ' QuickSort sestupně podle data (sloupec L = 12) - O(n log n)
+    Call QuickSortIndices(indices, dataArr, 12, 2, UBound(indices), True)
+    
+    ' Vytvořit tabulku bez sloupce B (Náhledovka)
+    Dim wdTable As Object, C As Long, row As Long, colIdx As Long
+    Dim numRows As Long: numRows = UBound(dataArr, 1)
+    Dim numCols As Long: numCols = UBound(exportCols)
+    
+    Set wdTable = wdDoc.Tables.Add(wdApp.Selection.Range, numRows, numCols)
+    With wdTable
+        .Borders.Enable = True: .AutoFitBehavior 1
+        .Range.Font.Name = FONT_NAME: .Range.Font.size = TABLE_FONT_SIZE
+        
+        ' Hlavička
+        For C = 1 To numCols
+            .cell(1, C).Range.text = CStr(dataArr(1, exportCols(C)))
+        Next C
+        .Rows(1).Range.Font.Bold = True
+        
+        ' Data - seřazené
+        Dim newRowNum As Long: newRowNum = 1
+        row = 2
+        For i = 2 To UBound(indices)
+            For C = 1 To numCols
+                colIdx = exportCols(C)
+                If colIdx = 1 Then
+                    .cell(row, C).Range.text = CStr(newRowNum) & "."
+                Else
+                    On Error Resume Next
+                    Dim cellVal As Variant
+                    cellVal = dataArr(indices(i), colIdx)
+                    If IsNumeric(cellVal) And Not IsEmpty(cellVal) And Not IsDate(cellVal) Then
+                        If Int(CDbl(cellVal)) <> CDbl(cellVal) Then
+                            .cell(row, C).Range.text = Format(cellVal, "0.00")
+                        Else
+                            .cell(row, C).Range.text = CStr(cellVal)
+                        End If
+                    ElseIf IsDate(cellVal) Then
+                        .cell(row, C).Range.text = Format(cellVal, "dd.mm.yyyy")
+                    Else
+                        .cell(row, C).Range.text = CStr(cellVal)
+                    End If
+                    On Error GoTo 0
+                End If
+            Next C
+            newRowNum = newRowNum + 1
+            row = row + 1
+        Next i
+    End With
+    wdApp.Selection.EndOf 6: wdApp.Selection.TypeParagraph
+End Sub
+
+Sub SectionS_WatchHistory(wdDoc As Object, wdApp As Object)
+    Call AddHeading(wdApp, "Historie sledování", HEADING1_FONT_SIZE)
+    
+    Dim ws As Worksheet: Set ws = ThisWorkbook.Sheets(SH_HIST)
+    Dim wdT As Object, lr As Long, r As Long
+    Dim lastDate As String, dateVal As Variant, cmt As String
+    
+    lr = ws.Cells(ws.Rows.count, 1).End(xlUp).row
+    If lr < 2 Then Exit Sub
+    
+    Set wdT = wdDoc.Tables.Add(wdApp.Selection.Range, lr - 1, 5)
+    With wdT
+        .Borders.Enable = True: .AutoFitBehavior 1
+        .Range.Font.Name = FONT_NAME: .Range.Font.size = TABLE_FONT_SIZE
+        
+        lastDate = ""
+        For r = 2 To lr
+            On Error Resume Next
+            Dim outRow As Long: outRow = r - 1
+            .cell(outRow, 1).Range.text = CStr(ws.Cells(r, 1).Value)
+            .cell(outRow, 2).Range.text = CStr(ws.Cells(r, 2).Value)
+            .cell(outRow, 3).Range.text = CStr(ws.Cells(r, 3).Value)
+            
+            dateVal = ws.Cells(r, 4).Value
+            If Not IsEmpty(dateVal) And Len(CStr(dateVal)) > 0 And CStr(dateVal) <> "0" Then
+                If IsDate(dateVal) Then lastDate = Format(dateVal, "dd.mm.yyyy") Else lastDate = CStr(dateVal)
+            End If
+            .cell(outRow, 4).Range.text = lastDate
+            
+            If outRow = 1 Then
+                .cell(outRow, 5).Range.text = "Rewatch"
+                .Rows(1).Range.Font.Bold = True
+            Else
+                cmt = "": If Not ws.Cells(r, 1).Comment Is Nothing Then cmt = "(Rewatch) " & ws.Cells(r, 1).Comment.text
+                .cell(outRow, 5).Range.text = cmt
+            End If
+            On Error GoTo 0
+        Next r
+    End With
+    wdApp.Selection.EndOf 6: wdApp.Selection.TypeParagraph
+End Sub
+
+Sub SectionT_FavouriteOPED(wdDoc As Object, wdApp As Object)
+    Call AddHeading(wdApp, "Favourite OP/ED", HEADING1_FONT_SIZE)
+    Dim ws As Worksheet: Set ws = ThisWorkbook.Sheets(SH_FAV)
+    
+    ' Použít tabulku Table_FAV_OP_ED - exportovat všechny sloupce
+    Dim tbl As ListObject, dataArr As Variant
+    Dim i As Long, j As Long, numRows As Long, numCols As Long
+    Dim wdTable As Object
+    
+    On Error Resume Next
+    Set tbl = ws.ListObjects("Table_FAV_OP_ED")
+    On Error GoTo 0
+    
+    If tbl Is Nothing Then
+        Call CreateTableFromRange(wdApp, wdDoc, ws, "A3:K90", True)
+        Exit Sub
+    End If
+    
+    If tbl.DataBodyRange Is Nothing Then Exit Sub
+    
+    numRows = tbl.DataBodyRange.Rows.count
+    numCols = tbl.ListColumns.count
+    dataArr = tbl.DataBodyRange.Value
+    
+    ' Vytvořit tabulku se všemi sloupci
+    Set wdTable = wdDoc.Tables.Add(wdApp.Selection.Range, numRows + 1, numCols)
+    With wdTable
+        .Borders.Enable = True: .AutoFitBehavior 1
+        .Range.Font.Name = FONT_NAME: .Range.Font.size = TABLE_FONT_SIZE
+        
+        ' Hlavička ze sloupců tabulky
+        For j = 1 To numCols
+            .cell(1, j).Range.text = tbl.ListColumns(j).Name
+        Next j
+        .Rows(1).Range.Font.Bold = True
+        
+        ' Data
+        For i = 1 To numRows
+            For j = 1 To numCols
+                On Error Resume Next
+                .cell(i + 1, j).Range.text = CStr(dataArr(i, j))
+                On Error GoTo 0
+            Next j
+        Next i
+    End With
+    wdApp.Selection.EndOf 6: wdApp.Selection.TypeParagraph
+End Sub
+
+Sub SectionU_FavouriteOSTs(wdDoc As Object, wdApp As Object)
+    Call AddHeading(wdApp, "Favourite OSTs", HEADING1_FONT_SIZE)
+    Dim ws As Worksheet: Set ws = ThisWorkbook.Sheets(SH_FAV)
+    Dim lr As Long: lr = ws.Cells(ws.Rows.count, "AC").End(xlUp).row
+    If lr > 1 Then Call CreateTableFromRange(wdApp, wdDoc, ws, "AC1:AE" & lr, True)
+End Sub
+
+Sub SectionV_AnimeFutures(wdDoc As Object, wdApp As Object)
+    Call AddHeading(wdApp, "Anime Futures", HEADING1_FONT_SIZE)
+    Dim ws As Worksheet
+    On Error Resume Next: Set ws = ThisWorkbook.Sheets(SH_PLAN): On Error GoTo 0
+    If ws Is Nothing Then Exit Sub
+    Dim lr As Long: lr = ws.Cells(ws.Rows.count, "A").End(xlUp).row
+    If lr > 1 Then Call CreateTableFromRange(wdApp, wdDoc, ws, "A1:D" & lr, True)
+End Sub
+
+Sub SectionW_PlanToWatch(wdDoc As Object, wdApp As Object)
+    Call AddHeading(wdApp, "Plan to Watch", HEADING1_FONT_SIZE)
+    Dim ws As Worksheet
+    On Error Resume Next: Set ws = ThisWorkbook.Sheets(SH_PLAN): On Error GoTo 0
+    If ws Is Nothing Then Exit Sub
+    Dim lr As Long: lr = ws.Cells(ws.Rows.count, "F").End(xlUp).row
+    If lr > 1 Then Call CreateTableFromRange(wdApp, wdDoc, ws, "F1:M" & lr, True)
+End Sub
+
+Sub SectionX_PlanToRead(wdDoc As Object, wdApp As Object)
+    Call AddHeading(wdApp, "Plan to Read", HEADING1_FONT_SIZE)
+    Dim ws As Worksheet
+    On Error Resume Next: Set ws = ThisWorkbook.Sheets(SH_PLAN): On Error GoTo 0
+    If ws Is Nothing Then Exit Sub
+    Dim lr As Long: lr = ws.Cells(ws.Rows.count, "O").End(xlUp).row
+    If lr > 1 Then Call CreateTableFromRange(wdApp, wdDoc, ws, "O1:V" & lr, True)
+End Sub
+
+' ***********************************************************************************
+' * HLAVNÍ SPOUŠTĚCÍ PROCEDURA                                                      *
+' ***********************************************************************************
+Sub ExportAllToWord_Master(Optional ByVal exportMode As Integer = 3, Optional ByVal overwriteExisting As Boolean = False)
+    Dim ws As Worksheet
+    Dim lastRow As Long, r As Long
+    Dim wordApp As Object, fso As Object
+    
+    LogToFile "[Ratings] Starting ExportAllToWord_Master (Mode=" & exportMode & ")"
+    
+    If Not MountVirtualDrive(VIRTUAL_DRIVE, PATH_ROOT_LONG) Then
+        LogToFile "[Ratings] ERROR: Failed to mount virtual drive " & VIRTUAL_DRIVE
+        If Application.Visible Then MsgBox "Nepodařilo se připojit virtuální disk " & VIRTUAL_DRIVE, vbCritical
+        Exit Sub
+    End If
+    LogToFile "[Ratings] Virtual drive mounted."
+    
+    On Error GoTo CleanExit
+    Dim dictMain As Object: Set dictMain = CreateObject("Scripting.Dictionary")
+    dictMain.CompareMode = vbTextCompare
+    
+    Dim dictActiveRatings As Object: Set dictActiveRatings = CreateObject("Scripting.Dictionary")
+    Dim dictActiveMerged As Object: Set dictActiveMerged = CreateObject("Scripting.Dictionary")
+    Dim dictActiveSeries As Object: Set dictActiveSeries = CreateObject("Scripting.Dictionary")
+    dictActiveRatings.CompareMode = vbTextCompare
+    dictActiveMerged.CompareMode = vbTextCompare
+    dictActiveSeries.CompareMode = vbTextCompare
+    
+    Set ws = ThisWorkbook.Sheets("ANIME LIST")
+    lastRow = ws.Cells(ws.Rows.count, "C").End(xlUp).row
+    
+    If lastRow < 2 Then
+        If Application.Visible Then MsgBox "Žádná data k exportu.", vbExclamation
+        GoTo CleanExit
+    End If
+    
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    
+    ' Ensure folders
+    If exportMode = 1 Or exportMode = 2 Then
+        EnsureFolder fso, PATH_OUT_RATINGS
+        EnsureFolder fso, PATH_OUT_MERGED_ANIME
+    End If
+    If exportMode = 1 Or exportMode = 3 Then
+        EnsureFolder fso, PATH_OUT_MERGED_SERIES
+    End If
+    
+    ' --- NAČTENÍ CACHE PODPISŮ (VBA Pre-Check Caching) ---
+    Dim dictCache As Object: Set dictCache = CreateObject("Scripting.Dictionary")
+    dictCache.CompareMode = vbTextCompare
+    Dim cacheFile As String: cacheFile = "C:\Temp\vba_series_cache.txt"
+    If fso.fileExists(cacheFile) Then
+        On Error Resume Next
+        Dim stream As Object: Set stream = fso.OpenTextFile(cacheFile, 1, False, -2)
+        If Not stream Is Nothing Then
+            Do Until stream.AtEndOfStream
+                Dim cacheLine As String: cacheLine = stream.ReadLine
+                Dim parts() As String
+                parts = Split(cacheLine, "|")
+                If UBound(parts) = 1 Then
+                    dictCache(parts(0)) = parts(1)
+                End If
+            Loop
+            stream.Close
+        End If
+        On Error GoTo CleanExit
+    End If
+    
+    On Error Resume Next
+    Set wordApp = GetObject(, "Word.Application")
+    If wordApp Is Nothing Then Set wordApp = CreateObject("Word.Application")
+    On Error GoTo CleanExit
+    
+    wordApp.Visible = False
+    ToggleSpeed True, wordApp
+    
+    ' Načtení dat do pole (sloupce A až L)
+    Dim arrData As Variant
+    If lastRow >= 2 Then arrData = ws.Range(ws.Cells(2, 1), ws.Cells(lastRow, 12)).Value
+
+    
+    Dim dictRatingComments As Object, dictSeriesComments As Object
+    Set dictRatingComments = CreateObject("Scripting.Dictionary")
+    Set dictSeriesComments = CreateObject("Scripting.Dictionary")
+    
+    ' Načíst komentáře hromadně (přes kolekci ws.Comments - mnohem rychlejší)
+    Dim cmt As Comment
+    For Each cmt In ws.Comments
+        If cmt.Parent.Column = 11 Then ' Sloupec K (Rating)
+            dictRatingComments(cmt.Parent.row) = cmt.text
+        ElseIf cmt.Parent.Column = 3 Then ' Sloupec C (Název/Série)
+            dictSeriesComments(cmt.Parent.row) = cmt.text
+        End If
+    Next cmt
+
+    
+    Dim dictFiles As Object: Set dictFiles = LoadFileCache(fso, PATH_SRC_ANALYSIS)
+    Dim animeName As String, cleanName As String, commentText As String, seriesName As String
+    Dim hasRatingNote As Boolean, analysisPath As String, startDate As Variant
+    
+    LogToFile "[Ratings] Processing " & UBound(arrData, 1) & " anime entries..."
+    
+    For r = 1 To UBound(arrData, 1)
+        animeName = Trim(CStr(arrData(r, 3)))
+        If animeName <> "" Then
+            If r Mod 5 = 0 Then
+                ReportProgress 60 + (r / UBound(arrData, 1)) * 20, 100, "Načítám data: " & animeName
+            End If
+            If r Mod 50 = 0 Then Application.StatusBar = "Zpracovávám: " & animeName
+
+            cleanName = CleanFileName(animeName)
+            startDate = arrData(r, 12)
+            
+            analysisPath = ""
+            If dictFiles.Exists(cleanName & ".docx") Then analysisPath = PATH_SRC_ANALYSIS & cleanName & ".docx"
+            
+            ' 1. ZÍSKÁNÍ TEXTU HODNOCENÍ
+            hasRatingNote = False
+            commentText = PLACEHOLDER_TEXT
+            
+            If dictRatingComments.Exists(r + 1) Then
+                If Trim(dictRatingComments(r + 1)) <> "" Then
+                    commentText = dictRatingComments(r + 1)
+                    hasRatingNote = True
+                End If
+            End If
+            
+            ' Populate active individual files list
+            If hasRatingNote Then
+                dictActiveRatings(LCase(cleanName & ".docx")) = True
+                dictActiveMerged(LCase(cleanName & ".docx")) = True
+            End If
+
+            ' 2. ZÍSKÁNÍ NÁZVU SÉRIE
+            seriesName = ""
+            If dictSeriesComments.Exists(r + 1) Then
+                seriesName = ExtractSeriesName(dictSeriesComments(r + 1))
+            End If
+            
+            ' EXPORTY JEDNOTLIVÝCH SOUBORŮ (PODMÍNKA: REŽIM 1 nebo 2)
+            If exportMode = 1 Or exportMode = 2 Then
+                If hasRatingNote Then
+                    Dim pathRating As String, pathMerged As String
+                    Dim skipRating As Boolean, skipMerged As Boolean
+                    
+                    pathRating = PATH_OUT_RATINGS & cleanName & ".docx"
+                    pathMerged = PATH_OUT_MERGED_ANIME & cleanName & ".docx"
+                    
+                    ' --- VÝPOČET PODPISŮ (Smart Update) ---
+                    Dim analysisSize As String: analysisSize = "0"
+                    Dim analysisMtime As String: analysisMtime = ""
+                    If analysisPath <> "" Then
+                        If fso.fileExists(analysisPath) Then
+                            analysisSize = CStr(fso.GetFile(analysisPath).size)
+                            analysisMtime = CStr(fso.GetFile(analysisPath).DateLastModified)
+                        End If
+                    End If
+                    
+                    Dim sigRating As String
+                    sigRating = cleanName & "|" & commentText
+                    Dim ratingHash As String
+                    ratingHash = GetSHA256String(sigRating)
+                    
+                    Dim sigMerged As String
+                    sigMerged = cleanName & "|" & commentText & "|" & analysisSize & "|" & analysisMtime
+                    Dim mergedHash As String
+                    mergedHash = GetSHA256String(sigMerged)
+                    
+                    ' Kontrola cache
+                    Dim ratingCached As Boolean: ratingCached = False
+                    If dictCache.Exists("R_" & cleanName) Then
+                        If dictCache("R_" & cleanName) = ratingHash And fso.fileExists(pathRating) Then
+                            ratingCached = True
+                        End If
+                    End If
+                    
+                    Dim mergedCached As Boolean: mergedCached = False
+                    If dictCache.Exists("M_" & cleanName) Then
+                        If dictCache("M_" & cleanName) = mergedHash And fso.fileExists(pathMerged) Then
+                            mergedCached = True
+                        End If
+                    End If
+                    
+                    ' Rozhodnutí o přeskočení
+                    skipRating = False
+                    If ratingCached Then
+                        skipRating = True
+                    ElseIf Not overwriteExisting And fso.fileExists(pathRating) Then
+                        skipRating = True
+                    End If
+                    
+                    skipMerged = False
+                    If mergedCached Then
+                        skipMerged = True
+                    ElseIf Not overwriteExisting And fso.fileExists(pathMerged) Then
+                        skipMerged = True
+                    End If
+                    
+                    If Not skipRating Then
+                        CreateWordDoc_RatingOnly wordApp, cleanName, commentText, PATH_OUT_RATINGS
+                        dictCache("R_" & cleanName) = ratingHash
+                    End If
+                    
+                    If Not skipMerged Then
+                        CreateWordDoc_MergedAnime wordApp, cleanName, commentText, analysisPath, PATH_OUT_MERGED_ANIME
+                        dictCache("M_" & cleanName) = mergedHash
+                    End If
+                End If
+            End If
+            
+            Dim storageKey As String, displayTitle As String
+            If seriesName <> "" Then
+                storageKey = CleanFileName(seriesName)
+                displayTitle = seriesName
+            Else
+                storageKey = cleanName
+                displayTitle = animeName
+            End If
+            Dim dateVal As Date
+            If IsDate(startDate) Then dateVal = CDate(startDate) Else dateVal = DateSerial(1900, 1, 1)
+            
+            If Not dictMain.Exists(storageKey) Then dictMain.Add storageKey, New Collection
+            dictMain(storageKey).Add Array(dateVal, animeName, commentText, analysisPath, displayTitle)
+        End If
+    Next r
+
+    If (exportMode = 1 Or exportMode = 3) And dictMain.count > 0 Then
+        Dim key As Variant, colData As Collection, counter As Long
+        counter = 0
+        
+        ' LOG: Začátek série generace
+        LogToFile "=== SÉRIE EXPORT START ==="
+        LogToFile "dictMain.count = " & dictMain.count
+        LogToFile "exportMode = " & exportMode & ", overwriteExisting = " & overwriteExisting
+        
+        For Each key In dictMain.keys
+            counter = counter + 1
+            
+            ' Zabránit tomu, aby neočekávaná chyba při třídění nebo zpracování jedné série zrušila celý export
+            On Error Resume Next
+            Set colData = SortCollectionByDate(dictMain(key))
+            
+            If err.Number <> 0 Then
+                LogToFile "  --> ERROR in Preparation/Sort: " & err.Description
+                err.Clear
+                Set colData = New Collection ' Pokračujeme prázdnou kolekcí nebo se přeskočí
+            End If
+            On Error GoTo CleanExit ' Restore clean exit logic for fatal outside-loop errors
+        
+            Dim docTitle As String: docTitle = CStr(key)
+            If colData.count > 0 Then
+                Dim firstItem As Variant: firstItem = colData(1)
+                If UBound(firstItem) >= 4 And firstItem(4) <> "" Then docTitle = firstItem(4)
+            End If
+            ' Populate active series file name
+            dictActiveSeries(LCase(CleanFileName(docTitle) & ".docx")) = True
+
+            ' Correct path constant
+            Dim pathSeries As String: pathSeries = PATH_OUT_MERGED_SERIES & CleanFileName(docTitle) & ".docx"
+            
+            ' --- VÝPOČET PODPISU (INPUT SIGNATURE) ---
+            Dim sigInput As String
+            sigInput = docTitle & "|" & colData.count
+            Dim item As Variant
+            For Each item In colData
+                sigInput = sigInput & "|" & item(1) & "|" & item(2) & "|" & CStr(item(0))
+                Dim pathAnalysis As String: pathAnalysis = item(3)
+                If pathAnalysis <> "" Then
+                    If fso.fileExists(pathAnalysis) Then
+                        sigInput = sigInput & "|" & fso.GetFile(pathAnalysis).size & "|" & CStr(fso.GetFile(pathAnalysis).DateLastModified)
+                    End If
+                End If
+            Next item
+            
+            Dim currentHash As String
+            currentHash = GetSHA256String(sigInput)
+            
+            Dim isCached As Boolean
+            isCached = False
+            If dictCache.Exists(key) Then
+                If dictCache(key) = currentHash And fso.fileExists(pathSeries) Then
+                    isCached = True
+                End If
+            End If
+            
+            If isCached Then
+                ' Skip generation completely
+                LogToFile "[" & counter & "/" & dictMain.count & "] KEY=" & CStr(key) & " TITLE=" & docTitle & " -> SKIPPED (VBA cache match: " & currentHash & ")"
+            Else
+                ' Generate document
+                ReportProgress 80 + (counter / dictMain.count) * 19, 100, "Generuji série: " & left(CStr(key), 30)
+                Application.StatusBar = "Generuji série (" & counter & "/" & dictMain.count & "): " & left(CStr(key), 30)
+                
+                LogToFile "[" & counter & "/" & dictMain.count & "] KEY=" & CStr(key) & " TITLE=" & docTitle & " PATH=" & pathSeries
+                LogToFile "  --> Creating (overwrite=" & overwriteExisting & ", exists=" & fso.fileExists(pathSeries) & ", hash=" & currentHash & ")"
+                
+                On Error Resume Next
+                CreateWordDoc_Unified wordApp, docTitle, colData, PATH_OUT_MERGED_SERIES
+                If err.Number <> 0 Then
+                    Debug.Print "Series CHYBA [" & docTitle & "]: " & err.Description
+                    LogToFile "  --> ERROR: " & err.Description
+                    err.Clear
+                Else
+                    LogToFile "  --> SUCCESS"
+                    dictCache(key) = currentHash
+                End If
+                
+                Set colData = Nothing
+                DoEvents
+                Sleep 200
+                LogToFile "  --> Loop End (Pre-Next)"
+                On Error GoTo CleanExit
+            End If
+        Next key
+        LogToFile "=== SÉRIE EXPORT END ==="
+    End If
+
+    ' --- CLEANUP OBSOLETE FILES ---
+    If exportMode = 1 Or exportMode = 2 Then
+        LogToFile "[Cleanup] Cleaning up Ratings and Merged Anime..."
+        CleanupObsoleteFiles fso, PATH_OUT_RATINGS, dictActiveRatings
+        CleanupObsoleteFiles fso, PATH_OUT_MERGED_ANIME, dictActiveMerged
+    End If
+    If exportMode = 1 Or exportMode = 3 Then
+        LogToFile "[Cleanup] Cleaning up Merged Series..."
+        CleanupObsoleteFiles fso, PATH_OUT_MERGED_SERIES, dictActiveSeries
+    End If
+
+CleanExit:
+    On Error Resume Next
+    
+    ' --- UKLÁDÁNÍ CACHE PODPISŮ ---
+    If Not fso Is Nothing And Not dictCache Is Nothing Then
+        LogToFile "[Ratings] Saving VBA caching signatures to " & cacheFile & "..."
+        Dim outStream As Object: Set outStream = fso.OpenTextFile(cacheFile, 2, True, -2)
+        If Not outStream Is Nothing Then
+            Dim cacheKey As Variant
+            For Each cacheKey In dictCache.keys
+                outStream.WriteLine cacheKey & "|" & dictCache(cacheKey)
+            Next cacheKey
+            outStream.Close
+        End If
+    End If
+    
+    ' Obnovení nastavení
+    ToggleSpeed False, wordApp
+    
+    If Not wordApp Is Nothing Then
+        wordApp.ScreenUpdating = True
+        wordApp.Quit
+        Set wordApp = Nothing
+    End If
+    Set fso = Nothing
+    UnmountVirtualDrive VIRTUAL_DRIVE
+    
+    Application.StatusBar = False
+    Application.ScreenUpdating = True
+    
+    If Application.Visible Then
+        If err.Number = 0 Then
+            'MsgBox "Hotovo! Export v režimu " & exportMode & " dokončen.", vbInformation
+        Else
+            MsgBox "Chyba: " & err.Description, vbCritical
+        End If
+    End If
+End Sub
+
+Sub CreateWordDoc_Unified(wApp As Object, title As String, colItems As Collection, path As String)
+On Error GoTo DocErr
+Dim doc As Object, item As Variant, i As Long
+Set doc = wApp.Documents.Add
+With doc.Range(0, 0)
+.InsertAfter "SÉRIE: " & UCase(title) & vbCrLf & vbCrLf
+.Font.Name = "Calibri": .Font.size = 24: .Font.Bold = True: .ParagraphFormat.Alignment = 1
+End With
+
+For i = 1 To colItems.count
+item = colItems(i)
+If i > 1 Then doc.Range(doc.Content.End - 1, doc.Content.End - 1).InsertBreak 7
+With doc.Range(doc.Content.End - 1, doc.Content.End - 1)
+    .text = "ANIME: " & UCase(item(1)) & " (" & Format(item(0), "dd.mm.yyyy") & ")" & vbCrLf
+    .Font.Name = "Calibri": .Font.size = 18: .Font.Bold = True: .Font.Color = RGB(0, 0, 139)
+End With
+AddSectionHeader doc, "1. OSOBNÍ HODNOCENÍ"
+With doc.Range(doc.Content.End - 1, doc.Content.End - 1)
+    .InsertAfter item(2) & vbCrLf & vbCrLf
+    .Font.size = 11: .Font.Color = RGB(0, 0, 0)
+    .Font.Italic = (item(2) = PLACEHOLDER_TEXT)
+End With
+If item(3) <> "" Then
+    AddSeparator doc
+    AddSectionHeader doc, "2. FAKTICKÝ ROZBOR"
+    On Error Resume Next: doc.Range(doc.Content.End - 1, doc.Content.End - 1).InsertFile item(3): On Error GoTo DocErr
+Else
+    doc.Range(doc.Content.End - 1, doc.Content.End - 1).InsertAfter vbCrLf & "[Faktický rozbor není k dispozici]" & vbCrLf
+End If
+Next i
+RemoveSuperscripts doc
+doc.SaveAs2 path & CleanFileName(title) & ".docx"
+doc.Close False
+Exit Sub
+
+DocErr:
+    On Error Resume Next
+    If Not doc Is Nothing Then doc.Close False
+    On Error GoTo 0
+    err.Raise err.Number, err.Source, "CreateWordDoc_Unified [" & title & "]: " & err.Description
+End Sub
+
+Sub CreateWordDoc_RatingOnly(wApp As Object, fName As String, cText As String, path As String)
+Dim doc As Object: Set doc = wApp.Documents.Add
+With doc.Content: .InsertAfter cText: .Font.Name = "Calibri": .Font.size = 11: End With
+doc.SaveAs2 path & fName & ".docx": doc.Close False
+End Sub
+
+Sub CreateWordDoc_MergedAnime(wApp As Object, fName As String, cText As String, aPath As String, path As String)
+Dim doc As Object: Set doc = wApp.Documents.Add
+AddSectionHeader doc, "MOJE HODNOCENÍ (" & fName & ")"
+doc.Content.InsertAfter cText & vbCrLf & vbCrLf
+If aPath <> "" Then
+AddSeparator doc
+AddSectionHeader doc, "FAKTICKÝ ROZBOR (GEMINI AI)"
+doc.Range(doc.Content.End - 1, doc.Content.End - 1).InsertFile aPath
+RemoveSuperscripts doc
+End If
+doc.SaveAs2 path & fName & ".docx": doc.Close False
+End Sub
+
+Sub ToggleSpeed(ByVal speedUp As Boolean, Optional wApp As Object = Nothing)
+    On Error Resume Next
+    If speedUp Then
+        Application.ScreenUpdating = False
+        Application.Calculation = -4135 ' xlCalculationManual
+        Application.EnableEvents = False
+        Application.DisplayStatusBar = True
+        
+        If Not wApp Is Nothing Then
+            wApp.ScreenUpdating = False
+            wApp.DisplayAlerts = 0 ' wdAlertsNone
+            wApp.Options.CheckSpellingAsYouType = False
+            wApp.Options.CheckGrammarAsYouType = False
+            wApp.Options.Pagination = False
+        End If
+    Else
+        Application.ScreenUpdating = True
+        Application.Calculation = -4105 ' xlCalculationAutomatic
+        Application.EnableEvents = True
+        Application.DisplayStatusBar = True
+        
+        If Not wApp Is Nothing Then
+            wApp.ScreenUpdating = True
+            wApp.DisplayAlerts = -1 ' wdAlertsAll
+            wApp.Options.CheckSpellingAsYouType = True
+            wApp.Options.CheckGrammarAsYouType = True
+            wApp.Options.Pagination = True
+        End If
+    End If
+End Sub
+
+Sub EnsureFolder(fso As Object, path As String)
+    On Error Resume Next
+    Dim parts() As String, buildPath As String, i As Long
+    ' Remove drive letter if present for splitting logic, but keep it for building path
+    Dim drive As String
+    drive = ""
+    If InStr(path, ":") > 0 Then
+        drive = left(path, InStr(path, ":"))
+        path = Mid(path, Len(drive) + 1)
+    End If
+    
+    parts = Split(path, "\")
+    buildPath = drive
+    
+    For i = 0 To UBound(parts)
+        If parts(i) <> "" Then
+            buildPath = buildPath & "\" & parts(i)
+            ' Fix double slash issue if present
+            buildPath = Replace(buildPath, drive & "\\", drive & "\")
+            If Not fso.FolderExists(buildPath) Then fso.CreateFolder buildPath
+        End If
+    Next i
+    On Error GoTo 0
+End Sub
+
+Private Sub CleanupObsoleteFiles(fso As Object, folderPath As String, dictActiveFiles As Object)
+    If Not fso.FolderExists(folderPath) Then Exit Sub
+    Dim folderObj As Object, fileObj As Object
+    Set folderObj = fso.GetFolder(folderPath)
+    For Each fileObj In folderObj.Files
+        If LCase(fso.GetExtensionName(fileObj.Name)) = "docx" And left(fileObj.Name, 2) <> "~$" Then
+            If Not dictActiveFiles.Exists(LCase(fileObj.Name)) Then
+                LogToFile "[Cleanup] Deleting obsolete local file: " & fileObj.path
+                On Error Resume Next
+                fileObj.Delete True
+                On Error GoTo 0
+            End If
+        End If
+    Next fileObj
+End Sub
+
+Function LoadFileCache(fso As Object, folderPath As String) As Object
+    Dim dict As Object: Set dict = CreateObject("Scripting.Dictionary"): dict.CompareMode = vbTextCompare
+    If Right(folderPath, 1) <> "\" Then folderPath = folderPath & "\"
+    
+    If fso.FolderExists(folderPath) Then
+        Dim folderObj As Object, fileObj As Object
+        Set folderObj = fso.GetFolder(folderPath)
+        
+        ' Smyčka přes fso.Files správně načte i speciální znaky (Dir to neumí)
+        For Each fileObj In folderObj.Files
+            dict(fileObj.Name) = True
+        Next fileObj
+    End If
+    
+    Set LoadFileCache = dict
+End Function
+
+Function ExtractSeriesName(txt As String) As String
+Dim lines As Variant, line As Variant, rawLine As String
+If Trim(txt) = "" Then ExtractSeriesName = "": Exit Function
+lines = Split(Replace(txt, vbCr, vbLf), vbLf)
+For Each line In lines
+    rawLine = Trim(line)
+    If InStr(1, rawLine, "Název série:", vbTextCompare) = 1 Or _
+       InStr(1, rawLine, "Série:", vbTextCompare) = 1 Then
+        ExtractSeriesName = Trim(Mid(rawLine, InStr(rawLine, ":") + 1)): Exit Function
+    End If
+Next line
+ExtractSeriesName = ""
+End Function
+
+Sub AddSectionHeader(doc As Object, txt As String)
+With doc.Range(doc.Content.End - 1, doc.Content.End - 1)
+    .InsertAfter txt & vbCrLf
+    .Font.Name = "Arial": .Font.size = 14: .Font.Bold = True: .Font.Underline = True: .Font.Color = RGB(0, 0, 0)
+    .ParagraphFormat.Alignment = 0
+End With
+End Sub
+
+Sub AddSeparator(doc As Object)
+    With doc.Range(doc.Content.End - 1, doc.Content.End - 1)
+        .InsertAfter String(30, "-") & vbCrLf
+        .Font.Bold = False: .ParagraphFormat.Alignment = 1
+    End With
+End Sub
+
+' Funkce pro odstranění horních indexů (citací)
+Sub RemoveSuperscripts(doc As Object)
+    On Error Resume Next
+    
+    ' Vypnutí sledování změn pro tento dokument
+    doc.TrackRevisions = False
+    
+    ' 1. Smazat skutečné Footnotes/Endnotes
+    Dim i As Long
+    If doc.Footnotes.count > 0 Then
+        For i = doc.Footnotes.count To 1 Step -1: doc.Footnotes(i).Delete: Next i
+    End If
+    If doc.Endnotes.count > 0 Then
+        For i = doc.Endnotes.count To 1 Step -1: doc.Endnotes(i).Delete: Next i
+    End If
+    
+    ' 2. Smazat specifické Unicode znaky (123...) - JEDNA TŘÍDA ZNAKŮ (Wildcard)
+    Dim strWildcard As String
+    strWildcard = "[" & ChrW(&H2070) & ChrW(&HB9) & ChrW(&HB2) & ChrW(&HB3) & _
+                  ChrW(&H2074) & ChrW(&H2075) & ChrW(&H2076) & ChrW(&H2077) & _
+                  ChrW(&H2078) & ChrW(&H2079) & "]"
+                  
+    With doc.Content.Find
+        .ClearFormatting
+        .Replacement.ClearFormatting
+        .text = strWildcard
+        .Replacement.text = ""
+        .Forward = True
+        .wrap = 1 ' wdFindContinue
+        .Format = False
+        .MatchWildcards = True
+        .Execute Replace:=2 ' wdReplaceAll
+    End With
+    
+    ' 3. Smazat formátovaný text (Superscript = True)
+    With doc.Content.Find
+        .ClearFormatting
+        .Replacement.ClearFormatting
+        .Font.Superscript = True
+        .text = ""
+        .Replacement.text = ""
+        .Forward = True
+        .wrap = 1 ' wdFindContinue
+        .Format = True
+        .MatchWildcards = False
+        .Execute Replace:=2 ' wdReplaceAll
+    End With
+    
+    ' 4a. Smazat čísla hned za tečkou
+    With doc.Content.Find
+        .ClearFormatting
+        .Replacement.ClearFormatting
+        .text = "([!0-9])\.([0-9]@)"
+        .Replacement.text = "\1."
+        .Forward = True
+        .wrap = 1
+        .Format = False
+        .MatchWildcards = True
+        .Execute Replace:=2
+    End With
+    
+    ' 4b. Smazat čísla na úplném konci odstavce
+    With doc.Content.Find
+        .ClearFormatting
+        .Replacement.ClearFormatting
+        .text = "\.([0-9]@)^13"
+        .Replacement.text = ".^13"
+        .MatchWildcards = True
+        .Execute Replace:=2
+    End With
+    
+    ' 5. Smazat citace v hranatých závorkách
+    With doc.Content.Find
+        .ClearFormatting
+        .Replacement.ClearFormatting
+        .text = "\[[0-9]@\]"
+        .Replacement.text = ""
+        .MatchWildcards = True
+        .Execute Replace:=2
+    End With
+    
+    On Error GoTo 0
+End Sub
+
+Function ExtractSortNumber(ByVal txt As String) As Long
+    Dim i As Long, sNum As String: txt = UCase(txt): sNum = ""
+    For i = 1 To Len(txt)
+        If IsNumeric(Mid(txt, i, 1)) Then
+            sNum = sNum & Mid(txt, i, 1)
+        Else
+            If sNum <> "" Then Exit For
+        End If
+    Next i
+    ExtractSortNumber = IIf(sNum = "", 0, CLng(sNum))
+End Function
+
+' ==============================================================================
+' SECTION 3: NOTEBOOKLM LOGIC
+' ==============================================================================
+' NotebookLM update je nyní kompletně řešen v Anime NotebookLM Updater.py,
+' který se spouští přes RunPythonOrchestrator().
+
+' ==============================================================================
+' SHARED HELPERS
+' ==============================================================================
+
+Function CleanFileName(ByVal rawName As String) As String
+    Dim s As String: s = rawName
+    s = Replace(s, ":", "_"): s = Replace(s, "/", " "): s = Replace(s, "\", "")
+    s = Replace(s, "*", ""): s = Replace(s, "?", ""): s = Replace(s, """", "")
+    s = Replace(s, "<", ""): s = Replace(s, ">", ""): s = Replace(s, "|", "")
+    CleanFileName = Application.Trim(s)
+End Function
+
+' --- PROGRESS REPORTING HELPER ---
+Sub ReportProgress(ByVal current As Long, ByVal total As Long, ByVal msg As String)
+    On Error Resume Next
+    Dim fso As Object, ts As Object
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    ' Write progress in format: current|total|message
+    Set ts = fso.CreateTextFile(PROGRESS_FILE, True, False)
+    ts.WriteLine current & "|" & total & "|" & msg
+    ts.Close
+    Set ts = Nothing: Set fso = Nothing
+End Sub
+
+
+Function MountVirtualDrive(driveLetter As String, targetPath As String) As Boolean
+    Dim wsh As Object, fso As Object
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    If fso.DriveExists(driveLetter) Then MountVirtualDrive = True: Exit Function
+    Set wsh = CreateObject("WScript.Shell")
+    If Right(targetPath, 1) = "\" Then targetPath = left(targetPath, Len(targetPath) - 1)
+    On Error Resume Next
+    wsh.Run "subst " & driveLetter & " """ & targetPath & """", 0, True
+    MountVirtualDrive = fso.DriveExists(driveLetter)
+End Function
+
+Sub UnmountVirtualDrive(driveLetter As String)
+    Dim wsh As Object: Set wsh = CreateObject("WScript.Shell")
+    On Error Resume Next: wsh.Run "subst " & driveLetter & " /d", 0, True
+End Sub
+
+' --- RATINGS SORTING LOGIC ---
+Function SortCollectionByDate(col As Collection) As Collection
+    Dim i As Long
+    Dim arr() As Variant
+    Dim sortedCol As New Collection
+    
+    If col.count = 0 Then Set SortCollectionByDate = col: Exit Function
+    
+    ' Převod Collection -> Array
+    ReDim arr(1 To col.count)
+    For i = 1 To col.count: arr(i) = col(i): Next i
+    
+    ' QuickSort (Už používáme typovaná data, takže žádné konverze uvnitř)
+    QuickSort arr, LBound(arr), UBound(arr)
+    
+    ' Převod Array -> Collection
+    For i = 1 To UBound(arr): sortedCol.Add arr(i): Next i
+    Set SortCollectionByDate = sortedCol
+End Function
+
+Sub QuickSort(vArray As Variant, inLow As Long, inHigh As Long)
+    Dim pivot   As Variant
+    Dim tmpSwap As Variant
+    Dim tmpLow  As Long
+    Dim tmpHigh As Long
+    
+    tmpLow = inLow
+    tmpHigh = inHigh
+    
+    pivot = vArray((inLow + inHigh) \ 2)
+    
+    While (tmpLow <= tmpHigh)
+        While (CompareItems(vArray(tmpLow), pivot) < 0 And tmpLow < inHigh)
+            tmpLow = tmpLow + 1
+        Wend
+        
+        While (CompareItems(pivot, vArray(tmpHigh)) < 0 And tmpHigh > inLow)
+            tmpHigh = tmpHigh - 1
+        Wend
+        
+        If (tmpLow <= tmpHigh) Then
+            tmpSwap = vArray(tmpLow)
+            vArray(tmpLow) = vArray(tmpHigh)
+            vArray(tmpHigh) = tmpSwap
+            tmpLow = tmpLow + 1
+            tmpHigh = tmpHigh - 1
+        End If
+    Wend
+    
+    If (inLow < tmpHigh) Then QuickSort vArray, inLow, tmpHigh
+    If (tmpLow < inHigh) Then QuickSort vArray, tmpLow, inHigh
+End Sub
+
+' Pomocná funkce pro porovnání dvou položek (Jméno+Čísla, pak Datum)
+' Vrací -1 pokud v1 < v2, 1 pokud v1 > v2, 0 pokud rovno
+Function CompareItems(v1 As Variant, v2 As Variant) As Integer
+    Dim res As Integer
+    
+    ' 1. Porovnáme názvy (včetně všech čísel v nich pomocí Natural Sort)
+    ' Index 1 v poli vArray je animeName
+    res = NaturalCompare_NLM(CStr(v1(1)), CStr(v2(1)))
+    
+    If res <> 0 Then
+        CompareItems = res
+    Else
+        ' 2. Pokud jsou názvy identické, rozhoduje datum zhlédnutí
+        Dim d1 As Date, d2 As Date
+        d1 = v1(0)
+        d2 = v2(0)
+        
+        If d1 < d2 Then
+            CompareItems = -1
+        ElseIf d1 > d2 Then
+            CompareItems = 1
+        Else
+            CompareItems = 0
+        End If
+    End If
+End Function
+
+' --- NOVÁ FUNKCE PRO PŘIROZENÉ ŘAZENÍ (POROVNÁVÁ VŠECHNA ČÍSLA) ---
+' Vrací: -1 (s1 < s2), 0 (s1 = s2), 1 (s1 > s2)
+Private Function NaturalCompare_NLM(ByVal s1 As String, ByVal s2 As String) As Integer
+    Dim i As Long, j As Long
+    Dim c1 As String, c2 As String
+    Dim num1 As Double, num2 As Double
+    Dim t1 As String, t2 As String
+    
+    i = 1: j = 1
+    Do While i <= Len(s1) And j <= Len(s2)
+        c1 = Mid(s1, i, 1): c2 = Mid(s2, j, 1)
+        
+        If IsNumeric(c1) And IsNumeric(c2) Then
+            ' Extrakce celé sekvence číslic
+            t1 = "": t2 = ""
+            Do While i <= Len(s1) And IsNumeric(Mid(s1, i, 1))
+                t1 = t1 & Mid(s1, i, 1): i = i + 1
+            Loop
+            Do While j <= Len(s2) And IsNumeric(Mid(s2, j, 1))
+                t2 = t2 & Mid(s2, j, 1): j = j + 1
+            Loop
+            
+            num1 = val(t1): num2 = val(t2)
+            If num1 < num2 Then NaturalCompare_NLM = -1: Exit Function
+            If num1 > num2 Then NaturalCompare_NLM = 1: Exit Function
+        Else
+            ' Textové porovnání (bez ohledu na velikost písmen)
+            If LCase(c1) < LCase(c2) Then NaturalCompare_NLM = -1: Exit Function
+            If LCase(c1) > LCase(c2) Then NaturalCompare_NLM = 1: Exit Function
+            i = i + 1: j = j + 1
+        End If
+    Loop
+    
+    ' Pokud jsou do teď stejné, rozhoduje délka
+    If Len(s1) < Len(s2) Then
+        NaturalCompare_NLM = -1
+    ElseIf Len(s1) > Len(s2) Then
+        NaturalCompare_NLM = 1
+    Else
+        NaturalCompare_NLM = 0
+    End If
+End Function
+
+' ==================================================================================================
+' HELPER: QuickSort pro pole indexů (sestupně/vzestupně)
+' ==================================================================================================
+Sub QuickSortIndices(ByRef indices() As Long, ByRef dataArr As Variant, ByVal sortCol As Long, ByVal lowIdx As Long, ByVal highIdx As Long, ByVal descending As Boolean)
+    If lowIdx >= highIdx Then Exit Sub
+    
+    Dim pivotIdx As Long, i As Long, j As Long, tempIdx As Long
+    Dim pivotVal As Variant
+    
+    pivotIdx = (lowIdx + highIdx) \ 2
+    pivotVal = dataArr(indices(pivotIdx), sortCol)
+    i = lowIdx: j = highIdx
+    
+    Do While i <= j
+        If descending Then
+            Do While CompareValues(dataArr(indices(i), sortCol), pivotVal) > 0: i = i + 1: Loop
+            Do While CompareValues(dataArr(indices(j), sortCol), pivotVal) < 0: j = j - 1: Loop
+        Else
+            Do While CompareValues(dataArr(indices(i), sortCol), pivotVal) < 0: i = i + 1: Loop
+            Do While CompareValues(dataArr(indices(j), sortCol), pivotVal) > 0: j = j - 1: Loop
+        End If
+        
+        If i <= j Then
+            tempIdx = indices(i): indices(i) = indices(j): indices(j) = tempIdx
+            i = i + 1: j = j - 1
+        End If
+    Loop
+    
+    If lowIdx < j Then QuickSortIndices indices, dataArr, sortCol, lowIdx, j, descending
+    If i < highIdx Then QuickSortIndices indices, dataArr, sortCol, i, highIdx, descending
+End Sub
+
+' ==================================================================================================
+' HELPER: Porovnání hodnot (Date, Number, String)
+' ==================================================================================================
+Function CompareValues(val1 As Variant, val2 As Variant) As Long
+    ' Vrací: -1 pokud val1 < val2, 0 pokud =, 1 pokud val1 > val2
+    On Error Resume Next
+    
+    ' Ošetřit prázdné hodnoty
+    If IsEmpty(val1) Or IsNull(val1) Or val1 = "" Then
+        If IsEmpty(val2) Or IsNull(val2) Or val2 = "" Then
+            CompareValues = 0
+        Else
+            CompareValues = -1  ' Prázdné na konec
+        End If
+        Exit Function
+    End If
+    If IsEmpty(val2) Or IsNull(val2) Or val2 = "" Then
+        CompareValues = 1
+        Exit Function
+    End If
+    
+    ' Porovnat datumy
+    If IsDate(val1) And IsDate(val2) Then
+        If CDate(val1) < CDate(val2) Then
+            CompareValues = -1
+        ElseIf CDate(val1) > CDate(val2) Then
+            CompareValues = 1
+        Else
+            CompareValues = 0
+        End If
+    ' Porovnat čísla
+    ElseIf IsNumeric(val1) And IsNumeric(val2) Then
+        If CDbl(val1) < CDbl(val2) Then
+            CompareValues = -1
+        ElseIf CDbl(val1) > CDbl(val2) Then
+            CompareValues = 1
+        Else
+            CompareValues = 0
+        End If
+    ' Porovnat stringy
+    Else
+        CompareValues = StrComp(CStr(val1), CStr(val2), vbTextCompare)
+    End If
+    
+    On Error GoTo 0
+End Function
+
+
+' --- FILE LOGGING HELPER (Pro headless Excel debugging) ---
+Sub LogToFile(msg As String)
+    On Error Resume Next
+    Dim fso As Object, ts As Object, logPath As String
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    ' Použít spolehlivý path - OneDrive složka
+    logPath = "C:\AL\vba_series_export.log"
+    Set ts = fso.OpenTextFile(logPath, 8, True) ' 8=Append
+    ts.WriteLine Format(Now, "yyyy-mm-dd hh:nn:ss") & " | " & msg
+    ts.Close
+    Set ts = Nothing
+    Set fso = Nothing
+    On Error GoTo 0
+End Sub
+
+Public Function GetSHA256String(ByVal txt As String) As String
+    On Error GoTo Fallback
+    
+    Dim utf8 As Object
+    Set utf8 = CreateObject("System.Text.UTF8Encoding")
+    
+    Dim sha256 As Object
+    Set sha256 = CreateObject("System.Security.Cryptography.SHA256Managed")
+    
+    Dim bytes() As Byte
+    bytes = utf8.GetBytes_4(txt)
+    
+    Dim hash() As Byte
+    hash = sha256.ComputeHash_2((bytes))
+    
+    Dim result As String
+    result = ""
+    Dim i As Long
+    For i = LBound(hash) To UBound(hash)
+        Dim hexVal As String
+        hexVal = Hex(hash(i))
+        If Len(hexVal) = 1 Then hexVal = "0" & hexVal
+        result = result & hexVal
+    Next i
+    
+    GetSHA256String = LCase(result)
+    Exit Function
+    
+Fallback:
+    ' Safe fallback custom rolling hash (FNV-1a 64-bit variant represented as hex string)
+    On Error Resume Next
+    Dim h1 As Double, h2 As Double
+    h1 = 146959810393#
+    h2 = 1.1258999068426E+15
+    
+    Dim charCode As Long
+    Dim j As Long
+    For j = 1 To Len(txt)
+        charCode = AscW(Mid(txt, j, 1))
+        h1 = (h1 Xor (charCode And &HFF)) * 1099511628211#
+        h2 = (h2 Xor ((charCode \ 256) And &HFF)) * 1099511628211#
+        ' Keep within limits
+        h1 = h1 - Int(h1 / 1000000000000#) * 1000000000000#
+        h2 = h2 - Int(h2 / 1000000000000#) * 1000000000000#
+    Next j
+    
+    GetSHA256String = "fb_" & Hex(h1) & "_" & Hex(h2)
+End Function

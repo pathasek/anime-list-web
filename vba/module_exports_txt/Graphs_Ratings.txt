@@ -1,0 +1,1212 @@
+﻿Option Explicit
+
+'====================================================================================================
+' UŽIVATELSKÁ NASTAVENÍ:
+'====================================================================================================
+Private Const POCET_ANIME_V_PREHLEDU As Integer = 7 ' Změňte toto číslo pro úpravu počtu anime v každém boxu
+Private Const CACHE_SHEET_NAME As String = "MAL Cache + Interactive Rating" ' Název skrytého listu pro mezipaměť
+
+' ===================================================================================
+' == MODUL PRO ANALÝZU ROZDÍLŮ HODNOCENÍ (OPTIMALIZOVANÁ VERZE S OPRAVOU) ==
+' ===================================================================================
+
+' --- Deklarace pro API a stahování ---
+#If VBA7 Then
+    Public Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As LongPtr)
+#Else
+    Public Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
+#End If
+
+' === KONSTANTY PRO ŘÍZENÍ API LIMITŮ ===
+Const USE_ADAPTIVE_DELAY As Boolean = True
+Const API_DELAY_MS As Long = 366
+Const INITIAL_DELAY_MS As Long = 100
+Const RETRY_DELAY_BASE_MS As Long = 388
+Const MAX_RETRIES As Long = 3
+
+' --- Konstanty pro tento modul ---
+Private Const UNIQUE_PREFIX As String = "shpAnimeRatingDiscrepancy"
+
+'====================================================================================================
+
+'————————————————————————————
+' 1) Vytvoření tlačítka "Aktualizovat graf" v buňce AW1
+'————————————————————————————
+Public Sub VytvorAktualizacniTlacitkoHodnoceni()
+    On Error GoTo ErrBtn
+    Dim ws As Worksheet
+    Dim rng As Range
+    Dim btn As Shape
+    
+    Set ws = ThisWorkbook.Sheets("OBECNÉ INFORMACE")
+    Set rng = ws.Range("BD1")
+    
+    rng.ColumnWidth = 27.14
+    rng.RowHeight = 24.75
+    
+    On Error Resume Next
+    ws.Shapes("btnAktualizaceHodnoceni").Delete
+    On Error GoTo ErrBtn
+    
+    Set btn = ws.Shapes.AddShape(msoShapeRectangle, rng.left, rng.top, rng.Width, rng.Height)
+    With btn
+        .Name = "btnAktualizaceHodnoceni"
+        .OnAction = "VytvorGrafHodnoceni"
+        .Fill.Solid: .Fill.ForeColor.RGB = RGB(71, 211, 89)
+        .line.Visible = msoTrue
+        .line.weight = 1.5
+        .line.ForeColor.RGB = RGB(0, 0, 0)
+        With .TextFrame2
+            .VerticalAnchor = msoAnchorMiddle
+            .HorizontalAnchor = msoAnchorCenter
+            .WordWrap = False
+            .TextRange.text = "Aktualizovat grafy a listy"
+            With .TextRange.Font
+                .Name = "Aptos Narrow": .size = 11: .Bold = True
+                .Fill.Visible = msoTrue
+                .Fill.Solid
+                .Fill.ForeColor.RGB = RGB(0, 0, 0)
+            End With
+        End With
+        .Placement = xlMoveAndSize
+    End With
+
+    Exit Sub
+ErrBtn:
+    MsgBox "Chyba při vytváření tlačítka: " & err.Description, vbCritical
+End Sub
+
+'————————————————————————————
+' 2) Pie-chart: Rozdělení hodnocení ze sloupce K (OPTIMALIZOVÁNO)
+'————————————————————————————
+Public Sub VytvorGrafHodnoceni()
+    On Error GoTo ErrPie
+    Dim wsD As Worksheet, wsC As Worksheet
+    Dim lastRow As Long, i As Long
+    Dim dataArr As Variant
+    Dim cellValue As Variant
+    
+    ' Dictionary pro počty a barvy
+    Dim dictR As Object: Set dictR = CreateObject("Scripting.Dictionary")
+    ' Dictionary pro ID řádky prvního výskytu každého hodnocení (pro rychlé načtení barvy)
+    Dim firstOccurrenceRow As Object: Set firstOccurrenceRow = CreateObject("Scripting.Dictionary")
+    
+    Dim unratedCount As Long
+    Dim totalAll As Double, totalRated As Double
+    
+    ' Statistiky
+    Dim ratingSum As Double, ratingCount As Long
+    Dim medianArr() As Double
+    
+    Application.ScreenUpdating = False
+    Application.Calculation = xlCalculationManual ' Zrychlení
+    
+    Set wsD = ThisWorkbook.Sheets("ANIME LIST")
+    Set wsC = ThisWorkbook.Sheets("OBECNÉ INFORMACE")
+    
+    lastRow = wsD.Cells(wsD.Rows.count, "C").End(xlUp).row
+    If lastRow < 2 Then GoTo Cleanup
+    
+    ' Načteme sloupec K (Hodnocení) do pole - MNOHEM RYCHLEJŠÍ než Cells(i, "K")
+    dataArr = wsD.Range("K2:K" & lastRow).Value
+    
+    ReDim medianArr(1 To UBound(dataArr, 1))
+    Dim mIdx As Long: mIdx = 0
+    
+    ' Jediný průchod polem
+    For i = 1 To UBound(dataArr, 1)
+        cellValue = dataArr(i, 1)
+        
+        If IsNumeric(cellValue) And Not IsEmpty(cellValue) Then
+            Dim dVal As Double: dVal = CDbl(cellValue)
+            If dVal >= 1 And dVal <= 10 Then
+                ' Počítání hodnocení
+                dictR(dVal) = dictR(dVal) + 1
+                
+                ' Statistika
+                ratingSum = ratingSum + dVal
+                ratingCount = ratingCount + 1
+                mIdx = mIdx + 1
+                medianArr(mIdx) = dVal
+                
+                ' Uložení řádku prvního výskytu pro barvu (offset +1 kvůli hlavičce + i je index od 1) -> Row = i + 1
+                If Not firstOccurrenceRow.Exists(dVal) Then
+                    firstOccurrenceRow(dVal) = i + 1
+                End If
+            Else
+                unratedCount = unratedCount + 1
+            End If
+        Else
+            ' Ošetření prázdných buněk nebo textu jako nehodnoceno
+             If Len(CStr(cellValue)) > 0 And Not IsNumeric(cellValue) Then ' Pokud tam je text (např. "-"), je to nehodnoceno
+                 unratedCount = unratedCount + 1
+             ElseIf IsEmpty(cellValue) Then
+                 ' Prázdné buňky ignorujeme, nebo počítáme jako nehodnocené?
+                 ' Původní kód: If IsNumeric... Else unratedCount++. Takže i prázdné.
+                 unratedCount = unratedCount + 1
+             End If
+        End If
+    Next i
+    
+    ' Zkrátíme pole pro medián na skutečnou velikost
+    If mIdx > 0 Then ReDim Preserve medianArr(1 To mIdx)
+    
+    ' Pokud nejsou žádná data, končíme
+    If dictR.count = 0 And unratedCount = 0 Then GoTo Cleanup
+    
+    ' — Graf —
+    Dim chtObj As ChartObject, cht As Chart
+    On Error Resume Next
+    Set chtObj = wsC.ChartObjects("GrafHodnoceniPop")
+    On Error GoTo ErrPie
+    
+    If chtObj Is Nothing Then
+        Set chtObj = wsC.ChartObjects.Add(left:=100, top:=20, Width:=400, Height:=300)
+        chtObj.Name = "GrafHodnoceniPop"
+        With chtObj.Chart
+            .ChartType = xlPie
+            .HasTitle = True: .ChartTitle.text = "Rozdělení hodnocení": .ChartTitle.Font.Bold = True
+            .HasLegend = False
+            If .SeriesCollection.count = 0 Then .SeriesCollection.NewSeries
+            .SeriesCollection(1).ApplyDataLabels
+            .SeriesCollection(1).DataLabels.Position = xlLabelPositionBestFit
+            .SeriesCollection(1).DataLabels.Font.Name = "Aptos Narrow"
+            .SeriesCollection(1).DataLabels.Font.size = 10
+        End With
+    End If
+    Set cht = chtObj.Chart
+    
+    ' Příprava dat pro graf
+    Dim keysArr As Variant, valsArr As Variant
+    keysArr = dictR.keys
+    valsArr = dictR.items
+    
+    ' Seřadit (Bubble Sort je OK pro <20 položek)
+    If UBound(keysArr) >= 0 Then
+        Dim a As Long, b As Long, tmpK As Variant, tmpV As Variant
+        For a = LBound(keysArr) To UBound(keysArr) - 1
+            For b = a + 1 To UBound(keysArr)
+                If val(keysArr(b)) > val(keysArr(a)) Then
+                    tmpV = valsArr(a): valsArr(a) = valsArr(b): valsArr(b) = tmpV
+                    tmpK = keysArr(a): keysArr(a) = keysArr(b): keysArr(b) = tmpK
+                End If
+            Next b
+        Next a
+    End If
+    
+    ' Přidat nehodnocené
+    If unratedCount > 0 Then
+        Dim newSize As Long
+        If IsEmpty(keysArr) Then newSize = 0 Else newSize = UBound(keysArr) + 1
+        ReDim Preserve keysArr(newSize)
+        ReDim Preserve valsArr(newSize)
+        keysArr(newSize) = "Nehodnoceno"
+        valsArr(newSize) = unratedCount
+    End If
+    
+    With cht.SeriesCollection(1)
+        .XValues = keysArr
+        .values = valsArr
+    End With
+    
+    totalAll = Application.WorksheetFunction.Sum(valsArr)
+    
+    ' Formátování a Barvy (OPTIMALIZOVÁNO)
+    Dim repRow As Long, repClr As Long
+    With cht.SeriesCollection(1)
+        For i = 1 To .Points.count
+            Dim currentKey As Variant
+            currentKey = keysArr(i - 1)
+            
+            Dim pt As Point: Set pt = .Points(i)
+            Dim ptVal As Double: ptVal = valsArr(i - 1)
+            
+            If currentKey = "Nehodnoceno" Then
+                pt.Format.Fill.ForeColor.RGB = RGB(160, 160, 160)
+                pt.HasDataLabel = True
+                pt.DataLabel.text = "Anime bez hodnocení: " & ptVal & " (" & Format(ptVal / totalAll, "0.0%") & ")"
+            Else
+                ' Rychlé získání barvy (jen jedním čtením Range na klíč)
+                If firstOccurrenceRow.Exists(CDbl(currentKey)) Then
+                    repRow = firstOccurrenceRow(CDbl(currentKey))
+                    ' Tady čteme z buňky, ale jen 1x pro každou kategorii hodnocení!
+                    repClr = wsD.Cells(repRow, "K").DisplayFormat.Interior.Color
+                    pt.Format.Fill.ForeColor.RGB = repClr
+                End If
+                
+                pt.HasDataLabel = True
+                pt.DataLabel.text = "Anime s hodnocením " & currentKey & ": " & ptVal & " (" & Format(ptVal / totalAll, "0.0%") & ")"
+            End If
+        Next i
+    End With
+    
+    ' Statistiky - TextBox
+    Dim avgRating As Double, medianRating As Double, stdDevRating As Double
+    
+    If ratingCount > 0 Then
+        avgRating = ratingSum / ratingCount
+        ' Medián a StdDev z pole medianArr
+        medianRating = Application.WorksheetFunction.Median(medianArr) ' Median funkce bere pole
+        stdDevRating = Application.WorksheetFunction.StDev_S(medianArr)
+    End If
+    
+    Dim sTextBoxText As String
+    sTextBoxText = "Celkem ohodnoceno: " & ratingCount & Chr(10) & _
+                   "Medián: " & Format(medianRating, "0.00") & Chr(10) & _
+                   "Průměr: " & Format(avgRating, "0.00") & Chr(10) & _
+                   "Směr. odchylka: " & Format(stdDevRating, "0.00")
+                   
+    UpdateStatsTextBox wsC, chtObj, "StatsTextBox", sTextBoxText
+    
+    ' Volání dalších
+    Call VytvorGrafPrubehuHodnoceni(wsD, wsC, lastRow) ' Předáváme parametry pro zrychlení
+    Call AktualizujPrehledRozdiluHodnoceni
+    Call VytvorGrafCasuPodleHodnoceni(wsD, wsC, lastRow)
+    Call VytvorGrafPoctuEpizod(wsD, wsC, lastRow)
+    
+Cleanup:
+    Application.Calculation = xlCalculationAutomatic
+    Application.ScreenUpdating = True
+    Exit Sub
+ErrPie:
+    MsgBox "Chyba při aktualizaci grafu hodnocení: " & err.Description, vbCritical
+    Resume Cleanup
+End Sub
+
+Private Sub UpdateStatsTextBox(ws As Worksheet, anchorObj As Object, tbName As String, txt As String)
+    Dim statsTextBox As Shape
+    On Error Resume Next
+    Set statsTextBox = ws.Shapes(tbName)
+    On Error GoTo 0
+    
+    If statsTextBox Is Nothing Then
+        Set statsTextBox = ws.Shapes.AddTextbox(msoTextOrientationHorizontal, _
+            anchorObj.left + anchorObj.Width + 20, anchorObj.top, 150, 85)
+        With statsTextBox
+            .Name = tbName
+            .Fill.Visible = msoTrue: .Fill.ForeColor.RGB = RGB(255, 255, 255)
+            .line.Visible = msoTrue: .line.weight = 1.5: .line.ForeColor.RGB = RGB(0, 0, 0)
+            .TextFrame2.MarginLeft = 5: .TextFrame2.MarginRight = 5: .TextFrame2.MarginTop = 5
+            With .TextFrame2.TextRange.Font
+                .Name = "Aptos Narrow": .size = 10: .Bold = True: .Fill.ForeColor.RGB = RGB(0, 0, 0)
+            End With
+        End With
+    End If
+    statsTextBox.TextFrame2.TextRange.text = txt
+End Sub
+
+'————————————————————————————
+' 3) Column-chart: Průběh hodnocení v čase (OPTIMALIZOVÁNO)
+'————————————————————————————
+Public Sub VytvorGrafPrubehuHodnoceni(Optional wsD As Worksheet, Optional wsC As Worksheet, Optional lr As Long)
+    On Error GoTo ErrLine
+    
+    ' Inicializace pokud není předáno
+    If wsD Is Nothing Then Set wsD = ThisWorkbook.Sheets("ANIME LIST")
+    If wsC Is Nothing Then Set wsC = ThisWorkbook.Sheets("OBECNÉ INFORMACE")
+    If lr = 0 Then lr = wsD.Cells(wsD.Rows.count, "K").End(xlUp).row
+    
+    Dim dataArr As Variant
+    ' Načteme sloupce K (11) a M (13) najednou (rozsah K:M)
+    ' K = Hodnocení, M = Datum
+    dataArr = wsD.Range("K2:M" & lr).Value
+    
+    Dim count As Long: count = 0
+    Dim i As Long
+    
+    ' První průchod pro zjištění velikosti
+    For i = 1 To UBound(dataArr, 1)
+        If IsNumeric(dataArr(i, 1)) And dataArr(i, 1) >= 1 And dataArr(i, 1) <= 10 Then
+            If IsDate(dataArr(i, 3)) Then count = count + 1 ' Index 3 je sloupec M (K,L,M -> 1,2,3)
+        End If
+    Next i
+    
+    If count = 0 Then
+        On Error Resume Next: wsC.ChartObjects("GrafPrubehHodnoceni").Delete: On Error GoTo 0
+        Exit Sub
+    End If
+    
+    ' Pole pro QuickSort (2D pole: Date, Rating)
+    Dim cleanData() As Variant
+    ReDim cleanData(1 To count, 1 To 2)
+    Dim idx As Long: idx = 1
+    
+    For i = 1 To UBound(dataArr, 1)
+        If IsNumeric(dataArr(i, 1)) And dataArr(i, 1) >= 1 And dataArr(i, 1) <= 10 Then
+            If IsDate(dataArr(i, 3)) Then
+                cleanData(idx, 1) = CDate(dataArr(i, 3)) ' Datum
+                cleanData(idx, 2) = CDbl(dataArr(i, 1))  ' Hodnocení
+                idx = idx + 1
+            End If
+        End If
+    Next i
+    
+    ' QuickSort podle data (sloupec 1)
+    QuickSort2D cleanData, 1, count, 1
+    
+    ' Rozdělení do polí pro graf
+    Dim labelsArr() As String, valuesArr() As Double
+    ReDim labelsArr(1 To count)
+    ReDim valuesArr(1 To count)
+    
+    For i = 1 To count
+        labelsArr(i) = Format(cleanData(i, 1), "dd.mm.yyyy")
+        valuesArr(i) = cleanData(i, 2)
+    Next i
+    
+    ' Graf
+    Dim chtObj As ChartObject
+    On Error Resume Next
+    Set chtObj = wsC.ChartObjects("GrafPrubehHodnoceni")
+    On Error GoTo ErrLine
+    
+    If chtObj Is Nothing Then
+        Set chtObj = wsC.ChartObjects.Add(left:=100, top:=350, Width:=700, Height:=350)
+        chtObj.Name = "GrafPrubehHodnoceni"
+        With chtObj.Chart
+            .ChartType = xlColumnClustered
+            .HasTitle = True: .ChartTitle.text = "Průběh hodnocení v čase"
+            .HasLegend = False
+            .SeriesCollection.NewSeries
+            ' Styling
+            .ChartArea.Format.Fill.ForeColor.RGB = RGB(82, 82, 82)
+            .PlotArea.Format.Fill.Visible = msoFalse
+            .ChartTitle.Font.Color = RGB(255, 255, 255)
+            .Axes(xlCategory).TickLabels.Font.Color = RGB(255, 255, 255)
+            .Axes(xlValue).TickLabels.Font.Color = RGB(255, 255, 255)
+            .Axes(xlValue).MajorGridlines.Format.line.ForeColor.RGB = RGB(120, 120, 120)
+            .SeriesCollection(1).Format.Fill.ForeColor.RGB = RGB(70, 114, 137)
+        End With
+    End If
+    
+    With chtObj.Chart.SeriesCollection(1)
+        .XValues = labelsArr
+        .values = valuesArr
+    End With
+    Exit Sub
+ErrLine:
+    MsgBox "Chyba při vytváření grafu průběhu hodnocení: " & err.Description, vbCritical
+End Sub
+
+'====================================================================================================
+' *** HLAVNÍ PROCEDURA PRO ANALÝZU ROZDÍLŮ V HODNOCENÍ ANIME (OPTIMALIZOVÁNO) ***
+'====================================================================================================
+Public Sub AktualizujPrehledRozdiluHodnoceni()
+    Application.StatusBar = "Spouštím aktualizaci rozdílů hodnocení..."
+    Application.ScreenUpdating = False
+    Application.Calculation = xlCalculationManual
+    On Error GoTo ChybaHlavnihoMakra
+
+    Dim wsData As Worksheet, wsTarget As Worksheet
+    Dim lastDataRow As Long, i As Long
+    Dim malID As Long, myRating As Integer
+    Dim cacheDict As Object, positiveDifferences As Object, negativeDifferences As Object
+    Dim animeData As Object, useCache As Boolean
+    
+    Set positiveDifferences = CreateObject("System.Collections.ArrayList")
+    Set negativeDifferences = CreateObject("System.Collections.ArrayList")
+    Set wsData = ThisWorkbook.Sheets("ANIME LIST")
+    Set wsTarget = ThisWorkbook.Sheets("OBECNÉ INFORMACE")
+    
+    Set cacheDict = NactiCache()
+    lastDataRow = wsData.Cells(wsData.Rows.count, "C").End(xlUp).row
+    
+    ' Načíst data do pole pro rychlost (Sloupce C až K)
+    ' C=3 (Hyperlink), D=4, E=5, F=6(Datum), ..., K=11(Hodnocení)
+    ' Read range C2:K...
+    Dim mainData As Variant
+    mainData = wsData.Range("C2:K" & lastDataRow).Value
+    
+    ' Optimalizace načítání hyperlinků: Načíst všechny hyperlinky v C sloupci najednou
+    Dim hlDict As Object: Set hlDict = CreateObject("Scripting.Dictionary")
+    Dim hl As Hyperlink
+    For Each hl In wsData.Range("C2:C" & lastDataRow).Hyperlinks
+        ' Uložíme mapování: Řádek -> Adresa
+        ' Subtract 1 because array is 1-based from row 2 (so row 2 is index 1)
+        ' Wait, row 2 is index 1.
+        hlDict(hl.Range.row) = hl.Address
+    Next hl
+
+    For i = 1 To UBound(mainData, 1)
+        Dim rowIdx As Long: rowIdx = i + 1 ' Skutečný řádek v Excelu
+        Dim valK As Variant: valK = mainData(i, 9) ' K je 9. sloupec v C:K (C,D,E,F,G,H,I,J,K)
+        
+        If Not IsNumeric(valK) Then GoTo NextRow
+        If valK < 1 Or valK > 10 Then GoTo NextRow
+        myRating = CInt(valK)
+        
+        ' Získání MAL ID z hyperlink cache
+        malID = 0
+        Dim urlAddr As String
+        If hlDict.Exists(rowIdx) Then
+            urlAddr = hlDict(rowIdx)
+            Dim urlParts() As String
+            urlParts = Split(urlAddr, "/")
+            If UBound(urlParts) >= 4 And IsNumeric(urlParts(4)) Then malID = CLng(urlParts(4))
+        End If
+        If malID = 0 Then GoTo NextRow
+
+        Application.StatusBar = "Zpracovávám... " & i & " / " & UBound(mainData, 1) & " (ID: " & malID & ")"
+        
+        ' --- LOGIKA CACHE ---
+        useCache = False
+        Dim forceUpdate As Boolean: forceUpdate = False
+        
+        If cacheDict.Exists(malID) Then
+            If CInt(cacheDict(malID)("MyRating")) <> myRating Then
+                forceUpdate = True
+            Else
+                Dim releaseDate As Variant
+                releaseDate = mainData(i, 4) ' Sloupec F je 4. v C:K (C,D,E,F...)
+                
+                Dim updateTierDays As Long
+                updateTierDays = GetUpdateTierDays(releaseDate)
+                
+                If updateTierDays > 0 Then
+                    Dim lastUpdate As Date
+                    lastUpdate = cacheDict(malID)("LastUpdate")
+                    If DateDiff("d", lastUpdate, Date) >= updateTierDays Then forceUpdate = True
+                End If
+            End If
+            If Not forceUpdate Then useCache = True
+        Else
+            forceUpdate = True
+        End If
+        
+        If useCache Then
+            Set animeData = cacheDict(malID)
+        Else
+            ' API Call
+            Set animeData = GetJikanData(malID, myRating)
+            If USE_ADAPTIVE_DELAY Then Sleep INITIAL_DELAY_MS Else Sleep API_DELAY_MS
+            
+            If Not animeData Is Nothing Then
+                animeData.Add "Title", mainData(i, 1) ' Sloupec C
+                animeData.Add "MyRating", myRating
+                animeData.Add "URL", urlAddr
+                animeData.Add "LastUpdate", Date
+                Set cacheDict(malID) = animeData
+            Else
+                If cacheDict.Exists(malID) Then Set animeData = cacheDict(malID) Else Set animeData = Nothing
+            End If
+        End If
+        
+        If Not animeData Is Nothing Then
+             If animeData.Exists("Difference") Then animeData.Remove "Difference"
+             Dim commScore As Double: commScore = CDbl(animeData("CommunityScore"))
+             animeData.Add "Difference", Abs(myRating - commScore)
+             If myRating < commScore Then
+                 negativeDifferences.Add animeData
+             ElseIf myRating > commScore Then
+                 positiveDifferences.Add animeData
+             End If
+        End If
+NextRow:
+    Next i
+    
+    Application.StatusBar = "Řadím výsledky a vykresluji přehledy..."
+    SortArrayListByDictKey negativeDifferences, "Difference", False
+    SortArrayListByDictKey positiveDifferences, "Difference", False
+    
+    VytvorPrehledyRozdilu wsTarget, negativeDifferences, positiveDifferences
+    
+    Application.StatusBar = "Ukládám novou cache..."
+    UlozCache cacheDict
+    Application.StatusBar = False
+
+Cleanup:
+    Application.Calculation = xlCalculationAutomatic
+    Application.ScreenUpdating = True
+    Application.StatusBar = False
+    Exit Sub
+
+ChybaHlavnihoMakra:
+    MsgBox "Došlo k chybě v hlavní proceduře: " & err.Description, vbCritical
+    GoTo Cleanup
+End Sub
+
+'====================================================================================================
+' SEKCE A: SPRÁVA CACHE
+'====================================================================================================
+Private Function NactiCache() As Object
+    ' AH:AP
+    Dim wsCache As Worksheet, cacheDict As Object, lastRow As Long, r As Long
+    Set cacheDict = CreateObject("Scripting.Dictionary")
+    On Error Resume Next
+    Set wsCache = ThisWorkbook.Sheets(CACHE_SHEET_NAME)
+    On Error GoTo 0
+    If wsCache Is Nothing Then Set NactiCache = cacheDict: Exit Function
+    
+    lastRow = wsCache.Cells(wsCache.Rows.count, "AH").End(xlUp).row
+    If lastRow < 2 Then Set NactiCache = cacheDict: Exit Function
+    
+    Dim dataRange As Variant
+    dataRange = wsCache.Range("AH2:AP" & lastRow).Value
+    
+    For r = 1 To UBound(dataRange, 1)
+        Dim singleEntry As Object, idKey As Long
+        If IsNumeric(dataRange(r, 1)) And dataRange(r, 1) > 0 Then
+            Set singleEntry = CreateObject("Scripting.Dictionary")
+            idKey = CLng(dataRange(r, 1))
+            singleEntry.Add "MAL_ID", idKey
+            singleEntry.Add "Title", dataRange(r, 2)
+            singleEntry.Add "MyRating", IIf(IsNumeric(dataRange(r, 3)), CInt(dataRange(r, 3)), 0)
+            singleEntry.Add "CommunityScore", IIf(IsNumeric(dataRange(r, 4)), CDbl(dataRange(r, 4)), 0)
+            singleEntry.Add "ScorePercentage", dataRange(r, 5)
+            singleEntry.Add "Difference", IIf(IsNumeric(dataRange(r, 6)), CDbl(dataRange(r, 6)), 0)
+            singleEntry.Add "VoteCount", IIf(IsNumeric(dataRange(r, 7)), CLng(dataRange(r, 7)), 0)
+            singleEntry.Add "URL", dataRange(r, 8)
+            singleEntry.Add "LastUpdate", IIf(IsDate(dataRange(r, 9)), CDate(dataRange(r, 9)), CDate(0))
+            Set cacheDict(idKey) = singleEntry
+        End If
+    Next r
+    Set NactiCache = cacheDict
+End Function
+
+Private Sub UlozCache(cacheDict As Object)
+    Dim wsCache As Worksheet, key As Variant, r As Long
+    On Error Resume Next: Set wsCache = ThisWorkbook.Sheets(CACHE_SHEET_NAME): On Error GoTo 0
+    If wsCache Is Nothing Then
+        Set wsCache = ThisWorkbook.Sheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.count))
+        wsCache.Name = CACHE_SHEET_NAME
+    End If
+    
+    wsCache.Range("AH:AP").ClearContents
+    Dim headers As Variant
+    headers = Array("MAL_ID", "Title", "MyRating", "CommunityScore", "ScorePercentage", "Difference", "VoteCount", "URL", "LastUpdate")
+    wsCache.Range("AH1").Resize(1, UBound(headers) + 1).Value = headers
+    
+    If cacheDict.count = 0 Then Exit Sub
+    
+    Dim outputArray() As Variant
+    Dim dictCount As Long: dictCount = cacheDict.count
+    ReDim outputArray(1 To dictCount, 1 To 9)
+    
+    r = 1
+    For Each key In cacheDict.keys
+        Dim item As Object: Set item = cacheDict(key)
+        outputArray(r, 1) = item("MAL_ID")
+        outputArray(r, 2) = item("Title")
+        outputArray(r, 3) = item("MyRating")
+        outputArray(r, 4) = item("CommunityScore")
+        outputArray(r, 5) = item("ScorePercentage")
+        outputArray(r, 6) = item("Difference")
+        outputArray(r, 7) = item("VoteCount")
+        outputArray(r, 8) = item("URL")
+        outputArray(r, 9) = item("LastUpdate")
+        r = r + 1
+    Next key
+    
+    wsCache.Range("AH2").Resize(dictCount, 9).Value = outputArray
+    wsCache.Columns("AH:AP").AutoFit
+End Sub
+
+'====================================================================================================
+' SEKCE B: JIKAN API (Zachováno)
+'====================================================================================================
+Private Function GetJikanData(ByVal malID As Long, ByVal userScore As Integer) As Object
+    On Error GoTo ErrGetData
+    Dim detailsJson As Object, statsJson As Object
+    Dim communityScore As Double
+    Dim scorePercentage As String: scorePercentage = "N/A"
+    Dim voteCount As Long: voteCount = 0
+    
+    Dim detailUrl As String: detailUrl = "https://api.jikan.moe/v4/anime/" & malID
+    Set detailsJson = FetchJikanApiData(detailUrl)
+    If detailsJson Is Nothing Then GoTo ErrGetData
+    
+    If detailsJson("data").Exists("score") And Not IsNull(detailsJson("data")("score")) Then
+        communityScore = CDbl(detailsJson("data")("score"))
+    Else
+        communityScore = 0: GoTo ErrGetData
+    End If
+    
+    Dim statsUrl As String: statsUrl = "https://api.jikan.moe/v4/anime/" & malID & "/statistics"
+    Set statsJson = FetchJikanApiData(statsUrl)
+    If Not statsJson Is Nothing Then
+        If statsJson("data").Exists("scores") Then
+            Dim item As Object
+            On Error Resume Next
+            For Each item In statsJson("data")("scores")
+                If CLng(item("score")) = CLng(userScore) Then
+                    voteCount = item("votes")
+                    scorePercentage = "'" & Format(item("percentage"), "0.0") & "%"
+                    Exit For
+                End If
+            Next item
+            On Error GoTo 0
+        End If
+    End If
+    
+    Dim dataDict As Object: Set dataDict = CreateObject("Scripting.Dictionary")
+    dataDict.Add "MAL_ID", malID
+    dataDict.Add "CommunityScore", communityScore
+    dataDict.Add "ScorePercentage", scorePercentage
+    dataDict.Add "VoteCount", voteCount
+    Set GetJikanData = dataDict
+    Exit Function
+ErrGetData:
+    Set GetJikanData = Nothing
+End Function
+
+Private Function FetchJikanApiData(ByVal requestUrl As String) As Object
+    ' Použijeme STATIC, aby se instance objektu zachovala mezi voláními funkce
+    Static httpReq As Object
+    Dim attempt As Long, currentDelay As Long
+    
+    On Error GoTo ErrHandler
+    
+    ' 1. Lazy Loading: Vytvoříme objekt pouze jednou (při prvním volání)
+    If httpReq Is Nothing Then
+        Set httpReq = CreateObject("MSXML2.XMLHTTP")
+    End If
+    
+    ' 2. Retry Loop: Řeší pouze komunikaci, nevytváří zbytečně nové objekty
+    For attempt = 1 To MAX_RETRIES
+        ' Reset objektu pro nový požadavek pomocí .Open
+        httpReq.Open "GET", requestUrl, False
+        httpReq.sEnd
+        
+        If httpReq.status = 200 Then
+            ' Úspěch - vrátíme parsovaný JSON
+            Set FetchJikanApiData = JsonConverter.ParseJson(httpReq.responseText)
+            Exit Function
+        Else
+            ' Neúspěch - čekáme (Exponential Backoff)
+            If attempt < MAX_RETRIES Then
+                currentDelay = RETRY_DELAY_BASE_MS * (2 ^ (attempt - 1))
+                Sleep currentDelay
+            End If
+        End If
+    Next attempt
+
+' Pokud dojdeme sem, všechny pokusy selhaly
+Cleanup:
+    Set FetchJikanApiData = Nothing
+    Exit Function
+
+ErrHandler:
+    ' Pokud nastane chyba (např. při CreateObject nebo .Send), zalogujeme a končíme
+    ' Debug.Print "Error in FetchJikanApiData: " & Err.Description
+    Resume Cleanup
+End Function
+
+'====================================================================================================
+' SEKCE C: VÝSTUP A POMOCNÉ FUNKCE
+'====================================================================================================
+Private Function FormatVoteCount(votes As Long) As String
+    If votes >= 1000000 Then
+        FormatVoteCount = Replace(Format(votes / 1000000, "0.0"), ".", ",") & " mil."
+    ElseIf votes >= 1000 Then
+        FormatVoteCount = Round(votes / 1000, 0) & " tis."
+    Else
+        FormatVoteCount = CStr(votes)
+    End If
+End Function
+
+Private Sub VytvorPrehledyRozdilu(wsTarget As Worksheet, negativeData As Object, positiveData As Object)
+    Dim shp As Shape
+    On Error Resume Next
+    For Each shp In wsTarget.Shapes
+        If left(shp.Name, Len(UNIQUE_PREFIX)) = UNIQUE_PREFIX And InStr(1, shp.Name, "_Line") > 0 Then shp.Delete
+    Next shp
+    On Error GoTo 0
+    VytvorJedenPrehled wsTarget, negativeData, "BG2", "Hodnotil jsem HŮŘE než průměr", RGB(153, 0, 0), RGB(255, 230, 230), RGB(200, 0, 0)
+    VytvorJedenPrehled wsTarget, positiveData, "BN2", "Hodnotil jsem LÉPE než průměr", RGB(0, 102, 51), RGB(230, 255, 242), RGB(0, 153, 0)
+End Sub
+
+Private Sub VytvorJedenPrehled(ws As Worksheet, dataList As Object, startCell As String, title As String, headerColor As Long, contentColor As Long, diffColor As Long)
+    Dim tbHeader As Shape, tbContent As Shape, lineShape As Shape, charRange As Object
+    
+    Dim specificPrefix As String: specificPrefix = UNIQUE_PREFIX & Replace(startCell, "2", "")
+    Dim headerName As String: headerName = specificPrefix & "_Header"
+    Dim contentName As String: contentName = specificPrefix & "_Content"
+    Dim lineNames(1 To 6) As String
+    Dim i As Integer
+    For i = 1 To 6
+        lineNames(i) = specificPrefix & "_Line" & i
+    Next i
+
+    On Error Resume Next
+    For i = 1 To 6
+        ws.Shapes(lineNames(i)).Delete
+    Next i
+    On Error GoTo 0
+
+    On Error Resume Next
+    Set tbHeader = ws.Shapes(headerName)
+    On Error GoTo 0
+    If tbHeader Is Nothing Then
+        Dim topPos As Double, leftPos As Double, headerHeight As Double, contentHeight As Double, boxWidth As Double
+        With ws.Range(startCell)
+            topPos = .top: leftPos = .left
+        End With
+        headerHeight = 30: boxWidth = 420: contentHeight = 160
+        Set tbHeader = ws.Shapes.AddTextbox(msoTextOrientationHorizontal, leftPos, topPos, boxWidth, headerHeight)
+        tbHeader.Name = headerName
+    End If
+    
+    On Error Resume Next
+    Set tbContent = ws.Shapes(contentName)
+    On Error GoTo 0
+    If tbContent Is Nothing Then
+        Set tbContent = ws.Shapes.AddTextbox(msoTextOrientationHorizontal, tbHeader.left, tbHeader.top + tbHeader.Height, tbHeader.Width, tbHeader.Height * 5.3)
+        tbContent.Name = contentName
+    End If
+    
+    With tbHeader
+        .Fill.Solid: .Fill.ForeColor.RGB = headerColor
+        .line.Visible = msoFalse
+        With .TextFrame2
+            .VerticalAnchor = msoAnchorMiddle
+            .HorizontalAnchor = msoAlignCenter
+            .TextRange.text = title
+            With .TextRange.Font
+                .Name = "Aptos Narrow": .size = 18: .Bold = msoTrue
+                .Fill.ForeColor.RGB = RGB(255, 255, 255)
+            End With
+        End With
+    End With
+    
+    With tbContent
+        .Fill.Solid: .Fill.ForeColor.RGB = contentColor
+        .line.Visible = msoFalse
+        With .TextFrame2
+            .TextRange.text = ""
+            With .TextRange.Font.Fill
+                .Visible = msoTrue
+                .Solid
+                .ForeColor.RGB = RGB(0, 0, 0)
+            End With
+            .TextRange.Font.Italic = msoFalse
+            .MarginLeft = 10: .MarginRight = 10: .MarginTop = 10: .MarginBottom = 10
+        End With
+    End With
+
+    Dim animeCount As Integer, currentAnime As Object
+    
+    For Each currentAnime In dataList
+        If animeCount >= POCET_ANIME_V_PREHLEDU Then Exit For
+        animeCount = animeCount + 1
+        
+        ' --- 1. Sestavení řetězce v paměti (StringBuilder pattern) ---
+        Dim formattedPerc As String
+        formattedPerc = currentAnime("ScorePercentage")
+        If left(formattedPerc, 1) = "'" Then formattedPerc = Mid(formattedPerc, 2)
+        
+        Dim sRank As String: sRank = animeCount & ". "
+        Dim sTitle As String: sTitle = currentAnime("Title")
+        Dim sLabelMy As String: sLabelMy = "Mé hodnocení: "
+        Dim sValMy As String: sValMy = currentAnime("MyRating") & "/10"
+        Dim sLabelComm As String: sLabelComm = " vs. komunitní: "
+        Dim sValComm As String: sValComm = Format(currentAnime("CommunityScore"), "0.00") & "/10"
+        Dim sLabelDiff As String: sLabelDiff = " (Rozdíl: "
+        Dim sValDiff As String: sValDiff = Format(currentAnime("Difference"), "0.00")
+        Dim sLabelDiffEnd As String: sLabelDiffEnd = ")"
+        
+        Dim sLineVotes As String
+        ' Zde se nic nemění na textu, jen si ho připravíme pro vložení
+        sLineVotes = "S mým hodnocením souhlasí: " & FormatVoteCount(currentAnime("VoteCount")) & " uživatelů (" & formattedPerc & ")"
+        
+        Dim sFullBlock As String
+        sFullBlock = sRank & sTitle & vbCrLf & _
+                     sLabelMy & sValMy & sLabelComm & sValComm & sLabelDiff & sValDiff & sLabelDiffEnd & vbCrLf & _
+                     sLineVotes
+                      
+        If animeCount > 1 Then sFullBlock = vbCrLf & vbCrLf & sFullBlock
+        
+        ' --- 2. Vložení textu najednou (Volání Excel objektu pouze 1x) ---
+        Set charRange = tbContent.TextFrame2.TextRange.Characters.InsertAfter(sFullBlock)
+        
+        ' --- 3. Formátování (relativně k vloženému bloku) ---
+        Dim curPos As Long: curPos = 1
+        If animeCount > 1 Then curPos = curPos + 2 ' Přeskočit úvodní vbCrLf a vbCrLf
+        
+        ' Rank "1. "
+        With charRange.Characters(curPos, Len(sRank)).Font: .Bold = msoFalse: .Italic = msoFalse: .size = 11: .Fill.ForeColor.RGB = RGB(0, 0, 0): End With
+        curPos = curPos + Len(sRank)
+        
+        ' Title (Bold + Italic)
+        With charRange.Characters(curPos, Len(sTitle)).Font: .Bold = msoTrue: .Italic = msoTrue: .size = 11: .Fill.ForeColor.RGB = RGB(0, 0, 0): End With
+        curPos = curPos + Len(sTitle) + 1 ' +1 za vbCrLf
+        
+        ' "Mé hodnocení: "
+        With charRange.Characters(curPos, Len(sLabelMy)).Font: .Bold = msoFalse: .Italic = msoFalse: .size = 11: .Fill.ForeColor.RGB = RGB(0, 0, 0): End With
+        curPos = curPos + Len(sLabelMy)
+        
+        ' "X/10"
+        With charRange.Characters(curPos, Len(sValMy)).Font: .Bold = msoTrue: .Italic = msoFalse: .size = 11: .Fill.ForeColor.RGB = RGB(0, 0, 0): End With
+        curPos = curPos + Len(sValMy)
+        
+        ' " vs. komunitní: "
+        With charRange.Characters(curPos, Len(sLabelComm)).Font: .Bold = msoFalse: .Italic = msoFalse: .size = 11: .Fill.ForeColor.RGB = RGB(0, 0, 0): End With
+        curPos = curPos + Len(sLabelComm)
+        
+        ' "Y.YY/10"
+        With charRange.Characters(curPos, Len(sValComm)).Font: .Bold = msoTrue: .Italic = msoFalse: .size = 11: .Fill.ForeColor.RGB = RGB(0, 0, 0): End With
+        curPos = curPos + Len(sValComm)
+        
+        ' " (Rozdíl: "
+        With charRange.Characters(curPos, Len(sLabelDiff)).Font: .Bold = msoFalse: .Italic = msoFalse: .size = 11: .Fill.ForeColor.RGB = RGB(0, 0, 0): End With
+        curPos = curPos + Len(sLabelDiff)
+        
+        ' "Z.ZZ" (Barevně)
+        With charRange.Characters(curPos, Len(sValDiff)).Font: .Bold = msoTrue: .Italic = msoFalse: .size = 11: .Fill.ForeColor.RGB = diffColor: End With
+        curPos = curPos + Len(sValDiff)
+        
+        ' ")"
+        With charRange.Characters(curPos, Len(sLabelDiffEnd)).Font: .Bold = msoFalse: .Italic = msoFalse: .size = 11: .Fill.ForeColor.RGB = RGB(0, 0, 0): End With
+        curPos = curPos + Len(sLabelDiffEnd) + 1 ' +1 za vbCrLf
+        
+        ' --- Třetí řádek: Formátování (VoteCount tučně + Procenta tučně) ---
+        Dim sLine3Base As String: sLine3Base = "S mým hodnocením souhlasí: "
+        Dim sLine3Count As String: sLine3Count = FormatVoteCount(currentAnime("VoteCount"))
+        Dim sLine3Users As String: sLine3Users = " uživatelů ("
+        Dim sLine3Perc As String: sLine3Perc = formattedPerc
+        Dim sLine3Close As String: sLine3Close = ")"
+        
+        ' 1. Base text
+        With charRange.Characters(curPos, Len(sLine3Base)).Font: .Bold = msoFalse: .Italic = msoFalse: .size = 11: .Fill.ForeColor.RGB = RGB(0, 0, 0): End With
+        curPos = curPos + Len(sLine3Base)
+        
+        ' 2. Count (Tučně)
+        With charRange.Characters(curPos, Len(sLine3Count)).Font: .Bold = msoTrue: .Italic = msoFalse: .size = 11: .Fill.ForeColor.RGB = RGB(0, 0, 0): End With
+        curPos = curPos + Len(sLine3Count)
+        
+        ' 3. " uživatelů ("
+        With charRange.Characters(curPos, Len(sLine3Users)).Font: .Bold = msoFalse: .Italic = msoFalse: .size = 11: .Fill.ForeColor.RGB = RGB(0, 0, 0): End With
+        curPos = curPos + Len(sLine3Users)
+        
+        ' 4. Procenta (Tučně)
+        With charRange.Characters(curPos, Len(sLine3Perc)).Font: .Bold = msoTrue: .Italic = msoFalse: .size = 11: .Fill.ForeColor.RGB = RGB(0, 0, 0): End With
+        curPos = curPos + Len(sLine3Perc)
+
+        ' 5. ")"
+        With charRange.Characters(curPos, Len(sLine3Close)).Font: .Bold = msoFalse: .Italic = msoFalse: .size = 11: .Fill.ForeColor.RGB = RGB(0, 0, 0): End With
+        ' Konec formátování tohoto bloku
+        
+    Next currentAnime
+    
+    Dim borderColor As Long: borderColor = RGB(0, 0, 0)
+    Dim borderWidth As Double: borderWidth = 1.5
+    Set lineShape = ws.Shapes.AddLine(tbHeader.left, tbHeader.top, tbHeader.left + tbHeader.Width, tbHeader.top): With lineShape: .Name = lineNames(1): .line.weight = borderWidth: .line.ForeColor.RGB = borderColor: End With
+    Set lineShape = ws.Shapes.AddLine(tbHeader.left, tbHeader.top, tbHeader.left, tbHeader.top + tbHeader.Height): With lineShape: .Name = lineNames(2): .line.weight = borderWidth: .line.ForeColor.RGB = borderColor: End With
+    Set lineShape = ws.Shapes.AddLine(tbHeader.left + tbHeader.Width, tbHeader.top, tbHeader.left + tbHeader.Width, tbHeader.top + tbHeader.Height): With lineShape: .Name = lineNames(3): .line.weight = borderWidth: .line.ForeColor.RGB = borderColor: End With
+    Set lineShape = ws.Shapes.AddLine(tbContent.left, tbContent.top, tbContent.left, tbContent.top + tbContent.Height): With lineShape: .Name = lineNames(4): .line.weight = borderWidth: .line.ForeColor.RGB = borderColor: End With
+    Set lineShape = ws.Shapes.AddLine(tbContent.left + tbContent.Width, tbContent.top, tbContent.left + tbContent.Width, tbContent.top + tbContent.Height): With lineShape: .Name = lineNames(5): .line.weight = borderWidth: .line.ForeColor.RGB = borderColor: End With
+    Set lineShape = ws.Shapes.AddLine(tbContent.left, tbContent.top + tbContent.Height, tbContent.left + tbContent.Width, tbContent.top + tbContent.Height): With lineShape: .Name = lineNames(6): .line.weight = borderWidth: .line.ForeColor.RGB = borderColor: End With
+End Sub
+
+Private Sub DrawLine(ws As Worksheet, x1, y1, x2, y2, nm As String, clr As Long)
+    Dim lObj As Shape
+    Set lObj = ws.Shapes.AddLine(x1, y1, x2, y2)
+    lObj.Name = nm
+    lObj.line.weight = 1.5
+    lObj.line.ForeColor.RGB = clr
+End Sub
+
+Private Function GetUpdateTierDays(releaseDate As Variant) As Long
+    On Error GoTo EH
+    If Not IsDate(releaseDate) Then
+        GetUpdateTierDays = 0
+        Exit Function
+    End If
+    
+    Dim da As Long
+    da = DateDiff("d", CDate(releaseDate), Date)
+    
+    If da < 0 Then
+        GetUpdateTierDays = 3
+    ElseIf da <= 183 Then
+        GetUpdateTierDays = 3
+    ElseIf da <= 365 Then
+        GetUpdateTierDays = 7
+    ElseIf da <= 1095 Then
+        GetUpdateTierDays = 30
+    Else
+        GetUpdateTierDays = 180
+    End If
+    Exit Function
+EH:
+    GetUpdateTierDays = 0
+End Function
+
+Private Sub SortArrayListByDictKey(list As Object, key As String, ascending As Boolean)
+    If list.count < 2 Then Exit Sub
+    QuickSortArrayList list, 0, list.count - 1, key, ascending
+End Sub
+
+Private Sub QuickSortArrayList(list As Object, First As Long, Last As Long, key As String, ascending As Boolean)
+    Dim pivotVal As Double, Temp As Object
+    Dim low As Long, high As Long
+    
+    low = First: high = Last
+    ' Pivot je uprostřed; očekáváme, že klíč (např. Difference) je číslo
+    pivotVal = CDbl(list((low + high) \ 2)(key))
+    
+    Do
+        If ascending Then
+            While CDbl(list(low)(key)) < pivotVal: low = low + 1: Wend
+            While CDbl(list(high)(key)) > pivotVal: high = high - 1: Wend
+        Else
+            While CDbl(list(low)(key)) > pivotVal: low = low + 1: Wend
+            While CDbl(list(high)(key)) < pivotVal: high = high - 1: Wend
+        End If
+        
+        If low <= high Then
+            Set Temp = list(low): list(low) = list(high): list(high) = Temp
+            low = low + 1: high = high - 1
+        End If
+    Loop While low <= high
+    
+    If First < high Then QuickSortArrayList list, First, high, key, ascending
+    If low < Last Then QuickSortArrayList list, low, Last, key, ascending
+End Sub
+
+'====================================================================================================
+' MODUL: Graf času (OPTIMALIZOVÁNO)
+'====================================================================================================
+Public Sub VytvorGrafCasuPodleHodnoceni(Optional wsData As Worksheet, Optional wsCiel As Worksheet, Optional lr As Long)
+    On Error GoTo Chyba
+    If wsData Is Nothing Then Set wsData = ThisWorkbook.Sheets("ANIME LIST")
+    If wsCiel Is Nothing Then Set wsCiel = ThisWorkbook.Sheets("OBECNÉ INFORMACE")
+    If lr = 0 Then lr = wsData.Cells(wsData.Rows.count, "C").End(xlUp).row
+    
+    Dim dataArr As Variant
+    ' Načteme sloupce I, J, K (Epizody, Čas, Hodnocení). Rozsah I:K
+    ' I=Col 1, J=Col 2, K=Col 3
+    dataArr = wsData.Range("I2:K" & lr).Value
+    
+    Dim dataDict As Object: Set dataDict = CreateObject("Scripting.Dictionary")
+    Dim colorDict As Object: Set colorDict = CreateObject("Scripting.Dictionary")
+    Dim firstOccurrenceRow As Object: Set firstOccurrenceRow = CreateObject("Scripting.Dictionary")
+    
+    Dim i As Long
+    For i = 1 To 10: dataDict(CStr(i)) = 0: Next i
+    dataDict("-") = 0
+    colorDict("-") = RGB(160, 160, 160)
+    
+    For i = 1 To UBound(dataArr, 1)
+        Dim eps As Variant: eps = dataArr(i, 1)
+        Dim dur As Variant: dur = dataArr(i, 2)
+        Dim rat As Variant: rat = dataArr(i, 3)
+        
+        If IsNumeric(eps) And IsNumeric(dur) And eps > 0 And dur > 0 Then
+            Dim mins As Double: mins = CDbl(eps) * CDbl(dur)
+            Dim rKey As String
+            
+            If IsNumeric(rat) And rat >= 1 And rat <= 10 Then
+                rKey = CStr(Int(rat))
+                If Not firstOccurrenceRow.Exists(rKey) Then firstOccurrenceRow(rKey) = i + 1
+            Else
+                rKey = "-"
+            End If
+            dataDict(rKey) = dataDict(rKey) + mins
+        End If
+    Next i
+    
+    ' Načíst barvy (jen 10 čtení)
+    Dim k As Variant
+    For Each k In firstOccurrenceRow.keys
+        colorDict(k) = wsData.Cells(firstOccurrenceRow(k), "K").DisplayFormat.Interior.Color
+    Next k
+    
+    ' Data pro graf
+    Dim kat(0 To 10) As String, vals(0 To 10) As Double
+    For i = 1 To 10
+        kat(10 - i) = CStr(i): vals(10 - i) = Round(dataDict(CStr(i)) / 60, 2)
+    Next i
+    kat(10) = "-": vals(10) = Round(dataDict("-") / 60, 2)
+    Dim totalHours As Double: totalHours = Application.WorksheetFunction.Sum(vals)
+    
+    ' Graf
+    Dim chtObj As ChartObject
+    On Error Resume Next: Set chtObj = wsCiel.ChartObjects("GrafCasPodleHodnoceni")
+    On Error GoTo Chyba
+    
+    ' Dim dbgStep Removed
+    On Error GoTo Chyba
+    
+    If chtObj Is Nothing Then
+        Set chtObj = wsCiel.ChartObjects.Add(left:=500, top:=50, Width:=550, Height:=350)
+        chtObj.Name = "GrafCasPodleHodnoceni"
+        
+        With chtObj.Chart
+            .ChartType = xlBarClustered
+            .HasLegend = False
+            .HasTitle = True
+            
+            ' DEBUG SECTION FOR CHART TITLE - REMOVED, KEPT SAFE LOGIC
+            On Error Resume Next
+            .ChartTitle.text = "Hodnocení vs čas sledování"
+            .ChartTitle.Font.size = 16
+            .Axes(xlCategory).ReversePlotOrder = True
+            On Error GoTo Chyba
+            
+            If .SeriesCollection.count = 0 Then .SeriesCollection.NewSeries
+        End With
+    End If
+    
+    With chtObj.Chart
+        If .SeriesCollection.count = 0 Then .SeriesCollection.NewSeries
+        
+        .SeriesCollection(1).values = vals
+        .SeriesCollection(1).XValues = kat
+        
+        ' Oprava pro GapWidth
+        .ChartGroups(1).GapWidth = 100
+        
+        Dim sc As Series: Set sc = .SeriesCollection(1)
+        sc.ApplyDataLabels
+        
+        Dim j As Long
+        For j = 1 To sc.Points.count
+            Dim pt As Point: Set pt = sc.Points(j)
+            Dim catName As String: catName = kat(j - 1)
+            Dim valV As Double: valV = vals(j - 1)
+            
+            If colorDict.Exists(catName) Then pt.Format.Fill.ForeColor.RGB = colorDict(catName) _
+            Else pt.Format.Fill.ForeColor.RGB = RGB(128, 128, 128)
+            
+            If valV > 0 Then
+                pt.HasDataLabel = True
+                pt.DataLabel.text = Replace(Format(valV, "0.0"), ".", ",") & " h (" & _
+                                    Replace(Format((valV / totalHours) * 100, "0.0"), ".", ",") & " %)"
+                pt.DataLabel.Font.Bold = True
+            Else
+                pt.HasDataLabel = False
+            End If
+        Next j
+    End With
+    
+    UpdateStatsTextBox wsCiel, chtObj, "TextBoxCasPodleHodnoceni", "Celkem hodin: " & Replace(Format(totalHours, "0.0"), ".", ",") & " (" & Replace(Format(totalHours / 24, "0.0"), ".", ",") & " dní)"
+    Exit Sub
+Chyba:
+    MsgBox "Chyba Graf Času: " & err.Description, vbCritical
+End Sub
+
+'====================================================================================================
+' MODUL: Graf počet epizod (OPTIMALIZOVÁNO)
+'====================================================================================================
+Public Sub VytvorGrafPoctuEpizod(Optional wsData As Worksheet, Optional wsCiel As Worksheet, Optional lr As Long)
+    On Error GoTo Chyba
+    If wsData Is Nothing Then Set wsData = ThisWorkbook.Sheets("ANIME LIST")
+    If wsCiel Is Nothing Then Set wsCiel = ThisWorkbook.Sheets("OBECNÉ INFORMACE")
+    If lr = 0 Then lr = wsData.Cells(wsData.Rows.count, "C").End(xlUp).row
+    
+    Dim dataArr As Variant
+    ' Sloupce D, I, K, M. Rozsah D:M.
+    ' D=1, I=6, K=8, M=10
+    dataArr = wsData.Range("D2:M" & lr).Value
+    
+    Dim countDict As Object: Set countDict = CreateObject("Scripting.Dictionary")
+    Dim sumDict As Object: Set sumDict = CreateObject("Scripting.Dictionary")
+    Dim cats As Variant: cats = Array("Movie", "1", "2-6", "7-13", "14-26", "27-52", "53-100", "?")
+    Dim i As Long
+    For i = LBound(cats) To UBound(cats): countDict(cats(i)) = 0: sumDict(cats(i)) = 0: Next i
+    
+    For i = 1 To UBound(dataArr, 1)
+        Dim dateEnd As Variant: dateEnd = dataArr(i, 10)
+        Dim catKey As String
+        
+        If Not IsDate(dateEnd) Then
+            catKey = "?"
+        Else
+            Dim eps As Variant: eps = dataArr(i, 6)
+            Dim typ As String: typ = CStr(dataArr(i, 1))
+            If UCase(typ) = "MOVIE" Then
+                catKey = "Movie"
+            Else
+                Select Case eps
+                    Case 1: catKey = "1"
+                    Case 2 To 6: catKey = "2-6"
+                    Case 7 To 13: catKey = "7-13"
+                    Case 14 To 26: catKey = "14-26"
+                    Case 27 To 52: catKey = "27-52"
+                    Case 53 To 100: catKey = "53-100"
+                    Case Else: catKey = "?"
+                End Select
+            End If
+        End If
+        
+        countDict(catKey) = countDict(catKey) + 1
+        If IsNumeric(dataArr(i, 8)) Then sumDict(catKey) = sumDict(catKey) + CDbl(dataArr(i, 8))
+    Next i
+    
+    Dim pocty() As Long, avgs() As Variant
+    ReDim pocty(LBound(cats) To UBound(cats))
+    ReDim avgs(LBound(cats) To UBound(cats))
+    Dim totalC As Long: totalC = 0
+    
+    For i = LBound(cats) To UBound(cats)
+        Dim k As String: k = cats(i)
+        pocty(i) = countDict(k)
+        If k <> "?" Then totalC = totalC + countDict(k)
+        If countDict(k) > 0 Then avgs(i) = sumDict(k) / countDict(k) Else avgs(i) = 0
+    Next i
+    
+    Dim chtObj As ChartObject
+    On Error Resume Next: Set chtObj = wsCiel.ChartObjects("GrafEpizodyHodnoceni")
+    On Error GoTo Chyba
+    If chtObj Is Nothing Then
+         Set chtObj = wsCiel.ChartObjects.Add(left:=50, top:=350, Width:=600, Height:=350)
+         chtObj.Name = "GrafEpizodyHodnoceni"
+         With chtObj.Chart
+            .ChartType = xlColumnClustered
+            .SeriesCollection.NewSeries
+            .SeriesCollection.NewSeries
+         End With
+    End If
+    
+    With chtObj.Chart
+        .SeriesCollection(1).values = pocty: .SeriesCollection(1).XValues = cats
+        .SeriesCollection(2).values = avgs: .SeriesCollection(2).AxisGroup = xlSecondary: .SeriesCollection(2).ChartType = xlLineMarkers
+        
+        Dim sc As Series: Set sc = .SeriesCollection(1)
+        Dim j As Long
+        For j = 1 To sc.Points.count
+             If pocty(j - 1) > 0 Then
+                 sc.Points(j).HasDataLabel = True
+                 If totalC > 0 And cats(j - 1) <> "?" Then
+                     sc.Points(j).DataLabel.text = "# " & pocty(j - 1) & vbLf & "(" & Replace(Format((pocty(j - 1) / totalC) * 100, "0.0"), ".", ",") & " %)"
+                 Else
+                     sc.Points(j).DataLabel.text = "# " & pocty(j - 1)
+                 End If
+             Else
+                 sc.Points(j).HasDataLabel = False
+             End If
+        Next j
+    End With
+    Exit Sub
+Chyba:
+    MsgBox "Chyba Graf Epizody: " & err.Description, vbCritical
+End Sub
+
+' === QuickSort Helper ===
+Private Sub QuickSort2D(ByRef arr As Variant, ByVal First As Long, ByVal Last As Long, ByVal KeyCol As Long)
+    Dim pivot As Variant, TempArr As Variant
+    Dim low As Long, high As Long
+    low = First: high = Last
+    pivot = arr((low + high) \ 2, KeyCol)
+    Do
+        While arr(low, KeyCol) < pivot: low = low + 1: Wend
+        While arr(high, KeyCol) > pivot: high = high - 1: Wend
+        If low <= high Then
+             ' Swap rows
+             Dim k As Long
+             For k = LBound(arr, 2) To UBound(arr, 2)
+                 Dim t As Variant
+                 t = arr(low, k): arr(low, k) = arr(high, k): arr(high, k) = t
+             Next k
+             low = low + 1: high = high - 1
+        End If
+    Loop While low <= high
+    If First < high Then QuickSort2D arr, First, high, KeyCol
+    If low < Last Then QuickSort2D arr, low, Last, KeyCol
+End Sub
+
+
+
+
+
+

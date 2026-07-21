@@ -1,0 +1,1058 @@
+﻿Option Explicit
+
+' ===========================================
+' Modul: Anime Airing (JIKAN API VERZE)
+' Optimalizace: Caching čtením vlastního výstupu (TextBox)
+' Upraveno: Centrovaná tlačítka, specifické tučné písmo a kurzíva, Oprava Outlooku
+' ===========================================
+
+' --- WinAPI pro Sleep a Timezones ---
+#If VBA7 Then
+    Private Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As LongPtr)
+    Private Type SYSTEMTIME
+        wYear As Integer: wMonth As Integer: wDayOfWeek As Integer: wDay As Integer
+        wHour As Integer: wMinute As Integer: wSecond As Integer: wMilliseconds As Integer
+    End Type
+    Private Declare PtrSafe Function SystemTimeToTzSpecificLocalTime Lib "kernel32" (ByVal lpTimeZoneInformation As LongPtr, ByRef lpUniversalTime As SYSTEMTIME, ByRef lpLocalTime As SYSTEMTIME) As Long
+#Else
+    Private Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
+    Private Type SYSTEMTIME
+        wYear As Integer: wMonth As Integer: wDayOfWeek As Integer: wDay As Integer
+        wHour As Integer: wMinute As Integer: wSecond As Integer: wMilliseconds As Integer
+    End Type
+    Private Declare Function SystemTimeToTzSpecificLocalTime Lib "kernel32" (ByVal lpTimeZoneInformation As Long, ByRef lpUniversalTime As SYSTEMTIME, ByRef lpLocalTime As SYSTEMTIME) As Long
+#End If
+
+' --- Konstanty ---
+Private Const JST_OFFSET_HOURS As Long = 9
+Private Const API_DELAY_MS As Long = 350 ' Jikan rate limit protection
+Private Const BTN_PREFIX As String = "btnAiring_"
+
+
+' --- UI Konstanty ---
+Private Const BTN_WIDTH As Double = 28
+Private Const BTN_HEIGHT As Double = 16
+Private Const BTN_MARGIN_LEFT As Double = 425
+Private Const ENTRY_BLOCK_HEIGHT As Double = 36
+Private Const BTN_VERTICAL_GAP As Double = 4
+Private Const ENTRY_TOP_OFFSET As Double = 12
+Private Const MAX_KEY_LEN As Long = 15
+
+' ==========================
+' Outlook – konstanty (vložte úplně nahoru pod Option Explicit)
+' ==========================
+Private Const olTaskItem As Long = 3
+Private Const olRecursWeekly As Long = 1
+Private Const olFolderTasks As Long = 13
+
+' Dny v týdnu pro Outlook
+Private Const olSunday As Long = 1
+Private Const olMonday As Long = 2
+Private Const olTuesday As Long = 4
+Private Const olWednesday As Long = 8
+Private Const olThursday As Long = 16
+Private Const olFriday As Long = 32   ' <--- Toto je ta chybějící proměnná (číslo 32)
+Private Const olSaturday As Long = 64
+
+' --- Sdílená Outlook session pro hromadné operace ---
+Private m_olApp As Object
+Private m_olNS As Object
+
+' ====================== HLAVNÍ SPUŠTĚCÍ MAKRO ======================
+Public Sub VytvorGrafyPokracovani()
+    Dim prevCalc As XlCalculation
+    prevCalc = Application.Calculation
+    Application.Calculation = xlCalculationManual
+    Application.ScreenUpdating = False
+    
+    On Error GoTo ErrorHandler
+
+    Dim wsData As Worksheet, wsChart As Worksheet
+    Set wsData = ThisWorkbook.Sheets("ANIME LIST")
+    Set wsChart = ThisWorkbook.Sheets("OBECNÉ INFORMACE")
+
+    ' 1. Generování grafu statusů
+    Call UpdateStatusChart(wsData, wsChart)
+    
+    ' 1b. Aktualizace štítku pro sezónu (txtBoxSeason)
+    Call UpdateSeasonLabel(wsChart)
+
+    ' 2. Načtení existujícího obsahu z TextBoxu (Cache)
+    Dim cachedTimes As Object
+    Set cachedTimes = GetExistingTimesFromTextBox(wsChart)
+
+    ' 3. Zpracování Airing Anime
+    Dim lastRow As Long, i As Long
+    Dim airingData() As Variant
+    Dim airingCount As Long: airingCount = 0
+    Dim statusQ As String
+    
+    lastRow = wsData.Cells(wsData.Rows.count, "Q").End(xlUp).row
+
+    For i = 2 To lastRow
+        statusQ = UCase(Trim(wsData.Cells(i, "Q").Value))
+        
+        If statusQ = "AIRING!" Then
+            airingCount = airingCount + 1
+            ' ZMĚNA: ReDim na 6 sloupců (6. sloupec bude ID pro uložení do cache)
+            ReDim Preserve airingData(1 To 6, 1 To airingCount)
+            
+            Dim animeName As String: animeName = Trim(wsData.Cells(i, "C").Value)
+            ' Odstranění tvrdých mezer pro jistotu
+            animeName = Replace(animeName, Chr(160), " ")
+            
+            Dim startDate As Variant: startDate = wsData.Cells(i, "L").Value
+            Dim watchedEp As Variant: watchedEp = wsData.Cells(i, "I").Value
+            
+            ' ZMĚNA: ID potřebujeme hned teď
+            Dim malID As Long: malID = ExtractMalID(wsData.Cells(i, "C"))
+            Dim strMalId As String: strMalId = CStr(malID)
+            
+            Dim broadcastTime As String
+            
+            ' A) KONTROLA CACHE PODLE ID (nikoliv podle jména)
+            If cachedTimes.Exists(strMalId) Then
+                broadcastTime = cachedTimes(strMalId)
+                If InStr(broadcastTime, "N/A") > 0 Or InStr(broadcastTime, "Chyba") > 0 Then
+                    broadcastTime = FetchBroadcastFromJikan(malID)
+                End If
+            Else
+                ' B) Není v cache -> Voláme API
+                If malID > 0 Then
+                    Application.StatusBar = "Stahuji data pro: " & animeName
+                    broadcastTime = FetchBroadcastFromJikan(malID)
+                    DoEvents
+                Else
+                    broadcastTime = "N/A (Chybí ID)"
+                End If
+            End If
+            
+            ' Uložení do pole
+            airingData(1, airingCount) = GetSortKeyFromString(broadcastTime)
+            airingData(2, airingCount) = animeName
+            airingData(3, airingCount) = startDate
+            airingData(4, airingCount) = watchedEp
+            airingData(5, airingCount) = broadcastTime
+            airingData(6, airingCount) = strMalId ' <--- NOVÉ: Ukládáme ID
+        End If
+    Next i
+
+    Application.StatusBar = False
+
+    ' 4. Seřazení pole
+    If airingCount > 1 Then SortAiringArray airingData, airingCount
+
+    ' 5. Vykreslení do TextBoxu a aktualizace tlačítek
+    Call RenderTextBoxContent(wsChart, airingData, airingCount)
+    
+    ' 6. Úklid Outlook session (pokud byla použita pro hromadnou aktualizaci)
+    CleanupOutlookSession
+    
+    ' 7. Úklid
+    Application.ScreenUpdating = True
+    Application.Calculation = prevCalc
+    Exit Sub
+
+ErrorHandler:
+    Application.StatusBar = False
+    CleanupOutlookSession
+    Application.ScreenUpdating = True
+    Application.Calculation = prevCalc
+    MsgBox "Chyba: " & err.Description, vbCritical
+End Sub
+
+' ====================== JIKAN API LOGIKA ======================
+
+Private Function FetchBroadcastFromJikan(ByVal malID As Long) As String
+    Sleep API_DELAY_MS
+    
+    Dim url As String
+    url = "https://api.jikan.moe/v4/anime/" & malID
+    
+    Dim httpReq As Object
+    Set httpReq = CreateObject("MSXML2.XMLHTTP")
+    
+    On Error Resume Next
+    httpReq.Open "GET", url, False
+    httpReq.sEnd
+    
+    If httpReq.status <> 200 Then
+        FetchBroadcastFromJikan = "N/A (API " & httpReq.status & ")"
+        Exit Function
+    End If
+    
+    Dim json As Object
+    Set json = JsonConverter.ParseJson(httpReq.responseText)
+    
+    If json Is Nothing Then FetchBroadcastFromJikan = "Chyba JSON": Exit Function
+    If Not json.Exists("data") Then FetchBroadcastFromJikan = "N/A (Data)": Exit Function
+    
+    Dim data As Object: Set data = json("data")
+    
+    If data("status") = "Finished Airing" Then
+        FetchBroadcastFromJikan = "Dokončeno"
+        Exit Function
+    End If
+    
+    If IsNull(data("broadcast")("day")) Or IsNull(data("broadcast")("time")) Then
+        FetchBroadcastFromJikan = "N/A (Neznámý čas)"
+        Exit Function
+    End If
+    
+    Dim jstDay As String: jstDay = data("broadcast")("day")
+    Dim jstTime As String: jstTime = data("broadcast")("time")
+    
+    FetchBroadcastFromJikan = ConvertJSTtoLocalWinAPI(jstDay, jstTime)
+    On Error GoTo 0
+End Function
+
+' ====================== ČASOVÉ FUNKCE (WINAPI) ======================
+
+Private Function ConvertJSTtoLocalWinAPI(ByVal jstDay As String, ByVal jstTime As String) As String
+    ' Dynamický výpočet nejbližšího výskytu dne v aktuálním týdnu
+    ' (aby SystemTimeToTzSpecificLocalTime použila správná DST pravidla)
+    Dim targetDow As Long
+    Select Case LCase(Trim(jstDay))
+        Case "mondays":    targetDow = vbMonday
+        Case "tuesdays":   targetDow = vbTuesday
+        Case "wednesdays": targetDow = vbWednesday
+        Case "thursdays":  targetDow = vbThursday
+        Case "fridays":    targetDow = vbFriday
+        Case "saturdays":  targetDow = vbSaturday
+        Case "sundays":    targetDow = vbSunday
+        Case Else:         ConvertJSTtoLocalWinAPI = "N/A (Den)": Exit Function
+    End Select
+    
+    Dim baseDate As Date
+    Dim dowDiff As Long: dowDiff = targetDow - Weekday(Date, vbSunday)
+    If dowDiff < 0 Then dowDiff = dowDiff + 7
+    baseDate = Date + dowDiff
+    
+    Dim h As Integer, m As Integer
+    h = CInt(Split(jstTime, ":")(0))
+    m = CInt(Split(jstTime, ":")(1))
+    
+    Dim dtJST As Date
+    dtJST = baseDate + TimeSerial(h, m, 0)
+    
+    Dim dtUTC As Date
+    dtUTC = DateAdd("h", -JST_OFFSET_HOURS, dtJST)
+    
+    Dim dtLocal As Date
+    dtLocal = UtcToLocal(dtUTC)
+    
+    Dim czechDay As String
+    Select Case Weekday(dtLocal, vbMonday)
+        Case 1: czechDay = "pondělí"
+        Case 2: czechDay = "úterý"
+        Case 3: czechDay = "středu"
+        Case 4: czechDay = "čtvrtek"
+        Case 5: czechDay = "pátek"
+        Case 6: czechDay = "sobotu"
+        Case 7: czechDay = "neděli"
+    End Select
+    
+    Dim prefix As String
+    If czechDay = "úterý" Or czechDay = "středu" Or czechDay = "čtvrtek" Then prefix = "ve " Else prefix = "v "
+    
+    ConvertJSTtoLocalWinAPI = prefix & czechDay & " " & Format(dtLocal, "hh:mm")
+End Function
+
+Private Function UtcToLocal(ByVal dtUTC As Date) As Date
+    Dim stUTC As SYSTEMTIME, stLocal As SYSTEMTIME
+    With stUTC
+        .wYear = year(dtUTC): .wMonth = Month(dtUTC): .wDay = Day(dtUTC)
+        .wHour = hour(dtUTC): .wMinute = minute(dtUTC): .wSecond = Second(dtUTC)
+    End With
+    
+    If SystemTimeToTzSpecificLocalTime(0, stUTC, stLocal) <> 0 Then
+        UtcToLocal = DateSerial(stLocal.wYear, stLocal.wMonth, stLocal.wDay) + _
+                     TimeSerial(stLocal.wHour, stLocal.wMinute, stLocal.wSecond)
+    Else
+        UtcToLocal = dtUTC
+    End If
+End Function
+
+' ====================== DETEKCE DST ======================
+
+Private Function GetCurrentUtcOffsetHours() As Long
+    ' Porovnáme UTC poledne dneška s jeho lokální konverzí
+    ' Vrací aktuální UTC offset (např. 1 v zimě CET, 2 v létě CEST)
+    Dim testUtc As Date
+    testUtc = DateSerial(year(Date), Month(Date), Day(Date)) + TimeSerial(12, 0, 0)
+    Dim testLocal As Date
+    testLocal = UtcToLocal(testUtc)
+    GetCurrentUtcOffsetHours = CLng(DateDiff("h", testUtc, testLocal))
+End Function
+
+' ====================== CACHING & PARSING ======================
+
+Private Function GetExistingTimesFromTextBox(ByVal ws As Worksheet) As Object
+    Dim dict As Object
+    Set dict = CreateObject("Scripting.Dictionary")
+    
+    On Error Resume Next
+    Dim shp As Shape
+    Set shp = ws.Shapes("txtBoxAiringAnimeContent")
+    If shp Is Nothing Then Set GetExistingTimesFromTextBox = dict: Exit Function
+    
+    ' Cache je nyní uložena v AlternativeText ve formátu: ID=Čas|ID=Čas|...
+    Dim metaString As String
+    metaString = shp.AlternativeText
+    
+    If metaString = "" Then Set GetExistingTimesFromTextBox = dict: Exit Function
+    
+    ' Kontrola DST markeru — pokud se offset změnil, invalidujeme celou cache
+    If left(metaString, 4) = "DST=" Then
+        Dim dstPipePos As Long: dstPipePos = InStr(metaString, "|")
+        If dstPipePos > 0 Then
+            Dim storedOffset As String
+            storedOffset = Mid(metaString, 5, dstPipePos - 5)
+            If storedOffset <> CStr(GetCurrentUtcOffsetHours()) Then
+                ' DST se změnil › cache je neplatná, vynutíme nové API volání
+                Set GetExistingTimesFromTextBox = dict
+                Exit Function
+            End If
+            ' Odstraníme DST prefix pro další zpracování
+            metaString = Mid(metaString, dstPipePos + 1)
+        End If
+    End If
+    
+    Dim pairs() As String
+    pairs = Split(metaString, "|")
+    
+    Dim i As Long, parts() As String
+    For i = LBound(pairs) To UBound(pairs)
+        If InStr(pairs(i), "=") > 0 Then
+            parts = Split(pairs(i), "=")
+            ' parts(0) je ID (String), parts(1) je Čas
+            Dim cleanId As String
+            cleanId = Trim(parts(0))
+            If cleanId <> "" Then dict(cleanId) = parts(1)
+        End If
+    Next i
+    
+    Set GetExistingTimesFromTextBox = dict
+End Function
+
+' ====================== POMOCNÉ FUNKCE ======================
+
+Private Function ExtractMalID(ByVal cell As Range) As Long
+    On Error Resume Next
+    If cell.Hyperlinks.count > 0 Then
+        Dim parts() As String
+        parts = Split(cell.Hyperlinks(1).Address, "/")
+        Dim k As Long
+        For k = LBound(parts) To UBound(parts)
+            If IsNumeric(parts(k)) And parts(k) <> "" Then
+                ExtractMalID = CLng(parts(k))
+                Exit Function
+            End If
+        Next k
+    End If
+    ExtractMalID = 0
+End Function
+
+' === NAHRADIT CELOU FUNKCI GetSortKeyFromString ===
+Private Function GetSortKeyFromString(ByVal czechTimeStr As String) As Long
+    If InStr(czechTimeStr, "N/A") > 0 Or czechTimeStr = "" Then GetSortKeyFromString = 9999999: Exit Function
+    
+    Dim dayVal As Long
+    ' 1=Pondělí ... 7=Neděle
+    If InStr(czechTimeStr, "pondělí") > 0 Then dayVal = 1
+    If InStr(czechTimeStr, "úterý") > 0 Then dayVal = 2
+    If InStr(czechTimeStr, "středu") > 0 Then dayVal = 3
+    If InStr(czechTimeStr, "čtvrtek") > 0 Then dayVal = 4
+    If InStr(czechTimeStr, "pátek") > 0 Then dayVal = 5
+    If InStr(czechTimeStr, "sobotu") > 0 Then dayVal = 6
+    If InStr(czechTimeStr, "neděli") > 0 Then dayVal = 7
+    
+    If dayVal = 0 Then GetSortKeyFromString = 9999999: Exit Function
+
+    ' --- SMART SORT LOGIKA ---
+    ' Získáme dnešní den (1=Po, 7=Ne)
+    Dim todayVal As Long
+    todayVal = Weekday(Date, vbMonday)
+    
+    ' Vypočítáme "vzdálenost" ve dnech od dneška (0 = dnes, 1 = zítra...)
+    Dim dayDiff As Long
+    dayDiff = dayVal - todayVal
+    
+    ' Pokud je den "minulost" v tomto týdnu (např. je Středa a anime je v Pondělí),
+    ' přičteme 7, aby se řadilo jako "příští Pondělí"
+    If dayDiff < 0 Then dayDiff = dayDiff + 7
+    
+    ' --- PARSOVÁNÍ ČASU ---
+    Dim timePart As String
+    timePart = Trim(Right(czechTimeStr, 5))
+    Dim h As Long, m As Long
+    On Error Resume Next
+    h = CLng(Split(timePart, ":")(0))
+    m = CLng(Split(timePart, ":")(1))
+    
+    ' Výsledný klíč: Dny_od_dneška * 10000 + Hodina * 100 + Minuta
+    GetSortKeyFromString = (dayDiff * 10000) + (h * 100) + m
+End Function
+Private Sub SortAiringArray(ByRef arr As Variant, ByVal count As Long)
+    Dim i As Long, j As Long, k As Long
+    Dim Temp As Variant
+    For i = 1 To count - 1
+        For j = i + 1 To count
+            If arr(1, i) > arr(1, j) Then
+                For k = 1 To 6
+                    Temp = arr(k, i): arr(k, i) = arr(k, j): arr(k, j) = Temp
+                Next k
+            End If
+        Next j
+    Next i
+End Sub
+
+' ====================== VYKRESLOVÁNÍ (UI - KOMPLETNÍ) ======================
+
+Private Sub RenderTextBoxContent(ByVal ws As Worksheet, ByVal data As Variant, ByVal count As Long)
+    ' Změna: Upraveno pro ukládání Cache (ID=Čas) do AlternativeText
+    
+    Dim txtContent As Shape
+    Set txtContent = GetOrCreateTextBox(ws)
+    
+    ' Reset Cache (pokud je seznam prázdný nebo se bude přepisovat)
+    txtContent.AlternativeText = ""
+    
+    If count = 0 Then
+        With txtContent.TextFrame2
+            .TextRange.text = "Nesleduji žádná vysílaná Anime"
+            .TextRange.Font.size = 18
+            .TextRange.Font.Bold = msoTrue
+            .VerticalAnchor = msoAnchorMiddle
+            .HorizontalAnchor = msoAnchorCenter
+        End With
+        CleanupAiringButtons ws, BTN_PREFIX, CreateObject("Scripting.Dictionary")
+        Exit Sub
+    End If
+    
+    Dim fullText As String: fullText = ""
+    Dim ranges As New Collection ' Format: Array(StartPos, Length, Type)
+    Dim usedButtons As Object: Set usedButtons = CreateObject("Scripting.Dictionary")
+    
+    ' Proměnná pro budování cache řetězce (ID=Čas|ID=Čas...)
+    Dim cacheBuilder As String: cacheBuilder = ""
+    
+    ' Definice řetězců pro popisky
+    Const LBL_START As String = "Začátek sledování: "
+    Const LBL_EP As String = " / počet zhlédnutých epizod: "
+    Const LBL_TIME As String = " / nová epizoda: "
+    
+    Dim i As Long
+    For i = 1 To count
+        ' Načtení dat z pole (nyní očekáváme 6 sloupců)
+        Dim aName As String: aName = data(2, i)
+        Dim aStart As String: aStart = Format(data(3, i), "DD.MM.YYYY")
+        Dim aEp As String: aEp = data(4, i)
+        Dim aTime As String: aTime = data(5, i)
+        Dim aID As String: aID = ""
+        
+        ' Bezpečnostní kontrola, kdyby pole nemělo 6. sloupec (stará verze pole)
+        On Error Resume Next
+        aID = data(6, i)
+        On Error GoTo 0
+        
+        ' --- 1. Budování Cache (ukládáme ID a čas) ---
+        If aID <> "" And aID <> "0" Then
+            If cacheBuilder <> "" Then cacheBuilder = cacheBuilder & "|"
+            cacheBuilder = cacheBuilder & aID & "=" & aTime
+        End If
+        
+        ' --- 2. Budování viditelného textu ---
+        
+        ' Oddělovač mezi anime
+        If fullText <> "" Then fullText = fullText & vbLf & vbLf
+        
+        ' A) Řádek: Název (HEADER)
+        Dim headerStr As String
+        headerStr = i & ". " & aName
+        
+        Dim startPosHeader As Long
+        startPosHeader = Len(fullText) + 1
+        
+        fullText = fullText & headerStr & vbLf
+        
+        ' Přidání do kolekce pro formátování (Header = Bold + Italic)
+        ranges.Add Array(startPosHeader, Len(headerStr), "HEADER")
+        
+        ' B) Řádek: Detaily
+        Dim currentLen As Long
+        currentLen = Len(fullText)
+        
+        ' Sestavení řetězce detailů
+        Dim detailsStr As String
+        detailsStr = LBL_START & aStart & LBL_EP & aEp & LBL_TIME & aTime
+        fullText = fullText & detailsStr
+        
+        ' Výpočet pozic pro tučné písmo
+        ' Datum (aStart)
+        Dim datePos As Long
+        datePos = currentLen + Len(LBL_START) + 1
+        ranges.Add Array(datePos, Len(aStart), "BOLD")
+        
+        ' Počet epizod (aEp)
+        Dim epPos As Long
+        epPos = datePos + Len(aStart) + Len(LBL_EP)
+        ranges.Add Array(epPos, Len(aEp), "BOLD")
+        
+        ' Čas vysílání (aTime)
+        Dim timePos As Long
+        timePos = epPos + Len(aEp) + Len(LBL_TIME)
+        ranges.Add Array(timePos, Len(aTime), "BOLD")
+        
+        ' --- 3. Tlačítko ---
+        Dim btnKey As String
+        btnKey = EnsureAiringButton(ws, txtContent, aName, aTime, i)
+        usedButtons(btnKey) = True
+    Next i
+    
+    ' --- Uložení Cache do metadat TextBoxu ---
+    ' Uložení cache s DST markerem pro automatickou invalidaci
+    If cacheBuilder <> "" Then
+        txtContent.AlternativeText = "DST=" & GetCurrentUtcOffsetHours() & "|" & cacheBuilder
+    Else
+        txtContent.AlternativeText = ""
+    End If
+    
+    ' --- Aplikace textu a stylů ---
+    With txtContent.TextFrame2
+        .TextRange.text = fullText
+        .TextRange.Font.size = 11
+        .TextRange.Font.Name = "Aptos Narrow"
+        
+        ' RESET stylů (vše normální)
+        .TextRange.Font.Bold = msoFalse
+        .TextRange.Font.Italic = msoFalse
+        
+        .VerticalAnchor = msoAnchorTop
+        .HorizontalAnchor = msoAnchorNone
+        
+        Dim rng As Variant
+        For Each rng In ranges
+            Dim rStart As Long: rStart = rng(0)
+            Dim rLen As Long: rLen = rng(1)
+            Dim rType As String: rType = rng(2)
+            
+            If rType = "HEADER" Then
+                ' Název: Tučně a Kurzíva
+                .TextRange.Characters(rStart, rLen).Font.Bold = msoTrue
+                .TextRange.Characters(rStart, rLen).Font.Italic = msoTrue
+            ElseIf rType = "BOLD" Then
+                ' Hodnoty: Jen Tučně
+                .TextRange.Characters(rStart, rLen).Font.Bold = msoTrue
+            End If
+        Next rng
+    End With
+    
+    CleanupAiringButtons ws, BTN_PREFIX, usedButtons
+End Sub
+
+Private Sub UpdateSeasonLabel(ByVal ws As Worksheet)
+    On Error Resume Next
+    Dim shpSeason As Shape
+    Set shpSeason = ws.Shapes("txtBoxSeason")
+    
+    If Not shpSeason Is Nothing Then
+        Dim sMonth As Integer, sYear As Integer, sId As Integer, sName As String
+        sMonth = Month(Date)
+        sYear = year(Date)
+        
+        ' Určení sezóny: 1=Winter, 2=Spring, 3=Summer, 4=Fall
+        sId = ((sMonth - 1) \ 3) + 1
+        
+        Select Case sId
+            Case 1: sName = "Winter " & sYear
+            Case 2: sName = "Spring " & sYear
+            Case 3: sName = "Summer " & sYear
+            Case 4: sName = "Fall " & sYear
+        End Select
+        
+        shpSeason.TextFrame2.TextRange.text = sName
+    End If
+    On Error GoTo 0
+End Sub
+
+Private Function GetOrCreateTextBox(ByVal ws As Worksheet) As Shape
+    On Error Resume Next
+    Set GetOrCreateTextBox = ws.Shapes("txtBoxAiringAnimeContent")
+    If GetOrCreateTextBox Is Nothing Then
+        Set GetOrCreateTextBox = ws.Shapes.AddTextbox(msoTextOrientationHorizontal, 50, 60, 450, 250)
+        GetOrCreateTextBox.Name = "txtBoxAiringAnimeContent"
+        GetOrCreateTextBox.line.Visible = msoFalse
+        GetOrCreateTextBox.Fill.Visible = msoFalse
+    End If
+End Function
+
+' ====================== GRAF STATUSŮ ======================
+
+Public Sub UpdateStatusChart(ByVal wsData As Worksheet, ByVal wsChart As Worksheet)
+    Dim dictStatus As Object, dictColors As Object
+    Set dictStatus = CreateObject("Scripting.Dictionary")
+    Set dictColors = CreateObject("Scripting.Dictionary")
+
+    Dim lastRow As Long, i As Long, status As String
+    lastRow = wsData.Cells(wsData.Rows.count, "Q").End(xlUp).row
+
+    For i = 2 To lastRow
+        status = Trim(wsData.Cells(i, "Q").Value)
+        If Len(status) > 0 Then
+            If UCase(left(status, 8)) = "EXISTUJE" Then status = "Existuje další obsah"
+            dictStatus(status) = dictStatus(status) + 1
+            If Not dictColors.Exists(status) Then dictColors(status) = wsData.Cells(i, "Q").DisplayFormat.Interior.Color
+        End If
+    Next i
+
+    Dim keysArr As Variant, valsArr As Variant
+    If dictStatus.count > 0 Then
+        keysArr = dictStatus.keys: valsArr = dictStatus.items
+        Dim a As Long, b As Long, tmpKey As Variant, tmpVal As Variant
+        For a = LBound(valsArr) To UBound(valsArr) - 1
+            For b = a + 1 To UBound(valsArr)
+                If valsArr(b) > valsArr(a) Then
+                    tmpVal = valsArr(a): valsArr(a) = valsArr(b): valsArr(b) = tmpVal
+                    tmpKey = keysArr(a): keysArr(a) = keysArr(b): keysArr(b) = tmpKey
+                End If
+            Next b
+        Next a
+    Else
+        Exit Sub
+    End If
+
+    Dim btnUpdate As Shape
+    Const BUTTON_NAME As String = "btnAktualizacePokracovani"
+    On Error Resume Next: wsChart.Shapes(BUTTON_NAME).Delete: On Error GoTo 0
+    
+    With wsChart.Range("DY1")
+        Set btnUpdate = wsChart.Shapes.AddShape(msoShapeRectangle, .left, .top, .Width, .Height)
+    End With
+    With btnUpdate
+        .Name = BUTTON_NAME
+        .OnAction = "'" & ThisWorkbook.Name & "'!VytvorGrafyPokracovani"
+        .Fill.Solid: .Fill.ForeColor.RGB = RGB(71, 211, 89)
+        .line.Visible = msoTrue: .line.weight = 1.5: .line.ForeColor.RGB = RGB(0, 0, 0)
+        
+        With .TextFrame2
+            .TextRange.text = "Aktualizovat graf a seznam"
+            .TextRange.Font.size = 11
+            .TextRange.Font.Bold = msoTrue
+            .TextRange.Font.Fill.ForeColor.RGB = RGB(0, 0, 0)
+            .VerticalAnchor = msoAnchorMiddle
+            .HorizontalAnchor = msoAnchorCenter
+            .TextRange.ParagraphFormat.Alignment = msoAlignCenter
+        End With
+    End With
+
+    Dim cht As ChartObject
+    Const CHART_NAME As String = "GrafPokracovani"
+    On Error Resume Next: Set cht = wsChart.ChartObjects(CHART_NAME): On Error GoTo 0
+    
+    If cht Is Nothing Then
+        Set cht = wsChart.ChartObjects.Add(550, 20, 400, 300)
+        cht.Name = CHART_NAME
+        cht.Chart.ChartType = xlPie
+        cht.Chart.HasTitle = True
+        cht.Chart.ChartTitle.text = "Rozdělení statusů pokračování"
+    End If
+    
+    With cht.Chart.SeriesCollection(1)
+        .values = valsArr
+        .XValues = keysArr
+        Dim total As Double: total = Application.WorksheetFunction.Sum(valsArr)
+        Dim iPt As Long
+        For iPt = 1 To .Points.count
+            Dim key As String: key = keysArr(iPt - 1)
+            .Points(iPt).HasDataLabel = True
+            .Points(iPt).DataLabel.text = key & ": " & valsArr(iPt - 1) & " (" & Format(valsArr(iPt - 1) / total, "0.0%") & ")"
+            If dictColors.Exists(key) Then .Points(iPt).Format.Fill.ForeColor.RGB = dictColors(key)
+        Next iPt
+    End With
+End Sub
+
+' ====================== SPRÁVA TLAČÍTEK (SG - UPRAVENO) ======================
+
+Private Function EnsureAiringButton(ByVal ws As Worksheet, ByVal txt As Shape, ByVal animeName As String, ByVal czechTime As String, ByVal itemIndex As Long) As String
+    Dim baseKey As String, key As String
+    baseKey = BTN_PREFIX & CleanKey(animeName)
+    key = baseKey
+
+    Dim leftPos As Double, topPos As Double
+    leftPos = txt.left + BTN_MARGIN_LEFT
+    topPos = txt.top + (itemIndex - 1) * (ENTRY_BLOCK_HEIGHT + BTN_VERTICAL_GAP) + ENTRY_TOP_OFFSET
+
+    Dim shp As Shape
+    On Error Resume Next: Set shp = ws.Shapes(key): On Error GoTo 0
+
+    If shp Is Nothing Then
+        Dim idx As Long: idx = 1
+        Do While ShapeExistsOnSheet(ws, key)
+            idx = idx + 1: key = baseKey & "_" & CStr(idx)
+        Loop
+        
+        Set shp = ws.Shapes.AddShape(msoShapeRoundedRectangle, leftPos, topPos, BTN_WIDTH, BTN_HEIGHT)
+        With shp
+            .Name = key
+            .OnAction = "'" & ThisWorkbook.Name & "'!ToggleAiringReminderChart"
+            .line.weight = 1
+            .TextFrame2.TextRange.text = "SG"
+            .TextFrame2.TextRange.Font.size = 9
+            
+            .TextFrame2.VerticalAnchor = msoAnchorMiddle
+            .TextFrame2.HorizontalAnchor = msoAnchorCenter
+            .TextFrame2.TextRange.ParagraphFormat.Alignment = msoAlignCenter
+            
+            .Fill.ForeColor.RGB = RGB(180, 180, 180)
+            .AlternativeText = BuildMeta(animeName, czechTime, "", False)
+        End With
+    Else
+        shp.left = leftPos: shp.top = topPos
+        
+        shp.TextFrame2.TextRange.ParagraphFormat.Alignment = msoAlignCenter
+        shp.TextFrame2.VerticalAnchor = msoAnchorMiddle
+        shp.TextFrame2.HorizontalAnchor = msoAnchorCenter
+        
+        Dim mName As String, mTime As String, mEntry As String, mActive As Boolean
+        ParseMeta shp.AlternativeText, mName, mTime, mEntry, mActive
+        
+        ' Auto-aktualizace: Pokud je reminder aktivní a čas se změnil, přeplánujeme Outlook Task
+        If mActive And mTime <> czechTime And Len(mEntry) > 0 Then
+            Dim newEntryId As String
+            newEntryId = RefreshActiveReminder(animeName, czechTime, mEntry)
+            If Len(newEntryId) > 0 Then
+                mEntry = newEntryId
+            End If
+        End If
+        
+        shp.AlternativeText = BuildMeta(animeName, czechTime, mEntry, mActive)
+        
+        If mActive Then shp.Fill.ForeColor.RGB = RGB(71, 211, 89) Else shp.Fill.ForeColor.RGB = RGB(180, 180, 180)
+        shp.OnAction = "'" & ThisWorkbook.Name & "'!ToggleAiringReminderChart"
+    End If
+
+    EnsureAiringButton = key
+End Function
+
+Private Sub CleanupAiringButtons(ByVal ws As Worksheet, ByVal prefix As String, ByVal usedNames As Object)
+    Dim i As Long
+    Dim needsOutlook As Boolean: needsOutlook = False
+    
+    For i = ws.Shapes.count To 1 Step -1
+        Dim shp As Shape: Set shp = ws.Shapes(i)
+        If left(shp.Name, Len(prefix)) = prefix Then
+            If Not usedNames.Exists(shp.Name) Then
+                Dim an As String, tm As String, en As String, act As Boolean
+                ParseMeta shp.AlternativeText, an, tm, en, act
+                If Len(en) > 0 Then
+                    ' Použijeme sdílenou session (inicializuje se jen jednou)
+                    InitOutlookSession
+                    DeleteOutlookItemByEntryID en, m_olNS
+                End If
+                shp.Delete
+            End If
+        End If
+    Next i
+    ' Synchronizace proběhne v CleanupOutlookSession na konci hlavní procedury
+End Sub
+
+' ====================== OUTLOOK LOGIKA (OPRAVENO) ======================
+
+Public Sub ToggleAiringReminderChart()
+    ' Kliknutí na tlačítko "SG"
+    On Error GoTo ErrH
+    Dim callerName As String: callerName = Application.Caller
+    Dim ws As Worksheet: Set ws = ActiveSheet
+    Dim shp As Shape: Set shp = ws.Shapes(callerName)
+
+    Dim an As String, tm As String, entry As String, active As Boolean
+    ParseMeta shp.AlternativeText, an, tm, entry, active
+
+    If Not active Then
+        ' ZAPNOUT
+        Dim newId As String
+        newId = CreateWeeklyRecurringTask(an & ": nová epizoda", tm)
+        If Len(newId) > 0 Then
+            shp.AlternativeText = BuildMeta(an, tm, newId, True)
+            shp.Fill.ForeColor.RGB = RGB(71, 211, 89) ' Zelená
+        Else
+            MsgBox "Nepodařilo se vytvořit úkol v Outlooku.", vbExclamation
+        End If
+    Else
+        ' VYPNOUT
+        DeleteOutlookItemByEntryID entry
+        shp.AlternativeText = BuildMeta(an, tm, "", False)
+        shp.Fill.ForeColor.RGB = RGB(180, 180, 180) ' Šedá
+    End If
+    Exit Sub
+ErrH:
+    MsgBox "Chyba tlačítka: " & err.Description
+End Sub
+
+Private Function CreateWeeklyRecurringTask(ByVal subjectText As String, ByVal czechTimeStr As String, Optional ByVal extNS As Object = Nothing) As String
+    On Error GoTo ErrCreate
+
+    Dim olApp As Object, olNS As Object, taskFolder As Object
+    Dim t As Object, rp As Object
+    Dim dowMask As Long, baseTime As Date, nextOcc As Date
+
+    ' 1. Parsování času (Default: Pátek 18:00)
+    If Not ParseCzechDayTime(czechTimeStr, dowMask, baseTime) Then
+        dowMask = olFriday
+        baseTime = TimeSerial(18, 0, 0)
+    End If
+
+    ' 2. Inicializace Outlooku (použije sdílenou session pokud je k dispozici)
+    If Not extNS Is Nothing Then
+        Set olNS = extNS
+    Else
+        On Error Resume Next
+        Set olApp = GetObject(, "Outlook.Application")
+        If olApp Is Nothing Then
+            Set olApp = CreateObject("Outlook.Application")
+        End If
+        On Error GoTo ErrCreate
+        Set olNS = olApp.GetNamespace("MAPI")
+        olNS.Logon "", "", False, False
+    End If
+    
+    Set taskFolder = olNS.GetDefaultFolder(olFolderTasks)
+    If taskFolder Is Nothing Then GoTo ErrCreate
+
+    ' 3. Vytvoření úkolu
+    Set t = taskFolder.items.Add(olTaskItem)
+    t.Subject = subjectText
+    t.categories = "Anime"
+
+    ' 4. Nastavení opakování (OPRAVENO)
+    Set rp = t.GetRecurrencePattern
+    rp.RecurrenceType = olRecursWeekly
+    rp.Interval = 1
+    rp.DayOfWeekMask = dowMask
+    rp.PatternStartDate = Date
+    rp.NoEndDate = True
+    
+    ' !!! ZDE BÝVALA CHYBA: Nesmíme nastavovat EndTime/StartTime pro Pattern,
+    ' pokud máme NoEndDate = True a jde o Task. Čas vyřešíme přes ReminderTime níže.
+    
+    ' 5. Výpočet nejbližšího termínu
+    ' Předáváme pouze časovou složku z baseTime
+    nextOcc = NextOccurrenceFromMask(dowMask, TimeSerial(hour(baseTime), minute(baseTime), 0), Now)
+
+    t.startDate = CDate(Int(nextOcc))
+    t.DueDate = CDate(Int(nextOcc))
+    
+    ' Nastavení připomínky
+    t.ReminderSet = True
+    If nextOcc <= Now Then nextOcc = DateAdd("n", 1, Now) ' Pojistka pro minulost
+    t.ReminderTime = nextOcc
+
+    t.Save
+    CreateWeeklyRecurringTask = t.entryId
+    Exit Function
+
+' ---- Fallback pro případ chyby ----
+ErrCreate:
+    On Error GoTo ErrFinal
+    ' Zkusíme vytvořit alespoň jednorázový úkol bez opakování
+    Dim t2 As Object
+    If olNS Is Nothing Then
+        Set olApp = CreateObject("Outlook.Application")
+        Set olNS = olApp.GetNamespace("MAPI")
+    End If
+    Set taskFolder = olNS.GetDefaultFolder(olFolderTasks)
+    Set t2 = taskFolder.items.Add(olTaskItem)
+    t2.Subject = subjectText
+    t2.categories = "Anime"
+
+    Dim dMask As Long, tm As Date, occ As Date
+    If Not ParseCzechDayTime(czechTimeStr, dMask, tm) Then
+        dMask = olFriday: tm = TimeSerial(18, 0, 0)
+    End If
+    occ = NextOccurrenceFromMask(dMask, tm, Now)
+    If occ <= Now Then occ = DateAdd("n", 1, Now)
+
+    t2.startDate = CDate(Int(occ))
+    t2.DueDate = CDate(Int(occ))
+    t2.ReminderSet = True
+    t2.ReminderTime = occ
+    t2.Save
+
+    CreateWeeklyRecurringTask = t2.entryId
+    Exit Function
+
+ErrFinal:
+    Debug.Print "CreateWeeklyRecurringTask failed: " & err.Number & " - " & err.Description
+    CreateWeeklyRecurringTask = ""
+End Function
+
+Private Function NextOccurrenceFromMask(ByVal mask As Long, ByVal tm As Date, ByVal fromDT As Date) As Date
+    Dim i As Long
+    For i = 0 To 13
+        Dim dt As Date
+        dt = DateAdd("d", i, DateSerial(year(fromDT), Month(fromDT), Day(fromDT))) + tm
+        If DayMatchesMask(dt, mask) And dt >= fromDT Then
+            NextOccurrenceFromMask = dt
+            Exit Function
+        End If
+    Next i
+    NextOccurrenceFromMask = Date + 1 + tm
+End Function
+
+Private Function DayMatchesMask(ByVal dt As Date, ByVal mask As Long) As Boolean
+    Dim wd As Integer: wd = Weekday(dt, vbSunday)
+    Dim olMaskVal As Long
+    Select Case wd
+        Case 1: olMaskVal = 1
+        Case 2: olMaskVal = 2
+        Case 3: olMaskVal = 4
+        Case 4: olMaskVal = 8
+        Case 5: olMaskVal = 16
+        Case 6: olMaskVal = 32
+        Case 7: olMaskVal = 64
+    End Select
+    DayMatchesMask = ((mask And olMaskVal) <> 0)
+End Function
+
+Private Function DeleteOutlookItemByEntryID(ByVal entryId As String, Optional ByVal extNS As Object = Nothing) As Boolean
+    If entryId = "" Then Exit Function
+    Dim olApp As Object, olNS As Object, item As Object
+    On Error Resume Next
+    
+    ' Pokud není předán existující Namespace, vytvoříme/najdeme nový
+    If extNS Is Nothing Then
+        On Error Resume Next
+        Set olApp = GetObject(, "Outlook.Application")
+        If olApp Is Nothing Then
+            Set olApp = CreateObject("Outlook.Application")
+        End If
+        Set olNS = olApp.GetNamespace("MAPI")
+        olNS.Logon "", "", False, False
+        On Error Resume Next ' Pokračujeme v tichosti
+    Else
+        Set olNS = extNS
+    End If
+    
+    Set item = olNS.GetItemFromID(entryId)
+    If Not item Is Nothing Then
+        item.Delete
+        DeleteOutlookItemByEntryID = True
+        ' Pokud jsme si vytvořili vlastní NS, zkusíme i sync
+        If extNS Is Nothing Then olNS.SendAndReceive True
+    End If
+End Function
+
+' ====================== AUTO-AKTUALIZACE REMINDERŮ ======================
+
+Private Function RefreshActiveReminder(ByVal animeName As String, ByVal newCzechTime As String, ByVal oldEntryId As String) As String
+    ' Smaže starý Outlook Task a vytvoří nový s aktualizovaným časem
+    ' Používá sdílenou Outlook session (m_olNS) pro hromadné operace
+    ' Vrací nový EntryID nebo "" při chybě
+    On Error GoTo ErrRefresh
+    
+    ' Inicializace sdílené session (pokud ještě není)
+    InitOutlookSession
+    
+    ' 1. Smazat starý task (přes sdílenou session)
+    DeleteOutlookItemByEntryID oldEntryId, m_olNS
+    
+    ' 2. Vytvořit nový task (přes sdílenou session)
+    RefreshActiveReminder = CreateWeeklyRecurringTask(animeName & ": nová epizoda", newCzechTime, m_olNS)
+    Exit Function
+    
+ErrRefresh:
+    Debug.Print "RefreshActiveReminder failed: " & err.Number & " - " & err.Description
+    RefreshActiveReminder = oldEntryId ' Při chybě zachováme starý ID
+End Function
+
+' ====================== SDÍLENÁ OUTLOOK SESSION ======================
+
+Private Sub InitOutlookSession()
+    ' Inicializuje sdílenou Outlook session jen jednou
+    ' Následná volání jsou no-op
+    If Not m_olNS Is Nothing Then Exit Sub
+    On Error Resume Next
+    Set m_olApp = GetObject(, "Outlook.Application")
+    If m_olApp Is Nothing Then Set m_olApp = CreateObject("Outlook.Application")
+    Set m_olNS = m_olApp.GetNamespace("MAPI")
+    m_olNS.Logon "", "", False, False
+    On Error GoTo 0
+End Sub
+
+Private Sub CleanupOutlookSession()
+    ' Uvolní sdílenou session a provede synchronizaci
+    On Error Resume Next
+    If Not m_olNS Is Nothing Then
+        m_olNS.SendAndReceive True
+        Set m_olNS = Nothing
+    End If
+    Set m_olApp = Nothing
+    On Error GoTo 0
+End Sub
+
+Private Function ParseCzechDayTime(ByVal czech As String, ByRef dayMask As Long, ByRef outTime As Date) As Boolean
+    Dim d As Long
+    czech = LCase(czech)
+    If InStr(czech, "ponděl") > 0 Then d = 2
+    If InStr(czech, "úter") > 0 Then d = 4
+    If InStr(czech, "střed") > 0 Then d = 8
+    If InStr(czech, "čtvr") > 0 Then d = 16
+    If InStr(czech, "pátek") > 0 Then d = 32
+    If InStr(czech, "sobot") > 0 Then d = 64
+    If InStr(czech, "neděl") > 0 Then d = 1
+    
+    If d = 0 Then Exit Function
+    
+    On Error Resume Next
+    Dim parts() As String: parts = Split(Trim(czech), " ")
+    Dim timeStr As String: timeStr = parts(UBound(parts))
+    outTime = TimeValue(timeStr)
+    
+    If err.Number = 0 Then
+        dayMask = d
+        ParseCzechDayTime = True
+    End If
+End Function
+
+' ====================== POMOCNÉ FUNKCE (STRING/META) ======================
+
+Private Function CleanKey(ByVal s As String) As String
+    Dim t As String: t = LCase(Trim(s))
+    t = Replace(t, " ", "_")
+    Dim i As Long, ch As String, res As String
+    For i = 1 To Len(t)
+        ch = Mid(t, i, 1)
+        If ch Like "[a-z0-9_]" Then res = res & ch
+    Next i
+    If Len(res) > MAX_KEY_LEN Then res = left(res, MAX_KEY_LEN)
+    CleanKey = res
+End Function
+
+Private Function ShapeExistsOnSheet(ByVal ws As Worksheet, ByVal nm As String) As Boolean
+    On Error Resume Next
+    ShapeExistsOnSheet = Not ws.Shapes(nm) Is Nothing
+End Function
+
+Private Function BuildMeta(ByVal Name As String, ByVal tim As String, ByVal entryId As String, ByVal active As Boolean) As String
+    BuildMeta = "name=" & Name & "|time=" & tim & "|entry=" & entryId & "|active=" & IIf(active, "1", "0")
+End Function
+
+Private Sub ParseMeta(ByVal meta As String, ByRef Name As String, ByRef tim As String, ByRef entryId As String, ByRef active As Boolean)
+    Dim parts() As String, p As Variant, k() As String
+    parts = Split(meta, "|")
+    active = False
+    For Each p In parts
+        k = Split(p, "=")
+        If UBound(k) = 1 Then
+            Select Case k(0)
+                Case "name": Name = k(1)
+                Case "time": tim = k(1)
+                Case "entry": entryId = k(1)
+                Case "active": active = (k(1) = "1")
+            End Select
+        End If
+    Next p
+End Sub
+
+

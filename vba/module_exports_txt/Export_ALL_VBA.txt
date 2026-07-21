@@ -1,0 +1,185 @@
+﻿Sub ExportAllVBAtoWordAndTxtAndBas()
+    Dim wdApp As Object
+    Dim wdDoc As Object
+    Dim vbComp As Object
+    Dim sCode As String
+    Dim sName As String
+    Dim iLineCount As Long
+    
+    ' --- NOVÉ PROMĚNNÉ PRO UKLÁDÁNÍ A MAZÁNÍ ---
+    Dim sPath As String
+    Dim sBasPath As String
+    Dim sTxtPath As String
+    Dim sFileNameWord As String
+    Dim sFileNameTxt As String
+    Dim ext As String
+    ' -------------------------------------------
+    
+    ' Konstanty pro Word
+    Const wdFormatDocumentDefault = 16
+    Const wdStyleHeading1 = -2
+    Const wdPageBreak = 7
+    
+    ' --- NASTAVENÍ CESTY A NÁZVU ---
+    ' Cesta ke složce s lomítkem na konci (opraveno)
+    sPath = "C:\Users\macou\Desktop\Anime list - experimenting\VBA modules in Anime Excel\"
+    sBasPath = sPath & "VBA .bas files\"
+    sTxtPath = sPath & "VBA .txt files\"
+    
+    ' Kontrola, zda složka existuje (pro jistotu)
+    If Dir(sPath, vbDirectory) = "" Then
+        MsgBox "Cílová složka neexistuje!" & vbCrLf & sPath, vbCritical
+        Exit Sub
+    End If
+    
+    ' Vytvoření podsložek pro samostatné exporty, pokud neexistují
+    If Dir(sBasPath, vbDirectory) = "" Then
+        MkDir sBasPath
+    End If
+    If Dir(sTxtPath, vbDirectory) = "" Then
+        MkDir sTxtPath
+    End If
+    
+    ' --- MAZÁNÍ STARÝCH SOUBORŮ (Zrychleno wildcards) ---
+    On Error Resume Next ' Ignorovat chyby u souborů, které jsou případně uzamčené
+    Kill sPath & "*_Current VBA Modules.docx"
+    Kill sPath & "*_Current VBA Modules.txt"
+    Kill sBasPath & "*.*"
+    Kill sTxtPath & "*.*"
+    On Error GoTo 0
+    ' ------------------------------
+
+    ' --- PŘÍPRAVA TXT SOUBORU (UTF-8) ---
+    sFileNameTxt = Format(Now, "dd.mm.yyyy, hh,mm") & "_Current VBA Modules.txt"
+    Dim oMainTxt As Object
+    Set oMainTxt = CreateObject("ADODB.Stream")
+    oMainTxt.Type = 2          ' adTypeText
+    oMainTxt.Charset = "UTF-8"
+    oMainTxt.Open
+    oMainTxt.WriteText "Dokumentace VBA kódu - Anime Excel", 1
+    oMainTxt.WriteText "Vygenerováno: " & Format(Now, "dd.mm.yyyy, hh:mm"), 1
+    oMainTxt.WriteText "", 1
+
+    ' --- PŘÍPRAVA MS WORD ---
+    On Error Resume Next
+    Set wdApp = GetObject(, "Word.Application")
+    If err.Number <> 0 Then
+        Set wdApp = CreateObject("Word.Application")
+    End If
+    On Error GoTo 0
+    
+    wdApp.Visible = True
+    wdApp.ScreenUpdating = False ' Vypnutí překreslování = zásadní urychlení makra pro Word
+    
+    Set wdDoc = wdApp.Documents.Add
+    
+    ' Úvodní nadpis Word
+    With wdApp.Selection
+        .Style = wdStyleHeading1
+        .TypeText text:="Dokumentace VBA kódu - Anime Excel"
+        .TypeParagraph
+        .Style = -1
+        .TypeText text:="Vygenerováno: " & Format(Now, "dd.mm.yyyy, hh:mm")
+        .TypeParagraph
+        .TypeParagraph
+    End With
+
+    ' --- SMYČKA PŘES MODULY ---
+    For Each vbComp In ThisWorkbook.VBProject.VBComponents
+        iLineCount = vbComp.CodeModule.CountOfLines
+        If iLineCount > 0 Then
+            sName = vbComp.Name
+            sCode = vbComp.CodeModule.lines(1, iLineCount)
+            
+            ' Exportuj pouze pokud obsahuje nějaké funkce (case-insensitive = robustnější)
+            If Len(Trim(sCode)) > 0 And _
+               (InStr(1, sCode, "Sub ", vbTextCompare) > 0 Or _
+                InStr(1, sCode, "Function ", vbTextCompare) > 0 Or _
+                InStr(1, sCode, "Property ", vbTextCompare) > 0) Then
+                
+                ' 1) Export do samostatného souboru
+                Select Case vbComp.Type
+                    Case 1 ' vbext_ct_StdModule
+                        ext = ".bas"
+                    Case 2 ' vbext_ct_ClassModule
+                        ext = ".cls"
+                    Case 3 ' vbext_ct_MSForm
+                        ext = ".frm"
+                    Case 100 ' vbext_ct_Document (List/ThisWorkbook)
+                        ext = ".cls"
+                    Case Else
+                        ext = ".bas"
+                End Select
+                
+                On Error Resume Next
+                vbComp.Export sBasPath & sName & ext
+                On Error GoTo 0
+                
+                ' 1b) Export do samostatného .txt souboru (UTF-8 pro NotebookLM)
+                Dim oStream As Object
+                Set oStream = CreateObject("ADODB.Stream")
+                oStream.Type = 2          ' adTypeText
+                oStream.Charset = "UTF-8"
+                oStream.Open
+                oStream.WriteText sCode, 1 ' adWriteLine
+                oStream.SaveToFile sTxtPath & sName & ".txt", 2 ' adSaveCreateOverWrite
+                oStream.Close
+                Set oStream = Nothing
+                
+                ' 2) Zápis do Wordu
+                With wdApp.Selection
+                    .Style = wdStyleHeading1
+                    .TypeText text:="Modul: " & sName
+                    .TypeParagraph
+                    .Style = -1
+                    .Font.Bold = True
+                    .Font.Color = 0
+                    .TypeText text:="--- ZAČÁTEK KÓDU [" & sName & "] ---"
+                    .TypeParagraph
+                    .Font.Bold = False
+                    .Font.Name = "Consolas"
+                    .Font.size = 9
+                    .TypeText text:=sCode
+                    .TypeParagraph
+                    .Font.Name = "Calibri"
+                    .Font.size = 11
+                    .Font.Bold = True
+                    .TypeText text:="--- KONEC KÓDU [" & sName & "] ---"
+                    .TypeParagraph
+                    .InsertBreak Type:=wdPageBreak
+                End With
+                
+                ' 3) Zápis do TXT
+                oMainTxt.WriteText "Modul: " & sName, 1
+                oMainTxt.WriteText "--- ZAČÁTEK KÓDU [" & sName & "] ---", 1
+                oMainTxt.WriteText sCode, 1
+                oMainTxt.WriteText "--- KONEC KÓDU [" & sName & "] ---", 1
+                oMainTxt.WriteText "", 1
+            End If
+        End If
+    Next vbComp
+    
+    ' Uložit a zavřít UTF-8 TXT dokument
+    oMainTxt.SaveToFile sPath & sFileNameTxt, 2 ' adSaveCreateOverWrite
+    oMainTxt.Close
+    Set oMainTxt = Nothing
+    
+    ' Návrat na začátek dokumentu Word a obnova překreslování
+    wdApp.Selection.HomeKey Unit:=6
+    wdApp.ScreenUpdating = True
+    
+    ' --- ULOŽENÍ SOUBORU Wordu ---
+    sFileNameWord = Format(Now, "dd.mm.yyyy, hh,mm") & "_Current VBA Modules.docx"
+    wdDoc.SaveAs2 FileName:=sPath & sFileNameWord, FileFormat:=wdFormatDocumentDefault
+    
+    ' Informační okno o úspěchu
+    'MsgBox "Hotovo! Uloženo jako:" & vbCrLf & _
+           "- Word: " & sFileNameWord & vbCrLf & _
+           "- TXT: " & sFileNameTxt & vbCrLf & _
+           "- Samostatné zdrojové soubory převedeny do složky 'VBA .bas files'", vbInformation, "Export Dokončen"
+    
+    ' Úklid z paměti
+    Set wdDoc = Nothing
+    Set wdApp = Nothing
+    Set vbComp = Nothing
+End Sub

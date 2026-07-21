@@ -1,0 +1,763 @@
+﻿' Vložit do nového modulu (např. mod_Top10_Postavy)
+
+Option Explicit
+
+' Konstanta pro základní URL API
+Private Const JIKAN_API_URL As String = "https://api.jikan.moe"
+
+'================================================================================
+' MAKRO: Spravovat_Top10_Postavy
+' ÚČEL: Hlavní makro pro správu Top 10 postav pomocí JIKAN API.
+'================================================================================
+Sub Spravovat_Top10_Postavy()
+    ' --- Deklarace proměnných ---
+    
+    ' Pro Excel
+    Dim wsInfo As Worksheet
+    Dim shpImage As Shape
+    Dim shpText As Shape
+    Dim rankInput As Variant
+    Dim rankNum As Long
+    Dim currentAltText As String
+    Dim currentCharID As String
+    Dim currentAnimeName As String
+    Dim hLink As Hyperlink
+    
+    ' Proměnné pro Krok 1 (Výběr)
+    Dim selectChoice As VbMsgBoxResult
+    
+    
+    ' Pro JIKAN a API
+    Dim jsonResponse As String
+    Dim jsonObj As Object ' Bude vyžadovat tvůj JSON parser
+    Dim searchName As String
+    Dim selectedCharID As String
+    Dim selectedCharName As String
+    Dim imageUrl As String
+    Dim tempFile As String
+    Dim selectedCharURL As String
+    Dim customUrl As String
+    Dim jsonAnimeInfo As Object ' Pro dotaz na Animeography
+    
+' Pro Hledání v Anime Listu
+    Dim wsList As Worksheet
+    Dim searchAnime As String
+    Dim finalAnimeName As String
+    Dim foundCell As Range
+    Dim cellComment As String
+    
+    ' Proměnné pro Krok 4 (Hledání postavy)
+    Dim continueSearching As Boolean
+    Dim item As Object ' Proměnná pro iteraci v JSON
+    Dim userChoice As VbMsgBoxResult
+    
+    ' Proměnné pro Krok 6 (Hledání série)
+    Dim continueAnimeSearch As Boolean
+    Dim seriesNameKey As String
+    
+    ' --- Cílení na listy ---
+    On Error Resume Next
+    Set wsInfo = ThisWorkbook.Worksheets("OBECNÉ INFORMACE")
+    If wsInfo Is Nothing Then
+        MsgBox "Chyba: List 'OBECNÉ INFORMACE' nebyl nalezen.", vbCritical
+        Exit Sub
+    End If
+    
+    Set wsList = ThisWorkbook.Worksheets("ANIME LIST")
+    If wsList Is Nothing Then
+        MsgBox "Chyba: List 'ANIME LIST' nebyl nalezen.", vbCritical
+        Exit Sub
+    End If
+    On Error GoTo 0
+    
+' TÍMTO KÓDEM KOMPLETNĚ NAHRAĎ PŘEDCHOZÍ "KROK 1"
+
+' --- KROK 1: Sjednocený výběr pozice ---
+
+' Lokální proměnné POUZE pro tento blok
+Dim i As Long
+Dim searchCharName As String
+Dim currentText As String
+Dim tempRank As Long
+
+' Resetujeme rankNum
+rankNum = 0
+
+' Zeptáme se na vstup (Type:=2 přijme text i číslo jako text)
+rankInput = Application.InputBox( _
+    prompt:="Zadej pozici (1-10) NEBO jméno postavy pro úpravu:", _
+    title:="Krok 1: Výběr Pozice", _
+    Type:=2)
+    
+If rankInput = "False" Then Exit Sub ' Uživatel stiskl Storno
+If Len(rankInput) = 0 Then Exit Sub ' Uživatel nic nezadal
+
+' --- Vyhodnocení vstupu ---
+
+' 1. Zkusíme, zda to je platné ČÍSLO POZICE
+If IsNumeric(rankInput) Then
+    tempRank = CLng(rankInput)
+    If tempRank >= 1 And tempRank <= 10 Then
+        rankNum = tempRank
+    End If
+End If
+
+' 2. Pokud to nebylo platné číslo (nebo číslo mimo 1-10),
+'    zkusíme HLEDÁNÍ PODLE JMÉNA
+If rankNum = 0 Then
+    searchCharName = CStr(rankInput)
+    
+    ' Pokud je text kratší než 2 znaky, nemá smysl hledat
+    ' (a chrání to před vstupem "0", který není platný rank)
+    If Len(searchCharName) < 2 Then
+         GoTo NalezenoNula ' Přeskočíme rovnou na chybovou hlášku
+    End If
+
+    ' Prohledáme všech 10 textových polí
+    On Error Resume Next ' Ignorujeme, pokud shape neexistuje
+    For i = 1 To 10
+        ' Použijeme hlavní proměnnou shpText
+        Set shpText = wsInfo.Shapes("Top10_CharAnime_" & i)
+        If Not shpText Is Nothing Then
+            currentText = shpText.TextFrame.Characters.text
+            ' Hledáme bez ohledu na velká/malá písmena
+            If InStr(1, currentText, searchCharName, vbTextCompare) > 0 Then
+                rankNum = i ' Našli jsme shodu!
+                Exit For ' Ukončíme hledání
+            End If
+        End If
+        Set shpText = Nothing ' Uvolníme pro další smyčku
+    Next i
+    On Error GoTo 0
+End If
+
+' --- Finální kontrola ---
+NalezenoNula:
+If rankNum = 0 Then
+    MsgBox "Pozice '" & rankInput & "' nebyla nalezena." & vbCrLf & _
+           "Zadej buď číslo 1-10, nebo část existujícího jména postavy.", vbExclamation
+    Exit Sub
+End If
+
+' Zobrazíme uživateli, co jsme vybrali (pro potvrzení)
+MsgBox "Bude upravena pozice #" & rankNum, vbInformation
+
+' Dále kód pokračuje Krokem 2, který již má správné rankNum
+    
+    ' --- KROK 2: Nalezení objektů ---
+    On Error Resume Next
+    Set shpImage = wsInfo.Shapes("Top10_Char_" & rankNum)
+    Set shpText = wsInfo.Shapes("Top10_CharAnime_" & rankNum)
+    On Error GoTo 0
+    
+    ' Kontrola, zda oba objekty existují
+    If shpImage Is Nothing Then
+        MsgBox "Chyba: Objekt obrázku 'Top10_Char_" & rankNum & "' nebyl nalezen.", vbCritical
+        Exit Sub
+    End If
+    
+    If shpText Is Nothing Then
+        MsgBox "Chyba: Objekt textu 'Top10_CharAnime_" & rankNum & "' nebyl nalezen.", vbCritical
+        Exit Sub
+    End If
+    
+    ' --- KROK 3: Čtení stávajících dat ---
+    currentAltText = shpImage.AlternativeText
+    
+    ' Použijeme pomocnou funkci z modulu mod_API_Helpers
+    currentCharID = ParseAltText(currentAltText, "CHAR_ID")
+    currentAnimeName = ParseAltText(currentAltText, "ANIME_NAME")
+    
+    ' Dáme uživateli na výběr, pokud pozice už je obsazená
+    If Len(currentCharID) > 0 Then
+        If MsgBox("Pozice #" & rankNum & " je již nastavena." & vbCrLf & _
+                  "(Postava ID: " & currentCharID & ", Série: " & currentAnimeName & ")" & vbCrLf & vbCrLf & _
+                  "Chceš tuto pozici přepsat?", _
+                  vbYesNo + vbQuestion, "Pozice je obsazena") = vbNo Then
+            Exit Sub ' Uživatel nechce přepsat
+        End If
+    End If
+    
+    
+    ' Vložit za Krok 3 v modulu mod_Top10_Postavy
+
+    ' --- KROK 4: Hledání postavy (JIKAN) ---
+    
+    continueSearching = True
+    
+    Do While continueSearching
+        searchName = Application.InputBox(prompt:="Zadej jméno postavy pro hledání na MyAnimeList:", _
+                                          title:="Krok 4: Hledání Postavy", _
+                                          Type:=2)
+                                          
+        If searchName = "False" Then Exit Sub ' Uživatel stiskl Storno
+        If Len(searchName) < 3 Then
+            MsgBox "Zadej prosím alespoň 3 znaky pro hledání.", vbExclamation
+            GoTo NextSearchLoop ' Přeskočí zbytek a vrátí se na začátek Do While
+        End If
+        
+        ' Zavoláme naši pomocnou funkci z modulu mod_API_Helpers
+        ' Použijeme limit=10, abychom nezobrazovali moc výsledků
+        jsonResponse = JikanV4Request("/v4/characters?q=" & URLEncode(searchName) & "&limit=10")
+        
+        If Len(jsonResponse) = 0 Then
+            MsgBox "Hledání postavy selhalo. API nevrátilo žádná data.", vbCritical
+            GoTo NextSearchLoop
+        End If
+        
+        ' --- !!! ZDE POUŽIJ SVŮJ JSON PARSER !!! ---
+        ' Předpokládám, že tvůj parser funguje nějak takto.
+        ' UPRAV TENTO ŘÁDEK podle toho, jaký JSON parser používáš:
+        'Příklad: Set jsonObj = JsonConverter.ParseJson(jsonResponse)
+        ' Příklad: Set jsonObj = ParseJson(jsonResponse)
+        ' -------------------------------------------
+        On Error Resume Next ' Ošetření chyb při parsování
+        Set jsonObj = JsonConverter.ParseJson(jsonResponse)
+        
+        If err.Number <> 0 Or jsonObj Is Nothing Then
+            MsgBox "Chyba při parsování JSON odpovědi. Zkontroluj svůj JSON modul.", vbCritical
+            err.Clear
+            On Error GoTo 0
+            Exit Sub
+        End If
+        On Error GoTo 0
+        ' -------------------------------------------
+
+        ' Kontrola, zda API vůbec něco našlo
+        If Not jsonObj.Exists("data") Or jsonObj("data").count = 0 Then
+            MsgBox "Pro '" & searchName & "' nebyly nalezeny žádné výsledky.", vbInformation
+            GoTo NextSearchLoop
+        End If
+
+        ' Smyčka pro výběr správné postavy
+        selectedCharID = "" ' Resetujeme výběr
+        
+        ' NAHRAĎ CELOU SMYČKU "For Each item In jsonObj("data")" V KROKU 4
+
+' TÍMTO KÓDEM NAHRAĎ CELOU SMYČKU "For Each item In jsonObj("data")" V KROKU 4
+
+        ' TÍMTO KÓDEM KOMPLETNĚ NAHRAĎ CELOU SMYČKU "For Each item..." V KROKU 4
+
+        For Each item In jsonObj("data")
+            ' Lokální proměnné pro tuto smyčku
+            Dim mediaLabel As String
+            Dim mediaTitle As String
+            Dim char_id As String
+            
+            mediaTitle = "N/A" ' Výchozí hodnota
+            mediaLabel = "Série: " ' Výchozí popisek
+            
+            ' Získáme ID postavy z prvního dotazu
+            char_id = CStr(item("mal_id"))
+            
+            On Error Resume Next ' Ochrana pro API a parsování
+            
+            ' --- NOVÝ KROK: Druhý, specifický dotaz na Anime ---
+            ' Tímto získáme data, která v prvním vyhledávacím dotazu chybí
+            jsonResponse = JikanV4Request("/v4/characters/" & char_id & "/anime")
+            
+            If Len(jsonResponse) > 0 Then
+                ' Použijeme náš nový JSON objekt
+                Set jsonAnimeInfo = JsonConverter.ParseJson(jsonResponse)
+                
+                ' Ověříme, že endpoint vrátil data a že pole není prázdné
+                If Not jsonAnimeInfo Is Nothing Then
+                    If jsonAnimeInfo.Exists("data") And jsonAnimeInfo("data").count > 0 Then
+                        ' Našli jsme anime, vezmeme první
+                        mediaLabel = "Anime: "
+                        mediaTitle = jsonAnimeInfo("data")(1)("anime")("title")
+                    End If
+                End If
+                Set jsonAnimeInfo = Nothing ' Uvolníme
+            End If
+            
+            ' Pokud jsme anime nenašli (ani po druhém dotazu),
+            ' zkusíme, jestli data nebyla alespoň v Manze (z prvního dotazu)
+            If mediaTitle = "N/A" Then
+                If item.Exists("manga") And item("manga").count > 0 Then
+                    mediaLabel = "Manga: "
+                    mediaTitle = item("manga")(1)("title")
+                End If
+            End If
+            
+            On Error GoTo 0
+            ' --- Konec vylepšení ---
+            
+            
+            ' Zobrazíme MsgBox s výběrem (Nyní se správnými daty)
+            userChoice = MsgBox("Našel jsem postavu:" & vbCrLf & vbCrLf & _
+                                "Jméno: " & item("name") & vbCrLf & _
+                                mediaLabel & mediaTitle & vbCrLf & _
+                                "Odkaz: " & item("url") & vbCrLf & vbCrLf & _
+                                "Je to správná postava?", _
+                                vbYesNoCancel + vbQuestion, "Potvrzení Výběru")
+            
+            ' Tento kód (logika vbYes/vbNo/vbCancel) zůstává stejný
+            If userChoice = vbYes Then
+                selectedCharID = CStr(item("mal_id"))
+                selectedCharName = CStr(item("name"))
+                selectedCharURL = CStr(item("url"))
+                
+                continueSearching = False
+                Exit For
+                
+            ElseIf userChoice = vbCancel Then
+                Exit Sub ' Uživatel stiskl Storno, konec makra
+                
+            ElseIf userChoice = vbNo Then
+                ' Uživatel stiskl Ne, pokračujeme na další výsledek
+            End If
+        Next item
+        
+        ' Pokud jsme prošli všechny výsledky a uživatel nic nevybral
+        If selectedCharID = "" Then
+            If MsgBox("Prošli jsme všechny výsledky. Chceš zkusit hledat znovu (jiné jméno)?", _
+                     vbYesNo + vbQuestion, "Hledání Neúspěšné") = vbNo Then
+                Exit Sub ' Uživatel nechce hledat znovu
+            End If
+            ' Pokud řekne Yes, smyčka 'Do While' se zopakuje
+        End If
+        
+NextSearchLoop:
+    Loop ' Konec Do While continueSearching
+    
+    
+    ' --- KROK 5: Získání detailů postavy (URL obrázku) ---
+    
+    If Len(selectedCharID) = 0 Then
+        MsgBox "Neočekávaná chyba: ID postavy nebylo vybráno.", vbCritical
+        Exit Sub
+    End If
+    
+    jsonResponse = JikanV4Request("/v4/characters/" & selectedCharID)
+    
+    If Len(jsonResponse) = 0 Then
+        MsgBox "Chyba: Nepodařilo se získat detaily pro postavu ID: " & selectedCharID, vbCritical
+        Exit Sub
+    End If
+    
+    ' --- !!! ZDE ZNOVU POUŽIJ SVŮJ JSON PARSER !!! ---
+    On Error Resume Next
+    Set jsonObj = JsonConverter.ParseJson(jsonResponse)
+    If err.Number <> 0 Or jsonObj Is Nothing Then
+        MsgBox "Chyba při parsování JSON odpovědi (detaily postavy).", vbCritical
+        err.Clear
+        On Error GoTo 0
+        Exit Sub
+    End If
+    On Error GoTo 0
+    ' -------------------------------------------
+    
+    ' Pokusíme se získat URL obrázku
+    On Error Resume Next
+    imageUrl = jsonObj("data")("images")("jpg")("image_url")
+    On Error GoTo 0
+    
+    If Len(imageUrl) = 0 Then
+        MsgBox "Chyba: V datech postavy nebylo nalezeno 'image_url'.", vbCritical
+        ' Můžeme zkusit záložní obrázek, pokud existuje (např. webp),
+        ' ale pro teď makro ukončíme.
+        Exit Sub
+    End If
+    
+    ' Informace pro uživatele
+    Debug.Print "Vybrána postava: " & selectedCharName & " (ID: " & selectedCharID & ")"
+    Debug.Print "Nalezena URL obrázku: " & imageUrl
+    
+    ' Vložit hned za KROK 5 (za řádek Debug.Print "Nalezena URL...")
+
+    ' --- NOVÝ KROK 5b: Ruční výběr obrázku (Požadavek 3) ---
+    If MsgBox("Našel jsem hlavní obrázek postavy." & vbCrLf & vbCrLf & _
+              "Chceš si ručně vybrat jiný z galerie?", _
+              vbYesNo + vbQuestion, "Volba Obrázku") = vbYes Then
+        
+        ' Otevřeme v prohlížeči galerii obrázků postavy
+        On Error Resume Next ' Pro případ, že by odkaz nešel otevřít
+        ' Použijeme URL, kterou jsme si uložili v Kroku 4
+        ActiveWorkbook.FollowHyperlink Address:=selectedCharURL & "/pics"
+        On Error GoTo 0
+        
+        customUrl = Application.InputBox( _
+            prompt:="Otevřel jsem v prohlížeči galerii obrázků." & vbCrLf & _
+                    "Zkopíruj sem prosím PŘÍMOU URL adresu (.jpg, .png) obrázku, který chceš použít.", _
+            title:="Krok 5b: Ruční Výběr Obrázku", Type:=2)
+        
+        ' Ověříme, zda uživatel něco vložil a zda to vypadá jako URL
+        If customUrl <> "False" And Len(customUrl) > 10 And left(customUrl, 4) = "http" Then
+            imageUrl = customUrl ' Přepíšeme původní imageUrl
+            Debug.Print "Obrázek změněn na uživatelskou URL: " & imageUrl
+        ElseIf customUrl <> "False" Then
+            MsgBox "Vložený text nevypadá jako platná URL. Bude použit výchozí obrázek.", vbExclamation
+        Else
+            ' Uživatel stiskl Storno v InputBoxu, použije se výchozí obrázek
+            MsgBox "Bude použit výchozí obrázek.", vbInformation
+        End If
+    End If
+    
+    
+' Vložit za Krok 5 v modulu mod_Top10_Postavy
+
+' TÍMTO KÓDEM KOMPLETNĚ NAHRAĎ CELÝ PŮVODNÍ KROK 6
+
+    ' --- KROK 6: Zadání názvu série (Požadavek 1 - Zjednodušeno) ---
+    
+    Do
+        finalAnimeName = Application.InputBox( _
+            prompt:="Krok 6: Zadej název série" & vbCrLf & vbCrLf & _
+                    "Zadej prosím přímo finální název série (např. 'Monogatari' nebo 'Steins;Gate'), " & _
+                    "který se má zobrazit u postavy.", _
+            title:="Krok 6: Zadání Názvu Série", _
+            Default:=currentAnimeName, _
+            Type:=2)
+            
+        If finalAnimeName = "False" Then Exit Sub ' Uživatel stiskl Storno
+        
+        If Len(finalAnimeName) > 0 Then
+            Exit Do ' Název je zadaný, můžeme opustit smyčku
+        Else
+            ' Uživatel nic nezadal
+            If MsgBox("Nezadal jsi žádný název. Chceš to zkusit znovu?", vbYesNo + vbQuestion) = vbNo Then
+                Exit Sub ' Uživatel to vzdal
+            End If
+            ' Pokud stiskne "Yes", smyčka se zopakuje
+        End If
+    Loop
+    
+    Debug.Print "Finální název série: " & finalAnimeName
+' TENTO KÓD VLOŽ MÍSTO SMAZANÉ ČÁSTI (OD KROKU 7 DO KONCE)
+' ----------------------------------------------------------------
+
+    ' --- KROK 7: Aktualizace Excelu (Finální verze) ---
+    
+    Debug.Print "Spouštím finální aktualizaci..."
+    Application.ScreenUpdating = False
+    
+    ' 1. Stáhneme obrázek
+    ' Použijeme funkci z modulu mod_API_Helpers
+    tempFile = DownloadImage(imageUrl)
+    
+    If Len(tempFile) = 0 Then
+        MsgBox "Stahování obrázku selhalo. Aktualizace byla přerušena.", vbCritical
+        Application.ScreenUpdating = True
+        Exit Sub
+    End If
+    
+    ' Přidáme Error Handler pro finální zápis
+    On Error GoTo UpdateError
+    
+' TOTO VLOŽ MÍSTO STARÉHO KROKU 2
+' ---------------------------------
+    ' 2. Aktualizujeme ODKAZ a OBRÁZEK (Změněné pořadí kvůli chybě Excelu)
+    
+    ' KROK 2a: Nejdříve přidáme odkaz (na 'shpImage')
+    If Len(selectedCharURL) > 0 Then
+        ' Smažeme starý odkaz z obrázku (pokud tam byl)
+        For Each hLink In wsInfo.Hyperlinks
+            On Error Resume Next
+            If hLink.Shape.Name = shpImage.Name Then
+                hLink.Delete
+                Exit For
+            End If
+            On Error GoTo UpdateError
+        Next hLink
+    
+        ' Přidáme nový odkaz na OBRÁZEK
+        wsInfo.Hyperlinks.Add Anchor:=shpImage, Address:=selectedCharURL
+        
+    Else
+        ' Pokud URL není, pro jistotu smažeme starý odkaz
+        For Each hLink In wsInfo.Hyperlinks
+            On Error Resume Next
+            If hLink.Shape.Name = shpImage.Name Then
+                hLink.Delete
+                Exit For
+            End If
+            On Error GoTo UpdateError
+        Next hLink
+        Debug.Print "selectedCharURL je prázdná, odkaz se nepřidává."
+    End If
+    
+    ' KROK 2b: AŽ POTOM vložíme obrázek
+    ' Toto pořadí (odkaz první, obrázek druhý) obchází chybu Excelu
+    With shpImage.Fill
+        .Visible = msoTrue
+        .UserPicture tempFile
+        .TextureTile = msoFalse
+    End With
+' ---------------------------------
+
+' TOTO VLOŽ MÍSTO STARÉHO KROKU 3
+' ----------------------------------------------------------------
+    ' 3. Aktualizujeme textové pole (Jméno, Série)
+    Dim finalText As String
+    finalText = selectedCharName & ", " & finalAnimeName
+
+    ' Vložíme finální text
+    shpText.TextFrame.Characters.text = finalText
+    
+    ' Ujistíme se, že text NENÍ podtržený
+    shpText.TextFrame.Characters.Font.Underline = msoNoUnderline
+    
+    ' FINÁLNÍ POJISTKA: Aktivně smažeme odkaz z textového pole
+    On Error Resume Next ' Ignorujeme chyby, pokud odkaz neexistuje
+    For Each hLink In wsInfo.Hyperlinks
+        If hLink.Shape.Name = shpText.Name Then
+            hLink.Delete
+            Exit For
+        End If
+    Next hLink
+    On Error GoTo UpdateError ' Vrátíme hlavní error handling
+' ----------------------------------------------------------------
+
+    ' 4. Aktualizujeme AlternativeText (pro budoucí spuštění)
+    shpImage.AlternativeText = "CHAR_ID:" & selectedCharID & ";ANIME_NAME:" & finalAnimeName
+    
+    ' 5. Smažeme dočasný soubor
+    On Error Resume Next ' Ignorujeme chybu, pokud by soubor nešel smazat
+    Kill tempFile
+    On Error GoTo UpdateError ' Vrátíme Error Handling
+    
+    ' Hotovo
+    Application.ScreenUpdating = True
+    MsgBox "Hotovo!" & vbCrLf & "Pozice #" & rankNum & " byla úspěšně aktualizována na:" & vbCrLf & _
+           selectedCharName & ", " & finalAnimeName, vbInformation, "Aktualizace Dokončena"
+           
+    ' Přeskočíme chybový handler a jdeme rovnou na úklid
+    GoTo Cleanup
+
+' --- Toto musí být úplně na konci Sub, těsně před "End Sub" ---
+
+UpdateError:
+    ' Chybový handler pro Krok 7
+    MsgBox "Došlo k chybě při finální aktualizaci objektů v Excelu." & vbCrLf & _
+           "Error: " & err.Description, vbCritical
+    Application.ScreenUpdating = True
+    ' Pokusíme se smazat temp soubor i při chybě
+    On Error Resume Next
+    Kill tempFile
+
+Cleanup:
+    ' Uvolnění proměnných z paměti
+    Set wsInfo = Nothing
+    Set wsList = Nothing
+    Set shpImage = Nothing
+    Set shpText = Nothing
+    Set jsonObj = Nothing
+    Set foundCell = Nothing
+    Set hLink = Nothing ' Uvolníme novou proměnnou
+    
+    Debug.Print "Makro Spravovat_Top10_Postavy dokončeno."
+
+End Sub
+
+
+    
+
+' --- POZNÁMKA: ---
+' Aby tento kód fungoval, musíš mít povolené "Microsoft XML, v6.0"
+' V editoru VBA jdi na Tools -> References... -> a zaškrtni "Microsoft XML, v6.0"
+
+
+
+'================================================================================
+' FUNKCE: JikanV4Request
+' ÚČEL:  Odešle GET požadavek na JIKAN v4 API a vrátí odpověď jako String.
+'================================================================================
+Function JikanV4Request(ByVal endpoint As String) As String
+    Dim http As Object
+    Dim requestUrl As String
+    
+    ' Používáme MSXML2.XMLHTTP.6.0
+    Set http = CreateObject("MSXML2.XMLHTTP.6.0")
+    requestUrl = JIKAN_API_URL & endpoint
+    
+    ' Nastavení "Error Handlingu" pro případ, že API neodpoví
+    On Error GoTo ApiError
+    
+    ' Odeslání synchronního požadavku (False = čekáme na odpověď)
+    http.Open "GET", requestUrl, False
+    http.sEnd
+    
+    ' API má "rate limit" (omezení počtu dotazů).
+    ' Dáme krátkou pauzu (0.5 sekundy), abychom ho nepřetížili.
+    Application.Wait Now + TimeValue("00:00:00") + (Timer - Int(Timer) + 500) / 86400000
+
+    ' Zpracování odpovědi
+    If http.status = 200 Then
+        ' Vše OK, vrátíme JSON text
+        JikanV4Request = http.responseText
+    Else
+        ' Chyba na straně API (např. 404 Nenalezeno, 429 Rate limit)
+        MsgBox "Chyba JIKAN API!" & vbCrLf & _
+               "Status: " & http.status & " - " & http.statusText & vbCrLf & _
+               "Endpoint: " & endpoint, vbCritical, "Chyba API"
+        JikanV4Request = "" ' Vrátíme prázdný string
+    End If
+    
+    GoTo Cleanup
+
+ApiError:
+    ' Chyba spojení (např. není internet)
+    MsgBox "Došlo k chybě při připojování k JIKAN API." & vbCrLf & _
+           "Error: " & err.Description, vbCritical, "Chyba Připojení"
+    JikanV4Request = ""
+
+Cleanup:
+    ' Uvolnění objektu z paměti
+    Set http = Nothing
+End Function
+
+' Vložit do stejného modulu (např. mod_API_Helpers)
+
+' --- POZNÁMKA: ---
+' Aby tento kód fungoval, musíš mít povolené "Microsoft ADO Stream"
+' V editoru VBA jdi na Tools -> References... -> a zaškrtni "Microsoft ActiveX Data Objects 6.1 Library"
+' (Pokud 6.1 nemáš, vyber nejvyšší verzi, kterou tam máš, např. 2.8)
+
+'================================================================================
+' FUNKCE: DownloadImage
+' ÚČEL:  Stáhne soubor (obrázek) z URL a uloží ho do dočasné složky.
+' VRACÍ: Plnou cestu k dočasnému souboru (např. "C:\Users\...\temp_char_pic.jpg")
+'================================================================================
+Function DownloadImage(ByVal url As String) As String
+    Dim http As Object
+    Dim stream As Object
+    Dim tempFilePath As String
+    Dim fileExt As String
+    
+    ' Zjistíme příponu souboru z URL (kvůli správnému uložení)
+    On Error Resume Next
+    fileExt = Right(url, Len(url) - InStrRev(url, "."))
+    If fileExt = "" Or Len(fileExt) > 4 Then fileExt = "jpg" ' Pojistka
+    On Error GoTo 0
+    
+    ' Definujeme cestu k dočasnému souboru
+    tempFilePath = Environ("TEMP") & "\temp_char_pic." & fileExt
+    
+    Set http = CreateObject("MSXML2.XMLHTTP.6.0")
+    Set stream = CreateObject("ADODB.Stream")
+    
+    On Error GoTo DownloadError
+    
+    http.Open "GET", url, False
+    http.sEnd
+    
+    If http.status = 200 Then
+        ' Obrázek nalezen, zpracujeme binární data
+        With stream
+            .Open
+            .Type = 1 ' adTypeBinary
+            .Write http.responseBody
+            .SaveToFile tempFilePath, 2 ' adSaveCreateOverWrite
+            .Close
+        End With
+        
+        ' Vrátíme cestu k souboru
+        DownloadImage = tempFilePath
+        
+    Else
+        ' Obrázek se nepodařilo stáhnout
+        MsgBox "Chyba při stahování obrázku!" & vbCrLf & _
+               "Status: " & http.status & " - " & http.statusText & vbCrLf & _
+               "URL: " & url, vbCritical, "Chyba Stahování"
+        DownloadImage = ""
+    End If
+    
+    GoTo Cleanup
+
+DownloadError:
+    MsgBox "Došlo k chybě při stahování obrázku." & vbCrLf & _
+           "Error: " & err.Description, vbCritical, "Chyba Stahování"
+    DownloadImage = ""
+
+Cleanup:
+    Set http = Nothing
+    Set stream = Nothing
+End Function
+
+' Vložit do modulu (např. mod_API_Helpers)
+
+'================================================================================
+' FUNKCE: ParseAltText
+' ÚČEL:  Prohledá text (ve formátu "KLIC1:HODNOTA1;KLIC2:HODNOTA2")
+'         a vrátí hodnotu pro zadaný klíč.
+'================================================================================
+Function ParseAltText(ByVal altText As String, ByVal key As String) As String
+    Dim pairs() As String
+    Dim pair() As String
+    Dim i As Long
+    
+    ' Ujistíme se, že klíč má za sebou dvojtečku
+    If Right(key, 1) <> ":" Then key = key & ":"
+    
+    ' Rozdělí text na jednotlivé páry (oddělovač je středník)
+    pairs = Split(altText, ";")
+    
+    On Error Resume Next ' Pro případ, že by formát nebyl správný
+    For i = 0 To UBound(pairs)
+        ' Hledáme náš klíč (s dvojtečkou)
+        If InStr(1, pairs(i), key, vbTextCompare) = 1 Then
+            ' Našli jsme klíč, teď rozdělíme pár na klíč a hodnotu
+            pair = Split(pairs(i), ":")
+            ' Vrátíme hodnotu (všechno za první dvojtečkou)
+            ParseAltText = Trim(Replace(pairs(i), key, "", 1, 1))
+            Exit Function
+        End If
+    Next i
+    On Error GoTo 0
+    
+    ' Pokud klíč nebyl nalezen, vrátí prázdný string
+    ParseAltText = ""
+End Function
+
+'================================================================================
+' FUNKCE: URLEncode (Nová verze bez ScriptControl)
+' ÚČEL:  Zakóduje textový řetězec pro bezpečné použití v URL adrese.
+'================================================================================
+Public Function URLEncode(ByVal text As String) As String
+    Dim i As Long
+    Dim char As String
+    Dim charCode As Integer
+    Dim result As String
+    
+    On Error GoTo URLEncode_Error
+    
+    For i = 1 To Len(text)
+        char = Mid(text, i, 1)
+        ' Získáme ASCII hodnotu znaku
+        charCode = Asc(char)
+        
+        Select Case charCode
+            Case 48 To 57  ' 0-9
+                result = result & char
+            Case 65 To 90  ' A-Z
+                result = result & char
+            Case 97 To 122 ' a-z
+                result = result & char
+            Case 45, 46, 95, 126 ' Znaky - . _ ~ (tyto jsou bezpečné)
+                result = result & char
+            Case 32 ' Mezera
+                result = result & "%20" ' Mezera se pro URL kóduje jako %20
+            Case Else
+                ' Všechny ostatní nebezpečné znaky (% & / ? atd.)
+                ' Převedeme jejich ASCII hodnotu na Hexa kód
+                If charCode < 16 Then
+                    result = result & "%0" & Application.WorksheetFunction.Dec2Hex(charCode)
+                Else
+                    result = result & "%" & Application.WorksheetFunction.Dec2Hex(charCode)
+                End If
+        End Select
+    Next i
+    
+    URLEncode = result
+    Exit Function
+    
+URLEncode_Error:
+    ' Fallback pro případ chyby (např. speciální znaky mimo Ascii)
+    URLEncode = text ' Vrátíme původní text
+    Debug.Print "Chyba v URLEncode: " & err.Description
+End Function
+
+
+
+

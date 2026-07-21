@@ -1,0 +1,749 @@
+﻿Option Explicit
+
+'================================================================================================
+'##### HLAVNÍ SPOUŠTĚCÍ MAKRO (CENTRALIZOVANÁ DATA - OPTIMALIZOVÁNO) #####
+'================================================================================================
+Public Sub AktualizovatVsechnyGrafyStudii()
+    On Error GoTo ErrorHandler
+    
+    Dim wsData As Worksheet
+    Dim lastRow As Long
+    Dim arrHlavniData As Variant
+    Dim dictAgregovanaData As Object ' Scripting.Dictionary
+    
+    Set wsData = ThisWorkbook.Sheets("ANIME LIST")
+    
+    ' ——— OPTIMALIZACE PROSTŘEDÍ (START) ———
+    With Application
+        .ScreenUpdating = False
+        .Calculation = xlCalculationManual
+        .EnableEvents = False
+    End With
+    
+    ' ——— KROK 1: JEDNORÁZOVÉ NAČTENÍ VŠECH DAT DO PAMĚTI ———
+    lastRow = wsData.Cells(wsData.Rows.count, "C").End(xlUp).row ' C je Název anime
+    
+    If lastRow < 2 Then
+        MsgBox "Žádná data k zobrazení.", vbExclamation
+        GoTo CleanExit
+    End If
+    
+    ' Načteme sloupec E (Studia) a K (Hodnocení) -> Range A:K
+    arrHlavniData = wsData.Range("A1:K" & lastRow).Value
+    
+    ' ——— KROK 2: JEDNORÁZOVÁ AGREGACE DAT PRO GRAFY ———
+    ' Výstupem je Dictionary, kde Key = Studio a Value = Array(CountTotal, SumRating, RatedCount)
+    Set dictAgregovanaData = AgregovatDataStudii(arrHlavniData)
+    
+    If dictAgregovanaData.count = 0 Then
+        MsgBox "Žádná platná data pro grafy studií.", vbInformation
+        GoTo CleanExit
+    End If
+    
+    ' ——— KROK 3: PŘEDÁNÍ AGREGOVANÝCH DAT PROCEDURÁM ———
+    Call VytvorGrafStudii_Pie(dictAgregovanaData, wsData)
+    Call VytvorGrafStudii_Best(dictAgregovanaData)
+    Call VytvorGrafStudii_Scatter(dictAgregovanaData)
+    
+    ' ——— KROK 4: SPUŠTĚNÍ TECHNICKÉ ANALÝZY (ANIMACE/CGI) ———
+    ' Toto makro má vlastní logiku čtení (komentáře), takže ho voláme zvlášť,
+    ' ale je součástí "Aktualizovat Vše".
+    Call AktualizovatDataStudiiTech
+    
+CleanExit:
+    ' ——— OPTIMALIZACE PROSTŘEDÍ (KONEC) ———
+    With Application
+        .ScreenUpdating = True
+        .Calculation = xlCalculationAutomatic
+        .EnableEvents = True
+    End With
+    Exit Sub
+
+ErrorHandler:
+    With Application
+        .ScreenUpdating = True
+        .Calculation = xlCalculationAutomatic
+        .EnableEvents = True
+    End With
+    MsgBox "Kritická chyba: " & err.Description, vbCritical
+End Sub
+
+'================================================================================================
+'##### POMOCNÁ FUNKCE: AGREGACE DAT STUDIÍ (JEDINÝ PRŮCHOD) #####
+'================================================================================================
+Private Function AgregovatDataStudii(dataArr As Variant) As Object
+    Dim dict As Object
+    Set dict = CreateObject("Scripting.Dictionary")
+    
+    Dim i As Long, j As Long
+    Dim strStudios As String, arrS As Variant, studio As String
+    Dim valHodnoceni As Variant
+    Dim arrStats As Variant
+    
+    ' Indexy v poli dataArr (A..K):
+    ' 5 = E (Studio)
+    ' 11 = K (Hodnocení)
+    
+    For i = 2 To UBound(dataArr, 1)
+        strStudios = CStr(dataArr(i, 5))
+        
+        If Len(strStudios) > 0 Then
+            arrS = Split(strStudios, ";")
+            
+            For j = LBound(arrS) To UBound(arrS)
+                studio = Trim(arrS(j))
+                
+                If Len(studio) > 0 Then
+                    ' Inicializace pole pro nové studio
+                    If Not dict.Exists(studio) Then
+                        ' Array(CountTotal=0, SumRating=0, RatedCount=0)
+                        dict(studio) = Array(0, 0#, 0)
+                    End If
+                    
+                    arrStats = dict(studio)
+                    
+                    ' 1. CountTotal (pro Pie Chart)
+                    arrStats(0) = arrStats(0) + 1
+                    
+                    ' 2. Rating (pro Best Bar Chart)
+                    valHodnoceni = dataArr(i, 11)
+                    If IsNumeric(valHodnoceni) And Not IsEmpty(valHodnoceni) Then
+                        arrStats(1) = arrStats(1) + CDbl(valHodnoceni) ' Suma hodnocení
+                        arrStats(2) = arrStats(2) + 1                  ' Počet hodnocených
+                    End If
+                    
+                    dict(studio) = arrStats ' Aktualizace v dictionary
+                End If
+            Next j
+        End If
+    Next i
+    
+    Set AgregovatDataStudii = dict
+End Function
+
+'================================================================================================
+'##### GRAF 1: PIE-CHART (ČETNOST STUDIÍ) #####
+'================================================================================================
+Private Sub VytvorGrafStudii_Pie(dictData As Object, wsData As Worksheet)
+    Dim wsChart As Worksheet
+    Dim chtObj As ChartObject, cht As Chart
+    Dim i As Long, p As Long
+    Dim keysArr As Variant, valsArr As Variant
+    Dim pieKeys() As String, pieCnts() As Double
+    Dim otherCnt As Double
+    Dim totalPie As Double
+    Dim arrStats As Variant
+    
+    Const THRESHOLD_PIE As Long = 4
+    
+    Set wsChart = ThisWorkbook.Sheets("OBECNÉ INFORMACE")
+    
+    ' Příprava dat pro Pie Chart
+    keysArr = dictData.keys
+    
+    ' Filtrace "Ostatní"
+    ReDim pieKeys(0 To UBound(keysArr))
+    ReDim pieCnts(0 To UBound(keysArr))
+    otherCnt = 0: p = 0
+    
+    For i = 0 To UBound(keysArr)
+        arrStats = dictData(keysArr(i))
+        Dim currentCount As Long
+        currentCount = arrStats(0) ' CountTotal
+        
+        If currentCount >= THRESHOLD_PIE Then
+            pieKeys(p) = keysArr(i)
+            pieCnts(p) = currentCount
+            p = p + 1
+        Else
+            otherCnt = otherCnt + currentCount
+        End If
+    Next i
+    
+    If otherCnt > 0 Then
+        pieKeys(p) = "Ostatní Studia"
+        pieCnts(p) = otherCnt
+        p = p + 1
+    End If
+    
+    ReDim Preserve pieKeys(0 To p - 1)
+    ReDim Preserve pieCnts(0 To p - 1)
+    
+    ' Bubble Sort (Descending Count)
+    Dim s As Long, t As Long, tmpKey As String, tmpCnt As Double
+    For s = 0 To p - 2
+        For t = s + 1 To p - 1
+            If pieCnts(t) > pieCnts(s) Then
+                tmpCnt = pieCnts(s): pieCnts(s) = pieCnts(t): pieCnts(t) = tmpCnt
+                tmpKey = pieKeys(s): pieKeys(s) = pieKeys(t): pieKeys(t) = tmpKey
+            End If
+        Next t
+    Next s
+    
+    ' Tvorba/Aktualizace grafu
+    On Error Resume Next
+    Set chtObj = wsChart.ChartObjects("GrafStudiiPop")
+    On Error GoTo 0
+    
+    If chtObj Is Nothing Then
+        Set chtObj = wsChart.ChartObjects.Add(100, 350, 400, 300)
+        chtObj.Name = "GrafStudiiPop"
+        With chtObj.Chart
+            .ChartType = xlPie
+            .HasTitle = True: .ChartTitle.text = "Četnost Anime Studií"
+            .ChartTitle.Font.Bold = True
+            .HasLegend = False: .SeriesCollection.NewSeries
+        End With
+    End If
+    
+    Set cht = chtObj.Chart
+    
+    With cht.SeriesCollection(1)
+        .XValues = pieKeys
+        .values = pieCnts
+        
+        totalPie = Application.WorksheetFunction.Sum(pieCnts)
+        
+        For i = 1 To .Points.count
+            .Points(i).HasDataLabel = True
+            With .Points(i).DataLabel
+                .text = pieKeys(i - 1) & ": " & pieCnts(i - 1) & " (" & Replace(Format(pieCnts(i - 1) / totalPie, "0.0%"), ".", ",") & ")"
+                .Font.Name = "Aptos Narrow": .Font.size = 10
+            End With
+        Next i
+    End With
+End Sub
+
+'================================================================================================
+'##### GRAF 2: BAR-CHART (TOP 10 DLE HODNOCENÍ) #####
+'================================================================================================
+Private Sub VytvorGrafStudii_Best(dictData As Object)
+    Dim wsChart As Worksheet
+    Dim chtObj As ChartObject, cht As Chart
+    Dim i As Long
+    Dim keysArr As Variant
+    Dim arrStats As Variant
+    Dim tmpArr() As Variant, mCount As Long
+    Dim bestKeys() As String, bestAvgs() As Double
+    Dim actualN As Long
+    
+    Const MIN_COUNT As Long = 4
+    Const TOP_N As Long = 10
+    
+    Set wsChart = ThisWorkbook.Sheets("OBECNÉ INFORMACE")
+    keysArr = dictData.keys
+    
+    ' Filtrace (Minimum hodnocení)
+    mCount = 0
+    For i = 0 To UBound(keysArr)
+        arrStats = dictData(keysArr(i))
+        ' arrStats(2) je RatedCount
+        If arrStats(2) >= MIN_COUNT Then mCount = mCount + 1
+    Next i
+    
+    If mCount = 0 Then Exit Sub ' Žádná data pro bar chart
+    
+    ReDim tmpArr(1 To mCount, 1 To 2)
+    mCount = 0
+    For i = 0 To UBound(keysArr)
+        arrStats = dictData(keysArr(i))
+        If arrStats(2) >= MIN_COUNT Then
+            mCount = mCount + 1
+            tmpArr(mCount, 1) = keysArr(i)
+            ' Average = SumRating (1) / RatedCount (2)
+            tmpArr(mCount, 2) = arrStats(1) / arrStats(2)
+        End If
+    Next i
+    
+    ' QuickSort (Sestupně dle hodnocení)
+    If mCount > 1 Then QuickSort2D tmpArr, 1, mCount
+    
+    ' Top N výběr
+    actualN = Application.Min(mCount, TOP_N)
+    ReDim bestKeys(0 To actualN - 1)
+    ReDim bestAvgs(0 To actualN - 1)
+    
+    For i = 1 To actualN
+        bestKeys(i - 1) = tmpArr(i, 1)
+        bestAvgs(i - 1) = tmpArr(i, 2)
+    Next i
+    
+    ' Tvorba/Aktualizace grafu
+    On Error Resume Next
+    Set chtObj = wsChart.ChartObjects("GrafStudiiBest")
+    On Error GoTo 0
+    
+    If chtObj Is Nothing Then
+        Set chtObj = wsChart.ChartObjects.Add(550, 350, 400, 300) ' Souřadnice přizpůsobit
+        chtObj.Name = "GrafStudiiBest"
+        With chtObj.Chart
+            .ChartType = xlBarClustered
+            .HasTitle = True: .ChartTitle.text = "Top " & actualN & " studií podle prům. hodnocení"
+            .ChartTitle.Font.Bold = True
+            .HasLegend = False
+            .SeriesCollection.NewSeries
+            
+            With .SeriesCollection(1).DataLabels
+                .ShowValue = True
+                .NumberFormat = "0.00"
+                .Position = xlLabelPositionOutsideEnd
+            End With
+            
+            With .Axes(xlValue)
+                .HasTitle = True: .AxisTitle.text = "Průměrné hodnocení"
+            End With
+            .Axes(xlCategory).TickLabels.Orientation = xlUpward
+        End With
+    End If
+    
+    Set cht = chtObj.Chart
+    
+    ' Aktualizace dat - Pouze hodnoty
+    ' Původní kód neresetoval formátování popisků při aktualizaci
+    With cht.SeriesCollection(1)
+        .values = bestAvgs
+        .XValues = bestKeys
+    End With
+    
+     ' Aktualizace titulku, pokud se počet změnil
+    cht.HasTitle = True
+    cht.ChartTitle.text = "Top " & actualN & " studií podle prům. hodnocení"
+End Sub
+
+'================================================================================================
+'##### TECHNICKÁ ANALÝZA (ANIMACE/CGI) - OPRAVENO PRO SPRÁVNOU TVORBU TABULKY #####
+'================================================================================================
+Public Sub AktualizovatDataStudiiTech()
+    Dim wsSource As Worksheet, wsDest As Worksheet, wsInfo As Worksheet
+    Dim lastRow As Long, i As Long
+    Dim arrSource As Variant
+    Dim cmtText As String
+    
+    ' Regex objekty
+    Dim reCat As Object, matches As Object, match As Object
+    
+    ' Pomocné proměnné
+    Dim rawScore As Double
+    Dim studioList As Variant, singleStudio As Variant, cleanSt As String
+    Dim dictCounts As Object   ' Počítadlo kolikrát se studio objevilo (pro filtr MIN_STUDIO_COUNT)
+    
+    ' === POLE PRO SBĚR DAT (JAKO V INSPIRAČNÍM MODULU) ===
+    Dim dataArray() As Variant
+    Dim arrRow As Long
+    Dim estimatedRows As Long
+    
+    ' Optimalizace komentářů
+    Dim dictComments As Object
+    Dim cmt As Comment
+    
+    ' Proměnné pro finální filtrovaný výstup
+    Dim arrFinal() As Variant
+    Dim finalCount As Long
+    Dim bufferItem As Variant
+    Dim j As Long
+    
+    Const MIN_STUDIO_COUNT As Long = 4
+    
+    ' ——— 1. INICIALIZACE ———
+    Application.ScreenUpdating = False
+    Application.Calculation = xlCalculationManual
+    On Error GoTo ErrHandler
+    
+    Set wsSource = ThisWorkbook.Sheets("ANIME LIST")
+    Set wsDest = ThisWorkbook.Sheets("MAL Cache + Interactive Rating")
+    Set wsInfo = ThisWorkbook.Sheets("OBECNÉ INFORMACE")
+    
+    ' Regex: Pattern bere "Kategorie -> Číslo"
+    Set reCat = CreateObject("VBScript.RegExp")
+    With reCat
+        .Global = True
+        .IgnoreCase = True
+        .Pattern = "([^->]+?)\s*->\s*([\d,./]+)"
+    End With
+    
+    Set dictCounts = CreateObject("Scripting.Dictionary")
+    
+    ' ——— 2. NAČTENÍ KOMENTÁŘŮ ZE SLOUPCE K (JAKO V INSPIRAČNÍM MODULU) ———
+    ' DŮLEŽITÉ: Bereme pouze komentáře ze sloupce K, ne z jakéhokoliv sloupce!
+    Set dictComments = CreateObject("Scripting.Dictionary")
+    For Each cmt In wsSource.Comments
+        ' Kontrola, že komentář je ve sloupci K (11)
+        If cmt.Parent.Column = 11 Then
+            dictComments(cmt.Parent.row) = cmt.text
+        End If
+    Next cmt
+    
+    ' ——— 3. NAČTENÍ DAT ———
+    lastRow = wsSource.Cells(wsSource.Rows.count, "C").End(xlUp).row
+    If lastRow < 2 Then GoTo CleanExit
+    
+    arrSource = wsSource.Range("A1:K" & lastRow).Value
+    
+    ' ——— 4. PŘÍPRAVA DATOVÉHO POLE (JAKO V INSPIRAČNÍM MODULU) ———
+    estimatedRows = lastRow * 10 ' Odhad: 10 záznamů na anime (Animace + CGI pro více studií)
+    If estimatedRows < 500 Then estimatedRows = 500
+    
+    ' Pole: 3 sloupce (Studio, Kategorie, Hodnocení), N řádků
+    ReDim dataArray(1 To 3, 1 To estimatedRows)
+    arrRow = 1
+    
+    ' ——— 5. PRŮCHOD DATY A SBĚR DO POLE ———
+    For i = 2 To UBound(arrSource, 1)
+        If Len(arrSource(i, 3)) > 0 And Len(arrSource(i, 5)) > 0 Then
+            If dictComments.Exists(i) Then
+                cmtText = dictComments(i)
+                Dim startPos As Long, endPos As Long, catBlock As String
+                startPos = InStr(1, cmtText, "Hodnocení kategorií:", vbTextCompare)
+                
+                If startPos > 0 Then
+                    startPos = startPos + Len("Hodnocení kategorií:")
+                    endPos = InStr(startPos, cmtText, "Průměrné vážené hodnocení:", vbTextCompare)
+                    If endPos = 0 Then endPos = Len(cmtText) + 1
+                    catBlock = Trim(Mid(cmtText, startPos, endPos - startPos))
+                    
+                    If reCat.Test(catBlock) Then
+                        Set matches = reCat.Execute(catBlock)
+                        For Each match In matches
+                            Dim combinedCategoryNames As String, scoreStr As String
+                            combinedCategoryNames = CleanString(match.SubMatches(0))
+                            scoreStr = Trim(match.SubMatches(1))
+                            
+                            ' Parsování skóre (stejně jako v inspiračním modulu)
+                            Dim scorePart As String
+                            On Error Resume Next
+                            scorePart = Trim(Split(scoreStr, "/")(0))
+                            scorePart = Replace(scorePart, ",", ".")
+                            On Error GoTo ErrHandler
+                            
+                            rawScore = val(scorePart)
+                            If rawScore <= 0 Or rawScore > 10 Then GoTo SkipMatch
+                            
+                            ' KLÍČOVÁ OPRAVA: Rozdělení kombinovaných kategorií jako "Animace/CGI"
+                            Dim singleCategories As Variant, singleCat As Variant
+                            singleCategories = Split(combinedCategoryNames, "/")
+                            
+                            For Each singleCat In singleCategories
+                                Dim catName As String
+                                catName = Trim(singleCat)
+                                
+                                ' Kontrola, zda je kategorie Animace nebo CGI
+                                If LCase(catName) = "animace" Or LCase(catName) = "cgi" Then
+                                    studioList = Split(arrSource(i, 5), ";")
+                                    For Each singleStudio In studioList
+                                        cleanSt = Trim(singleStudio)
+                                        If Len(cleanSt) > 0 Then
+                                            ' Počítáme výskyty studia pro pozdější filtraci
+                                            dictCounts(cleanSt) = dictCounts(cleanSt) + 1
+                                            
+                                            ' Kontrola velikosti pole
+                                            If arrRow > UBound(dataArray, 2) Then
+                                                ReDim Preserve dataArray(1 To 3, 1 To UBound(dataArray, 2) + 500)
+                                            End If
+                                            
+                                            ' Zápis do pole (SLOUPEC, ŘÁDEK)
+                                            dataArray(1, arrRow) = cleanSt
+                                            dataArray(2, arrRow) = catName
+                                            dataArray(3, arrRow) = rawScore
+                                            arrRow = arrRow + 1
+                                        End If
+                                    Next singleStudio
+                                End If
+                            Next singleCat
+SkipMatch:
+                        Next match
+                    End If
+                End If
+            End If
+        End If
+    Next i
+    
+    ' ——— 6. FILTROVÁNÍ DLE MIN_STUDIO_COUNT A PŘÍPRAVA VÝSTUPU ———
+    If arrRow <= 1 Then GoTo CleanExit ' Žádná data
+    
+    ' Nejprve spočítáme, kolik záznamů projde filtrem
+    finalCount = 0
+    For j = 1 To arrRow - 1
+        If dictCounts(dataArray(1, j)) >= MIN_STUDIO_COUNT Then
+            finalCount = finalCount + 1
+        End If
+    Next j
+    
+    If finalCount = 0 Then GoTo CleanExit ' Žádná studia nesplňují MIN_STUDIO_COUNT
+    
+    ' Vytvoříme finální pole (řádky, sloupce) pro zápis na list
+    ReDim arrFinal(1 To finalCount, 1 To 3)
+    Dim writeRow As Long
+    writeRow = 1
+    
+    For j = 1 To arrRow - 1
+        If dictCounts(dataArray(1, j)) >= MIN_STUDIO_COUNT Then
+            arrFinal(writeRow, 1) = dataArray(1, j) ' Studio
+            arrFinal(writeRow, 2) = dataArray(2, j) ' Kategorie
+            arrFinal(writeRow, 3) = dataArray(3, j) ' Hodnocení
+            writeRow = writeRow + 1
+        End If
+    Next j
+    
+    ' ——— 7. ZÁPIS VÝSLEDKŮ A TVORBA TABULKY ———
+    Dim tbl As ListObject
+    
+    With wsDest
+        ' Vyčistíme oblast
+        On Error Resume Next
+        .ListObjects("TabulkaStudiaTech").Delete
+        On Error GoTo ErrHandler
+        .Range("AV:AX").ClearContents
+        
+        ' Hlavičky
+        .Range("AV1").Value = "Studio"
+        .Range("AW1").Value = "Tech. Kategorie"
+        .Range("AX1").Value = "Hodnocení"
+        
+        ' Zápis dat
+        .Range("AV2").Resize(finalCount, 3).Value = arrFinal
+        
+        ' Vytvoření tabulky
+        Set tbl = .ListObjects.Add(xlSrcRange, .Range("AV1").Resize(finalCount + 1, 3), , xlYes)
+        tbl.Name = "TabulkaStudiaTech"
+        tbl.TableStyle = "TableStyleMedium2"
+        .Columns("AX").NumberFormat = "0.00"
+    End With
+    
+    ' ——— 8. AKTUALIZACE PIVOT TABULKY A GRAFU ———
+    On Error Resume Next
+    Dim chartObj As ChartObject
+    Set chartObj = wsInfo.ChartObjects("Pivot_Graph_Animace_CGI")
+    
+    If Not chartObj Is Nothing Then
+        chartObj.Chart.PivotLayout.PivotTable.PivotCache.Refresh
+    Else
+        Dim pt As PivotTable
+        For Each pt In wsDest.PivotTables
+            pt.PivotCache.Refresh
+        Next pt
+    End If
+    
+    Set pt = Nothing
+    Set pt = wsDest.PivotTables("PivotStudiaTech")
+    If Not pt Is Nothing Then
+        pt.PivotFields("Studio").AutoSort xlAscending, "Průměr z Hodnocení"
+    End If
+    On Error GoTo ErrHandler
+
+CleanExit:
+    Erase dataArray
+    Erase arrFinal
+    Set dictCounts = Nothing
+    Set dictComments = Nothing
+    Set reCat = Nothing
+    Application.ScreenUpdating = True
+    Application.Calculation = xlCalculationAutomatic
+    Exit Sub
+    
+ErrHandler:
+    Erase dataArray
+    Erase arrFinal
+    Application.ScreenUpdating = True
+    Application.Calculation = xlCalculationAutomatic
+    MsgBox "Chyba v 'AktualizovatDataStudiiTech': " & err.Description, vbCritical
+End Sub
+
+'—————————————————————————————————————
+' POMOCNÉ FUNKCE
+'—————————————————————————————————————
+Private Sub QuickSort2D(ByRef arr As Variant, ByVal inLow As Long, ByVal inHi As Long)
+    Dim pivot As Double
+    Dim tmp1 As Variant, tmp2 As Variant
+    Dim tmpLow As Long, tmpHi As Long
+
+    tmpLow = inLow
+    tmpHi = inHi
+    pivot = arr((inLow + inHi) \ 2, 2)
+
+    While (tmpLow <= tmpHi)
+        While (arr(tmpLow, 2) > pivot And tmpLow < inHi)
+            tmpLow = tmpLow + 1
+        Wend
+        While (pivot > arr(tmpHi, 2) And tmpHi > inLow)
+            tmpHi = tmpHi - 1
+        Wend
+
+        If (tmpLow <= tmpHi) Then
+            tmp1 = arr(tmpLow, 1): arr(tmpLow, 1) = arr(tmpHi, 1): arr(tmpHi, 1) = tmp1
+            tmp2 = arr(tmpLow, 2): arr(tmpLow, 2) = arr(tmpHi, 2): arr(tmpHi, 2) = tmp2
+            tmpLow = tmpLow + 1
+            tmpHi = tmpHi - 1
+        End If
+    Wend
+
+    If (inLow < tmpHi) Then QuickSort2D arr, inLow, tmpHi
+    If (tmpLow < inHi) Then QuickSort2D arr, tmpLow, inHi
+End Sub
+
+Private Function CleanString(ByVal txt As String) As String
+    txt = Replace(txt, ",", "")
+    txt = Replace(txt, ".", "")
+    txt = Replace(txt, ":", "")
+    txt = Replace(txt, vbCr, "")
+    txt = Replace(txt, vbLf, "")
+    txt = Replace(txt, vbTab, "")
+    CleanString = Trim(txt)
+End Function
+
+'================================================================================================
+'##### GRAF 3: SCATTER-CHART (OPTIMALIZOVÁNO: GHOSTING & LAZY WRITE) #####
+'================================================================================================
+Private Sub VytvorGrafStudii_Scatter(dictData As Object)
+    Dim wsChart As Worksheet
+    Dim chtObj As ChartObject, cht As Chart
+    Dim i As Long
+    Dim keysArr As Variant
+    Dim arrStats As Variant
+    Dim ser As Series
+    
+    ' --- KONFIGURACE ---
+    Const SCATTER_COLOR As Long = 65535
+    Const MIN_COUNT_SCATTER As Long = 4
+    
+    ' --- 1. PŘÍPRAVA DAT DO SLOVNÍKU ---
+    Dim dictScatterData As Object
+    Set dictScatterData = CreateObject("Scripting.Dictionary")
+    
+    keysArr = dictData.keys
+    Dim currentCount As Long, currentSum As Double, ratedCount As Long
+    Dim avgRating As Double
+    Dim studioName As String
+    
+    For i = 0 To UBound(keysArr)
+        arrStats = dictData(keysArr(i))
+        currentCount = arrStats(0)
+        currentSum = arrStats(1)
+        ratedCount = arrStats(2)
+        
+        If ratedCount >= MIN_COUNT_SCATTER Then
+            studioName = keysArr(i)
+            avgRating = currentSum / ratedCount
+            dictScatterData(studioName) = Array(currentCount, avgRating)
+        End If
+    Next i
+    
+    If dictScatterData.count = 0 Then Exit Sub
+
+    ' --- 2. ZÍSKÁNÍ NEBO VYTVOŘENÍ GRAFU ---
+    Set wsChart = ThisWorkbook.Sheets("OBECNÉ INFORMACE")
+    On Error Resume Next
+    Set chtObj = wsChart.ChartObjects("GrafStudiiScatter")
+    On Error GoTo 0
+    
+    If chtObj Is Nothing Then
+        Set chtObj = wsChart.ChartObjects.Add(100, 670, 600, 400)
+        chtObj.Name = "GrafStudiiScatter"
+        Set cht = chtObj.Chart
+        With cht
+            .ChartType = xlXYScatter
+            .HasTitle = True: .ChartTitle.text = "Kvantita vs. Kvalita (Studia 4+ titulů)"
+            .ChartTitle.Font.Bold = True
+            .HasLegend = False
+            
+            With .Axes(xlCategory)
+                .HasTitle = True: .AxisTitle.text = "Počet titulů (KVANTITA)"
+                .MinimumScaleIsAuto = True
+            End With
+            With .Axes(xlValue)
+                .HasTitle = True: .AxisTitle.text = "Průměrné hodnocení (KVALITA)"
+                .MinimumScale = 4: .MaximumScale = 10
+            End With
+        End With
+    Else
+        Set cht = chtObj.Chart
+        If cht.SeriesCollection.count = 1 Then
+             If InStr(1, cht.SeriesCollection(1).Name, "Studia") > 0 Then cht.SeriesCollection(1).Delete
+        End If
+    End If
+    
+    ' --- 3. OPTIMALIZACE "GHOSTING" (Skrytí grafu pro zrychlení) ---
+    Dim wasVisible As Boolean
+    wasVisible = chtObj.Visible
+    chtObj.Visible = False ' <--- TOTO EXTRÉMNĚ ZRYCHLÍ PRŮBĚH
+    
+    ' --- 4. SYNCHRONIZACE SÉRIÍ ---
+    Application.ScreenUpdating = False
+    Dim serName As String
+    Dim newData As Variant
+    
+    ' A) Aktualizace a Mazání
+    For i = cht.SeriesCollection.count To 1 Step -1
+        Set ser = cht.SeriesCollection(i)
+        serName = ser.Name
+        
+        If dictScatterData.Exists(serName) Then
+            newData = dictScatterData(serName)
+            
+            ' --- LAZY WRITE (Zápis jen při změně) ---
+            Dim oldX As Variant, oldY As Variant
+            Dim needsUpdate As Boolean: needsUpdate = True
+            
+            oldX = ser.XValues
+            oldY = ser.values
+            
+            ' Kontrola, zda data v grafu odpovídají novým datům
+            If IsArray(oldX) And IsArray(oldY) Then
+                If UBound(oldX) >= 1 And UBound(oldY) >= 1 Then
+                    ' Excel vrací pole indexované od 1, Array() od 0
+                    If oldX(1) = newData(0) And oldY(1) = newData(1) Then
+                        needsUpdate = False
+                    End If
+                End If
+            End If
+            
+            If needsUpdate Then
+                ser.XValues = Array(newData(0))
+                ser.values = Array(newData(1))
+            End If
+            ' ---------------------------------------
+            
+            ' --- ZDE JE OPRAVA: VŽDY AKTUALIZOVAT BARVU ---
+            ' I když se nezmění data, barva se musí přepsat, kdyby se změnila konstanta
+            ser.MarkerBackgroundColor = SCATTER_COLOR
+            ser.MarkerForegroundColor = SCATTER_COLOR
+            ' ----------------------------------------------
+            
+            dictScatterData.Remove serName
+        Else
+            ser.Delete
+        End If
+    Next i
+    
+    ' B) Přidání nových studií
+    Dim key As Variant
+    For Each key In dictScatterData.keys
+        studioName = key
+        newData = dictScatterData(studioName)
+        
+        Set ser = cht.SeriesCollection.NewSeries
+        With ser
+            .Name = studioName
+            .XValues = Array(newData(0))
+            .values = Array(newData(1))
+            
+            .MarkerBackgroundColor = SCATTER_COLOR
+            .MarkerForegroundColor = SCATTER_COLOR
+            .MarkerStyle = xlMarkerStyleCircle
+            .MarkerSize = 7
+            
+            .HasDataLabels = True
+            With .DataLabels
+                .ShowSeriesName = True
+                .ShowValue = False
+                .Position = xlLabelPositionAbove
+                .Font.Name = "Aptos Narrow"
+                .Font.size = 9
+            End With
+        End With
+    Next key
+    
+    ' --- 5. OBNOVENÍ VIDITELNOSTI ---
+    cht.HasLegend = False
+    chtObj.Visible = wasVisible ' <--- ZOBRAZÍME HOTOVÝ GRAF
+    Application.ScreenUpdating = True
+End Sub

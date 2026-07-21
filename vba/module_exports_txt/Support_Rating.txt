@@ -1,0 +1,1133 @@
+﻿Option Explicit
+
+' GlobĂˇlnĂ­ pĹ™epĂ­naÄŤ pro vypnutĂ­ synchronizace vĹˇech komentĂˇĹ™ĹŻ
+Private Const DISABLE_REFRESH As Boolean = True
+
+' ********************************************************************************************************************
+' * HLAVNĂŤ METODY PRO SYNCHRONIZACI A ĂšPRAVU HODNOCENĂŤ V KOMENTĂĹĂŤCH                                                *
+' ********************************************************************************************************************
+
+' Makro pro kompletnĂ­ synchronizaci vĹˇech komentĂˇĹ™ĹŻ podle pravidel OP/ED, OST a Story Conclusion
+Public Sub RefreshAllComments()
+    If DISABLE_REFRESH Then
+        MsgBox "Tato funkce (RefreshAllComments) je docasne vypnuta.", vbExclamation, "Funkce vypnuta"
+        Exit Sub
+    End If
+    ProcessComments "", Null
+End Sub
+
+' Makro pro cĂ­lenou Ăşpravu hodnocenĂ­ vybranĂ˝ch anime a vybranĂ© kategorie
+Public Sub AdjustSpecificAnimeRatings()
+    Dim animeInput As String
+    Dim targetCategory As String
+    Dim newValueInput As String
+    Dim newRating As Double
+    
+    ' 1. Dotaz na nĂˇzvy anime
+    animeInput = Trim(InputBox("Zadejte nazvy anime oddelene strednikem (;) (napr. Bleach, S02; Overlord, S04):", "Vyber anime k uprave"))
+    If animeInput = "" Then Exit Sub
+    
+    ' 2. Dotaz na kategorii
+    targetCategory = Trim(InputBox("Zadejte nazev kategorie, kterou chcete upravit (napr. CGI, Animace, MC...):", "Vyber kategorie"))
+    If targetCategory = "" Then Exit Sub
+    
+    ' Validace nĂˇzvu kategorie
+    Dim isCatValid As Boolean
+    Dim cat As Variant
+    Dim standardCats As Variant
+    standardCats = Array("Animace", "CGI", "MC", "Vedlej" & ChrW(353) & ChrW(237) & " postavy", "Waifu", "Plot", "Pacing", "Story Conclusion", "Originalita", "Emoce", "Enjoyment", "OP", "ED", "OST")
+    isCatValid = False
+    For Each cat In standardCats
+        If StrComp(cat, targetCategory, vbTextCompare) = 0 Then
+            targetCategory = cat ' Normalizace velikosti pĂ­smen
+            isCatValid = True
+            Exit For
+        End If
+    Next cat
+    
+    If Not isCatValid Then
+        MsgBox "Chyba: Neplatny nazev kategorie '" & targetCategory & "'.", vbCritical, "Neplatna kategorie"
+        Exit Sub
+    End If
+    
+    ' 3. Dotaz na novĂ© hodnocenĂ­
+    newValueInput = Trim(InputBox("Zadejte nove hodnoceni pro kategorii '" & targetCategory & "' (napr. 8 nebo 7,5):", "Nove hodnoceni"))
+    If newValueInput = "" Then Exit Sub
+    
+    ' ParsovĂˇnĂ­ a pĹ™evod na desetinnĂ© ÄŤĂ­slo podle regionĂˇlnĂ­ho nastavenĂ­
+    Dim decSep As String
+    decSep = Application.DecimalSeparator
+    newValueInput = Replace(Replace(newValueInput, ".", decSep), ",", decSep)
+    
+    If Not IsNumeric(newValueInput) Then
+        MsgBox "Chyba: Zadana hodnota neni platne cislo.", vbCritical, "Neplatne cislo"
+        Exit Sub
+    End If
+    
+    newRating = CDbl(newValueInput)
+    If newRating < 1 Or newRating > 10 Then
+        MsgBox "Chyba: Hodnoceni musi byt v rozmezi 1 az 10.", vbCritical, "Mimo rozsah"
+        Exit Sub
+    End If
+    
+    ' NaplnÄ›nĂ­ slovnĂ­ku pro filtrovĂˇnĂ­
+    Dim dictFilter As Object
+    Set dictFilter = CreateObject("Scripting.Dictionary")
+    dictFilter.CompareMode = vbTextCompare
+    
+    Dim names() As String
+    Dim namePart As Variant
+    names = Split(animeInput, ";")
+    For Each namePart In names
+        Dim trimmedName As String
+        trimmedName = Trim(CStr(namePart))
+        If trimmedName <> "" Then
+            dictFilter(trimmedName) = True
+        End If
+    Next namePart
+    
+    ' SpuĹˇtÄ›nĂ­ procesu s filtrem
+    ProcessComments targetCategory, newRating, dictFilter
+End Sub
+
+' Makro, kterĂ© navĂ­c umoĹľnĂ­ manuĂˇlnĂ­ zmÄ›nu jednĂ© vybranĂ© kategorie napĹ™Ă­ÄŤ komentĂˇĹ™i
+Public Sub GlobalAdjustCategoryRating()
+    Dim targetCategory As String
+    Dim newValueInput As String
+    Dim newRating As Variant
+    
+    ' 1. Dotaz na kategorii
+    targetCategory = Trim(InputBox("Zadejte nazev kategorie, kterou chcete globalne upravit (napr. CGI, Animace, MC...):", "Globalni uprava hodnoceni"))
+    If targetCategory = "" Then Exit Sub
+    
+    ' Validace nĂˇzvu kategorie
+    Dim isCatValid As Boolean
+    Dim cat As Variant
+    Dim standardCats As Variant
+    standardCats = Array("Animace", "CGI", "MC", "Vedlej" & ChrW(353) & ChrW(237) & " postavy", "Waifu", "Plot", "Pacing", "Story Conclusion", "Originalita", "Emoce", "Enjoyment", "OP", "ED", "OST")
+    isCatValid = False
+    For Each cat In standardCats
+        If StrComp(cat, targetCategory, vbTextCompare) = 0 Then
+            targetCategory = cat ' Normalizace velikosti pĂ­smen
+            isCatValid = True
+            Exit For
+        End If
+    Next cat
+    
+    If Not isCatValid Then
+        MsgBox "Chyba: Neplatny nazev kategorie '" & targetCategory & "'.", vbCritical, "Neplatna kategorie"
+        Exit Sub
+    End If
+    
+    ' 2. Dotaz na novĂ© hodnocenĂ­
+    newValueInput = Trim(InputBox("Zadejte nove hodnoceni pro kategorii '" & targetCategory & "' (napr. 8 nebo 7,5):", "Nove hodnoceni"))
+    If newValueInput = "" Then Exit Sub
+    
+    ' ParsovĂˇnĂ­ a pĹ™evod na desetinnĂ© ÄŤĂ­slo podle regionĂˇlnĂ­ho nastavenĂ­
+    Dim decSep As String
+    decSep = Application.DecimalSeparator
+    newValueInput = Replace(Replace(newValueInput, ".", decSep), ",", decSep)
+    
+    If Not IsNumeric(newValueInput) Then
+        MsgBox "Chyba: Zadana hodnota neni platne cislo.", vbCritical, "Neplatne cislo"
+        Exit Sub
+    End If
+    
+    newRating = CDbl(newValueInput)
+    If newRating < 1 Or newRating > 10 Then
+        MsgBox "Chyba: Hodnoceni musi byt v rozmezi 1 az 10.", vbCritical, "Mimo rozsah"
+        Exit Sub
+    End If
+    
+    ' SpuĹˇtÄ›nĂ­ procesu
+    ProcessComments targetCategory, newRating
+End Sub
+
+' ********************************************************************************************************************
+' * JĂDRO PROCESU AKTUALIZACE A SYNCHRONIZACE                                                                        *
+' ********************************************************************************************************************
+Private Sub ProcessComments(ByVal manualCat As String, ByVal manualRating As Variant, Optional ByVal filterAnimeList As Object = Nothing)
+    Dim ws As Worksheet
+    Dim cmt As Comment
+    Dim cell As Range
+    Dim updateCount As Long
+    Dim animeName As String
+    
+    LogToFile "=== START ProcessComments ==="
+    LogToFile "manualCat: " & manualCat & ", manualRating: " & CStr(manualRating)
+    If Not filterAnimeList Is Nothing Then
+        LogToFile "filterAnimeList count: " & filterAnimeList.count
+        Dim k As Variant
+        For Each k In filterAnimeList.keys
+            LogToFile "  Filter key: '" & CStr(k) & "'"
+        Next k
+    Else
+        LogToFile "filterAnimeList is Nothing"
+    End If
+    
+    On Error Resume Next
+    Set ws = ThisWorkbook.Sheets("ANIME LIST")
+    On Error GoTo 0
+    If ws Is Nothing Then
+        MsgBox "Chyba: List 'ANIME LIST' nebyl nalezen.", vbCritical
+        Exit Sub
+    End If
+    
+    ' NalezenĂ­ tabulek
+    Dim tblOpEd As ListObject
+    Dim tblOst As ListObject
+    Set tblOpEd = FindListObject("Table_FAV_OP_ED")
+    Set tblOst = FindListObject("Table_FAV_OST_PIECES")
+    
+    ' Optimalizace vĂ˝konu
+    With Application
+        .ScreenUpdating = False
+        .EnableEvents = False
+        .Calculation = xlCalculationManual
+    End With
+    
+    Dim lastRow As Long
+    lastRow = ws.Cells(ws.Rows.count, "C").End(xlUp).row
+    
+    Dim rngComments As Range
+    On Error Resume Next
+    Set rngComments = ws.Range("K2:K" & lastRow).SpecialCells(xlCellTypeComments)
+    On Error GoTo 0
+    
+    If rngComments Is Nothing Then
+        With Application
+            .ScreenUpdating = True
+            .EnableEvents = True
+            .Calculation = xlCalculationAutomatic
+        End With
+        MsgBox "V listu 'ANIME LIST' (sloupec K) nebyly nalezeny zadne bunky s komentari.", vbInformation
+        Exit Sub
+    End If
+    
+    updateCount = 0
+    Debug.Print "=== SPUSTENI SYNCHRONIZACE KOMENTARU: " & Now & " ==="
+    
+    Dim dictWeights As Object
+    Set dictWeights = GetCategoryWeights()
+    
+    For Each cell In rngComments
+        Set cmt = cell.Comment
+        Dim rawText As String
+        rawText = cmt.text
+        
+        ' ZpracovĂˇvĂˇme pouze komentĂˇĹ™e s hodnocenĂ­m
+        If InStr(1, rawText, "Hodnocen" & ChrW(237) & " kategori" & ChrW(237) & ":", vbTextCompare) > 0 Then
+            Dim notesContent As String
+            Dim episodeRatingsList As String
+            Dim avgEpisodeRatingFormatted As String
+            Dim categoryRatingsList As String
+            Dim weightedAvgCategoryFormatted As String
+            Dim finalRatingFormatted As String
+            Dim hasEpisodes As Boolean
+            
+            ' RozparsovĂˇnĂ­ textu
+            ParseCommentContent rawText, animeName, notesContent, episodeRatingsList, avgEpisodeRatingFormatted, _
+                                categoryRatingsList, weightedAvgCategoryFormatted, finalRatingFormatted, hasEpisodes
+            
+            LogToFile "Row " & cell.row & " | Sheet Name: '" & cell.Offset(0, -8).Value & "' | Parsed Anime Name: '" & animeName & "'"
+            If Not filterAnimeList Is Nothing Then
+                LogToFile "  Testing against filter keys..."
+            End If
+            
+            ' FiltrovĂˇnĂ­ podle seznamu anime, pokud byl zadĂˇn
+            Dim shouldProcess As Boolean
+            shouldProcess = True
+            If Not filterAnimeList Is Nothing Then
+                shouldProcess = False
+                Dim filterKey As Variant
+                For Each filterKey In filterAnimeList.keys
+                    Dim normAnime As String, normKey As String
+                    normAnime = NormalizeSpaces(animeName)
+                    normKey = NormalizeSpaces(CStr(filterKey))
+                    Dim pos As Long
+                    pos = InStr(1, normAnime, normKey, vbTextCompare)
+                    LogToFile "    Checking Key: '" & CStr(filterKey) & "' -> normAnime: '" & normAnime & "' vs normKey: '" & normKey & "' | InStr pos: " & pos
+                    If pos > 0 Then
+                        shouldProcess = True
+                        Exit For
+                    End If
+                Next filterKey
+            End If
+            
+            If shouldProcess Then
+                LogToFile "  shouldProcess = True"
+                ' RozparsovĂˇnĂ­ kategoriĂ­ do dictionary
+                Dim dictRatings As Object
+                Set dictRatings = ParseCategoryRatings(categoryRatingsList)
+                
+                Dim catKey As Variant, catStr As String
+                catStr = ""
+                For Each catKey In dictRatings.keys
+                    catStr = catStr & catKey & "=" & dictRatings(catKey) & "; "
+                Next catKey
+                LogToFile "    Parsed categories: " & catStr
+                
+                Dim isChanged As Boolean
+                isChanged = False
+                
+                ' 1) UplatnÄ›nĂ­ manuĂˇlnĂ­ zmÄ›ny, pokud byla zadĂˇna
+                If manualCat <> "" And Not IsNull(manualRating) Then
+                    If dictRatings.Exists(manualCat) Then
+                        Dim oldManVal As Double
+                        oldManVal = dictRatings(manualCat)
+                        If oldManVal <> CDbl(manualRating) Then
+                            dictRatings(manualCat) = CDbl(manualRating)
+                            isChanged = True
+                            Debug.Print "[RATING UPDATE] Anime: " & animeName & " | Kategorie: " & manualCat & " | " & oldManVal & "/10 -> " & manualRating & "/10 (manualni globalni zmena)"
+                        End If
+                    End If
+                End If
+                
+                ' 2) UplatnÄ›nĂ­ pravidel pro OP a ED z tabulky Table_FAV_OP_ED
+                Dim beforeOPED As String
+                beforeOPED = SerializeCategoryRatings(dictRatings)
+                Dim skipOP As Boolean, skipED As Boolean
+                skipOP = (StrComp(manualCat, "OP", vbTextCompare) = 0)
+                skipED = (StrComp(manualCat, "ED", vbTextCompare) = 0)
+                UpdateOPEDRatings animeName, dictRatings, tblOpEd, skipOP, skipED
+                If SerializeCategoryRatings(dictRatings) <> beforeOPED Then isChanged = True
+                
+                ' 3) UplatnÄ›nĂ­ pravidla pro OST z tabulky Table_FAV_OST_PIECES a globĂˇlnĂ­ Ăşpravy
+                Dim beforeOST As String
+                beforeOST = SerializeCategoryRatings(dictRatings)
+                Dim skipOST As Boolean
+                skipOST = (StrComp(manualCat, "OST", vbTextCompare) = 0)
+                If Not skipOST Then
+                    UpdateOSTRating animeName, dictRatings, tblOst
+                    AdjustOSTValue animeName, dictRatings
+                End If
+                If SerializeCategoryRatings(dictRatings) <> beforeOST Then isChanged = True
+                
+                ' 4) UplatnÄ›nĂ­ pravidla pro Story Conclusion podle poslednĂ­ epizody
+                Dim beforeSC As String
+                beforeSC = SerializeCategoryRatings(dictRatings)
+                Dim skipSC As Boolean
+                skipSC = (StrComp(manualCat, "Story Conclusion", vbTextCompare) = 0)
+                If Not skipSC Then
+                    CheckStoryConclusion animeName, dictRatings, episodeRatingsList
+                End If
+                If SerializeCategoryRatings(dictRatings) <> beforeSC Then isChanged = True
+                
+                ' 5) Pokud doĹˇlo ke zmÄ›nÄ›, pĹ™epoÄŤĂ­tĂˇme prĹŻmÄ›ry a uloĹľĂ­me zpÄ›t
+                If isChanged Then
+                    ' VĂ˝poÄŤet novĂ©ho prĹŻmÄ›ru
+                    Dim newWeightedAvg As Double
+                    newWeightedAvg = CalculateWeightedAverage(dictRatings, dictWeights)
+                    
+                    ' Aktualizace formĂˇtovanĂ©ho prĹŻmÄ›ru
+                    Dim newAvgStr As String
+                    newAvgStr = FormatNumberWithTrimmedZeros(newWeightedAvg) & "/10"
+                    If weightedAvgCategoryFormatted <> newAvgStr Then
+                        Debug.Print "[RATING UPDATE] Anime: " & animeName & " | Prumerne vazene hodnoceni | " & weightedAvgCategoryFormatted & " -> " & newAvgStr
+                        weightedAvgCategoryFormatted = newAvgStr
+                    End If
+                    
+                    ' SestavenĂ­ novĂ©ho seznamu kategoriĂ­
+                    categoryRatingsList = SerializeCategoryRatings(dictRatings)
+                    
+                    ' SestavenĂ­ celĂ©ho textu komentĂˇĹ™e
+                    Dim newCommentText As String
+                    If hasEpisodes Then
+                        newCommentText = animeName & vbCrLf & _
+                                        "Pozn" & ChrW(225) & "mky: " & notesContent & vbCrLf & vbCrLf & _
+                                        "Hodnocen" & ChrW(237) & " epizod:" & vbCrLf & episodeRatingsList & vbCrLf & _
+                                        "Pr" & ChrW(367) & "m" & ChrW(283) & "rn" & ChrW(233) & " hodnocen" & ChrW(237) & " epizod: " & avgEpisodeRatingFormatted & vbCrLf & vbCrLf & _
+                                        "Hodnocen" & ChrW(237) & " kategori" & ChrW(237) & ":" & vbCrLf & categoryRatingsList & vbCrLf & _
+                                        "Pr" & ChrW(367) & "m" & ChrW(283) & "rn" & ChrW(233) & " v" & ChrW(225) & ChrW(382) & "en" & ChrW(233) & " hodnocen" & ChrW(237) & ": " & weightedAvgCategoryFormatted & vbCrLf & vbCrLf & _
+                                        "Fin" & ChrW(225) & "ln" & ChrW(237) & " hodnocen" & ChrW(237) & ": " & finalRatingFormatted
+                    Else
+                        newCommentText = animeName & vbCrLf & _
+                                        "Pozn" & ChrW(225) & "mky: " & notesContent & vbCrLf & vbCrLf & _
+                                        "Hodnocen" & ChrW(237) & " kategori" & ChrW(237) & ":" & vbCrLf & categoryRatingsList & vbCrLf & _
+                                        "Pr" & ChrW(367) & "m" & ChrW(283) & "rn" & ChrW(233) & " v" & ChrW(225) & ChrW(382) & "en" & ChrW(233) & " hodnocen" & ChrW(237) & ": " & weightedAvgCategoryFormatted & vbCrLf & vbCrLf & _
+                                        "Fin" & ChrW(225) & "ln" & ChrW(237) & " hodnocen" & ChrW(237) & ": " & finalRatingFormatted
+                    End If
+                    
+                    ' ZĂˇpis textu in-place (zachovĂˇ velikost komentĂˇĹ™e)
+                    cmt.text text:=newCommentText
+                    
+                    ' Re-aplikace formĂˇtovĂˇnĂ­
+                    Dim episodeRatingValues As Collection
+                    Set episodeRatingValues = ExtractRatingValues(episodeRatingsList)
+                    Dim categoryRatingValues As Collection
+                    Set categoryRatingValues = ExtractRatingValues(categoryRatingsList)
+                    
+                    ApplyCommentFormatting cmt, animeName, newCommentText, episodeRatingValues, categoryRatingValues, _
+                                            avgEpisodeRatingFormatted, weightedAvgCategoryFormatted, finalRatingFormatted
+                    
+                    updateCount = updateCount + 1
+                End If
+            End If
+        End If
+    Next cell
+    
+    With Application
+        .ScreenUpdating = True
+        .EnableEvents = True
+        .Calculation = xlCalculationAutomatic
+    End With
+    
+    Debug.Print "=== SYNCHRONIZACE DOKONCENA. AKTUALIZOVANO CELKEM: " & updateCount & " KOMENTARU ==="
+    MsgBox "Synchronizace a uprava dokoncena. Aktualizovano komentaru: " & updateCount & vbCrLf & _
+           "Podrobnosti naleznete v Immediate Window (Ctrl+G) ve VBA editoru.", vbInformation, "Hotovo"
+End Sub
+
+' ********************************************************************************************************************
+' * POMOCNĂ‰ VYHLEDĂVACĂŤ A REKULAÄŚNĂŤ FUNKCE                                                                           *
+' ********************************************************************************************************************
+
+' VyhledĂˇnĂ­ tabulky (ListObject) napĹ™Ă­ÄŤ vĹˇemi listy seĹˇitu
+Private Function FindListObject(ByVal tableName As String) As ListObject
+    Dim ws As Worksheet
+    Dim tbl As ListObject
+    For Each ws In ThisWorkbook.Worksheets
+        On Error Resume Next
+        Set tbl = ws.ListObjects(tableName)
+        On Error GoTo 0
+        If Not tbl Is Nothing Then
+            Set FindListObject = tbl
+            Exit Function
+        End If
+    Next ws
+    Set FindListObject = Nothing
+End Function
+
+' Aktualizace hodnocenĂ­ OP a ED z tabulky Table_FAV_OP_ED (s vĂ˝bÄ›rem maximĂˇlnĂ­ hodnoty)
+Private Sub UpdateOPEDRatings(ByVal animeName As String, ByRef dictRatings As Object, ByVal tblOpEd As ListObject, Optional ByVal skipOP As Boolean = False, Optional ByVal skipED As Boolean = False)
+    If tblOpEd Is Nothing Then Exit Sub
+    
+    Dim row As ListRow
+    Dim rName As String
+    Dim rType As String
+    Dim rRating As Variant
+    
+    Dim maxOP As Double
+    Dim maxED As Double
+    Dim opFound As Boolean
+    Dim edFound As Boolean
+    
+    maxOP = -1
+    maxED = -1
+    opFound = False
+    edFound = False
+    
+    For Each row In tblOpEd.ListRows
+        Dim cellValI As Variant, cellValJ As Variant
+        cellValI = row.Range.Worksheet.Cells(row.Range.row, "I").Value
+        cellValJ = row.Range.Worksheet.Cells(row.Range.row, "J").Value
+        
+        If Not IsError(cellValI) And Not IsError(cellValJ) Then
+            rName = Trim(CStr(cellValI))
+            rType = Trim(CStr(cellValJ))
+            
+            If StrComp(NormalizeSpaces(rName), NormalizeSpaces(animeName), vbTextCompare) = 0 Then
+                rRating = row.Range.Worksheet.Cells(row.Range.row, "V").Value
+                If Not IsError(rRating) Then
+                    If IsNumeric(rRating) And Not IsEmpty(rRating) Then
+                        Dim val As Double
+                        val = CDbl(rRating)
+                        
+                        If StrComp(rType, "OP", vbTextCompare) = 0 Then
+                            If val > maxOP Then
+                                maxOP = val
+                                opFound = True
+                            End If
+                        ElseIf StrComp(rType, "ED", vbTextCompare) = 0 Then
+                            If val > maxED Then
+                                maxED = val
+                                edFound = True
+                            End If
+                        End If
+                    End If
+                End If
+            End If
+        End If
+    Next row
+    
+    ' Aktualizace OP v dictionary
+    If opFound And Not skipOP Then
+        Dim oldOP As Variant
+        If dictRatings.Exists("OP") Then
+            oldOP = dictRatings("OP")
+        Else
+            oldOP = "N/A"
+        End If
+        
+        If oldOP <> maxOP Then
+            dictRatings("OP") = maxOP
+            Debug.Print "[RATING UPDATE] Anime: " & animeName & " | Kategorie: OP | " & oldOP & "/10 -> " & maxOP & "/10 (z Table_FAV_OP_ED, vybrano maximum)"
+        End If
+    End If
+    
+    ' Aktualizace ED v dictionary
+    If edFound And Not skipED Then
+        Dim oldED As Variant
+        If dictRatings.Exists("ED") Then
+            oldED = dictRatings("ED")
+        Else
+            oldED = "N/A"
+        End If
+        
+        If oldED <> maxED Then
+            dictRatings("ED") = maxED
+            Debug.Print "[RATING UPDATE] Anime: " & animeName & " | Kategorie: ED | " & oldED & "/10 -> " & maxED & "/10 (z Table_FAV_OP_ED, vybrano maximum)"
+        End If
+    End If
+End Sub
+
+' Aktualizace hodnocenĂ­ OST z tabulky Table_FAV_OST_PIECES
+Private Sub UpdateOSTRating(ByVal animeName As String, ByRef dictRatings As Object, ByVal tblOst As ListObject)
+    If tblOst Is Nothing Then Exit Sub
+    
+    Dim row As ListRow
+    Dim rName As String
+    Dim count As Long
+    
+    count = 0
+    For Each row In tblOst.ListRows
+        Dim cellVal As Variant
+        cellVal = row.Range.Worksheet.Cells(row.Range.row, "AD").Value
+        If Not IsError(cellVal) Then
+            rName = Trim(CStr(cellVal))
+             If StrComp(NormalizeSpaces(rName), NormalizeSpaces(animeName), vbTextCompare) = 0 Then
+                count = count + 1
+            End If
+        End If
+    Next row
+    
+    ' Pouze pokud je nalezeno (1x nebo vĂ­ce)
+    If count > 0 Then
+        Dim targetRating As Double
+        If count >= 2 Then
+            targetRating = 9#
+        Else
+            targetRating = 8.5
+        End If
+        
+        Dim oldVal As Variant
+        If dictRatings.Exists("OST") Then
+            oldVal = dictRatings("OST")
+        Else
+            oldVal = "N/A"
+        End If
+        
+        ' Pokud je hodnocenĂ­ jiĹľ 10/10, nemÄ›nĂ­me ho
+        If IsNumeric(oldVal) Then
+            If CDbl(oldVal) = 10# Then Exit Sub
+        End If
+        
+        If oldVal <> targetRating Then
+            dictRatings("OST") = targetRating
+            Debug.Print "[RATING UPDATE] Anime: " & animeName & " | Kategorie: OST | " & oldVal & "/10 -> " & targetRating & "/10 (z Table_FAV_OST_PIECES, nalezeno " & count & "x)"
+        End If
+    End If
+End Sub
+
+' GlobĂˇlnĂ­ snĂ­ĹľenĂ­ OST z 8 na 7,5
+Private Sub AdjustOSTValue(ByVal animeName As String, ByRef dictRatings As Object)
+    If dictRatings.Exists("OST") Then
+        Dim ostVal As Variant
+        ostVal = dictRatings("OST")
+        If IsNumeric(ostVal) Then
+            If CDbl(ostVal) = 8# Then
+                dictRatings("OST") = 7.5
+                Debug.Print "[RATING UPDATE] Anime: " & animeName & " | Kategorie: OST | 8/10 -> 7,5/10 (globalni uprava z 8 na 7,5)"
+            End If
+        End If
+    End If
+End Sub
+
+' ZjiĹˇtÄ›nĂ­ hodnocenĂ­ poslednĂ­ epizody pro Story Conclusion
+Private Sub CheckStoryConclusion(ByVal animeName As String, ByRef dictRatings As Object, ByVal episodeRatingsList As String)
+    Dim lastEpRating As Variant
+    lastEpRating = GetLastEpisodeRating(episodeRatingsList)
+    
+    If Not IsNull(lastEpRating) And Not IsError(lastEpRating) Then
+        ' Zkontrolujeme, zda konÄŤĂ­ na .5
+        If Abs((lastEpRating - Int(lastEpRating)) - 0.5) < 0.001 Then
+            Dim oldVal As Variant
+            If dictRatings.Exists("Story Conclusion") Then
+                oldVal = dictRatings("Story Conclusion")
+            Else
+                oldVal = "N/A"
+            End If
+            
+            If oldVal <> lastEpRating Then
+                dictRatings("Story Conclusion") = lastEpRating
+                Debug.Print "[RATING UPDATE] Anime: " & animeName & " | Kategorie: Story Conclusion | " & oldVal & "/10 -> " & lastEpRating & "/10 (posledni epizoda konci na .5)"
+            End If
+        End If
+    End If
+End Sub
+
+' ********************************************************************************************************************
+' * POMOCNĂ‰ FUNKCE PRO PARSOVĂNĂŤ TEXTU A HODNOCENĂŤ                                                                   *
+' ********************************************************************************************************************
+
+Public Sub ParseCommentContent(ByVal fullText As String, _
+                               ByRef animeName As String, _
+                               ByRef notesContent As String, _
+                               ByRef episodeRatingsList As String, _
+                               ByRef avgEpisodeRatingFormatted As String, _
+                               ByRef categoryRatingsList As String, _
+                               ByRef weightedAvgCategoryFormatted As String, _
+                               ByRef finalRatingFormatted As String, _
+                               ByRef hasEpisodes As Boolean)
+    Dim normText As String
+    normText = Replace(fullText, "_x000D_", "", 1, -1, vbTextCompare)
+    normText = Replace(normText, vbCrLf, vbLf)
+    normText = Replace(normText, vbCr, vbLf)
+    
+    Dim pNotes As Long
+    pNotes = InStr(1, normText, "Pozn" & ChrW(225) & "mky:", vbTextCompare)
+    If pNotes > 0 Then
+        animeName = TrimNewlines(left(normText, pNotes - 1))
+    Else
+        Dim pNext As Long
+        pNext = InStr(1, normText, "Hodnocen" & ChrW(237) & " epizod:", vbTextCompare)
+        If pNext = 0 Then
+            pNext = InStr(1, normText, "Hodnocen" & ChrW(237) & " kategori" & ChrW(237) & ":", vbTextCompare)
+        End If
+        If pNext > 0 Then
+            animeName = TrimNewlines(left(normText, pNext - 1))
+        Else
+            Dim pLf As Long
+            pLf = InStr(1, normText, vbLf)
+            If pLf > 0 Then
+                animeName = TrimNewlines(left(normText, pLf - 1))
+            Else
+                animeName = TrimNewlines(normText)
+            End If
+        End If
+    End If
+    
+    hasEpisodes = (InStr(1, normText, "Hodnocen" & ChrW(237) & " epizod:", vbTextCompare) > 0)
+    
+    Dim pPr As Long
+    If hasEpisodes Then
+        notesContent = TrimNewlines(ExtractBetween(normText, "Pozn" & ChrW(225) & "mky: ", "Hodnocen" & ChrW(237) & " epizod:"))
+        episodeRatingsList = TrimNewlines(ExtractBetween(normText, "Hodnocen" & ChrW(237) & " epizod:", "hodnocen" & ChrW(237) & " epizod:"))
+        
+        ' Odstraneni pripadneho vleceneho "Prumerne" na konci seznamu epizod
+        pPr = InStrRev(episodeRatingsList, "Pr", -1, vbTextCompare)
+        If pPr > Len(episodeRatingsList) - 20 And pPr > 0 Then
+            episodeRatingsList = TrimNewlines(left(episodeRatingsList, pPr - 1))
+        End If
+        
+        avgEpisodeRatingFormatted = TrimNewlines(ExtractBetween(normText, "hodnocen" & ChrW(237) & " epizod: ", "Hodnocen" & ChrW(237) & " kategori" & ChrW(237) & ":"))
+    Else
+        notesContent = TrimNewlines(ExtractBetween(normText, "Pozn" & ChrW(225) & "mky: ", "Hodnocen" & ChrW(237) & " kategori" & ChrW(237) & ":"))
+        episodeRatingsList = ""
+        avgEpisodeRatingFormatted = ""
+    End If
+    
+    categoryRatingsList = TrimNewlines(ExtractBetween(normText, "Hodnocen" & ChrW(237) & " kategori" & ChrW(237) & ":", "v" & ChrW(225) & ChrW(382) & "en" & ChrW(233) & " hodnocen" & ChrW(237) & ":"))
+    
+    ' Odstraneni pripadneho vleceneho "Prumerne" na konci seznamu kategorii
+    pPr = InStrRev(categoryRatingsList, "Pr", -1, vbTextCompare)
+    If pPr > Len(categoryRatingsList) - 20 And pPr > 0 Then
+        categoryRatingsList = TrimNewlines(left(categoryRatingsList, pPr - 1))
+    End If
+    weightedAvgCategoryFormatted = TrimNewlines(ExtractBetween(normText, "v" & ChrW(225) & ChrW(382) & "en" & ChrW(233) & " hodnocen" & ChrW(237) & ": ", "Fin" & ChrW(225) & "ln" & ChrW(237) & " hodnocen" & ChrW(237) & ":"))
+    finalRatingFormatted = TrimNewlines(ExtractAfter(normText, "Fin" & ChrW(225) & "ln" & ChrW(237) & " hodnocen" & ChrW(237) & ": "))
+End Sub
+
+Private Function TrimNewlines(ByVal s As String) As String
+    Dim res As String
+    res = Trim(s)
+    
+    ' Trim trailing newlines/carriage returns/tabs/spaces
+    Do While Len(res) > 0
+        Dim lastChar As String
+        lastChar = Right(res, 1)
+        If lastChar = vbLf Or lastChar = vbCr Or lastChar = vbTab Or lastChar = " " Then
+            res = left(res, Len(res) - 1)
+        Else
+            Exit Do
+        End If
+    Loop
+    
+    ' Trim leading newlines/carriage returns/tabs/spaces
+    Do While Len(res) > 0
+        Dim firstChar As String
+        firstChar = left(res, 1)
+        If firstChar = vbLf Or firstChar = vbCr Or firstChar = vbTab Or firstChar = " " Then
+            res = Mid(res, 2)
+        Else
+            Exit Do
+        End If
+    Loop
+    
+    TrimNewlines = res
+End Function
+
+Private Function NormalizeSpaces(ByVal s As String) As String
+    Dim res As String
+    res = Replace(s, "_x000D_", " ", 1, -1, vbTextCompare)
+    res = Replace(res, vbCrLf, " ")
+    res = Replace(res, vbCr, " ")
+    res = Replace(res, vbLf, " ")
+    res = Replace(res, vbTab, " ")
+    
+    Do While InStr(res, "  ") > 0
+        res = Replace(res, "  ", " ")
+    Loop
+    
+    NormalizeSpaces = Trim(res)
+End Function
+
+Public Function ParseCategoryRatings(ByVal categoryRatingsList As String) As Object
+    Dim dict As Object
+    Set dict = CreateObject("Scripting.Dictionary")
+    dict.CompareMode = vbTextCompare
+    
+    Dim parts() As String
+    Dim i As Long
+    Dim pArrow As Long
+    Dim leftPart As String
+    Dim rightPart As String
+    Dim names() As String
+    Dim j As Long
+    Dim v As Variant
+    
+    parts = Split(categoryRatingsList, ", ")
+    For i = LBound(parts) To UBound(parts)
+        Dim g As String
+        g = Trim$(parts(i))
+        If g <> "" Then
+            pArrow = InStr(1, g, "->", vbTextCompare)
+            If pArrow > 0 Then
+                leftPart = Trim$(left$(g, pArrow - 1))
+                rightPart = Trim$(Mid$(g, pArrow + 2))
+                
+                v = ParseRating(rightPart)
+                If Not IsError(v) Then
+                    names = Split(leftPart, "/")
+                    For j = LBound(names) To UBound(names)
+                        Dim nm As String
+                        nm = Trim$(names(j))
+                        If nm <> "" Then
+                            dict(nm) = CDbl(v)
+                        End If
+                    Next j
+                End If
+            End If
+        End If
+    Next i
+    
+    Set ParseCategoryRatings = dict
+End Function
+
+Public Function SerializeCategoryRatings(ByVal dictRatings As Object) As String
+    Dim standardCats As Variant
+    standardCats = Array("Animace", "CGI", "MC", "Vedlej" & ChrW(353) & ChrW(237) & " postavy", "Waifu", "Plot", "Pacing", "Story Conclusion", "Originalita", "Emoce", "Enjoyment", "OP", "ED", "OST")
+    
+    Dim activeCats() As String
+    Dim activeRatings() As Double
+    Dim count As Long
+    count = 0
+    
+    Dim cat As Variant
+    For Each cat In standardCats
+        If dictRatings.Exists(CStr(cat)) Then
+            ReDim Preserve activeCats(0 To count)
+            ReDim Preserve activeRatings(0 To count)
+            activeCats(count) = CStr(cat)
+            activeRatings(count) = CDbl(dictRatings(CStr(cat)))
+            count = count + 1
+        End If
+    Next cat
+    
+    If count = 0 Then
+        SerializeCategoryRatings = ""
+        Exit Function
+    End If
+    
+    Dim list As String
+    Dim groupNames As String
+    Dim groupRating As Double
+    Dim i As Long
+    
+    list = ""
+    groupNames = activeCats(0)
+    groupRating = activeRatings(0)
+    
+    For i = 1 To count - 1
+        If activeRatings(i) = groupRating Then
+            groupNames = groupNames & "/" & activeCats(i)
+        Else
+            list = list & IIf(list = "", "", ", ") & groupNames & " -> " & FormatNumberWithTrimmedZeros(groupRating) & "/10"
+            groupNames = activeCats(i)
+            groupRating = activeRatings(i)
+        End If
+    Next i
+    
+    list = list & IIf(list = "", "", ", ") & groupNames & " -> " & FormatNumberWithTrimmedZeros(groupRating) & "/10"
+    
+    SerializeCategoryRatings = list
+End Function
+
+Public Function CalculateWeightedAverage(ByVal dictRatings As Object, ByVal dictWeights As Object) As Double
+    Dim sumOfProducts As Double
+    Dim sumOfWeights As Double
+    Dim key As Variant
+    Dim rating As Double
+    Dim weight As Double
+    
+    sumOfProducts = 0
+    sumOfWeights = 0
+    
+    For Each key In dictRatings.keys
+        rating = dictRatings(key)
+        If dictWeights.Exists(key) Then
+            weight = dictWeights(key)
+            sumOfProducts = sumOfProducts + (rating * weight)
+            sumOfWeights = sumOfWeights + weight
+        End If
+    Next key
+    
+    If sumOfWeights > 0 Then
+        CalculateWeightedAverage = sumOfProducts / sumOfWeights
+    Else
+        CalculateWeightedAverage = 0
+    End If
+End Function
+
+Private Function GetLastEpisodeRating(ByVal episodeRatingsList As String) As Variant
+    Dim parts() As String
+    Dim i As Long
+    Dim maxEp As Long
+    Dim lastEpRating As Variant
+    
+    maxEp = -1
+    lastEpRating = Null
+    
+    parts = Split(episodeRatingsList, ", ")
+    For i = LBound(parts) To UBound(parts)
+        Dim g As String, pArrow As Long
+        g = Trim$(parts(i))
+        pArrow = InStr(1, g, "->", vbTextCompare)
+        If pArrow > 0 Then
+            Dim leftPart As String, rightPart As String
+            leftPart = Trim$(left$(g, pArrow - 1))
+            rightPart = Trim$(Mid$(g, pArrow + 2))
+            
+            If InStr(1, leftPart, "EP ", vbTextCompare) = 1 Then
+                Dim rest As String: rest = Trim$(Mid$(leftPart, 4))
+                Dim a As Long, b As Long
+                If InStr(1, rest, "-", vbTextCompare) > 0 Then
+                    Dim ab() As String: ab = Split(rest, "-")
+                    If UBound(ab) >= 1 Then
+                        b = CLng(Trim$(ab(1)))
+                    Else
+                        b = CLng(Trim$(ab(0)))
+                    End If
+                Else
+                    b = CLng(rest)
+                End If
+                
+                If b > maxEp Then
+                    maxEp = b
+                    lastEpRating = ParseRating(rightPart)
+                End If
+            End If
+        End If
+    Next i
+    
+    GetLastEpisodeRating = lastEpRating
+End Function
+
+Private Function ExtractBetween(ByVal fullText As String, ByVal header As String, ByVal nextHeader As String) As String
+    Dim s As Long, e As Long, t As String
+    s = InStr(1, fullText, header, vbTextCompare)
+    If s = 0 Then ExtractBetween = "": Exit Function
+    s = s + Len(header)
+    e = InStr(s, fullText, nextHeader, vbTextCompare)
+    If e = 0 Then
+        t = Mid$(fullText, s)
+    Else
+        t = Mid$(fullText, s, e - s)
+    End If
+    ExtractBetween = Trim$(t)
+End Function
+
+Private Function ExtractAfter(ByVal fullText As String, ByVal header As String) As String
+    Dim s As Long, t As String
+    s = InStr(1, fullText, header, vbTextCompare)
+    If s = 0 Then ExtractAfter = "": Exit Function
+    s = s + Len(header)
+    t = Mid$(fullText, s)
+    ExtractAfter = Trim$(t)
+End Function
+
+Private Function GetCategoryWeights() As Object
+    Dim d As Object
+    Set d = CreateObject("Scripting.Dictionary")
+    d.CompareMode = vbTextCompare
+    d.Add "Animace", 2#
+    d.Add "CGI", 1.8
+    d.Add "MC", 3#
+    d.Add "Vedlej" & ChrW(353) & ChrW(237) & " postavy", 2.5
+    d.Add "Waifu", 1.5
+    d.Add "Plot", 4#
+    d.Add "Pacing", 1.5
+    d.Add "Story Conclusion", 1.5
+    d.Add "Originalita", 2.5
+    d.Add "Emoce", 3.5
+    d.Add "Enjoyment", 4#
+    d.Add "OP", 1#
+    d.Add "ED", 0.5
+    d.Add "OST", 2#
+    Set GetCategoryWeights = d
+End Function
+
+Private Function FormatNumberWithTrimmedZeros(ByVal num As Double) As String
+    Dim formattedNum As String
+    formattedNum = Format(num, "0.00")
+    If Right(formattedNum, 3) = ".00" Or Right(formattedNum, 3) = ",00" Then
+        formattedNum = left(formattedNum, Len(formattedNum) - 3)
+    ElseIf Right(formattedNum, 1) = "0" And (InStr(formattedNum, ".") > 0 Or InStr(formattedNum, ",") > 0) Then
+        formattedNum = left(formattedNum, Len(formattedNum) - 1)
+    End If
+    formattedNum = Replace(formattedNum, ".", ",")
+    FormatNumberWithTrimmedZeros = formattedNum
+End Function
+
+Private Function ParseRating(ByVal ratingText As String) As Variant
+    Dim t As String, decSep As String
+    t = Trim$(ratingText)
+    If InStr(1, t, "/10", vbTextCompare) > 0 Then t = Replace$(t, "/10", "", , , vbTextCompare)
+    t = Trim$(t)
+    If t = "" Or UCase$(t) = "N/A" Then
+        ParseRating = CVErr(xlErrNA)
+        Exit Function
+    End If
+    decSep = Application.DecimalSeparator
+    t = Replace$(Replace$(t, ".", decSep), ",", decSep)
+    On Error GoTo Fail
+    ParseRating = CDbl(t)
+    Exit Function
+Fail:
+    ParseRating = CVErr(xlErrValue)
+End Function
+
+' ********************************************************************************************************************
+' * KĂ“D PRO RE-APLIKACI FORMĂTOVĂNĂŤ TEXTU V KOMENTĂĹI                                                                *
+' ********************************************************************************************************************
+
+Private Sub ApplyCommentFormatting(cmt As Comment, _
+                                   ByVal animeName As String, _
+                                   ByVal outputContent As String, _
+                                   ByVal episodeRatingValues As Collection, _
+                                   ByVal categoryRatingValues As Collection, _
+                                   ByVal avgEpisodeRatingFormatted As String, _
+                                   ByVal weightedAvgCategoryFormatted As String, _
+                                   ByVal finalRatingFormatted As String)
+    Dim titleLength As Long
+    Dim finalRatingStart As Long
+    Dim finalRatingLength As Long
+    Dim labelStart As Long
+    Dim ratingValue As Variant
+    Dim ratingText As String
+    Dim tempFoundPos As Long
+
+    ' Reset standardnĂ­ho pĂ­sma
+    With cmt.Shape.TextFrame.Characters.Font
+        .Name = "Tahoma"
+        .size = 9
+        .Bold = False
+        .Italic = False
+    End With
+
+    ' 1. TuÄŤnĂ˝ nĂˇzev anime
+    titleLength = Len(animeName)
+    If titleLength > 0 Then
+        With cmt.Shape.TextFrame.Characters(Start:=1, length:=titleLength).Font
+            .Bold = True
+            .Italic = True
+        End With
+    End If
+
+    ' 2. FinĂˇlnĂ­ hodnocenĂ­
+    finalRatingStart = InStr(1, outputContent, "Fin" & ChrW(225) & "ln" & ChrW(237) & " hodnocen" & ChrW(237) & ": ")
+    If finalRatingStart > 0 Then
+        finalRatingLength = Len("Fin" & ChrW(225) & "ln" & ChrW(237) & " hodnocen" & ChrW(237) & ": ") + Len(finalRatingFormatted)
+        With cmt.Shape.TextFrame.Characters(Start:=finalRatingStart, length:=finalRatingLength).Font
+            .Bold = True
+            .size = 11
+        End With
+    End If
+
+    ' 3. Nadpisy sekcĂ­
+    labelStart = InStr(1, outputContent, "Pozn" & ChrW(225) & "mky:")
+    If labelStart > 0 Then cmt.Shape.TextFrame.Characters(Start:=labelStart, length:=Len("Pozn" & ChrW(225) & "mky:")).Font.Bold = True
+
+    labelStart = InStr(1, outputContent, "Hodnocen" & ChrW(237) & " epizod:")
+    If labelStart > 0 Then cmt.Shape.TextFrame.Characters(Start:=labelStart, length:=Len("Hodnocen" & ChrW(237) & " epizod:")).Font.Bold = True
+
+    ' 4. ZvĂ˝raznÄ›nĂ­ hodnocenĂ­ epizod
+    Dim currentEpSearchStart As Long
+    Dim epHeaderPos As Long
+    epHeaderPos = InStr(1, outputContent, "Hodnocen" & ChrW(237) & " epizod:")
+    If epHeaderPos > 0 Then
+        currentEpSearchStart = epHeaderPos + Len("Hodnocen" & ChrW(237) & " epizod:" & vbCrLf)
+        For Each ratingValue In episodeRatingValues
+            ratingText = CStr(ratingValue)
+            tempFoundPos = InStr(currentEpSearchStart, outputContent, ratingText)
+            Do While tempFoundPos > 0
+                If tempFoundPos >= Len(" -> ") + 1 Then
+                    If Mid(outputContent, tempFoundPos - Len(" -> "), Len(" -> ")) = " -> " Then
+                        cmt.Shape.TextFrame.Characters(Start:=tempFoundPos, length:=Len(ratingText)).Font.Bold = True
+                    End If
+                End If
+                tempFoundPos = InStr(tempFoundPos + Len(ratingText), outputContent, ratingText)
+            Loop
+        Next ratingValue
+    End If
+
+    ' 5. PrĹŻmÄ›rnĂ© hodnocenĂ­ epizod
+    labelStart = InStr(1, outputContent, "hodnocen" & ChrW(237) & " epizod:")
+    If labelStart > 9 Then
+        labelStart = labelStart - 9
+        Dim epLabelLen As Long
+        epLabelLen = 9 + Len("hodnocen" & ChrW(237) & " epizod: " & avgEpisodeRatingFormatted)
+        cmt.Shape.TextFrame.Characters(Start:=labelStart, length:=epLabelLen).Font.Bold = True
+    End If
+
+    ' 6. Nadpis kategoriĂ­
+    labelStart = InStr(1, outputContent, "Hodnocen" & ChrW(237) & " kategori" & ChrW(237) & ":")
+    If labelStart > 0 Then cmt.Shape.TextFrame.Characters(Start:=labelStart, length:=Len("Hodnocen" & ChrW(237) & " kategori" & ChrW(237) & ":")).Font.Bold = True
+
+    ' 7. ZvĂ˝raznÄ›nĂ­ hodnocenĂ­ kategoriĂ­
+    Dim currentCatSearchStart As Long
+    currentCatSearchStart = InStr(1, outputContent, "Hodnocen" & ChrW(237) & " kategori" & ChrW(237) & ":") + Len("Hodnocen" & ChrW(237) & " kategori" & ChrW(237) & ":" & vbCrLf)
+    For Each ratingValue In categoryRatingValues
+        ratingText = CStr(ratingValue)
+        tempFoundPos = InStr(currentCatSearchStart, outputContent, ratingText)
+        Do While tempFoundPos > 0
+            If tempFoundPos >= Len(" -> ") + 1 Then
+                If Mid(outputContent, tempFoundPos - Len(" -> "), Len(" -> ")) = " -> " Then
+                    cmt.Shape.TextFrame.Characters(Start:=tempFoundPos, length:=Len(ratingText)).Font.Bold = True
+                End If
+            End If
+            tempFoundPos = InStr(tempFoundPos + Len(ratingText), outputContent, ratingText)
+        Loop
+    Next ratingValue
+
+    ' 8. VĂˇĹľenĂ˝ prĹŻmÄ›r
+    labelStart = InStr(1, outputContent, "v" & ChrW(225) & ChrW(382) & "en" & ChrW(233) & " hodnocen" & ChrW(237) & ":")
+    If labelStart > 9 Then
+        labelStart = labelStart - 9
+        Dim wtLabelLen As Long
+        wtLabelLen = 9 + Len("v" & ChrW(225) & ChrW(382) & "en" & ChrW(233) & " hodnocen" & ChrW(237) & ": " & weightedAvgCategoryFormatted)
+        cmt.Shape.TextFrame.Characters(Start:=labelStart, length:=wtLabelLen).Font.Bold = True
+    End If
+End Sub
+
+Private Function ExtractRatingValues(ByVal ratingsList As String) As Collection
+    Dim col As New Collection
+    Dim parts() As String
+    Dim i As Long
+    Dim pArrow As Long
+    Dim ratingPart As String
+    
+    parts = Split(ratingsList, ", ")
+    For i = LBound(parts) To UBound(parts)
+        pArrow = InStr(1, parts(i), "->", vbTextCompare)
+        If pArrow > 0 Then
+            ratingPart = Trim(Mid(parts(i), pArrow + 2))
+            If ratingPart <> "" Then
+                On Error Resume Next
+                col.Add ratingPart, ratingPart
+                On Error GoTo 0
+            End If
+        End If
+    Next i
+    Set ExtractRatingValues = col
+End Function
+
+' ********************************************************************************************************************
+' * UKĂZKOVĂ TESTOVACĂŤ PROCEDURA (IN-MEMORY TEST PARSOVĂNĂŤ A PRAVIDEL)                                                *
+' ********************************************************************************************************************
+
+Public Sub TestRulesLogic()
+    Dim testComment As String
+    testComment = "Lord of Mysteries" & vbCrLf & _
+                  "Poznamky: Skvele anime." & vbCrLf & vbCrLf & _
+                  "Hodnocen" & ChrW(237) & " epizod:" & vbCrLf & _
+                  "EP 1 - 11 -> 8/10, EP 12 -> 7,5/10" & vbCrLf & _
+                  "Prumerne hodnoceni epizod: 7,95/10" & vbCrLf & vbCrLf & _
+                  "Hodnocen" & ChrW(237) & " kategori" & ChrW(237) & ":" & vbCrLf & _
+                  "Animace -> 9/10, CGI -> 5/10, MC -> 9/10, Plot -> 9/10, Story Conclusion -> 8/10, Emoce -> 8/10, Enjoyment -> 9/10" & vbCrLf & _
+                  "Prumerne vazene hodnoceni: 8,45/10" & vbCrLf & vbCrLf & _
+                  "Finalni hodnoceni: 8/10"
+                  
+    Debug.Print "=== TEST PARSOVANI KOMENTARE ==="
+    Dim animeName As String
+    Dim notesContent As String
+    Dim episodeRatingsList As String
+    Dim avgEpisodeRatingFormatted As String
+    Dim categoryRatingsList As String
+    Dim weightedAvgCategoryFormatted As String
+    Dim finalRatingFormatted As String
+    
+    Dim hasEpisodes As Boolean
+    ParseCommentContent testComment, animeName, notesContent, episodeRatingsList, avgEpisodeRatingFormatted, _
+                        categoryRatingsList, weightedAvgCategoryFormatted, finalRatingFormatted, hasEpisodes
+                        
+    Debug.Print "Anime Name: " & animeName
+    Debug.Print "Notes Content: " & notesContent
+    Debug.Print "Episodes List: " & episodeRatingsList
+    Debug.Print "Avg Episode Rating: " & avgEpisodeRatingFormatted
+    Debug.Print "Categories List: " & categoryRatingsList
+    Debug.Print "Avg Weighted Category: " & weightedAvgCategoryFormatted
+    Debug.Print "Final Rating: " & finalRatingFormatted
+    
+    Debug.Print "=== TEST PARSOVANI KATEGORII ==="
+    Dim dict As Object
+    Set dict = ParseCategoryRatings(categoryRatingsList)
+    Dim key As Variant
+    For Each key In dict.keys
+        Debug.Print "  " & key & ": " & dict(key)
+    Next key
+    
+    Debug.Print "=== TEST HODNOCENI POSLEDNI EPIZODY ==="
+    Dim lastEpRating As Variant
+    lastEpRating = GetLastEpisodeRating(episodeRatingsList)
+    Debug.Print "Last Episode Rating: " & lastEpRating
+    
+    If Not IsNull(lastEpRating) Then
+        If Abs((lastEpRating - Int(lastEpRating)) - 0.5) < 0.001 Then
+            Debug.Print "  -> Konci na .5! Story Conclusion by se prepsalo na: " & lastEpRating
+        Else
+            Debug.Print "  -> Nekonci na .5."
+        End If
+    End If
+End Sub
+
+
+Private Sub LogToFile(ByVal msg As String)
+    On Error Resume Next
+    Dim logFileNum As Integer
+    logFileNum = FreeFile
+    Open "C:\Temp\vba_debug_log.txt" For Append As #logFileNum
+    Print #logFileNum, "[" & Now & "] " & msg
+    Close #logFileNum
+End Sub
+
+
+Public Sub RunTestProcessComments()
+    Dim dictFilter As Object
+    Set dictFilter = CreateObject("Scripting.Dictionary")
+    dictFilter.CompareMode = vbTextCompare
+    dictFilter.Add "Owarimonogatari, S01", True
+    dictFilter.Add "Owarimonogatari, S02", True
+    dictFilter.Add "The Melancholy of Haruhi Suzumiya, S02", True
+    
+    ProcessComments "OST", 8#, dictFilter
+End Sub

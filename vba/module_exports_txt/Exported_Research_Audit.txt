@@ -1,0 +1,1546 @@
+﻿Option Explicit
+
+' --- KONSTANTY PRO ZABRÁNĚNÍ AMBIGUOUS NAME CHYBÁM ---
+Private Const VIRTUAL_DRIVE As String = "B:"
+Private Const PATH_ROOT_LONG As String = "C:\AL\Anime hodnocení a rozbory\"
+Private Const PATH_SRC_ANALYSIS As String = VIRTUAL_DRIVE & "\Faktické rozbory (Gemini AI)\Vytvořené faktické rozbory\"
+Private Const PATH_WIP_ANALYSIS As String = VIRTUAL_DRIVE & "\Faktické rozbory (Gemini AI)\Čekající rozbory (W.I.P.)\Anime, která jsem už viděl - rozšíření EP a CAT\"
+
+' --- KONFIGUROVATELNÉ KONSTANTY ---
+Private Const WORD_THRESHOLD_COMPLETE As Long = 6200
+Private Const NEW_ANIME_CUTOFF As String = "2025-02-28"
+Private Const HM_MAX_SLOTS As Long = 20
+Private Const MODULE_VERSION As String = "2.0"
+
+' --- TYPOVÝ HLEDÁČEK PRO PRIORITIZACI VYLEPŠENÍ ---
+Private Type AnimeImprovementData
+    Name As String
+    rating As Double
+    WordCount As Long
+    PriorityScore As Double
+    PriorityClass As String ' "Critical", "High", "Medium", "Low"
+    Top10Rank As Long
+    IsHM As Boolean
+    density As Long
+    IsWIP As Boolean
+    FileName As String
+End Type
+
+' --- PRVKY PRO PŘIPOJENÍ DISKU (ZABRÁNĚNÍ AMBIGUOUS NAME) ---
+Private Function MountVirtualDrive(ByVal driveLetter As String, ByVal targetPath As String) As Boolean
+    Dim wsh As Object, fso As Object
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    If fso.DriveExists(driveLetter) Then
+        MountVirtualDrive = True
+        Exit Function
+    End If
+    Set wsh = CreateObject("WScript.Shell")
+    If Right(targetPath, 1) = "\" Then targetPath = left(targetPath, Len(targetPath) - 1)
+    Dim cmd As String: cmd = "subst " & driveLetter & " """ & targetPath & """"
+    On Error Resume Next
+    wsh.Run cmd, 0, True
+    On Error GoTo 0
+    MountVirtualDrive = fso.DriveExists(driveLetter)
+End Function
+
+Private Sub UnmountVirtualDrive(driveLetter As String)
+    Dim wsh As Object: Set wsh = CreateObject("WScript.Shell")
+    On Error Resume Next
+    wsh.Run "subst " & driveLetter & " /d", 0, True
+    On Error GoTo 0
+End Sub
+
+' --- UTILITY PRO ZABRÁNĚNÍ AMBIGUOUS NAME ---
+Private Sub ToggleSpeed(ByVal speedUp As Boolean, Optional wApp As Object = Nothing)
+    On Error Resume Next
+    If speedUp Then
+        Application.ScreenUpdating = False
+        Application.Calculation = -4135 ' xlCalculationManual
+        Application.EnableEvents = False
+        Application.DisplayStatusBar = True
+        
+        If Not wApp Is Nothing Then
+            wApp.ScreenUpdating = False
+            wApp.DisplayAlerts = 0 ' wdAlertsNone
+            wApp.Options.CheckSpellingAsYouType = False
+            wApp.Options.CheckGrammarAsYouType = False
+            wApp.Options.Pagination = False
+        End If
+    Else
+        Application.ScreenUpdating = True
+        Application.Calculation = -4105 ' xlCalculationAutomatic
+        Application.EnableEvents = True
+        Application.DisplayStatusBar = True
+        
+        If Not wApp Is Nothing Then
+            wApp.ScreenUpdating = True
+            wApp.DisplayAlerts = -1 ' wdAlertsAll
+            wApp.Options.CheckSpellingAsYouType = True
+            wApp.Options.CheckGrammarAsYouType = True
+            wApp.Options.Pagination = True
+        End If
+    End If
+End Sub
+
+Private Function CleanFileName(ByVal rawName As String) As String
+    Dim s As String: s = rawName
+    s = Replace(s, ":", "_"): s = Replace(s, "/", " "): s = Replace(s, "\", "")
+    s = Replace(s, "*", ""): s = Replace(s, "?", ""): s = Replace(s, """", "")
+    s = Replace(s, "<", ""): s = Replace(s, ">", ""): s = Replace(s, "|", "")
+    CleanFileName = Application.Trim(s)
+End Function
+
+Private Function LoadFileCache(fso As Object, folderPath As String) As Object
+    Dim dict As Object
+    Set dict = CreateObject("Scripting.Dictionary")
+    dict.CompareMode = vbTextCompare
+    
+    If Right(folderPath, 1) <> "\" Then folderPath = folderPath & "\"
+    
+    If fso.FolderExists(folderPath) Then
+        Dim parentFolder As Object
+        Set parentFolder = fso.GetFolder(folderPath)
+        Dim fileObj As Object
+        For Each fileObj In parentFolder.Files
+            dict(fileObj.Name) = True
+        Next fileObj
+    End If
+    Set LoadFileCache = dict
+End Function
+
+Private Function LoadFolderCache(fso As Object, folderPath As String) As Object
+    Dim dict As Object
+    Set dict = CreateObject("Scripting.Dictionary")
+    dict.CompareMode = vbTextCompare
+    
+    If Right(folderPath, 1) <> "\" Then folderPath = folderPath & "\"
+    
+    If fso.FolderExists(folderPath) Then
+        Dim parentFolder As Object
+        Set parentFolder = fso.GetFolder(folderPath)
+        Dim subFolder As Object
+        For Each subFolder In parentFolder.SubFolders
+            dict(subFolder.Name) = True
+        Next subFolder
+    End If
+    Set LoadFolderCache = dict
+End Function
+
+Private Function GetWordCountFromDoc(wordApp As Object, docPath As String) As Long
+    Dim doc As Object
+    Dim wCount As Long: wCount = 0
+    On Error Resume Next
+    Set doc = wordApp.Documents.Open(FileName:=docPath, ReadOnly:=True, Visible:=False, AddToRecentFiles:=False)
+    If Not doc Is Nothing Then
+        wCount = doc.BuiltinDocumentProperties(15) ' wdPropertyWords
+        If wCount <= 0 Then
+            wCount = doc.Range.ComputeStatistics(0) ' wdStatisticWords
+        End If
+        doc.Close SaveChanges:=False
+    End If
+    On Error GoTo 0
+    GetWordCountFromDoc = wCount
+End Function
+
+Private Function GetRatingHTML(ByVal rating As Double) As String
+    If rating <= 0 Then
+        GetRatingHTML = "<span class=""badge badge-normal"" style=""color: var(--text-secondary);"">X/10</span>"
+    Else
+        Dim rColor As String
+        If rating >= 9 Then
+            rColor = "#22c55e"
+        ElseIf rating >= 8 Then
+            rColor = "#84cc16"
+        ElseIf rating >= 7 Then
+            rColor = "#eab308"
+        ElseIf rating >= 6 Then
+            rColor = "#f97316"
+        Else
+            rColor = "#ef4444"
+        End If
+        GetRatingHTML = "<strong style=""color: " & rColor & ";"">" & Format(rating, "0") & "/10</strong>"
+    End If
+End Function
+
+Private Function GetWordCountProgressHTML(ByVal wCount As Long, Optional ByVal maxVal As Long = 6200) As String
+    If maxVal <= 0 Then maxVal = 1
+    Dim wPct As Long
+    wPct = CLng((wCount / maxVal) * 100)
+    If wPct > 100 Then wPct = 100
+    Dim wClass As String
+    If wPct < 30 Then
+        wClass = "critical"
+    ElseIf wPct < 60 Then
+        wClass = "high"
+    ElseIf wPct < 90 Then
+        wClass = "medium"
+    Else
+        wClass = "low"
+    End If
+    Dim res As String
+    res = "<div class=""progress-container"">" & _
+          "<span class=""word-count-text"">" & wCount & " slov</span>" & _
+          "<div class=""progress-bar-bg"">" & _
+          "<div class=""progress-bar " & wClass & """ style=""width: " & wPct & "%;""></div>" & _
+          "</div></div>"
+    GetWordCountProgressHTML = res
+End Function
+
+Private Function GetDensityProgressHTML(ByVal density As Long, Optional ByVal maxVal As Long = 400) As String
+    If maxVal <= 0 Then maxVal = 1
+    Dim dPct As Long
+    dPct = CLng((density / maxVal) * 100)
+    If dPct > 100 Then dPct = 100
+    Dim dClass As String
+    If dPct < 30 Then
+        dClass = "critical"
+    ElseIf dPct < 60 Then
+        dClass = "high"
+    ElseIf dPct < 90 Then
+        dClass = "medium"
+    Else
+        dClass = "low"
+    End If
+    Dim res As String
+    res = "<div class=""progress-container"">" & _
+          "<span class=""word-count-text"">" & density & " slov/ep</span>" & _
+          "<div class=""progress-bar-bg"">" & _
+          "<div class=""progress-bar " & dClass & """ style=""width: " & dPct & "%;""></div>" & _
+          "</div></div>"
+    GetDensityProgressHTML = res
+End Function
+
+Private Function NormalizeForMatch(ByVal s As String) As String
+    s = LCase(s)
+    s = Replace(s, ":", ""): s = Replace(s, "/", ""): s = Replace(s, "\", "")
+    s = Replace(s, "_", ""): s = Replace(s, "-", ""): s = Replace(s, " ", "")
+    s = Replace(s, ",", ""): s = Replace(s, ".", ""): s = Replace(s, ";", "")
+    s = Replace(s, "!", ""): s = Replace(s, "?", ""): s = Replace(s, "*", "")
+    s = Replace(s, "<", ""): s = Replace(s, ">", ""): s = Replace(s, "|", "")
+    s = Replace(s, """", ""): s = Replace(s, "'", "")
+    s = Replace(s, ChrW(&H201C), ""): s = Replace(s, ChrW(&H201D), "")
+    s = Replace(s, ChrW(&H2018), ""): s = Replace(s, ChrW(&H2019), "")
+    s = Replace(s, "ě", "e"): s = Replace(s, "á", "a"): s = Replace(s, "í", "i")
+    s = Replace(s, "ó", "o"): s = Replace(s, "ú", "u"): s = Replace(s, "ů", "u")
+    s = Replace(s, "ý", "y"): s = Replace(s, "é", "e"): s = Replace(s, "š", "s")
+    s = Replace(s, "č", "c"): s = Replace(s, "ř", "r"): s = Replace(s, "ž", "z")
+    s = Replace(s, "ť", "t"): s = Replace(s, "ď", "d"): s = Replace(s, "ň", "n")
+    s = Replace(s, "adventures", "adventure")
+    s = Replace(s, "s0", "s") ' Normalizace sezón, např. S04 -> s4
+    s = Replace(s, ChrW(65533), "e")
+    NormalizeForMatch = s
+End Function
+
+Private Function FindMatchingFileOnDisk(ByVal animeName As String, ByVal seriesName As String, dictFiles As Object) As String
+    Dim cleanA As String: cleanA = CleanFileName(animeName) & ".docx"
+    If dictFiles.Exists(cleanA) Then
+        FindMatchingFileOnDisk = cleanA
+        Exit Function
+    End If
+    
+    If seriesName <> "" Then
+        Dim cleanS As String: cleanS = CleanFileName(seriesName) & ".docx"
+        If dictFiles.Exists(cleanS) Then
+            FindMatchingFileOnDisk = cleanS
+            Exit Function
+        End If
+    End If
+    
+    Dim normA As String: normA = NormalizeForMatch(animeName)
+    Dim normS As String: normS = NormalizeForMatch(seriesName)
+    
+    Dim k As Variant
+    For Each k In dictFiles.keys
+        Dim fName As String: fName = CStr(k)
+        If Len(fName) >= 5 And LCase(Right(fName, 5)) = ".docx" Then
+            Dim normF As String: normF = NormalizeForMatch(left(fName, Len(fName) - 5))
+            
+            If normF <> "" Then
+                If normA = normF Then
+                    FindMatchingFileOnDisk = fName: Exit Function
+                End If
+                If Len(normA) > 5 Then
+                    If InStr(1, normF, normA, vbTextCompare) = 1 Then
+                        Dim tailFA As String: tailFA = Mid(normF, Len(normA) + 1)
+                        If normA = normS And Len(tailFA) >= 2 And left(tailFA, 1) = "s" And IsNumeric(Mid(tailFA, 2, 1)) Then
+                            ' Excel nemá sezónu, ale soubor ano -> zamítnout (např. "Slime" nebere "Slime S02")
+                        Else
+                            FindMatchingFileOnDisk = fName: Exit Function
+                        End If
+                    End If
+                End If
+            End If
+        End If
+    Next k
+    FindMatchingFileOnDisk = ""
+End Function
+
+Private Function FindMatchingFolderOnDisk(ByVal animeName As String, ByVal seriesName As String, dictFolders As Object) As String
+    Dim cleanA As String: cleanA = CleanFileName(animeName)
+    If dictFolders.Exists(cleanA) Then
+        FindMatchingFolderOnDisk = cleanA
+        Exit Function
+    End If
+    
+    If seriesName <> "" Then
+        Dim cleanS As String: cleanS = CleanFileName(seriesName)
+        If dictFolders.Exists(cleanS) Then
+            FindMatchingFolderOnDisk = cleanS
+            Exit Function
+        End If
+    End If
+    
+    Dim normA As String: normA = NormalizeForMatch(animeName)
+    Dim normS As String: normS = NormalizeForMatch(seriesName)
+    
+    Dim k As Variant
+    For Each k In dictFolders.keys
+        Dim fName As String: fName = CStr(k)
+        Dim normF As String: normF = NormalizeForMatch(fName)
+        
+        If normF <> "" Then
+            If normA = normF Then
+                FindMatchingFolderOnDisk = fName: Exit Function
+            End If
+            If Len(normA) > 5 Then
+                If InStr(1, normF, normA, vbTextCompare) = 1 Then
+                    Dim tailFA As String: tailFA = Mid(normF, Len(normA) + 1)
+                    If normA = normS And Len(tailFA) >= 2 And left(tailFA, 1) = "s" And IsNumeric(Mid(tailFA, 2, 1)) Then
+                        ' Excel nemá sezónu, ale složka ano -> zamítnout
+                    Else
+                        FindMatchingFolderOnDisk = fName: Exit Function
+                    End If
+                End If
+            End If
+        End If
+    Next k
+    FindMatchingFolderOnDisk = ""
+End Function
+
+' --- QUICKSORT PRO AnimeImprovementData ---
+Private Sub QuickSortImprovements(arr() As AnimeImprovementData, ByVal lo As Long, ByVal hi As Long)
+    If lo >= hi Then Exit Sub
+    Dim pivot As Double: pivot = arr((lo + hi) \ 2).PriorityScore
+    Dim i As Long: i = lo
+    Dim j As Long: j = hi
+    Dim tmp As AnimeImprovementData
+    Do While i <= j
+        Do While arr(i).PriorityScore > pivot: i = i + 1: Loop
+        Do While arr(j).PriorityScore < pivot: j = j - 1: Loop
+        If i <= j Then
+            tmp = arr(i): arr(i) = arr(j): arr(j) = tmp
+            i = i + 1: j = j - 1
+        End If
+    Loop
+    If lo < j Then QuickSortImprovements arr, lo, j
+    If i < hi Then QuickSortImprovements arr, i, hi
+End Sub
+
+' ***********************************************************************************
+' * KOMPLETNÍ AUDIT: KONTROLA CHYBĚJÍCÍCH A PŘEBYTEČNÝCH ROZBORŮ                   *
+' ***********************************************************************************
+
+' ***********************************************************************************
+' * NOVÁ FUNKCE: ANALÝZA HUSTOTY ROZBORŮ (WORD COUNT vs DÉLKA ANIME)                *
+' ***********************************************************************************
+
+'--------------------------------------------------------------------------------------------------
+' VYTVOŘENÍ A OTEVŘENÍ HTML AUDIT REPORTU (PREMIUM DESIGN)
+'--------------------------------------------------------------------------------------------------
+Public Sub GenerovatHTMLAudit()
+    Dim ws As Worksheet
+    Dim lastRow As Long, r As Long
+    Dim fso As Object, folderObj As Object, fileObj As Object
+    Dim dictExcel As Object, dictFiles As Object
+    Dim dictTop10 As Object, dictHM As Object
+    Dim wordApp As Object, doc As Object
+    Dim createdWord As Boolean: createdWord = False
+    Dim startTimer As Double: startTimer = Timer
+    
+    ' Výstupní cesta k souboru HTML (do Stažených souborů)
+    Dim htmlPath As String
+    htmlPath = Environ("USERPROFILE") & "\Downloads\Audit_Report.html"
+    
+    ' Nastavení a optimalizace
+    ToggleSpeed True
+    
+    ' --- 1. Připojení disku ---
+    If Not MountVirtualDrive(VIRTUAL_DRIVE, PATH_ROOT_LONG) Then
+        MsgBox "Nepodařilo se připojit virtuální disk " & VIRTUAL_DRIVE, vbCritical
+        GoTo CleanExit
+    End If
+    
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    Set dictExcel = CreateObject("Scripting.Dictionary")
+    dictExcel.CompareMode = vbTextCompare
+    
+    ' Načtení dat z listu ANIME LIST
+    Set ws = ThisWorkbook.Sheets("ANIME LIST")
+    lastRow = ws.Cells(ws.Rows.count, "C").End(xlUp).row
+    
+    ' Pre-cache názvů sérií z komentářů ve sloupci C
+    Dim commentsC As Object
+    Set commentsC = CreateObject("Scripting.Dictionary")
+    For r = 2 To lastRow
+        If Not ws.Cells(r, "C").Comment Is Nothing Then
+            commentsC(r) = GetSeriesNameFromComment(ws.Cells(r, "C"))
+        Else
+            commentsC(r) = ""
+        End If
+    Next r
+    
+    ' Načtení TOP 10 a HM
+    Call NactiTop10AHM(dictTop10, dictHM)
+    
+    ' Načtení cache souborů
+    Set dictFiles = LoadFileCache(fso, PATH_SRC_ANALYSIS)
+    
+    ' Inicializace Wordu pro audit počtu slov
+    On Error Resume Next
+    Set wordApp = GetObject(, "Word.Application")
+    If wordApp Is Nothing Then
+        Set wordApp = CreateObject("Word.Application")
+        createdWord = True
+    End If
+    On Error GoTo ErrorHandler
+    
+    wordApp.Visible = False
+    wordApp.DisplayAlerts = 0
+    ToggleSpeed True, wordApp
+    
+    ' Načtení hlavních dat z Excelu
+    Dim arrData As Variant
+    If lastRow >= 2 Then
+        arrData = ws.Range(ws.Cells(2, 3), ws.Cells(lastRow, 11)).Value ' Sloupce C až K (C=3, K=11)
+    End If
+    
+    ' Datové kolekce pro HTML
+    Dim missingList As Object: Set missingList = CreateObject("System.Collections.ArrayList")
+    Dim extraList As Object: Set extraList = CreateObject("System.Collections.ArrayList")
+    Dim completeList As Object: Set completeList = CreateObject("System.Collections.ArrayList")
+    Dim newAnimeList As Object: Set newAnimeList = CreateObject("System.Collections.ArrayList")
+    Dim wipAnimeList As Object: Set wipAnimeList = CreateObject("System.Collections.ArrayList")
+    Dim improvementList() As AnimeImprovementData
+    Dim impCount As Long: impCount = 0
+    Dim totalWordCount As Long: totalWordCount = 0
+    Dim docCount As Long: docCount = 0
+    
+    Dim top5L(1 To 5) As String, top5LW(1 To 5) As Long
+    Dim top5S(1 To 5) As String, top5SW(1 To 5) As Long
+    Dim i_top As Long, j_top As Long
+    For i_top = 1 To 5
+        top5LW(i_top) = 0: top5SW(i_top) = 9999999
+    Next i_top
+    
+    Dim dictWIP As Object
+    Set dictWIP = LoadFolderCache(fso, PATH_WIP_ANALYSIS)
+    
+    If IsArray(arrData) Then
+        ReDim improvementList(1 To UBound(arrData, 1))
+        
+        For r = 1 To UBound(arrData, 1)
+            ' Status bar progress
+            If r Mod 10 = 0 Then
+                Application.StatusBar = "Skenování rozborů pro HTML audit: " & r & " / " & UBound(arrData, 1)
+                DoEvents
+            End If
+            
+            Dim animeName As String: animeName = Trim(CStr(arrData(r, 1))) ' Sloupec C
+            Dim ratingVal As Double: ratingVal = 0
+            If IsNumeric(arrData(r, 9)) Then ratingVal = CDbl(arrData(r, 9)) ' Sloupec K (Rating)
+            
+            If animeName <> "" Then
+                Dim seriesName As String
+                If commentsC.Exists(r + 1) Then
+                    seriesName = CStr(commentsC(r + 1))
+                Else
+                    seriesName = ""
+                End If
+                
+                Dim releaseDateStr As String: releaseDateStr = Trim(CStr(arrData(r, 4))) ' Sloupec F
+                If releaseDateStr <> "" Then
+                    On Error Resume Next
+                    Dim rDate As Date: rDate = CDate(releaseDateStr)
+                    Dim dateOk As Boolean: dateOk = (err.Number = 0)
+                    err.Clear
+                    On Error GoTo ErrorHandler
+                    If dateOk And rDate > CDate(NEW_ANIME_CUTOFF) Then
+                        newAnimeList.Add Array(animeName, releaseDateStr, ratingVal)
+                    End If
+                End If
+                
+                Dim matchedWIP As String
+                matchedWIP = FindMatchingFolderOnDisk(animeName, seriesName, dictWIP)
+                If matchedWIP <> "" Then
+                    wipAnimeList.Add Array(animeName, matchedWIP)
+                End If
+                
+                ' Označíme, že anime existuje v Excelu
+                If Not dictExcel.Exists(animeName) Then
+                    dictExcel.Add animeName, animeName
+                End If
+                
+                Dim matchedFile As String
+                matchedFile = FindMatchingFileOnDisk(animeName, seriesName, dictFiles)
+                Dim wCount As Long: wCount = 0
+                
+                If matchedFile <> "" Then
+                    dictFiles(matchedFile) = False ' Označíme jako využité
+                    
+                    ' Přečteme počet slov dokumentu
+                    Dim analysisPath As String
+                    analysisPath = PATH_SRC_ANALYSIS & matchedFile
+                    
+                    wCount = GetWordCountFromDoc(wordApp, analysisPath)
+                    On Error GoTo ErrorHandler
+                    
+                    ' Akumulace statistik
+                    If wCount > 0 Then
+                        totalWordCount = totalWordCount + wCount
+                        docCount = docCount + 1
+                        
+                        For i_top = 1 To 5
+                            If wCount > top5LW(i_top) Then
+                                For j_top = 5 To i_top + 1 Step -1
+                                    top5LW(j_top) = top5LW(j_top - 1)
+                                    top5L(j_top) = top5L(j_top - 1)
+                                Next j_top
+                                top5LW(i_top) = wCount
+                                top5L(i_top) = animeName
+                                Exit For
+                            End If
+                        Next i_top
+                        
+                        For i_top = 1 To 5
+                            If wCount < top5SW(i_top) Then
+                                For j_top = 5 To i_top + 1 Step -1
+                                    top5SW(j_top) = top5SW(j_top - 1)
+                                    top5S(j_top) = top5S(j_top - 1)
+                                Next j_top
+                                top5SW(i_top) = wCount
+                                top5S(i_top) = animeName
+                                Exit For
+                            End If
+                        Next i_top
+                    End If
+                    
+                    ' Výpočet hustoty (slov na epizodu)
+                    Dim eps As Variant: eps = arrData(r, 7) ' Sloupec I
+                    Dim mins As Variant: mins = arrData(r, 8) ' Sloupec J
+                    Dim density As Long: density = 0
+                    If IsNumeric(eps) And IsNumeric(mins) And val(eps) > 0 And val(mins) > 0 Then
+                        Dim normLen As Double: normLen = (CDbl(eps) * CDbl(mins)) / 24
+                        If normLen > 0 Then density = CLng(wCount / normLen)
+                    End If
+                    
+                    ' Zkontrolujeme, zda je rozbor kompletní nebo k vylepšení
+                    If wCount >= WORD_THRESHOLD_COMPLETE Then
+                        ' Kompletní rozbor
+                        completeList.Add Array(animeName, wCount, ratingVal, seriesName, density)
+                    Else
+                        ' K vylepšení
+                        impCount = impCount + 1
+                        improvementList(impCount).Name = animeName
+                        improvementList(impCount).rating = ratingVal
+                        improvementList(impCount).WordCount = wCount
+                        improvementList(impCount).density = density
+                        
+                        ' Zjistíme, zda je v TOP 10 nebo HM
+                        Dim t10Rank As Long: t10Rank = 0
+                        Dim inHM As Boolean: inHM = False
+                        
+                        ' Match podle názvu nebo série
+                        If dictTop10.Exists(animeName) Then
+                            t10Rank = dictTop10(animeName)
+                        ElseIf seriesName <> "" And dictTop10.Exists(seriesName) Then
+                            t10Rank = dictTop10(seriesName)
+                        End If
+                        
+                        If dictHM.Exists(animeName) Then
+                            inHM = True
+                        ElseIf seriesName <> "" And dictHM.Exists(seriesName) Then
+                            inHM = True
+                        End If
+                        
+                        improvementList(impCount).Top10Rank = t10Rank
+                        improvementList(impCount).IsHM = inHM
+                        improvementList(impCount).IsWIP = (matchedWIP <> "")
+                        improvementList(impCount).FileName = matchedFile
+                        
+                        ' Výpočet prioritního skóre
+                        Dim score As Double: score = ratingVal * 10
+                        If t10Rank > 0 Then
+                            score = score + (11 - t10Rank) * 10
+                        End If
+                        If inHM Then
+                            score = score + 50
+                        End If
+                        
+                        improvementList(impCount).PriorityScore = score
+                        
+                        ' Třída priority
+                        If score >= 150 Then
+                            improvementList(impCount).PriorityClass = "Critical"
+                        ElseIf score >= 100 Then
+                            improvementList(impCount).PriorityClass = "High"
+                        ElseIf score >= 70 Then
+                            improvementList(impCount).PriorityClass = "Medium"
+                        Else
+                            improvementList(impCount).PriorityClass = "Low"
+                        End If
+                    End If
+                Else
+                    ' Chybí rozbor na disku
+                    missingList.Add Array(animeName, ratingVal, seriesName)
+                End If
+            End If
+        Next r
+    End If
+    
+    ' Skenování disku na přebývající soubory (Extra files)
+    Dim k As Variant
+    Dim extCount As Long: extCount = 0
+    For Each k In dictFiles.keys
+        Dim fName As String: fName = CStr(k)
+        If dictFiles(k) = True Then ' Nevyužité -> Extra
+            If LCase(Right(fName, 5)) = ".docx" And left(fName, 2) <> "~$" Then
+                extCount = extCount + 1
+                If extCount Mod 5 = 0 Then
+                    Application.StatusBar = "Analyzuji soubory navíc pro HTML audit: " & extCount
+                    DoEvents
+                End If
+                
+                ' Přečteme slova i pro přebývající soubory
+                Dim exPath As String: exPath = PATH_SRC_ANALYSIS & fName
+                Dim extraWCount As Long
+                extraWCount = GetWordCountFromDoc(wordApp, exPath)
+                
+                extraList.Add Array(fName, extraWCount)
+            End If
+        End If
+    Next k
+    
+    ' Word bude bezpečně ukončen v CleanExit
+    
+    ' Třídění rozborů k vylepšení (QuickSort podle PriorityScore sestupně)
+    If impCount > 1 Then QuickSortImprovements improvementList, 1, impCount
+    
+    ' --- GENEROVÁNÍ HTML SOUBORU ---
+    Dim f As Long
+    f = FreeFile
+    Open htmlPath For Output As #f
+    
+    ' Hlavička HTML
+    Print #f, "<!DOCTYPE html>"
+    Print #f, "<html lang=""cs"">"
+    Print #f, "<head>"
+    Print #f, "    <meta charset=""windows-1250"">"
+    Print #f, "    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">"
+    Print #f, "    <title>Audit rozborů a analýza priorit</title>"
+    Print #f, "    <link href=""https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap"" rel=""stylesheet"">"
+    
+    ' CSS styly
+    Print #f, "    <style>"
+    Print #f, "        :root {"
+    Print #f, "            --bg-base: #0b0f19;"
+    Print #f, "            --bg-surface: #131b2e;"
+    Print #f, "            --bg-surface-hover: #1e294b;"
+    Print #f, "            --text-primary: #f8fafc;"
+    Print #f, "            --text-secondary: #94a3b8;"
+    Print #f, "            --accent-teal: #06b6d4;"
+    Print #f, "            --accent-teal-glow: rgba(6, 182, 212, 0.15);"
+    Print #f, "            --accent-gold: #f59e0b;"
+    Print #f, "            --accent-gold-glow: rgba(245, 158, 11, 0.15);"
+    Print #f, "            --accent-amber: #f97316;"
+    Print #f, "            --accent-amber-glow: rgba(249, 115, 22, 0.15);"
+    Print #f, "            --accent-red: #ef4444;"
+    Print #f, "            --accent-red-glow: rgba(239, 68, 68, 0.15);"
+    Print #f, "            --accent-green: #22c55e;"
+    Print #f, "            --accent-green-glow: rgba(34, 197, 94, 0.15);"
+    Print #f, "            --border: #1e293b;"
+    Print #f, "        }"
+    Print #f, "        * { box-sizing: border-box; margin: 0; padding: 0; }"
+    Print #f, "        body { font-family: 'Inter', sans-serif; background-color: var(--bg-base); color: var(--text-primary); line-height: 1.5; padding: 2rem; }"
+    Print #f, "        h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; font-weight: 600; }"
+    Print #f, "        .header { margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }"
+    Print #f, "        .header-title h1 { font-size: 2.2rem; background: linear-gradient(to right, var(--accent-teal), #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }"
+    Print #f, "        .header-title p { color: var(--text-secondary); font-size: 0.95rem; margin-top: 0.25rem; }"
+    Print #f, "        .timestamp { font-size: 0.85rem; color: var(--text-secondary); background: rgba(255, 255, 255, 0.03); padding: 0.5rem 1rem; border-radius: 9999px; border: 1px solid var(--border); }"
+    Print #f, "        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; margin-bottom: 2.5rem; }"
+    Print #f, "        .stat-card { background-color: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s ease; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }"
+    Print #f, "        .stat-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.1); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2); }"
+    Print #f, "        .stat-label { font-size: 0.85rem; color: var(--text-secondary); font-weight: 600; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }"
+    Print #f, "        .stat-value { font-size: 2.4rem; font-weight: 700; font-family: 'Outfit', sans-serif; }"
+    Print #f, "        .stat-card.teal .stat-value { color: var(--accent-teal); }"
+    Print #f, "        .stat-card.gold .stat-value { color: var(--accent-gold); }"
+    Print #f, "        .stat-card.amber .stat-value { color: var(--accent-amber); }"
+    Print #f, "        .stat-card.red .stat-value { color: var(--accent-red); }"
+    Print #f, "        .stat-card.green .stat-value { color: var(--accent-green); }"
+    Print #f, "        .main-container { display: grid; grid-template-columns: 260px 1fr; gap: 2rem; }"
+    Print #f, "        .sidebar { display: flex; flex-direction: column; gap: 0.5rem; }"
+    Print #f, "        .nav-btn { background: none; border: 1px solid transparent; color: var(--text-secondary); padding: 0.85rem 1.25rem; border-radius: 12px; text-align: left; font-family: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center; }"
+    Print #f, "        .nav-btn:hover { background-color: rgba(255, 255, 255, 0.03); color: var(--text-primary); }"
+    Print #f, "        .nav-btn.active { background-color: var(--bg-surface); border-color: var(--border); color: var(--accent-teal); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }"
+    Print #f, "        .nav-badge { background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 9999px; font-weight: 700; }"
+    Print #f, "        .nav-btn.active .nav-badge { background: var(--accent-teal-glow); color: var(--accent-teal); }"
+    Print #f, "        .content { background-color: var(--bg-surface); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3); min-height: 500px; }"
+    Print #f, "        .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; gap: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }"
+    Print #f, "        .content-header h2 { font-size: 1.5rem; }"
+    Print #f, "        .search-container { position: relative; flex-grow: 1; max-width: 400px; }"
+    Print #f, "        .search-input { width: 100%; background-color: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); color: var(--text-primary); padding: 0.75rem 1rem 0.75rem 2.5rem; border-radius: 10px; font-family: inherit; font-size: 0.9rem; transition: all 0.2s; }"
+    Print #f, "        .search-input:focus { outline: none; border-color: var(--accent-teal); background-color: rgba(255, 255, 255, 0.04); box-shadow: 0 0 0 3px var(--accent-teal-glow); }"
+    Print #f, "        .search-icon { position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); pointer-events: none; }"
+    Print #f, "        .table-wrapper { overflow-x: auto; }"
+    Print #f, "        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }"
+    Print #f, "        .table-wrapper table th:first-child { width: 40%; max-width: 400px; }"
+    Print #f, "        th { padding: 1rem; color: var(--text-secondary); font-weight: 600; border-bottom: 2px solid var(--border); user-select: none; }"
+    Print #f, "        td { padding: 1rem; border-bottom: 1px solid rgba(255, 255, 255, 0.02); }"
+    Print #f, "        tr:hover td { background-color: rgba(255, 255, 255, 0.01); }"
+    Print #f, "        .badge { display: inline-flex; align-items: center; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; border: 1px solid transparent; text-transform: uppercase; letter-spacing: 0.05em; }"
+    Print #f, "        .badge-critical { background: var(--accent-red-glow); color: var(--accent-red); border-color: rgba(239, 68, 68, 0.25); }"
+    Print #f, "        .badge-high { background: var(--accent-amber-glow); color: var(--accent-amber); border-color: rgba(249, 115, 22, 0.25); }"
+    Print #f, "        .badge-medium { background: var(--accent-gold-glow); color: var(--accent-gold); border-color: rgba(245, 158, 11, 0.25); }"
+    Print #f, "        .badge-low { background: var(--accent-teal-glow); color: var(--accent-teal); border-color: rgba(6, 182, 212, 0.25); }"
+    Print #f, "        .badge-top10 { background: rgba(249, 115, 22, 0.1); color: #f97316; border-color: rgba(249, 115, 22, 0.3); margin-left: 0.5rem; font-size: 0.7rem; padding: 0.15rem 0.5rem; }"
+    Print #f, "        .badge-hm { background: rgba(245, 158, 11, 0.1); color: #f59e0b; border-color: rgba(245, 158, 11, 0.3); margin-left: 0.5rem; font-size: 0.7rem; padding: 0.15rem 0.5rem; }"
+    Print #f, "        .progress-container { width: 100%; max-width: 150px; display: block; margin-top: 6px; }"
+    Print #f, "        .word-count-text { display: block; }"
+    Print #f, "        .progress-bar-bg { width: 100%; height: 6px; background-color: rgba(255, 255, 255, 0.05); border-radius: 9999px; overflow: hidden; }"
+    Print #f, "        .progress-bar { height: 100%; border-radius: 9999px; }"
+    Print #f, "        .progress-bar.critical { background-color: var(--accent-red); }"
+    Print #f, "        .progress-bar.high { background-color: var(--accent-amber); }"
+    Print #f, "        .progress-bar.medium { background-color: var(--accent-gold); }"
+    Print #f, "        .progress-bar.low { background-color: var(--accent-teal); }"
+    Print #f, "        .hidden { display: none !important; }"
+    Print #f, "        .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5rem 2rem; color: var(--text-secondary); text-align: center; }"
+    Print #f, "        .empty-state svg { margin-bottom: 1.25rem; color: var(--border); }"
+    Print #f, "        .empty-state h3 { font-size: 1.2rem; color: var(--text-primary); margin-bottom: 0.25rem; }"
+    Print #f, "        .rating-val { font-size: 1.15rem; font-weight: 700; }"
+    Print #f, "        .rating-10 { color: #00ff66; }" ' Zářivá zelená pro dark mode
+    Print #f, "        .rating-9 { color: #22c55e; }"
+    Print #f, "        .rating-8 { color: #84cc16; }"
+    Print #f, "        .rating-7 { color: #eab308; }"
+    Print #f, "        .rating-6 { color: #f97316; }"
+    Print #f, "        .rating-5 { color: #ef4444; }"  ' Červená
+    Print #f, "        .filter-checkbox { display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); cursor: pointer; font-size: 0.9rem; user-select: none; margin-right: 1rem; }"
+    Print #f, "        .filter-checkbox input { cursor: pointer; }"
+    Print #f, "        .wip-btn { background-color: rgba(255, 255, 255, 0.05); color: var(--text-primary); border: 1px solid var(--border); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; margin-top: 0.5rem; }"
+    Print #f, "        .wip-btn:hover { background-color: var(--accent-teal); border-color: var(--accent-teal); }"
+    Print #f, "        .stats-detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin-bottom: 2rem; }"
+    Print #f, "        .stat-detail-card { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; }"
+    Print #f, "        .stat-detail-card h4 { font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; }"
+    Print #f, "        .stat-detail-card .stat-detail-value { font-size: 1.8rem; font-weight: 700; font-family: 'Outfit', sans-serif; }"
+    Print #f, "        .stat-detail-card .stat-detail-sub { font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.25rem; }"
+    Print #f, "        .scroll-top { position: fixed; bottom: 2rem; right: 2rem; width: 48px; height: 48px; border-radius: 50%; background: var(--accent-teal); color: var(--bg-base); border: none; cursor: pointer; font-size: 1.5rem; display: none; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3); transition: all 0.3s; z-index: 1000; }"
+    Print #f, "        .scroll-top:hover { transform: scale(1.1); box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4); }"
+    Print #f, "        .scroll-top.visible { display: flex; }"
+    Print #f, "        .theme-toggle { background: none; border: 1px solid var(--border); color: var(--text-secondary); padding: 0.5rem 1rem; border-radius: 9999px; cursor: pointer; font-family: inherit; font-size: 0.85rem; transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem; }"
+    Print #f, "        .theme-toggle:hover { border-color: var(--accent-teal); color: var(--accent-teal); }"
+    Print #f, "        .footer { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: 0.8rem; color: var(--text-secondary); }"
+    Print #f, "        .badge-normal { background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); border-color: var(--border); }"
+    Print #f, "        body.light { --bg-base: #f8fafc; --bg-surface: #ffffff; --bg-surface-hover: #f1f5f9; --text-primary: #0f172a; --text-secondary: #64748b; --border: #e2e8f0; }"
+    Print #f, "        body.light .stat-card { box-shadow: 0 1px 3px rgba(0,0,0,0.08); }"
+    Print #f, "        body.light .content { box-shadow: 0 4px 6px rgba(0,0,0,0.05); }"
+    Print #f, "        @media (max-width: 768px) { .main-container { grid-template-columns: 1fr; } .sidebar { flex-direction: row; overflow-x: auto; } .header { flex-direction: column; align-items: flex-start; gap: 1rem; } }"
+    Print #f, "    </style>"
+    Print #f, "</head>"
+    Print #f, "<body>"
+    
+    ' Obsah HTML Body
+    Print #f, "    <div class=""header"">"
+    Print #f, "        <div class=""header-title"">"
+    Print #f, "            <h1>Dashboard auditu & priorit rozborů</h1>"
+    Print #f, "            <p>Přehled stavu textových rozborů, chybějících souborů a priorit vylepšení</p>"
+    Print #f, "        </div>"
+    Print #f, "        <div style=""display: flex; align-items: center; gap: 1rem;"">"
+    Print #f, "            <button class=""theme-toggle"" onclick=""toggleTheme()"" title=""Přepnout motiv"">"
+    Print #f, "                <span id=""theme-icon"">&#127769;</span> <span id=""theme-label"">Dark</span>"
+    Print #f, "            </button>"
+    Print #f, "            <div class=""timestamp"">Aktualizováno: " & Format(Now, "dd.mm.yyyy HH:MM:ss") & "</div>"
+    Print #f, "        </div>"
+    Print #f, "    </div>"
+    
+    ' Metriky (Dashboard)
+    Dim totalPhysicalDocs As Long
+    totalPhysicalDocs = completeList.count + impCount
+    
+    Print #f, "    <div class=""stats-grid"">"
+    Print #f, "        <div class=""stat-card teal"">"
+    Print #f, "            <div class=""stat-label"">Anime v databázi</div>"
+    Print #f, "            <div class=""stat-value"">" & lastRow - 1 & "</div>"
+    Print #f, "        </div>"
+    Print #f, "        <div class=""stat-card green"">"
+    Print #f, "            <div class=""stat-label"">Rozbory na disku</div>"
+    Print #f, "            <div class=""stat-value"">" & totalPhysicalDocs & "</div>"
+    Print #f, "        </div>"
+    If missingList.count > 0 Then
+        Print #f, "        <div class=""stat-card red"">"
+        Print #f, "            <div class=""stat-label"">Chybějící rozbory</div>"
+        Print #f, "            <div class=""stat-value"">" & missingList.count & "</div>"
+        Print #f, "        </div>"
+    End If
+    If extraList.count > 0 Then
+        Print #f, "        <div class=""stat-card gold"">"
+        Print #f, "            <div class=""stat-label"">Rozbory navíc</div>"
+        Print #f, "            <div class=""stat-value"">" & extraList.count & "</div>"
+        Print #f, "        </div>"
+    End If
+    If completeList.count > 0 Then
+        Print #f, "        <div class=""stat-card green"">"
+        Print #f, "            <div class=""stat-label"">Kompletní (>=6200w)</div>"
+        Print #f, "            <div class=""stat-value"">" & completeList.count & "</div>"
+        Print #f, "        </div>"
+    End If
+    Print #f, "        <div class=""stat-card amber"">"
+    Print #f, "            <div class=""stat-label"">K vylepšení (&lt;6200w)</div>"
+    Print #f, "            <div class=""stat-value"" id=""stat-value-improvements"">" & impCount & "</div>"
+    Print #f, "        </div>"
+    Print #f, "    </div>"
+    
+    ' Grid s Navigací a Obsahem
+    Print #f, "    <div class=""main-container"">"
+    Print #f, "        <div class=""sidebar"">"
+    Print #f, "            <button class=""nav-btn active"" onclick=""switchTab('tab-improvements')"" id=""btn-improvements"">"
+    Print #f, "                <span>Rozbory k vylepšení</span>"
+    Print #f, "                <span class=""nav-badge"" id=""badge-improvements"">" & impCount & "</span>"
+    Print #f, "            </button>"
+    If missingList.count > 0 Then
+        Print #f, "            <button class=""nav-btn"" onclick=""switchTab('tab-missing')"" id=""btn-missing"">"
+        Print #f, "                <span>Chybějící rozbory</span>"
+        Print #f, "                <span class=""nav-badge"">" & missingList.count & "</span>"
+        Print #f, "            </button>"
+    End If
+    If completeList.count > 0 Then
+        Print #f, "            <button class=""nav-btn"" onclick=""switchTab('tab-complete')"" id=""btn-complete"">"
+        Print #f, "                <span>Kompletní rozbory</span>"
+        Print #f, "                <span class=""nav-badge"">" & completeList.count & "</span>"
+        Print #f, "            </button>"
+    End If
+    If extraList.count > 0 Then
+        Print #f, "            <button class=""nav-btn"" onclick=""switchTab('tab-extra')"" id=""btn-extra"">"
+        Print #f, "                <span>Rozbory navíc</span>"
+        Print #f, "                <span class=""nav-badge"">" & extraList.count & "</span>"
+        Print #f, "            </button>"
+    End If
+    If newAnimeList.count > 0 Then
+        Print #f, "            <button class=""nav-btn"" onclick=""switchTab('tab-new')"" id=""btn-new"">"
+        Print #f, "                <span>Nové rozbory (od 03/2025)</span>"
+        Print #f, "                <span class=""nav-badge"">" & newAnimeList.count & "</span>"
+        Print #f, "            </button>"
+    End If
+    If wipAnimeList.count > 0 Then
+        Print #f, "            <button class=""nav-btn"" onclick=""switchTab('tab-wip')"" id=""btn-wip"">"
+        Print #f, "                <span>Rozpracované rozbory (WIP)</span>"
+        Print #f, "                <span class=""nav-badge"">" & wipAnimeList.count & "</span>"
+        Print #f, "            </button>"
+    End If
+    Print #f, "            <button class=""nav-btn"" onclick=""switchTab('tab-stats')"" id=""btn-stats"">"
+    Print #f, "                <span>Statistiky</span>"
+    Print #f, "                <span class=""nav-badge"">&#128202;</span>"
+    Print #f, "            </button>"
+        Print #f, "        </div>"
+    
+    Print #f, "        <div class=""content"">"
+    
+    ' --- TAB 1: K VYLEPŠENÍ ---
+    Print #f, "            <div id=""tab-improvements"" class=""tab-content"">"
+    Print #f, "                <div class=""content-header"">"
+    Print #f, "                    <h2>Rozbory, které si zaslouží vylepšení</h2>"
+    Print #f, "                    <div class=""search-container"" style=""display: flex; align-items: center;"">"
+    Print #f, "                        <label class=""filter-checkbox"">"
+    Print #f, "                            <input type=""checkbox"" id=""filter-wip"" onchange=""filterImprovements()""> Skrýt WIP"
+    Print #f, "                            <span style=""cursor: help; color: var(--text-secondary); background: rgba(255,255,255,0.1); border-radius: 50%; width: 16px; height: 16px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.7rem;"" title=""Tip: Spouštěcí soubory pro vytvoření WIP složek jsou automaticky vygenerovány ve složce: C:\AL\Anime hodnocení a rozbory\Faktické rozbory (Gemini AI)\Čeká na hodnocení\ZZ_Anime, která jsem už viděl\00_Přípravné BAT soubory\"">?</span>"
+    Print #f, "                        </label>"
+    Print #f, "                        <div style=""position: relative; flex-grow: 1;"">"
+    Print #f, "                            <svg class=""search-icon"" xmlns=""http://www.w3.org/2000/svg"" width=""16"" height=""16"" fill=""none"" stroke=""currentColor"" stroke-width=""2"" stroke-linecap=""round"" stroke-linejoin=""round""><circle cx=""11"" cy=""11"" r=""8""></circle><line x1=""21"" y1=""21"" x2=""16.65"" y2=""16.65""></line></svg>"
+    Print #f, "                            <input type=""text"" id=""search-improvements"" class=""search-input"" onkeyup=""filterImprovements()"" placeholder=""Hledat..."" />"
+    Print #f, "                        </div>"
+    Print #f, "                    </div>"
+    Print #f, "                </div>"
+    Print #f, "                <div class=""table-wrapper"">"
+    
+    If impCount = 0 Then
+        Print #f, "                    <div class=""empty-state"">"
+        Print #f, "                        <svg xmlns=""http://www.w3.org/2000/svg"" width=""48"" height=""48"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""1.5"" stroke-linecap=""round"" stroke-linejoin=""round""><circle cx=""12"" cy=""12"" r=""10""></circle><line x1=""12"" y1=""8"" x2=""12"" y2=""12""></line><line x1=""12"" y1=""16"" x2=""12.01"" y2=""16""></line></svg>"
+        Print #f, "                        <h3>Všechny existující rozbory jsou kompletní!</h3>"
+        Print #f, "                        <p>Nebyly nalezeny žádné existující rozbory pod 6200 slov.</p>"
+        Print #f, "                    </div>"
+    Else
+        Print #f, "                    <table id=""table-improvements"">"
+        Print #f, "                        <thead>"
+        Print #f, "                            <tr>"
+        Print #f, "                                <th>Název Anime</th>"
+        Print #f, "                                <th>Hodnocení</th>"
+        Print #f, "                                <th>Počet slov</th>"
+        Print #f, "                                <th title=""Hustota = počet slov / normovaná délka. Normovaná délka přepočítává filmy a různé délky anime na standardní 24minutové epizody (Počet epizod × Minuty / 24). Slouží k určení, jak detailní je rozbor."">Hustota <span style=""cursor:help; border-bottom:1px dotted var(--text-secondary);"">?</span></th>"
+        Print #f, "                                <th>Priorita</th>"
+        Print #f, "                                <th>Prioritní skóre</th>"
+        Print #f, "                            </tr>"
+        Print #f, "                        </thead>"
+        Print #f, "                        <tbody>"
+        
+        For r = 1 To impCount
+            Dim wipStatus As String: wipStatus = LCase(CStr(improvementList(r).IsWIP))
+            Print #f, "                            <tr data-is-wip=""" & wipStatus & """>"
+            
+            Dim badges As String: badges = ""
+            If improvementList(r).Top10Rank > 0 Then
+                badges = " <span class=""badge badge-top10"">Top " & improvementList(r).Top10Rank & "</span>"
+            End If
+            If improvementList(r).IsHM Then
+                badges = badges & " <span class=""badge badge-hm"">HM</span>"
+            End If
+            
+            Dim btnHtml As String: btnHtml = ""
+            If Not improvementList(r).IsWIP Then
+                btnHtml = "<br><span class=""wip-btn"" style=""display:inline-block; font-size: 0.75rem; background: rgba(255,255,255,0.02); cursor:default; border: 1px dashed var(--border);"">BAT připraven ve složce</span>"
+            End If
+            
+            Print #f, "                                <td><strong>" & improvementList(r).Name & "</strong>" & badges & btnHtml & "</td>"
+            
+            Print #f, "                                <td data-value=""" & improvementList(r).rating & """>" & GetRatingHTML(improvementList(r).rating) & "</td>"
+            Print #f, "                                <td data-value=""" & improvementList(r).WordCount & """>" & GetWordCountProgressHTML(improvementList(r).WordCount) & "</td>"
+            Print #f, "                                <td data-value=""" & improvementList(r).density & """>" & GetDensityProgressHTML(improvementList(r).density) & "</td>"
+            
+            Print #f, "                                <td data-value=""" & improvementList(r).PriorityScore & """><span class=""badge badge-" & LCase(improvementList(r).PriorityClass) & """>" & improvementList(r).PriorityClass & "</span></td>"
+            
+            Dim prioPct As Long: prioPct = 0
+            If improvementList(r).PriorityScore > 0 Then prioPct = CLng((improvementList(r).PriorityScore / 250) * 100)
+            If prioPct > 100 Then prioPct = 100
+            Dim prioColor As String
+            If improvementList(r).PriorityScore >= 150 Then prioColor = "var(--accent-red)" Else If improvementList(r).PriorityScore >= 100 Then prioColor = "var(--accent-gold)" Else prioColor = "var(--accent-green)"
+            
+            Print #f, "                                <td data-value=""" & improvementList(r).PriorityScore & """>" & _
+                      "                                    <strong class=""word-count-text"">" & Format(improvementList(r).PriorityScore, "0") & "</strong>" & _
+                      "                                    <div class=""progress-container"">" & _
+                      "                                        <div class=""progress-bar-bg"">" & _
+                      "                                            <div class=""progress-bar"" style=""width: " & prioPct & "%; background-color: " & prioColor & ";""></div>" & _
+                      "                                        </div>" & _
+                      "                                    </div>" & _
+                      "                                </td>"
+            Print #f, "                            </tr>"
+        Next r
+        
+        Print #f, "                        </tbody>"
+        Print #f, "                    </table>"
+    End If
+    Print #f, "                </div>"
+    Print #f, "            </div>"
+    
+    ' --- TAB 2: CHYBĚJÍCÍ ---
+    Print #f, "            <div id=""tab-missing"" class=""tab-content hidden"">"
+    Print #f, "                <div class=""content-header"">"
+    Print #f, "                    <h2>Chybějící rozbory (V Excelu jsou, na disku ne)</h2>"
+    Print #f, "                    <div class=""search-container"">"
+    Print #f, "                        <svg class=""search-icon"" xmlns=""http://www.w3.org/2000/svg"" width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2"" stroke-linecap=""round"" stroke-linejoin=""round""><circle cx=""11"" cy=""11"" r=""8""></circle><line x1=""21"" y1=""21"" x2=""16.65"" y2=""16.65""></line></svg>"
+    Print #f, "                        <input type=""text"" class=""search-input"" onkeyup=""filterTable('table-missing', this.value)"" placeholder=""Hledat..."" />"
+    Print #f, "                    </div>"
+    Print #f, "                </div>"
+    Print #f, "                <div class=""table-wrapper"">"
+    
+    If missingList.count = 0 Then
+        Print #f, "                    <div class=""empty-state"">"
+        Print #f, "                        <svg xmlns=""http://www.w3.org/2000/svg"" width=""48"" height=""48"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""1.5"" stroke-linecap=""round"" stroke-linejoin=""round""><circle cx=""12"" cy=""12"" r=""10""></circle><polyline points=""12 6 12 12 16 14""></polyline></svg>"
+        Print #f, "                        <h3>Žádné chybějící rozbory!</h3>"
+        Print #f, "                        <p>Všechna anime z databáze mají svůj soubor rozboru na disku.</p>"
+        Print #f, "                    </div>"
+    Else
+        Print #f, "                    <table id=""table-missing"">"
+        Print #f, "                        <thead>"
+        Print #f, "                            <tr>"
+        Print #f, "                                <th>Název Anime</th>"
+        Print #f, "                                <th>Hodnocení</th>"
+        Print #f, "                                <th>Vazba na seznamy</th>"
+        Print #f, "                            </tr>"
+        Print #f, "                        </thead>"
+        Print #f, "                        <tbody>"
+        
+        For r = 0 To missingList.count - 1
+            Dim itemMissing As Variant: itemMissing = missingList(r)
+            Print #f, "                            <tr>"
+            Print #f, "                                <td><strong style=""color: var(--accent-red);"">" & itemMissing(0) & "</strong></td>"
+            Print #f, "                                <td>" & GetRatingHTML(CDbl(itemMissing(1))) & "</td>"
+            
+            Dim missingBadges As String: missingBadges = ""
+            If dictTop10.Exists(itemMissing(0)) Then
+                missingBadges = "<span class=""badge badge-top10"">Top " & dictTop10(itemMissing(0)) & "</span> "
+            ElseIf itemMissing(2) <> "" And dictTop10.Exists(itemMissing(2)) Then
+                missingBadges = "<span class=""badge badge-top10"">Top " & dictTop10(itemMissing(2)) & "</span> "
+            End If
+            
+            If dictHM.Exists(itemMissing(0)) Then
+                missingBadges = missingBadges & "<span class=""badge badge-hm"">HM</span>"
+            ElseIf itemMissing(2) <> "" And dictHM.Exists(itemMissing(2)) Then
+                missingBadges = missingBadges & "<span class=""badge badge-hm"">HM</span>"
+            End If
+            
+            If missingBadges = "" Then missingBadges = "<span style=""color: var(--text-secondary);"">-</span>"
+            
+            Print #f, "                                <td>" & missingBadges & "</td>"
+            Print #f, "                            </tr>"
+        Next r
+        
+        Print #f, "                        </tbody>"
+        Print #f, "                    </table>"
+    End If
+    Print #f, "                </div>"
+    Print #f, "            </div>"
+    
+    ' --- TAB 3: KOMPLETNÍ ---
+    Print #f, "            <div id=""tab-complete"" class=""tab-content hidden"">"
+    Print #f, "                <div class=""content-header"">"
+    Print #f, "                    <h2>Kompletní rozbory (Více než 6200 slov)</h2>"
+    Print #f, "                    <div class=""search-container"">"
+    Print #f, "                        <svg class=""search-icon"" xmlns=""http://www.w3.org/2000/svg"" width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2"" stroke-linecap=""round"" stroke-linejoin=""round""><circle cx=""11"" cy=""11"" r=""8""></circle><line x1=""21"" y1=""21"" x2=""16.65"" y2=""16.65""></line></svg>"
+    Print #f, "                        <input type=""text"" class=""search-input"" onkeyup=""filterTable('table-complete', this.value)"" placeholder=""Hledat..."" />"
+    Print #f, "                    </div>"
+    Print #f, "                </div>"
+    Print #f, "                <div class=""table-wrapper"">"
+    
+    If completeList.count = 0 Then
+        Print #f, "                    <div class=""empty-state"">"
+        Print #f, "                        <svg xmlns=""http://www.w3.org/2000/svg"" width=""48"" height=""48"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""1.5"" stroke-linecap=""round"" stroke-linejoin=""round""><circle cx=""12"" cy=""12"" r=""10""></circle><line x1=""12"" y1=""8"" x2=""12"" y2=""12""></line><line x1=""12"" y1=""16"" x2=""12.01"" y2=""16""></line></svg>"
+        Print #f, "                        <h3>Nenalezeny žádné kompletní rozbory!</h3>"
+        Print #f, "                        <p>Zatím žádný rozbor nepřesahuje limit 6200 slov.</p>"
+        Print #f, "                    </div>"
+    Else
+        Print #f, "                    <table id=""table-complete"">"
+        Print #f, "                        <thead>"
+        Print #f, "                            <tr>"
+        Print #f, "                                <th>Název Anime</th>"
+        Print #f, "                                <th>Hodnocení</th>"
+        Print #f, "                                <th>Počet slov</th>"
+        Print #f, "                                <th title=""Normovaná délka (1 díl = 24 min). U filmů je délka přepočtena na ekvivalent běžných epizod."">Hustota <span style=""cursor:help; border-bottom:1px dotted var(--text-secondary);"">?</span></th>"
+        Print #f, "                                <th>Status</th>"
+        Print #f, "                            </tr>"
+        Print #f, "                        </thead>"
+        Print #f, "                        <tbody>"
+        
+        For r = 0 To completeList.count - 1
+            Dim itemComplete As Variant: itemComplete = completeList(r)
+            Print #f, "                            <tr>"
+            
+            Dim compBadges As String: compBadges = ""
+            If dictTop10.Exists(itemComplete(0)) Then
+                compBadges = " <span class=""badge badge-top10"">Top " & dictTop10(itemComplete(0)) & "</span>"
+            ElseIf itemComplete(3) <> "" And dictTop10.Exists(itemComplete(3)) Then
+                compBadges = " <span class=""badge badge-top10"">Top " & dictTop10(itemComplete(3)) & "</span>"
+            End If
+            
+            If dictHM.Exists(itemComplete(0)) Then
+                compBadges = compBadges & " <span class=""badge badge-hm"">HM</span>"
+            ElseIf itemComplete(3) <> "" And dictHM.Exists(itemComplete(3)) Then
+                compBadges = compBadges & " <span class=""badge badge-hm"">HM</span>"
+            End If
+            
+            Print #f, "                                <td><strong>" & itemComplete(0) & "</strong>" & compBadges & "</td>"
+            Print #f, "                                <td data-value=""" & itemComplete(2) & """>" & GetRatingHTML(CDbl(itemComplete(2))) & "</td>"
+            Print #f, "                                <td data-value=""" & itemComplete(1) & """>" & GetWordCountProgressHTML(CLng(itemComplete(1)), 20000) & "</td>"
+            Print #f, "                                <td data-value=""" & itemComplete(4) & """>" & GetDensityProgressHTML(CLng(itemComplete(4)), 800) & "</td>"
+            Print #f, "                                <td><span class=""badge badge-normal"" style=""color: var(--accent-green); border-color: rgba(34, 197, 94, 0.25);"">KOMPLETNÍ</span></td>"
+            Print #f, "                            </tr>"
+        Next r
+        
+        Print #f, "                        </tbody>"
+        Print #f, "                    </table>"
+    End If
+    Print #f, "                </div>"
+    Print #f, "            </div>"
+    
+    ' --- TAB 4: NAVÍC (EXTRA) ---
+    Print #f, "            <div id=""tab-extra"" class=""tab-content hidden"">"
+    Print #f, "                <div class=""content-header"">"
+    Print #f, "                    <h2>Rozbory navíc (Na disku jsou, v Excelu ne)</h2>"
+    Print #f, "                    <div class=""search-container"">"
+    Print #f, "                        <svg class=""search-icon"" xmlns=""http://www.w3.org/2000/svg"" width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2"" stroke-linecap=""round"" stroke-linejoin=""round""><circle cx=""11"" cy=""11"" r=""8""></circle><line x1=""21"" y1=""21"" x2=""16.65"" y2=""16.65""></line></svg>"
+    Print #f, "                        <input type=""text"" class=""search-input"" onkeyup=""filterTable('table-extra', this.value)"" placeholder=""Hledat..."" />"
+    Print #f, "                    </div>"
+    Print #f, "                </div>"
+    Print #f, "                <div class=""table-wrapper"">"
+    
+    If extraList.count = 0 Then
+        Print #f, "                    <div class=""empty-state"">"
+        Print #f, "                        <svg xmlns=""http://www.w3.org/2000/svg"" width=""48"" height=""48"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""1.5"" stroke-linecap=""round"" stroke-linejoin=""round""><circle cx=""12"" cy=""12"" r=""10""></circle><path d=""M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z""></path></svg>"
+        Print #f, "                        <h3>Žádné nadbytečné soubory!</h3>"
+        Print #f, "                        <p>Ve složce rozborů se nenacházejí žádné soubory, které by nebyly v Excelu.</p>"
+        Print #f, "                    </div>"
+    Else
+        Print #f, "                    <table id=""table-extra"">"
+        Print #f, "                        <thead>"
+        Print #f, "                            <tr>"
+        Print #f, "                                <th>Název souboru</th>"
+        Print #f, "                                <th>Počet slov</th>"
+        Print #f, "                                <th>Akce</th>"
+        Print #f, "                            </tr>"
+        Print #f, "                        </thead>"
+        Print #f, "                        <tbody>"
+        
+        For r = 0 To extraList.count - 1
+            Dim itemExtra As Variant: itemExtra = extraList(r)
+            Print #f, "                            <tr>"
+            Print #f, "                                <td><strong style=""color: var(--accent-gold);"">" & itemExtra(0) & "</strong></td>"
+            Print #f, "                                <td>" & itemExtra(1) & " slov</td>"
+            Print #f, "                                <td><span class=""badge badge-normal"">Nepárováno</span></td>"
+            Print #f, "                            </tr>"
+        Next r
+        
+        Print #f, "                        </tbody>"
+        Print #f, "                    </table>"
+    End If
+    Print #f, "                </div>"
+    Print #f, "            </div>"
+    
+    ' --- TAB: Nové rozbory ---
+    Print #f, "            <div id=""tab-new"" class=""tab-content hidden"">"
+    Print #f, "                <div class=""content-header"">"
+    Print #f, "                    <h2>Nové rozbory (od 03/2025)</h2>"
+    Print #f, "                    <div class=""search-container"">"
+    Print #f, "                        <svg class=""search-icon"" width=""16"" height=""16"" fill=""none"" stroke=""currentColor"" viewBox=""0 0 24 24""><path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z""></path></svg>"
+        Print #f, "                        <input type=""text"" class=""search-input"" placeholder=""Hledat v nových rozborech..."" onkeyup=""filterTable('table-new', this.value)"">"
+    Print #f, "                    </div>"
+    Print #f, "                </div>"
+    Print #f, "                <div class=""table-wrapper"">"
+    If newAnimeList.count = 0 Then
+        Print #f, "                    <div class=""empty-state"">"
+        Print #f, "                        <svg width=""48"" height=""48"" fill=""none"" stroke=""currentColor"" viewBox=""0 0 24 24""><path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""1.5"" d=""M5 13l4 4L19 7""></path></svg>"
+        Print #f, "                        <h3>Žádné nové anime</h3>"
+        Print #f, "                        <p>Zatím zde nejsou žádné rozbory vydané od března 2025.</p>"
+        Print #f, "                    </div>"
+    Else
+        Print #f, "                    <table id=""table-new"">"
+        Print #f, "                        <thead>"
+        Print #f, "                            <tr>"
+        Print #f, "                                <th>Název Anime</th>"
+        Print #f, "                                <th>Datum vydání</th>"
+        Print #f, "                                <th>Hodnocení</th>"
+        Print #f, "                            </tr>"
+        Print #f, "                        </thead>"
+        Print #f, "                        <tbody>"
+        
+        For r = 0 To newAnimeList.count - 1
+            Dim itemNew As Variant: itemNew = newAnimeList(r)
+            Print #f, "                            <tr>"
+            Print #f, "                                <td><strong>" & itemNew(0) & "</strong></td>"
+            Print #f, "                                <td>" & itemNew(1) & "</td>"
+            Print #f, "                                <td>" & GetRatingHTML(CDbl(itemNew(2))) & "</td>"
+            Print #f, "                            </tr>"
+        Next r
+        
+        Print #f, "                        </tbody>"
+        Print #f, "                    </table>"
+    End If
+    Print #f, "                </div>"
+    Print #f, "            </div>"
+    
+    ' --- TAB: WIP rozbory ---
+    Print #f, "            <div id=""tab-wip"" class=""tab-content hidden"">"
+    Print #f, "                <div class=""content-header"">"
+    Print #f, "                    <h2>Rozpracované rozbory (WIP)</h2>"
+    Print #f, "                    <div class=""search-container"">"
+    Print #f, "                        <svg class=""search-icon"" width=""16"" height=""16"" fill=""none"" stroke=""currentColor"" viewBox=""0 0 24 24""><path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z""></path></svg>"
+    Print #f, "                        <input type=""text"" class=""search-input"" placeholder=""Hledat ve WIP..."" onkeyup=""filterTable('table-wip', this.value)"">"
+    Print #f, "                    </div>"
+    Print #f, "                </div>"
+    Print #f, "                <div class=""table-wrapper"">"
+    If wipAnimeList.count = 0 Then
+        Print #f, "                    <div class=""empty-state"">"
+        Print #f, "                        <svg width=""48"" height=""48"" fill=""none"" stroke=""currentColor"" viewBox=""0 0 24 24""><path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""1.5"" d=""M5 13l4 4L19 7""></path></svg>"
+        Print #f, "                        <h3>Žádné rozpracované anime</h3>"
+        Print #f, "                        <p>Momentálně se nepracuje na žádných nových rozborech.</p>"
+        Print #f, "                    </div>"
+    Else
+        Print #f, "                    <table id=""table-wip"">"
+        Print #f, "                        <thead>"
+        Print #f, "                            <tr>"
+        Print #f, "                                <th>Název Anime</th>"
+        Print #f, "                                <th>Název složky (Disk)</th>"
+        Print #f, "                            </tr>"
+        Print #f, "                        </thead>"
+        Print #f, "                        <tbody>"
+        
+        For r = 0 To wipAnimeList.count - 1
+            Dim itemWip As Variant: itemWip = wipAnimeList(r)
+            Print #f, "                            <tr>"
+            Print #f, "                                <td><strong>" & itemWip(0) & "</strong></td>"
+            Print #f, "                                <td><span style=""color: var(--text-secondary);"">" & itemWip(1) & "</span></td>"
+            Print #f, "                            </tr>"
+        Next r
+        
+        Print #f, "                        </tbody>"
+        Print #f, "                    </table>"
+    End If
+    Print #f, "                </div>"
+    Print #f, "            </div>"
+    
+    ' --- TAB 7: STATISTIKY ---
+    Print #f, "            <div id=""tab-stats"" class=""tab-content hidden"">"
+    Print #f, "                <div class=""content-header"">"
+    Print #f, "                    <h2>Souhrnné statistiky</h2>"
+    Print #f, "                </div>"
+    
+    Dim avgWords As Long
+    If docCount > 0 Then avgWords = CLng(totalWordCount / docCount) Else avgWords = 0
+    
+    Print #f, "                <div style=""display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; margin-bottom: 1.25rem;"">"
+    Print #f, "                    <div class=""stat-detail-card"">"
+    Print #f, "                        <h4>Celkový počet slov</h4>"
+    Print #f, "                        <div class=""stat-detail-value"" style=""color: var(--accent-teal);"">" & Format(totalWordCount, "#,##0") & "</div>"
+    Print #f, "                        <div class=""stat-detail-sub"">Součet slov ve všech rozborech na disku</div>"
+    Print #f, "                    </div>"
+    Print #f, "                    <div class=""stat-detail-card"">"
+    Print #f, "                        <h4>Průměrný počet slov</h4>"
+    Print #f, "                        <div class=""stat-detail-value"" style=""color: var(--accent-gold);"">" & Format(avgWords, "#,##0") & "</div>"
+    Print #f, "                        <div class=""stat-detail-sub"">Průměr na dokument (celkem " & docCount & " dokumentů)</div>"
+    Print #f, "                    </div>"
+    Print #f, "                    <div class=""stat-detail-card"">"
+    Print #f, "                        <h4>Kompletní rozbory</h4>"
+    Print #f, "                        <div class=""stat-detail-value"" style=""color: var(--accent-green);"">" & completeList.count & " / " & (completeList.count + impCount) & "</div>"
+    Print #f, "                        <div class=""stat-detail-sub"">Práh: " & WORD_THRESHOLD_COMPLETE & " slov a více</div>"
+    Print #f, "                    </div>"
+    Print #f, "                    <div class=""stat-detail-card"">"
+    Print #f, "                        <h4>Práh kompletnosti</h4>"
+    Print #f, "                        <div class=""stat-detail-value"" style=""color: var(--accent-amber);"">" & WORD_THRESHOLD_COMPLETE & "</div>"
+    Print #f, "                        <div class=""stat-detail-sub"">Konfigurovatelná konstanta WORD_THRESHOLD_COMPLETE</div>"
+    Print #f, "                    </div>"
+    Print #f, "                </div>"
+    
+    Print #f, "                <div style=""display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.25rem;"">"
+    Print #f, "                    <div class=""stat-detail-card"">"
+    Print #f, "                        <h4>Nejdelší rozbory (TOP 5)</h4>"
+    Print #f, "                        <div style=""display: grid; gap: 0.5rem; margin-top: 1rem;"">"
+    For i_top = 1 To 5
+        If top5L(i_top) <> "" Then
+            Print #f, "                            <div style=""display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 0.5rem 1rem; border-radius: 8px;"">"
+            Print #f, "                                <span>" & i_top & ". " & top5L(i_top) & "</span>"
+            Print #f, "                                <span style=""color: var(--accent-green); font-weight: 700;"">" & Format(top5LW(i_top), "#,##0") & " slov</span>"
+            Print #f, "                            </div>"
+        End If
+    Next i_top
+    Print #f, "                        </div>"
+    Print #f, "                    </div>"
+    Print #f, "                    <div class=""stat-detail-card"">"
+    Print #f, "                        <h4>Nejkratší rozbory (TOP 5)</h4>"
+    Print #f, "                        <div style=""display: grid; gap: 0.5rem; margin-top: 1rem;"">"
+    For i_top = 1 To 5
+        If top5S(i_top) <> "" Then
+            Print #f, "                            <div style=""display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 0.5rem 1rem; border-radius: 8px;"">"
+            Print #f, "                                <span>" & i_top & ". " & top5S(i_top) & "</span>"
+            Print #f, "                                <span style=""color: var(--accent-red); font-weight: 700;"">" & Format(top5SW(i_top), "#,##0") & " slov</span>"
+            Print #f, "                            </div>"
+        End If
+    Next i_top
+    Print #f, "                        </div>"
+    Print #f, "                    </div>"
+    Print #f, "                </div>"
+    Print #f, "            </div>"
+    
+    Print #f, "        </div>"
+    Print #f, "    </div>"
+    
+    ' JavaScript pro přepínání záložek a filtrování
+    Print #f, "    <script>"
+    Print #f, "        function switchTab(tabId) {"
+    Print #f, "            document.querySelectorAll('.tab-content').forEach(function(el) {"
+    Print #f, "                el.classList.add('hidden');"
+    Print #f, "            });"
+    Print #f, "            document.getElementById(tabId).classList.remove('hidden');"
+    Print #f, "            "
+    Print #f, "            document.querySelectorAll('.nav-btn').forEach(function(el) {"
+    Print #f, "                el.classList.remove('active');"
+    Print #f, "            });"
+    Print #f, "            var activeBtnId = 'btn-' + tabId.replace('tab-', '');"
+    Print #f, "            document.getElementById(activeBtnId).classList.add('active');"
+    Print #f, "        }"
+    Print #f, "        "
+    Print #f, "        function filterTable(tableId, query) {"
+    Print #f, "            var table = document.getElementById(tableId);"
+    Print #f, "            if (!table) return;"
+    Print #f, "            var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');"
+    Print #f, "            query = query.toLowerCase();"
+    Print #f, "            for (var i = 0; i < rows.length; i++) {"
+    Print #f, "                var cells = rows[i].getElementsByTagName('td');"
+    Print #f, "                var match = false;"
+    Print #f, "                for (var j = 0; j < cells.length; j++) {"
+    Print #f, "                    if (cells[j].innerText.toLowerCase().indexOf(query) > -1) {"
+    Print #f, "                        match = true; break;"
+    Print #f, "                    }"
+    Print #f, "                }"
+    Print #f, "                if (match) { rows[i].classList.remove('hidden'); } else { rows[i].classList.add('hidden'); }"
+    Print #f, "            }"
+    Print #f, "        }"
+    Print #f, "        "
+    Print #f, "        function filterImprovements() {"
+    Print #f, "            var query = document.getElementById('search-improvements').value.toLowerCase();"
+    Print #f, "            var hideWip = document.getElementById('filter-wip').checked;"
+    Print #f, "            var table = document.getElementById('table-improvements');"
+    Print #f, "            if (!table) return;"
+    Print #f, "            var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');"
+    Print #f, "            var visibleCount = 0;"
+    Print #f, "            for (var i = 0; i < rows.length; i++) {"
+    Print #f, "                var cells = rows[i].getElementsByTagName('td');"
+    Print #f, "                var match = false;"
+    Print #f, "                for (var j = 0; j < cells.length; j++) {"
+    Print #f, "                    if (cells[j].innerText.toLowerCase().indexOf(query) > -1) {"
+    Print #f, "                        match = true; break;"
+    Print #f, "                    }"
+    Print #f, "                }"
+    Print #f, "                var isWip = rows[i].getAttribute('data-is-wip') === 'true';"
+    Print #f, "                if (match && (!hideWip || !isWip)) {"
+    Print #f, "                    rows[i].classList.remove('hidden');"
+    Print #f, "                    visibleCount++;"
+    Print #f, "                } else {"
+    Print #f, "                    rows[i].classList.add('hidden');"
+    Print #f, "                }"
+    Print #f, "            }"
+    Print #f, "            var badge = document.getElementById('badge-improvements');"
+    Print #f, "            if (badge) badge.innerText = visibleCount;"
+    Print #f, "            var statVal = document.getElementById('stat-value-improvements');"
+    Print #f, "            if (statVal) statVal.innerText = visibleCount;"
+    Print #f, "        }"
+    Print #f, "        "
+    Print #f, "        document.addEventListener('DOMContentLoaded', function() {"
+    Print #f, "            document.querySelectorAll('th').forEach(function(th) {"
+    Print #f, "                th.style.cursor = 'pointer';"
+    Print #f, "                th.title = th.title || 'Kliknutím seřadíte';"
+    Print #f, "                th.addEventListener('click', function() {"
+    Print #f, "                    var table = th.closest('table');"
+    Print #f, "                    var tbody = table.querySelector('tbody');"
+    Print #f, "                    var rows = Array.from(tbody.querySelectorAll('tr'));"
+    Print #f, "                    var idx = Array.from(th.parentNode.children).indexOf(th);"
+    Print #f, "                    var isAsc = th.classList.contains('asc');"
+    Print #f, "                    table.querySelectorAll('th').forEach(h => h.classList.remove('asc', 'desc'));"
+    Print #f, "                    th.classList.add(isAsc ? 'desc' : 'asc');"
+    Print #f, "                    rows.sort(function(a, b) {"
+    Print #f, "                        var cellA = a.children[idx]; var cellB = b.children[idx];"
+    Print #f, "                        var valA = cellA.hasAttribute('data-value') ? cellA.getAttribute('data-value') : cellA.innerText.trim();"
+    Print #f, "                        var valB = cellB.hasAttribute('data-value') ? cellB.getAttribute('data-value') : cellB.innerText.trim();"
+    Print #f, "                        var numA = Number(valA.replace(',', '.').replace(/[^0-9.-]+/g, ''));"
+    Print #f, "                        var numB = Number(valB.replace(',', '.').replace(/[^0-9.-]+/g, ''));"
+    Print #f, "                        var isNum = !isNaN(numA) && !isNaN(numB) && /[0-9]/.test(valA) && /[0-9]/.test(valB);"
+    Print #f, "                        if (isNum) {"
+    Print #f, "                            return isAsc ? (numA > numB ? 1 : -1) : (numA < numB ? 1 : -1);"
+    Print #f, "                        }"
+    Print #f, "                        return isAsc ? valA.localeCompare(valB) : valB.localeCompare(valA);"
+    Print #f, "                    });"
+    Print #f, "                    rows.forEach(function(row) { tbody.appendChild(row); });"
+    Print #f, "                });"
+    Print #f, "            });"
+    Print #f, "        });"
+    Print #f, "        "
+    Print #f, "        function toggleTheme() {"
+    Print #f, "            document.body.classList.toggle('light');"
+    Print #f, "            var isLight = document.body.classList.contains('light');"
+    Print #f, "            document.getElementById('theme-icon').innerHTML = isLight ? '&#9728;' : '&#127769;';"
+    Print #f, "            document.getElementById('theme-label').textContent = isLight ? 'Light' : 'Dark';"
+    Print #f, "            localStorage.setItem('audit-theme', isLight ? 'light' : 'dark');"
+    Print #f, "        }"
+    Print #f, "        "
+    Print #f, "        if (localStorage.getItem('audit-theme') === 'light') {"
+    Print #f, "            document.body.classList.add('light');"
+    Print #f, "            document.getElementById('theme-icon').innerHTML = '&#9728;';"
+    Print #f, "            document.getElementById('theme-label').textContent = 'Light';"
+    Print #f, "        }"
+    Print #f, "        "
+    Print #f, "        window.addEventListener('scroll', function() {"
+    Print #f, "            var btn = document.getElementById('scrollTop');"
+    Print #f, "            if (window.scrollY > 300) { btn.classList.add('visible'); }"
+    Print #f, "            else { btn.classList.remove('visible'); }"
+    Print #f, "        });"
+    Print #f, "    </script>"
+    
+    ' Footer s metadata
+    Dim elapsed As Double: elapsed = Timer - startTimer
+    If elapsed < 0 Then elapsed = elapsed + 86400
+    Print #f, "    <div class=""footer"">"
+    Print #f, "        <span>Modul v" & MODULE_VERSION & " &bull; Vygenerováno za " & Format(elapsed, "0.0") & "s</span>"
+    Print #f, "        <span>Zpracováno " & docCount & " dokumentů &bull; Celkem " & Format(totalWordCount, "#,##0") & " slov</span>"
+    Print #f, "    </div>"
+    
+    ' Scroll-to-top tlačítko
+    Print #f, "    <button class=""scroll-top"" id=""scrollTop"" onclick=""window.scrollTo({top:0,behavior:'smooth'})"">&uarr;</button>"
+    
+    Print #f, "</body>"
+    Print #f, "</html>"
+    
+    Close #f
+    
+    ' === Vytvoření BAT souborů pro WIP ===
+    Dim batDir As String
+    batDir = "C:\AL\Anime hodnocení a rozbory\Faktické rozbory (Gemini AI)\Čeká na hodnocení\ZZ_Anime, která jsem už viděl\00_Přípravné BAT soubory\"
+    If Not fso.FolderExists(batDir) Then
+        On Error Resume Next
+        CreateObject("WScript.Shell").Run "cmd /c mkdir """ & batDir & """", 0, True
+        err.Clear
+        On Error GoTo ErrorHandler
+    End If
+    
+    If fso.FolderExists(batDir) Then
+        ' Spolehlivé odstranění starých BAT souborů pomocí iterace FSO
+        On Error Resume Next
+        Dim delFile As Object
+        For Each delFile In fso.GetFolder(batDir).Files
+            If LCase(fso.GetExtensionName(delFile.Name)) = "bat" Then
+                delFile.Delete True
+            End If
+        Next delFile
+        err.Clear
+        On Error GoTo ErrorHandler
+        
+        Dim physicalSrcPath As String
+        physicalSrcPath = "C:\AL\Anime hodnocení a rozbory\Faktické rozbory (Gemini AI)\Vytvořené faktické rozbory\"
+        Dim physicalWIP As String
+        physicalWIP = "C:\AL\Anime hodnocení a rozbory\Faktické rozbory (Gemini AI)\Čeká na hodnocení\ZZ_Anime, která jsem už viděl\"
+        
+        Dim stmBat As Object
+        For r = 1 To impCount
+            If Not improvementList(r).IsWIP Then
+                Dim safeName As String
+                Dim folderName As String
+                Dim extPos As Long
+                extPos = InStrRev(improvementList(r).FileName, ".docx", -1, vbTextCompare)
+                If extPos > 0 Then
+                    folderName = left(improvementList(r).FileName, extPos - 1)
+                Else
+                    folderName = improvementList(r).FileName
+                End If
+                
+                ' FIX: Soubory na disku můžou obsahovat "plnotučnou" asijskou dvojtečku (ChrW(&HFF1A)).
+                ' Tu Windows povolí, ale VBA ji při zápisu přes Print # (ANSI) zkonvertuje na normální dvojtečku (:),
+                ' což BAT soubor následně zničí. Proto ji tady musíme natvrdo nahradit za podtržítko.
+                folderName = Replace(folderName, ChrW(&HFF1A), "_")
+                
+                Dim batFile As String
+                batFile = batDir & "Vytvorit_WIP_" & folderName & ".bat"
+                
+                On Error Resume Next
+                Dim ts As Object
+                Set ts = fso.CreateTextFile(batFile, True, False) ' True = overwrite, False = ASCII (Windows-1250)
+                If err.Number = 0 Then
+                    ts.WriteLine "@echo off"
+                    ts.WriteLine "setlocal DisableDelayedExpansion"
+                    ts.WriteLine "chcp 1250 > nul"
+                    Dim batAnimeName As String: batAnimeName = Replace(folderName, "%", "%%")
+                    ts.WriteLine "set ""WIP_DIR=" & physicalWIP & batAnimeName & """"
+                    ts.WriteLine "mkdir ""%WIP_DIR%\epizody"" 2>nul"
+                    ts.WriteLine "mkdir ""%WIP_DIR%\kategorie"" 2>nul"
+                    ts.WriteLine "type nul > ""%WIP_DIR%\epizody\epizody1.docx"""
+                    ts.WriteLine "type nul > ""%WIP_DIR%\epizody\epizody2.docx"""
+                    ts.WriteLine "type nul > ""%WIP_DIR%\epizody\epizody3.docx"""
+                    ts.WriteLine "type nul > ""%WIP_DIR%\kategorie\kategorie1.docx"""
+                    ts.WriteLine "type nul > ""%WIP_DIR%\kategorie\kategorie2.docx"""
+                    ts.WriteLine "type nul > ""%WIP_DIR%\kategorie\kategorie3.docx"""
+                    ts.WriteLine "copy """ & physicalSrcPath & improvementList(r).FileName & """ ""%WIP_DIR%\"" > nul"
+                    ts.WriteLine "echo Hotovo! Slozky a soubory pro " & folderName & " byly vytvoreny."
+                    ts.WriteLine "timeout /t 3 > nul"
+                    ts.Close
+                End If
+                err.Clear
+                On Error GoTo ErrorHandler
+            End If
+        Next r
+        
+        ' HACK: Automaticky odblokovat všechny BAT soubory, aby Windows SmartScreen nevyhazoval
+        ' modrou tabulku "Systém Windows ochránil váš počítač" (odstraní tzv. Mark-of-the-Web).
+        On Error Resume Next
+        CreateObject("WScript.Shell").Run "powershell -Command ""Get-ChildItem -LiteralPath '" & left(batDir, Len(batDir) - 1) & "' -Filter '*.bat' | Unblock-File""", 0, True
+        err.Clear
+        On Error GoTo ErrorHandler
+    End If
+    
+    ' Otevření HTML v prohlížeči
+    Dim wShell As Object
+    Set wShell = CreateObject("WScript.Shell")
+    wShell.Run """" & htmlPath & """"
+    
+CleanExit:
+    On Error Resume Next
+    ' Bezpečné ukončení Wordu (BUG 6 fix)
+    If Not wordApp Is Nothing Then
+        ToggleSpeed False, wordApp
+        If createdWord Then wordApp.Quit
+        Set wordApp = Nothing
+    End If
+    UnmountVirtualDrive VIRTUAL_DRIVE
+    Set fso = Nothing
+    Set dictExcel = Nothing
+    Set dictFiles = Nothing
+    Set dictTop10 = Nothing
+    Set dictHM = Nothing
+    Set dictWIP = Nothing
+    Set commentsC = Nothing
+    Application.StatusBar = False
+    Application.ScreenUpdating = True
+    Application.Calculation = xlCalculationAutomatic
+    Application.EnableEvents = True
+    Exit Sub
+    
+ErrorHandler:
+    MsgBox "Při generování HTML auditu nastala chyba: " & err.Description, vbCritical
+    Resume CleanExit
+End Sub
+
+'--------------------------------------------------------------------------------------------------
+' POMOCNÝ SUB PRO NAČTENÍ TOP 10 A HM Z SHAPES LISTU OBECNÉ INFORMACE
+'--------------------------------------------------------------------------------------------------
+Private Sub NactiTop10AHM(ByRef dictTop10 As Object, ByRef dictHM As Object)
+    Dim wsTarget As Worksheet
+    Dim shp As Shape
+    Dim i As Long
+    
+    Set wsTarget = ThisWorkbook.Sheets("OBECNÉ INFORMACE")
+    Set dictTop10 = CreateObject("Scripting.Dictionary")
+    Set dictHM = CreateObject("Scripting.Dictionary")
+    
+    dictTop10.CompareMode = vbTextCompare
+    dictHM.CompareMode = vbTextCompare
+    
+    ' Top 10
+    For i = 1 To 10
+        Set shp = Nothing
+        On Error Resume Next
+        Set shp = wsTarget.Shapes("Top10_Anime_" & i)
+        On Error GoTo 0
+        If Not shp Is Nothing Then
+            If Trim(shp.AlternativeText) <> "" Then
+                If Not dictTop10.Exists(Trim(shp.AlternativeText)) Then
+                    dictTop10.Add Trim(shp.AlternativeText), i
+                End If
+            End If
+        End If
+    Next i
+    
+    ' HM
+    For i = 1 To HM_MAX_SLOTS
+        Set shp = Nothing
+        On Error Resume Next
+        Set shp = wsTarget.Shapes("HM_Anime_" & i)
+        On Error GoTo 0
+        If Not shp Is Nothing Then
+            If Trim(shp.AlternativeText) <> "" Then
+                If Not dictHM.Exists(Trim(shp.AlternativeText)) Then
+                    dictHM.Add Trim(shp.AlternativeText), True
+                End If
+            End If
+        End If
+    Next i
+End Sub
+
+'--------------------------------------------------------------------------------------------------
+' POMOCNÁ FUNKCE PRO EXTRAKCI NÁZVU SÉRIE Z KOMENTÁŘE
+'--------------------------------------------------------------------------------------------------
+Private Function GetSeriesNameFromComment(cell As Range) As String
+    If Not cell.Comment Is Nothing Then
+        Dim cleanText As String
+        cleanText = Replace(cell.Comment.text, vbCr, "")
+        Dim lines As Variant
+        lines = Split(cleanText, vbLf)
+        Dim line As Variant
+        For Each line In lines
+            If InStr(1, Trim(line), "Název série:", vbTextCompare) = 1 Then
+                GetSeriesNameFromComment = Trim(Mid(line, InStr(1, line, ":") + 1))
+                Exit Function
+            End If
+        Next line
+    End If
+    GetSeriesNameFromComment = ""
+End Function

@@ -1,0 +1,167 @@
+﻿' ===================================================================================
+' == SAMOSTATNÝ KONTROLNÍ MODUL PRO "ANIME LIST" ==
+' ===================================================================================
+
+' --- Deklarace pro API a stahování ---
+#If VBA7 Then
+    Public Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As LongPtr)
+#Else
+    Public Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
+#End If
+
+' --- Potřebné konstanty ---
+Const API_DELAY_MS As Long = 400
+Const ANIME_LIST_SHEET As String = "ANIME LIST"
+Const COL_TITLE As String = "C"
+Const COL_EPISODES As String = "I"
+Const COL_GENRES As String = "H"
+Const COL_THEMES As String = "G"
+
+' --- Seznam ignorovaných značek ---
+Const IGNORED_GENRES As String = "Award Winning"
+' --- Hodnota "X" se bude chovat jako prázdná buňka ---
+Const VYLUCKA_JAKO_PRAZDNE As String = "X"
+
+' --- HLAVNÍ KONTROLNÍ MAKRO ---
+Public Sub KontrolaDatAnimeListu()
+    Dim ws As Worksheet
+    Set ws = ThisWorkbook.Sheets(ANIME_LIST_SHEET)
+    If ws Is Nothing Then
+        MsgBox "List '" & ANIME_LIST_SHEET & "' nebyl nalezen.", vbCritical
+        Exit Sub
+    End If
+
+    Application.Cursor = xlWait
+    Application.ScreenUpdating = False
+
+    Dim lastRow As Long, i As Long
+    Dim malID As Long
+    Dim discrepancies As String: discrepancies = ""
+    Dim errorCount As Long: errorCount = 0
+
+    lastRow = ws.Cells(ws.Rows.count, COL_TITLE).End(xlUp).row
+
+    For i = 2 To lastRow
+        malID = 0
+        ' Získání MAL ID z odkazu
+        On Error Resume Next
+        If ws.Cells(i, COL_TITLE).Hyperlinks.count > 0 Then
+            Dim urlParts() As String
+            urlParts = Split(ws.Cells(i, COL_TITLE).Hyperlinks(1).Address, "/")
+            If UBound(urlParts) >= 4 And IsNumeric(urlParts(4)) Then malID = CLng(urlParts(4))
+        End If
+        On Error GoTo 0
+        
+        If malID > 0 Then
+            Application.StatusBar = "Kontroluji řádek " & i & " z " & lastRow & "..."
+            
+            ' Získání aktuálních dat z API
+            Dim details As Object: Set details = GetAnimeDetails(malID)
+            
+            If Not details Is Nothing Then
+                Dim animeTitle As String: animeTitle = ws.Cells(i, COL_TITLE).Value
+                Dim currentDiscrepancy As String: currentDiscrepancy = ""
+                
+                ' 1. Porovnání počtu epizod
+                Dim excelEpisodes As String: excelEpisodes = CStr(ws.Cells(i, COL_EPISODES).Value)
+                Dim apiEpisodes As String
+                If details.Exists("episodes") And Not IsNull(details("episodes")) Then apiEpisodes = CStr(details("episodes")) Else apiEpisodes = "?"
+                If excelEpisodes <> apiEpisodes Then
+                    currentDiscrepancy = currentDiscrepancy & vbTab & "- Počet epizod (Vy: " & excelEpisodes & ", MAL: " & apiEpisodes & ")" & vbCrLf
+                End If
+                
+                ' 2. Porovnání žánrů
+                If Not AreTagsMatching(CStr(ws.Cells(i, COL_GENRES).Value), details("genres")) Then
+                    currentDiscrepancy = currentDiscrepancy & vbTab & "- Žánry se neshodují." & vbCrLf
+                End If
+
+                ' 3. Porovnání témat
+                If Not AreTagsMatching(CStr(ws.Cells(i, COL_THEMES).Value), details("themes")) Then
+                    currentDiscrepancy = currentDiscrepancy & vbTab & "- Témata se neshodují." & vbCrLf
+                End If
+
+                ' Pokud jsme pro dané anime našli chybu, přidáme ji do celkového seznamu
+                If currentDiscrepancy <> "" Then
+                    errorCount = errorCount + 1
+                    discrepancies = discrepancies & errorCount & ". " & animeTitle & vbCrLf & currentDiscrepancy & vbCrLf
+                End If
+                
+                Sleep API_DELAY_MS
+            End If
+        End If
+    Next i
+
+    Application.StatusBar = False
+    Application.Cursor = xlDefault
+    Application.ScreenUpdating = True
+
+    ' Zobrazení výsledků
+    If discrepancies = "" Then
+        MsgBox "Kontrola dokončena. Všechna data na listu 'ANIME LIST' se shodují s databází MAL.", vbInformation
+    Else
+        MsgBox "Bylo nalezeno " & errorCount & " nesrovnalostí:" & vbCrLf & vbCrLf & discrepancies, vbExclamation
+    End If
+End Sub
+
+
+' --- POMOCNÉ FUNKCE PRO TENTO MODUL ---
+
+Private Function AreTagsMatching(ByVal excelString As String, ByVal apiCollection As Object) As Boolean
+' Porovná string oddělený středníky s kolekcí tagů z API. Ignoruje pořadí a definované výjimky.
+On Error GoTo CleanFail
+' === NOVÁ ÚPRAVA (X = prázdné) ===
+' Pokud je v Excelu hodnota rovna "X", považuj ji za prázdný řetězec
+If Trim(excelString) = VYLUCKA_JAKO_PRAZDNE Then
+excelString = ""
+End If
+' === KONEC ÚPRAVY ===
+
+' Získání tagů z API a jejich filtrace
+Dim apiList As Object: Set apiList = CreateObject("System.Collections.ArrayList")
+    If Not apiCollection Is Nothing Then
+        Dim item As Object
+        For Each item In apiCollection
+            Dim tagName As String: tagName = CStr(item("name"))
+            ' Přeskočíme žánry, které jsou v seznamu ignorovaných
+            If InStr(1, ";" & IGNORED_GENRES & ";", ";" & tagName & ";", vbTextCompare) = 0 Then
+                apiList.Add tagName
+            End If
+        Next item
+    End If
+    apiList.Sort
+    Dim apiTags As String: apiTags = Join(apiList.ToArray, ";")
+    
+    ' Získání tagů z Excelu
+    Dim excelList As Object: Set excelList = CreateObject("System.Collections.ArrayList")
+    Dim excelParts() As String: excelParts = Split(excelString, ";")
+    Dim part As Variant
+    For Each part In excelParts
+        If Trim(part) <> "" Then excelList.Add Trim(part)
+    Next part
+    excelList.Sort
+    Dim excelTags As String: excelTags = Join(excelList.ToArray, ";")
+    
+    AreTagsMatching = (LCase(apiTags) = LCase(excelTags))
+    Exit Function
+    
+CleanFail:
+    AreTagsMatching = False
+End Function
+
+Private Function GetAnimeDetails(ByVal animeID As Long) As Object
+    ' Tato funkce je zkopírovaná z hlavního modulu, aby byl tento modul soběstačný.
+    Dim detailUrl As String: detailUrl = "https://api.jikan.moe/v4/anime/" & animeID
+    Dim httpReq As Object: Set httpReq = CreateObject("MSXML2.XMLHTTP")
+    httpReq.Open "GET", detailUrl, False
+    httpReq.sEnd
+    
+    If httpReq.status = 200 Then
+        ' Potřebujeme JsonConverter - ujistěte se, že je v projektu
+        On Error Resume Next
+        Set GetAnimeDetails = JsonConverter.ParseJson(httpReq.responseText)("data")
+        If err.Number <> 0 Then Set GetAnimeDetails = Nothing
+        On Error GoTo 0
+    Else
+        Set GetAnimeDetails = Nothing
+    End If
+End Function

@@ -1,0 +1,533 @@
+﻿Option Explicit
+
+'================================================================================================
+'##### HLAVNÍ SPOUŠTĚCÍ MAKRO (CENTRALIZOVANÁ DATA - OPTIMALIZOVÁNO) #####
+'================================================================================================
+Public Sub AktualizovatVsechnyGrafyDabing()
+    On Error GoTo ErrorHandler
+    
+    Dim wsData As Worksheet
+    Dim lastRow As Long
+    Dim arrData As Variant
+    Dim dictComments As Object
+    Dim rngComments As Range, cell As Range
+    Dim dictAgregovanaData As Object
+    
+    Set wsData = ThisWorkbook.Sheets("ANIME LIST")
+    
+    ' ——— OPTIMALIZACE PROSTŘEDÍ (START) ———
+    With Application
+        .ScreenUpdating = False
+        .Calculation = xlCalculationManual
+        .EnableEvents = False
+    End With
+    
+    ' ——— KROK 1: NAČTENÍ DAT DO PAMĚTI ———
+    lastRow = wsData.Cells(wsData.Rows.count, "P").End(xlUp).row
+    
+    If lastRow < 2 Then
+        MsgBox "Žádná data pro dabing.", vbExclamation
+        GoTo CleanExit
+    End If
+    
+    ' Načteme oblast J2 až P(lastRow).
+    ' Indexy v poli arrData (relativně k J):
+    ' 1 = J (Čas na epizodu)
+    ' 2 = K (Hodnocení)
+    ' 6 = O (Celkový čas)
+    ' 7 = P (Dabing text)
+    arrData = wsData.Range("J2:P" & lastRow).Value
+    
+    ' ——— KROK 2: RYCHLÉ NAČTENÍ KOMENTÁŘŮ ———
+    Set dictComments = CreateObject("Scripting.Dictionary")
+    On Error Resume Next
+    Set rngComments = wsData.Range("P2:P" & lastRow).SpecialCells(xlCellTypeComments)
+    On Error GoTo ErrorHandler
+    
+    If Not rngComments Is Nothing Then
+        For Each cell In rngComments
+            dictComments(cell.row) = cell.Comment.text
+        Next cell
+    End If
+    
+    ' ——— KROK 3: JEDNORÁZOVÁ AGREGACE DAT ———
+    ' Výstup: Dictionary s klíčem Jazyk a Hodnotou Array(Count, SumRating, RatedCount, SumTime)
+    Set dictAgregovanaData = AgregovatDataDabing(arrData, dictComments)
+    
+    If dictAgregovanaData.count = 0 Then
+        MsgBox "Žádná platná dabingová data.", vbInformation
+        GoTo CleanExit
+    End If
+    
+    ' ——— KROK 4: PŘEDÁNÍ AGREGOVANÝCH DAT PROCEDURÁM ———
+    Call VytvorGrafDabing_Count(dictAgregovanaData)
+    Call VytvorGrafDabing_Avg(dictAgregovanaData)
+    Call VytvorGrafDabing_Time(dictAgregovanaData)
+    
+CleanExit:
+    With Application
+        .ScreenUpdating = True
+        .Calculation = xlCalculationAutomatic
+        .EnableEvents = True
+    End With
+    Exit Sub
+
+ErrorHandler:
+    With Application
+        .ScreenUpdating = True
+        .Calculation = xlCalculationAutomatic
+        .EnableEvents = True
+    End With
+    MsgBox "Kritická chyba v modulu Dabing: " & err.Description, vbCritical
+End Sub
+
+'================================================================================================
+'##### POMOCNÁ FUNKCE: AGREGACE DAT (JEDINÝ PRŮCHOD + REGEX) #####
+'================================================================================================
+Private Function AgregovatDataDabing(dataArr As Variant, dictComments As Object) As Object
+    Dim dict As Object
+    Set dict = CreateObject("Scripting.Dictionary")
+    dict.CompareMode = vbTextCompare ' Case Insensitive
+    
+    ' Předvyplnění klíčů (volitelné, ale dobré pro pořádek)
+    dict.Add "JAP", Array(0, 0#, 0, 0#)
+    dict.Add "ENG", Array(0, 0#, 0, 0#)
+    dict.Add "CZ", Array(0, 0#, 0, 0#)
+    dict.Add "SK", Array(0, 0#, 0, 0#)
+    
+    Dim i As Long, currentRow As Long
+    Dim cellContent As String, cellP As String
+    Dim valRating As Variant, valTimeEp As Double, valTotalTime As Double
+    Dim dabArr As Variant, dab As Variant
+    Dim arrStats As Variant ' (Count, SumRating, RatedCount, SumTime)
+    Dim komentar As String, casZpracovan As Boolean
+    
+    ' Regex objekt (vytvoříme jen jednou)
+    Dim regEx As Object
+    Set regEx = CreateObject("VBScript.RegExp")
+    With regEx
+        .Global = True: .IgnoreCase = True
+        .Pattern = "([A-Z]+)\s*:\s*(\d+)"
+    End With
+    
+    For i = 1 To UBound(dataArr, 1)
+        currentRow = i + 1
+        
+        cellP = Trim(dataArr(i, 7)) ' Sloupec P (Dubbing)
+        valRating = dataArr(i, 2)   ' Sloupec K (Rating)
+        valTimeEp = CDbl(Nz(dataArr(i, 1), 0))   ' Sloupec J (Time/Ep)
+        valTotalTime = CDbl(Nz(dataArr(i, 6), 0)) ' Sloupec O (Total Time)
+        
+        If Len(cellP) > 0 Then
+            dabArr = Split(cellP, ";")
+            
+            ' ——— A) ZÁKLADNÍ STATISTIKY (Count, Rating) ———
+            For Each dab In dabArr
+                dab = UCase(Trim(dab))
+                If dab <> "" Then
+                    If Not dict.Exists(dab) Then dict.Add dab, Array(0, 0#, 0, 0#)
+                    arrStats = dict(dab)
+                    
+                    ' Count
+                    arrStats(0) = arrStats(0) + 1
+                    
+                    ' Rating
+                    If IsNumeric(valRating) And Not IsEmpty(valRating) Then
+                        arrStats(1) = arrStats(1) + CDbl(valRating)
+                        arrStats(2) = arrStats(2) + 1
+                    End If
+                    
+                    dict(dab) = arrStats ' Uložit zpět (Array je Value Type při přiřazení)
+                End If
+            Next dab
+            
+            ' ——— B) ČAS (Složitější logika s komentáři) ———
+            casZpracovan = False
+            
+            ' 1. Check Comment
+            komentar = ""
+            If dictComments.Exists(currentRow) Then komentar = dictComments(currentRow)
+            
+            If Len(komentar) > 0 And valTimeEp > 0 Then
+                If regEx.Test(komentar) Then
+                    Dim matches As Object, match As Object
+                    Dim epCnt As Long
+                    Set matches = regEx.Execute(komentar)
+                    For Each match In matches
+                        dab = UCase(match.SubMatches(0))
+                        epCnt = CLng(match.SubMatches(1))
+                        
+                        If epCnt > 0 And dict.Exists(dab) Then
+                            arrStats = dict(dab)
+                            arrStats(3) = arrStats(3) + (epCnt * valTimeEp)
+                            dict(dab) = arrStats
+                        End If
+                    Next match
+                    casZpracovan = True
+                End If
+            End If
+            
+            ' 2. Pokud není split time v komentáři, rozpočítat rovnoměrně
+            If Not casZpracovan And valTotalTime > 0 Then
+                Dim countValidDabs As Long
+                countValidDabs = 0
+                ' Spočítat validní
+                For Each dab In dabArr
+                    If Trim(dab) <> "" Then countValidDabs = countValidDabs + 1
+                Next dab
+                
+                If countValidDabs > 0 Then
+                    Dim timePerDab As Double
+                    timePerDab = valTotalTime / countValidDabs
+                    For Each dab In dabArr
+                        dab = UCase(Trim(dab))
+                        If dab <> "" And dict.Exists(dab) Then
+                            arrStats = dict(dab)
+                            arrStats(3) = arrStats(3) + timePerDab
+                            dict(dab) = arrStats
+                        End If
+                    Next dab
+                End If
+            End If
+        End If
+    Next i
+    
+    ' Úklid prázdných (ty co mají Count 0) - např. pokud jsme předvyplnili SK a není tam
+    Dim k As Variant
+    For Each k In dict.keys
+        If dict(k)(0) = 0 Then dict.Remove k
+    Next k
+    
+    Set AgregovatDataDabing = dict
+End Function
+
+'================================================================================================
+'##### 1) TLAČÍTKO (Beze změny) #####
+'================================================================================================
+Public Sub VytvorTlacitkoGrafDabing()
+    On Error GoTo ErrBtn
+    Dim ws As Worksheet, rng As Range, btn As Shape
+    Set ws = ThisWorkbook.Sheets("OBECNÉ INFORMACE")
+    Set rng = ws.Range("DL1")
+    
+    rng.ColumnWidth = 27.14: rng.RowHeight = 24.75
+    
+    On Error Resume Next
+    Set btn = ws.Shapes("btnAktualizaceDabing")
+    On Error GoTo ErrBtn
+    
+    If btn Is Nothing Then
+        Set btn = ws.Shapes.AddShape(msoShapeRectangle, rng.left, rng.top, rng.Width, rng.Height)
+        btn.Name = "btnAktualizaceDabing"
+    Else
+        btn.left = rng.left: btn.top = rng.top: btn.Width = rng.Width: btn.Height = rng.Height
+    End If
+    
+    With btn
+        .OnAction = "AktualizovatVsechnyGrafyDabing"
+        .Fill.Solid: .Fill.ForeColor.RGB = RGB(71, 211, 89)
+        .line.Visible = msoTrue: .line.weight = 1.5: .line.ForeColor.RGB = RGB(0, 0, 0)
+        With .TextFrame2
+            .VerticalAnchor = msoAnchorMiddle: .HorizontalAnchor = msoAnchorCenter: .WordWrap = False
+            .TextRange.text = "Aktualizovat grafy"
+            With .TextRange.Font
+                .Name = "Aptos Narrow": .size = 11: .Bold = True: .Fill.ForeColor.RGB = RGB(0, 0, 0)
+            End With
+        End With
+    End With
+    Exit Sub
+ErrBtn:
+    MsgBox "Chyba tlačítka dabing: " & err.Description
+End Sub
+
+'================================================================================================
+'##### 2) GRAF POČTU (BAR CHART - AGREGOVANÁ DATA) #####
+'================================================================================================
+Private Sub VytvorGrafDabing_Count(dictData As Object)
+    Dim wsC As Worksheet
+    Dim chtObj As ChartObject, cht As Chart
+    Dim keysArray As Variant, valuesArray As Variant
+    Dim totalDabingCount As Long
+    Dim i As Long
+    
+    ' Proměnné pro zachování formátování
+    Dim oldYAxisMax As Double, oldYAxisMin As Double, oldYAxisMajorUnit As Double
+    Dim oldChartTitle As String, oldChartTitleFontSize As Double
+    Dim oldCategoryFontSize As Double
+    
+    Set wsC = ThisWorkbook.Sheets("OBECNÉ INFORMACE")
+    
+    If dictData.count = 0 Then Exit Sub
+    
+    keysArray = dictData.keys
+    ReDim valuesArray(0 To UBound(keysArray))
+    
+    ' Extract Count (Index 0)
+    For i = 0 To UBound(keysArray)
+        valuesArray(i) = dictData(keysArray(i))(0)
+    Next i
+    
+    totalDabingCount = Application.Sum(valuesArray)
+    
+    ' Bubble Sort (Descending)
+    Dim x As Long, y As Long, tmpV As Long, tmpK As String
+    For x = LBound(valuesArray) To UBound(valuesArray) - 1
+        For y = x + 1 To UBound(valuesArray)
+            If valuesArray(x) < valuesArray(y) Then
+                tmpV = valuesArray(x): valuesArray(x) = valuesArray(y): valuesArray(y) = tmpV
+                tmpK = keysArray(x): keysArray(x) = keysArray(y): keysArray(y) = tmpK
+            End If
+        Next y
+    Next x
+    
+    ' --- GRAF ---
+    On Error Resume Next
+    Set chtObj = wsC.ChartObjects("GrafDabingu")
+    
+    If Not chtObj Is Nothing Then
+        Set cht = chtObj.Chart
+        With cht.Axes(xlValue)
+            oldYAxisMax = .MaximumScale: oldYAxisMin = .MinimumScale: oldYAxisMajorUnit = .MajorUnit
+        End With
+        If cht.HasTitle Then
+            oldChartTitle = cht.ChartTitle.text: oldChartTitleFontSize = cht.ChartTitle.Font.size
+        End If
+        oldCategoryFontSize = cht.Axes(xlCategory).TickLabels.Font.size
+    Else
+        Set chtObj = wsC.ChartObjects.Add(100, 400, 500, 300)
+        chtObj.Name = "GrafDabingu"
+        Set cht = chtObj.Chart
+        With cht
+            .ChartType = xlBarClustered
+            .HasTitle = True: .ChartTitle.text = "Počet anime podle dabingu"
+            .ChartTitle.Font.size = 14: .ChartTitle.Font.Bold = True
+            .HasLegend = False
+            .Axes(xlCategory).TickLabels.Font.size = 10
+            .Axes(xlCategory).ReversePlotOrder = True
+        End With
+    End If
+    On Error GoTo 0
+    
+    ' Update Data
+    If cht.SeriesCollection.count = 0 Then cht.SeriesCollection.NewSeries
+    With cht.SeriesCollection(1)
+        .XValues = keysArray
+        .values = valuesArray
+        
+        If cht.ChartType <> xlBarClustered Then
+            cht.ChartType = xlBarClustered
+            On Error Resume Next
+            cht.Axes(xlCategory).ReversePlotOrder = True
+            On Error GoTo 0
+        End If
+        
+        If Not .HasDataLabels Then
+            .ApplyDataLabels
+            .DataLabels.Position = xlLabelPositionOutsideEnd
+            .DataLabels.Font.size = 10: .DataLabels.Font.Bold = True
+        End If
+        
+        For i = 1 To .Points.count
+            .Points(i).DataLabel.text = valuesArray(i - 1) & " (" & Format(valuesArray(i - 1) / totalDabingCount, "0.0%") & ")"
+            .Points(i).DataLabel.Font.Bold = True
+        Next i
+    End With
+    
+    ' Restore Settings
+    With cht
+        If oldChartTitle <> "" Then .ChartTitle.text = oldChartTitle
+        If oldChartTitleFontSize <> 0 Then .ChartTitle.Font.size = oldChartTitleFontSize
+        With .Axes(xlValue)
+            If oldYAxisMax <> 0 Then .MaximumScale = oldYAxisMax
+            If oldYAxisMin <> 0 Then .MinimumScale = oldYAxisMin
+            If oldYAxisMajorUnit <> 0 Then .MajorUnit = oldYAxisMajorUnit
+        End With
+        If oldCategoryFontSize <> 0 Then .Axes(xlCategory).TickLabels.Font.size = oldCategoryFontSize
+    End With
+End Sub
+
+'================================================================================================
+'##### 3) GRAF HODNOCENÍ (AGREGOVANÁ DATA) #####
+'================================================================================================
+Private Sub VytvorGrafDabing_Avg(dictData As Object)
+    Const TOP_N As Long = 10
+    Dim wsC As Worksheet, chtObj As ChartObject, cht As Chart
+    Dim i As Long, keysArr As Variant
+    Dim arrStats As Variant
+    Dim isNewChart As Boolean
+    Dim oldYAxisMax As Double, oldYAxisMin As Double, oldYAxisMajorUnit As Double
+    Dim oldValueAxisHasTitle As Boolean
+    
+    Set wsC = ThisWorkbook.Sheets("OBECNÉ INFORMACE")
+    If dictData.count = 0 Then Exit Sub
+    
+    keysArr = dictData.keys
+    Dim avgs() As Double
+    ReDim avgs(0 To UBound(keysArr))
+    
+    For i = 0 To UBound(keysArr)
+        arrStats = dictData(keysArr(i))
+        ' Index 1 = SumRating, Index 2 = RatedCount
+        If arrStats(2) > 0 Then
+            avgs(i) = arrStats(1) / arrStats(2)
+        Else
+            avgs(i) = 0
+        End If
+    Next i
+    
+    ' Bubble Sort (Rating Desc)
+    Dim a As Long, b As Long, tmpD As Double, tmpS As String
+    For a = LBound(avgs) To UBound(avgs) - 1
+        For b = a + 1 To UBound(avgs)
+            If avgs(b) > avgs(a) Then
+                tmpD = avgs(a): avgs(a) = avgs(b): avgs(b) = tmpD
+                tmpS = keysArr(a): keysArr(a) = keysArr(b): keysArr(b) = tmpS
+            End If
+        Next b
+    Next a
+    
+    ' TOP N
+    Dim actualN As Long: actualN = IIf(UBound(keysArr) + 1 < TOP_N, UBound(keysArr) + 1, TOP_N)
+    Dim finalKeys() As String, finalAvgs() As Double
+    ReDim finalKeys(0 To actualN - 1): ReDim finalAvgs(0 To actualN - 1)
+    
+    For i = 0 To actualN - 1
+        finalKeys(i) = keysArr(i)
+        finalAvgs(i) = avgs(i)
+    Next i
+    
+    ' Chart
+    On Error Resume Next
+    Set chtObj = wsC.ChartObjects("GrafDabingAvgRating")
+    If Not chtObj Is Nothing Then
+        isNewChart = False
+        Set cht = chtObj.Chart
+        With cht.Axes(xlValue)
+            oldYAxisMax = .MaximumScale: oldYAxisMin = .MinimumScale: oldYAxisMajorUnit = .MajorUnit
+            oldValueAxisHasTitle = .HasTitle
+        End With
+    Else
+        isNewChart = True
+        Set chtObj = wsC.ChartObjects.Add(100, 750, 500, 300)
+        chtObj.Name = "GrafDabingAvgRating"
+        Set cht = chtObj.Chart
+        With cht
+            .ChartType = xlBarClustered
+            .HasTitle = True: .ChartTitle.text = "Průměrné hodnocení dabingu"
+            .HasLegend = False
+        End With
+    End If
+    On Error GoTo 0
+    
+    If cht.SeriesCollection.count = 0 Then cht.SeriesCollection.NewSeries
+    With cht.SeriesCollection(1)
+        .XValues = finalKeys
+        .values = finalAvgs
+        .ApplyDataLabels
+        For i = 1 To .Points.count
+            .Points(i).DataLabel.text = Replace(Format(finalAvgs(i - 1), "0.00"), ".", ",")
+            .Points(i).DataLabel.Font.Bold = True
+        Next i
+    End With
+    
+    With cht.Axes(xlValue)
+        If isNewChart Then
+            .HasTitle = True: .AxisTitle.text = "Průměrné hodnocení"
+        Else
+            .HasTitle = oldValueAxisHasTitle
+            If oldValueAxisHasTitle Then .AxisTitle.text = "Průměrné hodnocení"
+        End If
+        If oldYAxisMax <> 0 Then .MaximumScale = oldYAxisMax Else .MaximumScale = 10
+        If oldYAxisMin <> 0 Then .MinimumScale = oldYAxisMin Else .MinimumScale = 0
+        If oldYAxisMajorUnit <> 0 Then .MajorUnit = oldYAxisMajorUnit Else .MajorUnit = 1
+    End With
+End Sub
+
+'================================================================================================
+'##### 4) GRAF ČASU (AGREGOVANÁ DATA) #####
+'================================================================================================
+Private Sub VytvorGrafDabing_Time(dictData As Object)
+    Dim wsC As Worksheet, chtObj As ChartObject, cht As Chart
+    Dim i As Long, keysArr As Variant, valuesArray As Variant
+    Dim arrStats As Variant
+    Dim oldYAxisMin As Double, oldYAxisMax As Double
+    
+    Set wsC = ThisWorkbook.Sheets("OBECNÉ INFORMACE")
+    If dictData.count = 0 Then Exit Sub
+    
+    keysArr = dictData.keys
+    ReDim valuesArray(0 To UBound(keysArr))
+    
+    For i = 0 To UBound(keysArr)
+        ' Index 3 = SumTime (minuty) -> To Hours
+        valuesArray(i) = dictData(keysArr(i))(3) / 60
+    Next i
+    
+    ' Sort
+    Dim x As Long, y As Long, tV As Double, tk As String
+    For x = LBound(valuesArray) To UBound(valuesArray) - 1
+        For y = x + 1 To UBound(valuesArray)
+            If valuesArray(x) < valuesArray(y) Then
+                tV = valuesArray(x): valuesArray(x) = valuesArray(y): valuesArray(y) = tV
+                tk = keysArr(x): keysArr(x) = keysArr(y): keysArr(y) = tk
+            End If
+        Next y
+    Next x
+    
+    ' Chart
+    On Error Resume Next
+    Set chtObj = wsC.ChartObjects("GrafCasDabing")
+    If Not chtObj Is Nothing Then
+        Set cht = chtObj.Chart
+        With cht.Axes(xlValue)
+           If Not .MinimumScaleIsAuto Then oldYAxisMin = .MinimumScale Else oldYAxisMin = -1
+           If Not .MaximumScaleIsAuto Then oldYAxisMax = .MaximumScale Else oldYAxisMax = -1
+        End With
+    Else
+        Set chtObj = wsC.ChartObjects.Add(100, 1100, 500, 300)
+        chtObj.Name = "GrafCasDabing"
+        Set cht = chtObj.Chart
+        With cht
+            .ChartType = xlColumnClustered
+            .HasTitle = True: .ChartTitle.text = "Celkový čas sledování podle dabingu"
+            .ChartTitle.Font.size = 14: .ChartTitle.Font.Bold = True
+            .HasLegend = False
+        End With
+        oldYAxisMin = -1: oldYAxisMax = -1
+    End If
+    On Error GoTo 0
+    
+    If cht.SeriesCollection.count = 0 Then cht.SeriesCollection.NewSeries
+    With cht.SeriesCollection(1)
+        .XValues = keysArr
+        .values = valuesArray
+        .Name = "Čas"
+        .ApplyDataLabels
+        Dim hodiny As Double, dny As Double
+        For i = 1 To .Points.count
+            hodiny = valuesArray(i - 1)
+            dny = hodiny / 24
+            .Points(i).DataLabel.text = Replace(Format(hodiny, "0.0"), ".", ",") & " h" & vbLf & "(" & Replace(Format(dny, "0.0"), ".", ",") & " dní)"
+            .Points(i).DataLabel.Font.Bold = True
+            On Error Resume Next
+            .Points(i).DataLabel.Font.size = 10
+            On Error GoTo 0
+        Next i
+    End With
+    
+    With cht.Axes(xlValue)
+        If oldYAxisMin <> -1 Then .MinimumScale = oldYAxisMin Else .MinimumScaleIsAuto = True
+        If oldYAxisMax <> -1 Then .MaximumScale = oldYAxisMax Else .MaximumScaleIsAuto = True
+    End With
+End Sub
+
+' --- Pomocná funkce ---
+Private Function Nz(Value As Variant, ValueIfNull As Variant) As Variant
+    If IsEmpty(Value) Or IsNull(Value) Or Value = "" Then
+        Nz = ValueIfNull
+    Else
+        Nz = Value
+    End If
+End Function
+
+

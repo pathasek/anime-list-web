@@ -11,7 +11,9 @@ from datetime import datetime
 # CONFIGURATION
 # ============================================
 script_dir = os.path.dirname(os.path.abspath(__file__))
-public_data_dir = os.path.join(script_dir, "public", "data")
+# Skript žije v anime-list-web/tools/ → data jsou o úroveň výš v anime-list-web/public/data
+app_root = os.path.dirname(script_dir)
+public_data_dir = os.path.join(app_root, "public", "data")
 anime_list_path = os.path.join(public_data_dir, "anime_list.json")
 imdb_cache_path = os.path.join(public_data_dir, "imdb_cache.json")
 

@@ -1,0 +1,103 @@
+﻿Option Explicit
+
+' ==============================================================================
+' PROMĚNNÉ PRO UCHOVÁNÍ STAVU ZVÝRAZNĚNÍ
+' ==============================================================================
+Private m_HighlightedRange As Range
+Private m_OriginalColor As Long
+Private m_IsHighlighted As Boolean
+
+' ==============================================================================
+' 1. PROCEDURA: KLIKNUTÍ NA ODKAZ
+' ==============================================================================
+Private Sub Worksheet_FollowHyperlink(ByVal Target As Hyperlink)
+    Dim targetRange As Range
+    Dim targetSheetName As String
+    Dim subAddress As String
+    Dim linkText As String
+    
+    subAddress = Target.subAddress
+    If subAddress = "" Then Exit Sub
+    
+    ' Získáme text odkazu (ošetřeno pro případ chyb)
+    On Error Resume Next
+    linkText = UCase(Trim(Target.TextToDisplay))
+    On Error GoTo 0
+    
+    ' 1. ZÍSKÁNÍ CÍLE
+    On Error Resume Next
+    Set targetRange = Application.Range(subAddress)
+    On Error GoTo 0
+    
+    If Not targetRange Is Nothing Then
+        targetSheetName = targetRange.Parent.Name
+        
+        ' Jsme na správném listu?
+        If ActiveSheet.Name = targetSheetName Then
+            
+            ' A) POKUD JE TO ODKAZ "ZPĚT NA ZAČÁTEK" -> JEN SCROLLOVAT A KONEC
+            ' (Tento blok zajistí, že se nic neobarví)
+            If linkText = "ZPĚT NA ZAČÁTEK" Then
+                ' Resetujeme případné předchozí zvýraznění z jiného odkazu
+                ResetHighlight
+                
+                ' Scrollujeme na cíl (A3)
+                ActiveWindow.ScrollRow = targetRange.row
+                targetRange.Select
+                Exit Sub ' <--- Tady procedura končí, dál k barvení nedojde
+            End If
+            
+            ' ==================================================================
+            ' B) POKUD JE TO BĚŽNÝ ODKAZ (DATA/HEATMAPA) -> POKRAČUJEME
+            ' ==================================================================
+            
+            ' 1. Pokud už je něco jiného zvýrazněno, vrátíme to do původního stavu
+            ResetHighlight
+            
+            ' 2. Scrollujeme tak, aby řádek byl 1. viditelný
+            ActiveWindow.ScrollRow = targetRange.row
+            
+            ' 3. ZVÝRAZNĚNÍ NOVÉHO ŘÁDKU
+            Set m_HighlightedRange = Me.Range("A" & targetRange.row & ":D" & targetRange.row)
+            
+            ' Uložíme si původní barvu
+            m_OriginalColor = m_HighlightedRange.Cells(1, 1).Interior.Color
+            
+            ' Aplikujeme žlutou #FFFFA7
+            m_HighlightedRange.Interior.Color = RGB(255, 255, 167)
+            m_IsHighlighted = True
+            
+            ' Vybereme řádek
+            targetRange.Select
+        End If
+    End If
+End Sub
+
+' ==============================================================================
+' 2. PROCEDURA: ZMĚNA VÝBĚRU (Deaktivuje žlutou při kliknutí jinam)
+' ==============================================================================
+Private Sub Worksheet_SelectionChange(ByVal Target As Range)
+    ' Pokud není nic zvýrazněno, nic neděláme
+    If Not m_IsHighlighted Then Exit Sub
+    If m_HighlightedRange Is Nothing Then Exit Sub
+    
+    ' Kontrola: Kliknul uživatel MIMO zvýrazněnou oblast?
+    If Intersect(Target, m_HighlightedRange) Is Nothing Then
+        ResetHighlight
+    End If
+End Sub
+
+' ==============================================================================
+' 3. POMOCNÁ PROCEDURA PRO RESET BARVY (Abychom neopakovali kód)
+' ==============================================================================
+Private Sub ResetHighlight()
+    If m_IsHighlighted And Not m_HighlightedRange Is Nothing Then
+        ' Vrátíme původní barvu
+        m_HighlightedRange.Interior.Color = m_OriginalColor
+        
+        ' Vyčistíme proměnné
+        Set m_HighlightedRange = Nothing
+        m_IsHighlighted = False
+        m_OriginalColor = 0
+    End If
+End Sub

@@ -1,0 +1,694 @@
+﻿Option Explicit
+
+' =========================================================================================
+' ===                          CENTRÁLNÍ KONSTANTY A NASTAVENÍ                          ===
+' =========================================================================================
+Private Const ANIME_SHEET_NAME As String = "ANIME LIST"
+Private Const TARGET_SHEET_NAME As String = "OBECNÉ INFORMACE"
+
+' Konstanty pro Chord Chart
+Private Const CHART_NAME_CHORD As String = "AnimeGenreChordChart"
+Private Const CHART_SCALE As Double = 0.92
+Private Const CURVATURE As Double = 0.4
+Private Const LABEL_DISTANCE As Double = 1.14
+Private Const CHORD_TRANSPARENCY As Double = 0.6
+Private Const STEPS_PER_CHORD As Integer = 50
+
+' =========================================================================================
+' ===                              HLAVNÍ SPOUŠTĚCÍ MAKRO                               ===
+' =========================================================================================
+Public Sub AktualizovatVsechnyGrafyZanru()
+    On Error GoTo ErrorHandler
+    
+    Dim wsData As Worksheet
+    Dim lastRow As Long
+    Dim rawData As Variant
+    Dim arrParsedGenres() As Variant
+    
+    Dim dictCounts As Object, dictRateSum As Object, dictRateCount As Object
+    
+    Dim i As Long, j As Long
+    Dim rawStr As String, cleanStr As String
+    Dim parts As Variant, zanr As String
+    Dim rate As Variant
+    
+    Set wsData = ThisWorkbook.Sheets(ANIME_SHEET_NAME)
+    
+    ' ——— OPTIMALIZACE PROSTŘEDÍ ———
+    With Application
+        .ScreenUpdating = False
+        .Calculation = xlCalculationManual
+        .EnableEvents = False
+    End With
+    
+    ' ——— 1. NAČTENÍ DAT ———
+    lastRow = wsData.Cells(wsData.Rows.count, "H").End(xlUp).row
+    
+    If lastRow < 2 Then
+        MsgBox "Žádná data žánrů k zobrazení.", vbExclamation
+        GoTo CleanExit
+    End If
+    
+    If lastRow = 2 Then
+        ReDim rawData(1 To 1, 1 To 4)
+        rawData(1, 1) = wsData.Range("H2").Value
+        rawData(1, 4) = wsData.Range("K2").Value
+    Else
+        rawData = wsData.Range("H2:K" & lastRow).Value
+    End If
+    
+    Set dictCounts = CreateObject("Scripting.Dictionary")
+    Set dictRateSum = CreateObject("Scripting.Dictionary")
+    Set dictRateCount = CreateObject("Scripting.Dictionary")
+    
+    ' ——— 2. PARSING A AGREGACE (SINGLE PASS) ———
+    Dim count As Long: count = UBound(rawData, 1)
+    ReDim arrParsedGenres(1 To count)
+    
+    For i = 1 To count
+        rawStr = CStr(rawData(i, 1))
+        rate = rawData(i, 4)
+        
+        If Len(rawStr) > 0 Then
+            ' Rychlé čištění
+            If InStr(rawStr, ",") > 0 Then rawStr = Replace(rawStr, ",", ";")
+            parts = Split(rawStr, ";")
+            
+            For j = LBound(parts) To UBound(parts)
+                zanr = Trim(parts(j))
+                parts(j) = zanr
+                
+                If Len(zanr) > 0 Then
+                    dictCounts(zanr) = dictCounts(zanr) + 1
+                    If IsNumeric(rate) And Not IsEmpty(rate) Then
+                        dictRateSum(zanr) = dictRateSum(zanr) + CDbl(rate)
+                        dictRateCount(zanr) = dictRateCount(zanr) + 1
+                    End If
+                End If
+            Next j
+            arrParsedGenres(i) = parts
+        Else
+            arrParsedGenres(i) = Array()
+        End If
+    Next i
+    
+    ' ——— 3. VYKRESLENÍ ———
+    Call VytvorGrafZanru_Pie(dictCounts)
+    Call VytvorGrafZanru_TopBar(dictRateSum, dictRateCount)
+    Call VytvorGrafZanru_Chord_Grouped(arrParsedGenres, dictCounts)
+    
+CleanExit:
+    With Application
+        .ScreenUpdating = True
+        .Calculation = xlCalculationAutomatic
+        .EnableEvents = True
+    End With
+    Exit Sub
+
+ErrorHandler:
+    With Application
+        .ScreenUpdating = True
+        .Calculation = xlCalculationAutomatic
+        .EnableEvents = True
+    End With
+    MsgBox "Chyba: " & err.Description, vbCritical
+End Sub
+
+' =========================================================================================
+' ===                                   1. TLAČÍTKO                                     ===
+' =========================================================================================
+Public Sub VytvorAktualizacniTlacitkoZanry()
+    On Error GoTo ErrBtn
+    Dim ws As Worksheet, btn As Shape, rng As Range
+    Set ws = ThisWorkbook.Sheets(TARGET_SHEET_NAME)
+    Set rng = ws.Range("AQ1")
+    
+    rng.ColumnWidth = 27.14: rng.RowHeight = 24.75
+    
+    On Error Resume Next
+    Set btn = ws.Shapes("btnAktualizaceZanry")
+    On Error GoTo ErrBtn
+    
+    If btn Is Nothing Then
+        Set btn = ws.Shapes.AddShape(msoShapeRectangle, rng.left, rng.top, rng.Width, rng.Height)
+        btn.Name = "btnAktualizaceZanry"
+    Else
+        btn.left = rng.left: btn.top = rng.top: btn.Width = rng.Width: btn.Height = rng.Height
+    End If
+    
+    With btn
+        .OnAction = "AktualizovatVsechnyGrafyZanru"
+        .Fill.Solid: .Fill.ForeColor.RGB = RGB(71, 211, 89)
+        .line.Visible = msoTrue: .line.weight = 1.5: .line.ForeColor.RGB = RGB(0, 0, 0)
+        With .TextFrame2
+            .VerticalAnchor = msoAnchorMiddle: .HorizontalAnchor = msoAnchorCenter: .WordWrap = False
+            .TextRange.text = "Aktualizovat grafy"
+            With .TextRange.Font
+                .Name = "Aptos Narrow": .size = 11: .Bold = True: .Fill.ForeColor.RGB = RGB(0, 0, 0)
+            End With
+        End With
+    End With
+    Exit Sub
+ErrBtn:
+    MsgBox "Chyba tlačítka: " & err.Description
+End Sub
+
+' =========================================================================================
+' ===                                 2. PIE CHART                                      ===
+' =========================================================================================
+Private Sub VytvorGrafZanru_Pie(dictData As Object)
+    If dictData.count = 0 Then Exit Sub
+    Dim wsC As Worksheet, chtObj As ChartObject, cht As Chart
+    Dim i As Long, isNewChart As Boolean
+    Set wsC = ThisWorkbook.Sheets(TARGET_SHEET_NAME)
+    
+    Dim keysArr As Variant, valsArr As Variant
+    keysArr = dictData.keys: valsArr = dictData.items
+    
+    Dim a As Long, b As Long, tmpK As Variant, tmpV As Variant
+    For a = LBound(valsArr) To UBound(valsArr) - 1
+        For b = a + 1 To UBound(valsArr)
+            If valsArr(b) > valsArr(a) Then
+                tmpV = valsArr(a): valsArr(a) = valsArr(b): valsArr(b) = tmpV
+                tmpK = keysArr(a): keysArr(a) = keysArr(b): keysArr(b) = tmpK
+            End If
+        Next b
+    Next a
+    
+    On Error Resume Next
+    Set chtObj = wsC.ChartObjects("GrafZanru")
+    On Error GoTo 0
+    
+    isNewChart = False
+    If chtObj Is Nothing Then
+        isNewChart = True
+        Set chtObj = wsC.ChartObjects.Add(550, 20, 400, 300)
+        chtObj.Name = "GrafZanru"
+        With chtObj.Chart
+            .ChartType = xlPie
+            .HasTitle = True: .ChartTitle.text = "Rozdělení žánrů": .ChartTitle.Font.Bold = True
+            .HasLegend = False: .SeriesCollection.NewSeries
+        End With
+    End If
+    
+    Set cht = chtObj.Chart
+    If isNewChart Then
+        With cht.ChartArea.Border: .LineStyle = xlContinuous: .Color = RGB(0, 0, 0): .weight = 2.5: End With
+    End If
+    
+    With cht.SeriesCollection(1)
+        .XValues = keysArr: .values = valsArr
+        If isNewChart Then .ApplyDataLabels
+        
+        Dim total As Double: total = Application.WorksheetFunction.Sum(valsArr)
+        Dim colorPalette As Variant: colorPalette = GetMasterPalette() ' <-- Změna na jednotnou paletu
+        Dim dictColorMap As Object: Set dictColorMap = CreateColorMap(keysArr, colorPalette)
+        
+        For i = 1 To .Points.count
+            With .Points(i)
+                .HasDataLabel = True
+                .DataLabel.text = keysArr(i - 1) & ": " & valsArr(i - 1) & " (" & Replace(Format(valsArr(i - 1) / total, "0.0%"), ".", ",") & ")"
+                .DataLabel.Font.Name = "Aptos Narrow": .DataLabel.Font.size = 10
+                .Format.Fill.ForeColor.RGB = dictColorMap(keysArr(i - 1))
+            End With
+        Next i
+    End With
+End Sub
+
+' =========================================================================================
+' ===                                 3. BAR CHART                                      ===
+' =========================================================================================
+Private Sub VytvorGrafZanru_TopBar(dictSum As Object, dictCnt As Object)
+    Const MIN_COUNT As Long = 4
+    Const TOP_N As Long = 10
+    If dictCnt.count = 0 Then Exit Sub
+    
+    Dim wsC As Worksheet, chtObj As ChartObject, cht As Chart
+    Dim i As Long, isNewChart As Boolean
+    Set wsC = ThisWorkbook.Sheets(TARGET_SHEET_NAME)
+    
+    Dim keysAll As Variant, validItems() As Variant, m As Long: m = 0
+    keysAll = dictCnt.keys
+    ReDim validItems(1 To dictCnt.count, 1 To 2)
+    
+    For i = 0 To UBound(keysAll)
+        If dictCnt(keysAll(i)) >= MIN_COUNT Then
+            m = m + 1
+            validItems(m, 1) = keysAll(i)
+            validItems(m, 2) = dictSum(keysAll(i)) / dictCnt(keysAll(i))
+        End If
+    Next i
+    If m = 0 Then Exit Sub
+    
+    Dim a As Long, b As Long, tName As String, tAvg As Double
+    For a = 1 To m - 1
+        For b = a + 1 To m
+            If validItems(b, 2) > validItems(a, 2) Then
+                tName = validItems(a, 1): validItems(a, 1) = validItems(b, 1): validItems(b, 1) = tName
+                tAvg = validItems(a, 2): validItems(a, 2) = validItems(b, 2): validItems(b, 2) = tAvg
+            End If
+        Next b
+    Next a
+    
+    Dim finalN As Long: finalN = IIf(m < TOP_N, m, TOP_N)
+    Dim xVal() As String, yVal() As Double
+    ReDim xVal(1 To finalN), yVal(1 To finalN)
+    For i = 1 To finalN: xVal(i) = validItems(i, 1): yVal(i) = validItems(i, 2): Next i
+    
+    On Error Resume Next
+    Set chtObj = wsC.ChartObjects("GrafZanruBest")
+    On Error GoTo 0
+    
+    isNewChart = False
+    If chtObj Is Nothing Then
+        isNewChart = True
+        Set chtObj = wsC.ChartObjects.Add(550, 350, 400, 300)
+        chtObj.Name = "GrafZanruBest"
+    End If
+    
+    Set cht = chtObj.Chart
+    If isNewChart Then
+        With cht
+            .ChartType = xlBarClustered
+            .HasTitle = True: .ChartTitle.text = "Top 10 žánrů (hodnocení)": .ChartTitle.Font.Bold = True
+            .HasLegend = False
+            If .SeriesCollection.count = 0 Then .SeriesCollection.NewSeries
+            .Axes(xlCategory).TickLabels.Orientation = xlHorizontal
+            .SeriesCollection(1).ApplyDataLabels
+            .SeriesCollection(1).DataLabels.Position = xlLabelPositionOutsideEnd
+            .SeriesCollection(1).DataLabels.NumberFormat = "0,00"
+        End With
+    End If
+    
+    With cht.SeriesCollection(1)
+        .XValues = xVal: .values = yVal
+        Dim pt As Point
+        For i = 1 To .Points.count
+             Set pt = .Points(i)
+             If Not pt.HasDataLabel Then
+                pt.HasDataLabel = True: pt.DataLabel.NumberFormat = "0,00"
+             End If
+        Next i
+    End With
+    
+    On Error Resume Next
+    cht.Axes(xlCategory).TickLabels.Orientation = xlTickLabelOrientationHorizontal
+    On Error GoTo 0
+End Sub
+
+' =========================================================================================
+' ===                4. CHORD CHART (DARK MODE NEON OPTIMIZATION)                       ===
+' =========================================================================================
+Private Sub VytvorGrafZanru_Chord_Grouped(arrParsed As Variant, dictAllGenres As Object)
+    Dim wsTarget As Worksheet
+    Dim sortedGenres() As String, genreMatrix() As Long, chartData As Object
+    Set wsTarget = ThisWorkbook.Sheets(TARGET_SHEET_NAME)
+
+    ' Krok A: Rychlá matice
+    If Not CreateMatrixFast(arrParsed, dictAllGenres, sortedGenres, genreMatrix) Then Exit Sub
+
+    ' Krok B: Matematika (Seskupuje čáry podle zdroje)
+    Set chartData = GenerateChartCoordinatesGrouped(sortedGenres, genreMatrix)
+    
+    ' Krok C: Vykreslení (Dark Mode)
+    PlotChartGrouped_Dark wsTarget, sortedGenres, chartData
+End Sub
+
+Private Function CreateMatrixFast(arrParsed As Variant, dictGenres As Object, ByRef sortedGenres() As String, ByRef matrix() As Long) As Boolean
+    If dictGenres.count < 2 Then Exit Function
+    
+    Dim tempKey As Variant: tempKey = dictGenres.keys
+    BubbleSortVariant tempKey
+    
+    Dim genreMap As Object: Set genreMap = CreateObject("Scripting.Dictionary")
+    Dim i As Long, j As Long, k As Long
+    
+    ReDim sortedGenres(0 To UBound(tempKey))
+    For i = 0 To UBound(tempKey)
+        sortedGenres(i) = tempKey(i)
+        genreMap.Add sortedGenres(i), i
+    Next i
+    
+    Dim size As Long: size = genreMap.count
+    ReDim matrix(0 To size - 1, 0 To size - 1)
+    Dim foundLink As Boolean: foundLink = False
+    
+    Dim subZanry As Variant, rowIDs() As Long, idCount As Long, gStr As String
+    For i = LBound(arrParsed) To UBound(arrParsed)
+        subZanry = arrParsed(i)
+        If UBound(subZanry) > 0 Then
+            ReDim rowIDs(0 To UBound(subZanry))
+            idCount = -1
+            For j = LBound(subZanry) To UBound(subZanry)
+                gStr = subZanry(j)
+                If Len(gStr) > 0 Then
+                    If genreMap.Exists(gStr) Then
+                        idCount = idCount + 1
+                        rowIDs(idCount) = genreMap(gStr)
+                    End If
+                End If
+            Next j
+            If idCount > 0 Then
+                For j = 0 To idCount
+                    For k = j + 1 To idCount
+                        matrix(rowIDs(j), rowIDs(k)) = matrix(rowIDs(j), rowIDs(k)) + 1
+                        matrix(rowIDs(k), rowIDs(j)) = matrix(rowIDs(k), rowIDs(j)) + 1
+                        foundLink = True
+                    Next k
+                Next j
+            End If
+        End If
+    Next i
+    CreateMatrixFast = foundLink
+End Function
+
+' --- MATH OPTIMIZATION: LOOK-UP TABLE & SERIES GROUPING (RIBBON SIMULATION) ---
+Private Function GenerateChartCoordinatesGrouped(sortedGenres() As String, matrix() As Long) As Object
+    Const PI As Double = 3.14159265358979
+    Const RIBBON_DENSITY As Double = 90 ' Počet čar na 1 radián šířky (čím vyšší, tím plnější stuha)
+    Const MIN_LINES As Long = 2         ' Minimální počet čar pro tenké spoje
+    
+    Dim n As Integer: n = UBound(sortedGenres)
+    Dim totals() As Double, segmentSizes() As Double, startAngles() As Double
+    ReDim totals(0 To n), segmentSizes(0 To n), startAngles(0 To n)
+    
+    Dim i As Long, j As Long, totalSum As Double
+    For i = 0 To n
+        For j = 0 To n: totals(i) = totals(i) + matrix(i, j): Next j
+        totalSum = totalSum + totals(i)
+    Next i
+    
+    Dim angleConversion As Double: If totalSum > 0 Then angleConversion = 2 * PI / totalSum
+    startAngles(0) = 0
+    For i = 0 To n
+        segmentSizes(i) = totals(i) * angleConversion
+        If i > 0 Then startAngles(i) = startAngles(i - 1) + segmentSizes(i - 1)
+    Next i
+    
+    ' 1. LOOK-UP TABLE (Předpočítání Bézierových koeficientů)
+    Dim LUT_1mT2(1 To STEPS_PER_CHORD) As Double
+    Dim LUT_2t1mt(1 To STEPS_PER_CHORD) As Double
+    Dim LUT_t2(1 To STEPS_PER_CHORD) As Double
+    Dim t As Double, l As Integer
+    For l = 1 To STEPS_PER_CHORD
+        t = (l - 1) / (STEPS_PER_CHORD - 1)
+        LUT_1mT2(l) = (1 - t) ^ 2
+        LUT_2t1mt(l) = 2 * (1 - t) * t
+        LUT_t2(l) = t ^ 2
+    Next l
+    
+    ' 2. GROUPED SERIES DATA STRUKTURA (RIBBON SIMULATION)
+    Dim groupedX() As Variant, groupedY() As Variant
+    ReDim groupedX(0 To n), groupedY(0 To n)
+    
+    Dim currA1() As Double, currA2() As Double
+    ReDim currA1(0 To n), currA2(0 To n)
+    For i = 0 To n: currA1(i) = startAngles(i): currA2(i) = startAngles(i): Next i
+    
+    ' Procházíme matici a plníme seskupená pole
+    For i = 0 To n
+        
+        ' Spočítáme počet bodů předem
+        Dim totalPoints As Long: totalPoints = 0
+        Dim connCount As Long: connCount = 0
+        
+        ' První průchod pro odhad velikosti pole (zabrání postupnému ReDim Preserve)
+        For j = i + 1 To n
+            If matrix(i, j) > 0 Then
+                Dim arcW As Double: arcW = matrix(i, j) * angleConversion
+                Dim numLines As Long: numLines = Int(arcW * RIBBON_DENSITY)
+                If numLines < MIN_LINES Then numLines = MIN_LINES
+                ' Omezení shora pro extrémní případy (aby Excel nepadl na 32k bodů)
+                If numLines > 20 Then numLines = 20
+                
+                totalPoints = totalPoints + numLines * (STEPS_PER_CHORD + 1)
+                connCount = connCount + 1
+            End If
+        Next j
+        
+        If totalPoints > 0 Then
+            Dim genreX() As Double, genreY() As Double
+            ' Pozor: Excel limit bodů na serii je cca 32 000. Pokud to překročíme, musíme oříznout.
+            If totalPoints > 30000 Then totalPoints = 30000 ' Hard cap safety
+            
+            ReDim genreX(1 To totalPoints), genreY(1 To totalPoints)
+            Dim pIdx As Long: pIdx = 0
+            
+            For j = i + 1 To n
+                If matrix(i, j) > 0 Then
+                    Dim widthRad As Double: widthRad = matrix(i, j) * angleConversion
+                    Dim nL As Long: nL = Int(widthRad * RIBBON_DENSITY)
+                    If nL < MIN_LINES Then nL = MIN_LINES
+                    If nL > 20 Then nL = 20
+                    
+                    Dim kLine As Long
+                    Dim startA1 As Double: startA1 = currA1(i)
+                    Dim startA2 As Double: startA2 = currA2(j)
+                    
+                    ' Posuneme "kurzory" pro další spoje
+                    currA1(i) = currA1(i) + widthRad
+                    currA2(j) = currA2(j) + widthRad ' Symetricky, zde to je jedno
+                    
+                    ' Generujeme N linek pro tento spoj (Ribbon effect)
+                    For kLine = 0 To nL - 1
+                        ' Bezpečnostní stopka
+                        If pIdx + STEPS_PER_CHORD + 1 > UBound(genreX) Then Exit For
+                        
+                        Dim ratio As Double: ratio = 0
+                        If nL > 1 Then ratio = kLine / (nL - 1) Else ratio = 0.5
+                        
+                        Dim cA1 As Double: cA1 = startA1 + ratio * widthRad
+                        Dim cA2 As Double: cA2 = startA2 + ratio * (matrix(j, i) * angleConversion) ' Použijeme šířku cíle (měla by být stejná)
+                        
+                        ' Kontrolní body Bézierovy křivky
+                        Dim p0x#, p0y#, p1x#, p1y#, p2x#, p2y#
+                        p0x = Cos(cA1) * CHART_SCALE: p0y = Sin(cA1) * CHART_SCALE
+                        p2x = Cos(cA2) * CHART_SCALE: p2y = Sin(cA2) * CHART_SCALE
+                        
+                        Dim midAng As Double: midAng = (startAngles(i) + startAngles(j)) / 2
+                        ' Vylepšení zakřivení pro Ribbon: Středový bod by měl být také interpolován?
+                        ' Zjednodušení: Všechny linky ve svazku mají stejný "směr" zakřivení k středu
+                        p1x = Cos(midAng) * CURVATURE * CHART_SCALE
+                        p1y = Sin(midAng) * CURVATURE * CHART_SCALE
+                        
+                        ' Výpočet bodů
+                        For l = 1 To STEPS_PER_CHORD
+                            pIdx = pIdx + 1
+                            genreX(pIdx) = LUT_1mT2(l) * p0x + LUT_2t1mt(l) * p1x + LUT_t2(l) * p2x
+                            genreY(pIdx) = LUT_1mT2(l) * p0y + LUT_2t1mt(l) * p1y + LUT_t2(l) * p2y
+                        Next l
+                        pIdx = pIdx + 1 ' Empty slot
+                    Next kLine
+                End If
+                If pIdx >= UBound(genreX) Then Exit For
+            Next j
+            
+            Dim vX As Variant, vY As Variant
+            ReDim vX(1 To pIdx), vY(1 To pIdx) ' Použijeme skutečný pIdx (pokud jsme narazili na limit)
+            Dim reader As Long
+            For reader = 1 To pIdx
+                If reader Mod (STEPS_PER_CHORD + 1) = 0 Then
+                    vX(reader) = Empty
+                    vY(reader) = Empty
+                Else
+                    vX(reader) = genreX(reader)
+                    vY(reader) = genreY(reader)
+                End If
+            Next reader
+            groupedX(i) = vX: groupedY(i) = vY
+        End If
+    Next i
+    
+    ' Příprava Rings (Obvod - "Buřtíky")
+    Dim ringsX() As Variant, ringsY() As Variant, labelX() As Double, labelY() As Double
+    Dim colors() As Long, palette As Variant
+    ReDim ringsX(0 To n), ringsY(0 To n), colors(0 To n), labelX(0 To n), labelY(0 To n)
+palette = GetMasterPalette() ' <-- Změna na jednotnou paletu
+    
+    
+    For i = 0 To n
+        Dim rX() As Double, rY() As Double
+        ReDim rX(1 To 50), rY(1 To 50)
+        
+        Dim gap As Double: gap = 0.02
+        Dim effSize As Double: effSize = segmentSizes(i) - gap
+        If effSize < 0 Then effSize = 0
+        
+        Dim iStart As Double: iStart = startAngles(i) + gap / 2
+        Dim aStep As Double: If effSize > 0 Then aStep = effSize / 49 Else aStep = 0
+        For j = 1 To 50
+            Dim cAng As Double: cAng = iStart + (j - 1) * aStep
+            rX(j) = Cos(cAng) * CHART_SCALE: rY(j) = Sin(cAng) * CHART_SCALE
+        Next j
+        ringsX(i) = rX: ringsY(i) = rY
+        Dim mAng As Double: mAng = startAngles(i) + segmentSizes(i) / 2
+        labelX(i) = Cos(mAng) * LABEL_DISTANCE * CHART_SCALE
+        labelY(i) = Sin(mAng) * LABEL_DISTANCE * CHART_SCALE
+        colors(i) = palette(i Mod (UBound(palette) + 1))
+    Next i
+    
+    Dim res As Object: Set res = CreateObject("Scripting.Dictionary")
+    res.Add "groupedX", groupedX: res.Add "groupedY", groupedY
+    res.Add "ringsX", ringsX: res.Add "ringsY", ringsY
+    res.Add "labelX", labelX: res.Add "labelY", labelY
+    res.Add "colors", colors
+    Set GenerateChartCoordinatesGrouped = res
+End Function
+
+' --- Vykreslení (Dark Mode + Ribbons) ---
+Private Sub PlotChartGrouped_Dark(ws As Worksheet, genres() As String, chartData As Object)
+    Dim chObj As ChartObject, ch As Chart, isNew As Boolean
+    On Error Resume Next
+    Set chObj = ws.ChartObjects(CHART_NAME_CHORD)
+    On Error GoTo 0
+    
+    ' 1. Vytvoření/Reset grafu
+    If chObj Is Nothing Then
+        Set chObj = ws.ChartObjects.Add(150, 75, 600, 600)
+        chObj.Name = CHART_NAME_CHORD: isNew = True
+    End If
+    
+    Set ch = chObj.Chart
+    With ch
+        Do While .SeriesCollection.count > 0: .SeriesCollection(1).Delete: Loop
+        .ChartType = xlXYScatterSmoothNoMarkers
+        .HasLegend = False: .HasTitle = True: .ChartTitle.text = "Propojení žánrů"
+        
+        ' --- DARK MODE STYLING ---
+        .ChartArea.Format.Fill.ForeColor.RGB = RGB(30, 30, 30)
+        .PlotArea.Format.Fill.Visible = msoFalse
+        With .ChartTitle.Format.TextFrame2.TextRange.Font
+            .Fill.ForeColor.RGB = vbWhite
+            .Name = "Aptos Narrow": .size = 18: .Bold = msoTrue
+        End With
+        
+        Dim i As Long, s As Series
+        
+        ' 2. Rings (Obvod - "Neon Arcs")
+        Dim rX As Variant, rY As Variant
+        rX = chartData("ringsX"): rY = chartData("ringsY")
+        For i = 0 To UBound(genres)
+            Set s = .SeriesCollection.NewSeries
+            s.XValues = rX(i): s.values = rY(i)
+            With s.Format.line
+                .ForeColor.RGB = chartData("colors")(i)
+                .weight = 14
+                .Transparency = 0
+            End With
+        Next i
+        
+        ' 3. Chords (Web - "Ribbons")
+        Dim gX As Variant, gY As Variant
+        gX = chartData("groupedX"): gY = chartData("groupedY")
+        
+        For i = 0 To UBound(genres)
+            If Not IsEmpty(gX(i)) Then
+                Set s = .SeriesCollection.NewSeries
+                ' Ochrana proti "Series data is too large" erroru (pokud stále moc bodů)
+                On Error Resume Next
+                s.XValues = gX(i)
+                s.values = gY(i)
+                On Error GoTo 0
+                
+                With s.Format.line
+                    .weight = 1.5   ' Tenčí linky pro ribbon efekt
+                    .ForeColor.RGB = chartData("colors")(i)
+                    .Transparency = 0.35 ' Nižší průhlednost (aby se "slily" do plochy)
+                End With
+            End If
+        Next i
+        
+        ' 4. Labels
+        Dim sLab As Series: Set sLab = .SeriesCollection.NewSeries
+        With sLab
+            .Name = "Labels": .MarkerStyle = xlMarkerStyleNone: .Format.line.Visible = msoFalse
+            .XValues = chartData("labelX"): .values = chartData("labelY")
+            .ApplyDataLabels
+        End With
+        For i = 1 To UBound(genres) + 1
+            .SeriesCollection("Labels").Points(i).DataLabel.text = genres(i - 1)
+        Next i
+        With .SeriesCollection("Labels").DataLabels
+            .Position = xlLabelPositionCenter
+            .Font.Name = "Aptos Narrow"
+            .Font.size = 9: .Font.Bold = True
+            .Font.Color = RGB(220, 220, 220)
+        End With
+        
+        ' Clean up axes
+        On Error Resume Next
+        .Axes(xlCategory).Delete: .Axes(xlValue).Delete
+        On Error GoTo 0
+        .PlotArea.Format.line.Visible = msoFalse
+        
+        If isNew Then
+            .PlotArea.Width = 500: .PlotArea.Height = 500
+            .PlotArea.left = (ch.ChartArea.Width - .PlotArea.Width) / 2
+            .PlotArea.top = (ch.ChartArea.Height - .PlotArea.Height) / 2
+        End If
+    End With
+End Sub
+
+' =========================================================================================
+' ===                           Nová "Kelly's Max Contrast" Paleta                      ===
+' =========================================================================================
+' Tato paleta obsahuje 20 pečlivě vybraných barev, které jsou matematicky maximálně odlišné.
+' Jsou seřazeny na střídačku (Tmavá/Světlá, Teplá/Studená), aby sousední žánry v abecedě
+' (např. Action a Adventure) nikdy neměly podobný odstín.
+' =========================================================================================
+Private Function GetMasterPalette() As Variant
+    GetMasterPalette = Array( _
+        RGB(230, 25, 75), _
+        RGB(60, 180, 75), _
+        RGB(255, 225, 25), _
+        RGB(0, 130, 200), _
+        RGB(245, 130, 48), _
+        RGB(145, 30, 180), _
+        RGB(70, 240, 240), _
+        RGB(240, 50, 230), _
+        RGB(210, 245, 60), _
+        RGB(250, 190, 212), _
+        RGB(0, 128, 128), _
+        RGB(163, 167, 255), _
+        RGB(170, 110, 40), _
+        RGB(255, 250, 200), _
+        RGB(128, 0, 0), _
+        RGB(170, 255, 195), _
+        RGB(128, 128, 0), _
+        RGB(255, 215, 180), _
+        RGB(0, 0, 128), _
+        RGB(128, 128, 128))
+    ' 1. Vivid Red, 2. Vivid Green, 3. Vivid Yellow, 4. Blue, 5. Orange
+    ' 6. Purple, 7. Cyan, 8. Magenta, 9. Lime, 10. Pink
+    ' 11. Teal, 12. Lavender, 13. Brown, 14. Beige, 15. Maroon
+    ' 16. Mint, 17. Olive, 18. Apricot, 19. Navy, 20. Grey
+End Function
+
+Private Function CreateColorMap(keys As Variant, palette As Variant) As Object
+    Dim d As Object: Set d = CreateObject("Scripting.Dictionary")
+    Dim sorted As Variant: sorted = keys
+    BubbleSortVariant sorted
+    Dim i As Long
+    For i = LBound(sorted) To UBound(sorted)
+        d(sorted(i)) = palette(i Mod (UBound(palette) + 1))
+    Next i
+    Set CreateColorMap = d
+End Function
+
+Private Sub BubbleSortVariant(arr As Variant)
+    Dim i As Long, j As Long, Temp As Variant
+    For i = LBound(arr) To UBound(arr) - 1
+        For j = i + 1 To UBound(arr)
+            If arr(i) > arr(j) Then
+                Temp = arr(i): arr(i) = arr(j): arr(j) = Temp
+            End If
+        Next j
+    Next i
+End Sub
+
+
+
+
+
+
+
