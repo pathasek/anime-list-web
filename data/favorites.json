@@ -4248,5 +4248,22 @@
     "has_frisson": false,
     "rating_avg": 8.1,
     "rating_final": 8
+  },
+  {
+    "index": "251.",
+    "anime_name": "Agents of the Four Seasons: Dance of Spring",
+    "type": "ED",
+    "song": "Hanaikada",
+    "author": "Orangestar; Kase",
+    "language": "JAP",
+    "rating_lyrics": "NEMÁM SUBS",
+    "rating_emotion": 10,
+    "rating_melody": 9,
+    "rating_video": 9.5,
+    "rating_voice": 9.5,
+    "sing_along": 1,
+    "has_frisson": false,
+    "rating_avg": 9.5,
+    "rating_final": 10
   }
 ]
