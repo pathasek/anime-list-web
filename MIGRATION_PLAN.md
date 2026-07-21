@@ -1,7 +1,20 @@
 # MIGRAČNÍ A REFACTOR PLÁN — Anime_List konsolidace
 
-> Vytvořeno: 2026-07-21 · Status dokumentu: **ČEKÁ NA SCHVÁLENÍ**
+> Vytvořeno: 2026-07-21 · Status dokumentu: **SCHVÁLENO, VYKONÁVÁ SE**
 > Průběžně aktualizováno — každá fáze má stav: ⬜ TODO / 🔄 PROBÍHÁ / ✅ HOTOVO / ⚠️ POZOR
+
+## PRŮBĚH (2026-07-21)
+- ✅ **F0** Bezpečnostní záloha WIP na větev `pre-migration-backup` (GitHub)
+- ✅ **F1** Kopie „Anime List WEB" → OneDrive (bez node_modules/dist/temp/A-List.xlsm/Náhledovky)
+- ✅ **F2** Reorg: `tools/` (8 pipeline skriptů) + `vba/` v git repu
+- ✅ **F3** Oprava cest (bugy z rekonstrukce: map_from_folder, extract_spotify, export_data fallback — chybějící `-ide`; sjednoceno na `APP_ROOT`); ověřeno 2× (compile + resolution)
+- ✅ **F4** Jednorázové skripty → `docs/ONEOFF_SCRIPTS_NOTES.md`, pak smazáno (originály zůstávají jako záloha do F7)
+- ✅ **F5** `npm install` + build OK (5.84s); commit `528166c` + push na `main` (skutečná záloha)
+- ✅ **F6** Přesun „Anime slučovač rozborů" (1,1 GB) + „Anime list - experimenting" (4,9 GB); opraveno 40 py cest slučovače (Desktop→OneDrive)
+- ✅ **F8** VBA cesty: `AutoUpdateWeb.bas` + experimenting `Export_Anilist_WEB.bas` → nová cesta + `tools\export_data.py`
+- ⬜ **F7** Smazání originálů — ČEKÁ na finální potvrzení uživatele
+- ⬜ **F9** OneDrive vyloučení node_modules + finální report
+- ⚠️ **NUTNÉ RUČNĚ:** uživatel musí re-importovat `AutoUpdateWeb.bas` do Excelu (Anime list.xlsm), aby se změna cesty projevila v živém makru.
 
 ## Cíl
 

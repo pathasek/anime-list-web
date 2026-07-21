@@ -31,10 +31,12 @@ Sub AktualizovatWebAplikaci()
     End If
     
     ' Kde je uložený Python skript a složka s webovou aplikací?
+    ' Po migraci 2026-07-21: workspace přesunut do OneDrive Anime_List,
+    ' Python pipeline konsolidována do anime-list-web\tools\
     Dim workspacePath As String
-    workspacePath = "c:\Users\macou\.gemini\antigravity-ide\scratch\Anime List WEB"
-    
-    pyScriptPath = workspacePath & "\export_data.py"
+    workspacePath = "C:\Users\macou\OneDrive - ŠKODA AUTO VYSOKÁ ŠKOLA o.p.s\Osobní PC\Excel Projekt - nemazat\Anime_List\Anime List WEB"
+
+    pyScriptPath = workspacePath & "\anime-list-web\tools\export_data.py"
     webAppPath = workspacePath & "\anime-list-web"
     
     ' =========================================================
