@@ -308,6 +308,17 @@ _STORY_RE = re.compile(r'shrnut|narativni\s+syntez|narativni\s+a\s+scenick|podro
 _TITLE_RE = re.compile(r'analyticka\s+(?:studie|zprava)|komplexni\s+analyt|komplexni\s+dekonstrukce')
 # Přechod na sekci kategorií („Deskriptivní analýza komponentů") = konec story
 _COMPONENT_RE = re.compile(r'deskriptivni\s+analyz|deskriptivni\s+.*komponent|analyza\s+komponent|popisna\s+analyz')
+# Číslovaná top-level sekce NE-dějové analýzy (postavy/animace/vizuál/hudba…) =
+# konec „Děje" u akademických rozborů, které nemají „Deskriptivní analýzu" ani
+# holé „Animace" (např. Hrob světlušek: „3. Komplexní analýza postav" ukončí děj).
+_ACADEMIC_STOP = re.compile(
+    r'analyza\s+postav|postav\s+a\s+psycholog|profil\w*\s+postav|analyza\s+komponent|deskriptivn|'
+    r'technick[aá]\s+analyza\s+animace|animace\s+a\s+vizualn|vizualni\s+(?:styl|estetik|jazyk)|'
+    r'hudebn[ií]|zvukov[aá]\s+slozk|technick[aá]\s+(?:realizace|slozka)')
+
+def _top_secnum(text):
+    m = re.match(r'^\s*(\d+)\.\s', text)
+    return int(m.group(1)) if m else None
 
 def _matches_story_heading(text):
     h = _norm_heading(text)
@@ -317,6 +328,10 @@ def _matches_story_heading(text):
 
 def _matches_component_heading(text):
     return bool(_COMPONENT_RE.search(_norm_heading(text)))
+
+# Číslovaná sekce ne-dějové analýzy → ukončí „Děj"
+def _is_academic_stop(text):
+    return _top_secnum(text) is not None and bool(_ACADEMIC_STOP.search(_norm_heading(text)))
 
 
 def parse_docx_categories(docx_path: str) -> dict[str, any]:
@@ -405,7 +420,7 @@ def parse_docx_categories(docx_path: str) -> dict[str, any]:
                     # „Deskriptivní analýza komponentů" nebo do „Animace" (výše).
                     # I nadpisy mapující na kategorii (např. „1.3 Závěr") jsou tu
                     # obsahem děje, ne kategorií.
-                    if para_is_bold and len(text) < 120 and _matches_component_heading(text):
+                    if para_is_bold and len(text) < 130 and (_matches_component_heading(text) or _is_academic_stop(text)):
                         if current_paragraphs and story is None:
                             story = {"title": current_story_title, "text": "\n".join(current_paragraphs).strip()}
                         current_story_title = None

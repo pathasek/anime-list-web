@@ -554,12 +554,104 @@ function buildAnimeEvents(a, episodes, info, schedule, nowTs) {
     return events
 }
 
+// Klíč cache je seřazený (pořadí seznamu se mění asynchronně a nesmí ho
+// zneplatnit). Sdílený mezi kalendářem i prewarmem v Dashboardu.
+function airingCalCacheKey(list) {
+    return (list || []).map(a => `${a.name}:${a.watchedEps || 0}`).sort().join('|')
+}
+
+// Načtení všech událostí kalendáře (fáze bez sítě → AniList rozvrh → doplnění
+// zastaralých seznamů). Volá onUpdate po každém kroku a průběžně ukládá do
+// cache. Sdílené pro prewarm (Dashboard) i pro mountnutý kalendář.
+async function loadAiringCalEvents(list, cacheKey, signal, onUpdate) {
+    const nowTs = Date.now()
+    const malIds = list.map(a => extractMalId(a.mal_url)).filter(Boolean)
+    // AniList rozvrh na pozadí — nečeká se na něj před prvním vykreslením.
+    const schedulesPromise = fetchAnilistSchedules(malIds, signal).catch(() => ({}))
+
+    const next = { ...(loadCalCache()?.animeEvents || {}) }
+    const names = new Set(list.map(a => a.name))
+    for (const k of Object.keys(next)) {
+        if (!names.has(k)) delete next[k]
+    }
+    const emit = () => { if (onUpdate) onUpdate({ ...next }) }
+    const persist = () => saveCalCache({ key: cacheKey, at: Date.now(), animeEvents: next })
+
+    // FÁZE 1 — bez čekání na síť: episode listy z IndexedDB + info z cache.
+    const EP_LIST_TTL = 24 * 60 * 60 * 1000
+    const staleQueue = []
+    const cachedByMal = {}
+    const infoByMal = {}
+    for (const a of list) {
+        const malId = extractMalId(a.mal_url)
+        if (!malId) continue
+        const [cachedList, info] = await Promise.all([
+            getCachedEpisodeList(malId).catch(() => null),
+            getAnimeInfo(malId, 'high', signal).catch(() => null)
+        ])
+        if (signal.aborted) return
+        cachedByMal[malId] = cachedList
+        infoByMal[malId] = info
+        next[a.name] = buildAnimeEvents(a, cachedList?.episodes || null, info, null, nowTs)
+        emit()
+        if (!cachedList?.fetchedAt || nowTs - cachedList.fetchedAt > EP_LIST_TTL) {
+            staleQueue.push({ a, malId, info })
+        }
+    }
+    persist()
+
+    // FÁZE 1b — AniList rozvrh (přesné časy/čísla budoucích dílů).
+    const schedules = await schedulesPromise
+    if (signal.aborted) return
+    for (const a of list) {
+        const malId = extractMalId(a.mal_url)
+        if (!malId || !schedules[malId]) continue
+        next[a.name] = buildAnimeEvents(a, cachedByMal[malId]?.episodes || null, infoByMal[malId], schedules[malId], nowTs)
+    }
+    emit()
+    persist()
+
+    // FÁZE 2 — síťové doplnění zastaralých seznamů; každé anime hned tiše
+    // přepíše své chipy (nic nebliká, nic se nemaže).
+    for (const { a, malId, info } of staleQueue) {
+        const episodes = await getOrFetchEpisodeList(malId, 'high', signal).catch(() => null)
+        if (signal.aborted) return
+        next[a.name] = buildAnimeEvents(a, episodes, info, schedules[malId], nowTs)
+        emit()
+        persist()
+    }
+}
+
+// Jediný sdílený běh loaderu na daný cacheKey. Drží se i po sbalení Statusu
+// (prewarm z Dashboardu ho startuje), takže po maximalizaci je kalendář už
+// hotový a nebliká. Odběratelé (mountnutý kalendář) dostanou aktuální stav
+// okamžitě a pak živě.
+let _calRun = null // { key, events, subs:Set, done, controller }
+
+function ensureCalRun(list, cacheKey) {
+    if (_calRun && _calRun.key === cacheKey) return _calRun
+    if (_calRun) _calRun.controller.abort()
+    const cached = loadCalCache()
+    const controller = new AbortController()
+    const run = { key: cacheKey, events: cached?.animeEvents || null, subs: new Set(), done: false, controller }
+    _calRun = run
+    // Čerstvá cache (stejný klíč, < TTL) → znovu nenačítat, šetří síť; kalendář
+    // se ukáže rovnou z cache. Jinak se spustí loader na pozadí.
+    if (cached && cached.key === cacheKey && Date.now() - cached.at < CAL_CACHE_TTL) {
+        run.done = true
+        return run
+    }
+    loadAiringCalEvents(list, cacheKey, controller.signal, (ev) => {
+        run.events = ev
+        run.subs.forEach(fn => { try { fn(ev) } catch { /* odhlášený odběratel */ } })
+    }).catch(() => { /* přerušeno / síť */ }).finally(() => { run.done = true })
+    return run
+}
+
 function AiringCalendar({ airingAnime }) {
     const today = new Date()
     const [viewYM, setViewYM] = useState({ y: today.getFullYear(), m: today.getMonth() })
-    // Klíč je seřazený, protože pořadí seznamu se mění asynchronně
-    // (airingSortKeys) a nesmí zneplatnit cache.
-    const cacheKey = airingAnime.map(a => `${a.name}:${a.watchedEps || 0}`).sort().join('|')
+    const cacheKey = airingCalCacheKey(airingAnime)
     // Poslední známá podoba se ukáže OKAMŽITĚ (i po refreshi stránky, i když
     // je „stará") — refresh ji pak anime po anime tiše přepíše.
     const [animeEvents, setAnimeEvents] = useState(() => loadCalCache()?.animeEvents || null)
@@ -573,97 +665,16 @@ function AiringCalendar({ airingAnime }) {
         airingRef.current = airingAnime
     }, [airingAnime])
 
+    // Kalendář se jen PŘIPOJÍ ke sdílenému běhu loaderu (ten startuje prewarm
+    // v Dashboardu už při načtení, nezávisle na rozbalení Statusu). Po
+    // maximalizaci proto dostane aktuální stav OKAMŽITĚ (hotový, když prewarm
+    // doběhl) a dál živě — žádné restartování načítání při každém rozbalení.
     useEffect(() => {
-        // Plná priorita platí, dokud je uživatel v Dashboardu s rozbaleným
-        // Statusem. Po odchodu smí rozdělaná aktualizace DOBĚHNOUT na pozadí
-        // a uložit se do cache (příští návštěva je hned čerstvá) — ale JEN
-        // když neběží Excel; při běžícím Excelu se zruší (abort projde až
-        // do rate-limit fronty), aby měl Excel update klid.
-        const controller = new AbortController()
-        const signal = controller.signal
-        const cached = loadCalCache()
-        if (cached && cached.key === cacheKey && Date.now() - cached.at < CAL_CACHE_TTL) return
-
-        const load = async () => {
-            const list = airingRef.current
-            const nowTs = Date.now()
-            const malIds = list.map(a => extractMalId(a.mal_url)).filter(Boolean)
-
-            // AniList rozvrh se stahuje NA POZADÍ — nečeká se na něj před prvním
-            // vykreslením (to byl hlavní důvod „lagu": celý kalendář čekal na
-            // jeden síťový GraphQL dotaz). Kalendář se ukáže hned z lokální
-            // cache a rozvrh ho pak jen zpřesní.
-            const schedulesPromise = fetchAnilistSchedules(malIds, signal).catch(() => ({}))
-
-            // Začíná se od poslední známé podoby — jen se vyhodí anime,
-            // která už nejsou ve sledovaných; zbytek zůstává viditelný,
-            // dokud ho nepřepíšou čerstvá data.
-            const next = { ...(loadCalCache()?.animeEvents || {}) }
-            const names = new Set(list.map(a => a.name))
-            for (const k of Object.keys(next)) {
-                if (!names.has(k)) delete next[k]
-            }
-
-            // FÁZE 1 — bez čekání na síť: episode listy z IndexedDB + info
-            // z localStorage/statické cache. Každé anime se vykreslí HNED,
-            // jak se spočítá (žádné čekání na celý batch ani na AniList
-            // rozvrh) — proto se maximalizovaný Status naplní naráz, ne po
-            // jednom titulu. Rozvrh (přesné časy budoucích dílů) se doplní
-            // v druhé fázi. Cache episode listů se přechová pro přepočet.
-            const EP_LIST_TTL = 24 * 60 * 60 * 1000
-            const staleQueue = []
-            const cachedByMal = {}
-            const infoByMal = {}
-            for (const a of list) {
-                const malId = extractMalId(a.mal_url)
-                if (!malId) continue
-                const [cachedList, info] = await Promise.all([
-                    getCachedEpisodeList(malId).catch(() => null),
-                    getAnimeInfo(malId, 'high', signal).catch(() => null)
-                ])
-                if (signal.aborted) return
-                cachedByMal[malId] = cachedList
-                infoByMal[malId] = info
-                next[a.name] = buildAnimeEvents(a, cachedList?.episodes || null, info, null, nowTs)
-                setAnimeEvents({ ...next })
-                if (!cachedList?.fetchedAt || nowTs - cachedList.fetchedAt > EP_LIST_TTL) {
-                    staleQueue.push({ a, malId, info })
-                }
-            }
-
-            // FÁZE 1b — jakmile dorazí AniList rozvrh, přepočítej všechna
-            // anime s přesnými čísly a časy budoucích dílů (jeden batch update).
-            const schedules = await schedulesPromise
-            if (signal.aborted) return
-            for (const a of list) {
-                const malId = extractMalId(a.mal_url)
-                if (!malId || !schedules[malId]) continue
-                next[a.name] = buildAnimeEvents(a, cachedByMal[malId]?.episodes || null, infoByMal[malId], schedules[malId], nowTs)
-            }
-            setAnimeEvents({ ...next })
-
-            // FÁZE 2 — sekvenční síťové doplnění jen zastaralých seznamů;
-            // každé dokončené anime hned tiše přepíše své chipy (nic nebliká,
-            // nic se nemaže). Priorita 'high' předbíhá downloader i při
-            // zavřeném Excelu; downloader sám při otevřeném Excelu stojí.
-            // Po odchodu z Dashboardu (bez abortu) smyčka dojede na pozadí —
-            // setAnimeEvents je pak neškodné no-op, ale cache se uloží.
-            for (const { a, malId, info } of staleQueue) {
-                const episodes = await getOrFetchEpisodeList(malId, 'high', signal).catch(() => null)
-                if (signal.aborted) return
-                next[a.name] = buildAnimeEvents(a, episodes, info, schedules[malId], nowTs)
-                setAnimeEvents({ ...next })
-            }
-            saveCalCache({ key: cacheKey, at: Date.now(), animeEvents: next })
-        }
-
-        load()
-        return () => {
-            // Odchod z tabu: abort JEN když běží Excel — jinak nechat doběhnout
-            isExcelRunning()
-                .then(running => { if (running) controller.abort() })
-                .catch(() => { /* endpoint nedostupný ⇒ Excel neběží */ })
-        }
+        const run = ensureCalRun(airingRef.current, cacheKey)
+        const cb = (ev) => setAnimeEvents(ev)
+        run.subs.add(cb)
+        setAnimeEvents(run.events)   // aktuální stav hned
+        return () => { run.subs.delete(cb) }
     }, [cacheKey])
 
     // Sloučení per-anime událostí na dny; v rámci dne mají přednost důležité
@@ -1251,6 +1262,17 @@ function Dashboard() {
             warmPoster(getCachedPoster(malId, 'small'));
             warmPoster(getCachedPoster(malId, 'large'));
         }
+    }, [stats?.excelData?.airingAnime]);
+
+    // PREWARM kalendáře: sdílený běh loaderu se nastartuje HNED při načtení
+    // Dashboardu (nezávisle na rozbalení Statusu). Než uživatel maximalizuje
+    // Status, jsou události kalendáře už načtené → po otevření se zobrazí
+    // naráz a kompletní, ne postupně/blikavě. (Klíč se řadí, takže neseřazený
+    // seznam sem dá stejný cacheKey jako kalendář.)
+    useEffect(() => {
+        const list = stats?.excelData?.airingAnime;
+        if (!list || list.length === 0) return;
+        ensureCalRun(list, airingCalCacheKey(list));
     }, [stats?.excelData?.airingAnime]);
 
     const sortedAiringAnime = useMemo(() => {
