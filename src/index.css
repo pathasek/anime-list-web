@@ -701,6 +701,23 @@ tr:hover td {
   padding: 0 2px;
 }
 
+/* ─── Sjednocený obrys sekcí ───
+   Inline-stylované kartové sekce (např. „Graf zhlédnutých epizod") mají
+   generický var(--border-color). Standardní karty (.dashboard-group,
+   .full-chart-wrapper…) ale v akcentních motivech dostávají tónovaný obrys,
+   takže inline sekce vypadaly „jinak". Tato třída sjednotí POUZE barvu obrysu
+   (nic jiného) — v základním motivu beze změny, v akcentních motivech přebije
+   inline border-color na stejný tón jako ostatní sekce. */
+[data-theme="rezero"] .themed-outline {
+  border-color: rgba(255, 111, 0, 0.15) !important;
+}
+[data-theme="scarlet-outline"] .themed-outline {
+  border-color: rgba(215, 70, 91, 0.15) !important;
+}
+[data-theme="emerald-forest"] .themed-outline {
+  border-color: rgba(52, 211, 153, 0.18) !important;
+}
+
 /* ─── Group Content (Expanded Full Charts) ─── */
 .dashboard-group-content {
   display: flex;
@@ -911,12 +928,158 @@ tr:hover td {
   flex-wrap: wrap;
 }
 
-/* Status group: kalendář | právě sledované | pending */
+/* Dvouřádkové položky: jméno na 1. řádku, všechny info na 2. řádku */
+.text-list-items.text-list-stacked li {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 3px;
+}
+
+.text-list-stacked .tl-line-name {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  min-width: 0;
+}
+
+.text-list-stacked .tl-line-name .text-list-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.text-list-stacked .tl-line-meta {
+  /* zarovnat info pod jméno (za pořadové číslo) */
+  padding-left: calc(28px + var(--spacing-sm));
+}
+
+.text-list-stacked .tl-line-meta .text-list-value {
+  margin-left: 0;
+  white-space: normal;
+}
+
+/* Status group: kalendář | (právě sledované nad pending).
+   Pending míval vlastní 3. sloupec, ale s 1 položkou zel prázdnotou. Teď jsou
+   jen 2 sloupce: vpravo dynamický blok, kde sledované dostanou maximum místa. */
 .dashboard-group-content.status-content {
   display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 0.8fr);
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.55fr);
   gap: var(--spacing-md);
   align-items: stretch;
+}
+
+/* Pravý sloupec: výškou drží krok s kalendářem (520px); sledované rostou
+   a scrollují uvnitř, pending se přizpůsobí obsahu pod nimi */
+.status-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  min-width: 0;
+  min-height: 0;
+  height: 520px;
+}
+
+.status-right-col .airing-panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto !important;
+}
+
+.status-right-col .pending-panel {
+  flex: 0 0 auto;
+  height: auto !important;
+  max-height: 45%;
+}
+
+/* Právě sledované — karty ve 2 sloupcích (auto-fill: 1 sloupec na úzko) */
+.airing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(248px, 1fr));
+  gap: var(--spacing-sm);
+  align-content: start;
+}
+
+.airing-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px;
+  border-bottom: none !important;
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.02) 100%);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.airing-card:hover {
+  border-color: rgba(99, 102, 241, 0.28);
+  box-shadow: 0 2px 12px rgba(99, 102, 241, 0.08);
+}
+
+.airing-card-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.airing-card-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.airing-card-name {
+  font-weight: 600;
+  font-size: 0.82rem;
+  line-height: 1.25;
+}
+
+.airing-card-mal {
+  color: #3b82f6;
+  font-size: 0.7rem;
+  text-decoration: none;
+  background: rgba(59, 130, 246, 0.1);
+  padding: 1px 4px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.airing-card-ep {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+/* Pending — kompaktní karty tečou vodorovně, ne jako tenký sloupec */
+.pending-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: var(--spacing-sm);
+}
+
+.pending-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-bottom: none !important;
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.02) 100%);
+}
+
+.pending-card-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pending-card .text-list-name {
+  flex: 1;
+  min-width: 0;
 }
 
 /* ─── Kalendář vysílání (maximalizovaný Status) ─── */
@@ -1129,20 +1292,14 @@ tr:hover td {
   opacity: 0.8;
 }
 
-/* Užší obrazovky: kalendář přes celou šířku, seznamy pod ním vedle sebe */
+/* Užší obrazovky: kalendář a pravý blok pod sebe přes celou šířku */
 @media (max-width: 1250px) {
   .dashboard-group-content.status-content {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .status-content .airing-cal-card {
-    grid-column: 1 / -1;
-  }
-}
-
-@media (max-width: 768px) {
-  .dashboard-group-content.status-content {
     grid-template-columns: 1fr;
+  }
+
+  .status-right-col .pending-panel {
+    max-height: none;
   }
 }
 

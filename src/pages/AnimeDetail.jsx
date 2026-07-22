@@ -765,7 +765,7 @@ function AnimeDetail() {
                         </div>
 
                         {/* TAGS ROW — Žánry + Témata nahoře, AniList Tagy dole */}
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)', background: 'var(--bg-secondary)', padding: 'var(--spacing-md)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                        <div className="themed-outline" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)', background: 'var(--bg-secondary)', padding: 'var(--spacing-md)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
                             {/* Žánry + Témata na jednom řádku */}
                             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)', flexWrap: 'wrap' }}>
                                 {anime.genres && (

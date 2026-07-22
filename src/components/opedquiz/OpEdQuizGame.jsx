@@ -84,10 +84,16 @@ export default function OpEdQuizGame({ onClose }) {
             fetch('data/animethemes_op_ed.json?v=' + Date.now()).then(r => r.json()).catch(() => null),
             fetch('data/op_ed_videos.json?v=' + Date.now()).then(r => r.json()).catch(() => null),
             fetch('data/anime_list.json?v=' + Date.now()).then(r => r.json()),
+            fetch('data/favorites.json?v=' + Date.now()).then(r => r.json()).catch(() => null),
         ])
-            .then(([themesJson, opEd, animeList]) => {
+            .then(([themesJson, opEd, animeList, favJson]) => {
                 if (cancelled) return
-                setRaw({ themes: themesJson?.themes || [], videos: opEd?.videos || [], animeList })
+                setRaw({
+                    themes: themesJson?.themes || [],
+                    videos: opEd?.videos || [],
+                    favorites: Array.isArray(favJson) ? favJson : (favJson?.favorites || []),
+                    animeList,
+                })
             })
             .catch(() => { if (!cancelled) setLoadError('Nepodařilo se načíst data pro hru.') })
         return () => { cancelled = true }

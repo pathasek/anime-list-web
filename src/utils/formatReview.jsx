@@ -58,8 +58,8 @@ function buildMasterRegex() {
   const prefixGroup = PREFIXES.map(escapeRegex).join('|');
   const catGroup = allPatterns.map(c => escapeRegex(c.pattern)).join('|');
 
-  // Full pattern: optional prefix + category + whitespace + optional ( + number + /10 + optional )
-  const pattern = `(?:\\b(?:${prefixGroup})\\s+)?\\b(${catGroup})\\s*(\\(?)\\s*(\\d+[.,]?\\d*)\\s*/\\s*10\\s*(\\)?)`;
+  // Full pattern: optional prefix + category + optional connector (na|:) + whitespace + optional ( + number + /10 + optional )
+  const pattern = `(?:\\b(?:${prefixGroup})\\s+)?\\b(${catGroup})\\s*(?:(na|:)\\s+)?(\\(?)\\s*(?:na\\s+)?(\\d+[.,]?\\d*)\\s*/\\s*10\\s*(\\)?)`;
   
   return new RegExp(pattern, 'gi');
 }
@@ -108,25 +108,26 @@ export function formatReview(text, animeName) {
       parts.push(...highlightAnimeName(beforeText, namesToMatch, parts.length === 0));
     }
 
-    // Check if it's an FH match (FH groups: 5=prefix, 6=score)
-    if (match[6] !== undefined) {
+    // Check if it's an FH match (FH groups: 6=prefix, 7=score)
+    if (match[7] !== undefined) {
       // FH match
-      const prefix = match[5] || '';
-      const score = parseFloat(match[6].replace(',', '.'));
+      const prefix = match[6] || '';
+      const score = parseFloat(match[7].replace(',', '.'));
       const color = getRatingColor(score);
       parts.push(
         <span key={parts.length}>
           {prefix && <span style={{ fontWeight: 'bold' }}>{prefix} </span>}
           <span style={{ fontWeight: 'bold' }}>FH </span>
-          <span style={{ fontWeight: 'bold', color }}>{match[6]}/10</span>
+          <span style={{ fontWeight: 'bold', color }}>{match[7]}/10</span>
         </span>
       );
     } else {
-      // Category match: groups (1=cat, 2=(, 3=score, 4=))
+      // Category match: groups (1=cat, 2=connector, 3=(, 4=score, 5=))
       const catName = match[1];
-      const openParen = match[2] || '';
-      const closeParen = match[4] || '';
-      const score = parseFloat(match[3].replace(',', '.'));
+      const connector = match[2] ? ` ${match[2]} ` : ' ';
+      const openParen = match[3] || '';
+      const closeParen = match[5] || '';
+      const score = parseFloat(match[4].replace(',', '.'));
       const color = getRatingColor(score);
 
       // Find canonical category name
@@ -140,9 +141,10 @@ export function formatReview(text, animeName) {
 
       parts.push(
         <span key={parts.length}>
-          <span style={{ fontWeight: 'bold' }}>{canonical} </span>
+          <span style={{ fontWeight: 'bold' }}>{canonical}</span>
+          <span style={{ fontWeight: 'normal' }}>{connector}</span>
           {openParen}
-          <span style={{ fontWeight: 'bold', color }}>{match[3]}/10</span>
+          <span style={{ fontWeight: 'bold', color }}>{match[4]}/10</span>
           {closeParen}
         </span>
       );

@@ -147,7 +147,7 @@ function getCachedPoster(malId, size) {
         } catch { /* poškozený záznam */ }
     }
     if (!memo) return null
-    return size === 'large' ? (memo.large || memo.small) : (memo.small || memo.large)
+    return (size === 'large' || size === 'xlarge') ? (memo.large || memo.small) : (memo.small || memo.large)
 }
 
 // Přednačtení + DEKÓDOVÁNÍ posterů do paměti prohlížeče. Fresh <img> při
@@ -195,14 +195,16 @@ function JikanPoster({ malUrl, size = 'small' }) {
                 const small = info.imageUrl || null
                 const large = info.largeImageUrl || info.imageUrl || null
                 _posterMemCache[malId] = { small, large }
-                if (!cancelled) setImageUrl(size === 'large' ? large : small)
+                if (!cancelled) setImageUrl(size === 'large' || size === 'xlarge' ? large : small)
             }
             if (!cancelled) setLoading(false)
         })
         return () => { cancelled = true }
     }, [malId, size])
 
-    const dims = size === 'large' ? { width: '45px', height: '64px' } : { width: '20px', height: '28px' }
+    const dims = size === 'xlarge' ? { width: '58px', height: '82px' }
+        : size === 'large' ? { width: '45px', height: '64px' }
+        : { width: '20px', height: '28px' }
 
     return (
         <div className="jikan-poster-container" style={dims}>
@@ -775,6 +777,35 @@ function AiringCalendar({ airingAnime }) {
             </div>
         </div>
     )
+}
+
+// Formátování rozsahu zhlédnutí pro „Poslední zhlédnuté":
+//   stejný den         → d.m.yyyy
+//   stejný měsíc a rok  → d. - d.m.yyyy          (A)
+//   stejný rok          → d.m. - d.m.yyyy        (C)
+//   různý rok           → d.m.yyyy - d.m.yyyy    (D)
+function formatWatchRange(startDate, endDate) {
+    const toDate = (v) => {
+        if (!v) return null
+        const d = new Date(v)
+        return isNaN(d.getTime()) ? null : d
+    }
+    const full = (d) => `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`
+    const s = toDate(startDate)
+    const e = toDate(endDate)
+    if (!s && !e) return ''
+    if (s && !e) return full(s)
+    if (!s && e) return full(e)
+    const sameDay = s.getDate() === e.getDate() && s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear()
+    if (sameDay) return full(e)
+    const end = full(e)
+    if (s.getFullYear() === e.getFullYear()) {
+        if (s.getMonth() === e.getMonth()) {
+            return `${s.getDate()}. - ${end}`          // A) d. - d.m.yyyy
+        }
+        return `${s.getDate()}.${s.getMonth() + 1}. - ${end}`  // C) d.m. - d.m.yyyy
+    }
+    return `${full(s)} - ${end}`                       // D) d.m.yyyy - d.m.yyyy
 }
 
 function Dashboard() {
@@ -2381,59 +2412,68 @@ function Dashboard() {
                             <AiringCalendar airingAnime={sortedAiringAnime} />
                         )}
 
-                        {/* Middle: Airing Anime with stats */}
-                        {sortedAiringAnime && sortedAiringAnime.length > 0 && (
-                            <div className="full-chart-wrapper text-list">
-                                <div className="chart-title">📺 Právě sledované ({sortedAiringAnime.length})</div>
-                                <div className="chart-body text-list-scroll">
-                                    <ul className="text-list-items" style={{ gap: '4px' }}>
-                                        {sortedAiringAnime.map((a, i) => (
-                                            <li key={i} style={{ gap: '8px', padding: '6px 4px' }}>
-                                                <JikanPoster malUrl={a.mal_url} size="large" />
-                                                <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                                        <Link to={`/anime/${encodeURIComponent(a.name)}`} className="anime-link" style={{ fontWeight: 600, fontSize: '0.82rem' }}>
-                                                            {a.name}
-                                                        </Link>
-                                                        {a.mal_url && (
-                                                            <a href={a.mal_url} target="_blank" rel="noreferrer" title="Otevřít na MyAnimeList" style={{ color: '#3b82f6', fontSize: '0.7rem', textDecoration: 'none', background: 'rgba(59, 130, 246, 0.1)', padding: '1px 4px', borderRadius: '4px' }}>
-                                                                MAL ↗
-                                                            </a>
-                                                        )}
-                                                    </div>
-                                                    <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
-                                                        EP {a.watchedEps}
-                                                        {a.startDate && ` • od ${new Date(a.startDate).toLocaleDateString('cs-CZ')}`}
-                                                    </span>
-                                                    <AiringEpisodeStats malUrl={a.mal_url} animeName={a.name} historyLog={historyLog} episodeRatings={episodeRatings} />
-                                                </div>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        )}
+                        {/* Right region: Právě sledované (roste) + Pending (kompaktně dole).
+                            Pending bývá 1 položka → dřív ukrádal celý sloupec. Teď je vpravo
+                            jen jeden dynamický blok: sledované dostanou maximum místa a Pending
+                            se přizpůsobí obsahu. */}
+                        {((sortedAiringAnime && sortedAiringAnime.length > 0) || (excelData.pendingAnime && excelData.pendingAnime.length > 0)) && (
+                            <div className="status-right-col">
+                                {/* Právě sledované — širší panel, karty ve 2 sloupcích, větší postery */}
+                                {sortedAiringAnime && sortedAiringAnime.length > 0 && (
+                                    <div className="full-chart-wrapper text-list airing-panel">
+                                        <div className="chart-title">📺 Právě sledované ({sortedAiringAnime.length})</div>
+                                        <div className="chart-body text-list-scroll">
+                                            <ul className="text-list-items airing-grid">
+                                                {sortedAiringAnime.map((a, i) => (
+                                                    <li key={i} className="airing-card">
+                                                        <JikanPoster malUrl={a.mal_url} size="xlarge" />
+                                                        <div className="airing-card-body">
+                                                            <div className="airing-card-head">
+                                                                <Link to={`/anime/${encodeURIComponent(a.name)}`} className="anime-link airing-card-name">
+                                                                    {a.name}
+                                                                </Link>
+                                                                {a.mal_url && (
+                                                                    <a href={a.mal_url} target="_blank" rel="noreferrer" title="Otevřít na MyAnimeList" className="airing-card-mal">
+                                                                        MAL ↗
+                                                                    </a>
+                                                                )}
+                                                            </div>
+                                                            <span className="airing-card-ep">
+                                                                EP {a.watchedEps}
+                                                                {a.startDate && ` • od ${new Date(a.startDate).toLocaleDateString('cs-CZ')}`}
+                                                            </span>
+                                                            <AiringEpisodeStats malUrl={a.mal_url} animeName={a.name} historyLog={historyLog} episodeRatings={episodeRatings} />
+                                                        </div>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                )}
 
-                        {/* Right column: Pending */}
-                        {excelData.pendingAnime && excelData.pendingAnime.length > 0 && (
-                            <div className="full-chart-wrapper text-list">
-                                <div className="chart-title">⏳ Pending ({excelData.pendingAnime.length})</div>
-                                <div className="chart-body text-list-scroll">
-                                    <ul className="text-list-items">
-                                        {excelData.pendingAnime.map((a, i) => (
-                                            <li key={i} style={{ gap: '8px' }}>
-                                                <JikanPoster malUrl={a.mal_url} />
-                                                <span className="text-list-rank">{i + 1}.</span>
-                                                <span className="text-list-name marquee-container">
-                                                    <Link to={`/anime/${encodeURIComponent(a.name)}`} className="marquee-link">
-                                                        <span className="marquee-text">{a.name}</span>
-                                                    </Link>
-                                                </span>
-                                                {a.episodes > 0 && <span className="text-list-value">{a.episodes} ep</span>}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
+                                {/* Pending — kompaktní pás dole; položky tečou vodorovně */}
+                                {excelData.pendingAnime && excelData.pendingAnime.length > 0 && (
+                                    <div className="full-chart-wrapper text-list pending-panel">
+                                        <div className="chart-title">⏳ Pending ({excelData.pendingAnime.length})</div>
+                                        <div className="chart-body text-list-scroll">
+                                            <ul className="text-list-items pending-grid">
+                                                {excelData.pendingAnime.map((a, i) => (
+                                                    <li key={i} className="pending-card">
+                                                        <JikanPoster malUrl={a.mal_url} size="large" />
+                                                        <div className="pending-card-body">
+                                                            <span className="text-list-name marquee-container">
+                                                                <Link to={`/anime/${encodeURIComponent(a.name)}`} className="marquee-link">
+                                                                    <span className="marquee-text">{a.name}</span>
+                                                                </Link>
+                                                            </span>
+                                                            {a.episodes > 0 && <span className="text-list-value">{a.episodes} ep</span>}
+                                                        </div>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         )}
                     </>
@@ -2446,32 +2486,41 @@ function Dashboard() {
                         <div className="full-chart-wrapper text-list">
                             <div className="chart-title">🕐 Poslední zhlédnuté</div>
                             <div className="chart-body text-list-scroll">
-                                <ul className="text-list-items">
-                                    {excelData.latestWatched.map((a, i) => (
-                                        <li key={i}>
-                                            <span className="text-list-rank">{i + 1}.</span>
-                                            <Link to={`/anime/${encodeURIComponent(a.name)}`} className="text-list-name anime-link">{a.name}</Link>
-                                            <span className="text-list-value">
-                                                {a.startDate && new Date(a.startDate).toLocaleDateString('cs-CZ')}
-                                                {a.startDate && a.endDate && ' → '}
-                                                {a.endDate && new Date(a.endDate).toLocaleDateString('cs-CZ')}
-                                                {a.totalTime > 0 && ` • ${toCS((a.totalTime / 60).toFixed(1))}h`}
-                                                {a.rating && ` • ⭐ ${toCS(a.rating)}`}
-                                            </span>
-                                        </li>
-                                    ))}
+                                <ul className="text-list-items text-list-stacked">
+                                    {excelData.latestWatched.map((a, i) => {
+                                        const parts = []
+                                        const range = formatWatchRange(a.startDate, a.endDate)
+                                        if (range) parts.push(range)
+                                        if (a.totalTime > 0) parts.push(`${toCS((a.totalTime / 60).toFixed(1))}h`)
+                                        if (a.rating) parts.push(`⭐ ${toCS(a.rating)}`)
+                                        return (
+                                            <li key={i}>
+                                                <div className="tl-line-name">
+                                                    <span className="text-list-rank">{i + 1}.</span>
+                                                    <Link to={`/anime/${encodeURIComponent(a.name)}`} className="text-list-name anime-link">{a.name}</Link>
+                                                </div>
+                                                <div className="tl-line-meta">
+                                                    <span className="text-list-value">{parts.join(' • ')}</span>
+                                                </div>
+                                            </li>
+                                        )
+                                    })}
                                 </ul>
                             </div>
                         </div>
                         <div className="full-chart-wrapper text-list">
                             <div className="chart-title">🔥 Nejrychlejší Binge</div>
                             <div className="chart-body text-list-scroll">
-                                <ul className="text-list-items">
+                                <ul className="text-list-items text-list-stacked">
                                     {excelData.fastestBinge.map((a, i) => (
                                         <li key={i}>
-                                            <span className="text-list-rank">{i + 1}.</span>
-                                            <Link to={`/anime/${encodeURIComponent(a.name)}`} className="text-list-name anime-link">{a.name}</Link>
-                                            <span className="text-list-value">{a.minPerDay} min/den • {a.days}d • {a.totalHours}h</span>
+                                            <div className="tl-line-name">
+                                                <span className="text-list-rank">{i + 1}.</span>
+                                                <Link to={`/anime/${encodeURIComponent(a.name)}`} className="text-list-name anime-link">{a.name}</Link>
+                                            </div>
+                                            <div className="tl-line-meta">
+                                                <span className="text-list-value">{a.minPerDay} min/den • {a.days}d • {a.totalHours}h</span>
+                                            </div>
                                         </li>
                                     ))}
                                 </ul>
@@ -2480,15 +2529,19 @@ function Dashboard() {
                         <div className="full-chart-wrapper text-list">
                             <div className="chart-title">⏱️ Nejdelší série</div>
                             <div className="chart-body text-list-scroll">
-                                <ul className="text-list-items">
+                                <ul className="text-list-items text-list-stacked">
                                     {excelData.longestSeries.map((s, i) => (
                                         <li key={i}>
-                                            <span className="text-list-rank">{i + 1}.</span>
-                                            <Link to={`/anime?series=${encodeURIComponent(s.name)}`} className="text-list-name anime-link">{s.name}</Link>
-                                            <span className="text-list-value">
-                                                {toCS(s.hours)}h ({toCS(s.days)}d) • {s.totalEps} ep • {s.parts} {s.parts === 1 ? 'díl' : s.parts <= 4 ? 'díly' : 'dílů'}
-                                                {s.avgRating && ` • ⭐ ${toCS(s.avgRating)}`}
-                                            </span>
+                                            <div className="tl-line-name">
+                                                <span className="text-list-rank">{i + 1}.</span>
+                                                <Link to={`/anime?series=${encodeURIComponent(s.name)}`} className="text-list-name anime-link">{s.name}</Link>
+                                            </div>
+                                            <div className="tl-line-meta">
+                                                <span className="text-list-value">
+                                                    {toCS(s.hours)}h ({toCS(s.days)}d) • {s.totalEps} ep • {s.parts} {s.parts === 1 ? 'díl' : s.parts <= 4 ? 'díly' : 'dílů'}
+                                                    {s.avgRating && ` • ⭐ ${toCS(s.avgRating)}`}
+                                                </span>
+                                            </div>
                                         </li>
                                     ))}
                                 </ul>

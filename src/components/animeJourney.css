@@ -95,7 +95,10 @@
 .aj-mini-track {
     display: flex;
     align-items: center;
-    gap: 26px;
+    /* Rozestup řeší margin-right na .aj-orb, NE flex `gap`. U zdvojené smyčky
+       totiž translateX(-50%) musí odpovídat šířce jedné kopie VČETNĚ koncové
+       mezery; flex `gap` mezi kopiemi chybí (gap je jen mezi prvky), takže by
+       reset smyčky poskočil o půl mezery (viditelný „hard stop/start"). */
     width: max-content;
     height: 100%;
     animation-name: aj-drift;
@@ -123,6 +126,7 @@
     color: var(--text-secondary);
     font-size: 0.75rem;
     white-space: nowrap;
+    margin-right: 26px;
     transform: translateY(calc(var(--step) * -7px + 10px));
     transition: color .15s;
 }

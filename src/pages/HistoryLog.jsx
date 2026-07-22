@@ -1106,7 +1106,7 @@ function HistoryLog() {
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--spacing-lg)', alignItems: 'stretch' }}>
                     {chartData ? (
-                        <div style={{
+                        <div className="themed-outline" style={{
                             background: 'var(--bg-secondary)',
                             borderRadius: 'var(--radius-md)',
                             padding: 'var(--spacing-md)',
@@ -1163,14 +1163,14 @@ function HistoryLog() {
                             </div>
                         </div>
                     ) : (
-                        <div style={{ background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', padding: 'var(--spacing-md)', border: '1px solid var(--border-color)' }}>
+                        <div className="themed-outline" style={{ background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', padding: 'var(--spacing-md)', border: '1px solid var(--border-color)' }}>
                             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>GRAF ZHLÉDNUTÝCH EPIZOD</div>
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '180px', color: 'var(--text-muted)' }}>Méně dat pro zobrazení</div>
                         </div>
                     )}
 
                     {/* Heatmap Section */}
-                    <div style={{
+                    <div className="themed-outline" style={{
                         background: 'var(--bg-secondary)',
                         borderRadius: 'var(--radius-md)',
                         padding: 'var(--spacing-md)',

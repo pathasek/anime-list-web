@@ -2,7 +2,7 @@
 // Záměrně izolovaná featura: konzumuje jen data z op_ed_videos.json
 // a anime_list.json, s aplikací sdílí pouze kanonický matcher názvů
 // (utils/mediaMatch). Žádné další vazby na stránky/komponenty.
-import { normalizeAnimeKey, animeKeysMatch } from '../../utils/mediaMatch'
+import { normalizeAnimeKey, animeKeysMatch, songsLooselyMatch } from '../../utils/mediaMatch'
 
 export const POINTS = { anime: 10, type: 2, artist: 4, song: 4 }
 
@@ -51,14 +51,18 @@ const songKeyOf = (s) => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').tri
  *
  * `mode`:
  *   'all'       — celý katalog: všechny OP/ED všech anime v listu.
- *   'favorites' — jen znělky, které mám v GDrive knihovně (op_ed_videos.json),
- *                 ale přehrávané taky z AnimeThemes (audio-only stopa).
- *                 Co se nepodaří spárovat, zůstane na přímém GDrive URL.
+ *   'favorites' — moje oblíbené znělky. Sem patří jak znělky stažené v GDrive
+ *                 knihovně (op_ed_videos.json), tak znělky, které mám jen
+ *                 OHODNOCENÉ v tabulce (favorites.json) a nemám je stažené —
+ *                 ty se přehrají z AnimeThemes (audio-only stopa). Přehrávání:
+ *                 primárně AnimeThemes, u nespárovaných stažených přímé GDrive
+ *                 URL. Ohodnocenou znělku bez AnimeThemes stopy (a bez stažení)
+ *                 nelze přehrát → do poolu se nezařadí.
  *
  * Metadata (přesný název, série, tagy pro podobnostní distraktory) se berou
- * z anime listu — u AnimeThemes přes MAL id, u GDrive přes fuzzy matcher.
+ * z anime listu — u AnimeThemes přes MAL id, u GDrive/tabulky přes fuzzy matcher.
  */
-export function buildPool({ themes, videos, animeList, mode = 'all' }) {
+export function buildPool({ themes, videos, favorites, animeList, mode = 'all' }) {
     const byMalId = new Map()
     const metas = []
     for (const a of animeList || []) {
@@ -168,6 +172,32 @@ export function buildPool({ themes, videos, animeList, mode = 'all' }) {
             tags: tagSetOf(meta),
         })
     }
+
+    // Rozšíření: znělky OHODNOCENÉ v tabulce (favorites.json), které NEMÁM
+    // stažené na GDrive. Přehrají se z AnimeThemes (audio-only stopa) — bez ní
+    // je přehrát nelze, takže se přeskočí. Stažené (i ohodnocené) už přidal
+    // cyklus výše, `used` zabrání duplicitám.
+    for (const f of favorites || []) {
+        const type = (f.type || '').toUpperCase()
+        if (type !== 'OP' && type !== 'ED') continue
+        const meta = findMetaByName(normalizeAnimeKey(f.anime_name))
+        const animeName = meta?.name || f.anime_name
+        if (!animeName) continue
+
+        const cands = byAnimeType.get(`${normalizeAnimeKey(animeName)}|${type}`) || []
+        if (!cands.length) continue                  // žádná AnimeThemes stopa → nelze přehrát
+
+        // Shoda podle názvu písně (tolerantní), jinak jen když má anime jedinou
+        // znělku daného typu (pak je jednoznačná).
+        let hit = f.song ? cands.find(c => songsLooselyMatch(c.song, f.song)) : null
+        if (!hit && cands.length === 1) hit = cands[0]
+        if (!hit) continue
+
+        if (used.has(hit.id)) continue               // už přidané (stažené) — nezdvojovat
+        used.add(hit.id)
+        favPool.push(hit)
+    }
+
     return favPool
 }
 

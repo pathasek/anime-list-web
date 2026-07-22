@@ -355,7 +355,10 @@ export default function AnimeJourney({ animeList, historyLog, episodeRatings, ra
                                     key={`${m.key}-${i}`}
                                     type="button"
                                     className="aj-orb"
-                                    style={{ '--step': i % 4 }}
+                                    // Diagonální schod podle pozice v JEDNÉ kopii (ne ve zdvojené
+                                    // smyčce) — jinak při počtu měsíců mimo násobek 4 druhá kopie
+                                    // začíná na jiné výšce a reset smyčky svisle poskočí.
+                                    style={{ '--step': (i % visible.length) % 4 }}
                                     onClick={() => openAt(m.key)}
                                     title={`${m.label}: +${m.plusCount} anime (celkem ${m.runningTotal})${m.best ? ` · Nejlepší: ${m.best.name} (${m.best.ratingText})` : ''}`}
                                 >

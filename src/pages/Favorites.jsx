@@ -1683,7 +1683,7 @@ function Favorites() {
                         alignItems: 'flex-start'
                     }}>
                         {/* Table 1 (Formerly 3): OST As a Whole - Tile Layout */}
-                        <div style={{ flex: 1.5, minWidth: '350px', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', padding: 'var(--spacing-lg)', border: '1px solid var(--border-color)' }}>
+                        <div className="themed-outline" style={{ flex: 1.5, minWidth: '350px', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', padding: 'var(--spacing-lg)', border: '1px solid var(--border-color)' }}>
                             <h4 style={{ color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                                 🎧 OST Only (As a Whole)
                                 {wholeGroups.length > 0 && (
@@ -1771,7 +1771,7 @@ function Favorites() {
                         </div>
 
                         {/* Table 2: Pieces (Middle) */}
-                        <div style={{ flex: 1, minWidth: '250px', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', padding: 'var(--spacing-lg)', border: '1px solid var(--border-color)' }}>
+                        <div className="themed-outline" style={{ flex: 1, minWidth: '250px', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', padding: 'var(--spacing-lg)', border: '1px solid var(--border-color)' }}>
                             <h4 style={{ color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                                 🎵 OST Only (The Best)
                                 {piecesTracks.length > 0 && (
@@ -1819,7 +1819,7 @@ function Favorites() {
                         </div>
 
                         {/* Table 3 (Formerly 1): Scenes (Right) */}
-                        <div style={{ flex: 1, minWidth: '280px', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', padding: 'var(--spacing-lg)', border: '1px solid var(--border-color)' }}>
+                        <div className="themed-outline" style={{ flex: 1, minWidth: '280px', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', padding: 'var(--spacing-lg)', border: '1px solid var(--border-color)' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                                 <h4 style={{ color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>🎬 OST + Scenes</h4>
                                 <a href="https://savsmb-my.sharepoint.com/:f:/g/personal/xmacoun1_is_savs_cz/IgB4lwcmUIhES67LCrn6UIYHAYtMD7DNKKhq256IvGNUpEs?e=f9QraG" target="_blank" rel="noreferrer" style={{ fontSize: '0.75rem', fontWeight: 'bold', display: 'inline-block', padding: '4px 8px', background: 'rgba(99, 102, 241, 0.1)', borderRadius: 'var(--radius-sm)', color: 'var(--accent-primary)', textDecoration: 'none', border: '1px solid rgba(99, 102, 241, 0.3)' }}>
