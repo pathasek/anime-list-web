@@ -117,6 +117,14 @@ export function buildJourney({ animeList, historyLog, top10Names = [], hmNames =
         monthly.get(key).push(a)
     }
 
+    // Mapa pro dohledání série podle jména anime z historyLog
+    const seriesByAnimeName = new Map()
+    for (const a of animeList || []) {
+        if (a.name) {
+            seriesByAnimeName.set(lc(a.name), { series: a.series, fullName: a.name })
+        }
+    }
+
     // Nakoukané minuty a epizody po měsících z history logu
     // (time "143 min (2,4 hod)", episodes "(6x) EP 7-12")
     const watchedByMonth = new Map()
@@ -124,10 +132,14 @@ export function buildJourney({ animeList, historyLog, top10Names = [], hmNames =
     const rewatchEpsByMonth = new Map()
     const rewatchMinsByMonth = new Map()
     const rewatchTitlesByMonth = new Map()
+    const watchedBySeriesAndMonth = new Map() // monthKey -> Map(seriesLc -> { name, mins, eps, firstName })
+    const allMonthKeys = new Set([...monthly.keys()])
 
     for (const h of historyLog || []) {
         const key = monthKeyOf(h.date)
         if (!key) continue
+        allMonthKeys.add(key)
+
         const mins = (() => {
             const m = /(\d+)\s*min/.exec(h.time || '')
             return m ? parseInt(m[1], 10) : 0
@@ -136,9 +148,26 @@ export function buildJourney({ animeList, historyLog, top10Names = [], hmNames =
 
         const eps = (() => {
             const e = /\((\d+)x\)/.exec(h.episodes || '')
-            return e ? parseInt(e[1], 10) : 0
+            return e ? parseInt(e[1], 10) : (h.episodes ? 1 : 0)
         })()
         if (eps) watchedEpsByMonth.set(key, (watchedEpsByMonth.get(key) || 0) + eps)
+
+        if (h.name && (mins > 0 || eps > 0)) {
+            const lookup = seriesByAnimeName.get(lc(h.name))
+            const seriesName = lookup?.series || h.name
+            const seriesLc = lc(seriesName)
+            const fullName = lookup?.fullName || h.name
+
+            if (!watchedBySeriesAndMonth.has(key)) watchedBySeriesAndMonth.set(key, new Map())
+            const monthMap = watchedBySeriesAndMonth.get(key)
+            const prev = monthMap.get(seriesLc) || { name: seriesName, mins: 0, eps: 0, firstName: fullName }
+            monthMap.set(seriesLc, {
+                name: seriesName,
+                mins: prev.mins + mins,
+                eps: prev.eps + eps,
+                firstName: prev.firstName || fullName
+            })
+        }
 
         if (h.rewatch) {
             if (eps) rewatchEpsByMonth.set(key, (rewatchEpsByMonth.get(key) || 0) + eps)
@@ -150,7 +179,7 @@ export function buildJourney({ animeList, historyLog, top10Names = [], hmNames =
         }
     }
 
-    const sortedKeys = [...monthly.keys()].sort()
+    const sortedKeys = [...allMonthKeys].sort()
     const top10Lc = top10Names.map(lc).filter(Boolean)
     const hmSet = new Set(hmNames.map(lc).filter(Boolean))
     const winners = new Set() // „paměť vítězů“ TOP10/HM — série vyhrává jen jednou
@@ -166,7 +195,7 @@ export function buildJourney({ animeList, historyLog, top10Names = [], hmNames =
     const out = []
 
     for (const key of sortedKeys) {
-        const monthAll = monthly.get(key)
+        const monthAll = monthly.get(key) || []
         runningTotal += monthAll.length
 
         // ── PRIORITA 1: TOP 10 (první výskyt série + paměť vítězů) ──
@@ -306,20 +335,31 @@ export function buildJourney({ animeList, historyLog, top10Names = [], hmNames =
             if (best.reason === 'top10' || best.reason === 'hm') winners.add(lc(best.name))
         }
 
-        // ── Nejdelší anime (VŽDY z celého měsíce, ne HM podmnožiny — VBA oprava) ──
-        // Série sčítá minuty i epizody svých dílů v měsíci.
-        const durBySeries = new Map()
+        // ── Nejdelší anime (Možnost A: z Logu sledování u rozkoukaných i dokončených, fallback na monthAll) ──
         let longest = null
-        for (const a of monthAll) {
-            const d = durOf(a)
-            const eps = num(a.episodes) || 0
-            const sk = lc(a.series)
-            if (sk) {
-                const prev = durBySeries.get(sk) || { name: a.series, mins: 0, eps: 0, firstName: a.name }
-                durBySeries.set(sk, { name: a.series, mins: prev.mins + d, eps: prev.eps + eps, firstName: prev.firstName })
-            } else if (!longest || d > longest.mins) longest = { name: a.name, mins: d, eps, firstName: a.name }
+        const logMap = watchedBySeriesAndMonth.get(key)
+        if (logMap && logMap.size > 0) {
+            for (const item of logMap.values()) {
+                if (!longest || item.mins > longest.mins) {
+                    longest = { ...item }
+                }
+            }
         }
-        for (const s of durBySeries.values()) if (!longest || s.mins > longest.mins) longest = s
+
+        // Fallback na celkové dokoukané položky v měsíci (pokud history log u daného měsíce chybí nebo má 0 mins)
+        if (!longest || longest.mins === 0) {
+            const durBySeries = new Map()
+            for (const a of monthAll) {
+                const d = durOf(a)
+                const eps = num(a.episodes) || 0
+                const sk = lc(a.series)
+                if (sk) {
+                    const prev = durBySeries.get(sk) || { name: a.series, mins: 0, eps: 0, firstName: a.name }
+                    durBySeries.set(sk, { name: a.series, mins: prev.mins + d, eps: prev.eps + eps, firstName: prev.firstName })
+                } else if (!longest || d > longest.mins) longest = { name: a.name, mins: d, eps, firstName: a.name }
+            }
+            for (const s of durBySeries.values()) if (!longest || s.mins > longest.mins) longest = s
+        }
 
         // ── Top typy/žánry/témata/tagy (celý měsíc; tagy s exkluzí vítězů) ──
         const types = topItems(monthAll.map(a => a.type).filter(Boolean), 3)
