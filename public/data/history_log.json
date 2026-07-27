@@ -1,6 +1,69 @@
 [
   {
     "name": "Black Clover, S01",
+    "episodes": "(9x) EP 71-79",
+    "time": "215 min (3,6 hod)",
+    "date": "2026-07-26T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "Black Clover, S01",
+    "episodes": "(11x) EP 60-70",
+    "time": "262 min (4,4 hod)",
+    "date": "2026-07-25T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "Black Clover, S01",
+    "episodes": "(11x) EP 49-59",
+    "time": "262 min (4,4 hod)",
+    "date": "2026-07-24T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "Black Clover, S01",
+    "episodes": "(2x) EP 47-48",
+    "time": "48 min",
+    "date": "2026-07-23T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "From Old Country Bumpkin to Master Swordsman, S02",
+    "episodes": "(1x) EP 3",
+    "time": "23 min",
+    "date": "2026-07-22T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "Saga of Tanya the Evil, S02",
+    "episodes": "(2x) EP 2-3",
+    "time": "46 min",
+    "date": "2026-07-22T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "Tomb Raider King",
+    "episodes": "(1x) EP 2",
+    "time": "23 min",
+    "date": "2026-07-22T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "The Exiled Heavy Knight Knows How to Game the System",
+    "episodes": "(1x) EP 3",
+    "time": "23 min",
+    "date": "2026-07-22T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "Black Clover, S01",
+    "episodes": "(9x) EP 38-46",
+    "time": "215 min (3,6 hod)",
+    "date": "2026-07-22T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "Black Clover, S01",
     "episodes": "(12x) EP 26-37",
     "time": "286 min (4,8 hod)",
     "date": "2026-07-21T00:00:00",
@@ -329,6 +392,20 @@
     "rewatch": null
   },
   {
+    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun, S01",
+    "episodes": "(1x) EP 12",
+    "time": "25 min",
+    "date": "2026-06-27T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "Classroom of the Elite, S04: Second Year, First Semester",
+    "episodes": "(1x) EP 16",
+    "time": "24 min",
+    "date": "2026-06-27T00:00:00",
+    "rewatch": null
+  },
+  {
     "name": "That Time I Got Reincarnated as a Slime, S04",
     "episodes": "(2x) EP 11-12",
     "time": "48 min",
@@ -350,23 +427,9 @@
     "rewatch": null
   },
   {
-    "name": "Classroom of the Elite, S04: Second Year, First Semester",
-    "episodes": "(1x) EP 16",
-    "time": "24 min",
-    "date": "2026-06-27T00:00:00",
-    "rewatch": null
-  },
-  {
     "name": "Petals of Reincarnation",
     "episodes": "(1x) EP 13",
     "time": "24 min",
-    "date": "2026-06-27T00:00:00",
-    "rewatch": null
-  },
-  {
-    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun",
-    "episodes": "(1x) EP 12",
-    "time": "25 min",
     "date": "2026-06-27T00:00:00",
     "rewatch": null
   },
@@ -448,6 +511,13 @@
     "rewatch": null
   },
   {
+    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun, S01",
+    "episodes": "(1x) EP 11",
+    "time": "25 min",
+    "date": "2026-06-18T00:00:00",
+    "rewatch": null
+  },
+  {
     "name": "Classroom of the Elite, S04: Second Year, First Semester",
     "episodes": "(1x) EP 15",
     "time": "24 min",
@@ -458,13 +528,6 @@
     "name": "Petals of Reincarnation",
     "episodes": "(1x) EP 12",
     "time": "24 min",
-    "date": "2026-06-18T00:00:00",
-    "rewatch": null
-  },
-  {
-    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun",
-    "episodes": "(1x) EP 11",
-    "time": "25 min",
     "date": "2026-06-18T00:00:00",
     "rewatch": null
   },
@@ -525,6 +588,20 @@
     "rewatch": null
   },
   {
+    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun, S01",
+    "episodes": "(1x) EP 10",
+    "time": "25 min",
+    "date": "2026-06-14T00:00:00",
+    "rewatch": null
+  },
+  {
+    "name": "Classroom of the Elite, S04: Second Year, First Semester",
+    "episodes": "(1x) EP 14",
+    "time": "24 min",
+    "date": "2026-06-14T00:00:00",
+    "rewatch": null
+  },
+  {
     "name": "That Time I Got Reincarnated as a Slime, S04",
     "episodes": "(1x) EP 10",
     "time": "24 min",
@@ -546,23 +623,9 @@
     "rewatch": null
   },
   {
-    "name": "Classroom of the Elite, S04: Second Year, First Semester",
-    "episodes": "(1x) EP 14",
-    "time": "24 min",
-    "date": "2026-06-14T00:00:00",
-    "rewatch": null
-  },
-  {
     "name": "Petals of Reincarnation",
     "episodes": "(1x) EP 11",
     "time": "24 min",
-    "date": "2026-06-14T00:00:00",
-    "rewatch": null
-  },
-  {
-    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun",
-    "episodes": "(1x) EP 10",
-    "time": "25 min",
     "date": "2026-06-14T00:00:00",
     "rewatch": null
   },
@@ -700,6 +763,13 @@
     "rewatch": null
   },
   {
+    "name": "Classroom of the Elite, S04: Second Year, First Semester",
+    "episodes": "(1x) EP 13",
+    "time": "24 min",
+    "date": "2026-06-03T00:00:00",
+    "rewatch": null
+  },
+  {
     "name": "That Time I Got Reincarnated as a Slime, S04",
     "episodes": "(1x) EP 8",
     "time": "24 min",
@@ -721,13 +791,6 @@
     "rewatch": null
   },
   {
-    "name": "Classroom of the Elite, S04: Second Year, First Semester",
-    "episodes": "(1x) EP 13",
-    "time": "24 min",
-    "date": "2026-06-03T00:00:00",
-    "rewatch": null
-  },
-  {
     "name": "Witch Hat Atelier, S01",
     "episodes": "(1x) EP 10",
     "time": "24 min",
@@ -735,16 +798,16 @@
     "rewatch": null
   },
   {
-    "name": "Daemons of the Shadow Realm",
-    "episodes": "(1x) EP 7",
-    "time": "24 min",
+    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun, S01",
+    "episodes": "(1x) EP 9",
+    "time": "25 min",
     "date": "2026-06-02T00:00:00",
     "rewatch": null
   },
   {
-    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun",
-    "episodes": "(1x) EP 9",
-    "time": "25 min",
+    "name": "Daemons of the Shadow Realm",
+    "episodes": "(1x) EP 7",
+    "time": "24 min",
     "date": "2026-06-02T00:00:00",
     "rewatch": null
   },
@@ -812,16 +875,16 @@
     "rewatch": null
   },
   {
-    "name": "Re:Zero -Starting Life in Another World-, S04",
-    "episodes": "(1x) EP 8",
-    "time": "23 min",
+    "name": "Classroom of the Elite, S04: Second Year, First Semester",
+    "episodes": "(1x) EP 12",
+    "time": "24 min",
     "date": "2026-05-27T00:00:00",
     "rewatch": null
   },
   {
-    "name": "Classroom of the Elite, S04: Second Year, First Semester",
-    "episodes": "(1x) EP 12",
-    "time": "24 min",
+    "name": "Re:Zero -Starting Life in Another World-, S04",
+    "episodes": "(1x) EP 8",
+    "time": "23 min",
     "date": "2026-05-27T00:00:00",
     "rewatch": null
   },
@@ -854,6 +917,13 @@
     "rewatch": null
   },
   {
+    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun, S01",
+    "episodes": "(1x) EP 8",
+    "time": "25 min",
+    "date": "2026-05-25T00:00:00",
+    "rewatch": null
+  },
+  {
     "name": "That Time I Got Reincarnated as a Slime, S04",
     "episodes": "(1x) EP 7",
     "time": "24 min",
@@ -864,13 +934,6 @@
     "name": "Ascendance of a Bookworm: Adopted Daughter of an Archduke",
     "episodes": "(1x) EP 7",
     "time": "23 min",
-    "date": "2026-05-25T00:00:00",
-    "rewatch": null
-  },
-  {
-    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun",
-    "episodes": "(1x) EP 8",
-    "time": "25 min",
     "date": "2026-05-25T00:00:00",
     "rewatch": null
   },
@@ -903,6 +966,13 @@
     "rewatch": null
   },
   {
+    "name": "Classroom of the Elite, S04: Second Year, First Semester",
+    "episodes": "(2x) EP 10-11",
+    "time": "47 min",
+    "date": "2026-05-20T00:00:00",
+    "rewatch": null
+  },
+  {
     "name": "That Time I Got Reincarnated as a Slime, S04",
     "episodes": "(1x) EP 6",
     "time": "24 min",
@@ -920,13 +990,6 @@
     "name": "Re:Zero -Starting Life in Another World-, S04",
     "episodes": "(1x) EP 7",
     "time": "23 min",
-    "date": "2026-05-20T00:00:00",
-    "rewatch": null
-  },
-  {
-    "name": "Classroom of the Elite, S04: Second Year, First Semester",
-    "episodes": "(2x) EP 10-11",
-    "time": "47 min",
     "date": "2026-05-20T00:00:00",
     "rewatch": null
   },
@@ -959,16 +1022,16 @@
     "rewatch": null
   },
   {
-    "name": "Petals of Reincarnation",
+    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun, S01",
     "episodes": "(1x) EP 7",
-    "time": "24 min",
+    "time": "25 min",
     "date": "2026-05-19T00:00:00",
     "rewatch": null
   },
   {
-    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun",
+    "name": "Petals of Reincarnation",
     "episodes": "(1x) EP 7",
-    "time": "25 min",
+    "time": "24 min",
     "date": "2026-05-19T00:00:00",
     "rewatch": null
   },
@@ -1015,7 +1078,7 @@
     "rewatch": null
   },
   {
-    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun",
+    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun, S01",
     "episodes": "(1x) EP 6",
     "time": "25 min",
     "date": "2026-05-12T00:00:00",
@@ -1099,16 +1162,16 @@
     "rewatch": null
   },
   {
-    "name": "Re:Zero -Starting Life in Another World-, S04",
-    "episodes": "(1x) EP 5",
-    "time": "23 min",
+    "name": "Classroom of the Elite, S04: Second Year, First Semester",
+    "episodes": "(1x) EP 9",
+    "time": "24 min",
     "date": "2026-05-06T00:00:00",
     "rewatch": null
   },
   {
-    "name": "Classroom of the Elite, S04: Second Year, First Semester",
-    "episodes": "(1x) EP 9",
-    "time": "24 min",
+    "name": "Re:Zero -Starting Life in Another World-, S04",
+    "episodes": "(1x) EP 5",
+    "time": "23 min",
     "date": "2026-05-06T00:00:00",
     "rewatch": null
   },
@@ -1134,16 +1197,16 @@
     "rewatch": null
   },
   {
-    "name": "Petals of Reincarnation",
+    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun, S01",
     "episodes": "(1x) EP 5",
-    "time": "24 min",
+    "time": "25 min",
     "date": "2026-05-05T00:00:00",
     "rewatch": null
   },
   {
-    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun",
+    "name": "Petals of Reincarnation",
     "episodes": "(1x) EP 5",
-    "time": "25 min",
+    "time": "24 min",
     "date": "2026-05-05T00:00:00",
     "rewatch": null
   },
@@ -1225,9 +1288,9 @@
     "rewatch": null
   },
   {
-    "name": "Re:Zero -Starting Life in Another World-, S04",
+    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun, S01",
     "episodes": "(1x) EP 4",
-    "time": "23 min",
+    "time": "25 min",
     "date": "2026-04-29T00:00:00",
     "rewatch": null
   },
@@ -1239,9 +1302,9 @@
     "rewatch": null
   },
   {
-    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun",
+    "name": "Re:Zero -Starting Life in Another World-, S04",
     "episodes": "(1x) EP 4",
-    "time": "25 min",
+    "time": "23 min",
     "date": "2026-04-29T00:00:00",
     "rewatch": null
   },
@@ -1365,16 +1428,16 @@
     "rewatch": null
   },
   {
-    "name": "Re:Zero -Starting Life in Another World-, S04",
-    "episodes": "(1x) EP 3",
-    "time": "23 min",
+    "name": "Classroom of the Elite, S04: Second Year, First Semester",
+    "episodes": "(1x) EP 7",
+    "time": "24 min",
     "date": "2026-04-22T00:00:00",
     "rewatch": null
   },
   {
-    "name": "Classroom of the Elite, S04: Second Year, First Semester",
-    "episodes": "(1x) EP 7",
-    "time": "24 min",
+    "name": "Re:Zero -Starting Life in Another World-, S04",
+    "episodes": "(1x) EP 3",
+    "time": "23 min",
     "date": "2026-04-22T00:00:00",
     "rewatch": null
   },
@@ -1400,7 +1463,7 @@
     "rewatch": null
   },
   {
-    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun",
+    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun, S01",
     "episodes": "(1x) EP 3",
     "time": "25 min",
     "date": "2026-04-20T00:00:00",
@@ -1491,16 +1554,16 @@
     "rewatch": null
   },
   {
-    "name": "Re:Zero -Starting Life in Another World-, S04",
-    "episodes": "(1x) EP 2",
-    "time": "23 min",
+    "name": "Classroom of the Elite, S04: Second Year, First Semester",
+    "episodes": "(1x) EP 6",
+    "time": "24 min",
     "date": "2026-04-15T00:00:00",
     "rewatch": null
   },
   {
-    "name": "Classroom of the Elite, S04: Second Year, First Semester",
-    "episodes": "(1x) EP 6",
-    "time": "24 min",
+    "name": "Re:Zero -Starting Life in Another World-, S04",
+    "episodes": "(1x) EP 2",
+    "time": "23 min",
     "date": "2026-04-15T00:00:00",
     "rewatch": null
   },
@@ -1519,7 +1582,7 @@
     "rewatch": null
   },
   {
-    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun",
+    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun, S01",
     "episodes": "(1x) EP 2",
     "time": "25 min",
     "date": "2026-04-14T00:00:00",
@@ -1666,7 +1729,7 @@
     "rewatch": null
   },
   {
-    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun",
+    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun, S01",
     "episodes": "(1x) EP 1",
     "time": "25 min",
     "date": "2026-04-05T00:00:00",
@@ -1694,6 +1757,13 @@
     "rewatch": null
   },
   {
+    "name": "Classroom of the Elite, S04: Second Year, First Semester",
+    "episodes": "(4x) EP 1-4",
+    "time": "95 min (1,6 hod)",
+    "date": "2026-04-04T00:00:00",
+    "rewatch": null
+  },
+  {
     "name": "Ascendance of a Bookworm: Adopted Daughter of an Archduke",
     "episodes": "(1x) EP 1",
     "time": "23 min",
@@ -1704,13 +1774,6 @@
     "name": "Daemons of the Shadow Realm",
     "episodes": "(1x) EP 1",
     "time": "24 min",
-    "date": "2026-04-04T00:00:00",
-    "rewatch": null
-  },
-  {
-    "name": "Classroom of the Elite, S04: Second Year, First Semester",
-    "episodes": "(4x) EP 1-4",
-    "time": "95 min (1,6 hod)",
     "date": "2026-04-04T00:00:00",
     "rewatch": null
   },

@@ -1,5 +1,5 @@
 {
- "generated": "2026-07-22T11:25:24",
+ "generated": "2026-07-27T20:28:42",
  "source": "AnimeThemes.moe API",
  "anime_count": 401,
  "count": 1074,
@@ -11160,8 +11160,8 @@
   },
   {
    "mal_id": 63375,
-   "anime_name": "Nippon Sangoku: The Three Nations of the Crimson Sun",
-   "series": null,
+   "anime_name": "Nippon Sangoku: The Three Nations of the Crimson Sun, S01",
+   "series": "Nippon Sangoku: The Three Nations of the Crimson Sun",
    "type": "OP",
    "label": "OP1",
    "song": "Hidane",
@@ -11171,8 +11171,8 @@
   },
   {
    "mal_id": 63375,
-   "anime_name": "Nippon Sangoku: The Three Nations of the Crimson Sun",
-   "series": null,
+   "anime_name": "Nippon Sangoku: The Three Nations of the Crimson Sun, S01",
+   "series": "Nippon Sangoku: The Three Nations of the Crimson Sun",
    "type": "ED",
    "label": "ED1",
    "song": "Chikai",

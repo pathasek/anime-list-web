@@ -13035,6 +13035,177 @@
     ]
   },
   {
+    "name": "Agents of the Four Seasons: Dance of Spring",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 5",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 8",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 9",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 11",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 13",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 14",
+        "rating": 9.0
+      }
+    ]
+  },
+  {
+    "name": "Witch Hat Atelier, S01",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 9.5
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 3",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 4",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 10.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 8",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 9",
+        "rating": 9.25
+      },
+      {
+        "episode": "EP 10",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 9.0
+      },
+      {
+        "episode": "EP 12",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 13",
+        "rating": 9.25
+      }
+    ]
+  },
+  {
+    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun, S01",
+    "episodes": [
+      {
+        "episode": "EP 1",
+        "rating": 8.75
+      },
+      {
+        "episode": "EP 2",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 6",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 7",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 8",
+        "rating": 8.5
+      },
+      {
+        "episode": "EP 9",
+        "rating": 7.75
+      },
+      {
+        "episode": "EP 10",
+        "rating": 8.0
+      },
+      {
+        "episode": "EP 11",
+        "rating": 8.25
+      },
+      {
+        "episode": "EP 12",
+        "rating": 7.5
+      }
+    ]
+  },
+  {
     "name": "Daemons of the Shadow Realm",
     "episodes": [
       {
@@ -13282,67 +13453,6 @@
     ]
   },
   {
-    "name": "Agents of the Four Seasons: Dance of Spring",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 5",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 8",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 9",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 11",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 12",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 13",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 14",
-        "rating": 9.0
-      }
-    ]
-  },
-  {
     "name": "Classroom of the Elite, S04: Second Year, First Semester",
     "episodes": [
       {
@@ -13375,11 +13485,11 @@
       },
       {
         "episode": "EP 8",
-        "rating": 7.0
+        "rating": 6.75
       },
       {
         "episode": "EP 9",
-        "rating": 7.25
+        "rating": 7.0
       },
       {
         "episode": "EP 10",
@@ -13399,15 +13509,15 @@
       },
       {
         "episode": "EP 14",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 15",
         "rating": 8.0
       },
       {
+        "episode": "EP 15",
+        "rating": 7.75
+      },
+      {
         "episode": "EP 16",
-        "rating": 8.75
+        "rating": 8.25
       }
     ]
   },
@@ -13465,116 +13575,6 @@
       {
         "episode": "EP 13",
         "rating": 7.0
-      }
-    ]
-  },
-  {
-    "name": "Nippon Sangoku: The Three Nations of the Crimson Sun",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 3",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 4",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 7.5
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 8",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 9",
-        "rating": 7.75
-      },
-      {
-        "episode": "EP 10",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 12",
-        "rating": 7.5
-      }
-    ]
-  },
-  {
-    "name": "Witch Hat Atelier, S01",
-    "episodes": [
-      {
-        "episode": "EP 1",
-        "rating": 9.5
-      },
-      {
-        "episode": "EP 2",
-        "rating": 8.0
-      },
-      {
-        "episode": "EP 3",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 4",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 5",
-        "rating": 10.0
-      },
-      {
-        "episode": "EP 6",
-        "rating": 8.5
-      },
-      {
-        "episode": "EP 7",
-        "rating": 8.75
-      },
-      {
-        "episode": "EP 8",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 9",
-        "rating": 9.25
-      },
-      {
-        "episode": "EP 10",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 11",
-        "rating": 9.0
-      },
-      {
-        "episode": "EP 12",
-        "rating": 8.25
-      },
-      {
-        "episode": "EP 13",
-        "rating": 9.25
       }
     ]
   }
