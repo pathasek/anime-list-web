@@ -2491,6 +2491,18 @@ function AnimeRatings() {
     const EP_COLUMNS_COLLAPSED = 26
     const MIN_EPISODES_FOR_TABLE = 2
 
+    // Vodorovný posun tabulky epizod po tlačítkách. Sloupec s názvem anime je
+    // přilepený vlevo, takže se posouvá jen oblast s díly; krok je násobek
+    // šířky sloupce, aby se nezastavovalo uprostřed čísla. Jen u epizod —
+    // tabulka kategorií tohle ovládání nemá.
+    const epTableWrapRef = useRef(null)
+    const EP_COLUMN_WIDTH = 46
+    const scrollEpisodeTable = (columns) => {
+        const wrap = epTableWrapRef.current
+        if (!wrap) return
+        wrap.scrollBy({ left: columns * EP_COLUMN_WIDTH, behavior: 'smooth' })
+    }
+
     const episodeTableData = useMemo(() => {
         const rows = episodeRatings
             .map(entry => {
@@ -4062,9 +4074,11 @@ function AnimeRatings() {
                                     </div>
                                     <h3 className="ratings-panel-title">
                                         <span>
+                                            {/* Oba popisy říkají totéž, jen pro svůj rozměr tabulky:
+                                                kam kliknout a že se otevře detail s rozborem. */}
                                             {tableTab === 'categories'
-                                                ? 'Heatmapa kategorií (kliknutím na řádek otevřeš detail)'
-                                                : 'Heatmapa epizod (kliknutím na zvýrazněnou buňku otevřeš rozbor)'}
+                                                ? 'Heatmapa kategorií (kliknutím na řádek otevřeš detail anime s rozborem)'
+                                                : 'Heatmapa epizod (kliknutím na zvýrazněnou buňku otevřeš detail epizody s rozborem)'}
                                             <RatingInfoButton
                                                 label={tableTab === 'categories' ? 'Jak hodnotím kategorie' : 'Jak hodnotím epizody'}
                                                 style={{ marginLeft: '8px' }}
@@ -4088,7 +4102,7 @@ function AnimeRatings() {
                                         const hiddenEps = episodeTableData.maxEp - shownEps
                                         return (
                                             <>
-                                                <div className="ratings-category-table-wrapper">
+                                                <div className="ratings-category-table-wrapper" ref={epTableWrapRef}>
                                                     <table className="ratings-category-table ratings-episode-table">
                                                         <thead>
                                                             <tr>
@@ -4201,6 +4215,26 @@ function AnimeRatings() {
                                                     {episodeTableData.avgAll !== null && (
                                                         <span>Průměr epizody: <strong>{episodeTableData.avgAll.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></span>
                                                     )}
+                                                    <span className="ep-scroll-controls">
+                                                        <button
+                                                            type="button"
+                                                            className="ep-scroll-btn"
+                                                            title="Posunout tabulku o 5 dílů doleva"
+                                                            aria-label="Posunout tabulku o 5 dílů doleva"
+                                                            onClick={() => scrollEpisodeTable(-5)}
+                                                        >
+                                                            ◂
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="ep-scroll-btn"
+                                                            title="Posunout tabulku o 5 dílů doprava"
+                                                            aria-label="Posunout tabulku o 5 dílů doprava"
+                                                            onClick={() => scrollEpisodeTable(5)}
+                                                        >
+                                                            ▸
+                                                        </button>
+                                                    </span>
                                                     {hiddenEps > 0 && (
                                                         <button type="button" className="ep-columns-toggle" onClick={() => setEpColumnsExpanded(true)}>
                                                             Zobrazit i zbylých {hiddenEps} dílů ▸

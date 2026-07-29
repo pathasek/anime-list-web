@@ -2640,33 +2640,38 @@
   }
 }
 /* ─── Mini taby nad kompletní tabulkou (Kategorie / Epizody) ────────────────
-   Vzhled prohlížečových panelů: neaktivní tab je zapuštěný, aktivní vystupuje
-   dopředu a spodní hranou splývá s panelem tabulky pod sebou. */
+   Oba taby jsou stejně velké a stojí na stejné lince — dřív měl neaktivní
+   `top: 2px`, takže seděly nesymetricky, a šířku si bral podle délky textu.
+   Dělící čára patří kontejneru a jde pod oběma taby souvisle; aktivní ji
+   „prořízne" spodním okrajem v barvě panelu, takže s tabulkou splývá. */
 .ratings-table-tabs {
   display: flex;
-  align-items: flex-end;
-  gap: 4px;
-  margin-bottom: -1px;
+  align-items: stretch;
+  gap: 6px;
+  margin-bottom: var(--spacing-sm);
   padding-left: 2px;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .ratings-table-tab {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  padding: 7px 16px;
+  min-width: 132px;
+  padding: 7px 18px;
   font-size: 0.85rem;
   font-weight: 600;
   font-family: inherit;
   color: var(--text-muted);
   background: var(--bg-tertiary);
   border: 1px solid var(--border-color);
-  border-bottom-color: transparent;
+  border-bottom: 1px solid transparent;
   border-radius: var(--radius-md) var(--radius-md) 0 0;
   cursor: pointer;
-  transition: color 0.15s, background 0.15s, transform 0.15s;
+  transition: color 0.15s, background 0.15s;
   position: relative;
-  top: 2px;
+  margin-bottom: -1px;
 }
 
 .ratings-table-tab:hover {
@@ -2675,11 +2680,10 @@
 }
 
 .ratings-table-tab.active {
-  top: 0;
   color: var(--text-primary);
   background: var(--bg-secondary);
   border-color: var(--border-color);
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.18);
+  border-bottom-color: var(--bg-secondary);
 }
 
 /* Barevný proužek nahoře odliší aktivní tab i v světlých tématech */
@@ -2694,11 +2698,57 @@
 
 /* ─── Tabulka epizod ────────────────────────────────────────────────────────
    Sloupců je až 74, proto užší buňky než u kategorií. Prázdná buňka (série má
-   míň dílů než nejdelší v tabulce) zůstává bez pozadí, ať je řada jasně vidět. */
+   míň dílů než nejdelší v tabulce) zůstává bez pozadí, ať je řada jasně vidět.
+
+   `width: auto` je tady zásadní: s `table-layout: fixed` a zděděným
+   `width: 100%` se tabulka nesměla rozšířit přes kontejner, takže součet
+   pevných šířek sloupců přetekl a na sloupec s názvem anime nezbylo nic —
+   smrskl se na 0 px a řádky byly bez názvu. Teď si tabulka vezme šířku podle
+   sloupců a přebytek řeší vodorovný posuvník obalu. */
+.ratings-episode-table {
+  width: auto;
+  min-width: 100%;
+}
+
 .ratings-episode-table .th-numeric {
   width: 46px;
   min-width: 46px;
   max-width: 46px;
+}
+
+/* Název anime zůstává vidět i po odscrollování doprava. Šířka musí být
+   explicitní — `min-width` samo `table-layout: fixed` ignoruje. */
+.ratings-episode-table .th-anime,
+.ratings-episode-table .td-anime,
+.ratings-episode-table .td-footer-label {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  width: 230px;
+  min-width: 230px;
+  max-width: 230px;
+  background: var(--bg-secondary);
+}
+
+.ratings-episode-table thead .th-anime {
+  z-index: 4;
+}
+
+.ratings-episode-table tfoot .td-footer-label {
+  z-index: 3;
+}
+
+/* Svislá hranice odděluje přilepený sloupec od podjíždějících dat */
+.ratings-episode-table .th-anime::after,
+.ratings-episode-table .td-anime::after,
+.ratings-episode-table .td-footer-label::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--border-color);
 }
 
 .ratings-episode-table .td-ep-count {
@@ -2708,6 +2758,35 @@
 
 .ratings-episode-table tbody .heatmap-cell:empty {
   background: none !important;
+}
+
+/* Šipky pro vodorovný posun tabulky epizod (u kategorií se nezobrazují) */
+.ep-scroll-controls {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.ep-scroll-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 22px;
+  padding: 0;
+  font: inherit;
+  line-height: 1;
+  color: var(--text-muted);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+
+.ep-scroll-btn:hover {
+  color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  background: var(--bg-secondary);
 }
 
 .ep-columns-toggle {

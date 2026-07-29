@@ -72,6 +72,9 @@ const miniPieOptions = {
 // Pozadí karty přebírá dominantní barvu z obalu playlistu (vzhled jako na
 // Spotify). Barva se počítá z lokálního obrázku přes canvas; když se nepodaří
 // (chybějící obal), karta zůstane na výchozím pozadí.
+// Kolik best skladeb se vejde do volného místa vpravo dole na kartě.
+const BEST_PIECES_PER_CARD = 4
+
 function OstWholeCard({ card, onPlayPlaylist, onPlayBest }) {
     const [tint, setTint] = useState(null)
 
@@ -117,7 +120,19 @@ function OstWholeCard({ card, onPlayPlaylist, onPlayBest }) {
                     <span className="fav-whole-rank" title={`${card.rank}. místo v mém žebříčku OST`}>
                         {card.rank}
                     </span>
-                    <span className="fav-whole-name" title={card.anime_name}>{card.anime_name}</span>
+                    {card.linkTo ? (
+                        <Link
+                            to={card.linkTo}
+                            className="fav-whole-name anime-link"
+                            title={card.parts > 1
+                                ? `Zobrazit celou sérii v Anime Listu: ${card.anime_name}`
+                                : `Otevřít detail: ${card.anime_name}`}
+                        >
+                            {card.anime_name}
+                        </Link>
+                    ) : (
+                        <span className="fav-whole-name" title={card.anime_name}>{card.anime_name}</span>
+                    )}
                     {card.rating !== null && (
                         <span className="fav-whole-rating" title="Můj průměr hodnocení série">
                             ★ {card.rating.toLocaleString('cs-CZ', { maximumFractionDigits: 2 })}
@@ -146,27 +161,32 @@ function OstWholeCard({ card, onPlayPlaylist, onPlayBest }) {
                     ) : null}
                 </div>
 
-                {card.best.length > 0 && (
-                    <div className="fav-whole-best">
-                        <span className="fav-whole-best-label">Best</span>
-                        {card.best.map((p, i) => (
-                            <button
-                                key={p.ost_name || i}
-                                type="button"
-                                className="fav-whole-best-chip"
-                                onClick={() => onPlayBest(p)}
-                                title={`Přehrát „${p.ost_name}" jako první, playlist pak pokračuje`}
-                            >
-                                <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-                                {p.ost_name}
-                            </button>
-                        ))}
+                {/* Spodek karty: odkazy vlevo dole, best skladby vyplňují volné
+                    místo vpravo a skládají se na sebe. Když je skladba jen jedna,
+                    stojí svisle na středu volného místa, ne úplně v rohu. */}
+                <div className="fav-whole-bottom">
+                    <div className="fav-whole-links">
+                        {card.spotify_url && <a href={card.spotify_url} target="_blank" rel="noreferrer" className="ext-link ext-link--spotify">Spotify</a>}
+                        {card.yt_url && <a href={card.yt_url} target="_blank" rel="noreferrer" className="ext-link ext-link--yt">YouTube</a>}
                     </div>
-                )}
 
-                <div className="fav-whole-links">
-                    {card.spotify_url && <a href={card.spotify_url} target="_blank" rel="noreferrer" className="ext-link ext-link--spotify">Spotify</a>}
-                    {card.yt_url && <a href={card.yt_url} target="_blank" rel="noreferrer" className="ext-link ext-link--yt">YouTube</a>}
+                    {card.best.length > 0 && (
+                        <div className="fav-whole-best">
+                            <span className="fav-whole-best-label">Best</span>
+                            {card.best.map((p, i) => (
+                                <button
+                                    key={p.ost_name || i}
+                                    type="button"
+                                    className="fav-whole-best-chip"
+                                    onClick={() => onPlayBest(p)}
+                                    title={`Přehrát „${p.ost_name}" jako první, playlist pak pokračuje`}
+                                >
+                                    <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                                    {p.ost_name}
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
@@ -473,11 +493,17 @@ function Favorites() {
             const episodes = members.reduce((s, a) => s + (parseInt(a.episodes) || 0), 0)
             const minutes = members.reduce((s, a) => s + (parseInt(a.episodes) || 0) * (parseFloat(a.episode_duration) || 0), 0)
 
-            // Best pieces se párují PŘESNÝM názvem (ne přes celou sérii) —
-            // odpovídá tomu, jak je mám vybrané: nejvýš dva na položku.
+            // Best pieces se párují přes CELOU sérii, ne jen na přesný název:
+            // playlisty jsou pojmenované sérií („Attack on Titan"), kdežto
+            // skladby po sezónách („Attack on Titan, S01"), takže při shodě
+            // jen na přesný název zůstalo 20 z 30 karet bez jediné skladby.
+            const memberKeys = new Set(members.map(a => normalizeAnimeKey(a.name)))
             const best = (ostTables?.pieces || [])
-                .filter(p => normalizeAnimeKey(p.anime_name) === key)
-                .slice(0, 2)
+                .filter(p => {
+                    const pk = normalizeAnimeKey(p.anime_name)
+                    return pk === key || memberKeys.has(pk) || pk.startsWith(key + ' ')
+                })
+                .slice(0, BEST_PIECES_PER_CARD)
 
             const album = (ytmusicAlbums || []).find(a => normalizeAnimeKey(a.anime_name) === key)
             // Přednost má počet zjištěný přímo z playlistu (je to ten, který
@@ -502,6 +528,14 @@ function Favorites() {
                 groupIdx: wholeGroups.findIndex(g => g.name === w.anime_name),
                 rating: ratings.length ? ratings.reduce((s, v) => s + v, 0) / ratings.length : null,
                 parts: members.length,
+                // Kam vede název na kartě: víc dílů → filtr série v Anime Listu
+                // (stejně jako „Nejdelší série" na Dashboardu), jediné anime →
+                // rovnou jeho detail. Když se nespáruje nic, název odkaz nemá.
+                linkTo: (() => {
+                    const seriesName = members.find(a => a.series)?.series
+                    if (members.length > 1 && seriesName) return `/anime?series=${encodeURIComponent(seriesName)}`
+                    return members.length ? animePath(members[0].name) : null
+                })(),
                 episodes,
                 hours: minutes / 60,
                 genres: topOf(members.flatMap(a => splitTags(a.genres)), 3),
@@ -1854,17 +1888,9 @@ function Favorites() {
             {/* OST Section */}
             {stats?.ostItems?.length > 0 && (
                 <div style={{ marginTop: 'var(--spacing-2xl)' }}>
-                    <h3 style={{
-                        marginBottom: 'var(--spacing-lg)',
-                        color: 'var(--accent-amber)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px'
-                    }}>
+                    <h3 className="section-heading">
                         🎼 Favorite OST
-                        <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                            ({stats.ostItems.length} skladeb)
-                        </span>
+                        <span className="section-heading-note">{stats.ostItems.length} skladeb</span>
                     </h3>
                     <div className="table-container hide-mobile">
                         <table>
@@ -1947,25 +1973,19 @@ function Favorites() {
             {/* NEW 3 OST Tables */}
             {ostTables && (
                 <div style={{ marginTop: 'var(--spacing-2xl)' }}>
-                    <h3 style={{ marginBottom: 'var(--spacing-lg)', color: 'var(--accent-amber)', fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        🎼 Anime Favourite OST
-                    </h3>
+                    <h3 className="section-heading">🎼 Anime Favourite OST</h3>
 
-                    <div style={{
-                        display: 'flex',
-                        flexDirection: window.innerWidth > 1024 ? 'row' : 'column',
-                        gap: '24px',
-                        alignItems: 'flex-start'
-                    }}>
+                    {/* „As a Whole" má celou šířku (žebříček teče doprava a dolů),
+                        pod ním dvě užší sekce vedle sebe. */}
+                    <div className="fav-ost-layout">
                         {/* Table 1 (Formerly 3): OST As a Whole - Tile Layout */}
-                        <div className="themed-outline" style={{ flex: 1.5, minWidth: '350px', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', padding: 'var(--spacing-lg)', border: '1px solid var(--border-color)' }}>
-                            <h4 style={{ color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div className="themed-outline fav-ost-panel">
+                            <h4 className="section-heading">
                                 🎧 OST Only (As a Whole)
                                 {wholeGroups.length > 0 && (
                                     <button
                                         type="button"
-                                        className="fav-play-all-btn"
-                                        style={{ marginLeft: 'auto' }}
+                                        className="fav-play-all-btn section-heading-action"
                                         onClick={() => openOstPlayer('whole', 0)}
                                         title="Otevřít přehrávač se všemi playlisty seskupenými podle anime"
                                     >
@@ -2001,76 +2021,80 @@ function Favorites() {
                             </div>
                         </div>
 
-                        {/* Table 2: Pieces (Middle) */}
-                        <div className="themed-outline" style={{ flex: 1, minWidth: '250px', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', padding: 'var(--spacing-lg)', border: '1px solid var(--border-color)' }}>
-                            <h4 style={{ color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                🎵 OST Only (The Best)
-                                {piecesTracks.length > 0 && (
-                                    <button
-                                        type="button"
-                                        className="fav-play-all-btn"
-                                        style={{ marginLeft: 'auto' }}
-                                        onClick={() => openOstPlayer('pieces', 0)}
-                                        title={`Otevřít přehrávač se všemi ${piecesTracks.length} skladbami`}
-                                    >
-                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-                                        Přehrát vše ({piecesTracks.length})
-                                    </button>
-                                )}
-                            </h4>
-                            {/* Bez overflow: hidden — rozbíjelo by sticky thead (zakotvení hlavičky) */}
-                            <div className="table-container" style={{ margin: 0 }}>
-                                <table style={{ fontSize: '0.8rem', width: '100%' }}>
-                                    <thead style={{ background: 'var(--bg-tertiary)' }}><tr><th style={{ width: '32px' }}></th><th>Anime</th><th>Název OST</th></tr></thead>
-                                    <tbody>
-                                        {ostTables.pieces.map((p, i) => {
-                                            const trackIdx = piecesTracks.findIndex(t => t.anime === p.anime_name && t.song === p.ost_name)
-                                            return (
-                                            <tr key={i}>
-                                                <td style={{ textAlign: 'center' }}>
-                                                    {trackIdx >= 0 && (
-                                                        <button
-                                                            type="button"
-                                                            className="fav-table-play-btn"
-                                                            onClick={() => openOstPlayer('pieces', trackIdx)}
-                                                            title="Přehrát tuto skladbu v přehrávači"
-                                                        >
-                                                            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-                                                        </button>
-                                                    )}
-                                                </td>
-                                                <td>{p.anime_url ? <a href={p.anime_url} target="_blank" rel="noreferrer" style={{ color: 'var(--text-primary)' }}>{p.anime_name}</a> : p.anime_name}</td>
-                                                <td>{p.ost_url ? <a href={p.ost_url} target="_blank" rel="noreferrer" style={{ color: 'var(--accent-primary)' }}>{p.ost_name}</a> : p.ost_name}</td>
-                                            </tr>
-                                            )
-                                        })}
-                                    </tbody>
-                                </table>
+                        {/* Table 2 + 3: obě tečou po sloupcích doprava a scrollují
+                            vodorovně — svisle jich přes 200 zabíralo přes celou
+                            obrazovku výšky. */}
+                        <div className="fav-ost-row">
+                            <div className="themed-outline fav-ost-panel">
+                                <h4 className="section-heading">
+                                    🎵 OST Only (The Best)
+                                    <span className="section-heading-note">{ostTables.pieces.length} skladeb</span>
+                                    {piecesTracks.length > 0 && (
+                                        <button
+                                            type="button"
+                                            className="fav-play-all-btn section-heading-action"
+                                            onClick={() => openOstPlayer('pieces', 0)}
+                                            title={`Otevřít přehrávač se všemi ${piecesTracks.length} skladbami`}
+                                        >
+                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                                            Přehrát vše ({piecesTracks.length})
+                                        </button>
+                                    )}
+                                </h4>
+                                <div className="fav-ost-flow fav-ost-flow--pieces">
+                                    {ostTables.pieces.map((p, i) => {
+                                        const trackIdx = piecesTracks.findIndex(t => t.anime === p.anime_name && t.song === p.ost_name)
+                                        return (
+                                            <div className="fav-ost-flow-item" key={i}>
+                                                <span className="fav-ost-flow-num">{i + 1}</span>
+                                                {trackIdx >= 0 ? (
+                                                    <button
+                                                        type="button"
+                                                        className="fav-table-play-btn"
+                                                        onClick={() => openOstPlayer('pieces', trackIdx)}
+                                                        title="Přehrát tuto skladbu v přehrávači"
+                                                    >
+                                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                                                    </button>
+                                                ) : <span className="fav-ost-flow-noplay" />}
+                                                <span className="fav-ost-flow-main" title={`${p.anime_name} — ${p.ost_name}`}>
+                                                    {p.ost_url
+                                                        ? <a href={p.ost_url} target="_blank" rel="noreferrer" className="fav-ost-flow-song">{p.ost_name}</a>
+                                                        : <span className="fav-ost-flow-song">{p.ost_name}</span>}
+                                                    {p.anime_url
+                                                        ? <a href={p.anime_url} target="_blank" rel="noreferrer" className="fav-ost-flow-sub">{p.anime_name}</a>
+                                                        : <span className="fav-ost-flow-sub">{p.anime_name}</span>}
+                                                </span>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
                             </div>
-                        </div>
 
-                        {/* Table 3 (Formerly 1): Scenes (Right) */}
-                        <div className="themed-outline" style={{ flex: 1, minWidth: '280px', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', padding: 'var(--spacing-lg)', border: '1px solid var(--border-color)' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                                <h4 style={{ color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>🎬 OST + Scenes</h4>
-                                <a href="https://savsmb-my.sharepoint.com/:f:/g/personal/xmacoun1_is_savs_cz/IgB4lwcmUIhES67LCrn6UIYHAYtMD7DNKKhq256IvGNUpEs?e=f9QraG" target="_blank" rel="noreferrer" className="link-plain" style={{ fontSize: '0.75rem', fontWeight: 'bold', display: 'inline-block', padding: '4px 8px', background: 'rgba(99, 102, 241, 0.1)', borderRadius: 'var(--radius-sm)', color: 'var(--accent-primary)', border: '1px solid rgba(99, 102, 241, 0.3)' }}>
-                                    Videoklipy ↗
-                                </a>
-                            </div>
-                            {/* Bez overflow: hidden — rozbíjelo by sticky thead (zakotvení hlavičky) */}
-                            <div className="table-container" style={{ margin: 0 }}>
-                                <table style={{ fontSize: '0.8rem', width: '100%' }}>
-                                    <thead style={{ background: 'var(--bg-tertiary)' }}><tr><th>Anime</th><th>Epizoda</th><th>Scéna</th></tr></thead>
-                                    <tbody>
-                                        {ostTables.scenes.map((s, i) => (
-                                            <tr key={i}>
-                                                <td style={{ color: 'var(--text-primary)' }}>{s.anime_name}</td>
-                                                <td style={{ color: 'var(--text-primary)' }}>{s.episode}</td>
-                                                <td style={{ color: 'var(--text-muted)' }}>{s.scene}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                            <div className="themed-outline fav-ost-panel">
+                                <h4 className="section-heading">
+                                    🎬 OST + Scenes
+                                    <span className="section-heading-note">{ostTables.scenes.length} scén</span>
+                                    <a
+                                        href="https://savsmb-my.sharepoint.com/:f:/g/personal/xmacoun1_is_savs_cz/IgB4lwcmUIhES67LCrn6UIYHAYtMD7DNKKhq256IvGNUpEs?e=f9QraG"
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="link-plain fav-scenes-link section-heading-action"
+                                    >
+                                        Videoklipy ↗
+                                    </a>
+                                </h4>
+                                <div className="fav-ost-flow fav-ost-flow--scenes">
+                                    {ostTables.scenes.map((s, i) => (
+                                        <div className="fav-ost-flow-item" key={i}>
+                                            <span className="fav-ost-flow-ep">{s.episode}</span>
+                                            <span className="fav-ost-flow-main" title={`${s.anime_name} — ${s.scene}`}>
+                                                <span className="fav-ost-flow-song">{s.scene}</span>
+                                                <span className="fav-ost-flow-sub">{s.anime_name}</span>
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>

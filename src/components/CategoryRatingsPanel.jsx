@@ -101,13 +101,25 @@ function useIsMobile() {
 //   nejpravější okraj = střed + drawingArea + offset + nudgeX + šířka textu
 //
 // Při šířce kontejneru W je střed W/2 a drawingArea = W/2 − padding, takže
-// podmínka „vejde se" zní:  W/2 + (W/2 − p) + 12 + 12 + 64 ≤ W  ⇒  p ≥ 88.
-// Proto mobilní padding 92 (viz chartOptions) a MOBILE_LABEL_MAX_W 64 níže,
-// což dává ~4 px rezervu na každé straně i na nejužších displejích (320 px).
-const RADAR_LABEL_OFFSET = { desktop: 34, mobile: 12 }
-const RADAR_LABEL_NUDGE = { desktop: { x: 25, y: 22 }, mobile: { x: 12, y: 12 } }
+// podmínka „vejde se" zní:  W/2 + (W/2 − p) + offset + nudgeX + 64 ≤ W
+//   ⇒  p ≥ offset + nudgeX + 64.
+// S offsetem 8 a nudge 8 vychází p ≥ 80; mobilní padding je 84 (viz
+// chartOptions), což dává 4 px rezervu na každé straně i na nejužších
+// displejích (320 px). Menší odsazení než původních 12/12 znamená větší
+// poloměr radaru — na výšku telefonu byl pavouk zbytečně titěrný.
+// `mobile: 22` drží ikony s odstupem VEN od kruhu stupnice (stejně jako na
+// PC), ne nalepené na jeho obvod. Vnější hrana ikony pak sedí kousek od kraje
+// kontejneru — víc už by se nevešlo (a clamp v computePositions by je začal
+// tahat zpátky dovnitř).
+const RADAR_LABEL_OFFSET = { desktop: 34, mobile: 22 }
+const RADAR_LABEL_NUDGE = { desktop: { x: 25, y: 22 }, mobile: { x: 8, y: 10 } }
 // Musí odpovídat `max-width` v .radar-label-text-box uvnitř @media (max-width: 768px)
 const MOBILE_LABEL_MAX_W = 64
+// Na mobilu je u radaru jen ikona kategorie. Odsazení plátna = její poloměr
+// + radiální offset + pár pixelů rezervy; musí odpovídat velikosti
+// .radar-label-icon-circle v mobilní @media (28 px ⇒ poloměr 14).
+const MOBILE_ICON_RADIUS = 14
+const MOBILE_ICON_PADDING = MOBILE_ICON_RADIUS + RADAR_LABEL_OFFSET.mobile + 1
 
 function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, animeName, animeSeries, categoryReviews, compactRadar = false, malId = null, showAnimeThemesExtras = false }) {
     const { theme } = useTheme()
@@ -348,8 +360,9 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
             // menší poloměr, aby popisky nezasahovaly do karet kategorií.
             // Na mobilu naopak padding ZVĚTŠUJEME (dřív 35, míň než na PC):
             // menší poloměr = víc místa pro popisky uvnitř úzké obrazovky.
-            // Hodnota 92 vychází z výpočtu u RADAR_LABEL_OFFSET (minimum 88).
-            padding: isMobile ? 92 : (compactRadar ? 78 : 45)
+            // Mobil kreslí u radaru jen ikony (viz níže v JSX), takže stačí
+            // rezerva na jejich poloměr + radiální offset — ne na text.
+            padding: isMobile ? MOBILE_ICON_PADDING : (compactRadar ? 78 : 45)
         },
         scales: {
             r: {
@@ -430,7 +443,10 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
         // Pojistka proti přetečení: kotva popisku se drží uvnitř kontejneru,
         // aby ani u nejužšího displeje žádný bod nevyjel mimo obrazovku.
         const wrapW = wrapRef.current?.clientWidth || 0
-        const margin = isMobile ? MOBILE_LABEL_MAX_W + RADAR_LABEL_NUDGE.mobile.x : 46
+        const wrapH = wrapRef.current?.clientHeight || 0
+        // Na mobilu se clampuje jen na poloměr ikony (text se nekreslí),
+        // na desktopu na šířku popisku.
+        const margin = isMobile ? MOBILE_ICON_RADIUS + 2 : 46
         const next = []
         for (let i = 0; i < count; i++) {
             // Anchor point for the label text & icon
@@ -442,7 +458,9 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
             const len = Math.sqrt(dx * dx + dy * dy) || 1
             next.push({
                 x: wrapW ? Math.min(Math.max(pos.x, margin), wrapW - margin) : pos.x,
-                y: pos.y,
+                // Svisle se clampuje jen na mobilu, kde je u radaru samotná
+                // ikona — na desktopu popisek nad/pod grafem přesahovat smí.
+                y: (isMobile && wrapH) ? Math.min(Math.max(pos.y, margin), wrapH - margin) : pos.y,
                 edgeX: edgePos.x,
                 edgeY: edgePos.y,
                 ux: dx / len,
@@ -829,6 +847,11 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                 {/* Radar chart with overlay labels on the right */}
                 <div className={`radar-chart-container${compactRadar ? ' radar-compact' : ''}`}>
                     <div className="radar-overlay-wrap" ref={wrapRef}>
+                        {/* Na mobilu zůstávají u radaru jen ikony kategorií, texty
+                            (název + hodnota) se nekreslí: 14 názvů se na šířku
+                            telefonu nevejde čitelně a hlavně z grafu ukrajovaly
+                            většinu poloměru. Názvy, váhy i hodnoty jsou v kartách
+                            nad grafem, takže se nic neztrácí. */}
                         {entries.map(([cat, rating], i) => {
                             const p = labelPos[i]
                             if (!p) return null
@@ -878,18 +901,20 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                                             top: `${p.y}px`
                                         }}
                                     >
-                                        <div className="radar-label-icon-circle">{iconFor(cat)}</div>
-                                        <div
-                                            className="radar-label-text-box"
-                                            style={{
-                                                transform: `translate(calc(${tx} + ${nudgeX}px), calc(${ty} + ${nudgeY}px))`,
-                                                alignItems: alignment,
-                                                textAlign: txtAlign
-                                            }}
-                                        >
-                                            <span className="radar-label-name">{cat}</span>
-                                            <span className="radar-label-value">{fmtRating(rating)}</span>
-                                        </div>
+                                        <div className="radar-label-icon-circle" title={`${cat}: ${fmtRating(rating)}`}>{iconFor(cat)}</div>
+                                        {!isMobile && (
+                                            <div
+                                                className="radar-label-text-box"
+                                                style={{
+                                                    transform: `translate(calc(${tx} + ${nudgeX}px), calc(${ty} + ${nudgeY}px))`,
+                                                    alignItems: alignment,
+                                                    textAlign: txtAlign
+                                                }}
+                                            >
+                                                <span className="radar-label-name">{cat}</span>
+                                                <span className="radar-label-value">{fmtRating(rating)}</span>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             )

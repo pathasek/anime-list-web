@@ -1030,6 +1030,41 @@ tr:hover td {
   max-height: 45%;
 }
 
+/* ─── Nadpis sekce (jednotný napříč všemi taby) ─────────────────────────────
+   Vzor je tab „Anime hodnocení" (.ratings-section-heading). Dělící čára je
+   součástí nadpisu: dotáhne se přes zbytek řádku, takže sekce vypadají stejně
+   bez ohledu na délku textu. Volitelný `<span class="section-heading-note">`
+   nese doplněk (počet položek apod.) a `.section-heading-action` tlačítko,
+   které má zůstat vpravo za čarou. */
+.section-heading {
+  margin: 0 0 var(--spacing-md);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-heading::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-color);
+}
+
+.section-heading-note {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* Tlačítko patří až za dělící čáru, proto se vykresluje po ::after */
+.section-heading-action {
+  order: 1;
+  flex-shrink: 0;
+}
+
 /* Právě sledované — karty ve 2 sloupcích (auto-fill: 1 sloupec na úzko) */
 .airing-grid {
   display: grid;
@@ -1038,11 +1073,17 @@ tr:hover td {
   align-content: start;
 }
 
-.airing-card {
+/* Výška karty je záměrně těsná: dva řádky karet se musí vejít do náhledu
+   skupiny Status (výška obsahu 265 px). Při 2 × 130 px + 8 px mezera to
+   o 3 px přeteklo a spodní hrana druhého řádku se uřízla, proto svislé
+   odsazení 7 px a menší mezery v těle karty. */
+.airing-grid .airing-card {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  padding: 8px;
+  /* Vyšší specificita než `.text-list-items li` — karta je <li> a obecné
+     pravidlo seznamu jinak přebije odsazení i výšku řádku. */
+  padding: 7px 8px;
   border-bottom: none !important;
   border: 1px solid rgba(99, 102, 241, 0.1);
   border-radius: var(--radius-md);
@@ -1060,7 +1101,7 @@ tr:hover td {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
 }
 
 .airing-card-head {
@@ -2728,7 +2769,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   .fav-tile-play-btn,
   .category-card-play-hint.is-search,
   .media-icon-btn,
-  .guide-close-btn,
+  .guide-close,
   .r2-chip-info,
   .ost-minimized-btn {
     min-height: 0 !important;
@@ -3234,7 +3275,9 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 /* Grid s kartami kategorií na levé straně - zvětšené sloupečky */
 .category-cards-grid {
   flex: 1.4;
-  min-width: 380px;
+  /* `min(...)`, ne pevných 380 px: na úzkém displeji by pevná hodnota
+     roztáhla obsah přes okraj okna a uřízla hodnotu na pravé straně karty. */
+  min-width: min(380px, 100%);
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: var(--spacing-sm);
@@ -3265,6 +3308,9 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   align-items: center;
   gap: var(--spacing-sm);
   overflow: hidden;
+  /* Aby se dlouhý název („Story Conclusion") smrsknul s výpustkou místo
+     roztlačení karty přes okraj obrazovky. */
+  min-width: 0;
 }
 
 .category-card-right {
@@ -4424,7 +4470,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   .fav-tile-play-btn,
   .category-card-play-hint.is-search,
   .media-icon-btn,
-  .guide-close-btn,
+  .guide-close,
   .r2-chip-info,
   .ost-minimized-btn {
     flex-shrink: 0 !important;
@@ -5202,45 +5248,32 @@ button.fav-ost-row-play:hover {
     grid-template-columns: 1fr;
     min-width: 100%;
   }
+  /* Na mobilu se popisky kategorií kolem radaru nevykreslují (viz
+     CategoryRatingsPanel.jsx) — názvy, váhy i hodnoty jsou v kartách nad
+     grafem. Kontejner proto může být čtvercový a graf vyplní celou šířku:
+     dřív z něj odsazení na popisky ukrajovalo přes polovinu poloměru. */
   .radar-chart-container {
     min-width: 100%;
-    height: 420px;
-    overflow: hidden; /* pojistka, aby popisek nikdy nerozšířil stránku do strany */
+    height: auto;
+    aspect-ratio: 1 / 1;
+    overflow: hidden; /* pojistka, aby nic nerozšířilo stránku do strany */
   }
-  .radar-label-weight {
-    display: none; /* schovat váhu na mobilech pro úsporu místa */
+  /* Posun nahoru dával místo popiskům; bez nich by graf jen vyjel z karty. */
+  .radar-overlay-wrap {
+    transform: none;
   }
-  /* Menší popisky = menší přesah přes okraj grafu. Spolu s kratším radiálním
-     offsetem v JS (RADAR_LABEL_OFFSET.mobile) se celý radar vejde na displej. */
-  .radar-label-name {
-    font-size: 0.68rem;
-  }
-  .radar-label-value {
-    font-size: 0.78rem;
-    margin-top: 0;
-  }
+  /* Průměr musí odpovídat MOBILE_ICON_RADIUS v CategoryRatingsPanel.jsx —
+     z něj se počítá odsazení plátna i clamp kotvy. */
   .radar-label-icon-circle {
-    width: 20px;
-    height: 20px;
+    width: 28px;
+    height: 28px;
   }
   .radar-label-icon-circle svg {
-    width: 11px;
-    height: 11px;
+    width: 14px;
+    height: 14px;
   }
   .radar-connector-line {
-    width: 10px !important; /* JS nastavuje 20px napevno; na mobilu je kratší */
-  }
-  /* Tvrdý strop šířky popisku. Musí odpovídat MOBILE_LABEL_MAX_W
-     v CategoryRatingsPanel.jsx — z něj se počítá padding grafu i clamp kotvy,
-     aby dlouhé názvy („Vedlejší postavy") nevyjely mimo obrazovku. */
-  .radar-label-text-box {
-    max-width: 64px;
-    white-space: normal;
-    overflow-wrap: anywhere;
-  }
-  /* Původních -42px vytlačovalo horní popisky nad viditelnou oblast karty. */
-  .radar-overlay-wrap {
-    transform: translateY(-18px);
+    width: 8px !important; /* JS nastavuje 20px napevno; k ikoně je to blíž */
   }
 }
 
@@ -7888,6 +7921,119 @@ button.fav-ost-row-play:hover {
    Širší karty místo malých dlaždic. Pozadí každé karty přebírá dominantní
    barvu z obalu playlistu (viz utils/dominantColor.js) — proměnná
    --fav-card-tint drží "r, g, b" a používají ji i prvky uvnitř. */
+/* ─── Rozvržení sekcí OST ───────────────────────────────────────────────────
+   „As a Whole" má celou šířku, pod ním dvě užší sekce vedle sebe. */
+.fav-ost-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.fav-ost-panel {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  min-width: 0;
+}
+
+.fav-ost-row {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .fav-ost-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Vodorovný tok: položky se skládají shora dolů do sloupce o pevném počtu
+   řádků a pak pokračují dalším sloupcem vpravo. Výška je tím daná a přebytek
+   řeší vodorovný posuvník — svisle by 217 skladeb zabralo celou obrazovku. */
+.fav-ost-flow {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(210px, 1fr);
+  gap: 2px 20px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 8px;
+}
+
+.fav-ost-flow--pieces {
+  grid-template-rows: repeat(12, auto);
+}
+
+.fav-ost-flow--scenes {
+  grid-template-rows: repeat(6, auto);
+}
+
+.fav-ost-flow-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  padding: 3px 4px;
+  border-radius: var(--radius-sm);
+}
+
+.fav-ost-flow-item:hover {
+  background: var(--bg-tertiary);
+}
+
+.fav-ost-flow-num,
+.fav-ost-flow-ep {
+  flex-shrink: 0;
+  min-width: 26px;
+  font-size: 0.66rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Prázdné místo po chybějícím tlačítku play, ať sloupce lícují */
+.fav-ost-flow-noplay {
+  width: 22px;
+  flex-shrink: 0;
+}
+
+.fav-ost-flow-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.fav-ost-flow-song {
+  font-size: 0.76rem;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fav-ost-flow-sub {
+  font-size: 0.66rem;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fav-scenes-link {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: var(--radius-sm);
+  color: var(--accent-primary);
+}
+
 .fav-whole-head {
   display: flex;
   align-items: center;
@@ -8078,12 +8224,28 @@ button.fav-ost-row-play:hover {
   font-weight: 600;
 }
 
+/* Spodní pás karty: odkazy na služby vlevo dole, best skladby vpravo.
+   `flex: 1` dá pásu všechno zbylé místo pod metadaty, takže je čím vyplnit. */
+.fav-whole-bottom {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  flex: 1;
+  min-height: 0;
+  margin-top: 4px;
+}
+
 .fav-whole-best {
   display: flex;
-  align-items: center;
-  gap: 5px;
-  flex-wrap: wrap;
-  margin-top: 1px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  margin-left: auto;
+  /* Svisle na střed volného místa: jedna skladba tak nesedí zaražená
+     v rohu, dvě a víc se přirozeně roztáhnou dolů. */
+  align-self: center;
+  max-width: 68%;
+  min-width: 0;
 }
 
 .fav-whole-best-label {
@@ -8122,8 +8284,9 @@ button.fav-ost-row-play:hover {
 .fav-whole-links {
   display: flex;
   gap: 10px;
-  margin-top: auto;
+  align-self: flex-end;
   padding-top: 2px;
+  flex-shrink: 0;
 }
 
 .fav-whole-links .ext-link {

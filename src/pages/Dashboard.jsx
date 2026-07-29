@@ -503,11 +503,21 @@ function saveCalCache(cache) {
 // všechna anime; AniList kuriozita (viz plán 7): pokud jediné idMal na
 // AniListu neexistuje, celý batch vrátí 404 + data:null → rozpad na
 // jednotlivé dotazy.
+//
+// `airedSchedule` se ptá BEZ filtru `notYetAired`. AniList ten filtr
+// s hodnotou `false` ignoruje (vrací i budoucí díly) a `pageInfo` u něj lže
+// — hlásí `total: 500` a `hasNextPage: true` i u dvanáctidílné série, navíc
+// `perPage` tiše zastropuje na 25. Dřív se na to spoléhalo (`!hasNextPage`),
+// takže se přesný rozvrh odvysílaných dílů zahazoval prakticky vždy a data
+// padala zpátky na Jikan, který u epizod zná jen DATUM bez času. Tím se
+// odvysílané díly v kalendáři posouvaly o den proti budoucím: půlnoční slot
+// (pátek 00:26 JST) je u nás ještě čtvrtek večer. Rozdělení na odvysílané
+// a budoucí si proto uděláme sami podle času, viz `buildAnimeEvents`.
 async function fetchAnilistSchedules(malIds, signal = null) {
     if (!malIds.length) return {}
     const mediaQuery = (id, alias) =>
         `${alias}: Media(idMal: ${id}, type: ANIME) { idMal episodes ` +
-        `airedSchedule: airingSchedule(notYetAired: false, perPage: 50) { pageInfo { hasNextPage } nodes { episode airingAt } } ` +
+        `airedSchedule: airingSchedule(perPage: 25) { nodes { episode airingAt } } ` +
         `upcomingSchedule: airingSchedule(notYetAired: true, perPage: 16) { nodes { episode airingAt } } }`
     const runQuery = async (body) => {
         const resp = await fetch('https://graphql.anilist.co', {
@@ -553,14 +563,15 @@ function buildAnimeEvents(a, episodes, info, schedule, nowTs) {
     const fmtTime = (d) => d.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' })
     const fmtDate = (d) => d.toLocaleDateString('cs-CZ')
 
-    // číslo dílu → { ts, exact }; AniList má přednost (přesné časy)
+    // číslo dílu → { ts, exact }; AniList má přednost (přesné časy).
+    // `airedSchedule` je první stránka rozvrhu (nejstarších 25 dílů) a obsahuje
+    // i budoucí díly; `upcomingSchedule` ji doplní o ty, které se na první
+    // stránku u delších sérií nevešly. Oba zdroje jdou do stejné mapy a na
+    // odvysílané/budoucí se rozdělí až níž podle `nowTs`.
     const epMap = new Map()
-    const airedSched = schedule?.airedSchedule
-    if (airedSched?.nodes?.length && !airedSched.pageInfo?.hasNextPage) {
-        airedSched.nodes.forEach(n => {
-            if (n?.airingAt) epMap.set(n.episode, { ts: n.airingAt * 1000, exact: true })
-        })
-    }
+    ;(schedule?.airedSchedule?.nodes || []).forEach(n => {
+        if (n?.airingAt) epMap.set(n.episode, { ts: n.airingAt * 1000, exact: true })
+    })
     ;(schedule?.upcomingSchedule?.nodes || []).forEach(n => {
         if (n?.airingAt) epMap.set(n.episode, { ts: n.airingAt * 1000, exact: true })
     })
