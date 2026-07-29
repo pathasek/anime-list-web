@@ -11,7 +11,7 @@ import {
 } from 'chart.js'
 import { useTheme } from './ThemeProvider'
 import { getThemeChartColors } from '../utils/chartTheme'
-import { getMediaForAnime, youtubeSearchUrl, songsLooselyMatch, normalizeAnimeKey, animeKeysMatch } from '../utils/mediaMatch'
+import { getMediaForAnime, youtubeSearchUrl, songsLooselyMatch, normalizeAnimeKey, animeKeysMatch, translateArtist } from '../utils/mediaMatch'
 import { fetchAnimeThemes } from '../utils/animeThemesService'
 import { VideoModal, FloatingOstPlayer, ScrollableText } from './CategoryMediaPlayers'
 import { iconFor } from './categoryIcons'
@@ -234,7 +234,7 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                 kind: 'youtube-playlist',
                 type: 'OST',
                 song: ytOstAlbum.album_title,
-                artist: [ytOstAlbum.artists, meta].filter(Boolean).join(' · ') || null,
+                artist: [translateArtist(ytOstAlbum.artists), meta].filter(Boolean).join(' · ') || null,
                 label: 'Celé OST',
                 url: `https://www.youtube.com/playlist?list=${ytOstAlbum.playlist_id}`,
                 ytPlaylistId: ytOstAlbum.playlist_id,

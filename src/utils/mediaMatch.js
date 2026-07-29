@@ -228,3 +228,48 @@ export function getMediaForAnime(animeName, opEdVideos, ostPieces, ostWhole, ani
 export function hasAnyMedia(media) {
     return !!media && (media.OP.length + media.ED.length + media.OST.length) > 0
 }
+
+const artistTranslations = {
+    '藤澤慶昌': 'Yoshiaki Fujisawa',
+    'saya': 'saya',
+    '横山克': 'Masaru Yokoyama',
+    '信澤宣明': 'Nobuaki Nobusawa',
+    '大野裕一': 'Yuichi Ohno',
+    '浜口史郎': 'Shiro Hamaguchi',
+    '末廣健一郎': 'Kenichiro Suehiro',
+    '伊藤 賢': 'Ken Ito',
+    '伊藤贤': 'Ken Ito',
+    '照井順政': 'Yoshimasa Terui',
+    '富貴晴美': 'Harumi Fuuki',
+    '川﨑龍': 'Ryo Kawasaki',
+    '片山修志': 'Shuji Katayama',
+    'R・O・N': 'R.O.N'
+}
+
+export function translateArtist(artistStr) {
+    if (!artistStr) return artistStr
+    
+    // Rozdělit podle čárek, lomítek, teček, plusů, japonských symbolů a 'and'
+    const parts = artistStr.split(/[,/·+、・&]|\band\b/i)
+    const translatedParts = parts.map(part => {
+        const trimmed = part.trim()
+        if (!trimmed) return ''
+        
+        if (artistTranslations[trimmed]) {
+            return artistTranslations[trimmed]
+        }
+        
+        // Zkusit překlad pro případ, že tam jsou japonské mezery nebo drobné rozdíly
+        for (const [jp, eng] of Object.entries(artistTranslations)) {
+            if (trimmed.replace(/\s+/g, '') === jp.replace(/\s+/g, '')) {
+                return eng
+            }
+        }
+        
+        return trimmed
+    }).filter(Boolean)
+    
+    if (translatedParts.length === 0) return artistStr
+    return translatedParts.join(', ')
+}
+

@@ -203,7 +203,10 @@ function JikanPoster({ malUrl, size = 'small' }) {
         return () => { cancelled = true }
     }, [malId, size])
 
-    const dims = size === 'xlarge' ? { width: '58px', height: '82px' }
+    // `xlarge` používají jen karty „Právě sledované". Poměr 1 : 1,414 jako
+    // u ostatních posterů; výška je zvolená tak, aby poster nepřerostl tělo
+    // karty (a nezvětšil tím její výšku).
+    const dims = size === 'xlarge' ? { width: '78px', height: '110px' }
         : size === 'large' ? { width: '45px', height: '64px' }
         : { width: '20px', height: '28px' }
 
@@ -230,11 +233,18 @@ function JikanPoster({ malUrl, size = 'small' }) {
 // mazání a „Načítám…" napříč celou sekcí.
 const AIRING_STATS_TTL = 15 * 60 * 1000
 const airingStatsKey = (malId) => `jikan_airing_stats_${malId}`
+// Verze formátu uložených statistik. Zvýšit při KAŽDÉ změně textů, které se
+// do cache ukládají (např. „Pravidelně: čtvrtek" → „Pravidelně: čt"), jinak
+// by staré záznamy držely starý tvar až do vypršení TTL.
+const AIRING_STATS_VERSION = 2
 
 function loadAiringStats(malId) {
     try {
         const raw = localStorage.getItem(airingStatsKey(malId))
-        if (raw) return JSON.parse(raw)
+        if (!raw) return null
+        const parsed = JSON.parse(raw)
+        if (parsed?.v !== AIRING_STATS_VERSION) return null
+        return parsed
     } catch { /* poškozený záznam — načte se z API */ }
     return null
 }
@@ -244,7 +254,7 @@ function loadAiringStats(malId) {
 // data zkusí dotáhnout znovu (místo 15 minut čekání s prázdnou kartou).
 function saveAiringStats(malId, stats, complete = true) {
     const at = complete ? Date.now() : Date.now() - AIRING_STATS_TTL
-    try { localStorage.setItem(airingStatsKey(malId), JSON.stringify({ stats, at })) } catch { /* quota */ }
+    try { localStorage.setItem(airingStatsKey(malId), JSON.stringify({ stats, at, v: AIRING_STATS_VERSION })) } catch { /* quota */ }
 }
 
 // Odhad délky série, když ji MAL ještě neuvádí (`episodes: null` u čerstvě
@@ -325,7 +335,10 @@ function AiringEpisodeStats({ malUrl, animeName, watchedEps = 0, historyLog = []
                 if (info && info.broadcast) {
                     exactNextDate = getNextBroadcastDate(info.broadcast)
                     if (exactNextDate) {
-                        const weekday = exactNextDate.toLocaleDateString('cs-CZ', { weekday: 'long' })
+                        // Krátký název dne („st"), stejně jako ostatní datumy na
+                        // kartě. Dlouhé „středa" byl nejširší údaj v řádku a kvůli
+                        // němu se statistiky lámaly do dalšího řádku.
+                        const weekday = exactNextDate.toLocaleDateString('cs-CZ', { weekday: 'short' })
                         const timeStr = exactNextDate.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' })
                         localBroadcast = `Pravidelně: ${weekday} ${timeStr}`
                         
@@ -401,9 +414,31 @@ function AiringEpisodeStats({ malUrl, animeName, watchedEps = 0, historyLog = []
     if (!hasScores && loading) return <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', opacity: 0.5 }}>Načítám…</span>
     if (!hasScores && !stats) return null
 
+    // Postup série: přesný počet dílů z MALu, dokud ho nezná, odhad jedné
+    // cour označený vlnovkou. Jakmile Jikan číslo doplní, „~12" se samo
+    // přepne na skutečnou hodnotu.
+    const progressChip = (() => {
+        const exact = stats?.plannedEps || null
+        const total = exact || EP_COUNT_ESTIMATE
+        if (!watchedEps && !exact) return null
+        const remaining = Math.max(0, total - watchedEps)
+        return (
+            <span
+                style={{ color: remaining === 0 ? '#34d399' : 'var(--text-muted)' }}
+                title={exact
+                    ? `Zhlédnuto ${watchedEps} z ${exact} dílů podle MyAnimeListu`
+                    : `MyAnimeList zatím neuvádí počet dílů, jde o odhad jedné cour (${EP_COUNT_ESTIMATE}). Upřesní se, jakmile bude znám.`}
+            >
+                📺 {watchedEps}/{exact ? exact : `~${total}`}
+                {remaining > 0 && ` (zbývá ${remaining})`}
+                {remaining === 0 && exact && ' ✓'}
+            </span>
+        )
+    })()
+
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', width: '100%' }}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 8px', fontSize: '0.62rem', color: 'var(--text-muted)', marginTop: '1px' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2px 7px', fontSize: '0.62rem', color: 'var(--text-muted)', marginTop: '1px' }}>
                 {liveScores.avgScore !== null && (
                     <span title="Tvůj průměr hodnocení sledovaných dílů">
                         ⭐ Ø {liveScores.avgScore.toFixed(2).replace('.', ',')}
@@ -421,42 +456,38 @@ function AiringEpisodeStats({ malUrl, animeName, watchedEps = 0, historyLog = []
                         📅 {lastEpText}
                     </span>
                 )}
-                {nextEpText && (
-                    <span
-                        title={calDates.next
-                            ? `Další díl: EP ${calDates.next.ep}${calDates.next.estimate ? ' (odhad z pravidelného času)' : ' (potvrzený rozvrh)'}`
-                            : 'Datum příští epizody (Jikan)'}
-                        style={{ color: '#34d399' }}
-                    >
-                        ⏭️ {nextEpText}{calDates.next?.estimate ? '?' : ''}
+                {/* Bez hodnocení epizod je první řádek poloprázdný — počet
+                    zhlédnutých dílů se proto přesune sem k datu místo na
+                    vlastní řádek dole. */}
+                {!hasScores && progressChip}
+                {/* Další díl a pravidelný čas patří k sobě, proto jsou ve vlastním
+                    nezalomitelném páru — dřív je zalomení rozhodilo na dva řádky
+                    a karta kvůli tomu narostla. Když se pár do šířky nevejde,
+                    zkrátí se výpustkou místo lámání. */}
+                {(nextEpText || stats?.broadcast) && (
+                    <span className="airing-card-schedule">
+                        {nextEpText && (
+                            <span
+                                title={calDates.next
+                                    ? `Další díl: EP ${calDates.next.ep}${calDates.next.estimate ? ' (odhad z pravidelného času)' : ' (potvrzený rozvrh)'}`
+                                    : 'Datum příští epizody (Jikan)'}
+                                style={{ color: '#34d399' }}
+                            >
+                                ⏭️ {nextEpText}{calDates.next?.estimate ? '?' : ''}
+                            </span>
+                        )}
+                        {stats?.broadcast && (
+                            <span
+                                className="airing-card-broadcast"
+                                title={`Pravidelný čas vysílání (Jikan): ${stats.broadcast}`}
+                                style={{ color: '#818cf8' }}
+                            >
+                                📡 {stats.broadcast}
+                            </span>
+                        )}
                     </span>
                 )}
-                {stats?.broadcast && (
-                    <span title="Pravidelný čas vysílání (Jikan)" style={{ color: '#818cf8' }}>
-                        📡 {stats.broadcast}
-                    </span>
-                )}
-                {(() => {
-                    // Postup série: přesný počet dílů z MALu, dokud ho nezná,
-                    // odhad jedné cour označený vlnovkou. Jakmile Jikan číslo
-                    // doplní, „~12" se samo přepne na skutečnou hodnotu.
-                    const exact = stats?.plannedEps || null
-                    const total = exact || EP_COUNT_ESTIMATE
-                    if (!watchedEps && !exact) return null
-                    const remaining = Math.max(0, total - watchedEps)
-                    return (
-                        <span
-                            style={{ color: remaining === 0 ? '#34d399' : 'var(--text-muted)' }}
-                            title={exact
-                                ? `Zhlédnuto ${watchedEps} z ${exact} dílů podle MyAnimeListu`
-                                : `MyAnimeList zatím neuvádí počet dílů, jde o odhad jedné cour (${EP_COUNT_ESTIMATE}). Upřesní se, jakmile bude znám.`}
-                        >
-                            📺 {watchedEps}/{exact ? exact : `~${total}`}
-                            {remaining > 0 && ` (zbývá ${remaining})`}
-                            {remaining === 0 && exact && ' ✓'}
-                        </span>
-                    )
-                })()}
+                {hasScores && progressChip}
             </div>
         </div>
     )
@@ -472,6 +503,16 @@ function AiringEpisodeStats({ malUrl, animeName, watchedEps = 0, historyLog = []
 //   proj   = odhad z pravidelného vysílacího času (jen bez AniList rozvrhu)
 // ==========================================
 const CAL_WEEKDAYS = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne']
+// Pořadí i názvy druhů událostí — sdílené mezi legendou pod kalendářem
+// a tečkami u „+X" v buňce dne, ať znamenají totéž a jdou ve stejném pořadí.
+const CAL_KIND_ORDER = ['aired', 'unseen', 'next', 'plan', 'proj']
+const CAL_KIND_LABEL = {
+    aired: 'Zhlédnuto',
+    unseen: 'Odvysíláno, nezhlédnuto',
+    next: 'Další díl',
+    plan: 'Naplánováno',
+    proj: 'Odhad',
+}
 const calDayKey = (d) => `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`
 
 // Cache událostí: module-level + localStorage, takže poslední známá podoba
@@ -867,11 +908,27 @@ function AiringCalendar({ airingAnime }) {
                                     <span className="airing-cal-chip-ep">EP {ev.ep}</span>
                                 </Link>
                             ))}
-                            {extra.length > 0 && (
-                                <span className="airing-cal-more" title={extra.map(e => e.title).join('\n')}>
-                                    +{extra.length}
-                                </span>
-                            )}
+                            {extra.length > 0 && (() => {
+                                // Skryté díly se do buňky nevejdou, ale aspoň se dá
+                                // poznat, CO se skrývá: za „+X" jdou tečky legendy
+                                // pro druhy, které mezi skrytými jsou (zhlédnuto /
+                                // nezhlédnuto / další díl / plán / odhad).
+                                const kinds = CAL_KIND_ORDER.filter(k => extra.some(e => e.kind === k))
+                                const summary = kinds
+                                    .map(k => `${CAL_KIND_LABEL[k]}: ${extra.filter(e => e.kind === k).length}`)
+                                    .join(' · ')
+                                return (
+                                    <span
+                                        className="airing-cal-more"
+                                        title={`${summary}\n${extra.map(e => e.title).join('\n')}`}
+                                    >
+                                        +{extra.length}
+                                        <span className="airing-cal-more-dots">
+                                            {kinds.map(k => <i key={k} className={`airing-cal-dot ${k}`} />)}
+                                        </span>
+                                    </span>
+                                )
+                            })()}
                         </div>
                     )
                 })}
@@ -928,6 +985,53 @@ function Dashboard() {
     const [timeFilter, setTimeFilter] = useState('all')
     const [customRange, setCustomRange] = useState({ start: '', end: '' })
     
+    // „Právě sledované": okno se ořízne na CELÉ řádky karet, aby zespoda
+    // nevykukoval proužek třetího řádku. Výška karty se mění podle šířky
+    // sloupce (statistiky se jinak zalomí), takže se měří za běhu a dopočítá
+    // se z ní nejbližší nižší násobek rozteče řádků.
+    const airingScrollRef = useRef(null)
+    const airingGridRef = useRef(null)
+    useEffect(() => {
+        const scroll = airingScrollRef.current
+        const grid = airingGridRef.current
+        if (!scroll || !grid || typeof ResizeObserver === 'undefined') return
+        const fit = () => {
+            const cards = grid.children
+            if (!cards.length) return
+            const avail = scroll.clientHeight
+            if (avail <= 0) return
+            const gap = parseFloat(getComputedStyle(grid).rowGap) || 0
+            // Přirozená výška karty se musí měřit BEZ našeho roztažení, jinak
+            // by se počítalo z hodnoty, kterou jsme sami nastavili.
+            const prev = grid.style.gridAutoRows
+            grid.style.gridAutoRows = 'min-content'
+            let natural = 0
+            for (const c of cards) natural = Math.max(natural, c.getBoundingClientRect().height)
+            if (natural <= 0) { grid.style.gridAutoRows = prev; return }
+            // Kolik celých řádků se vejde — a rozteč se pak dopočítá tak, aby
+            // je vyplnily přesně. Výšky okna se nedotýkáme (je daná flexem
+            // panelu), jen se do ní karty rovnoměrně roztáhnou.
+            // Tolerance: karta bývá o pár pixelů vyšší, než kolik na řádek
+            // vychází. Bez ní by se počet řádků skokem propadl o jedna (dva
+            // řádky → jeden), takže by dole zase vykukoval proužek dalšího
+            // řádku. Pár pixelů přesahu není v kartě vidět.
+            const TOLERANCE = 12
+            const rows = Math.max(1, Math.floor((avail + gap + TOLERANCE) / (natural + gap)))
+            const pitch = (avail - (rows - 1) * gap) / rows
+            // Pojistka pro opravdu vysoký obsah: roztažení na celé okno by
+            // z karty udělalo obří poloprázdný blok, to radši přirozenou výšku.
+            grid.style.gridAutoRows = pitch > natural * 1.35 ? '' : `${pitch}px`
+        }
+        const ro = new ResizeObserver(fit)
+        ro.observe(scroll)
+        ro.observe(grid)
+        fit()
+        return () => {
+            ro.disconnect()
+            grid.style.gridAutoRows = ''
+        }
+    })
+
     // Airing Anime sorting state
     const [airingSortKeys, setAiringSortKeys] = useState({})
 
@@ -2532,8 +2636,8 @@ function Dashboard() {
                                 {sortedAiringAnime && sortedAiringAnime.length > 0 && (
                                     <div className="full-chart-wrapper text-list airing-panel">
                                         <div className="chart-title">📺 Právě sledované ({sortedAiringAnime.length})</div>
-                                        <div className="chart-body text-list-scroll">
-                                            <ul className="text-list-items airing-grid">
+                                        <div className="chart-body text-list-scroll" ref={airingScrollRef}>
+                                            <ul className="text-list-items airing-grid" ref={airingGridRef}>
                                                 {sortedAiringAnime.map((a, i) => (
                                                     <li key={i} className="airing-card">
                                                         <JikanPoster malUrl={a.mal_url} size="xlarge" />

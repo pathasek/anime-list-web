@@ -2488,7 +2488,7 @@ function AnimeRatings() {
     // Řádky jsou anime s hodnocenými epizodami, sloupce EP 1..N. Buňka, ke které
     // existuje DOCX rozbor, je klikatelná a otevře stejný modal jako graf
     // hodnocení epizod (včetně listování mezi rozebranými díly).
-    const EP_COLUMNS_COLLAPSED = 26
+    const EP_COLUMNS_COLLAPSED = 24
     const MIN_EPISODES_FOR_TABLE = 2
 
     // Vodorovný posun tabulky epizod po tlačítkách. Sloupec s názvem anime je
@@ -2496,7 +2496,7 @@ function AnimeRatings() {
     // šířky sloupce, aby se nezastavovalo uprostřed čísla. Jen u epizod —
     // tabulka kategorií tohle ovládání nemá.
     const epTableWrapRef = useRef(null)
-    const EP_COLUMN_WIDTH = 46
+    const EP_COLUMN_WIDTH = 44
     const scrollEpisodeTable = (columns) => {
         const wrap = epTableWrapRef.current
         if (!wrap) return
@@ -2504,6 +2504,9 @@ function AnimeRatings() {
     }
 
     const episodeTableData = useMemo(() => {
+        // Finální hodnocení anime — stejný zdroj jako sloupec FH u kategorií,
+        // aby obě tabulky ukazovaly totéž číslo.
+        const fhByName = new Map(animeList.map(a => [a.name, Number(a.rating) || null]))
         const rows = episodeRatings
             .map(entry => {
                 const eps = (entry.episodes || [])
@@ -2520,6 +2523,7 @@ function AnimeRatings() {
                 const vals = eps.map(e => e.rating).filter(v => v !== null)
                 return {
                     name: entry.name,
+                    fh: fhByName.get(entry.name) ?? null,
                     byNum,
                     count: eps.length,
                     maxEp: eps[eps.length - 1].num,
@@ -2545,6 +2549,7 @@ function AnimeRatings() {
             if (tableSortColumn === 'Anime') return a.name.localeCompare(b.name, 'cs') * dir
             let valA, valB
             if (tableSortColumn === 'Ø') { valA = a.avg; valB = b.avg }
+            else if (tableSortColumn === 'FH') { valA = a.fh; valB = b.fh }
             else if (tableSortColumn === 'EP') { valA = a.count; valB = b.count }
             else if (tableSortColumn === 'MAX') { valA = a.best; valB = b.best }
             else if (typeof tableSortColumn === 'number') {
@@ -2564,6 +2569,7 @@ function AnimeRatings() {
             epAverages.set(n, vals.length ? vals.reduce((s, v) => s + v, 0) / vals.length : null)
         }
         const allVals = sorted.flatMap(r => [...r.byNum.values()].filter(v => v !== null))
+        const fhVals = sorted.map(r => r.fh).filter(v => v !== null)
 
         return {
             items: sorted,
@@ -2572,8 +2578,9 @@ function AnimeRatings() {
             total: sorted.length,
             episodeCount: allVals.length,
             avgAll: allVals.length ? allVals.reduce((s, v) => s + v, 0) / allVals.length : null,
+            avgFh: fhVals.length ? fhVals.reduce((s, v) => s + v, 0) / fhVals.length : null,
         }
-    }, [episodeRatings, tableSearchQuery, tableSortColumn, tableSortDirection])
+    }, [animeList, episodeRatings, tableSearchQuery, tableSortColumn, tableSortDirection])
 
     // Otevře rozbor epizody ze buňky tabulky (stejné chování jako klik v grafu)
     const openTableEpisodeReview = useCallback((animeName, epNum, rating) => {
@@ -4074,11 +4081,11 @@ function AnimeRatings() {
                                     </div>
                                     <h3 className="ratings-panel-title">
                                         <span>
-                                            {/* Oba popisy říkají totéž, jen pro svůj rozměr tabulky:
-                                                kam kliknout a že se otevře detail s rozborem. */}
+                                            {/* Oba popisy mají stejnou stavbu: co je v řádcích,
+                                                co ve sloupcích a co otevře kliknutí. */}
                                             {tableTab === 'categories'
-                                                ? 'Heatmapa kategorií (kliknutím na řádek otevřeš detail anime s rozborem)'
-                                                : 'Heatmapa epizod (kliknutím na zvýrazněnou buňku otevřeš detail epizody s rozborem)'}
+                                                ? 'Heatmapa kategorií: anime × kategorie, kliknutím na název nebo známku otevřeš rozbor anime'
+                                                : 'Heatmapa epizod: anime × díly, kliknutím na zvýrazněnou známku otevřeš rozbor EP'}
                                             <RatingInfoButton
                                                 label={tableTab === 'categories' ? 'Jak hodnotím kategorie' : 'Jak hodnotím epizody'}
                                                 style={{ marginLeft: '8px' }}
@@ -4102,7 +4109,7 @@ function AnimeRatings() {
                                         const hiddenEps = episodeTableData.maxEp - shownEps
                                         return (
                                             <>
-                                                <div className="ratings-category-table-wrapper" ref={epTableWrapRef}>
+                                                <div className={`ratings-category-table-wrapper${!epColumnsExpanded ? ' ep-collapsed' : ''}`} ref={epTableWrapRef}>
                                                     <table className="ratings-category-table ratings-episode-table">
                                                         <thead>
                                                             <tr>
@@ -4111,6 +4118,18 @@ function AnimeRatings() {
                                                                     onClick={() => handleTableSort('Anime')}
                                                                 >
                                                                     Anime {tableSortColumn === 'Anime' ? (tableSortDirection === 'asc' ? '▲' : '▼') : ''}
+                                                                </th>
+                                                                <th
+                                                                    className={`th-sortable th-numeric ${tableSortColumn === 'FH' ? 'th-active' : ''}`}
+                                                                    onClick={() => handleTableSort('FH')}
+                                                                    title="Finální hodnocení anime (v. = kliknutí na ? vysvětlí škálu)"
+                                                                >
+                                                                    FH {tableSortColumn === 'FH' ? (tableSortDirection === 'asc' ? '▲' : '▼') : ''}
+                                                                    <RatingInfoButton
+                                                                        label="Co znamená finální hodnocení"
+                                                                        style={{ marginLeft: '4px', verticalAlign: 'middle' }}
+                                                                        onClick={(e) => { e.stopPropagation(); setFhGuideOpen(true) }}
+                                                                    />
                                                                 </th>
                                                                 <th
                                                                     className={`th-sortable th-numeric ${tableSortColumn === 'Ø' ? 'th-active' : ''}`}
@@ -4143,6 +4162,10 @@ function AnimeRatings() {
                                                                         {n}{tableSortColumn === n ? (tableSortDirection === 'asc' ? ' ▲' : ' ▼') : ''}
                                                                     </th>
                                                                 ))}
+                                                                {!epColumnsExpanded && hiddenEps > 0 && (
+                                                                    <th className="th-ep-overflow" title="Některá anime mají více epizod">
+                                                                    </th>
+                                                                )}
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -4161,7 +4184,10 @@ function AnimeRatings() {
                                                                             {row.name}
                                                                         </span>
                                                                     </td>
-                                                                    <td className="td-numeric td-fh" style={getHeatmapStyle(row.avg)}>
+                                                                    <td className="td-numeric td-fh" style={getHeatmapStyle(row.fh)}>
+                                                                        {row.fh !== null ? row.fh.toLocaleString('cs-CZ', { maximumFractionDigits: 2 }) : '—'}
+                                                                    </td>
+                                                                    <td className="td-numeric td-wa" style={getHeatmapStyle(row.avg)}>
                                                                         {row.avg !== null ? row.avg.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'}
                                                                     </td>
                                                                     <td className="td-numeric td-wa" style={getHeatmapStyle(row.best)}>
@@ -4186,16 +4212,33 @@ function AnimeRatings() {
                                                                             </td>
                                                                         )
                                                                     })}
+                                                                    {!epColumnsExpanded && hiddenEps > 0 && (() => {
+                                                                        const rowHidden = row.maxEp > shownEps
+                                                                            ? row.maxEp - shownEps
+                                                                            : 0
+                                                                        return (
+                                                                            <td
+                                                                                className={`td-ep-overflow${rowHidden > 0 ? ' has-more' : ''}`}
+                                                                                title={rowHidden > 0 ? `${row.name} má ještě ${rowHidden} EP za sloupcem ${shownEps}` : undefined}
+                                                                                onClick={rowHidden > 0 ? () => setEpColumnsExpanded(true) : undefined}
+                                                                            >
+                                                                                {rowHidden > 0 && <span className="ep-overflow-badge">…+{rowHidden}</span>}
+                                                                            </td>
+                                                                        )
+                                                                    })()}
                                                                 </tr>
                                                             ))}
                                                         </tbody>
                                                         <tfoot>
                                                             <tr className="table-footer-row">
                                                                 <td className="td-footer-label">Průměr ({episodeTableData.total} anime)</td>
-                                                                <td className="td-numeric td-fh" style={getFooterHeatmapStyle(episodeTableData.avgAll)}>
+                                                                <td className="td-numeric td-fh" style={getFooterHeatmapStyle(episodeTableData.avgFh)}>
+                                                                    {episodeTableData.avgFh !== null ? episodeTableData.avgFh.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'}
+                                                                </td>
+                                                                <td className="td-numeric td-wa" style={getFooterHeatmapStyle(episodeTableData.avgAll)}>
                                                                     {episodeTableData.avgAll !== null ? episodeTableData.avgAll.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'}
                                                                 </td>
-                                                                <td className="td-numeric td-wa">—</td>
+                                                                <td className="td-numeric">—</td>
                                                                 <td className="td-numeric">{episodeTableData.episodeCount}</td>
                                                                 {epCols.map(n => {
                                                                     const avg = episodeTableData.epAverages.get(n)
@@ -4205,6 +4248,7 @@ function AnimeRatings() {
                                                                         </td>
                                                                     )
                                                                 })}
+                                                                {!epColumnsExpanded && hiddenEps > 0 && <td className="td-ep-overflow"></td>}
                                                             </tr>
                                                         </tfoot>
                                                     </table>
@@ -4215,6 +4259,7 @@ function AnimeRatings() {
                                                     {episodeTableData.avgAll !== null && (
                                                         <span>Průměr epizody: <strong>{episodeTableData.avgAll.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></span>
                                                     )}
+                                                    {epColumnsExpanded && (
                                                     <span className="ep-scroll-controls">
                                                         <button
                                                             type="button"
@@ -4235,14 +4280,15 @@ function AnimeRatings() {
                                                             ▸
                                                         </button>
                                                     </span>
+                                                    )}
                                                     {hiddenEps > 0 && (
                                                         <button type="button" className="ep-columns-toggle" onClick={() => setEpColumnsExpanded(true)}>
-                                                            Zobrazit i zbylých {hiddenEps} dílů ▸
+                                                            Zobrazit i zbylých {hiddenEps} EP ▸
                                                         </button>
                                                     )}
                                                     {epColumnsExpanded && episodeTableData.maxEp > EP_COLUMNS_COLLAPSED && (
                                                         <button type="button" className="ep-columns-toggle" onClick={() => setEpColumnsExpanded(false)}>
-                                                            ◂ Zpět na prvních {EP_COLUMNS_COLLAPSED} dílů
+                                                            ◂ Zpět na prvních {EP_COLUMNS_COLLAPSED} EP
                                                         </button>
                                                     )}
                                                 </div>

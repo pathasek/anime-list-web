@@ -7,9 +7,10 @@ import DashboardGroup from '../components/DashboardGroup'
 const OpEdQuizGame = lazy(() => import('../components/opedquiz/OpEdQuizGame'))
 import { VideoModal } from '../components/CategoryMediaPlayers'
 import { useOstPlayer } from '../components/OstPlayerProvider'
-import { normalizeAnimeKey, extractYoutubeId, extractYoutubePlaylistId, findOpEdVideo, animeKeysMatch, songsLooselyMatch } from '../utils/mediaMatch'
+import { normalizeAnimeKey, extractYoutubeId, extractYoutubePlaylistId, findOpEdVideo, animeKeysMatch, songsLooselyMatch, translateArtist } from '../utils/mediaMatch'
 import { getDominantColor } from '../utils/dominantColor'
 import { getPlaylistCounts, OST_COUNTS_EVENT } from '../utils/ostPlaylistCounts'
+import { getAnilistArtists, ANILIST_ARTISTS_EVENT } from '../utils/anilistStaffCache'
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -72,8 +73,22 @@ const miniPieOptions = {
 // Pozadí karty přebírá dominantní barvu z obalu playlistu (vzhled jako na
 // Spotify). Barva se počítá z lokálního obrázku přes canvas; když se nepodaří
 // (chybějící obal), karta zůstane na výchozím pozadí.
-// Kolik best skladeb se vejde do volného místa vpravo dole na kartě.
-const BEST_PIECES_PER_CARD = 4
+// Pomocná funkce pro převod délky (např. "2 hours, 33 minutes" -> "2:33:00")
+const parseDurationToHMS = (durationStr) => {
+    if (!durationStr) return null
+    const hMatch = durationStr.match(/(\d+)\s*hour/)
+    const mMatch = durationStr.match(/(\d+)\s*minute/)
+    const sMatch = durationStr.match(/(\d+)\s*second/)
+    
+    const h = hMatch ? parseInt(hMatch[1], 10) : 0
+    const m = mMatch ? parseInt(mMatch[1], 10) : 0
+    const s = sMatch ? parseInt(sMatch[1], 10) : 0
+    
+    if (h > 0) {
+        return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+    }
+    return `${m}:${String(s).padStart(2, '0')}`
+}
 
 function OstWholeCard({ card, onPlayPlaylist, onPlayBest }) {
     const [tint, setTint] = useState(null)
@@ -88,106 +103,149 @@ function OstWholeCard({ card, onPlayPlaylist, onPlayBest }) {
     const rgb = tint ? `${tint.r}, ${tint.g}, ${tint.b}` : null
     const style = rgb
         ? {
-            background: `linear-gradient(160deg, rgba(${rgb}, 0.42) 0%, rgba(${rgb}, 0.16) 42%, var(--bg-tertiary) 88%)`,
-            borderColor: `rgba(${rgb}, 0.45)`,
+            background: `linear-gradient(160deg, rgba(${rgb}, 0.28) 0%, rgba(${rgb}, 0.12) 42%, var(--bg-tertiary) 90%)`,
+            borderColor: `rgba(${rgb}, 0.35)`,
             '--fav-card-tint': rgb,
         }
         : undefined
 
-    const meta = [
-        card.parts > 1 ? `${card.parts} díly` : null,
-        card.episodes > 0 ? `${card.episodes} EP` : null,
-        card.hours > 0 ? `${card.hours.toLocaleString('cs-CZ', { maximumFractionDigits: 1 })} h` : null,
-    ].filter(Boolean)
+    const formattedDuration = parseDurationToHMS(card.albumDuration)
+
+    // Určení barvy odznaku pořadí
+    const getRankBadgeClass = (rank) => {
+        if (rank === 1) return 'rank-badge-gold'
+        if (rank === 2) return 'rank-badge-silver'
+        if (rank === 3) return 'rank-badge-bronze'
+        return 'rank-badge-default'
+    }
 
     return (
-        <div className={`fav-whole-card${card.rank <= 3 ? ` rank-${card.rank}` : ''}`} style={style}>
-            <div className="fav-whole-cover" onClick={onPlayPlaylist}
-                title={card.groupIdx >= 0 ? `Přehrát playlist: ${card.anime_name}` : card.anime_name}>
-                {card.image
-                    ? <img src={card.image} alt="" loading="lazy" />
-                    : <div className="fav-whole-cover-ph">♪</div>}
-                {card.groupIdx >= 0 && (
-                    <button type="button" className="fav-whole-play" title={`Přehrát playlist: ${card.anime_name}`}
-                        onClick={(e) => { e.stopPropagation(); onPlayPlaylist() }}>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-                    </button>
-                )}
-            </div>
+        <div className="fav-whole-card" style={style}>
+            {/* Horní sekce: obal a textové info */}
+            <div className="fav-whole-main-row">
+                <div className="fav-whole-left-col">
+                    <div className="fav-whole-cover" onClick={onPlayPlaylist}
+                        title={card.groupIdx >= 0 ? `Přehrát playlist: ${card.anime_name}` : card.anime_name}>
+                        
+                        {/* Odznak pořadí (Rank) překrývající levý horní roh */}
+                        <div className={`fav-whole-rank-badge ${getRankBadgeClass(card.rank)}`}>
+                            {card.rank}
+                        </div>
 
-            <div className="fav-whole-body">
-                <div className="fav-whole-titlerow">
-                    <span className="fav-whole-rank" title={`${card.rank}. místo v mém žebříčku OST`}>
-                        {card.rank}
-                    </span>
-                    {card.linkTo ? (
-                        <Link
-                            to={card.linkTo}
-                            className="fav-whole-name anime-link"
-                            title={card.parts > 1
-                                ? `Zobrazit celou sérii v Anime Listu: ${card.anime_name}`
-                                : `Otevřít detail: ${card.anime_name}`}
-                        >
-                            {card.anime_name}
-                        </Link>
-                    ) : (
-                        <span className="fav-whole-name" title={card.anime_name}>{card.anime_name}</span>
-                    )}
-                    {card.rating !== null && (
-                        <span className="fav-whole-rating" title="Můj průměr hodnocení série">
-                            ★ {card.rating.toLocaleString('cs-CZ', { maximumFractionDigits: 2 })}
-                        </span>
-                    )}
-                </div>
-
-                {(card.genres.length > 0 || card.themes.length > 0) && (
-                    <div className="fav-whole-tags">
-                        {card.genres.map(g => <span key={g} className="fav-whole-tag genre">{g}</span>)}
-                        {card.themes.map(t => <span key={t} className="fav-whole-tag theme">{t}</span>)}
+                        {card.image
+                            ? <img src={card.image} alt="" loading="lazy" />
+                            : <div className="fav-whole-cover-ph">♪</div>}
+                        
+                        {card.groupIdx >= 0 && (
+                            <button 
+                                type="button" 
+                                className="fav-whole-cover-play" 
+                                title={`Přehrát playlist: ${card.anime_name}`}
+                                onClick={(e) => { e.stopPropagation(); onPlayPlaylist() }}
+                            >
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                            </button>
+                        )}
                     </div>
-                )}
-
-                <div className="fav-whole-meta">
-                    {meta.join(' · ')}
-                    {card.trackCount ? (
-                        <span
-                            className="fav-whole-tracks"
-                            title={card.trackCountSource === 'playlist'
-                                ? 'Zjištěno přímo z playlistu při posledním přehrání'
-                                : 'Podle YouTube Music alba (playlist se ještě nepřehrával)'}
-                        >
-                            ♪ {card.trackCount} skladeb
-                        </span>
-                    ) : null}
-                </div>
-
-                {/* Spodek karty: odkazy vlevo dole, best skladby vyplňují volné
-                    místo vpravo a skládají se na sebe. Když je skladba jen jedna,
-                    stojí svisle na středu volného místa, ne úplně v rohu. */}
-                <div className="fav-whole-bottom">
-                    <div className="fav-whole-links">
-                        {card.spotify_url && <a href={card.spotify_url} target="_blank" rel="noreferrer" className="ext-link ext-link--spotify">Spotify</a>}
-                        {card.yt_url && <a href={card.yt_url} target="_blank" rel="noreferrer" className="ext-link ext-link--yt">YouTube</a>}
-                    </div>
-
                     {card.best.length > 0 && (
-                        <div className="fav-whole-best">
-                            <span className="fav-whole-best-label">Best</span>
-                            {card.best.map((p, i) => (
-                                <button
-                                    key={p.ost_name || i}
-                                    type="button"
-                                    className="fav-whole-best-chip"
-                                    onClick={() => onPlayBest(p)}
-                                    title={`Přehrát „${p.ost_name}" jako první, playlist pak pokračuje`}
-                                >
-                                    <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-                                    {p.ost_name}
-                                </button>
-                            ))}
+                        <span className="fav-whole-best-label">Best Pieces</span>
+                    )}
+                </div>
+
+                <div className="fav-whole-body">
+                    <div className="fav-whole-titlerow">
+                        {card.linkTo ? (
+                            <Link
+                                to={card.linkTo}
+                                className="fav-whole-name anime-link"
+                                title={card.parts > 1
+                                    ? `Zobrazit celou sérii v Anime Listu: ${card.anime_name}`
+                                    : `Otevřít detail: ${card.anime_name}`}
+                            >
+                                {card.anime_name}
+                            </Link>
+                        ) : (
+                            <span className="fav-whole-name" title={card.anime_name}>{card.anime_name}</span>
+                        )}
+                        {card.rating !== null && (
+                            <span className="fav-whole-rating" title="Můj průměr hodnocení série">
+                                ★ {card.rating.toLocaleString('cs-CZ', { maximumFractionDigits: 2 })}
+                            </span>
+                        )}
+                    </div>
+
+                    {/* Autoři a rok vydání */}
+                    {(card.artists || card.year) && (
+                        <div className="fav-whole-artists-row">
+                            {card.artists && <span className="fav-whole-artists">{card.artists}</span>}
+                            {card.year && <span className="fav-whole-year">{card.year}</span>}
+                        </div>
+                    )}
+
+                    {/* Žánrové štítky */}
+                    {card.genres.length > 0 && (
+                        <div className="fav-whole-tags">
+                            {card.genres.map(g => <span key={g} className="fav-whole-tag genre">{g}</span>)}
+                        </div>
+                    )}
+
+                    {/* Počet skladeb a celková délka alba (hh:mm:ss) */}
+                    {card.trackCount && (
+                        <div className="fav-whole-tracks-row">
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/>
+                                </svg>
+                                <span>
+                                    {card.trackCount} skladeb
+                                    {formattedDuration ? ` · ${formattedDuration}` : ''}
+                                </span>
+                            </div>
                         </div>
                     )}
                 </div>
+            </div>
+
+            {/* Střední sekce: Seznam všech nejlepších skladeb (BEST) přes celou šířku pod obalem */}
+            {card.best.length > 0 && (
+                <div className="fav-whole-best-section">
+                    {card.best.map((p, i) => (
+                        <button
+                            key={p.ost_name || i}
+                            type="button"
+                            className="fav-whole-best-chip-new"
+                            onClick={() => onPlayBest(p)}
+                            title={`Přehrát „${p.ost_name}“ jako první, playlist pak pokračuje`}
+                        >
+                            <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" style={{ flexShrink: 0 }}><path d="M8 5v14l11-7z" /></svg>
+                            <span className="best-chip-text">{p.ost_name}</span>
+                        </button>
+                    ))}
+                </div>
+            )}
+
+            {/* Spodní panel s externími odkazy (Spotify a YouTube) */}
+            <div className="fav-whole-footer">
+                {card.spotify_url && (
+                    <a href={card.spotify_url} target="_blank" rel="noreferrer" className="ext-link-new spotify">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" width="12" height="12">
+                            <path fill="#1ed760" d="M248 8C111.1 8 0 119.1 0 256s111.1 248 248 248 248-111.1 248-248S384.9 8 248 8Z"/>
+                            <path d="M406.6 231.1c-5.2 0-8.4-1.3-12.9-3.9-71.2-42.5-198.5-52.7-280.9-29.7-3.6 1-8.1 2.6-12.9 2.6-13.2 0-23.3-10.3-23.3-23.6 0-13.6 8.4-21.3 17.4-23.9 35.2-10.3 74.6-15.2 117.5-15.2 73 0 149.5 15.2 205.4 47.8 7.8 4.5 12.9 10.7 12.9 22.6 0 13.6-11 23.3-23.2 23.3zm-31 76.2c-5.2 0-8.7-2.3-12.3-4.2-62.5-37-155.7-51.9-238.6-29.4-4.8 1.3-7.4 2.6-11.9 2.6-10.7 0-19.4-8.7-19.4-19.4s5.2-17.8 15.5-20.7c27.8-7.8 56.2-13.6 97.8-13.6 64.9 0 127.6 16.1 177 45.5 8.1 4.8 11.3 11 11.3 19.7-.1 10.8-8.5 19.5-19.4 19.5zm-26.9 65.6c-4.2 0-6.8-1.3-10.7-3.6-62.4-37.6-135-39.2-206.7-24.5-3.9 1-9 2.6-11.9 2.6-9.7 0-15.8-7.7-15.8-15.8 0-10.3 6.1-15.2 13.6-16.8 81.9-18.1 165.6-16.5 237 26.2 6.1 3.9 9.7 7.4 9.7 16.5s-7.1 15.4-15.2 15.4z"/>
+                        </svg>
+                        <span>Spotify</span>
+                    </a>
+                )}
+                {card.yt_url && (
+                    <a href={card.yt_url} target="_blank" rel="noreferrer" className="ext-link-new youtube">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28.57 20" width="16" height="11">
+                            <g>
+                                <path d="M27.9727 3.12324C27.6435 1.89323 26.6768 0.926623 25.4468 0.597366C23.2197 2.24288e-07 14.285 0 14.285 0C14.285 0 5.35042 2.24288e-07 3.12323 0.597366C1.89323 0.926623 0.926623 1.89323 0.597366 3.12324C2.24288e-07 5.35042 0 10 0 10C0 10 2.24288e-07 14.6496 0.597366 16.8768C0.926623 18.1068 1.89323 19.0734 3.12323 19.4026C5.35042 20 14.285 20 14.285 20C14.285 20 23.2197 20 25.4468 19.4026C26.6768 19.0734 27.6435 18.1068 27.9727 16.8768C28.5701 14.6496 28.5701 10 28.5701 10C28.5701 10 28.5677 5.35042 27.9727 3.12324Z" fill="#FF0000"></path>
+                                <path d="M11.4253 14.2854L18.8477 10.0004L11.4253 5.71533V14.2854Z" fill="white"></path>
+                            </g>
+                        </svg>
+                        <span>YouTube</span>
+                    </a>
+                )}
             </div>
         </div>
     )
@@ -245,6 +303,12 @@ function Favorites() {
         const onChange = () => setPlaylistCounts(getPlaylistCounts())
         window.addEventListener(OST_COUNTS_EVENT, onChange)
         return () => window.removeEventListener(OST_COUNTS_EVENT, onChange)
+    }, [])
+    const [anilistVersion, setAnilistVersion] = useState(0)
+    useEffect(() => {
+        const onChange = () => setAnilistVersion(v => v + 1)
+        window.addEventListener(ANILIST_ARTISTS_EVENT, onChange)
+        return () => window.removeEventListener(ANILIST_ARTISTS_EVENT, onChange)
     }, [])
     const [videoModal, setVideoModal] = useState(null)     // přehrávané OP/ED video v modálu
     const [quizOpen, setQuizOpen] = useState(false)         // minihra „Hádej OP/ED“
@@ -331,6 +395,25 @@ function Favorites() {
                 console.error('Failed to load favorites:', err)
                 setLoading(false)
             })
+    }, [])
+
+    // Vyčištění SharePoint odkazu pro přímé otevření videa v prohlížeči
+    const getCleanSceneUrl = useCallback((url) => {
+        if (!url) return null
+        if (url.startsWith('http://') || url.startsWith('https://')) return url
+        
+        // Zkusí najít SharePoint cestu
+        const match = url.match(/(?::?[vw]:)?\/g\/personal\/(.+)$/)
+        if (match) {
+            return 'https://savsmb-my.sharepoint.com/:v:/g/personal/' + match[1]
+        }
+        
+        // Fallback pro /personal/
+        const personalIdx = url.indexOf('/personal/')
+        if (personalIdx !== -1) {
+            return 'https://savsmb-my.sharepoint.com' + url.substring(personalIdx)
+        }
+        return url
     }, [])
 
     // ---- Párování řádků OP/ED tabulky na Gdrive videa ----
@@ -503,9 +586,21 @@ function Favorites() {
                     const pk = normalizeAnimeKey(p.anime_name)
                     return pk === key || memberKeys.has(pk) || pk.startsWith(key + ' ')
                 })
-                .slice(0, BEST_PIECES_PER_CARD)
 
-            const album = (ytmusicAlbums || []).find(a => normalizeAnimeKey(a.anime_name) === key)
+            // Najdi nejlepší YT Music album pro tuhle sérii.
+            // Přednost: 1) přesná shoda klíče, 2) album s reálným autorem
+            // (ne "Various Artists"), 3) jakékoliv matching album.
+            // Bez toho by např. "Jujutsu Kaisen" matchovalo "Jujutsu Kaisen 0"
+            // (film), který má "Various Artists", místo S02 s "Yoshimasa Terui".
+            const matchingAlbums = (ytmusicAlbums || []).filter(a => {
+                const ak = normalizeAnimeKey(a.anime_name)
+                return ak && (ak === key || ak.includes(key) || key.includes(ak))
+            })
+            const album =
+                matchingAlbums.find(a => normalizeAnimeKey(a.anime_name) === key) ||
+                matchingAlbums.find(a => a.artists && a.artists !== 'Various Artists') ||
+                matchingAlbums[0] ||
+                null
             // Přednost má počet zjištěný přímo z playlistu (je to ten, který
             // opravdu poslouchám); YT Music album je záloha, když se playlist
             // ještě nikdy nepustil.
@@ -519,6 +614,35 @@ function Favorites() {
                     return ck && (key.includes(ck) || ck.includes(key))
                 })
                 if (mk) image = spotifyImages[mk]
+            }
+
+            // Sběr všech let vydání (jak z YT Music alb pro členy, tak ze samotných anime)
+            const allYears = new Set()
+            if (album?.year) {
+                const y = parseInt(album.year)
+                if (!isNaN(y)) allYears.add(y)
+            }
+            members.forEach(m => {
+                if (m.release_date) {
+                    const y = new Date(m.release_date).getFullYear()
+                    if (!isNaN(y)) allYears.add(y)
+                }
+                const mKey = normalizeAnimeKey(m.name)
+                const memberAlbum = (ytmusicAlbums || []).find(a => {
+                    const ak = normalizeAnimeKey(a.anime_name)
+                    return ak && (ak === mKey || ak.includes(mKey) || mKey.includes(ak))
+                })
+                if (memberAlbum?.year) {
+                    const y = parseInt(memberAlbum.year)
+                    if (!isNaN(y)) allYears.add(y)
+                }
+            })
+            const sortedYears = Array.from(allYears).sort((a, b) => a - b)
+            let yearDisplay = null
+            if (sortedYears.length === 1) {
+                yearDisplay = String(sortedYears[0])
+            } else if (sortedYears.length > 1) {
+                yearDisplay = `${sortedYears[0]} - ${sortedYears[sortedYears.length - 1]}`
             }
 
             return {
@@ -543,19 +667,42 @@ function Favorites() {
                 trackCount: liveCount ?? album?.track_count ?? null,
                 trackCountSource: liveCount ? 'playlist' : (album?.track_count ? 'ytmusic' : null),
                 albumDuration: album?.duration || null,
-                best,
+                artists: (() => {
+                    let rawArtists = album?.artists || null
+                    // Když hlavní album nemá reálné autory, prohledáme
+                    // členská alba série (např. JJK S02 má "Yoshimasa Terui"
+                    // i když hlavní album i S01 říkají "Various Artists").
+                    if (!rawArtists || rawArtists === 'Various Artists') {
+                        for (const m of members) {
+                            const mKey = normalizeAnimeKey(m.name)
+                            const mAlbum = (ytmusicAlbums || []).find(a => {
+                                const ak = normalizeAnimeKey(a.anime_name)
+                                return ak && (ak === mKey || ak.includes(mKey) || mKey.includes(ak))
+                            })
+                            if (mAlbum?.artists && mAlbum.artists !== 'Various Artists') {
+                                rawArtists = mAlbum.artists
+                                break
+                            }
+                        }
+                    }
+                    const hasNoArtists = !rawArtists || rawArtists === 'Various Artists'
+                    const cachedAnilist = hasNoArtists ? getAnilistArtists(w.anime_name) : null
+                    return (hasNoArtists && cachedAnilist)
+                        ? cachedAnilist
+                        : (rawArtists ? translateArtist(rawArtists) : null)
+                })(),
+                year: yearDisplay,
+                best: [...best].sort((a, b) => (a.ost_name || '').length - (b.ost_name || '').length),
             }
         })
-    // `favorites` je v závislostech schválně: animeListRef se plní ve stejném
-    // efektu jako favorites, takže jeho změna signalizuje, že už jsou data k dispozici.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sortedWhole, wholeGroups, ostTables, spotifyImages, ytmusicAlbums, playlistCounts, favorites])
+    }, [sortedWhole, wholeGroups, ostTables, spotifyImages, ytmusicAlbums, playlistCounts, favorites, anilistVersion])
 
     const visibleWholeCards = useMemo(() => {
         const q = wholeSearch.trim().toLowerCase()
         if (!q) return wholeCards
         return wholeCards.filter(c =>
             c.anime_name.toLowerCase().includes(q)
+            || (c.artists && c.artists.toLowerCase().includes(q))
             || c.genres.some(g => g.toLowerCase().includes(q))
             || c.themes.some(t => t.toLowerCase().includes(q))
             || c.best.some(b => (b.ost_name || '').toLowerCase().includes(q))
@@ -1975,10 +2122,56 @@ function Favorites() {
                 <div style={{ marginTop: 'var(--spacing-2xl)' }}>
                     <h3 className="section-heading">🎼 Anime Favourite OST</h3>
 
-                    {/* „As a Whole" má celou šířku (žebříček teče doprava a dolů),
-                        pod ním dvě užší sekce vedle sebe. */}
+                    {/* Všechny tři sekce jsou plné šířky pod sebou v rozvržení flexboxu (fav-ost-layout) */}
                     <div className="fav-ost-layout">
-                        {/* Table 1 (Formerly 3): OST As a Whole - Tile Layout */}
+                        {/* Table 1: OST Only (The Best) - Nyní nahoře, plná šířka */}
+                        <div className="themed-outline fav-ost-panel">
+                            <h4 className="section-heading">
+                                🎵 OST Only (The Best)
+                                <span className="section-heading-note">{ostTables.pieces.length} skladeb</span>
+                                {piecesTracks.length > 0 && (
+                                    <button
+                                        type="button"
+                                        className="fav-play-all-btn section-heading-action"
+                                        onClick={() => openOstPlayer('pieces', 0)}
+                                        title={`Otevřít přehrávač se všemi ${piecesTracks.length} skladbami`}
+                                    >
+                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                                        Přehrát vše ({piecesTracks.length})
+                                    </button>
+                                )}
+                            </h4>
+                            <div className="fav-ost-flow fav-ost-flow--pieces">
+                                {ostTables.pieces.map((p, i) => {
+                                    const trackIdx = piecesTracks.findIndex(t => t.anime === p.anime_name && t.song === p.ost_name)
+                                    return (
+                                        <div className="fav-ost-flow-item" key={i}>
+                                            <span className="fav-ost-flow-num">{i + 1}</span>
+                                            {trackIdx >= 0 ? (
+                                                <button
+                                                    type="button"
+                                                    className="fav-table-play-btn"
+                                                    onClick={() => openOstPlayer('pieces', trackIdx)}
+                                                    title="Přehrát tuto skladbu v přehrávači"
+                                                >
+                                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                                                </button>
+                                            ) : <span className="fav-ost-flow-noplay" />}
+                                            <span className="fav-ost-flow-main" title={`${p.anime_name} — ${p.ost_name}`}>
+                                                {p.ost_url
+                                                    ? <a href={p.ost_url} target="_blank" rel="noreferrer" className="fav-ost-flow-song">{p.ost_name}</a>
+                                                    : <span className="fav-ost-flow-song">{p.ost_name}</span>}
+                                                {p.anime_url
+                                                    ? <a href={p.anime_url} target="_blank" rel="noreferrer" className="fav-ost-flow-sub">{p.anime_name}</a>
+                                                    : <span className="fav-ost-flow-sub">{p.anime_name}</span>}
+                                            </span>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        </div>
+
+                        {/* Table 2: OST As a Whole - Tile Layout - Uprostřed, plná šířka */}
                         <div className="themed-outline fav-ost-panel">
                             <h4 className="section-heading">
                                 🎧 OST Only (As a Whole)
@@ -2001,7 +2194,7 @@ function Favorites() {
                                 <input
                                     type="text"
                                     className="table-search-input fav-whole-search"
-                                    placeholder="Hledat anime, žánr, skladbu..."
+                                    placeholder="Hledat anime, autora, žánr, skladbu..."
                                     value={wholeSearch}
                                     onChange={(e) => setWholeSearch(e.target.value)}
                                 />
@@ -2021,80 +2214,57 @@ function Favorites() {
                             </div>
                         </div>
 
-                        {/* Table 2 + 3: obě tečou po sloupcích doprava a scrollují
-                            vodorovně — svisle jich přes 200 zabíralo přes celou
-                            obrazovku výšky. */}
-                        <div className="fav-ost-row">
-                            <div className="themed-outline fav-ost-panel">
-                                <h4 className="section-heading">
-                                    🎵 OST Only (The Best)
-                                    <span className="section-heading-note">{ostTables.pieces.length} skladeb</span>
-                                    {piecesTracks.length > 0 && (
-                                        <button
-                                            type="button"
-                                            className="fav-play-all-btn section-heading-action"
-                                            onClick={() => openOstPlayer('pieces', 0)}
-                                            title={`Otevřít přehrávač se všemi ${piecesTracks.length} skladbami`}
-                                        >
-                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-                                            Přehrát vše ({piecesTracks.length})
-                                        </button>
-                                    )}
-                                </h4>
-                                <div className="fav-ost-flow fav-ost-flow--pieces">
-                                    {ostTables.pieces.map((p, i) => {
-                                        const trackIdx = piecesTracks.findIndex(t => t.anime === p.anime_name && t.song === p.ost_name)
-                                        return (
-                                            <div className="fav-ost-flow-item" key={i}>
-                                                <span className="fav-ost-flow-num">{i + 1}</span>
-                                                {trackIdx >= 0 ? (
-                                                    <button
-                                                        type="button"
-                                                        className="fav-table-play-btn"
-                                                        onClick={() => openOstPlayer('pieces', trackIdx)}
-                                                        title="Přehrát tuto skladbu v přehrávači"
-                                                    >
-                                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-                                                    </button>
-                                                ) : <span className="fav-ost-flow-noplay" />}
-                                                <span className="fav-ost-flow-main" title={`${p.anime_name} — ${p.ost_name}`}>
-                                                    {p.ost_url
-                                                        ? <a href={p.ost_url} target="_blank" rel="noreferrer" className="fav-ost-flow-song">{p.ost_name}</a>
-                                                        : <span className="fav-ost-flow-song">{p.ost_name}</span>}
-                                                    {p.anime_url
-                                                        ? <a href={p.anime_url} target="_blank" rel="noreferrer" className="fav-ost-flow-sub">{p.anime_name}</a>
-                                                        : <span className="fav-ost-flow-sub">{p.anime_name}</span>}
-                                                </span>
-                                            </div>
-                                        )
-                                    })}
-                                </div>
-                            </div>
-
-                            <div className="themed-outline fav-ost-panel">
-                                <h4 className="section-heading">
-                                    🎬 OST + Scenes
-                                    <span className="section-heading-note">{ostTables.scenes.length} scén</span>
-                                    <a
-                                        href="https://savsmb-my.sharepoint.com/:f:/g/personal/xmacoun1_is_savs_cz/IgB4lwcmUIhES67LCrn6UIYHAYtMD7DNKKhq256IvGNUpEs?e=f9QraG"
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        className="link-plain fav-scenes-link section-heading-action"
-                                    >
-                                        Videoklipy ↗
-                                    </a>
-                                </h4>
-                                <div className="fav-ost-flow fav-ost-flow--scenes">
-                                    {ostTables.scenes.map((s, i) => (
+                        {/* Table 3: OST + Scenes - Nyní dole, plná šířka */}
+                        <div className="themed-outline fav-ost-panel">
+                            <h4 className="section-heading">
+                                🎬 OST + Scenes
+                                <span className="section-heading-note">{ostTables.scenes.length} scén</span>
+                                <a
+                                    href="https://savsmb-my.sharepoint.com/:f:/g/personal/xmacoun1_is_savs_cz/IgB4lwcmUIhES67LCrn6UIYHAYtMD7DNKKhq256IvGNUpEs?e=f9QraG"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="link-plain fav-scenes-link section-heading-action"
+                                >
+                                    Složka videoklipů ↗
+                                </a>
+                            </h4>
+                            <div className="fav-ost-flow fav-scene-flow">
+                                {ostTables.scenes.map((s, i) => {
+                                    const cleanUrl = getCleanSceneUrl(s.scene_url)
+                                    const title = s.scene ? s.scene.replace(/^"(.*)"$/, '$1') : ''
+                                    
+                                    return (
                                         <div className="fav-ost-flow-item" key={i}>
-                                            <span className="fav-ost-flow-ep">{s.episode}</span>
-                                            <span className="fav-ost-flow-main" title={`${s.anime_name} — ${s.scene}`}>
-                                                <span className="fav-ost-flow-song">{s.scene}</span>
+                                            <span className="fav-scene-flow-ep" title="Epizoda / čas ve videu">
+                                                {s.episode}
+                                            </span>
+                                            {cleanUrl ? (
+                                                <a
+                                                    href={cleanUrl}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    className="fav-table-play-btn fav-scene-play-btn"
+                                                    title={`Přehrát video: ${title}`}
+                                                >
+                                                    {/* Clapperboard SVG ikona */}
+                                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+                                                        <path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/>
+                                                    </svg>
+                                                </a>
+                                            ) : (
+                                                <span className="fav-ost-flow-noplay" />
+                                            )}
+                                            <span className="fav-ost-flow-main" title={`${s.anime_name} — ${title}`}>
+                                                {cleanUrl ? (
+                                                    <a href={cleanUrl} target="_blank" rel="noreferrer" className="fav-ost-flow-song">{title}</a>
+                                                ) : (
+                                                    <span className="fav-ost-flow-song">{title}</span>
+                                                )}
                                                 <span className="fav-ost-flow-sub">{s.anime_name}</span>
                                             </span>
                                         </div>
-                                    ))}
-                                </div>
+                                    )
+                                })}
                             </div>
                         </div>
                     </div>
