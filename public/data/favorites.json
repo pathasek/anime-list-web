@@ -3760,8 +3760,8 @@
     "index": "222.",
     "anime_name": "Frieren: Beyond Journey's End, S02",
     "type": "ED",
-    "song": "milet",
-    "author": "The Story of Us",
+    "song": "The Story of Us",
+    "author": "milet",
     "language": "JAP (73%) ENG (27%)",
     "rating_lyrics": "NEMÁM SUBS",
     "rating_emotion": 9.25,
@@ -4306,7 +4306,7 @@
     "type": "OP",
     "song": "MONSTER",
     "author": "Eir Aoi",
-    "language": "JAP",
+    "language": "JAP (88%) ENG (32%)",
     "rating_lyrics": "NEMÁM SUBS",
     "rating_emotion": 7.25,
     "rating_melody": 8.75,
@@ -4333,5 +4333,22 @@
     "has_frisson": false,
     "rating_avg": 8.625,
     "rating_final": 9
+  },
+  {
+    "index": "256.",
+    "anime_name": "Petals of Reincarnation",
+    "type": "OP",
+    "song": "Glitch*",
+    "author": "eill",
+    "language": "ENG (60%) JAP (40%)",
+    "rating_lyrics": "NEMÁM SUBS",
+    "rating_emotion": 7.25,
+    "rating_melody": 8.5,
+    "rating_video": 8.75,
+    "rating_voice": 9,
+    "sing_along": 6,
+    "has_frisson": false,
+    "rating_avg": 8.375,
+    "rating_final": 8
   }
 ]
