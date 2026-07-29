@@ -24,6 +24,7 @@ import SpiralWordCloud from '../components/charts/SpiralWordCloud'
 import { calculateExcelChartsData } from '../utils/excelChartCalculations'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { extractMalId, getAnimeInfo, getOrFetchEpisodeList, getCachedEpisodeList, getNextBroadcastDate, isExcelRunning } from '../utils/jikanService'
+import { animePath } from '../utils/animeSlug'
 
 // Register Chart.js components
 ChartJS.register(
@@ -238,11 +239,20 @@ function loadAiringStats(malId) {
     return null
 }
 
-function saveAiringStats(malId, stats) {
-    try { localStorage.setItem(airingStatsKey(malId), JSON.stringify({ stats, at: Date.now() })) } catch { /* quota */ }
+// `complete` = dotaz na Jikan doopravdy prošel. Nekompletní záznam se uloží
+// s časem v minulosti, takže ho TTL kontrola bere jako prošlý a příští render
+// data zkusí dotáhnout znovu (místo 15 minut čekání s prázdnou kartou).
+function saveAiringStats(malId, stats, complete = true) {
+    const at = complete ? Date.now() : Date.now() - AIRING_STATS_TTL
+    try { localStorage.setItem(airingStatsKey(malId), JSON.stringify({ stats, at })) } catch { /* quota */ }
 }
 
-function AiringEpisodeStats({ malUrl, animeName, historyLog = [], episodeRatings = [] }) {
+// Odhad délky série, když ji MAL ještě neuvádí (`episodes: null` u čerstvě
+// vysílaných anime). Jedna cour = 12–13 dílů, což sedí na drtivou většinu;
+// odhad se sám nahradí přesným číslem, jakmile ho Jikan doplní.
+const EP_COUNT_ESTIMATE = 12
+
+function AiringEpisodeStats({ malUrl, animeName, watchedEps = 0, historyLog = [], episodeRatings = [] }) {
     // Stejný vzor jako JikanPoster: loading odvozený z malId při renderu,
     // efekt nevolá setState synchronně (react-hooks/set-state-in-effect).
     const malId = malUrl ? extractMalId(malUrl) : null
@@ -328,30 +338,33 @@ function AiringEpisodeStats({ malUrl, animeName, historyLog = [], episodeRatings
                     }
                 }
 
+                commitStats(info, localBroadcast, formattedLast, formattedNext)
+            }).catch(() => {
+                if (!signal.aborted) commitStats(null, null, formattedLast, formattedNext)
+            })
+
+            // Neúspěšný dotaz na Jikan (typicky 429 při rozjezdu, kdy se ptá
+            // 13 vysílaných anime naráz) NESMÍ přepsat známá data prázdnem —
+            // dřív se `broadcast: null` uložilo s čerstvým časem a karta pak
+            // 15 minut TTL nic neukazovala a ani to nezkusila znovu.
+            // Při selhání se proto poslední známé hodnoty zachovají a čas se
+            // posune tak, aby další render zkusil dotaz hned znovu.
+            function commitStats(info, broadcast, lastDate, nextDate) {
+                const prev = loadAiringStats(malId)?.stats || null
+                const ok = !!info
                 const statsObj = {
-                    lastEpDate: formattedLast,
-                    nextEpDate: formattedNext,
-                    totalEps: episodes ? episodes.length : 0,
+                    lastEpDate: lastDate || prev?.lastEpDate || null,
+                    nextEpDate: nextDate || prev?.nextEpDate || null,
+                    totalEps: episodes ? episodes.length : (prev?.totalEps || 0),
                     airedCount: aired.length,
-                    broadcast: localBroadcast
+                    // Plánovaná délka série z MALu; null = MAL ji ještě neuvádí
+                    plannedEps: ok ? (info.episodes ?? null) : (prev?.plannedEps ?? null),
+                    broadcast: ok ? broadcast : (prev?.broadcast ?? null)
                 }
-                saveAiringStats(malId, statsObj)
+                saveAiringStats(malId, statsObj, ok)
                 setStats(statsObj)
                 setLoading(false)
-            }).catch(() => {
-                if (!signal.aborted) {
-                    const statsObj = {
-                        lastEpDate: formattedLast,
-                        nextEpDate: formattedNext,
-                        totalEps: episodes ? episodes.length : 0,
-                        airedCount: aired.length,
-                        broadcast: null
-                    }
-                    saveAiringStats(malId, statsObj)
-                    setStats(statsObj)
-                    setLoading(false)
-                }
-            })
+            }
         }).catch(() => { if (!signal.aborted) setLoading(false) })
 
         return () => {
@@ -361,6 +374,26 @@ function AiringEpisodeStats({ malUrl, animeName, historyLog = [], episodeRatings
                 .catch(() => { /* endpoint nedostupný ⇒ Excel neběží */ })
         }
     }, [malId, animeName, historyLog])
+
+    // Skutečné datumy z téhož zdroje jako kalendář vysílání. Mají přednost před
+    // projekcí „za týden ve stejný čas": u série na pauze (Re:Zero S04) nebo se
+    // změněným slotem projekce lže, kalendář zná z AniListu pravdu.
+    const calEvents = useSharedCalEvents(animeName)
+    const calDates = useMemo(() => {
+        if (!calEvents?.length) return { next: null, last: null }
+        const now = Date.now()
+        const fmt = (ts) => new Date(ts).toLocaleString('cs-CZ',
+            { weekday: 'short', day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' })
+        const future = calEvents.filter(e => e.ts > now).sort((a, b) => a.ts - b.ts)
+        const past = calEvents.filter(e => e.ts <= now).sort((a, b) => b.ts - a.ts)
+        return {
+            next: future[0] ? { text: fmt(future[0].ts), ep: future[0].ep, estimate: future[0].kind === 'proj' } : null,
+            last: past[0] ? { text: fmt(past[0].ts), ep: past[0].ep } : null,
+        }
+    }, [calEvents])
+
+    const lastEpText = calDates.last?.text || stats?.lastEpDate
+    const nextEpText = calDates.next?.text || stats?.nextEpDate
 
     // Skóre (bez sítě) se ukážou hned; „Načítám…" jen když není ani skóre ani
     // cache Jikan dat. Datumy/broadcast se doplní, až dojedou z Jikanu.
@@ -381,14 +414,21 @@ function AiringEpisodeStats({ malUrl, animeName, historyLog = [], episodeRatings
                         📊 Last: {liveScores.lastScore.toFixed(1).replace('.', ',')}
                     </span>
                 )}
-                {stats?.lastEpDate && (
-                    <span title="Datum poslední epizody (Jikan)">
-                        📅 {stats.lastEpDate}
+                {lastEpText && (
+                    <span title={calDates.last
+                        ? `Poslední odvysílaný díl: EP ${calDates.last.ep}`
+                        : 'Datum poslední epizody (Jikan)'}>
+                        📅 {lastEpText}
                     </span>
                 )}
-                {stats?.nextEpDate && (
-                    <span title="Datum příští epizody (Jikan)" style={{ color: '#34d399' }}>
-                        ⏭️ {stats.nextEpDate}
+                {nextEpText && (
+                    <span
+                        title={calDates.next
+                            ? `Další díl: EP ${calDates.next.ep}${calDates.next.estimate ? ' (odhad z pravidelného času)' : ' (potvrzený rozvrh)'}`
+                            : 'Datum příští epizody (Jikan)'}
+                        style={{ color: '#34d399' }}
+                    >
+                        ⏭️ {nextEpText}{calDates.next?.estimate ? '?' : ''}
                     </span>
                 )}
                 {stats?.broadcast && (
@@ -396,6 +436,27 @@ function AiringEpisodeStats({ malUrl, animeName, historyLog = [], episodeRatings
                         📡 {stats.broadcast}
                     </span>
                 )}
+                {(() => {
+                    // Postup série: přesný počet dílů z MALu, dokud ho nezná,
+                    // odhad jedné cour označený vlnovkou. Jakmile Jikan číslo
+                    // doplní, „~12" se samo přepne na skutečnou hodnotu.
+                    const exact = stats?.plannedEps || null
+                    const total = exact || EP_COUNT_ESTIMATE
+                    if (!watchedEps && !exact) return null
+                    const remaining = Math.max(0, total - watchedEps)
+                    return (
+                        <span
+                            style={{ color: remaining === 0 ? '#34d399' : 'var(--text-muted)' }}
+                            title={exact
+                                ? `Zhlédnuto ${watchedEps} z ${exact} dílů podle MyAnimeListu`
+                                : `MyAnimeList zatím neuvádí počet dílů, jde o odhad jedné cour (${EP_COUNT_ESTIMATE}). Upřesní se, jakmile bude znám.`}
+                        >
+                            📺 {watchedEps}/{exact ? exact : `~${total}`}
+                            {remaining > 0 && ` (zbývá ${remaining})`}
+                            {remaining === 0 && exact && ' ✓'}
+                        </span>
+                    )
+                })()}
             </div>
         </div>
     )
@@ -524,7 +585,7 @@ function buildAnimeEvents(a, episodes, info, schedule, nowTs) {
             const kind = epNum <= watched ? 'aired' : 'unseen'
             events.push({
                 day: calDayKey(d), ts: rec.ts, name: a.name, malUrl: a.mal_url, ep: epNum, kind,
-                title: `${a.name} — EP ${epNum} • ${fmtDate(d)}${rec.exact ? ` ${fmtTime(d)}` : ''}`
+                title: `${a.name}: EP ${epNum} • ${fmtDate(d)}${rec.exact ? ` ${fmtTime(d)}` : ''}`
                     + (kind === 'unseen' ? ' • odvysíláno, nezhlédnuto' : '')
             })
         }
@@ -533,23 +594,29 @@ function buildAnimeEvents(a, episodes, info, schedule, nowTs) {
         events.push({
             day: calDayKey(u.d), ts: u.rec.ts, name: a.name, malUrl: a.mal_url, ep: u.epNum,
             kind: i === 0 ? 'next' : 'plan',
-            title: `${a.name} — EP ${u.epNum} • ${fmtDate(u.d)}${u.rec.exact ? ` ${fmtTime(u.d)}` : ''}`
+            title: `${a.name}: EP ${u.epNum} • ${fmtDate(u.d)}${u.rec.exact ? ` ${fmtTime(u.d)}` : ''}`
         })
     })
 
     const nextBroadcast = info?.broadcast ? getNextBroadcastDate(info.broadcast) : null
     if (upcoming.length === 0 && nextBroadcast) {
         const base = Math.max(maxEp, watched)
+        // MAL zná plánovaný počet dílů → neprojektovat za finále (dřív se slepě
+        // přidávalo 10 dílů dopředu i sérii, které zbývaly dva). Když ho nezná,
+        // zůstává původních 10 jako horní mez.
+        const plannedTotal = info?.episodes || null
+        const maxProjected = plannedTotal ? Math.max(0, plannedTotal - base) : 10
         let projected = 0
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 10 && projected < maxProjected; i++) {
             const d = new Date(nextBroadcast.getTime() + i * 7 * 24 * 60 * 60 * 1000)
             if (usedDays.has(calDayKey(d))) continue
             projected++
             const epNum = base + projected
+            const isFinale = plannedTotal && epNum === plannedTotal
             events.push({
                 day: calDayKey(d), ts: d.getTime(), name: a.name, malUrl: a.mal_url, ep: epNum,
                 kind: projected === 1 ? 'next' : 'proj',
-                title: `${a.name} — EP ${epNum}${projected === 1 ? '' : ' (odhad)'} • ${fmtDate(d)} ${fmtTime(d)}`
+                title: `${a.name}: EP ${epNum}${isFinale ? ' (finále)' : projected === 1 ? '' : ' (odhad)'} • ${fmtDate(d)} ${fmtTime(d)}`
             })
         }
     }
@@ -630,6 +697,33 @@ async function loadAiringCalEvents(list, cacheKey, signal, onUpdate) {
 // okamžitě a pak živě.
 let _calRun = null // { key, events, subs:Set, done, controller }
 
+// Globální sběrnice událostí kalendáře. Odběratelé se na ni můžou přihlásit
+// dřív, než běh vůbec vznikne (efekty potomků běží před efekty rodiče, takže
+// karty „Právě sledované" se mountují dřív, než Dashboard nastartuje prewarm).
+const _calEventSubs = new Set()
+function publishCalEvents(ev) {
+    _calEventSubs.forEach(fn => { try { fn(ev) } catch { /* odhlášený odběratel */ } })
+}
+
+/**
+ * Události kalendáře pro jedno anime. Sdílený zdroj pravdy s kalendářem
+ * vysílání: AniList rozvrh > Jikan seznam epizod > projekce z pravidelného
+ * vysílacího času. Díky tomu karta ukazuje stejné datum jako kalendář i
+ * u sérií na pauze, kde „za týden ve stejný čas" neplatí.
+ */
+function useSharedCalEvents(animeName) {
+    const [events, setEvents] = useState(
+        () => _calRun?.events?.[animeName] || loadCalCache()?.animeEvents?.[animeName] || null
+    )
+    useEffect(() => {
+        const cb = (ev) => setEvents(ev?.[animeName] || null)
+        _calEventSubs.add(cb)
+        if (_calRun?.events) cb(_calRun.events)
+        return () => { _calEventSubs.delete(cb) }
+    }, [animeName])
+    return events
+}
+
 function ensureCalRun(list, cacheKey) {
     if (_calRun && _calRun.key === cacheKey) return _calRun
     if (_calRun) _calRun.controller.abort()
@@ -641,11 +735,16 @@ function ensureCalRun(list, cacheKey) {
     // se ukáže rovnou z cache. Jinak se spustí loader na pozadí.
     if (cached && cached.key === cacheKey && Date.now() - cached.at < CAL_CACHE_TTL) {
         run.done = true
+        // Odběratelé, kteří se přihlásili dřív než vznikl běh, se z čerstvé
+        // cache jinak nedozvědí nic (loader se nespustí). Microtask, ať se
+        // setState nevolá uprostřed renderu volajícího.
+        if (run.events) queueMicrotask(() => publishCalEvents(run.events))
         return run
     }
     loadAiringCalEvents(list, cacheKey, controller.signal, (ev) => {
         run.events = ev
         run.subs.forEach(fn => { try { fn(ev) } catch { /* odhlášený odběratel */ } })
+        publishCalEvents(ev)
     }).catch(() => { /* přerušeno / síť */ }).finally(() => { run.done = true })
     return run
 }
@@ -749,7 +848,7 @@ function AiringCalendar({ airingAnime }) {
                             {evs.slice(0, MAX_CHIPS).map((ev) => (
                                 <Link
                                     key={`${ev.name}|${ev.kind}|${ev.ep}`}
-                                    to={`/anime/${encodeURIComponent(ev.name)}`}
+                                    to={animePath(ev.name)}
                                     className={`airing-cal-chip ${ev.kind}`}
                                     title={ev.title}
                                 >
@@ -2173,7 +2272,7 @@ function Dashboard() {
                                                     <span
                                                         className="tag-anime-count"
                                                         style={{ color: '#fbbf24', cursor: 'help' }}
-                                                        title={`Vážené hodnocení vybraných tagů — Σ(moje hodnocení × rank/100) / Σ(rank/100) přes ${selRatedCount} hodnocených anime z výběru`}
+                                                        title={`Vážené hodnocení vybraných tagů: Σ(moje hodnocení × rank/100) / Σ(rank/100) přes ${selRatedCount} hodnocených anime z výběru`}
                                                     >
                                                         ⚖️ {selWeighted.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}{selRatedCount < 2 ? ' (málo dat)' : ''}
                                                     </span>
@@ -2215,7 +2314,7 @@ function Dashboard() {
                         {/* Bottom: Spiral Word Cloud */}
                         {excelData.tagCloud && excelData.tagCloud.length > 0 && (
                             <div className="full-chart-wrapper wide" style={{ maxWidth: 'none', aspectRatio: 'unset', height: '500px' }}>
-                                <div className="chart-title">☁️ Word Cloud — AniList Tagy (relevance)</div>
+                                <div className="chart-title">☁️ Word Cloud: AniList Tagy (relevance)</div>
                                 <div className="chart-body">
                                     <SpiralWordCloud tags={excelData.tagCloud} tagDescriptions={excelData.tagDescriptions} onTagClick={handleWcClick} selectedTags={selectedTags} excludedTags={excludedTags} />
                                 </div>
@@ -2429,20 +2528,24 @@ function Dashboard() {
                                                         <JikanPoster malUrl={a.mal_url} size="xlarge" />
                                                         <div className="airing-card-body">
                                                             <div className="airing-card-head">
-                                                                <Link to={`/anime/${encodeURIComponent(a.name)}`} className="anime-link airing-card-name">
+                                                                <Link to={animePath(a.name)} className="anime-link airing-card-name">
                                                                     {a.name}
                                                                 </Link>
+                                                            </div>
+                                                            {/* MAL sedí hned za datem (ne u pravého okraje) — název tak
+                                                                dostal celý řádek pro sebe. */}
+                                                            <span className="airing-card-ep">
+                                                                <span>
+                                                                    EP {a.watchedEps}
+                                                                    {a.startDate && ` • od ${new Date(a.startDate).toLocaleDateString('cs-CZ')}`}
+                                                                </span>
                                                                 {a.mal_url && (
-                                                                    <a href={a.mal_url} target="_blank" rel="noreferrer" title="Otevřít na MyAnimeList" className="airing-card-mal">
-                                                                        MAL ↗
+                                                                    <a href={a.mal_url} target="_blank" rel="noreferrer" title="Otevřít na MyAnimeList" className="ext-link ext-link--mal airing-card-mal">
+                                                                        🔗 MAL
                                                                     </a>
                                                                 )}
-                                                            </div>
-                                                            <span className="airing-card-ep">
-                                                                EP {a.watchedEps}
-                                                                {a.startDate && ` • od ${new Date(a.startDate).toLocaleDateString('cs-CZ')}`}
                                                             </span>
-                                                            <AiringEpisodeStats malUrl={a.mal_url} animeName={a.name} historyLog={historyLog} episodeRatings={episodeRatings} />
+                                                            <AiringEpisodeStats malUrl={a.mal_url} animeName={a.name} watchedEps={a.watchedEps} historyLog={historyLog} episodeRatings={episodeRatings} />
                                                         </div>
                                                     </li>
                                                 ))}
@@ -2462,7 +2565,7 @@ function Dashboard() {
                                                         <JikanPoster malUrl={a.mal_url} size="large" />
                                                         <div className="pending-card-body">
                                                             <span className="text-list-name marquee-container">
-                                                                <Link to={`/anime/${encodeURIComponent(a.name)}`} className="marquee-link">
+                                                                <Link to={animePath(a.name)} className="marquee-link">
                                                                     <span className="marquee-text">{a.name}</span>
                                                                 </Link>
                                                             </span>
@@ -2491,13 +2594,14 @@ function Dashboard() {
                                         const parts = []
                                         const range = formatWatchRange(a.startDate, a.endDate)
                                         if (range) parts.push(range)
+                                        if (a.episodes > 0) parts.push(`${a.episodes} EP`)
                                         if (a.totalTime > 0) parts.push(`${toCS((a.totalTime / 60).toFixed(1))}h`)
                                         if (a.rating) parts.push(`⭐ ${toCS(a.rating)}`)
                                         return (
                                             <li key={i}>
                                                 <div className="tl-line-name">
                                                     <span className="text-list-rank">{i + 1}.</span>
-                                                    <Link to={`/anime/${encodeURIComponent(a.name)}`} className="text-list-name anime-link">{a.name}</Link>
+                                                    <Link to={animePath(a.name)} className="text-list-name anime-link">{a.name}</Link>
                                                 </div>
                                                 <div className="tl-line-meta">
                                                     <span className="text-list-value">{parts.join(' • ')}</span>
@@ -2516,10 +2620,10 @@ function Dashboard() {
                                         <li key={i}>
                                             <div className="tl-line-name">
                                                 <span className="text-list-rank">{i + 1}.</span>
-                                                <Link to={`/anime/${encodeURIComponent(a.name)}`} className="text-list-name anime-link">{a.name}</Link>
+                                                <Link to={animePath(a.name)} className="text-list-name anime-link">{a.name}</Link>
                                             </div>
                                             <div className="tl-line-meta">
-                                                <span className="text-list-value">{a.minPerDay} min/den • {a.days}d • {a.totalHours}h</span>
+                                                <span className="text-list-value">{a.minPerDay} min/den{a.episodes > 0 ? ` • ${a.episodes} EP` : ''} • {a.days}d • {a.totalHours}h</span>
                                             </div>
                                         </li>
                                     ))}
@@ -3107,7 +3211,7 @@ function Dashboard() {
                                 </a>
                             )}
                             <Link 
-                                to={`/anime/${encodeURIComponent(item.name)}`} 
+                                to={animePath(item.name)} 
                                 className="rewatch-action-btn detail"
                                 title="Zobrazit detail v aplikaci"
                             >
@@ -3306,9 +3410,9 @@ function Dashboard() {
                 return (
                     <div className="card" style={{ marginBottom: 'var(--spacing-lg)' }}>
                         <h3 style={{ marginBottom: 'var(--spacing-md)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            📊 Sledovaní Anime — Data projekt
+                            📊 Sledovaná Anime (Data projekt)
                             {stats.isFiltered && (
-                                <span className="tt-badge" title="Aktivní časový filtr — hodnoty ukazují stav ke konci zvoleného období, jako by dnešek byl tehdy">
+                                <span className="tt-badge" title="Aktivní časový filtr: hodnoty ukazují stav ke konci zvoleného období, jako by dnešek byl tehdy">
                                     ⏳ stav k období
                                 </span>
                             )}

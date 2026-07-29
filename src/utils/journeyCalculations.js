@@ -125,6 +125,21 @@ export function buildJourney({ animeList, historyLog, top10Names = [], hmNames =
     const rewatchMinsByMonth = new Map()
     const rewatchTitlesByMonth = new Map()
 
+    // Rozkoukaná anime (AIRING! / PENDING) mají end_date "X", takže je monthKeyOf
+    // vyřadí a do měsíčních košů výše vůbec nespadnou. Do „Nejdelší“ ale patří:
+    // zhlédnuté epizody se už znovu koukat nebudou.
+    // Minuty se berou z history logu, ne z `episodes × episode_duration` — série
+    // běžící přes několik měsíců (např. 15 dílů duben–červenec) se tím rozdělí do
+    // správných měsíců místo naskládání celého součtu do jednoho.
+    // KLÍČOVÉ: rewatch řádky se přeskakují. Bez toho filtru by se do „Nejdelší“
+    // počítalo i opakované koukání (viz zrevertovaný commit 1d1759c).
+    const ongoingByName = new Map()
+    for (const a of animeList || []) {
+        if (a.status === 'AIRING!' || a.status === 'PENDING') ongoingByName.set(lc(a.name), a)
+    }
+    // monthKey → Map(klíč série/anime → { name, mins, eps, firstName, isSeries })
+    const ongoingByMonth = new Map()
+
     for (const h of historyLog || []) {
         const key = monthKeyOf(h.date)
         if (!key) continue
@@ -139,6 +154,18 @@ export function buildJourney({ animeList, historyLog, top10Names = [], hmNames =
             return e ? parseInt(e[1], 10) : 0
         })()
         if (eps) watchedEpsByMonth.set(key, (watchedEpsByMonth.get(key) || 0) + eps)
+
+        if (!h.rewatch && (mins || eps) && ongoingByName.size) {
+            const a = ongoingByName.get(lc(h.name))
+            if (a) {
+                const sk = lc(a.series) || lc(a.name)
+                if (!ongoingByMonth.has(key)) ongoingByMonth.set(key, new Map())
+                const bucket = ongoingByMonth.get(key)
+                const prev = bucket.get(sk)
+                    || { name: a.series || a.name, mins: 0, eps: 0, firstName: a.name, isSeries: !!a.series }
+                bucket.set(sk, { ...prev, mins: prev.mins + mins, eps: prev.eps + eps })
+            }
+        }
 
         if (h.rewatch) {
             if (eps) rewatchEpsByMonth.set(key, (rewatchEpsByMonth.get(key) || 0) + eps)
@@ -316,9 +343,19 @@ export function buildJourney({ animeList, historyLog, top10Names = [], hmNames =
             const sk = lc(a.series)
             if (sk) {
                 const prev = durBySeries.get(sk) || { name: a.series, mins: 0, eps: 0, firstName: a.name }
-                durBySeries.set(sk, { name: a.series, mins: prev.mins + d, eps: prev.eps + eps, firstName: prev.firstName })
-            } else if (!longest || d > longest.mins) longest = { name: a.name, mins: d, eps, firstName: a.name }
+                durBySeries.set(sk, { name: a.series, mins: prev.mins + d, eps: prev.eps + eps, firstName: prev.firstName, isSeries: true })
+            } else if (!longest || d > longest.mins) longest = { name: a.name, mins: d, eps, firstName: a.name, isSeries: false }
         }
+
+        // Rozkoukaná anime (AIRING!/PENDING) — přičíst k sérii, která už v měsíci
+        // je (Grand Blue S03 k dokoukaným S01+S02), nebo přidat jako novou položku
+        // (Black Clover, který v měsíci nic dokončeného nemá).
+        for (const [sk, o] of ongoingByMonth.get(key) || []) {
+            const prev = durBySeries.get(sk)
+            if (prev) durBySeries.set(sk, { ...prev, mins: prev.mins + o.mins, eps: prev.eps + o.eps })
+            else durBySeries.set(sk, { name: o.name, mins: o.mins, eps: o.eps, firstName: o.firstName, isSeries: o.isSeries })
+        }
+
         for (const s of durBySeries.values()) if (!longest || s.mins > longest.mins) longest = s
 
         // ── Top typy/žánry/témata/tagy (celý měsíc; tagy s exkluzí vítězů) ──

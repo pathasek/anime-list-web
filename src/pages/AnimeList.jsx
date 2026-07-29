@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useNavigate, useLocation, Outlet, useParams } from 'react-router-dom'
 import { loadData, getCachedData, STORAGE_KEYS } from '../utils/dataStore'
+import { animePath } from '../utils/animeSlug'
 
 const FilterDropdown = ({ label, options, currentFilters, onFilterChange, type, alignRight, descriptions }) => {
     const [isOpen, setIsOpen] = useState(false)
@@ -868,11 +869,8 @@ function AnimeList() {
                                                 href={getMALUrl(anime)}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                style={{
-                                                    fontWeight: '500',
-                                                    color: 'var(--text-primary)',
-                                                    textDecoration: 'none',
-                                                }}
+                                                className="anime-link"
+                                                style={{ fontWeight: '500' }}
                                                 title={anime.mal_url ? "Otevřít na MyAnimeList" : "Hledat na MyAnimeList"}
                                             >
                                                 {anime.name.replace(/ (\d+)$/, '\u00A0$1')}
@@ -929,7 +927,7 @@ function AnimeList() {
                                             onClick={() => {
                                                 sessionStorage.setItem('animeListScroll', window.scrollY)
                                                 sessionStorage.setItem('animeListDisplayCount', displayCount)
-                                                navigate(`/anime/${encodeURIComponent(anime.name)}`)
+                                                navigate(animePath(anime.name))
                                             }}
                                             title="Zobrazit detailní hodnocení"
                                         >
@@ -942,7 +940,7 @@ function AnimeList() {
                                             onClick={() => {
                                                 sessionStorage.setItem('animeListScroll', window.scrollY)
                                                 sessionStorage.setItem('animeListDisplayCount', displayCount)
-                                                navigate(`/anime/${encodeURIComponent(anime.name)}`)
+                                                navigate(animePath(anime.name))
                                             }}
                                             title="Zobrazit detailní hodnocení"
                                         >
@@ -1002,7 +1000,7 @@ function AnimeList() {
                                                 href={getMALUrl(anime)}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                style={{ color: 'var(--text-primary)', textDecoration: 'none' }}
+                                                className="anime-link"
                                             >
                                                 {anime.name}
                                             </a>
@@ -1037,7 +1035,7 @@ function AnimeList() {
                                         onClick={() => {
                                             sessionStorage.setItem('animeListScroll', window.scrollY)
                                             sessionStorage.setItem('animeListDisplayCount', displayCount)
-                                            navigate(`/anime/${encodeURIComponent(anime.name)}`)
+                                            navigate(animePath(anime.name))
                                         }}
                                     >
                                         <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: getRatingColor(anime.rating) }}>
@@ -1051,7 +1049,7 @@ function AnimeList() {
                                         onClick={() => {
                                             sessionStorage.setItem('animeListScroll', window.scrollY)
                                             sessionStorage.setItem('animeListDisplayCount', displayCount)
-                                            navigate(`/anime/${encodeURIComponent(anime.name)}`)
+                                            navigate(animePath(anime.name))
                                         }}
                                     >
                                         <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--text-muted)' }}>

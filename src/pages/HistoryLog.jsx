@@ -6,6 +6,7 @@ import { useModalScrollLock } from '../utils/useModalScrollLock'
 import { useTheme } from '../components/ThemeProvider'
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js'
 import { Bar } from 'react-chartjs-2'
+import { animePath } from '../utils/animeSlug'
 
 // Heatmap configuration inspired by VBA
 const HEATMAP_COLOR_LEVEL_1 = 2
@@ -233,7 +234,7 @@ function StreakHistoryModal({ streaks, onClose }) {
                                             )}
                                             {!s.ongoing && (
                                                 <span style={{ display: 'block', marginTop: '2px' }}>
-                                                    Ukončen — poslední den: <span style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>{s.lastDayAnime.join(', ') || '—'}</span>
+                                                    Ukončen, poslední den: <span style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>{s.lastDayAnime.join(', ') || '—'}</span>
                                                     {s.gapAfter !== null && s.gapAfter > 0 && <span>, poté {s.gapAfter} {pluralDen(s.gapAfter)} pauza</span>}
                                                 </span>
                                             )}
@@ -766,7 +767,13 @@ function HistoryLog() {
             peak: peak.eps > 0 ? peak : null,
             bestWd: WD[bestWd],
             bestWdAvg: wdCnt[bestWd] ? wdTot[bestWd] / wdCnt[bestWd] : 0,
-            wdDist: wdTot.map((t, i) => ({ name: WD[i], v: t, h: t / wdMax })),
+            // avg = průměr epizod na jeden takový den v zobrazeném ročním okně
+            // (wdCnt = kolik pondělků/úterků… do okna spadlo)
+            wdDist: wdTot.map((t, i) => ({
+                name: WD[i], v: t, h: t / wdMax,
+                avg: wdCnt[i] ? t / wdCnt[i] : 0,
+                days: wdCnt[i],
+            })),
         };
     }, [heatmapData]);
 
@@ -1189,7 +1196,7 @@ function HistoryLog() {
                                     {heatmapStats.peak && (
                                         <div
                                             style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}
-                                            title={`Nejvíc epizod za jeden den — ${heatmapStats.peak.date.toLocaleDateString('cs-CZ')} (klik = skok na den)`}
+                                            title={`Nejvíc epizod za jeden den: ${heatmapStats.peak.date.toLocaleDateString('cs-CZ')} (klik = skok na den)`}
                                             onClick={() => scrollToDate(heatmapStats.peak.dateStr)}
                                         >
                                             <span style={{ color: 'var(--text-muted)' }}>Nej. den:</span>
@@ -1205,7 +1212,7 @@ function HistoryLog() {
                                     <div style={{ width: '1px', height: '16px', background: 'var(--border-color)' }} />
                                     <div
                                         style={{ display: 'flex', alignItems: 'flex-end', gap: '2px', height: '18px' }}
-                                        title={`Rozložení epizod podle dne v týdnu:\n${heatmapStats.wdDist.map(d => `${d.name}: ${d.v} EP`).join('\n')}`}
+                                        title={`Rozložení epizod podle dne v týdnu:\n${heatmapStats.wdDist.map(d => `${d.name}: ${d.v} EP (⌀ ${d.avg.toLocaleString('cs-CZ', { maximumFractionDigits: 1 })} / den)`).join('\n')}`}
                                     >
                                         {heatmapStats.wdDist.map(d => (
                                             <div
@@ -1474,10 +1481,8 @@ function HistoryLog() {
                                 >
                                     <div style={{ fontWeight: '500', width: '100%', wordBreak: 'break-word', lineHeight: '1.4' }}>
                                         <Link
-                                            to={`/anime/${encodeURIComponent(entry.name)}`}
-                                            style={{ color: 'inherit', textDecoration: 'none' }}
-                                            onMouseEnter={e => e.target.style.color = 'var(--accent-primary)'}
-                                            onMouseLeave={e => e.target.style.color = 'inherit'}
+                                            to={animePath(entry.name)}
+                                            className="anime-link"
                                         >
                                             {entry.name}
                                         </Link>

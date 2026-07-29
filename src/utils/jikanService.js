@@ -716,10 +716,14 @@ function getMetadataCache() {
 export async function getAnimeInfo(malId, priority = 'high', signal = null) {
     if (!malId) return null;
 
-    // Check pre-fetched global static cache first
+    // Statická cache (anime_metadata.json) je rychlá, ale starší verze v ní mají
+    // jen score+obrázky. Vracet ji rovnou by znamenalo, že takové anime NIKDY
+    // nedostane broadcast ani počet dílů — proto je zkratkou jen tehdy, když je
+    // záznam kompletní. Jinak z ní vezmeme, co v ní je, a zbytek dotáhneme z API.
     const staticCache = await getMetadataCache();
-    if (staticCache && staticCache[malId]) {
-        return staticCache[malId];
+    const staticRec = staticCache ? staticCache[malId] : null
+    if (staticRec && staticRec.broadcast !== undefined) {
+        return staticRec;
     }
 
     const cacheKey = `jikan_anime_info_${malId}`
@@ -744,11 +748,15 @@ export async function getAnimeInfo(malId, priority = 'high', signal = null) {
         const res = await fetchWithRetry(url, RETRY_MAX, priority, signal)
         if (res && res.data) {
             const info = {
-                imageUrl: res.data.images?.jpg?.image_url || null,
-                largeImageUrl: res.data.images?.jpg?.large_image_url || null,
-                score: res.data.score || null,
+                imageUrl: res.data.images?.jpg?.image_url || staticRec?.imageUrl || null,
+                largeImageUrl: res.data.images?.jpg?.large_image_url || staticRec?.largeImageUrl || null,
+                score: res.data.score || staticRec?.score || null,
                 title: res.data.title || null,
                 broadcast: res.data.broadcast || null,
+                // Plánovaný celkový počet dílů (null, dokud ho MAL nezná) —
+                // z něj se počítá „zbývá X dílů" a omezuje projekce v kalendáři.
+                episodes: res.data.episodes ?? null,
+                status: res.data.status || null,
                 fetchedAt: Date.now()
             }
             localStorage.setItem(cacheKey, JSON.stringify(info))
@@ -756,8 +764,11 @@ export async function getAnimeInfo(malId, priority = 'high', signal = null) {
         }
     } catch (e) {
         console.error(`[Jikan] Failed to fetch info for malId ${malId}:`, e)
-        return null
     }
+
+    // Síť selhala nebo API nic nevrátilo — radši neúplný záznam ze statické cache
+    // (obrázek/skóre) než undefined. Bez tohohle returnu funkce vracela undefined.
+    return staticRec || null
 }
 
 // ============================================

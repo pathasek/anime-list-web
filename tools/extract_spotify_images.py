@@ -6,7 +6,10 @@ import json
 def copy_spotify_images():
     # Skript žije v anime-list-web/tools/ → app root je o úroveň výš
     app_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    source_dir = r"C:\Users\macou\OneDrive - ŠKODA AUTO VYSOKÁ ŠKOLA o.p.s\Osobní PC\Excel Projekt - nemazat\Anime_List\Náhledovky a obrázky - Anime\Obrázky\Spotify"
+    # …a kořen Anime_List další dvě úrovně nad ním. Odvozeno z __file__, ať se dá
+    # celá složka přesunout; přebít lze proměnnou prostředí ANIME_LIST_ROOT.
+    anime_list_root = os.environ.get("ANIME_LIST_ROOT") or os.path.dirname(os.path.dirname(app_root))
+    source_dir = os.path.join(anime_list_root, "Náhledovky a obrázky - Anime", "Obrázky", "Spotify")
     dest_dir = os.path.join(app_root, "public", "images", "spotify")
     os.makedirs(dest_dir, exist_ok=True)
     

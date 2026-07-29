@@ -283,7 +283,7 @@ function makeRound(track, ctx) {
 
     let question, animeOptions
     if (isSeries) {
-        question = `Série „${track.series}“ — ze které části je tato znělka?`
+        question = `Série „${track.series}“: ze které části je tato znělka?`
         animeOptions = shuffle([track.animeName, ...sample(otherParts, 3)])
     } else {
         question = 'Z jakého anime je tato znělka?'

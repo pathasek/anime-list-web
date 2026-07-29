@@ -386,6 +386,7 @@ export function calculateExcelChartsData(animeList, _historyLog) {
             name: a.name,
             startDate: a.start_date || null,
             endDate: a.end_date,
+            episodes: parseInt(a.episodes) || 0,
             totalTime: parseFloat(a.total_time) || 0, // minutes
             rating: parseFloat(a.rating) || null
         }));

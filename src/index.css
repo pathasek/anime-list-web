@@ -161,9 +161,49 @@ a {
   transition: color var(--transition-fast);
 }
 
-a:hover {
-  color: var(--accent-secondary);
+/* ─── Jednotný hover odkazů (globální) ───────────────────────────────────────
+   Jeden efekt pro VŠECHNY textové odkazy napříč webem: obarvení na akcentovou
+   barvu + podtržení s odsazením. Dřív se každé místo chovalo jinak (někde jen
+   barva, někde podtržení, někde JS handler na onMouseEnter).
+
+   Výjimku mají odkazy stylizované jako tlačítko/odznak (mají pozadí a rámeček,
+   takže podtržení by je rozbilo) — ty nesou třídu .link-plain nebo některou
+   z tříd vyjmenovaných níže. */
+a:hover,
+a:focus-visible {
+  color: var(--accent-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
 }
+
+a.link-plain:hover,
+a.link-plain:focus-visible,
+a.nav-link:hover,
+a.rec-link-btn:hover,
+a.hover-btn:hover,
+a.filter-btn:hover,
+a.airing-cal-chip:hover,
+a.aj-strip-item:hover,
+a.aj-best:hover {
+  text-decoration: none;
+}
+
+/* Odkazy na externí služby: společný tvar, odlišná barva podle služby.
+   Vzor je MAL odkaz z detailu anime („🔗 MAL"). */
+.ext-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Firemní modrá MALu (#2e51a2) je na tmavém pozadí nečitelná, proto světlejší odstín */
+.ext-link--mal { color: #6b8ddb; }
+.ext-link--yt { color: #ff4560; }
+.ext-link--spotify { color: #1DB954; }
 
 /* ─── Layout ─── */
 .app-container {
@@ -1036,19 +1076,20 @@ tr:hover td {
   line-height: 1.25;
 }
 
+/* Tvar dědí z .ext-link--mal (stejně jako odkaz v detailu anime);
+   tady zbývá jen velikost, aby sedla do řádku s počtem epizod. */
 .airing-card-mal {
-  color: #3b82f6;
-  font-size: 0.7rem;
-  text-decoration: none;
-  background: rgba(59, 130, 246, 0.1);
-  padding: 1px 4px;
-  border-radius: 4px;
+  font-size: 0.68rem;
   flex-shrink: 0;
 }
 
 .airing-card-ep {
   font-size: 0.68rem;
   color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 /* Pending — kompaktní karty tečou vodorovně, ne jako tenký sloupec */
@@ -1594,6 +1635,8 @@ tr:hover td {
 
 .marquee-link:hover {
   color: var(--accent-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .marquee-link:hover .marquee-text {
@@ -4919,6 +4962,26 @@ button.fav-ost-row-play:hover {
   transition: all var(--transition-fast);
   flex-shrink: 0;
 }
+/* Znělky, které nemám na Google Drive a hrají se z katalogu AnimeThemes.
+   Odlišeny jantarovou, ať je na první pohled poznat, že to není moje vybraná verze. */
+.fav-play-hint.is-at {
+  background: rgba(245, 158, 11, 0.14);
+  color: var(--accent-amber, #f59e0b);
+}
+.fav-row-playable:hover .fav-play-hint.is-at {
+  background: var(--accent-amber, #f59e0b);
+  color: #1a1a1a;
+}
+.fav-table-play-btn.is-at {
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.35);
+  color: var(--accent-amber, #f59e0b);
+}
+.fav-table-play-btn.is-at:hover {
+  background: var(--accent-amber, #f59e0b);
+  color: #1a1a1a;
+}
+
 .fav-table-play-btn:hover {
   background: var(--accent-primary);
   color: #fff;
@@ -5142,9 +5205,42 @@ button.fav-ost-row-play:hover {
   .radar-chart-container {
     min-width: 100%;
     height: 420px;
+    overflow: hidden; /* pojistka, aby popisek nikdy nerozšířil stránku do strany */
   }
   .radar-label-weight {
     display: none; /* schovat váhu na mobilech pro úsporu místa */
+  }
+  /* Menší popisky = menší přesah přes okraj grafu. Spolu s kratším radiálním
+     offsetem v JS (RADAR_LABEL_OFFSET.mobile) se celý radar vejde na displej. */
+  .radar-label-name {
+    font-size: 0.68rem;
+  }
+  .radar-label-value {
+    font-size: 0.78rem;
+    margin-top: 0;
+  }
+  .radar-label-icon-circle {
+    width: 20px;
+    height: 20px;
+  }
+  .radar-label-icon-circle svg {
+    width: 11px;
+    height: 11px;
+  }
+  .radar-connector-line {
+    width: 10px !important; /* JS nastavuje 20px napevno; na mobilu je kratší */
+  }
+  /* Tvrdý strop šířky popisku. Musí odpovídat MOBILE_LABEL_MAX_W
+     v CategoryRatingsPanel.jsx — z něj se počítá padding grafu i clamp kotvy,
+     aby dlouhé názvy („Vedlejší postavy") nevyjely mimo obrazovku. */
+  .radar-label-text-box {
+    max-width: 64px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  /* Původních -42px vytlačovalo horní popisky nad viditelnou oblast karty. */
+  .radar-overlay-wrap {
+    transform: translateY(-18px);
   }
 }
 
@@ -7786,4 +7882,264 @@ button.fav-ost-row-play:hover {
 .streak-history-modal::-webkit-scrollbar-thumb:hover {
   background: rgba(99, 102, 241, 0.55);
   background-clip: content-box;
+}
+
+/* ─── OST Only (As a Whole): karty ──────────────────────────────────────────
+   Širší karty místo malých dlaždic. Pozadí každé karty přebírá dominantní
+   barvu z obalu playlistu (viz utils/dominantColor.js) — proměnná
+   --fav-card-tint drží "r, g, b" a používají ji i prvky uvnitř. */
+.fav-whole-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: -8px 0 14px;
+  flex-wrap: wrap;
+}
+
+.fav-whole-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.fav-whole-search {
+  margin-left: auto;
+  max-width: 240px;
+}
+
+.fav-whole-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 14px;
+}
+
+.fav-whole-empty {
+  grid-column: 1 / -1;
+  padding: 24px 4px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.fav-whole-card {
+  display: flex;
+  gap: 14px;
+  padding: 12px;
+  border-radius: var(--radius-lg);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  min-width: 0;
+}
+
+.fav-whole-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.32);
+}
+
+/* Medailové orámování pro první tři v žebříčku */
+.fav-whole-card.rank-1 { border-color: rgba(212, 160, 23, 0.75); }
+.fav-whole-card.rank-2 { border-color: rgba(151, 163, 181, 0.75); }
+.fav-whole-card.rank-3 { border-color: rgba(160, 90, 44, 0.75); }
+
+.fav-whole-cover {
+  position: relative;
+  width: 104px;
+  height: 104px;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.28);
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+.fav-whole-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.fav-whole-cover-ph {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: var(--text-muted);
+}
+
+/* Tlačítko play najede zdola při hoveru na obal (jako u hudebních služeb) */
+.fav-whole-play {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  color: #fff;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+}
+
+.fav-whole-card:hover .fav-whole-play,
+.fav-whole-play:focus-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fav-whole-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+}
+
+.fav-whole-titlerow {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  min-width: 0;
+}
+
+/* Pořadí v žebříčku: výrazné číslo místo malého odznaku v rohu obalu */
+.fav-whole-rank {
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1;
+  color: rgba(var(--fav-card-tint, 148, 163, 184), 1);
+  filter: brightness(1.5);
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.fav-whole-card.rank-1 .fav-whole-rank { color: #d4a017; filter: none; }
+.fav-whole-card.rank-2 .fav-whole-rank { color: #97a3b5; filter: none; }
+.fav-whole-card.rank-3 .fav-whole-rank { color: #c07a3e; filter: none; }
+
+.fav-whole-name {
+  font-weight: 650;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  flex: 1;
+}
+
+.fav-whole-rating {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent-amber);
+  flex-shrink: 0;
+}
+
+.fav-whole-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.fav-whole-tag {
+  font-size: 0.63rem;
+  padding: 1px 6px;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  background: rgba(0, 0, 0, 0.18);
+  white-space: nowrap;
+}
+
+.fav-whole-tag.theme {
+  opacity: 0.75;
+  font-style: italic;
+}
+
+.fav-whole-meta {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.fav-whole-tracks {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.fav-whole-best {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-top: 1px;
+}
+
+.fav-whole-best-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.fav-whole-best-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+  padding: 2px 8px 2px 6px;
+  font-size: 0.68rem;
+  font-family: inherit;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: rgba(var(--fav-card-tint, 99, 102, 241), 0.26);
+  border: 1px solid rgba(var(--fav-card-tint, 99, 102, 241), 0.5);
+  border-radius: 999px;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: background 0.15s, transform 0.15s;
+}
+
+.fav-whole-best-chip:hover {
+  background: rgba(var(--fav-card-tint, 99, 102, 241), 0.5);
+  transform: translateY(-1px);
+}
+
+.fav-whole-links {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 2px;
+}
+
+.fav-whole-links .ext-link {
+  font-size: 0.7rem;
+}
+
+@media (max-width: 640px) {
+  .fav-whole-grid {
+    grid-template-columns: 1fr;
+  }
+  .fav-whole-cover {
+    width: 84px;
+    height: 84px;
+  }
+  .fav-whole-search {
+    margin-left: 0;
+    max-width: 100%;
+  }
 }

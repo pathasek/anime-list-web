@@ -10,7 +10,10 @@ import re
 # Paths
 # Skript žije v anime-list-web/tools/ → app root je o úroveň výš
 APP_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SOURCE_IMAGES_DIR = r"C:\Users\macou\OneDrive - ŠKODA AUTO VYSOKÁ ŠKOLA o.p.s\Osobní PC\Excel Projekt - nemazat\Anime_List\Náhledovky a obrázky - Anime"
+# …a kořen Anime_List další dvě úrovně nad ním. Odvozeno z __file__, ať se dá
+# celá složka přesunout; přebít lze proměnnou prostředí ANIME_LIST_ROOT.
+ANIME_LIST_ROOT = os.environ.get("ANIME_LIST_ROOT") or os.path.dirname(os.path.dirname(APP_ROOT))
+SOURCE_IMAGES_DIR = os.path.join(ANIME_LIST_ROOT, "Náhledovky a obrázky - Anime")
 TARGET_IMAGES_DIR = os.path.join(APP_ROOT, "public", "images", "anime")
 ANIME_LIST_PATH = os.path.join(APP_ROOT, "public", "data", "anime_list.json")
 

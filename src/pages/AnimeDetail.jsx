@@ -26,6 +26,7 @@ import { formatCategoryMarkdown } from '../utils/formatCategoryMarkdown'
 import { getDocxEpisode } from '../utils/docxEpisode'
 import { RatingInfoButton, EpisodeGuideModal, FinalGuideModal } from '../components/RatingGuideModals'
 import { extractMalId } from '../utils/jikanService'
+import { animePath, resolveAnimeName, safeDecode } from '../utils/animeSlug'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, CategoryScale, LinearScale, BarElement)
 
@@ -143,7 +144,6 @@ function AnimeDetail() {
     }
 
     useEffect(() => {
-        const decodedName = decodeURIComponent(name)
         let cancelled = false
 
         Promise.all([
@@ -157,8 +157,11 @@ function AnimeDetail() {
             // Ignore results that arrive after navigating to a different anime
             if (cancelled) return
 
-            // Find anime by name
-            const found = animeList.find(a => a.name === decodedName)
+            // Adresa nese slug („wistoria-wand-and-sword-s01"), ale data se dál
+            // párují na přesný název. resolveAnimeName zvládne i starší odkazy
+            // s percent-enkódovaným názvem.
+            const decodedName = resolveAnimeName(name, animeList)
+            const found = decodedName ? animeList.find(a => a.name === decodedName) : undefined
             setAnime(found)
 
             // Task 17: díly stejné série (pro badge s prev/next a modal se
@@ -199,9 +202,9 @@ function AnimeDetail() {
             setNote(foundNote?.note || null)
 
             // Find watching history (exact match)
-            const animeHistory = historyLog.filter(h =>
+            const animeHistory = decodedName ? historyLog.filter(h =>
                 h.name && h.name.trim() === decodedName.trim()
-            )
+            ) : []
             setHistory(animeHistory)
 
             setLoading(false)
@@ -487,7 +490,7 @@ function AnimeDetail() {
         return (
             <div className="fade-in">
                 <h2>Anime nenalezeno</h2>
-                <p>Anime "{decodeURIComponent(name)}" nebylo nalezeno.</p>
+                <p>Anime "{safeDecode(name)}" nebylo nalezeno.</p>
                 <button className="btn btn-primary" onClick={() => navigate('/anime')}>
                     Zpět na seznam
                 </button>
@@ -553,7 +556,7 @@ function AnimeDetail() {
                                         )}
                                         {anime.mal_url && (
                                             <a href={anime.mal_url} target="_blank" rel="noopener noreferrer"
-                                                style={{ fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                className="ext-link ext-link--mal">
                                                 🔗 MAL
                                             </a>
                                         )}
@@ -821,7 +824,7 @@ function AnimeDetail() {
                                     return (
                                         <div className="series-nav-badge" style={{ marginLeft: 'auto', alignSelf: 'center' }}>
                                             {prev ? (
-                                                <Link to={`/anime/${encodeURIComponent(prev.name)}`} state={nextDetailState} className="series-nav-chip" title={`Předchozí díl: ${prev.name}`}>
+                                                <Link to={animePath(prev.name)} state={nextDetailState} className="series-nav-chip" title={`Předchozí díl: ${prev.name}`}>
                                                     <span aria-hidden="true">←</span>
                                                     <span className="series-nav-chip-label">{shortLabel(prev)}</span>
                                                 </Link>
@@ -834,7 +837,7 @@ function AnimeDetail() {
                                                 <span className="series-nav-count">{idx + 1}/{seriesParts.length}</span>
                                             </button>
                                             {next ? (
-                                                <Link to={`/anime/${encodeURIComponent(next.name)}`} state={nextDetailState} className="series-nav-chip" title={`Další díl: ${next.name}`}>
+                                                <Link to={animePath(next.name)} state={nextDetailState} className="series-nav-chip" title={`Další díl: ${next.name}`}>
                                                     <span className="series-nav-chip-label">{shortLabel(next)}</span>
                                                     <span aria-hidden="true">→</span>
                                                 </Link>
@@ -886,7 +889,7 @@ function AnimeDetail() {
             {note && (
                 <div className="card" style={{ marginBottom: 'var(--spacing-xl)' }}>
                     <h3 style={{ marginBottom: 'var(--spacing-md)' }}>📝 Recenze / Poznámky</h3>
-                    <p style={{ fontFamily: "'Open Sans', var(--font-family)", lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>{formatReview(note.replace(/_x000D_/g, ''), decodeURIComponent(name))}</p>
+                    <p style={{ fontFamily: "'Open Sans', var(--font-family)", lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>{formatReview(note.replace(/_x000D_/g, ''), anime.name)}</p>
                 </div>
             )}
 
@@ -1066,7 +1069,7 @@ function SeriesPartsModal({ series, parts, currentName, onClose }) {
                             return (
                                 <Link
                                     key={p.name}
-                                    to={`/anime/${encodeURIComponent(p.name)}`}
+                                    to={animePath(p.name)}
                                     state={nextDetailState}
                                     className={`series-part-row${isCurrent ? ' current' : ''}`}
                                     onClick={onClose}

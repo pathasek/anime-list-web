@@ -17,6 +17,25 @@ from xml.etree import ElementTree as ET
 import win32com.client
 import hashlib
 
+
+def anime_list_root():
+    """Kořen složky `Anime_List` (nadřazená složka celého projektu).
+
+    Odvozuje se z umístění tohoto skriptu:
+        Anime_List/Anime List WEB/anime-list-web/tools/export_data.py
+        └── 3 úrovně nahoru = Anime_List
+
+    Díky tomu jde celou složku Anime_List přesunout nebo přejmenovat, aniž by
+    bylo nutné sahat do skriptů. Pro netypické umístění se dá přebít proměnnou
+    prostředí ANIME_LIST_ROOT.
+    """
+    env = os.environ.get("ANIME_LIST_ROOT")
+    if env:
+        return env
+    tools_dir = os.path.dirname(os.path.abspath(__file__))
+    return os.path.dirname(os.path.dirname(os.path.dirname(tools_dir)))
+
+
 def serialize_value(val):
     """Convert Excel values to JSON-serializable format"""
     if val is None:
@@ -1046,8 +1065,12 @@ def main():
     if len(sys.argv) > 1:
         file_path = sys.argv[1]
     else:
-        file_path = r"C:\Users\macou\OneDrive - ŠKODA AUTO VYSOKÁ ŠKOLA o.p.s\Osobní PC\Excel Projekt - nemazat\Anime_List\Anime list.xlsm"
-        
+        # Cesta se odvozuje od umístění skriptu, ne napevno — celá složka
+        # Anime_List se tak dá přesunout nebo přejmenovat a export běží dál.
+        # Přebít jde proměnnou prostředí ANIME_LIST_ROOT nebo argumentem.
+        file_path = os.path.join(anime_list_root(), "Anime list.xlsm")
+
+
     if len(sys.argv) > 2:
         output_dir = sys.argv[2]
     else:

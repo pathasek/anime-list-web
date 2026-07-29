@@ -4,7 +4,15 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>anime-list-web</title>
+
+    <!-- Stránka se nemá objevovat ve vyhledávačích. Odkaz sdílený přímo
+         (kamarádům) funguje dál beze změny; tohle jen brání indexaci. -->
+    <meta name="robots" content="noindex, nofollow, noarchive, noimageindex" />
+    <meta name="googlebot" content="noindex, nofollow, noarchive, noimageindex" />
+    <!-- Neposílat adresu stránky jako Referer na Jikan/AniList/AnimeThemes -->
+    <meta name="referrer" content="no-referrer" />
+
+    <title>Anime List</title>
   </head>
   <body>
     <div id="root"></div>

@@ -78,6 +78,37 @@ function useAccentColor(theme) {
 //        přímý GDrive stream nejde (mobil) — posílá AnimeDetail i AnimeRatings.
 // showAnimeThemesExtras: navíc přimíchá „Ostatní verze · AnimeThemes.moe" do
 //        seznamu znělek — záměrně JEN detail anime (plán 6b), jinde beze změny.
+// Radar se na mobilu musí vejít i s popisky. Dřív se `window.innerWidth < 768`
+// četlo jen jednou při renderu, takže otočení telefonu rozměry nepřepočítalo.
+const MOBILE_QUERY = '(max-width: 767px)'
+function useIsMobile() {
+    const [isMobile, setIsMobile] = useState(
+        () => typeof window !== 'undefined' && window.matchMedia(MOBILE_QUERY).matches
+    )
+    useEffect(() => {
+        const mq = window.matchMedia(MOBILE_QUERY)
+        const onChange = (e) => setIsMobile(e.matches)
+        mq.addEventListener('change', onChange)
+        setIsMobile(mq.matches)
+        return () => mq.removeEventListener('change', onChange)
+    }, [])
+    return isMobile
+}
+
+// Rozměry popisků radaru. Mobilní hodnoty nejsou odhad — jsou dopočítané tak,
+// aby se popisek zaručeně vešel:
+//
+//   nejpravější okraj = střed + drawingArea + offset + nudgeX + šířka textu
+//
+// Při šířce kontejneru W je střed W/2 a drawingArea = W/2 − padding, takže
+// podmínka „vejde se" zní:  W/2 + (W/2 − p) + 12 + 12 + 64 ≤ W  ⇒  p ≥ 88.
+// Proto mobilní padding 92 (viz chartOptions) a MOBILE_LABEL_MAX_W 64 níže,
+// což dává ~4 px rezervu na každé straně i na nejužších displejích (320 px).
+const RADAR_LABEL_OFFSET = { desktop: 34, mobile: 12 }
+const RADAR_LABEL_NUDGE = { desktop: { x: 25, y: 22 }, mobile: { x: 12, y: 12 } }
+// Musí odpovídat `max-width` v .radar-label-text-box uvnitř @media (max-width: 768px)
+const MOBILE_LABEL_MAX_W = 64
+
 function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, animeName, animeSeries, categoryReviews, compactRadar = false, malId = null, showAnimeThemesExtras = false }) {
     const { theme } = useTheme()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -295,7 +326,7 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
         }]
     }), [entries, accent, c])
 
-    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+    const isMobile = useIsMobile()
 
     const radarMin = useMemo(() => {
         const values = entries.map(([, r]) => r)
@@ -315,7 +346,10 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
             // Balanced padding for larger radar with space for labels.
             // compactRadar (stránka Anime hodnocení) přidá extra padding →
             // menší poloměr, aby popisky nezasahovaly do karet kategorií.
-            padding: isMobile ? 35 : (compactRadar ? 78 : 45)
+            // Na mobilu naopak padding ZVĚTŠUJEME (dřív 35, míň než na PC):
+            // menší poloměr = víc místa pro popisky uvnitř úzké obrazovky.
+            // Hodnota 92 vychází z výpočtu u RADAR_LABEL_OFFSET (minimum 88).
+            padding: isMobile ? 92 : (compactRadar ? 78 : 45)
         },
         scales: {
             r: {
@@ -392,17 +426,22 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
         const scale = chart?.scales?.r
         if (!scale || typeof scale.getPointPosition !== 'function') return
         const count = chart.data.labels.length
+        const offset = isMobile ? RADAR_LABEL_OFFSET.mobile : RADAR_LABEL_OFFSET.desktop
+        // Pojistka proti přetečení: kotva popisku se drží uvnitř kontejneru,
+        // aby ani u nejužšího displeje žádný bod nevyjel mimo obrazovku.
+        const wrapW = wrapRef.current?.clientWidth || 0
+        const margin = isMobile ? MOBILE_LABEL_MAX_W + RADAR_LABEL_NUDGE.mobile.x : 46
         const next = []
         for (let i = 0; i < count; i++) {
             // Anchor point for the label text & icon
-            const pos = scale.getPointPosition(i, scale.drawingArea + 34)
+            const pos = scale.getPointPosition(i, scale.drawingArea + offset)
             // Point exactly on the outer scale boundary (max value)
             const edgePos = scale.getPointPosition(i, scale.drawingArea)
             const dx = pos.x - scale.xCenter
             const dy = pos.y - scale.yCenter
             const len = Math.sqrt(dx * dx + dy * dy) || 1
             next.push({
-                x: pos.x,
+                x: wrapW ? Math.min(Math.max(pos.x, margin), wrapW - margin) : pos.x,
                 y: pos.y,
                 edgeX: edgePos.x,
                 edgeY: edgePos.y,
@@ -420,7 +459,7 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                 )
             return same ? prev : next
         })
-    }, [])
+    }, [isMobile])
 
     useEffect(() => {
         const raf = requestAnimationFrame(computePositions)
@@ -802,8 +841,9 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
 
                             // Compute the transform to center the label group on the anchor point.
                             // The extra radial offset (vs. 21/18) pushes the text ~1mm further from the icon.
-                            const nudgeX = p.ux * 25
-                            const nudgeY = p.uy * 22
+                            const nudge = isMobile ? RADAR_LABEL_NUDGE.mobile : RADAR_LABEL_NUDGE.desktop
+                            const nudgeX = p.ux * nudge.x
+                            const nudgeY = p.uy * nudge.y
                             const tx = isRight ? '0%' : (isLeft ? '-100%' : '-50%')
                             const ty = p.uy < -0.5 ? '-100%' : (p.uy > 0.5 ? '0%' : '-50%')
 

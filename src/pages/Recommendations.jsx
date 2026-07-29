@@ -708,7 +708,7 @@ function ScoreDistributionTooltip({ malId }) {
         >
             <div className="rec-stats-head">
                 <span className="rec-stats-head-label">Statistika hodnocení</span>
-                <span className={`rec-stats-source ${stats.source === 'AniList' ? 'anilist' : 'mal'}`} title={stats.source === 'AniList' ? 'MAL statistiky jsou dočasně nedostupné (Jikan 504) — zobrazuji AniList' : 'Data z MyAnimeList (Jikan)'}>
+                <span className={`rec-stats-source ${stats.source === 'AniList' ? 'anilist' : 'mal'}`} title={stats.source === 'AniList' ? 'MAL statistiky jsou dočasně nedostupné (Jikan 504), zobrazuji AniList' : 'Data z MyAnimeList (Jikan)'}>
                     {stats.source || 'MAL'}
                 </span>
                 <span className="rec-stats-users">{formatNumber(stats.total)} uživatelů</span>
@@ -1374,7 +1374,7 @@ function Recommendations() {
                     setProgress(prev => ({
                         ...prev,
                         current: i + 1,
-                        text: `Zpracovávám ${i + 1} z ${totalRecs}... (přeskočeno — již zhlédnuto)`,
+                        text: `Zpracovávám ${i + 1} z ${totalRecs}... (přeskočeno, již zhlédnuto)`,
                     }))
                     continue
                 }

@@ -13,6 +13,26 @@ const extractMalId = (url) => {
 
 const delay = (ms) => new Promise(res => setTimeout(res, ms));
 
+// Verze schématu záznamu. Zvýšení donutí skript přetáhnout i položky, které
+// v cache už jsou, ale nemají nová pole. (v2 přidalo broadcast/episodes/status —
+// bez broadcastu se v Dashboardu nezobrazoval řádek „Pravidelně“ a kalendář
+// vysílání neměl z čeho promítat další díly.)
+const SCHEMA_VERSION = 2;
+
+// Vysílaná a neodvysílaná anime se mění (přibývají díly, upřesní se počet
+// epizod i vysílací čas), takže jejich záznam nesmí ležet v cache navždy.
+const VOLATILE_STATUSES = new Set(['Currently Airing', 'Not yet aired']);
+const VOLATILE_TTL_MS = 24 * 60 * 60 * 1000;
+
+function isFresh(rec) {
+    if (!rec || rec.v !== SCHEMA_VERSION) return false;
+    if (!rec.imageUrl) return false;
+    if (VOLATILE_STATUSES.has(rec.status)) {
+        return !!rec.fetchedAt && (Date.now() - rec.fetchedAt < VOLATILE_TTL_MS);
+    }
+    return true;
+}
+
 async function fetchMetadata() {
     console.log('Starting metadata fetch...');
     const animeListData = JSON.parse(fs.readFileSync(path.join(__dirname, ANIME_LIST_PATH), 'utf-8'));
@@ -33,7 +53,7 @@ async function fetchMetadata() {
     
     let processed = 0;
     for (const id of uniqueIds) {
-        if (cache[id] && cache[id].score && cache[id].imageUrl) {
+        if (isFresh(cache[id])) {
             processed++;
             continue;
         }
@@ -51,9 +71,17 @@ async function fetchMetadata() {
             const data = json.data;
             if (data) {
                 cache[id] = {
+                    v: SCHEMA_VERSION,
                     score: data.score,
                     imageUrl: data.images?.jpg?.image_url,
-                    largeImageUrl: data.images?.jpg?.large_image_url
+                    largeImageUrl: data.images?.jpg?.large_image_url,
+                    // Pravidelný vysílací čas (JST) — zdroj pro řádek „Pravidelně“
+                    // a pro projekci dalších dílů v kalendáři vysílání.
+                    broadcast: data.broadcast || null,
+                    // Plánovaný celkový počet dílů; null, dokud ho MAL nezná.
+                    episodes: data.episodes ?? null,
+                    status: data.status || null,
+                    fetchedAt: Date.now()
                 };
                 // Save incrementally
                 fs.writeFileSync(cachePath, JSON.stringify(cache, null, 2));

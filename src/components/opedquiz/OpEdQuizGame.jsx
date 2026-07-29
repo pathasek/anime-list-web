@@ -200,7 +200,7 @@ export default function OpEdQuizGame({ onClose }) {
         const rounds = [...g.rounds]
         rounds[idxRef.current] = spare
         setGame({ rounds, spares })
-        setNotice('Skladbu se nepodařilo přehrát — nahrazena náhradní. 🎲')
+        setNotice('Skladbu se nepodařilo přehrát, nahrazena náhradní. 🎲')
     }, [])
 
     const togglePlay = () => {
@@ -260,7 +260,7 @@ export default function OpEdQuizGame({ onClose }) {
                     <div className="opq-body">
                         <p className="opq-lead">
                             Pustí se <b>jen hudba</b> náhodné OP/ED znělky z tvé knihovny.
-                            Uhádni, z jakého anime je — a sbírej bonusy!
+                            Uhádni, z jakého anime je, a sbírej bonusy!
                         </p>
                         <ul className="opq-rules">
                             <li>🎯 Anime <b>+{POINTS.anime} b.</b></li>
@@ -293,7 +293,7 @@ export default function OpEdQuizGame({ onClose }) {
                         </div>
                         <p className="opq-source-note">
                             {source === 'all'
-                                ? 'Hraje se ze všech znělek všech anime v tvém listu — i těch, které nemáš v oblíbených.'
+                                ? 'Hraje se ze všech znělek všech anime v tvém listu, i těch, které nemáš v oblíbených.'
                                 : 'Hraje se jen z tvé vybrané knihovny oblíbených znělek.'}
                         </p>
                         <div className="opq-rounds-select">
@@ -417,7 +417,7 @@ export default function OpEdQuizGame({ onClose }) {
 
                                 <button type="button" className="opq-next-btn" onClick={next}>
                                     {idx + 1 >= game.rounds.length
-                                        ? (isEndless ? '📚 Knihovna vyčerpána — Vyhodnocení' : '🏁 Vyhodnocení')
+                                        ? (isEndless ? '📚 Knihovna vyčerpána: Vyhodnocení' : '🏁 Vyhodnocení')
                                         : 'Další kolo →'}
                                 </button>
                             </div>

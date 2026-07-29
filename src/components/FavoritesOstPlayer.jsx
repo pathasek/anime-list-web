@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import YouTube from 'react-youtube'
+import { savePlaylistCount } from '../utils/ostPlaylistCounts'
 
 // ============================================================
 // Plovoucí OST přehrávač pro stránku Favourite OP/ED/OST.
@@ -153,6 +154,10 @@ export default function FavoritesOstPlayer({ mode, tracks = [], groups = [], ini
         if (!isWhole) return
 
         const ids = p.getPlaylist() || []
+        // Jediné, co tu přibylo: zapamatovat si délku playlistu pro karty
+        // „As a Whole". Čistě zápis do localStorage, přehrávání to nijak
+        // neovlivňuje (YouTube počet skladeb dopředu neposkytne).
+        savePlaylistCount(currentGroup?.playlistId, ids.length)
         const initialTracks = ids.map((id, i) => ({ ytId: id, song: `Skladba ${i + 1}` }))
         setTracksByGroup(prev => ({ ...prev, [groupIdx]: initialTracks }))
         const pos = p.getPlaylistIndex()

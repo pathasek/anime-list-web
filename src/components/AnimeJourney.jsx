@@ -8,6 +8,7 @@ import { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { buildJourney, monthLabelShort, fmtHours } from '../utils/journeyCalculations'
 import { extractMalId, getAnimeInfo } from '../utils/jikanService'
+import { animePath } from '../utils/animeSlug'
 import './animeJourney.css'
 
 // Cache pro postery v paměti (zkrátí re-rendery)
@@ -166,7 +167,7 @@ function MonthCard({ m }) {
             </div>
 
             {m.best && (
-                <Link to={`/anime/${encodeURIComponent(m.best.memberNames[0])}`} className="aj-best">
+                <Link to={animePath(m.best.memberNames[0])} className="aj-best">
                     {m.best.thumbnail
                         ? <img src={m.best.thumbnail} alt="" loading="lazy" />
                         : <div className="aj-best-ph">🎬</div>}
@@ -187,16 +188,22 @@ function MonthCard({ m }) {
             <div className="aj-facts">
                 {m.longest && (() => {
                     const meta = `${m.longest.hoursText}${m.longest.eps > 0 ? ` / ${m.longest.eps} EP` : ''}`
-                    const targetName = m.longest.firstName || m.longest.name
+                    // Série vede na filtr v Anime Listu (stejně jako „Nejdelší série“
+                    // na Dashboardu), samostatné anime rovnou do detailu — filtr série
+                    // by u něj neměl co filtrovat.
+                    const target = m.longest.isSeries
+                        ? `/anime?series=${encodeURIComponent(m.longest.name)}`
+                        : animePath(m.longest.firstName || m.longest.name)
                     return (
                         <div className="aj-fact">
                             <span className="aj-fact-label">Nejdelší</span>
-                            <span className="aj-fact-value" title={`${m.longest.name} — ${meta}`}>
+                            <span className="aj-fact-value" title={`${m.longest.name} (${meta})`}>
                                 <Link
-                                    to={`/anime/${encodeURIComponent(targetName)}`}
-                                    style={{ color: 'inherit', textDecoration: 'none' }}
-                                    onMouseEnter={e => e.target.style.textDecoration = 'underline'}
-                                    onMouseLeave={e => e.target.style.textDecoration = 'none'}
+                                    to={target}
+                                    className="anime-link"
+                                    title={m.longest.isSeries
+                                        ? `Zobrazit celou sérii v Anime Listu: ${m.longest.name}`
+                                        : `Otevřít detail: ${m.longest.name}`}
                                 >
                                     {m.longest.name}
                                 </Link>{' '}
@@ -208,7 +215,7 @@ function MonthCard({ m }) {
                 {m.watchedMins > 0 && (
                     <div className="aj-fact">
                         <span className="aj-fact-label">Nakoukáno celkem</span>
-                        <span className="aj-fact-value" title="Skutečně zhlédnutý čas a počet epizod v měsíci (z History logu) — počítá i rozkoukaná anime">
+                        <span className="aj-fact-value" title="Skutečně zhlédnutý čas a počet epizod v měsíci (z History logu), včetně rozkoukaných anime">
                             <b>{fmtHours(m.watchedMins)}{m.watchedEps > 0 ? ` / ${m.watchedEps} EP` : ''}</b>
                         </span>
                     </div>
@@ -224,8 +231,8 @@ function MonthCard({ m }) {
 
             <div className="aj-strip" title="Anime dokončená v měsíci (seřazeno dle hodnocení)">
                 {m.items.map(a => (
-                    <Link key={a.name} to={`/anime/${encodeURIComponent(a.name)}`}
-                        className="aj-strip-item" title={`${a.name}${a.rating ? ` — ${a.rating}/10` : ''}`}>
+                    <Link key={a.name} to={animePath(a.name)}
+                        className="aj-strip-item" title={`${a.name}${a.rating ? ` (${a.rating}/10)` : ''}`}>
                         <StripPoster anime={a} />
                     </Link>
                 ))}

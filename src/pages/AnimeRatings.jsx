@@ -26,6 +26,7 @@ import { useModalScrollLock } from '../utils/useModalScrollLock'
 import { useModalTables } from '../utils/useModalTables'
 import { useRatingGuide } from '../utils/ratingGuide'
 import { getDocxEpisode } from '../utils/docxEpisode'
+import { animePath } from '../utils/animeSlug'
 
 // Cache pro AI rozbory kategorií/epizod (category_texts.json — víc MB, načíst jen jednou)
 let cachedCategoryTexts = null
@@ -570,6 +571,22 @@ function AnimeRatings() {
     const [tableSearchQuery, setTableSearchQuery] = useState('')
     const [tableSortColumn, setTableSortColumn] = useState('FH')
     const [tableSortDirection, setTableSortDirection] = useState('desc')
+    // Mini taby nad tabulkou: kategorie (výchozí) / epizody. Volba přežije
+    // návrat z detailu anime, aby se uživatel nemusel překlikávat znovu.
+    const [tableTab, setTableTab] = useState(() => {
+        try { return sessionStorage.getItem('ratings_table_tab') === 'episodes' ? 'episodes' : 'categories' } catch { return 'categories' }
+    })
+    const switchTableTab = useCallback((tab) => {
+        setTableTab(tab)
+        try { sessionStorage.setItem('ratings_table_tab', tab) } catch { /* quota */ }
+        // Řazení se mezi taby nesdílí (sloupce jsou úplně jiné) — reset na
+        // rozumný výchozí stav pro daný tab.
+        setTableSortColumn(tab === 'episodes' ? 'Ø' : 'FH')
+        setTableSortDirection('desc')
+    }, [])
+    // Kolik sloupců epizod se ukáže, než se tabulka rozbalí celá (nejdelší
+    // série má 74 dílů, což by na první pohled zahltilo).
+    const [epColumnsExpanded, setEpColumnsExpanded] = useState(false)
 
     // ---- UI STATES: Průvodce hodnocením ("?" modály jako v detailu anime) ----
     const [catGuideOpen, setCatGuideOpen] = useState(false)
@@ -1114,7 +1131,7 @@ function AnimeRatings() {
             if (!cText) return
             const cRating = animeData?.categories?.[targetCat] ?? null
             episodeModalRef.current?.open({
-                title: `${cleanSeasonLabel(animeName, selectedSeries)} — ${targetCat}`,
+                title: `${cleanSeasonLabel(animeName, selectedSeries)}: ${targetCat}`,
                 text: cText,
                 rating: (cRating === undefined) ? null : cRating
             }, availableCats.length > 1 ? {
@@ -1140,7 +1157,7 @@ function AnimeRatings() {
             if (!cText) return
             const cRating = targetCat === cat ? rating : (animeData?.categories?.[targetCat] ?? null)
             episodeModalRef.current?.open({
-                title: `${animeName} — ${targetCat}`,
+                title: `${animeName}: ${targetCat}`,
                 text: cText,
                 rating: (cRating === undefined || cRating === null) ? null : cRating
             }, availableCats.length > 1 ? {
@@ -2467,6 +2484,114 @@ function AnimeRatings() {
         return { items: filtered, avgFh, bestCat, bestVal, worstCat, worstVal, total: filtered.length, catAverages }
     }, [animeList, categoryRatings, tableSearchQuery, tableSortColumn, tableSortDirection])
 
+    // ── Tabulka epizod (mini tab vedle „Kategorie") ─────────────────────────
+    // Řádky jsou anime s hodnocenými epizodami, sloupce EP 1..N. Buňka, ke které
+    // existuje DOCX rozbor, je klikatelná a otevře stejný modal jako graf
+    // hodnocení epizod (včetně listování mezi rozebranými díly).
+    const EP_COLUMNS_COLLAPSED = 26
+    const MIN_EPISODES_FOR_TABLE = 2
+
+    const episodeTableData = useMemo(() => {
+        const rows = episodeRatings
+            .map(entry => {
+                const eps = (entry.episodes || [])
+                    .map(e => {
+                        const m = /(\d+)/.exec(e.episode || '')
+                        const num = m ? parseInt(m[1], 10) : null
+                        const rating = parseFloat(e.rating)
+                        return num === null ? null : { num, rating: isNaN(rating) ? null : rating }
+                    })
+                    .filter(Boolean)
+                    .sort((a, b) => a.num - b.num)
+                if (eps.length < MIN_EPISODES_FOR_TABLE) return null
+                const byNum = new Map(eps.map(e => [e.num, e.rating]))
+                const vals = eps.map(e => e.rating).filter(v => v !== null)
+                return {
+                    name: entry.name,
+                    byNum,
+                    count: eps.length,
+                    maxEp: eps[eps.length - 1].num,
+                    avg: vals.length ? vals.reduce((s, v) => s + v, 0) / vals.length : null,
+                    best: vals.length ? Math.max(...vals) : null,
+                    worst: vals.length ? Math.min(...vals) : null,
+                }
+            })
+            .filter(Boolean)
+
+        let filtered = rows
+        if (tableSearchQuery) {
+            const lower = tableSearchQuery.toLowerCase()
+            filtered = rows.filter(r => r.name.toLowerCase().includes(lower))
+        }
+
+        // Počet sloupců se řídí jen zobrazenými řádky — po vyhledání se tabulka
+        // sama zúží na to, co je opravdu vidět.
+        const maxEp = filtered.reduce((m, r) => Math.max(m, r.maxEp), 0)
+
+        const sorted = [...filtered].sort((a, b) => {
+            const dir = tableSortDirection === 'asc' ? 1 : -1
+            if (tableSortColumn === 'Anime') return a.name.localeCompare(b.name, 'cs') * dir
+            let valA, valB
+            if (tableSortColumn === 'Ø') { valA = a.avg; valB = b.avg }
+            else if (tableSortColumn === 'EP') { valA = a.count; valB = b.count }
+            else if (tableSortColumn === 'MAX') { valA = a.best; valB = b.best }
+            else if (typeof tableSortColumn === 'number') {
+                valA = a.byNum.get(tableSortColumn) ?? null
+                valB = b.byNum.get(tableSortColumn) ?? null
+            } else { valA = a.avg; valB = b.avg }
+            if (valA === null && valB === null) return 0
+            if (valA === null) return 1
+            if (valB === null) return -1
+            return (valA - valB) * dir
+        })
+
+        // Průměr za každý díl napříč sériemi (patičkový řádek)
+        const epAverages = new Map()
+        for (let n = 1; n <= maxEp; n++) {
+            const vals = sorted.map(r => r.byNum.get(n)).filter(v => v !== undefined && v !== null)
+            epAverages.set(n, vals.length ? vals.reduce((s, v) => s + v, 0) / vals.length : null)
+        }
+        const allVals = sorted.flatMap(r => [...r.byNum.values()].filter(v => v !== null))
+
+        return {
+            items: sorted,
+            maxEp,
+            epAverages,
+            total: sorted.length,
+            episodeCount: allVals.length,
+            avgAll: allVals.length ? allVals.reduce((s, v) => s + v, 0) / allVals.length : null,
+        }
+    }, [episodeRatings, tableSearchQuery, tableSortColumn, tableSortDirection])
+
+    // Otevře rozbor epizody ze buňky tabulky (stejné chování jako klik v grafu)
+    const openTableEpisodeReview = useCallback((animeName, epNum, rating) => {
+        const entry = categoryReviews?.[animeName]
+        const docxEp = getDocxEpisode(entry, epNum)
+        if (!docxEp) return
+        const row = episodeTableData.items.find(r => r.name === animeName)
+        const reviewedEps = []
+        if (row) {
+            for (const n of row.byNum.keys()) {
+                if (getDocxEpisode(entry, n)) reviewedEps.push(n)
+            }
+        }
+        const openEp = (num) => {
+            const ep = getDocxEpisode(entry, num)
+            if (!ep) return
+            episodeModalRef.current?.open({
+                episodeNumber: num,
+                title: ep.title,
+                text: ep.text,
+                rating: row?.byNum.get(num) ?? (num === epNum ? rating : null)
+            }, reviewedEps.length > 1 ? {
+                items: reviewedEps,
+                current: num,
+                onSelect: (target) => openEp(target)
+            } : null)
+        }
+        openEp(epNum)
+    }, [categoryReviews, episodeTableData])
+
     const handleTableSort = useCallback((column) => {
         if (tableSortColumn === column) {
             // Toggle direction
@@ -2865,7 +2990,7 @@ function AnimeRatings() {
                                                         return (
                                                             <Link
                                                                 key={it.name}
-                                                                to={`/anime/${encodeURIComponent(it.name)}`}
+                                                                to={animePath(it.name)}
                                                                 state={{
                                                                     fromSeries: selectedSeriesObj.name,
                                                                     fromViewMode: viewMode
@@ -3913,13 +4038,37 @@ function AnimeRatings() {
                             <h2 className="ratings-section-heading">📊 Kompletní tabulka hodnocení</h2>
                             <div className="ratings-row row-4 fade-in" style={{ marginBottom: 'var(--spacing-xl)' }}>
                                 <div className="ratings-panel" style={{ flex: 1 }}>
+                                    {/* Mini taby ve stylu prohlížeče: aktivní splývá s tabulkou pod sebou */}
+                                    <div className="ratings-table-tabs" role="tablist">
+                                        <button
+                                            type="button"
+                                            role="tab"
+                                            aria-selected={tableTab === 'categories'}
+                                            className={`ratings-table-tab${tableTab === 'categories' ? ' active' : ''}`}
+                                            onClick={() => switchTableTab('categories')}
+                                        >
+                                            📊 Kategorie
+                                        </button>
+                                        <button
+                                            type="button"
+                                            role="tab"
+                                            aria-selected={tableTab === 'episodes'}
+                                            className={`ratings-table-tab${tableTab === 'episodes' ? ' active' : ''}`}
+                                            onClick={() => switchTableTab('episodes')}
+                                            title="Hodnocení jednotlivých epizod (jen anime se 2 a více díly)"
+                                        >
+                                            🎬 Epizody
+                                        </button>
+                                    </div>
                                     <h3 className="ratings-panel-title">
                                         <span>
-                                            Heatmapa kategorií — kliknutím na řádek otevřeš detail
+                                            {tableTab === 'categories'
+                                                ? 'Heatmapa kategorií (kliknutím na řádek otevřeš detail)'
+                                                : 'Heatmapa epizod (kliknutím na zvýrazněnou buňku otevřeš rozbor)'}
                                             <RatingInfoButton
-                                                label="Jak hodnotím kategorie"
+                                                label={tableTab === 'categories' ? 'Jak hodnotím kategorie' : 'Jak hodnotím epizody'}
                                                 style={{ marginLeft: '8px' }}
-                                                onClick={() => setCatGuideOpen(true)}
+                                                onClick={() => tableTab === 'categories' ? setCatGuideOpen(true) : setEpGuideOpen(true)}
                                             />
                                         </span>
                                         <input
@@ -3930,6 +4079,143 @@ function AnimeRatings() {
                                             onChange={(e) => setTableSearchQuery(e.target.value)}
                                         />
                                     </h3>
+
+                                    {tableTab === 'episodes' ? (() => {
+                                        const shownEps = epColumnsExpanded
+                                            ? episodeTableData.maxEp
+                                            : Math.min(episodeTableData.maxEp, EP_COLUMNS_COLLAPSED)
+                                        const epCols = Array.from({ length: shownEps }, (_, i) => i + 1)
+                                        const hiddenEps = episodeTableData.maxEp - shownEps
+                                        return (
+                                            <>
+                                                <div className="ratings-category-table-wrapper">
+                                                    <table className="ratings-category-table ratings-episode-table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th
+                                                                    className={`th-sortable th-anime ${tableSortColumn === 'Anime' ? 'th-active' : ''}`}
+                                                                    onClick={() => handleTableSort('Anime')}
+                                                                >
+                                                                    Anime {tableSortColumn === 'Anime' ? (tableSortDirection === 'asc' ? '▲' : '▼') : ''}
+                                                                </th>
+                                                                <th
+                                                                    className={`th-sortable th-numeric ${tableSortColumn === 'Ø' ? 'th-active' : ''}`}
+                                                                    onClick={() => handleTableSort('Ø')}
+                                                                    title="Průměr hodnocení všech dílů"
+                                                                >
+                                                                    Ø {tableSortColumn === 'Ø' ? (tableSortDirection === 'asc' ? '▲' : '▼') : ''}
+                                                                </th>
+                                                                <th
+                                                                    className={`th-sortable th-numeric ${tableSortColumn === 'MAX' ? 'th-active' : ''}`}
+                                                                    onClick={() => handleTableSort('MAX')}
+                                                                    title="Nejlépe hodnocený díl"
+                                                                >
+                                                                    Max {tableSortColumn === 'MAX' ? (tableSortDirection === 'asc' ? '▲' : '▼') : ''}
+                                                                </th>
+                                                                <th
+                                                                    className={`th-sortable th-numeric ${tableSortColumn === 'EP' ? 'th-active' : ''}`}
+                                                                    onClick={() => handleTableSort('EP')}
+                                                                    title="Počet hodnocených dílů"
+                                                                >
+                                                                    EP {tableSortColumn === 'EP' ? (tableSortDirection === 'asc' ? '▲' : '▼') : ''}
+                                                                </th>
+                                                                {epCols.map(n => (
+                                                                    <th
+                                                                        key={n}
+                                                                        className={`th-sortable th-numeric ${tableSortColumn === n ? 'th-active' : ''}`}
+                                                                        onClick={() => handleTableSort(n)}
+                                                                        title={`Seřadit podle ${n}. dílu`}
+                                                                    >
+                                                                        {n}{tableSortColumn === n ? (tableSortDirection === 'asc' ? ' ▲' : ' ▼') : ''}
+                                                                    </th>
+                                                                ))}
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {episodeTableData.items.map((row, idx) => (
+                                                                <tr key={row.name} className="table-row-hover">
+                                                                    <td className="td-anime">
+                                                                        <span className="td-rank">{idx + 1}.</span>
+                                                                        <span
+                                                                            className="td-name td-name-link"
+                                                                            role="link"
+                                                                            tabIndex={0}
+                                                                            title={`Načíst anime výše: ${row.name}`}
+                                                                            onClick={() => openAnimeFromChart(row.name)}
+                                                                            onKeyDown={(e) => { if (e.key === 'Enter') openAnimeFromChart(row.name) }}
+                                                                        >
+                                                                            {row.name}
+                                                                        </span>
+                                                                    </td>
+                                                                    <td className="td-numeric td-fh" style={getHeatmapStyle(row.avg)}>
+                                                                        {row.avg !== null ? row.avg.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'}
+                                                                    </td>
+                                                                    <td className="td-numeric td-wa" style={getHeatmapStyle(row.best)}>
+                                                                        {row.best !== null ? row.best.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'}
+                                                                    </td>
+                                                                    <td className="td-numeric td-ep-count">{row.count}</td>
+                                                                    {epCols.map(n => {
+                                                                        const val = row.byNum.get(n)
+                                                                        const has = val !== undefined
+                                                                        const hasReview = has && !!getDocxEpisode(categoryReviews?.[row.name], n)
+                                                                        return (
+                                                                            <td
+                                                                                key={n}
+                                                                                className={`td-numeric heatmap-cell${hasReview ? ' heatmap-cell-review' : ''}`}
+                                                                                style={has ? getHeatmapStyle(val) : undefined}
+                                                                                title={hasReview ? `Zobrazit rozbor: ${row.name}, EP ${n}` : undefined}
+                                                                                onClick={hasReview ? () => openTableEpisodeReview(row.name, n, val) : undefined}
+                                                                            >
+                                                                                {has && val !== null
+                                                                                    ? val.toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 2 })
+                                                                                    : ''}
+                                                                            </td>
+                                                                        )
+                                                                    })}
+                                                                </tr>
+                                                            ))}
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr className="table-footer-row">
+                                                                <td className="td-footer-label">Průměr ({episodeTableData.total} anime)</td>
+                                                                <td className="td-numeric td-fh" style={getFooterHeatmapStyle(episodeTableData.avgAll)}>
+                                                                    {episodeTableData.avgAll !== null ? episodeTableData.avgAll.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'}
+                                                                </td>
+                                                                <td className="td-numeric td-wa">—</td>
+                                                                <td className="td-numeric">{episodeTableData.episodeCount}</td>
+                                                                {epCols.map(n => {
+                                                                    const avg = episodeTableData.epAverages.get(n)
+                                                                    return (
+                                                                        <td key={n} className="td-numeric heatmap-cell" style={getFooterHeatmapStyle(avg)}>
+                                                                            {avg !== null ? avg.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'}
+                                                                        </td>
+                                                                    )
+                                                                })}
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                                <div className="table-footer-stats">
+                                                    <span>Zobrazeno: <strong>{episodeTableData.total}</strong> anime</span>
+                                                    <span>Hodnocených epizod: <strong>{episodeTableData.episodeCount}</strong></span>
+                                                    {episodeTableData.avgAll !== null && (
+                                                        <span>Průměr epizody: <strong>{episodeTableData.avgAll.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></span>
+                                                    )}
+                                                    {hiddenEps > 0 && (
+                                                        <button type="button" className="ep-columns-toggle" onClick={() => setEpColumnsExpanded(true)}>
+                                                            Zobrazit i zbylých {hiddenEps} dílů ▸
+                                                        </button>
+                                                    )}
+                                                    {epColumnsExpanded && episodeTableData.maxEp > EP_COLUMNS_COLLAPSED && (
+                                                        <button type="button" className="ep-columns-toggle" onClick={() => setEpColumnsExpanded(false)}>
+                                                            ◂ Zpět na prvních {EP_COLUMNS_COLLAPSED} dílů
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </>
+                                        )
+                                    })() : (
+                                    <>
                                     <div className="ratings-category-table-wrapper">
                                         <table className="ratings-category-table">
                                             <thead>
@@ -4060,6 +4346,8 @@ function AnimeRatings() {
                                         {tableData.bestCat && <span>Nejvyšší kat.: <strong>{tableData.bestCat}</strong> ({tableData.bestVal.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})</span>}
                                         {tableData.worstCat && <span>Nejnižší kat.: <strong>{tableData.worstCat}</strong> ({tableData.worstVal.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})</span>}
                                     </div>
+                                    </>
+                                    )}
                                 </div>
                             </div>
                         </Fragment>
@@ -4086,7 +4374,7 @@ function AnimeRatings() {
                         <div className="category-detail-modal-header">
                             <div className="category-detail-modal-title">
                                 <span className="category-card-icon">📝</span>
-                                <span>{radarPartChooser.cat} — vyber díl</span>
+                                <span>{radarPartChooser.cat}: vyber díl</span>
                             </div>
                             <button type="button" className="category-detail-modal-close" onClick={() => setRadarPartChooser(null)} aria-label="Zavřít">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -4097,7 +4385,7 @@ function AnimeRatings() {
                         </div>
                         <div className="category-detail-modal-body">
                             <p className="series-radar-explain" style={{ margin: 0 }}>
-                                Je zobrazen Ø průměr série — z jakého dílu chceš rozbor kategorie
+                                Je zobrazen Ø průměr série. Z jakého dílu chceš rozbor kategorie
                                 „{radarPartChooser.cat}“?
                             </p>
                             <div className="radar-part-chooser-list">
