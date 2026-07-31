@@ -5471,7 +5471,7 @@
     "mal_url": "https://myanimelist.net/anime/62276/Guimi_Zhi_Zhu_Tebie_Pian__Liewu",
     "series": "Lord of Mysteries",
     "rewatches": [],
-    "tags": "Detective:75:Features a character who investigates and solves crimes.;Magic:65:Prominently features magical elements or the use of magic.;Steampunk:65:Prominently features technology and designs inspired by 19th-century industrial steam-powered machinery.;Gore:50:Prominently features graphic bloodshed and violence.;Cultivation:40:Features characters using training, often martial arts-related, and other special methods to cultivate qi (a component of traditional Chinese philosophy, described as \"life force\") and gain strength or immortality.;Male Protagonist:30:Main character is male."
+    "tags": "Detective:75:Features a character who investigates and solves crimes.;Magic:65:Prominently features magical elements or the use of magic.;Steampunk:65:Prominently features technology and designs inspired by 19th-century industrial steam-powered machinery.;Cosmic Horror:60:A type of horror that emphasizes human insignificance in the grand scope of cosmic reality; fearing the unknown and being powerless to fight it.;Gore:50:Prominently features graphic bloodshed and violence.;Cultivation:40:Features characters using training, often martial arts-related, and other special methods to cultivate qi (a component of traditional Chinese philosophy, described as \"life force\") and gain strength or immortality.;Male Protagonist:30:Main character is male."
   },
   {
     "index": "239.",
@@ -5494,7 +5494,7 @@
     "mal_url": "https://myanimelist.net/anime/59971/Tensei_shitara_Slime_Datta_Ken_Movie_2__Soukai_no_Namida-hen",
     "series": "That Time I Got Reincarnated as a Slime",
     "rewatches": [],
-    "tags": "Isekai:100:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Male Protagonist:80:Main character is male.;Medieval:79:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Reincarnation:79:Features a character being born again after death, typically as another person or in another world.;Magic:79:Prominently features magical elements or the use of magic.;Kingdom Management:79:Characters in these series take on the responsibility of running a town or kingdom, whether they take control of an existing one, or build their own from the ground up.;Demons:75:Prominently features malevolent otherworldly creatures.;Agender:73:Prominently features agender characters.;Shounen:60:Target demographic is teenage and young adult males.;Femboy:44:Features a boy who exhibits characteristics or behaviors considered in many cultures to be typical of girls."
+    "tags": "Isekai:100:Features characters being transported into an alternate world setting and having to adapt to their new surroundings.;Male Protagonist:80:Main character is male.;Medieval:79:Partially or completely set in the Middle Ages or a Middle Ages-inspired setting. Commonly features elements such as European castles and knights.;Reincarnation:79:Features a character being born again after death, typically as another person or in another world.;Monster Boy:79:Prominently features a male character who is a part-monster.;Monster Girl:79:Prominently features a female character who is part-monster.;Magic:79:Prominently features magical elements or the use of magic.;Kingdom Management:79:Characters in these series take on the responsibility of running a town or kingdom, whether they take control of an existing one, or build their own from the ground up.;Agender:77:Prominently features agender characters.;Demons:75:Prominently features malevolent otherworldly creatures.;Shounen:60:Target demographic is teenage and young adult males.;Femboy:44:Features a boy who exhibits characteristics or behaviors considered in many cultures to be typical of girls."
   },
   {
     "index": "240.",
@@ -11209,13 +11209,13 @@
     "release_date": null,
     "themes": null,
     "genres": null,
-    "episodes": 102,
+    "episodes": 112,
     "episode_duration": 23.857,
     "rating": "X",
     "start_date": "2026-07-18T00:00:00",
     "end_date": "X",
     "rewatch_count": 0,
-    "total_time": 2433.4139999999998,
+    "total_time": 2671.984,
     "dub": "ENG",
     "status": "PENDING",
     "mal_url": "https://myanimelist.net/anime/34572/Black_Clover",
