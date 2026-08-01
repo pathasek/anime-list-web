@@ -21,6 +21,7 @@ Ruční kurátorství: ytmusic_ost_overrides.json (vedle skriptu):
 Automatika je fuzzy — stejnojmenné filmy/hry a fan covery projdou přes název,
 blokace je jediná spolehlivá obrana. Overrides přežívají i rebuild cache.
 """
+import argparse
 import io
 import json
 import os
@@ -220,3 +221,208 @@ def find_ost_album(yt: YTMusic, anime_name: str, alt=None):
         romaji = alt.get("romaji")
         if romaji:
             rk = normalize_key(romaji)
+            if rk and rk not in (anime_key, base_name) and rk not in accept_keys:
+                accept_keys.append(rk)
+                queries.append("%s original soundtrack" % romaji)
+        native = alt.get("native")
+        if native:
+            native_titles.append(native)
+            queries.append("%s オリジナルサウンドトラック" % native)
+
+    # Ze všech dotazů se posbírají kandidáti a vybere se nejlépe hodnocený.
+    # Skóre řeší score_album (pokrytí názvu, sezóna, „soundtrack" v názvu...).
+    seen = set()
+    best = None
+    best_score = 0.0
+    for q in queries:
+        try:
+            results = yt.search(q, filter="albums", limit=8) or []
+        except Exception:
+            continue
+        for r in results:
+            bid = r.get("browseId")
+            if not bid or bid in seen:
+                continue
+            seen.add(bid)
+            s = score_album(anime_key, r, accept_keys, native_titles)
+            if s > best_score:
+                best_score, best = s, r
+        time.sleep(SLEEP_BETWEEN)
+
+    if not best or best_score <= 0:
+        return None, None
+
+    album = album_details(yt, best.get("browseId"))
+    if not album:
+        return None, None
+
+    # Krátká alba jsou singly a EP, ne celé OST
+    if album.get("track_count") and album["track_count"] < MIN_TRACKS:
+        return None, None
+
+    if best_score >= 4.0:
+        confidence = "high"
+    elif best_score >= 2.5:
+        confidence = "medium"
+    else:
+        confidence = "low"
+    return album, confidence
+
+
+def album_details(yt: YTMusic, browse_id: str):
+    """Z browseId udělá záznam alba v podobě, jakou čte web. None při chybě."""
+    if not browse_id:
+        return None
+    try:
+        d = yt.get_album(browse_id)
+    except Exception:
+        return None
+    if not d:
+        return None
+
+    playlist_id = d.get("audioPlaylistId")
+    if not playlist_id:
+        return None  # bez playlistu si album stejně nepustím
+
+    artists = ", ".join(a["name"] for a in (d.get("artists") or []) if a.get("name"))
+    thumbs = d.get("thumbnails") or []
+    return {
+        "album_title": d.get("title"),
+        "artists": artists or None,
+        "year": str(d["year"]) if d.get("year") else None,
+        "track_count": d.get("trackCount") or len(d.get("tracks") or []) or None,
+        "duration": d.get("duration"),
+        "playlist_id": playlist_id,
+        "thumbnail": thumbs[-1].get("url") if thumbs else None,
+    }
+
+
+def album_from_playlist(yt: YTMusic, playlist_id: str):
+    """Ruční přiřazení z overrides: z playlist_id (OLAK5uy_...) dohledá album."""
+    try:
+        browse_id = yt.get_album_browse_id(playlist_id)
+    except Exception:
+        return None
+    return album_details(yt, browse_id)
+
+
+def load_json(path, default):
+    try:
+        with io.open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return default
+
+
+def mal_id_of(anime):
+    m = re.search(r"myanimelist\.net/anime/(\d+)", anime.get("mal_url") or "")
+    return m.group(1) if m else None
+
+
+def main():
+    _force_utf8_stdio()
+    ap = argparse.ArgumentParser(description="Dohledání OST alb na YouTube Music")
+    ap.add_argument("--force", action="store_true", help="ignorovat cache a hledat znovu")
+    ap.add_argument("--only", default=None, help="jen anime, jejichž název obsahuje tenhle text")
+    args = ap.parse_args()
+
+    anime_list = load_json(LIST_FILE, [])
+    if not anime_list:
+        print("Nepodařilo se načíst %s" % LIST_FILE)
+        return 1
+
+    cache = load_json(CACHE_FILE, {})
+    overrides = load_json(OVERRIDES_FILE, {})
+    anilist = load_json(ANILIST_CACHE_FILE, {})
+
+    yt = YTMusic()
+    albums = []
+    searched = from_cache = blocked = manual = missing = 0
+
+    for anime in anime_list:
+        name = anime.get("name")
+        if not name:
+            continue
+        if args.only and args.only.lower() not in name.lower():
+            continue
+        key = normalize_key(name)
+        ov = overrides.get(key) or {}
+
+        if ov.get("block"):
+            blocked += 1
+            continue
+
+        album = None
+        confidence = None
+
+        if ov.get("playlist_id"):
+            # Ruční přiřazení přebíjí hledání i cache: je to moje rozhodnutí.
+            album = album_from_playlist(yt, ov["playlist_id"])
+            confidence = "manual"
+            manual += 1
+            time.sleep(SLEEP_BETWEEN)
+            if not album:
+                print("  [!!] %-46s ruční playlist se nepodařilo načíst" % name[:46])
+        elif key in cache and not args.force:
+            rec = cache[key] or {}
+            album = rec.get("album")
+            confidence = rec.get("confidence")
+            from_cache += 1
+        else:
+            alt = anilist.get(mal_id_of(anime) or "") or None
+            album, confidence = find_ost_album(yt, name, alt)
+            cache[key] = {
+                "anime_name": name,
+                "album": album,
+                "confidence": confidence,
+                "checked": int(time.time()),
+            }
+            searched += 1
+            if album:
+                print("  [->] %-46s %s" % (name[:46], album.get("album_title", "")[:40]))
+            else:
+                print("  [--] %-46s nenalezeno" % name[:46])
+
+        if not album:
+            missing += 1
+            continue
+
+        albums.append({
+            "match_key": key,
+            "anime_name": name,
+            "confidence": confidence,
+            **album,
+        })
+
+    with io.open(CACHE_FILE, "w", encoding="utf-8") as f:
+        json.dump(cache, f, ensure_ascii=False, indent=1)
+
+    # S --only se prošla jen část seznamu, takže se výsledek SLOUČÍ do stávajícího
+    # výstupu. Bez téhle pojistky by cílený běh přepsal celý ytmusic_ost.json
+    # hrstkou alb a zbytek by zmizel.
+    if args.only:
+        merged = {a["match_key"]: a for a in (load_json(OUT_FILE, {}).get("albums") or [])}
+        touched = {normalize_key(a.get("name") or "") for a in anime_list
+                   if a.get("name") and args.only.lower() in a["name"].lower()}
+        # Co se v tomhle běhu vyřadilo (blokace, nenalezeno), musí ze slitiny pryč
+        for k in touched:
+            merged.pop(k, None)
+        for a in albums:
+            merged[a["match_key"]] = a
+        albums = [merged[k] for k in sorted(merged)]
+        print("Sloučeno se stávajícím výstupem, alb celkem: %d" % len(albums))
+
+    out = {"generated": int(time.time() * 1000), "albums": albums}
+    with io.open(OUT_FILE, "w", encoding="utf-8") as f:
+        json.dump(out, f, ensure_ascii=False, indent=1)
+
+    print("")
+    print("Alb celkem: %d (%d z cache, %d nově hledáno, %d ručně)"
+          % (len(albums), from_cache, searched, manual))
+    print("Bez alba: %d, blokováno: %d" % (missing, blocked))
+    print("Zapsáno do %s" % OUT_FILE)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

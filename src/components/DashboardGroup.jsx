@@ -20,11 +20,17 @@ function DashboardGroup({ id, title, icon, isExpanded, onToggle, alwaysExpanded 
 
     const showExpanded = isExpanded || alwaysExpanded
 
+    // Status je v GROUPS_CONFIG první, takže ho order: -1 nikam neposune a
+    // rozbalení je plynulé. U „lists" (druhý v pořadí) to ale znamenalo skok nad
+    // Status SOUČASNĚ s roztažením na plnou šířku — mřížka se přeskládala a
+    // rozbalení viditelně bliklo. Proto order řídí jen Status.
+    const groupStyle = (showExpanded && id === 'status') ? { order: -1 } : undefined
+
     return (
-        <div 
+        <div
             className={`dashboard-group ${showExpanded ? 'expanded' : ''}${fullWidth && showExpanded ? ' expanded-full-width' : ''}`}
             id={`group-${id}`}
-            style={(showExpanded && (id === 'status' || id === 'lists')) ? { order: -1 } : undefined}
+            style={groupStyle}
         >
             <div 
                 className="dashboard-group-header"

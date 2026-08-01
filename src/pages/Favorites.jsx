@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback, useRef, lazy, Suspense } from 'react'
+import { useState, useEffect, useLayoutEffect, useMemo, useCallback, useRef, lazy, Suspense } from 'react'
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import DashboardGroup from '../components/DashboardGroup'
@@ -84,14 +84,153 @@ const parseDurationToHMS = (durationStr) => {
     const m = mMatch ? parseInt(mMatch[1], 10) : 0
     const s = sMatch ? parseInt(sMatch[1], 10) : 0
     
-    if (h > 0) {
-        return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+    // Vždy h:mm:ss, i když je hodin nula. Dřív se vracelo „51:00" pro 51 minut,
+    // což se vedle „3:14:00" četlo jako 51 hodin.
+    return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+}
+
+// Sekundy z playlistu na týž tvar h:mm:ss
+const formatSeconds = (total) => {
+    if (!total || total <= 0) return null
+    const h = Math.floor(total / 3600)
+    const m = Math.floor((total % 3600) / 60)
+    const s = Math.floor(total % 60)
+    return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+}
+
+// Kolik autorů se vejde na kartu, zbytek jde do tooltipu
+const MAX_CARD_ARTISTS = 3
+
+// Cesta k předgenerované zmenšenině obalu (tools/build_cover_thumbs.py).
+// Obal se kreslí do čtverce 104 px, ale originály mají až 2160 px a prohlížeč
+// je zmenšuje metodou, která rozbíjí tenkou linku anime kresby. Zmenšeniny jsou
+// hotové filtrem LANCZOS, takže prohlížeč nezmenšuje nic. Když zmenšenina
+// chybí, komponenta se sama vrátí k originálu.
+const coverThumbPath = (src) => {
+    if (!src || !src.startsWith('images/spotify/')) return null
+    const file = src.slice('images/spotify/'.length)
+    return `images/spotify/thumbs/${file.replace(/\.(jpe?g|png|webp)$/i, '')}.jpg`
+}
+
+// Autoři ze VŠECH alb série, ne jen z jednoho. U delších sérií se skladatelé
+// střídají a karta má ukázat všechny: Berserk z roku 1997 složil Susumu
+// Hirasawa, verzi z roku 2016 Shiro Sagisu. Dřív se vypsal jen ten z vybraného
+// alba a druhý zmizel.
+const collectArtists = (albums, animeKey) => {
+    const seen = new Set()
+    const names = []
+    for (const a of albums) {
+        if (!a?.artists || a.artists === 'Various Artists') continue
+        for (const raw of translateArtist(a.artists).split(',')) {
+            const name = raw.trim()
+            if (!name) continue
+            // Katalog někdy místo autora vrátí název alba nebo kanálu
+            // („NEON GENESIS EVANGELION (OST)"). Poznáme to podle toho, že se
+            // to kryje s názvem anime, případně to rovnou hlásí soundtrack.
+            const bare = normalizeAnimeKey(name)
+            if (!bare) continue
+            if (animeKey && (bare === animeKey || bare.includes(animeKey) || animeKey.includes(bare))) continue
+            if (/\b(ost|soundtrack|original score)\b/i.test(name)) continue
+            // Klíč z abecedně seřazených částí jména: „Shiro SAGISU" a
+            // „Sagisu Shiro" je tentýž člověk s prohozeným pořadím, stejně jako
+            // „Hiroyuki Sawano" a „Hiroyuki SAWANO" jen jinak psaný.
+            const dedupeKey = bare.split(' ').sort().join(' ')
+            if (seen.has(dedupeKey)) continue
+            seen.add(dedupeKey)
+            names.push(name)
+        }
     }
-    return `${m}:${String(s).padStart(2, '0')}`
+    return names
+}
+
+// Automatické rolování seznamu best pieces při najetí myší na kartu.
+// Chipy mají pevnou výšku (tři řádky), takže u karet s víc skladbami je zbytek
+// schovaný. Po chvilce hoveru se seznam sám pomalu sroluje dolů, na konci
+// počká a vrátí se nahoru. Odjetí myší posun okamžitě zruší.
+const AUTOSCROLL_DELAY = 600    // ms, ať projetí myší přes mřížku nerozjede všechny karty
+const AUTOSCROLL_SPEED = 18     // px za sekundu
+const AUTOSCROLL_END_PAUSE = 900
+
+function useBestAutoScroll() {
+    const ref = useRef(null)
+    const timerRef = useRef(null)
+    const rafRef = useRef(null)
+    // Přetéká seznam chipů? Podle toho se zapíná `overscroll-behavior: contain`.
+    // U karty, která se vejde celá, by contain spolklo kolečko myši a stránka
+    // by se pod kurzorem nehnula.
+    const [scrollable, setScrollable] = useState(false)
+
+    useLayoutEffect(() => {
+        const el = ref.current
+        if (!el) return
+        const check = () => setScrollable(el.scrollHeight - el.clientHeight > 1)
+        check()
+        // Chipy se dopočítávají a karta mění šířku podle okna, proto sledujeme
+        // i změny velikosti, ne jen první vykreslení.
+        const ro = new ResizeObserver(check)
+        ro.observe(el)
+        return () => ro.disconnect()
+    }, [])
+
+    const stop = useCallback(() => {
+        clearTimeout(timerRef.current)
+        cancelAnimationFrame(rafRef.current)
+        timerRef.current = null
+        rafRef.current = null
+        const el = ref.current
+        if (el) el.scrollTop = 0
+    }, [])
+
+    const start = useCallback(() => {
+        const el = ref.current
+        if (!el) return
+        // Kdo má v systému vypnuté animace, dostane jen normální rolovací seznam
+        if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
+        const maxScroll = el.scrollHeight - el.clientHeight
+        if (maxScroll <= 1) return   // vejde se celý, není co rolovat
+
+        clearTimeout(timerRef.current)
+        timerRef.current = setTimeout(() => {
+            let last = null
+            let pausedUntil = 0
+            let dir = 1
+            const step = (now) => {
+                const node = ref.current
+                if (!node) return
+                if (last === null) last = now
+                const dt = (now - last) / 1000
+                last = now
+                if (now >= pausedUntil) {
+                    node.scrollTop += dir * AUTOSCROLL_SPEED * dt
+                    if (dir > 0 && node.scrollTop >= maxScroll - 0.5) {
+                        node.scrollTop = maxScroll
+                        pausedUntil = now + AUTOSCROLL_END_PAUSE
+                        dir = -1
+                    } else if (dir < 0 && node.scrollTop <= 0.5) {
+                        node.scrollTop = 0
+                        pausedUntil = now + AUTOSCROLL_END_PAUSE
+                        dir = 1
+                    }
+                }
+                rafRef.current = requestAnimationFrame(step)
+            }
+            rafRef.current = requestAnimationFrame(step)
+        }, AUTOSCROLL_DELAY)
+    }, [])
+
+    useEffect(() => () => {
+        clearTimeout(timerRef.current)
+        cancelAnimationFrame(rafRef.current)
+    }, [])
+
+    // Vrací se pole, ne objekt: díky tomu si komponenta hodnoty rovnou
+    // rozbalí do proměnných a nesahá na `.ref` během renderu.
+    return [ref, start, stop, scrollable]
 }
 
 function OstWholeCard({ card, onPlayPlaylist, onPlayBest }) {
     const [tint, setTint] = useState(null)
+    const [bestListRef, startBestScroll, stopBestScroll, bestScrollable] = useBestAutoScroll()
 
     useEffect(() => {
         if (!card.image) return
@@ -109,7 +248,8 @@ function OstWholeCard({ card, onPlayPlaylist, onPlayBest }) {
         }
         : undefined
 
-    const formattedDuration = parseDurationToHMS(card.albumDuration)
+    // Už přichází hotové jako h:mm:ss (viz wholeCards)
+    const formattedDuration = card.albumDuration
 
     // Určení barvy odznaku pořadí
     const getRankBadgeClass = (rank) => {
@@ -120,7 +260,12 @@ function OstWholeCard({ card, onPlayPlaylist, onPlayBest }) {
     }
 
     return (
-        <div className="fav-whole-card" style={style}>
+        <div
+            className="fav-whole-card"
+            style={style}
+            onMouseEnter={startBestScroll}
+            onMouseLeave={stopBestScroll}
+        >
             {/* Horní sekce: obal a textové info */}
             <div className="fav-whole-main-row">
                 <div className="fav-whole-left-col">
@@ -133,7 +278,17 @@ function OstWholeCard({ card, onPlayPlaylist, onPlayBest }) {
                         </div>
 
                         {card.image
-                            ? <img src={card.image} alt="" loading="lazy" />
+                            ? <img
+                                src={coverThumbPath(card.image) || card.image}
+                                alt=""
+                                loading="lazy"
+                                onError={(e) => {
+                                    // Zmenšenina ještě není vygenerovaná → originál
+                                    if (e.currentTarget.dataset.fallback) return
+                                    e.currentTarget.dataset.fallback = '1'
+                                    e.currentTarget.src = card.image
+                                }}
+                            />
                             : <div className="fav-whole-cover-ph">♪</div>}
                         
                         {card.groupIdx >= 0 && (
@@ -177,7 +332,11 @@ function OstWholeCard({ card, onPlayPlaylist, onPlayBest }) {
                     {/* Autoři a rok vydání */}
                     {(card.artists || card.year) && (
                         <div className="fav-whole-artists-row">
-                            {card.artists && <span className="fav-whole-artists">{card.artists}</span>}
+                            {card.artists && (
+                                <span className="fav-whole-artists" title={card.artistsFull || undefined}>
+                                    {card.artists}
+                                </span>
+                            )}
                             {card.year && <span className="fav-whole-year">{card.year}</span>}
                         </div>
                     )}
@@ -196,7 +355,9 @@ function OstWholeCard({ card, onPlayPlaylist, onPlayBest }) {
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
                                     <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/>
                                 </svg>
-                                <span>
+                                <span title={card.durationApprox
+                                    ? 'Délka je přibližná: část videí v playlistu už na YouTube není dostupná, takže se do součtu nezapočítala.'
+                                    : undefined}>
                                     {card.trackCount} skladeb
                                     {formattedDuration ? ` · ${formattedDuration}` : ''}
                                 </span>
@@ -208,7 +369,7 @@ function OstWholeCard({ card, onPlayPlaylist, onPlayBest }) {
 
             {/* Střední sekce: Seznam všech nejlepších skladeb (BEST) přes celou šířku pod obalem */}
             {card.best.length > 0 && (
-                <div className="fav-whole-best-section">
+                <div className={`fav-whole-best-section${bestScrollable ? ' is-scrollable' : ''}`} ref={bestListRef}>
                     {card.best.map((p, i) => (
                         <button
                             key={p.ost_name || i}
@@ -295,7 +456,19 @@ function Favorites() {
     const [opEdVideos, setOpEdVideos] = useState([])       // Gdrive videa OP/ED (stejná knihovna jako v detailu)
     const [animeThemes, setAnimeThemes] = useState([])     // záložní znělky z AnimeThemes (statický katalog)
     const [ytmusicAlbums, setYtmusicAlbums] = useState([]) // YT Music alba — počet skladeb u karet As a Whole
+    const [playlistDurations, setPlaylistDurations] = useState({}) // počet + délka přímo z YT playlistů
     const [wholeSearch, setWholeSearch] = useState('')     // hledání v kartách As a Whole
+    // Řazení sekce „OST Only (The Best)": 'none' = pořadí z Excelu.
+    // Drží se mezi návštěvami, stejně jako shuffle v přehrávači.
+    const [piecesSort, setPiecesSort] = useState(() => {
+        try { return localStorage.getItem('fav_pieces_sort') || 'none' } catch { return 'none' }
+    })
+    useEffect(() => {
+        try { localStorage.setItem('fav_pieces_sort', piecesSort) } catch { /* quota */ }
+    }, [piecesSort])
+    const togglePiecesSort = useCallback(() => {
+        setPiecesSort(prev => (prev === 'none' ? 'newest' : prev === 'newest' ? 'oldest' : 'none'))
+    }, [])
     // Počty skladeb zjištěné přehrávačem při spuštění playlistu (localStorage).
     // Aktualizují se hned, jak přehrávač playlist načte — bez reloadu stránky.
     const [playlistCounts, setPlaylistCounts] = useState(() => getPlaylistCounts())
@@ -364,9 +537,12 @@ function Favorites() {
             // Katalog AnimeThemes: záloha pro OP/ED, které nemám na Google Drive
             fetch('data/animethemes_op_ed.json?v=' + Date.now()).then(r => r.json()).catch(() => null),
             // YT Music katalog: počet skladeb a délka alba pro karty As a Whole
-            fetch('data/ytmusic_ost.json?v=' + Date.now()).then(r => r.json()).catch(() => null)
+            fetch('data/ytmusic_ost.json?v=' + Date.now()).then(r => r.json()).catch(() => null),
+            // Počet skladeb a délka spočítané přímo z mých YouTube playlistů
+            // (tools/build_ytmusic_durations.py). Oba údaje z jednoho zdroje.
+            fetch('data/ost_playlist_durations.json?v=' + Date.now()).then(r => r.json()).catch(() => null)
         ])
-            .then(([favData, ostData, spotData, opEdData, animeListData, atData, ymData]) => {
+            .then(([favData, ostData, spotData, opEdData, animeListData, atData, ymData, durData]) => {
                 animeListRef.current = animeListData || []
                 const decorated = (favData || []).map(fav => {
                     const favKey = normalizeAnimeKey(fav.anime_name)
@@ -389,6 +565,7 @@ function Favorites() {
                 if (opEdData && opEdData.videos) setOpEdVideos(opEdData.videos)
                 if (atData && atData.themes) setAnimeThemes(atData.themes)
                 if (ymData && ymData.albums) setYtmusicAlbums(ymData.albums)
+                if (durData && durData.playlists) setPlaylistDurations(durData.playlists)
                 setLoading(false)
             })
             .catch(err => {
@@ -502,24 +679,44 @@ function Favorites() {
     }, [favorites, findPlayableFor, playOpEdVideo])
 
     // ---- Data pro OST přehrávač ----
-    // Plochý seznam všech "The Best" skladeb (pieces)
-    const piecesTracks = useMemo(() => {
+    // Skladby „The Best" i s datem zhlédnutí anime (kvůli řazení).
+    const piecesDecorated = useMemo(() => {
         if (!ostTables?.pieces) return []
-        return ostTables.pieces
-            .map(p => {
-                const ytId = extractYoutubeId(p.ost_url)
-                if (!ytId) return null
-                // Dohledání watch_date z anime_list pro řazení
-                const pieceKey = normalizeAnimeKey(p.anime_name)
-                const match = animeListRef.current.find(a => {
-                    const aKey = normalizeAnimeKey(a.name)
-                    return animeKeysMatch(aKey, pieceKey) || animeKeysMatch(pieceKey, aKey)
-                })
-                const watchDate = match ? (match.end_date || match.start_date || null) : null
-                return { anime: p.anime_name, song: p.ost_name, ytId, watch_date: watchDate }
+        return ostTables.pieces.map(p => {
+            const pieceKey = normalizeAnimeKey(p.anime_name)
+            const match = animeListRef.current.find(a => {
+                const aKey = normalizeAnimeKey(a.name)
+                return animeKeysMatch(aKey, pieceKey) || animeKeysMatch(pieceKey, aKey)
             })
-            .filter(Boolean)
-    }, [ostTables])
+            return {
+                ...p,
+                ytId: extractYoutubeId(p.ost_url),
+                watch_date: match ? (match.end_date || match.start_date || null) : null,
+            }
+        })
+    }, [ostTables, favorites])
+
+    // Zobrazené pořadí sekce „OST Only (The Best)". Výchozí je pořadí z Excelu,
+    // přepínač umí ještě podle data zhlédnutí, stejně jako OST přehrávač.
+    const piecesSorted = useMemo(() => {
+        if (piecesSort === 'none') return piecesDecorated
+        const withIdx = piecesDecorated.map((p, i) => ({ ...p, _origIndex: i }))
+        withIdx.sort((a, b) => {
+            const da = a.watch_date || '0000-00-00'
+            const db = b.watch_date || '0000-00-00'
+            const cmp = piecesSort === 'newest' ? db.localeCompare(da) : da.localeCompare(db)
+            // Stejné datum → zachovat původní pořadí z Excelu, ať to neposkakuje
+            return cmp || (a._origIndex - b._origIndex)
+        })
+        return withIdx
+    }, [piecesDecorated, piecesSort])
+
+    // Přehrávač dostává skladby v TOMTÉŽ pořadí, v jakém je vidíš v seznamu,
+    // aby „Přehrát vše" hrálo odshora dolů podle zvoleného řazení.
+    const piecesTracks = useMemo(() => piecesSorted
+        .filter(p => p.ytId)
+        .map(p => ({ anime: p.anime_name, song: p.ost_name, ytId: p.ytId, watch_date: p.watch_date })),
+    [piecesSorted])
 
     // Playlisty "As a Whole" seřazené stejně jako dlaždice, seskupené podle anime
     const sortedWhole = useMemo(() => {
@@ -566,12 +763,20 @@ function Favorites() {
 
         return sortedWhole.map((w, i) => {
             const key = normalizeAnimeKey(w.anime_name)
-            // Členové série: shoda na pole `series`, na přesný název, nebo na
-            // název začínající názvem playlistu (sezóny „…, S02" apod.)
-            const members = list.filter(a => {
-                const nk = normalizeAnimeKey(a.name)
-                return normalizeAnimeKey(a.series) === key || nk === key || nk.startsWith(key + ' ')
-            })
+            // Členové série. Primárně se věří poli `series` z Excelu a přesnému
+            // názvu. Shoda na začátek názvu je jen ZÁLOHA pro playlisty, u nichž
+            // v Excelu žádná série vyplněná není (např. „The Unwanted Undead
+            // Adventurer" existuje jen jako „…, S01").
+            //
+            // Dřív se záloha uplatňovala vždy, takže do série spadlo i anime,
+            // které jen náhodou začíná stejným slovem: karta „Berserk" počítala
+            // i „Berserk of Gluttony, S01" a ukazovala průměr 6,8 místo 7,0.
+            // Kontaminovaly se tím i žánry, počet dílů a délka.
+            const strictMembers = list.filter(a =>
+                normalizeAnimeKey(a.series) === key || normalizeAnimeKey(a.name) === key)
+            const members = strictMembers.length
+                ? strictMembers
+                : list.filter(a => normalizeAnimeKey(a.name).startsWith(key + ' '))
             const ratings = members.map(a => parseFloat(a.rating)).filter(v => !isNaN(v))
             const episodes = members.reduce((s, a) => s + (parseInt(a.episodes) || 0), 0)
             const minutes = members.reduce((s, a) => s + (parseInt(a.episodes) || 0) * (parseFloat(a.episode_duration) || 0), 0)
@@ -587,25 +792,74 @@ function Favorites() {
                     return pk === key || memberKeys.has(pk) || pk.startsWith(key + ' ')
                 })
 
-            // Najdi nejlepší YT Music album pro tuhle sérii.
-            // Přednost: 1) přesná shoda klíče, 2) album s reálným autorem
-            // (ne "Various Artists"), 3) jakékoliv matching album.
-            // Bez toho by např. "Jujutsu Kaisen" matchovalo "Jujutsu Kaisen 0"
-            // (film), který má "Various Artists", místo S02 s "Yoshimasa Terui".
-            const matchingAlbums = (ytmusicAlbums || []).filter(a => {
-                const ak = normalizeAnimeKey(a.anime_name)
-                return ak && (ak === key || ak.includes(key) || key.includes(ak))
-            })
-            const album =
-                matchingAlbums.find(a => normalizeAnimeKey(a.anime_name) === key) ||
-                matchingAlbums.find(a => a.artists && a.artists !== 'Various Artists') ||
-                matchingAlbums[0] ||
-                null
             // Přednost má počet zjištěný přímo z playlistu (je to ten, který
             // opravdu poslouchám); YT Music album je záloha, když se playlist
             // ještě nikdy nepustil.
             const playlistId = extractYoutubePlaylistId(w.yt_url)
             const liveCount = playlistId ? playlistCounts[playlistId]?.count ?? null : null
+            // Data ze skriptu tools/build_ytmusic_durations.py: počet skladeb
+            // a jejich délka, obojí z téhož playlistu.
+            //
+            // Část playlistů YouTube nevydá celé: v hlavičce počítá i videa,
+            // která mezitím zmizela (smazaná, privátní), ale ve výpisu je
+            // nevrátí. Součet délek pak pokrývá jen dostupnou část, proto se
+            // u těch karet ukazuje s vlnovkou („~4:11:11").
+            const durRec = playlistId ? playlistDurations[playlistId] : null
+            const playlistStats = durRec?.tracks ? durRec : null
+            const durationApprox = !!(playlistStats?.listed && playlistStats.listed !== playlistStats.tracks)
+
+            // Najdi nejlepší YT Music album pro tuhle sérii.
+            //
+            // Volná shoda přes podřetězec našla u „Attack on Titan" devět
+            // kandidátů a vybrala prostě prvního s reálným autorem, což byl
+            // „Attack on Titan OAD" — soundtrack k OVA o 16 skladbách. Karta pak
+            // hlásila „129 skladeb · 1:17:00", kde ta délka patřila k šestnácti
+            // stopám. Stejně dopadl Spy x Family (film Code: White) a
+            // Evangelion (Rebuild 1.0 místo seriálu).
+            //
+            // Kandidáti se proto berou primárně z členů série (přesná shoda
+            // názvu) a vybírá se ten, jehož počet skladeb je nejblíž skutečnému
+            // playlistu. Když playlist ještě nikdy neběžel, rozhoduje reálný
+            // autor a pak větší album.
+            const albumsFromMembers = (ytmusicAlbums || [])
+                .filter(a => memberKeys.has(normalizeAnimeKey(a.anime_name)))
+            const albumsLoose = (ytmusicAlbums || []).filter(a => {
+                const ak = normalizeAnimeKey(a.anime_name)
+                return ak && (ak === key || ak.includes(key) || key.includes(ak))
+            })
+            const matchingAlbums = albumsFromMembers.length ? albumsFromMembers : albumsLoose
+
+            const hasRealArtist = (a) => (a.artists && a.artists !== 'Various Artists') ? 1 : 0
+            const albumYear = (a) => {
+                const y = parseInt(a.year, 10)
+                return isNaN(y) ? 9999 : y
+            }
+            const album = (() => {
+                if (!matchingAlbums.length) return null
+                const exact = matchingAlbums.find(a => normalizeAnimeKey(a.anime_name) === key)
+                if (exact) return exact
+                const ranked = [...matchingAlbums].sort((a, b) => {
+                    // 1) Když víme, kolik skladeb playlist doopravdy má, vyhrává
+                    //    album, které se tomu počtu nejvíc blíží. Počet i délka
+                    //    pak patří k sobě.
+                    if (liveCount) {
+                        const da = Math.abs((a.track_count || 0) - liveCount)
+                        const db = Math.abs((b.track_count || 0) - liveCount)
+                        if (da !== db) return da - db
+                    }
+                    // 2) Album s reálným autorem před „Various Artists"
+                    if (hasRealArtist(b) !== hasRealArtist(a)) return hasRealArtist(b) - hasRealArtist(a)
+                    // 3) Nejstarší album série. Playlist bývá postavený na
+                    //    původním díle, ne na pozdějším remaku: u Berserku je to
+                    //    OST z roku 1997 (Susumu Hirasawa), ne verze z 2016
+                    //    (Shiro Sagisu). Řadit podle počtu skladeb by tady
+                    //    vybralo špatného autora.
+                    if (albumYear(a) !== albumYear(b)) return albumYear(a) - albumYear(b)
+                    return (b.track_count || 0) - (a.track_count || 0)
+                })
+                return ranked[0]
+            })()
+            const allArtists = collectArtists([album, ...matchingAlbums], key)
 
             let image = null
             if (spotifyImages) {
@@ -616,24 +870,18 @@ function Favorites() {
                 if (mk) image = spotifyImages[mk]
             }
 
-            // Sběr všech let vydání (jak z YT Music alb pro členy, tak ze samotných anime)
+            // Roky se berou VÝHRADNĚ z anime, ne z vydání soundtracku.
+            //
+            // Dřív se do rozsahu počítal i rok alba, jenže to je datum vydání
+            // desky, ne díla: remaster nebo reedice ho posunula o roky dopředu.
+            // Cyberpunk: Edgerunners je jednosezónovka z roku 2022, ale karta
+            // kvůli reedici hlásila „2022 - 2023"; Girls' Last Tour z roku 2017
+            // dokonce „2017 - 2024" a Steins;Gate začínal 2010 podle OST ke hře,
+            // i když anime je z roku 2011. Dohromady u 6 z 30 karet.
             const allYears = new Set()
-            if (album?.year) {
-                const y = parseInt(album.year)
-                if (!isNaN(y)) allYears.add(y)
-            }
             members.forEach(m => {
                 if (m.release_date) {
                     const y = new Date(m.release_date).getFullYear()
-                    if (!isNaN(y)) allYears.add(y)
-                }
-                const mKey = normalizeAnimeKey(m.name)
-                const memberAlbum = (ytmusicAlbums || []).find(a => {
-                    const ak = normalizeAnimeKey(a.anime_name)
-                    return ak && (ak === mKey || ak.includes(mKey) || mKey.includes(ak))
-                })
-                if (memberAlbum?.year) {
-                    const y = parseInt(memberAlbum.year)
                     if (!isNaN(y)) allYears.add(y)
                 }
             })
@@ -664,38 +912,51 @@ function Favorites() {
                 hours: minutes / 60,
                 genres: topOf(members.flatMap(a => splitTags(a.genres)), 3),
                 themes: topOf(members.flatMap(a => splitTags(a.themes)), 2),
-                trackCount: liveCount ?? album?.track_count ?? null,
-                trackCountSource: liveCount ? 'playlist' : (album?.track_count ? 'ytmusic' : null),
-                albumDuration: album?.duration || null,
-                artists: (() => {
-                    let rawArtists = album?.artists || null
-                    // Když hlavní album nemá reálné autory, prohledáme
-                    // členská alba série (např. JJK S02 má "Yoshimasa Terui"
-                    // i když hlavní album i S01 říkají "Various Artists").
-                    if (!rawArtists || rawArtists === 'Various Artists') {
-                        for (const m of members) {
-                            const mKey = normalizeAnimeKey(m.name)
-                            const mAlbum = (ytmusicAlbums || []).find(a => {
-                                const ak = normalizeAnimeKey(a.anime_name)
-                                return ak && (ak === mKey || ak.includes(mKey) || mKey.includes(ak))
-                            })
-                            if (mAlbum?.artists && mAlbum.artists !== 'Various Artists') {
-                                rawArtists = mAlbum.artists
-                                break
-                            }
-                        }
+                // Počet skladeb a délka. Pořadí zdrojů:
+                //   1. ost_playlist_durations.json — obojí spočítané z TÉHOŽ
+                //      playlistu, takže k sobě zaručeně patří.
+                //   2. živý počet z přehrávače (localStorage) — jen počet.
+                //   3. YT Music album — záloha, když playlist nikdy neběžel.
+                //
+                // Dřív se počet bral z playlistu a délka z alba, což u sérií
+                // nikdy nesedělo: „129 skladeb · 1:17:00", kde ta délka patřila
+                // k šestnáctiskladbovému albu jedné sezóny.
+                // Počet skladeb: kolik jich playlist doopravdy má (včetně těch,
+                // co už nejdou přehrát) — je to totéž číslo, které hlásí
+                // přehrávač.
+                trackCount: playlistStats
+                    ? (playlistStats.listed || playlistStats.tracks)
+                    : (liveCount ?? album?.track_count ?? null),
+                trackCountSource: playlistStats ? 'playlist'
+                    : (liveCount ? 'playlist' : (album?.track_count ? 'ytmusic' : null)),
+                durationApprox,
+                // Hotový text h:mm:ss, nebo null když délku spolehlivě neznáme.
+                albumDuration: (() => {
+                    if (playlistStats?.seconds) {
+                        return (durationApprox ? '~' : '') + formatSeconds(playlistStats.seconds)
                     }
-                    const hasNoArtists = !rawArtists || rawArtists === 'Various Artists'
-                    const cachedAnilist = hasNoArtists ? getAnilistArtists(w.anime_name) : null
-                    return (hasNoArtists && cachedAnilist)
-                        ? cachedAnilist
-                        : (rawArtists ? translateArtist(rawArtists) : null)
+                    if (!album?.duration) return null
+                    // Bez přesných dat ukážeme délku alba jen tehdy, když počet
+                    // skladeb zhruba sedí. Jinak radši nic než špatný údaj.
+                    if (liveCount && Math.abs(liveCount - (album.track_count || 0)) > 1) return null
+                    return parseDurationToHMS(album.duration)
                 })(),
+                artists: allArtists.length
+                    ? allArtists.slice(0, MAX_CARD_ARTISTS).join(', ')
+                    : (getAnilistArtists(w.anime_name) || null),
+                // Plný seznam do tooltipu, když se na kartu nevejdou všichni
+                artistsFull: allArtists.length > MAX_CARD_ARTISTS ? allArtists.join(', ') : null,
                 year: yearDisplay,
-                best: [...best].sort((a, b) => (a.ost_name || '').length - (b.ost_name || '').length),
+                // Chipy abecedně podle názvu skladby, při shodě podle anime
+                // (u víc sezón se tím pořadí nerozhazuje). Dřív se řadilo podle
+                // DÉLKY názvu, což vypadalo hezky, ale pořadí z Excelu to
+                // zahodilo a nedalo se v tom nic najít.
+                best: [...best].sort((a, b) =>
+                    (a.ost_name || '').localeCompare(b.ost_name || '', 'cs')
+                    || (a.anime_name || '').localeCompare(b.anime_name || '', 'cs')),
             }
         })
-    }, [sortedWhole, wholeGroups, ostTables, spotifyImages, ytmusicAlbums, playlistCounts, favorites, anilistVersion])
+    }, [sortedWhole, wholeGroups, ostTables, spotifyImages, ytmusicAlbums, playlistCounts, playlistDurations, favorites, anilistVersion])
 
     const visibleWholeCards = useMemo(() => {
         const q = wholeSearch.trim().toLowerCase()
@@ -2140,9 +2401,25 @@ function Favorites() {
                                         Přehrát vše ({piecesTracks.length})
                                     </button>
                                 )}
+                                {/* Řazení podle data zhlédnutí, stejný přepínač jako v OST
+                                    přehrávači. Mění i pořadí, ve kterém „Přehrát vše" hraje. */}
+                                <button
+                                    type="button"
+                                    className={`fav-play-all-btn section-heading-action${piecesSort !== 'none' ? ' active' : ''}`}
+                                    onClick={togglePiecesSort}
+                                    title={piecesSort === 'newest'
+                                        ? 'Seřazeno od nedávno zhlédnutých anime. Kliknutím přepneš na nejstarší.'
+                                        : piecesSort === 'oldest'
+                                            ? 'Seřazeno od nejdéle zhlédnutých anime. Kliknutím se vrátíš na moje pořadí.'
+                                            : 'Moje pořadí. Kliknutím seřadíš podle data zhlédnutí.'}
+                                >
+                                    {piecesSort === 'newest' ? '🔽 Nedávné'
+                                        : piecesSort === 'oldest' ? '🔼 Nejstarší'
+                                            : '🔄 Moje pořadí'}
+                                </button>
                             </h4>
                             <div className="fav-ost-flow fav-ost-flow--pieces">
-                                {ostTables.pieces.map((p, i) => {
+                                {piecesSorted.map((p, i) => {
                                     const trackIdx = piecesTracks.findIndex(t => t.anime === p.anime_name && t.song === p.ost_name)
                                     return (
                                         <div className="fav-ost-flow-item" key={i}>

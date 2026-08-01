@@ -230,6 +230,9 @@ export function hasAnyMedia(media) {
 }
 
 const artistTranslations = {
+    // Katakana zápis západního jména. Musí být v tabulce, jinak by ho dělič
+    // rozsekal na „ケビン" a „ペンキン" (translateArtist štěpí i podle ・).
+    'ケビン・ペンキン': 'Kevin Penkin',
     '藤澤慶昌': 'Yoshiaki Fujisawa',
     'saya': 'saya',
     '横山克': 'Masaru Yokoyama',
@@ -248,7 +251,13 @@ const artistTranslations = {
 
 export function translateArtist(artistStr) {
     if (!artistStr) return artistStr
-    
+
+    // Nejdřív zkusit CELÝ řetězec. Katakana zápis západního jména používá
+    // prostřední tečku jako oddělovač jména a příjmení („ケビン・ペンキン"),
+    // takže by ho dělení níž rozsekalo na dvě půlky a překlad by nenašel.
+    const whole = artistStr.trim()
+    if (artistTranslations[whole]) return artistTranslations[whole]
+
     // Rozdělit podle čárek, lomítek, teček, plusů, japonských symbolů a 'and'
     const parts = artistStr.split(/[,/·+、・&]|\band\b/i)
     const translatedParts = parts.map(part => {

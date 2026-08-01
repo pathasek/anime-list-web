@@ -1,7 +1,15 @@
 import React, { useMemo, useState } from 'react';
 import { excelPalettes } from '../../utils/excelStyles';
 
-const AnimeGenreChordChart = ({ data }) => {
+/**
+ * Chord diagram společného výskytu hodnot.
+ *
+ * @param data     pole anime
+ * @param field    které pole se čte: 'genres' (výchozí), 'themes', 'tags'
+ * @param topN     kolik nejčastějších hodnot se vykreslí
+ * @param background barva pozadí SVG (v modalu průhledná)
+ */
+const AnimeGenreChordChart = ({ data, field = 'genres', topN = 15, background = '#1E1E1E' }) => {
     // We expect `data.list` or just the `animeList` to be passed
     const { matrix, groups, labels } = useMemo(() => {
         if (!data || !Array.isArray(data)) return { matrix: [], groups: [], labels: [] };
@@ -11,8 +19,12 @@ const AnimeGenreChordChart = ({ data }) => {
 
         // Parse genres from anime list
         data.forEach(anime => {
-            if (anime.genres) {
-                const parts = anime.genres.split(';').map(g => g.trim()).filter(Boolean);
+            if (anime[field]) {
+                // Tagy z AniListu chodí jako „Název:rank:popis", žánry a témata
+                // jen jako „Název". Bereme vždycky první část.
+                const parts = anime[field].split(';')
+                    .map(g => g.split(':')[0].trim())
+                    .filter(g => g && g.toLowerCase() !== 'x');
                 parts.forEach(g => {
                     genreCounts[g] = (genreCounts[g] || 0) + 1;
                 });
@@ -33,10 +45,10 @@ const AnimeGenreChordChart = ({ data }) => {
             }
         });
 
-        // Take top 15 genres to fit Kelly's palette limit cleanly
+        // Take top N genres to fit Kelly's palette limit cleanly
         const topGenres = Object.entries(genreCounts)
             .sort((a, b) => b[1] - a[1])
-            .slice(0, 15)
+            .slice(0, topN)
             .map(x => x[0]);
 
         // Build chord matrix
@@ -79,7 +91,7 @@ const AnimeGenreChordChart = ({ data }) => {
         }
 
         return { matrix: m, groups: grps, labels: topGenres };
-    }, [data]);
+    }, [data, field, topN]);
 
     const [hoveredIndex, setHoveredIndex] = useState(null);
 
@@ -172,7 +184,7 @@ const AnimeGenreChordChart = ({ data }) => {
     }
 
     return (
-        <svg viewBox={`0 0 ${width} ${height}`} style={{ width: '100%', height: '100%', backgroundColor: '#1E1E1E', fontFamily: '"Aptos Narrow", sans-serif' }}>
+        <svg viewBox={`0 0 ${width} ${height}`} style={{ width: '100%', height: '100%', backgroundColor: background, fontFamily: '"Aptos Narrow", sans-serif' }}>
             {/* Draw Ribbons */}
             {ribbons.map(ribbon => {
                 const isHovered = hoveredIndex === null || hoveredIndex === ribbon.sourceIndex || hoveredIndex === ribbon.targetIndex;

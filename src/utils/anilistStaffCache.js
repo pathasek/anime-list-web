@@ -27,7 +27,7 @@ function saveCache(data) {
     cache = data;
     try {
         localStorage.setItem(LS_KEY, JSON.stringify(data));
-    } catch (e) {
+    } catch {
         /* Quota exceeded */
     }
 }

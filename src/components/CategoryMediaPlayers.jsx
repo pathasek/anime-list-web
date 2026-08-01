@@ -105,10 +105,6 @@ function VideoModalInner({ media, onClose, onNext }) {
     const [atUrl, setAtUrl] = useState(null)
     // AnimeThemes lookup už jednou selhal → při chybě videa se znovu nezkouší
     const atFailedRef = useRef(false)
-    // Ruční vynucení přímého streamu (tlačítko „Plná kvalita"). Drží se v refu,
-    // aby se po dalším selhání dalo tlačítko vypnout a nezacyklit se.
-    const forcedDirectRef = useRef(false)
-    const [directFailed, setDirectFailed] = useState(false)
 
     useEffect(() => {
         if (!wantsAtFirst) return
@@ -150,15 +146,6 @@ function VideoModalInner({ media, onClose, onNext }) {
         }
         if (playMode !== 'video') return
 
-        // Ruční pokus o originál selhal → zpátky na Drive přehrávač a tlačítko
-        // se vypne, ať se nedá zacyklit.
-        if (forcedDirectRef.current) {
-            forcedDirectRef.current = false
-            setDirectFailed(true)
-            if (hasFileId) setPlayMode('iframe')
-            return
-        }
-
         // Náhradní stream z AnimeThemes.moe — JEN na mobilech/tabletech a jen
         // pokud už lookup jednou neselhal. Na PC se má při selhání přímého
         // streamu zůstat u GDrive (preview iframe), tam Drive funguje a chci
@@ -187,23 +174,6 @@ function VideoModalInner({ media, onClose, onNext }) {
                     {subtitle && <span className="media-modal-subtitle">{subtitle}</span>}
                 </div>
                 <div className="media-modal-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    {/* Drive v režimu /preview nepouští tvůj soubor, ale své vlastní
-                        převody — a ty vznikají až při prvním přehrání, takže začíná
-                        na nejnižším rozlišení a vyšší doskočí za pár minut. Tímhle
-                        se dá přepnout na originální soubor v plné kvalitě. */}
-                    {playMode === 'iframe' && media.url && (
-                        <button
-                            className="media-icon-btn"
-                            title={directFailed
-                                ? 'Originál se přehrát nepodařilo, Google Drive ho odmítl streamovat'
-                                : 'Přehrát originální soubor v plné kvalitě místo převodu z Google Drive'}
-                            disabled={directFailed}
-                            onClick={() => { forcedDirectRef.current = true; setPlayMode('video') }}
-                            style={{ width: 'auto', padding: '0 10px', gap: '6px', fontSize: '0.8rem', fontWeight: 600 }}
-                        >
-                            ✨ Plná kvalita
-                        </button>
-                    )}
                     {onNext && (
                         <button
                             className="media-icon-btn"

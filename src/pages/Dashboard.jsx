@@ -134,7 +134,7 @@ const GROUPS_CONFIG = [
 // + in-memory memo). Díky tomu se poster ukáže OKAMŽITĚ při (re)mountu — žádné
 // bliknutí placeholderu „…" při rozbalení Statusu / re-renderu kalendáře.
 const _posterMemCache = {} // malId -> { small, large }
-function getCachedPoster(malId, size) {
+function getCachedPoster(malId) {
     if (!malId) return null
     let memo = _posterMemCache[malId]
     if (!memo) {
@@ -148,7 +148,8 @@ function getCachedPoster(malId, size) {
         } catch { /* poškozený záznam */ }
     }
     if (!memo) return null
-    return (size === 'large' || size === 'xlarge') ? (memo.large || memo.small) : (memo.small || memo.large)
+    // Vždycky menší verze, viz poznámka u JikanPoster
+    return memo.small || memo.large
 }
 
 // Přednačtení + DEKÓDOVÁNÍ posterů do paměti prohlížeče. Fresh <img> při
@@ -167,12 +168,26 @@ function warmPoster(url) {
     if (im.decode) im.decode().catch(() => { /* ještě se nenačetl / CORS — nevadí */ })
 }
 
+// `size` řídí jen VELIKOST BOXU, ne zdroj obrázku. Zdrojem je vždycky menší
+// verze z Jikanu (225x318).
+//
+// Jikan nabízí dvě velikosti: 225x318 a 424x600. Největší box na webu je
+// 78x110, takže i na displeji s dvojnásobnou hustotou stačí 156x220 a menší
+// verze to pokryje. Dřív se pro `large` i `xlarge` brala velká verze, tedy
+// 424 px do boxu širokého 78 px (zmenšení 5,4x) a u `large` dokonce do 45 px
+// (9,4x). Prohlížeč zmenšuje rychlou metodou, která při takovém skoku trhá
+// tenkou linku anime kresby: nejvíc to bylo vidět na členitých posterech
+// (The Exiled Heavy Knight, Chainsmoker Cat), zatímco jednoduché kompozice to
+// přežily. Menší zdroj znamená mírnější zmenšení a ostřejší výsledek.
+//
+// Rozměry boxu se nemění, poster vyplňuje kartu na výšku celý (110 ze 112 px
+// vnitřní výšky), takže zvětšit by ho šlo jen na úkor velikosti karty.
 function JikanPoster({ malUrl, size = 'small' }) {
     // malId je odvozený z props — loading se inicializuje/resetuje podle něj
     // při renderu, takže efekt nemusí volat setState synchronně
     // (react-hooks/set-state-in-effect).
     const malId = malUrl ? extractMalId(malUrl) : null
-    const cachedImg = getCachedPoster(malId, size)
+    const cachedImg = getCachedPoster(malId)
     const [imageUrl, setImageUrl] = useState(cachedImg)
     const [loading, setLoading] = useState(!!malId && !cachedImg)
     const [prevMalId, setPrevMalId] = useState(malId)
@@ -180,7 +195,7 @@ function JikanPoster({ malUrl, size = 'small' }) {
         // Změna anime: nový poster ber rovnou z cache (bez bliknutí),
         // async doběhne jen když v cache není.
         setPrevMalId(malId)
-        const c = getCachedPoster(malId, size)
+        const c = getCachedPoster(malId)
         setImageUrl(c)
         setLoading(!!malId && !c)
     }
@@ -188,7 +203,7 @@ function JikanPoster({ malUrl, size = 'small' }) {
     useEffect(() => {
         if (!malId) return
         // Už máme poster z cache → nic nenačítáme (kalendář nebliká).
-        if (getCachedPoster(malId, size)) return
+        if (getCachedPoster(malId)) return
 
         let cancelled = false
         getAnimeInfo(malId).then(info => {
@@ -196,7 +211,7 @@ function JikanPoster({ malUrl, size = 'small' }) {
                 const small = info.imageUrl || null
                 const large = info.largeImageUrl || info.imageUrl || null
                 _posterMemCache[malId] = { small, large }
-                if (!cancelled) setImageUrl(size === 'large' || size === 'xlarge' ? large : small)
+                if (!cancelled) setImageUrl(small || large)
             }
             if (!cancelled) setLoading(false)
         })
@@ -1456,12 +1471,11 @@ function Dashboard() {
                     const info = await getAnimeInfo(malId);
                     if (cancelled) return;
 
-                    // Nahřej postery do cache dopředu → maximalizace Statusu
-                    // (kalendář = malý, seznam „Právě sledované" = velký) bez bliknutí.
-                    if (info) {
-                        warmPoster(info.imageUrl);
-                        warmPoster(info.largeImageUrl);
-                    }
+                    // Nahřej poster do cache dopředu → maximalizace Statusu
+                    // bez bliknutí. Stačí menší verze: kalendář i „Právě
+                    // sledované" ji teď používají oba (viz JikanPoster), takže
+                    // tahat i velkou by byla jen zbytečná data navíc.
+                    if (info) warmPoster(info.imageUrl || info.largeImageUrl);
 
                     if (info && info.broadcast) {
                         const nextBroadcast = getNextBroadcastDate(info.broadcast);
@@ -1504,8 +1518,7 @@ function Dashboard() {
         for (const a of list) {
             const malId = extractMalId(a.mal_url);
             if (!malId) continue;
-            warmPoster(getCachedPoster(malId, 'small'));
-            warmPoster(getCachedPoster(malId, 'large'));
+            warmPoster(getCachedPoster(malId));
         }
     }, [stats?.excelData?.airingAnime]);
 

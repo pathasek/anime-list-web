@@ -7,6 +7,7 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { buildJourney, monthLabelShort, fmtHours } from '../utils/journeyCalculations'
+import AnimeJourneyMonthModal from './AnimeJourneyMonthModal'
 import { extractMalId, getAnimeInfo } from '../utils/jikanService'
 import { animePath } from '../utils/animeSlug'
 import './animeJourney.css'
@@ -144,12 +145,21 @@ function ChipRow({ label, items, suffix = 'x' }) {
     )
 }
 
-function MonthCard({ m }) {
+function MonthCard({ m, onOpenDetail }) {
     const reason = m.best ? REASON_META[m.best.reason] || REASON_META.standard : null
     return (
         <div className="aj-month-card" data-month={m.key}>
             <div className="aj-month-head">
-                <span className="aj-month-name">{m.label}</span>
+                {/* Klik na název měsíce otevře podrobný rozpad v modalu.
+                    Zbytek karty zůstává beze změny. */}
+                <button
+                    type="button"
+                    className="aj-month-name aj-month-name-btn"
+                    onClick={() => onOpenDetail(m.key)}
+                    title={`Zobrazit detail měsíce: ${m.label}`}
+                >
+                    {m.label}
+                </button>
                 <span className="aj-month-plus">+{m.plusCount}</span>
                 {m.rewatchStats?.count > 0 && (
                     <span
@@ -335,6 +345,20 @@ export default function AnimeJourney({ animeList, historyLog, episodeRatings, ra
         toggleMax(true)
     }, [toggleMax])
 
+    // Detail měsíce (modal). Drží se klíč měsíce, ne index, aby se výběr
+    // nerozbil, když časový filtr Dashboardu změní seznam viditelných měsíců.
+    const [detailKey, setDetailKey] = useState(null)
+    const detailIdx = visible ? visible.findIndex(m => m.key === detailKey) : -1
+    const detailMonth = detailIdx >= 0 ? visible[detailIdx] : null
+    const goDetail = useCallback((delta) => {
+        setDetailKey(prev => {
+            const list = visible || []
+            const i = list.findIndex(m => m.key === prev)
+            const next = i + delta
+            return (next >= 0 && next < list.length) ? list[next].key : prev
+        })
+    }, [visible])
+
     const scrollBy = useCallback((dir) => {
         const el = maxRef.current
         if (!el) return
@@ -407,11 +431,22 @@ export default function AnimeJourney({ animeList, historyLog, episodeRatings, ra
                         return (
                             <span key={m.key} style={{ display: 'contents' }}>
                                 {prevY !== null && prevY !== y && <div className="aj-year-divider"><span>{y}</span></div>}
-                                <MonthCard m={m} />
+                                <MonthCard m={m} onOpenDetail={setDetailKey} />
                             </span>
                         )
                     })}
             </div>
+
+            {detailMonth && (
+                <AnimeJourneyMonthModal
+                    month={detailMonth}
+                    onClose={() => setDetailKey(null)}
+                    onPrev={() => goDetail(-1)}
+                    onNext={() => goDetail(1)}
+                    hasPrev={detailIdx > 0}
+                    hasNext={detailIdx >= 0 && detailIdx < visible.length - 1}
+                />
+            )}
         </div>
     )
 }

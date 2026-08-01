@@ -217,8 +217,11 @@ function SeriesMetaIcon({ kind }) {
 const R2_GROUPS = [
     { name: 'Vizuál', icon: '🎬', color: '6, 182, 212', cats: ['Animace', 'CGI'] },
     { name: 'Postavy', icon: '👥', color: '168, 85, 247', cats: ['MC', 'Vedlejší postavy', 'Waifu'] },
-    { name: 'Příběh', icon: '📖', color: '245, 158, 11', cats: ['Plot', 'Pacing', 'Story Conclusion', 'Originalita', 'Emoce'] },
-    { name: 'Zážitek', icon: '⭐', color: '34, 197, 94', cats: ['Enjoyment'] },
+    { name: 'Příběh', icon: '📖', color: '245, 158, 11', cats: ['Plot', 'Pacing', 'Story Conclusion', 'Originalita'] },
+    // Emoce patří k zážitku ze sledování, ne k stavbě příběhu, proto je vedle
+    // Enjoymentu (a nalevo od něj). Šířka skupin se tím nemění: Příběh o jeden
+    // chip ubere, Zážitek o jeden přidá, součet min-width zůstává stejný.
+    { name: 'Zážitek', icon: '⭐', color: '34, 197, 94', cats: ['Emoce', 'Enjoyment'] },
     { name: 'Hudba', icon: '🎵', color: '236, 72, 153', cats: ['OP', 'ED', 'OST'] },
 ]
 

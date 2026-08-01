@@ -421,3 +421,292 @@
     }
     .aj-subtitle { display: none; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Detail měsíce (modal) — otevírá se klikem na název měsíce v timeline
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Název měsíce je nově tlačítko, ale má vypadat pořád jako nadpis */
+.aj-month-name-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    font-weight: 700;
+    text-transform: capitalize;
+    color: var(--text-primary);
+    cursor: pointer;
+    border-bottom: 1px dashed transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+.aj-month-name-btn:hover,
+.aj-month-name-btn:focus-visible {
+    color: var(--accent-primary);
+    border-bottom-color: var(--accent-primary);
+}
+
+.ajm-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(3px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    animation: ajmFade 0.18s ease-out;
+}
+@keyframes ajmFade { from { opacity: 0 } to { opacity: 1 } }
+
+.ajm-modal {
+    width: min(1100px, 100%);
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+.ajm-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    background: linear-gradient(180deg, rgba(99, 102, 241, 0.08), transparent);
+    flex-shrink: 0;
+}
+.ajm-title-block { flex: 1; min-width: 0; text-align: center; }
+.ajm-title {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 800;
+    text-transform: capitalize;
+    color: var(--text-primary);
+}
+.ajm-subtitle { font-size: 0.8rem; color: var(--text-muted); }
+
+.ajm-nav, .ajm-close {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+.ajm-nav:hover:not(:disabled), .ajm-close:hover {
+    background: var(--accent-primary);
+    color: #fff;
+    border-color: var(--accent-primary);
+}
+.ajm-nav:disabled { opacity: 0.3; cursor: default; }
+.ajm-close { font-size: 0.95rem; }
+
+.ajm-body {
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* ── Čísla ── */
+.ajm-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 10px;
+}
+.ajm-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+}
+.ajm-stat-label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-muted);
+}
+.ajm-stat-value { font-size: 1.15rem; color: var(--text-primary); }
+
+.ajm-section-title {
+    margin: 0 0 8px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.ajm-section-note, .ajm-chord-note {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-full);
+    padding: 1px 8px;
+}
+.ajm-hint { margin: 0 0 10px; font-size: 0.76rem; color: var(--text-muted); }
+
+/* ── Nejlepší anime ── */
+.ajm-best {
+    display: flex;
+    gap: 12px;
+    padding: 10px;
+    border-radius: var(--radius-md);
+    background: var(--bg-tertiary);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    text-decoration: none;
+}
+.ajm-best:hover { border-color: rgba(245, 158, 11, 0.7); }
+.ajm-best img, .ajm-best-ph {
+    width: 76px;
+    height: 108px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.ajm-best-info { display: flex; flex-direction: column; gap: 5px; justify-content: center; min-width: 0; }
+.ajm-best-name { font-weight: 700; color: var(--text-primary); }
+.ajm-best-meta { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--accent-amber, #f59e0b); }
+.ajm-best-reason { font-size: 0.75rem; color: var(--text-muted); }
+.ajm-badge {
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    padding: 1px 6px;
+    border-radius: var(--radius-full);
+}
+.ajm-badge.series { background: rgba(99, 102, 241, 0.2); color: #a5b4fc; }
+.ajm-badge.standalone { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; }
+
+.ajm-longest {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 8px 12px;
+    border-radius: var(--radius-md);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    font-size: 0.86rem;
+}
+
+/* ── Mřížka anime ── */
+.ajm-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 10px;
+}
+.ajm-card {
+    display: flex;
+    gap: 8px;
+    padding: 6px;
+    border-radius: var(--radius-md);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    text-decoration: none;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.ajm-card:hover { border-color: var(--accent-primary); transform: translateY(-2px); }
+.ajm-card img, .ajm-card-ph {
+    width: 44px;
+    height: 62px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.ajm-card-info { display: flex; flex-direction: column; gap: 3px; min-width: 0; justify-content: center; }
+.ajm-card-name {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.ajm-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    font-size: 0.68rem;
+    color: var(--text-muted);
+}
+.ajm-card-meta b { color: var(--accent-amber, #f59e0b); }
+.ajm-card-type {
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-full);
+    padding: 0 6px;
+}
+
+/* ── Chord diagramy ── */
+.ajm-chords {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 14px;
+}
+.ajm-chord {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border-radius: var(--radius-md);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    min-width: 0;
+}
+.ajm-chord-title {
+    margin: 0 0 6px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.ajm-chord-canvas { width: 100%; aspect-ratio: 1 / 1; }
+.ajm-chord-fallback { font-size: 0.78rem; }
+.ajm-chord-hint { margin: 0 0 6px; font-size: 0.72rem; color: var(--text-muted); }
+.ajm-count-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; }
+.ajm-count-list li {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 3px 6px;
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.03);
+}
+.ajm-count-list b { color: var(--accent-primary); }
+.ajm-empty { color: var(--text-muted); font-style: italic; }
+
+@media (max-width: 700px) {
+    .ajm-backdrop { padding: 10px; }
+    .ajm-modal { max-height: 94vh; }
+    .ajm-chords { grid-template-columns: 1fr; }
+}
