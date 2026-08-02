@@ -19,6 +19,7 @@ Tento soubor shrnuje všechny nedávné změny, opravy a vylepšení implementov
 ### 🧹 Úklid
 - **Zrušen mrtvý `npm run deploy`.** Web nasazuje workflow z větve `main`, zatímco `deploy.js` force-pushoval build do větve `gh-pages`, kterou GitHub Pages vůbec nečte. Smazán skript, `deploy.js` i závislost `gh-pages`.
 - **Dokumentace sloučena do jednoho zdroje pravdy** mimo repozitář (`../dokumentace/ZDROJ_PRAVDY.md`). Z repa zmizelo 18 zastaralých .md (implementační plány 1 až 9, migrační plán, research dokumenty) a 22 obrázků k nim, celkem asi 4,3 MB.
+- **Smazán mrtvý duplikát `scripts/fetchAnimeMetadata.js`.** Existoval vedle `.cjs` verze, měl starší schéma (jen skóre a obrázky, bez `broadcast`) a hlavně se vůbec nedal spustit: `package.json` má `"type": "module"`, takže `require()` v souboru s příponou `.js` skončí na `require is not defined`. Živá je `.cjs` verze.
 - **Odstraněny mrtvé jednorázové pomůcky z kořene repa:** `run_debug_tree.js` (importoval smazaný `xpEngines` z Research Tree), `extract_chart_sizes.py` (četl dávno přejmenovaný `A-List.xlsm`), `find_jikan_cache.py` (natvrdo stará cesta z Antigravity workspace), `debug_console.py`, `download_all_posters.cjs`, celá složka `scratch/` (7 souborů) a `netlify.toml` (web běží na GitHub Pages, ne na Netlify).
 
 ---
