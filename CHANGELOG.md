@@ -4,6 +4,25 @@ Tento soubor shrnuje všechny nedávné změny, opravy a vylepšení implementov
 
 ---
 
+## [1.1.1] - 2026-08-02
+
+### 🧭 Dashboard
+- **Rozbalený blok „Poslední & Binge & Nejdelší" je zase nahoře** nad Statusem, jak byl původně. Prohození sloupců u karet pod ním (dřív jeden ostrý skok, „flicker") nyní plynule přejede: FLIP animace 180 ms, jen vodorovný posun, respektuje `prefers-reduced-motion`. Rychlost je konstanta `FLIP_MS` v `Dashboard.jsx`.
+
+### 🎵 Názvy skladeb v OST přehrávači
+- **`ostTrackTitle.js` přepsán** z pevných vzorů na hledání opakující se slupky napříč celým playlistem. Pevný vzor buď nesedl (Re:Zero má za slovem „Ost" rovnou číslo, ne pomlčku), nebo sedl moc.
+- **Opravena regrese u Attack on Titan:** starý vzor na `OST -` ukusoval celý název skladby, takže 63 položek se jmenovalo „Hiroyuki Sawano".
+- Nově se čistí i **konce názvů** („— SPY x FAMILY [OST]", „[… Original Soundtrack]") a název anime slouží jako vodítko.
+- Pojistky: koncová slupka musí začínat oddělovačem (jinak by se ze skutečného názvu „Beyond the Journey's End" stalo „Beyond the") a neusekne se nic, po čem by dvě různé skladby měly stejný název.
+- Ověřeno na 30 playlistech a 2 400 skladbách, bez nových duplicit. Nejvíc opraveno u Re:Zero, Attack on Titan, Garden of Sinners, Spy x Family, Tower of God a Girls' Last Tour.
+
+### 🧹 Úklid
+- **Zrušen mrtvý `npm run deploy`.** Web nasazuje workflow z větve `main`, zatímco `deploy.js` force-pushoval build do větve `gh-pages`, kterou GitHub Pages vůbec nečte. Smazán skript, `deploy.js` i závislost `gh-pages`.
+- **Dokumentace sloučena do jednoho zdroje pravdy** mimo repozitář (`../dokumentace/ZDROJ_PRAVDY.md`). Z repa zmizelo 18 zastaralých .md (implementační plány 1 až 9, migrační plán, research dokumenty) a 22 obrázků k nim, celkem asi 4,3 MB.
+- **Odstraněny mrtvé jednorázové pomůcky z kořene repa:** `run_debug_tree.js` (importoval smazaný `xpEngines` z Research Tree), `extract_chart_sizes.py` (četl dávno přejmenovaný `A-List.xlsm`), `find_jikan_cache.py` (natvrdo stará cesta z Antigravity workspace), `debug_console.py`, `download_all_posters.cjs`, celá složka `scratch/` (7 souborů) a `netlify.toml` (web běží na GitHub Pages, ne na Netlify).
+
+---
+
 ## [1.1.0] - 2026-08-01
 
 ### 🎬 Cesta Anime & Statistiky měsíce

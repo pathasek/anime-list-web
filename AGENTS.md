@@ -6,6 +6,11 @@ Tenhle soubor je **jediný zdroj pravdy** pro všechny AI nástroje v tomhle pro
 Projekt: **Anime List Web** (React 19 + Vite 5, HashRouter, Chart.js). Osobní
 aplikace pro sledování a hodnocení anime. Data se generují z Excelu, ne ručně.
 
+**Kontext a souvislosti** (architektura, data, ověřené pasti, co je otevřené)
+jsou o patro výš v `../dokumentace/ZDROJ_PRAVDY.md`. Tenhle soubor drží
+**pravidla**, ten druhý **znalosti**. Mimo repozitář je schválně, ať se
+neveřejní na GitHubu.
+
 ---
 
 ## 1. Rozsah práce (nejdůležitější pravidlo)
@@ -57,7 +62,12 @@ Klíčové soubory a co v nich je:
 
 ## 4. Git a nasazení
 
-- **Nikdy** `git push`, `npm run deploy` ani `git commit` bez mého pokynu.
+- **Nikdy** `git push` ani `git commit` bez mého pokynu.
+- **Nasazení není samostatný krok.** Push do `main` spustí workflow
+  `.github/workflows/deploy.yml`, který web postaví a publikuje na GitHub Pages.
+  Push do `main` = nasazení. Žádný `npm run deploy` neexistuje.
+  Výsledek ověřuj přes `gh run list`. Hash assetu z lokálního buildu se
+  se živým webem **neshoduje**, protože Actions staví znovu u sebe.
 - Repozitář je veřejný na GitHubu (`pathasek/anime-list-web`) a nasazuje se na
   GitHub Pages. **Nikdy do něj nepřidávej** přihlašovací údaje, tokeny ani nové
   soukromé odkazy (OneDrive/SharePoint/Google Drive).

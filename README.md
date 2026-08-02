@@ -33,7 +33,7 @@ Aplikace **Anime List Web** je interaktivní a vizuálně bohaté webové centru
 - **Frontend**: React 19, Vite, React Router DOM
 - **Vizualizace dat**: Chart.js, React-Chartjs-2, Chartjs-Plugin-Datalabels, D3 Cloud
 - **Styling**: Custom CSS variables, moderní skleněný/neonový design systém, responsive grid layout
-- **Deployment**: Automated GitHub Pages script (`gh-pages`)
+- **Deployment**: GitHub Actions workflow → GitHub Pages (push do `main`)
 
 ---
 
@@ -61,6 +61,9 @@ npm run build
 ```
 
 5. Nasazení na GitHub Pages:
+
+Nasazuje se samo. Push do větve `main` spustí workflow
+`.github/workflows/deploy.yml`, který web postaví a publikuje.
 ```bash
-npm run deploy
+git push origin main
 ```

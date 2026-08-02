@@ -44,7 +44,7 @@ export default defineConfig([
   },
   {
     // Node/build skripty (ne prohlížeč) — mají process/require/__dirname/module.
-    files: ['deploy.js', 'vite.config.js', 'scripts/**/*.js'],
+    files: ['vite.config.js', 'scripts/**/*.js'],
     languageOptions: {
       globals: globals.node,
     },
