@@ -134,23 +134,23 @@ export default function FavoritesOstPlayer({ mode, tracks = [], groups = [], ini
         return withDates
     }, [tracks, sortOrder, isWhole])
 
-    // Zobrazené názvy skladeb: syrové titulky z YouTube jsou zanesené prefixy
-    // („BERSERK (1997) Original Soundtrack - Behelit"), které se opakují u každé
-    // skladby. Čistí se po celých skupinách naráz, protože odstranění společného
-    // prefixu potřebuje vidět všechny názvy pohromadě. Původní titulek zůstává
-    // v atributu title.
+    // Zobrazené názvy skladeb: syrové titulky z YouTube jsou zanesené slupkou
+    // („BERSERK (1997) Original Soundtrack - Behelit"), která se opakuje u každé
+    // skladby. Čistí se po celých skupinách naráz, protože poznat slupku jde jen
+    // z porovnání všech názvů playlistu. Název anime pomáhá ji odlišit od názvu
+    // skladby. Původní titulek zůstává v atributu title.
     const cleanTitlesByGroup = useMemo(() => {
         const out = {}
         for (const [gIdx, list] of Object.entries(tracksByGroup)) {
             if (!list) continue
             const resolvedIdx = list.map((t, i) => (t.resolved ? i : -1)).filter(i => i >= 0)
-            const cleaned = cleanTrackTitles(resolvedIdx.map(i => list[i].song))
+            const cleaned = cleanTrackTitles(resolvedIdx.map(i => list[i].song), groups[gIdx]?.name)
             const names = list.map(t => t.song)
             resolvedIdx.forEach((listIdx, k) => { names[listIdx] = cleaned[k] })
             out[gIdx] = names
         }
         return out
-    }, [tracksByGroup])
+    }, [tracksByGroup, groups])
 
     // Průběžný zápis pozice, aby refresh navázal tam, kde hudba skončila.
     //

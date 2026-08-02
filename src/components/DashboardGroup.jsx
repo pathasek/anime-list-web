@@ -20,11 +20,12 @@ function DashboardGroup({ id, title, icon, isExpanded, onToggle, alwaysExpanded 
 
     const showExpanded = isExpanded || alwaysExpanded
 
-    // Status je v GROUPS_CONFIG první, takže ho order: -1 nikam neposune a
-    // rozbalení je plynulé. U „lists" (druhý v pořadí) to ale znamenalo skok nad
-    // Status SOUČASNĚ s roztažením na plnou šířku — mřížka se přeskládala a
-    // rozbalení viditelně bliklo. Proto order řídí jen Status.
-    const groupStyle = (showExpanded && id === 'status') ? { order: -1 } : undefined
+    // Rozbalený „lists" se vyhoupne nad Status, aby byl hned nahoře. Cenou je,
+    // že se všem kartám pod ním prohodí levý a pravý sloupec (Status je půlka
+    // řádku, takže se parita otočí). Dřív to byl jeden ostrý skok. Samotné
+    // přeskládání teď plynule přejede, viz FLIP v Dashboard.jsx.
+    // U Statusu order nic nedělá, je v GROUPS_CONFIG stejně první.
+    const groupStyle = (showExpanded && (id === 'status' || id === 'lists')) ? { order: -1 } : undefined
 
     return (
         <div

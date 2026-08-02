@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef, Fragment } from 'react'
+import { useState, useEffect, useLayoutEffect, useMemo, useRef, Fragment } from 'react'
 import { Link, useNavigationType } from 'react-router-dom'
 import {
     Chart as ChartJS,
@@ -1066,7 +1066,23 @@ function Dashboard() {
         } catch { /* poškozený záznam — použije se default */ }
         return new Set(['dub'])
     })
+    // ─── Plynulé přeskládání mřížky skupin (FLIP) ───
+    // Rozbalená skupina na plnou šířku se přesune nad Status, čímž se všem
+    // kartám pod ní prohodí levý a pravý sloupec. Dřív to byl jeden ostrý skok
+    // („flicker"). Teď si před přerovnáním zapamatujeme pozice karet a po něm
+    // je krátce přejedeme z původního místa na nové.
+    const groupsGridRef = useRef(null)
+    const flipRectsRef = useRef(null)
+    const FLIP_MS = 180   // krátce, ať to působí okamžitě
+
     const toggleGroup = (id) => {
+        const grid = groupsGridRef.current
+        const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+        if (grid && !reduceMotion) {
+            const rects = new Map()
+            for (const el of grid.children) rects.set(el.id, el.getBoundingClientRect())
+            flipRectsRef.current = rects
+        }
         setExpandedGroups(prev => {
             const next = new Set(prev)
             if (next.has(id)) {
@@ -1078,6 +1094,48 @@ function Dashboard() {
             return next
         })
     }
+
+    useLayoutEffect(() => {
+        const grid = groupsGridRef.current
+        const before = flipRectsRef.current
+        flipRectsRef.current = null
+        if (!grid || !before) return
+
+        // Animujeme jen vodorovný posun. Svislý posun je přirozený důsledek
+        // rozbalení (obsah povyroste) a nikdy nevadil.
+        const moved = []
+        for (const el of grid.children) {
+            const prevRect = before.get(el.id)
+            if (!prevRect) continue
+            const dx = Math.round(prevRect.left - el.getBoundingClientRect().left)
+            if (!dx) continue
+            el.style.transition = 'none'
+            el.style.transform = `translateX(${dx}px)`
+            moved.push(el)
+        }
+        if (!moved.length) return
+
+        // Vynucený reflow, aby prohlížeč vzal výchozí posun jako skutečný stav.
+        // Přes requestAnimationFrame by to bylo křehké: ve skrytém okně snímky
+        // netikají a karty by místo přejezdu chvíli stály posunuté.
+        void grid.offsetHeight
+
+        for (const el of moved) {
+            el.style.transition = `transform ${FLIP_MS}ms cubic-bezier(0.22, 0.61, 0.36, 1)`
+            el.style.transform = ''
+        }
+
+        const done = setTimeout(() => {
+            for (const el of moved) el.style.transition = ''
+        }, FLIP_MS + 60)
+        return () => {
+            clearTimeout(done)
+            for (const el of moved) {
+                el.style.transition = ''
+                el.style.transform = ''
+            }
+        }
+    }, [expandedGroups])
 
     // Návrat „do minulosti": při odchodu z Dashboardu se uloží scroll pozice
     // a při POP navigaci (tlačítko zpět) se po vykreslení obnoví. Dopředná
@@ -3724,7 +3782,7 @@ function Dashboard() {
             {/* ═══════════════════════════════════════════ */}
             {/* DASHBOARD GROUPS GRID                      */}
             {/* ═══════════════════════════════════════════ */}
-            <div className="dashboard-groups-grid">
+            <div className="dashboard-groups-grid" ref={groupsGridRef}>
                 {GROUPS_CONFIG.map(group => {
                     let headerExtra = null
                     if (group.id === 'status' && stats) {
