@@ -13472,6 +13472,10 @@
       {
         "episode": "EP 3",
         "rating": 8.25
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.75
       }
     ]
   },
@@ -13518,6 +13522,10 @@
       {
         "episode": "EP 3",
         "rating": 8.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.5
       }
     ]
   },
@@ -13534,7 +13542,11 @@
       },
       {
         "episode": "EP 3",
-        "rating": 7.75
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.25
       }
     ]
   },
@@ -13573,6 +13585,14 @@
       {
         "episode": "EP 2",
         "rating": 7.5
+      },
+      {
+        "episode": "EP 3",
+        "rating": 7.5
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.5
       }
     ]
   },
@@ -13590,6 +13610,10 @@
       {
         "episode": "EP 3",
         "rating": 7.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 8.25
       }
     ]
   },
@@ -13607,6 +13631,10 @@
       {
         "episode": "EP 3",
         "rating": 6.75
+      },
+      {
+        "episode": "EP 4",
+        "rating": 7.25
       }
     ]
   }
