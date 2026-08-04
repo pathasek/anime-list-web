@@ -6,3 +6,4 @@
 6) Na cizím počítač v MS EDGE jsem si všiml, že v cestě Anime u malých anime obrázku níže (v maximalizované verzi) se namísto JIKAN/MAL posterů ukazují moje vlastní thumbnaily, které ale jsou 16:9 převážně - je dobré, že toto je fallback, ale správně mají vždy být předuložené a automaticky k dispozici verze z Jikanu
 7) A Town with an Ocean view je jiná verze než mám na Spotify
 8) Sledovaná Anime (Data projekt) -> Sledovaní Anime (Dashboard)
+9) Přidat AniDB relation chart map pro série do svého listu Anime List Web
