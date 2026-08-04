@@ -9,6 +9,7 @@ import subprocess
 import base64
 import shutil
 import tempfile
+import time
 from datetime import datetime, date, timedelta
 from io import BytesIO
 import re
@@ -622,7 +623,65 @@ def export_episode_ratings(wb):
                 "name": anime_name,
                 "episodes": sorted_eps
             })
-    
+
+    data = _zahod_zkopirovane_bloky(wb, data)
+
+    return data
+
+
+def _zahod_zkopirovane_bloky(wb, data):
+    """Zahodí známky epizod, které jsou kopií jiného titulu.
+
+    V listu „MAL Cache + Interactive Rating" se stane, že se řádky jednoho
+    anime omylem zkopírují pod název jiného. Poznávací znamení: dva různé
+    tituly mají naprosto shodnou posloupnost známek. Rozhodčím je počet epizod
+    v hlavním seznamu: blok, který mu odpovídá, zůstane, ten druhý padá.
+
+    Reálný případ, kvůli kterému to vzniklo: film „The Disappearance of Haruhi
+    Suzumiya" (1 epizoda) nesl 14 známek zkopírovaných ze seriálu
+    „The Melancholy of Haruhi Suzumiya, S02". Web z toho počítal průměr epizod
+    a analytickou tenzi z cizích dat.
+
+    Schválně se nekontroluje jen počet epizod proti seznamu. U právě
+    vysílaných sérií je běžné, že mám ohodnoceno víc dílů, než kolik seznam
+    eviduje, a to není chyba. Zahazuje se výhradně shodná posloupnost.
+    """
+    pocty_epizod = {}
+    try:
+        ws = wb["ANIME LIST"]
+        for row in range(2, ws.max_row + 1):
+            nazev = ws.cell(row, 3).value        # sloupec C, název
+            pocet = ws.cell(row, 9).value        # sloupec I, počet epizod
+            if nazev and isinstance(pocet, (int, float)):
+                pocty_epizod[str(nazev).strip()] = int(pocet)
+    except Exception as e:
+        print(f"  [kontrola epizod] hlavni seznam nelze precist, kontrola se preskakuje: {e}")
+        return data
+
+    podle_otisku = {}
+    for zaznam in data:
+        otisk = tuple(e["rating"] for e in zaznam["episodes"])
+        if len(otisk) < 3:
+            continue
+        podle_otisku.setdefault(otisk, []).append(zaznam)
+
+    k_zahozeni = set()
+    for skupina in podle_otisku.values():
+        if len(skupina) < 2:
+            continue
+        for zaznam in skupina:
+            ocekavano = pocty_epizod.get(zaznam["name"])
+            if ocekavano is not None and len(zaznam["episodes"]) != ocekavano:
+                k_zahozeni.add(zaznam["name"])
+                print(f"  [kontrola epizod] VAROVANI: '{zaznam['name']}' ma "
+                      f"{len(zaznam['episodes'])} znamek, ale v seznamu ma "
+                      f"{ocekavano} epizod, a posloupnost je shodna s jinym "
+                      f"titulem. Blok se do exportu nedostane. Oprav to "
+                      f"v Excelu, tohle je jen zachytna sit.")
+
+    if k_zahozeni:
+        data = [z for z in data if z["name"] not in k_zahozeni]
+
     return data
 
 def export_notes(wb):
@@ -1228,19 +1287,83 @@ def main():
         except Exception as e:
             print(f"Failed to run download_animethemes_cache.py: {e}")
 
-        # 7. Push to GitHub
+        # 7. Refresh IMDb cache
+        # Skript stahuje z IMDb datové sady o desítkách MB, takže nemá smysl ho
+        # pouštět při každém exportu. Týdenní odstup stačí: epizodní známky se
+        # mění pomalu a u právě vysílaných sérií se dopočítají příště.
+        print("Kontroluji stari IMDb cache...")
+        try:
+            imdb_cache_file = os.path.join(output_dir, "imdb_cache.json")
+            stari_dnu = None
+            if os.path.exists(imdb_cache_file):
+                stari_dnu = (time.time() - os.path.getmtime(imdb_cache_file)) / 86400
+
+            if stari_dnu is not None and stari_dnu < 7:
+                print(f"  IMDb cache je stara {stari_dnu:.1f} dne, refresh se preskakuje "
+                      f"(obnovuje se jednou za 7 dni).")
+            else:
+                duvod = "cache neexistuje" if stari_dnu is None else f"cache je stara {stari_dnu:.1f} dne"
+                print(f"  Spoustim download_imdb_cache.py ({duvod})...")
+                imdb_script = os.path.join(script_root, "download_imdb_cache.py")
+                subprocess.run([sys.executable, imdb_script], check=True, cwd=script_root)
+                print("  IMDb cache aktualizovana.")
+        except Exception as e:
+            # Selhani refreshe nesmi shodit export, web pojede na starsi cachi.
+            print(f"  Varovani: aktualizace IMDb cache selhala: {e}")
+
+        # 8a. Zmenseniny obrazku (obaly OST + postery Top Favorites)
+        # Velky obrazek v malem poli vypada kostickovane, protoze ho prohlizec
+        # zmensuje rychlou metodou. Oba skripty proto zmenseninu predgeneruji
+        # filtrem LANCZOS. Prepocitava se jen to, co ma novejsi original nez
+        # zmenseninu, takze bezny beh neudela nic a trva sekundy.
+        for thumbs_script, popis in (
+            ("build_cover_thumbs.py", "OST cover thumbnails"),
+            ("build_top_favorites_thumbs.py", "Top Favorites thumbnails"),
+        ):
+            print(f"Running {thumbs_script} to update {popis}...")
+            try:
+                subprocess.run([sys.executable, os.path.join(script_root, thumbs_script)],
+                               check=True, cwd=script_root)
+                print(f"{popis} updated successfully!")
+            except Exception as e:
+                print(f"Failed to run {thumbs_script}: {e}")
+
+        # 8. Predstazeni posteru pro Cestu Anime
+        # Inkrementalni: stahuje jen nova anime a postery, kterym se na MAL
+        # zmenila adresa. Bezny beh tedy neudela nic a trva sekundy.
+        print("Running download_journey_posters.py to update anime posters...")
+        try:
+            posters_script = os.path.join(script_root, "download_journey_posters.py")
+            subprocess.run([sys.executable, posters_script], check=True, cwd=script_root)
+            print("Anime posters updated successfully!")
+        except Exception as e:
+            print(f"Failed to run download_journey_posters.py: {e}")
+
+        # 9. Push to GitHub
+        # `-c gc.auto=0` je tu schvalne. Repozitar lezi ve slozce OneDrive,
+        # ktera na souborech drzi zamky, takze automaticky uklid gitu neuspeje
+        # smazat uz zabalene volne objekty a zeptá se
+        # „Deletion of directory '.git/objects/xx' failed. Should I try again? (y/n)".
+        # Export bezi bez konzole, na kterou by slo odpovedet, takze cely
+        # skript na tom uvizne. Uklid tedy pri automatickem behu vypiname,
+        # rucni `git gc` funguje dal beze zmeny.
+        GIT = ["git", "-c", "gc.auto=0"]
         print("Pushing data to GitHub...")
         try:
             web_dir = os.path.abspath(os.path.join(output_dir, "..", ".."))
-            subprocess.run(["git", "add", "public/data/*", "public/images/*"], cwd=web_dir, check=True)
-            subprocess.run(["git", "commit", "-m", "Auto-update dat z Excelu (Background)"], cwd=web_dir, check=True)
-            subprocess.run(["git", "push", "origin", "main"], cwd=web_dir, check=True)
+            subprocess.run(GIT + ["add", "public/data/*", "public/images/*"], cwd=web_dir, check=True)
+            subprocess.run(GIT + ["commit", "-m", "Auto-update dat z Excelu (Background)"], cwd=web_dir, check=True)
+            subprocess.run(GIT + ["push", "origin", "main"], cwd=web_dir, check=True)
             print("Git push completed successfully!")
         except Exception as e:
             try:
-                subprocess.run(["git", "add", "-A"], cwd=web_dir, check=True)
-                subprocess.run(["git", "commit", "-m", "Auto-update dat z Excelu (Background Fallback)"], cwd=web_dir, check=True)
-                subprocess.run(["git", "push", "origin", "main"], cwd=web_dir, check=True)
+                # POZOR: `add -A` vezme i rozpracovane zmeny ve zdrojacich, ne
+                # jen data, a hned je pushne, coz je nasazeni. Je to zachranna
+                # vetev pro pripad, kdy prvni pokus selze; kdyz se spusti behem
+                # rozdelane prace, dostane se na web i to, co jeste nemelo jit.
+                subprocess.run(GIT + ["add", "-A"], cwd=web_dir, check=True)
+                subprocess.run(GIT + ["commit", "-m", "Auto-update dat z Excelu (Background Fallback)"], cwd=web_dir, check=True)
+                subprocess.run(GIT + ["push", "origin", "main"], cwd=web_dir, check=True)
                 print("Git fallback push completed successfully!")
             except Exception as ge:
                 print(f"Failed to push to GitHub: {ge}")

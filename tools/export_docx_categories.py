@@ -1,7 +1,11 @@
+import argparse
+import hashlib
 import os
 import re
 import json
+import sys
 import unicodedata
+import zipfile
 from docx import Document
 from docx.text.paragraph import Paragraph
 from docx.table import Table
@@ -12,6 +16,13 @@ SRC_DIR = r"C:\AL\Anime hodnocení a rozbory\Faktické rozbory (Gemini AI)\Vytvo
 # Target output — skript žije v anime-list-web/tools/ → app root je o úroveň výš
 APP_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT_FILE = os.path.join(APP_ROOT, "public", "data", "category_texts.json")
+# Cache pro inkrementální běh (leží vedle ostatních cache souborů v tools/)
+CACHE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "docx_export_cache.json")
+
+# Verze parseru. Když se změní pravidla parsování, musí se všechno přeparsovat
+# znovu, jinak by v JSONu zůstaly staré výsledky ze zacachovaných souborů.
+# Zvyšuj při každé změně logiky parseru.
+PARSER_VERSION = 3
 
 HEADING_MAP = {
     # Animace
@@ -160,21 +171,44 @@ def clean_file_name(name: str) -> str:
     s = re.sub(r'\s+', ' ', s)
     return s.strip()
 
+# Uvozovací slova, kterými rozbory často začínají nadpis kategorie
+# („2. Analýza animace (2D)", „5. Technická analýza animace: 2D a Background Art").
+# Bez odstranění se nadpis nenapáruje a kategorie tiše propadne.
+_UVOD_ANALYZY = re.compile(
+    r'^(?:'
+    r'(?:komplexn[ií]|technick[aá]|detailn[ií]|podrobn[aá]|hloubkov[aá]|'
+    r'z[aá]kladn[ií]|celkov[aá]|struktur[aá]ln[ií]|krit[ií]ck[aá])?\s*'
+    r'(?:anal[yý]z\w*|rozbor\w*|dekonstrukc\w*|zhodnocen[ií]|hodnocen[ií])'
+    r')\s+')
+
+
 def map_heading_to_category(text: str) -> str:
     clean = text.lower().strip()
     clean = re.sub(r'^[\d\.\s\-:]+', '', clean).strip()
     clean = re.sub(r'^[-\*•\s]+', '', clean).strip()
     clean = clean.rstrip('.:')
-    
+
     first_part = clean.split(':')[0].strip()
     first_part_no_paren = re.sub(r'\(.*?\)', '', first_part).strip()
-    
+
     sub_parts = re.split(r'[:/()\-]| a | and ', clean)
     sub_parts = [sp.strip() for sp in sub_parts if sp.strip()]
-    
+
     for sp in sub_parts:
         if sp in HEADING_MAP:
             return HEADING_MAP[sp]
+
+    # Druhý pokus: odloupnout uvozovací „analýza / rozbor / dekonstrukce".
+    # Schválně jen u číslovaných sekcí („2. Analýza animace (2D)"), protože tak
+    # jsou hlavní kapitoly rozborů psané. Uvnitř textu se totiž běžně objevují
+    # nečíslované tučné podnadpisy typu „Analýza Adaptace:", a ty by se po
+    # odloupnutí namapovaly na kategorii (adaptace → Originalita), utnuly by
+    # rozepsanou kategorii a jejich text by se cestou ztratil.
+    if re.match(r'^\s*\d+[.)]\s', text):
+        for sp in sub_parts:
+            holy = _UVOD_ANALYZY.sub('', sp).strip()
+            if holy and holy != sp and holy in HEADING_MAP:
+                return HEADING_MAP[holy]
     return None
 
 def is_likely_animation(text: str) -> bool:
@@ -334,7 +368,31 @@ def _is_academic_stop(text):
     return _top_secnum(text) is not None and bool(_ACADEMIC_STOP.search(_norm_heading(text)))
 
 
-def parse_docx_categories(docx_path: str) -> dict[str, any]:
+# Nadpis epizody. Kromě prostého „EP 3" musí zvládnout i víceúrovňové číslování
+# („2.1 Epizoda 1: The Abduction…"), slovo před klíčem („1. Děj Epizody 1: …",
+# „1. Analýza Epizody 1: …") a název díla před pořadím
+# („1.1 Angel Beats! Special 1: …"). Do části před klíčem se schválně nepouští
+# dvojtečka ani číslice, aby se nadpis typu „Shrnutí děje: Epizoda 1" nezachytil
+# jako epizoda, když je to ve skutečnosti souhrn.
+# Skupiny: 1 = číslování sekce, 2 = slova před klíčem, 3 = číslo epizody.
+_EP_HEADING_RE = re.compile(
+    r'^\s*(?:(\d+(?:\.\d+)*)\.?\s+)?'
+    r'([^:\d\n]{1,40}?\s)?'
+    r'\b(?:EP|Epizod[aěy]|D[ií]l|Speci[aá]l|Special)\s*'
+    r'(?:č\.\s*)?(\d+)',
+    re.IGNORECASE)
+
+
+def parse_docx_categories(docx_path: str, start_on_any_category: bool = False) -> dict[str, any]:
+    """Rozparsuje jeden DOCX rozbor.
+
+    `start_on_any_category`: sekce kategorií normálně začíná až nadpisem
+    „Animace". Některé rozbory ale mají první kategorii pojmenovanou jinak
+    (např. „2. Analýza animace (2D)" u Tower of God) a pak propadl celý
+    dokument, i kategorie, které by se namapovaly. S tímhle přepínačem stačí
+    jako začátek libovolná namapovaná kategorie. Používá se až ve druhém
+    průchodu, když první nenajde nic (viz `parse_docx`).
+    """
     doc = Document(docx_path)
     categories = {}
     episodes = {}
@@ -367,10 +425,22 @@ def parse_docx_categories(docx_path: str) -> dict[str, any]:
                 para_is_bold = all(r.bold for r in block.runs if r.text.strip()) if block.runs else False
                 if list_type is None and not is_cat_heading:
                     if para_is_bold:
-                        ep_match = re.search(r'^\s*(?:\d+\.\s+)?\b(EP|Epizoda)\s*(\d+)', text, re.IGNORECASE)
-                        if ep_match:
-                            is_ep_heading = True
-                            matched_ep_num = ep_match.group(2)
+                        ep_match = _EP_HEADING_RE.search(text)
+                        # Nadpis souhrnu děje není epizoda, i když v něm číslo
+                        # epizody padne („1. Shrnutí Děje (Chronologicky EP 13–EP 24)").
+                        if ep_match and not _matches_story_heading(text):
+                            cislovani, predpona = ep_match.group(1), ep_match.group(2)
+                            # Uvnitř rozepsaného děje bývají podnadpisy typu
+                            # „1.1 Epizoda 1: …" nebo „Narativní obsah Epizody 18.5".
+                            # To je pořád děj, ne epizodní rozbor. Na epizodu se
+                            # tam proto láme jen nadpis, který začíná rovnou
+                            # klíčem („EP 13: …"), jinak by filmy a speciály
+                            # přišly o tlačítko „Děj".
+                            v_deji = current_story_title is not None
+                            je_podnadpis = bool(predpona) or bool(cislovani and '.' in cislovani)
+                            if not (v_deji and je_podnadpis):
+                                is_ep_heading = True
+                                matched_ep_num = ep_match.group(3)
 
                 # Detekce začátku sekce „Shrnutí Děje" (jen před kategoriemi,
                 # jen když ještě neběží epizody ani story)
@@ -381,7 +451,10 @@ def parse_docx_categories(docx_path: str) -> dict[str, any]:
                     is_story_heading = True
                 story_active = (not has_started) and (current_story_title is not None)
 
-                if is_cat_heading and cat == "Animace":
+                je_start_kategorii = is_cat_heading and (
+                    cat == "Animace" or (start_on_any_category and not has_started))
+
+                if je_start_kategorii:
                     if current_ep_num and current_paragraphs:
                         episodes[current_ep_num] = {
                             "title": current_ep_title,
@@ -527,9 +600,147 @@ def parse_docx_categories(docx_path: str) -> dict[str, any]:
         
     return categories
 
+
+def parse_docx(docx_path: str) -> dict[str, any]:
+    """Rozparsuje rozbor, v případě potřeby na dva průchody.
+
+    První průchod jede podle původního pravidla: kategorie začínají nadpisem
+    „Animace". Když z toho nevypadne ani jedna kategorie, jde se na druhý
+    průchod, kde stačí libovolný namapovaný nadpis. Rozdělení na dva průchody
+    je schválně: dokumenty, které se dnes parsují správně, se tím nemůžou
+    rozbít, protože pro ně druhý průchod vůbec nenastane.
+    """
+    vysledek = parse_docx_categories(docx_path)
+    if [k for k in vysledek if k not in ("episodes", "story")]:
+        return vysledek
+
+    druhy = parse_docx_categories(docx_path, start_on_any_category=True)
+    if [k for k in druhy if k not in ("episodes", "story")]:
+        # Epizody a děj z prvního průchodu se nesmí ztratit
+        for klic in ("episodes", "story"):
+            if klic in vysledek and klic not in druhy:
+                druhy[klic] = vysledek[klic]
+        return druhy
+
+    return vysledek
+
+
+# ── Inkrementální běh ───────────────────────────────────────────────────────
+
+def _file_hash(path: str) -> str:
+    h = hashlib.sha256()
+    with open(path, 'rb') as f:
+        while True:
+            chunk = f.read(8192)
+            if not chunk:
+                break
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def docx_content_hash(path: str) -> str:
+    """Otisk obsahu rozboru, očištěný o technický šum Wordu.
+
+    Word při každém uložení přepíše náhodné identifikátory (RSID, paraId,
+    textId), takže hash celého souboru by hlásil změnu i u dokumentu, kterého
+    se nikdo nedotkl. Počítá se proto z `document.xml` (text) a `numbering.xml`
+    (formát seznamů, který parser taky čte). Stejný postup používá i
+    NotebookLM updater.
+    """
+    try:
+        if not zipfile.is_zipfile(path):
+            return _file_hash(path)
+        h = hashlib.sha256()
+        with zipfile.ZipFile(path, 'r') as z:
+            jmena = z.namelist()
+            for name in ("word/document.xml", "word/numbering.xml"):
+                if name not in jmena:
+                    continue
+                obsah = z.read(name)
+                obsah = re.sub(
+                    rb'(w:rsid[a-zA-Z0-9]*|w14:paraId|w14:textId)="[a-fA-F0-9]{8}"',
+                    b'', obsah)
+                obsah = re.sub(rb'\s+', b' ', obsah)
+                h.update(obsah)
+        return h.hexdigest()
+    except Exception:
+        return _file_hash(path)
+
+
+def _nacti_json(cesta: str, vychozi):
+    try:
+        with open(cesta, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception:
+        return vychozi
+
+
+def _force_utf8_stdio():
+    # Skript spouští export_data.py přes subprocess a české výpisy by na
+    # konzoli s windows-1250 shodily celý export na UnicodeEncodeError.
+    for proud in (sys.stdout, sys.stderr):
+        try:
+            proud.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
+
+
+def vypis_kontrolu(result: dict, list_items: list):
+    """Vypíše tituly, jejichž rozbor vypadá neúplně.
+
+    HEADING_MAP je tichý propad: nadpis mimo mapu znamená, že se kategorie do
+    JSONu vůbec nedostane a nikde to nezasvítí. Tenhle report je proti tomu
+    pojistka, ať se na to nepřijde až na webu.
+    """
+    ocekavane_epizody = {}
+    for it in list_items:
+        try:
+            ocekavane_epizody[it['name']] = int(it.get('episodes'))
+        except (TypeError, ValueError):
+            continue
+
+    bez_kategorii = []
+    malo_epizod = []
+    for name, v in result.items():
+        if not isinstance(v, dict):
+            continue
+        kategorie = [k for k in v if k not in ("episodes", "story")]
+        epizod = len(v.get("episodes", {}) or {})
+        ocekavano = ocekavane_epizody.get(name)
+        if not kategorie:
+            bez_kategorii.append(name)
+        if (ocekavano and ocekavano > 1 and "story" not in v
+                and epizod < ocekavano * 0.5):
+            malo_epizod.append(f"{name} ({epizod} z {ocekavano})")
+
+    print()
+    print("--- Kontrola úplnosti rozborů ---")
+    if bez_kategorii:
+        print(f"Bez jediné kategorie ({len(bez_kategorii)}):")
+        for n in sorted(bez_kategorii):
+            print(f"   {n}")
+    if malo_epizod:
+        print(f"Míň epizod, než má titul v seznamu ({len(malo_epizod)}):")
+        for n in sorted(malo_epizod):
+            print(f"   {n}")
+    if not bez_kategorii and not malo_epizod:
+        print("Všechny rozbory vypadají úplné.")
+    print("Nadpis mimo HEADING_MAP propadne tiše, proto tenhle výpis existuje.")
+
+
 def main():
+    _force_utf8_stdio()
+
+    parser = argparse.ArgumentParser(
+        description="Export DOCX rozborů do public/data/category_texts.json")
+    parser.add_argument("--full", action="store_true",
+                        help="přeparsovat všechny rozbory a ignorovat cache")
+    parser.add_argument("--out", default=OUT_FILE,
+                        help="cesta k výstupnímu JSONu (pro zkušební běhy)")
+    args = parser.parse_args()
+
     print("Spouštím export DOCX rozborů...")
-    
+
     # Načteme názvy anime ze DVOU zdrojů a sjednotíme je:
     #   1) category_ratings.json — anime s kategoriálním hodnocením (~296)
     #   2) anime_list.json — KOMPLETNÍ seznam všech titulů (~488), vč. jednotlivých
@@ -546,6 +757,7 @@ def main():
 
     all_anime_names = []
     seen_names = set()
+    list_items = []
 
     def add_names(names):
         for n in names:
@@ -568,9 +780,6 @@ def main():
     print(f"Načteno {len(all_anime_names)} anime "
           f"({rating_count} z hodnocení + {len(all_anime_names) - rating_count} navíc z anime_list).")
     
-    result = {}
-    parsed_count = 0
-    
     # Check directory
     if not os.path.exists(SRC_DIR):
         print(f"Chyba: Složka s rozbory {SRC_DIR} neexistuje!")
@@ -578,29 +787,84 @@ def main():
 
     # Cache file list
     files = os.listdir(SRC_DIR)
-    docx_files = {clean_file_name(f[:-5]).lower(): f for f in files if f.endswith(".docx")}
+    docx_files = {clean_file_name(f[:-5]).lower(): f
+                  for f in files if f.endswith(".docx") and not f.startswith("~$")}
     print(f"Nalezeno {len(docx_files)} DOCX souborů ve zdrojové složce.")
-    
+
+    # Cache otisků. Když se změní verze parseru, staré výsledky by neodpovídaly
+    # nové logice, takže se cache zahodí a parsuje se všechno znovu.
+    cache = _nacti_json(CACHE_FILE, {})
+    if cache.get("parser_version") != PARSER_VERSION:
+        if cache:
+            print(f"Parser má novou verzi ({PARSER_VERSION}), cache se zahazuje "
+                  f"a rozbory se parsují znovu.")
+        cache = {"parser_version": PARSER_VERSION, "soubory": {}}
+    zaznamy = cache.setdefault("soubory", {})
+
+    # Předchozí výstup je základ pro merge: nezměněné rozbory se z něj přeberou,
+    # aby se nemusely znovu parsovat.
+    stary_vystup = {} if args.full else _nacti_json(args.out, {})
+
+    result = {}
+    prevzato = 0
+    prohnano = 0
+
     for name in all_anime_names:
         clean = clean_file_name(name).lower()
-        if clean in docx_files:
-            file_name = docx_files[clean]
-            file_path = os.path.join(SRC_DIR, file_name)
-            try:
-                # Read-Only access
-                categories = parse_docx_categories(file_path)
-                if categories:
-                    result[name] = categories
-                    parsed_count += 1
-            except Exception as e:
-                print(f"Chyba při parsování {file_name}: {e}")
-                
+        if clean not in docx_files:
+            continue
+
+        file_name = docx_files[clean]
+        file_path = os.path.join(SRC_DIR, file_name)
+
+        try:
+            otisk = docx_content_hash(file_path)
+        except Exception as e:
+            print(f"Varování: otisk {file_name} nelze spočítat ({e}), parsuje se natvrdo.")
+            otisk = None
+
+        zaznam = zaznamy.get(name)
+        if (not args.full and otisk and zaznam
+                and zaznam.get("hash") == otisk and name in stary_vystup):
+            result[name] = stary_vystup[name]
+            prevzato += 1
+            continue
+
+        try:
+            # Read-Only access
+            categories = parse_docx(file_path)
+            if categories:
+                result[name] = categories
+                prohnano += 1
+                zaznamy[name] = {"soubor": file_name, "hash": otisk}
+            else:
+                zaznamy.pop(name, None)
+        except Exception as e:
+            print(f"Chyba při parsování {file_name}: {e}")
+
+    # Rozbory, ke kterým už DOCX neexistuje, z cache i z výstupu vypadnou
+    for jmeno in [k for k in zaznamy if k not in result]:
+        del zaznamy[jmeno]
+
+    zmizelo = [k for k in stary_vystup if k not in result]
+    if zmizelo:
+        print(f"Pozor: {len(zmizelo)} rozborů oproti minulému běhu zmizelo: "
+              f"{', '.join(sorted(zmizelo)[:10])}"
+              f"{' …' if len(zmizelo) > 10 else ''}")
+
     # Save results
-    os.makedirs(os.path.dirname(OUT_FILE), exist_ok=True)
-    with open(OUT_FILE, 'w', encoding='utf-8') as f:
+    os.makedirs(os.path.dirname(args.out), exist_ok=True)
+    with open(args.out, 'w', encoding='utf-8') as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
-        
-    print(f"Hotovo! Úspěšně napárováno a vyexportováno {parsed_count} rozborů do {OUT_FILE}.")
+
+    if args.out == OUT_FILE:
+        with open(CACHE_FILE, 'w', encoding='utf-8') as f:
+            json.dump(cache, f, ensure_ascii=False, indent=1)
+
+    print(f"Hotovo! Vyexportováno {len(result)} rozborů do {args.out} "
+          f"({prohnano} nově naparsováno, {prevzato} beze změny převzato z minula).")
+
+    vypis_kontrolu(result, list_items)
 
 if __name__ == "__main__":
     main()

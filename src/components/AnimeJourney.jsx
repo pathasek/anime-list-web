@@ -15,6 +15,32 @@ import './animeJourney.css'
 // Cache pro postery v paměti (zkrátí re-rendery)
 const posterMemoryCache = {}
 
+// Postery předstažené do repozitáře skriptem tools/download_journey_posters.py.
+// Dřív se tahaly za běhu z Jikanu, což na cizím počítači s prázdnou cache
+// znamenalo stovky dotazů přes rate limit. Index říká, pro která malId soubor
+// existuje, ať prohlížeč nestřílí 404 na to, co stažené není.
+let posteryIndexPromise = null
+let posteryIndex = null
+
+function nactiPosteryIndex() {
+    if (!posteryIndexPromise) {
+        posteryIndexPromise = fetch('data/posters_index.json')
+            .then(res => (res.ok ? res.json() : []))
+            .catch(() => [])
+            .then(seznam => {
+                posteryIndex = new Set((seznam || []).map(String))
+                return posteryIndex
+            })
+    }
+    return posteryIndexPromise
+}
+
+function lokalniPoster(malId) {
+    return posteryIndex && posteryIndex.has(String(malId))
+        ? `images/posters/${malId}.jpg`
+        : null
+}
+
 const pluralDilo = (n) => (n === 1 ? '1 dílo' : n >= 2 && n <= 4 ? `${n} díla` : `${n} děl`)
 
 async function fetchAniListCover(malId) {
@@ -40,6 +66,15 @@ async function resolvePoster(malId, fallbackThumbnail) {
     if (!malId) return fallbackThumbnail || null
     if (posterMemoryCache[malId]) return posterMemoryCache[malId]
 
+    // 1. Předstažený poster z repozitáře. Je okamžitý a funguje i na cizím
+    // počítači, kde prohlížeč nemá nic v paměti a Jikan by nestíhal.
+    await nactiPosteryIndex()
+    const lokalni = lokalniPoster(malId)
+    if (lokalni) {
+        posterMemoryCache[malId] = lokalni
+        return lokalni
+    }
+
     try {
         const cached = localStorage.getItem('journey_poster_' + malId)
         if (cached) {
@@ -48,7 +83,7 @@ async function resolvePoster(malId, fallbackThumbnail) {
         }
     } catch { /* quota / SSR */ }
 
-    // 1. Priorita: Jikan (čte okamžitě ze statického anime_metadata.json / API)
+    // 2. Jikan (čte okamžitě ze statického anime_metadata.json / API)
     try {
         const info = await getAnimeInfo(malId)
         const jikanImg = info?.imageUrl || info?.largeImageUrl
@@ -59,7 +94,7 @@ async function resolvePoster(malId, fallbackThumbnail) {
         }
     } catch { /* proceed to AniList */ }
 
-    // 2. Záloha: AniList GraphQL
+    // 3. Záloha: AniList GraphQL
     const anilistImg = await fetchAniListCover(malId)
     if (anilistImg) {
         posterMemoryCache[malId] = anilistImg
@@ -67,12 +102,13 @@ async function resolvePoster(malId, fallbackThumbnail) {
         return anilistImg
     }
 
-    // 3. Poslední záloha: Vlastní screenshot
+    // 4. Poslední záloha: vlastní náhledovka. Do localStorage se ZÁMĚRNĚ
+    // neukládá. Dřív se ukládala, takže když Jikan i AniList jednou selhaly
+    // (na cizím počítači běžné), zapsala se náhledovka natrvalo a poster se
+    // už nikdy nedotáhl, ani když API zase začalo odpovídat. V paměti stránky
+    // zůstat může, aby se dotaz neopakoval při každém překreslení.
     const fallback = fallbackThumbnail || null
-    if (fallback) {
-        posterMemoryCache[malId] = fallback
-        try { localStorage.setItem('journey_poster_' + malId, fallback) } catch { /* noop */ }
-    }
+    if (fallback) posterMemoryCache[malId] = fallback
     return fallback
 }
 
@@ -81,6 +117,13 @@ function StripPoster({ anime }) {
     const [src, setSrc] = useState(() => {
         if (malId && posterMemoryCache[malId]) return posterMemoryCache[malId]
         if (malId) {
+            // Když je index posterů už načtený, vezmi lokální soubor rovnou,
+            // ať se pás nekreslí nejdřív náhledovkami a pak nepřeblikne.
+            const lokalni = lokalniPoster(malId)
+            if (lokalni) {
+                posterMemoryCache[malId] = lokalni
+                return lokalni
+            }
             try {
                 const cached = localStorage.getItem('journey_poster_' + malId)
                 if (cached) {

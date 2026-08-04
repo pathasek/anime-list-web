@@ -9,8 +9,13 @@
          (kamarádům) funguje dál beze změny; tohle jen brání indexaci. -->
     <meta name="robots" content="noindex, nofollow, noarchive, noimageindex" />
     <meta name="googlebot" content="noindex, nofollow, noarchive, noimageindex" />
-    <!-- Neposílat adresu stránky jako Referer na Jikan/AniList/AnimeThemes -->
-    <meta name="referrer" content="no-referrer" />
+    <!-- Posílat jen holou doménu, ne konkrétní adresu stránky. Úplné
+         `no-referrer` tady bylo dřív, jenže YouTube od té doby u licencovaných
+         skladeb (třeba „Gats" z kanálu Susumu Hirasawa - Topic) vyžaduje vědět,
+         která stránka přehrávač vkládá, a bez toho vrátí chybu 153
+         („Chyba konfigurace přehrávače videí") místo hudby.
+         Indexaci to neovlivňuje, tu drží meta robots výše a robots.txt. -->
+    <meta name="referrer" content="strict-origin" />
 
     <title>Anime List</title>
   </head>

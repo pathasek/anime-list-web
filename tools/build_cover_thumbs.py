@@ -96,10 +96,13 @@ def main():
         src_size = os.path.getsize(src_path)
         src_total += src_size
 
-        if os.path.exists(out_path) and not args.force:
+        # Přeskočit jen tehdy, když je zmenšenina novější než originál. Dřív
+        # stačilo, že vůbec existuje, takže vyměněný obal si nechal starou
+        # zmenšeninu a na webu se změna neprojevila.
+        if (os.path.exists(out_path) and not args.force
+                and os.path.getmtime(out_path) >= os.path.getmtime(src_path)):
             out_total += os.path.getsize(out_path)
             skipped += 1
-            print("  [ok] %-46s už existuje" % name[:46])
             continue
 
         try:

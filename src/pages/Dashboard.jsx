@@ -3596,7 +3596,7 @@ function Dashboard() {
                 return (
                     <div className="card" style={{ marginBottom: 'var(--spacing-lg)' }}>
                         <h3 style={{ marginBottom: 'var(--spacing-md)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            📊 Sledovaná Anime (Data projekt)
+                            📊 Sledování Anime (Dashboard)
                             {stats.isFiltered && (
                                 <span className="tt-badge" title="Aktivní časový filtr: hodnoty ukazují stav ke konci zvoleného období, jako by dnešek byl tehdy">
                                     ⏳ stav k období

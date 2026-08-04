@@ -42,8 +42,19 @@ def download_mapping():
             season = item.get("season", {})
             # Look up TMDB or TVDB season number, default to season 1
             season_num = season.get("tmdb") or season.get("tvdb") or 1
+
+            # Zdroj dřív vracel `imdb_id` jako holý řetězec, dneska vrací vždy
+            # seznam (a u 46 titulů je v něm víc než jedno ID). Skript na tom
+            # padal na „unhashable type: list", protože se ID cpalo do množiny.
+            # Zvládáme obě podoby a bereme všechna ID, ne jen první, ať se
+            # u vícedílných záznamů neztratí epizody.
+            raw = item["imdb_id"]
+            imdb_ids = [i for i in (raw if isinstance(raw, list) else [raw]) if i]
+            if not imdb_ids:
+                continue
+
             mapping[int(item["mal_id"])] = {
-                "imdb_id": item["imdb_id"],
+                "imdb_ids": imdb_ids,
                 "season": season_num
             }
     return mapping
@@ -92,8 +103,8 @@ def main():
         
         mal_id_info = mapping.get(mal_id)
         if not mal_id_info: continue
-        imdb_id = mal_id_info["imdb_id"]
-        
+        imdb_ids = mal_id_info["imdb_ids"]
+
         # Check if already cached and if it's fresh
         is_cached = mal_id_str in cache
         should_update = not is_cached
@@ -120,7 +131,7 @@ def main():
                     print(f"  -> {a['name']} vyžaduje týdenní aktualizaci (Nedávné/Airing)")
         
         if should_update:
-            imdb_ids_to_update.add(imdb_id)
+            imdb_ids_to_update.update(imdb_ids)
             
     if not imdb_ids_to_update:
         print("Všechna data v cache jsou aktuální. Není potřeba nic stahovat.")
@@ -139,17 +150,17 @@ def main():
         
         mal_id_info = mapping.get(mal_id)
         if not mal_id_info: continue
-        imdb_id = mal_id_info["imdb_id"]
         season_num = mal_id_info["season"]
-        
-        if imdb_id in imdb_ids_to_update:
-            if imdb_id not in target_series:
-                target_series[imdb_id] = []
-            target_series[imdb_id].append({
-                "mal_id_str": mal_id_str,
-                "name": a["name"],
-                "season": season_num
-            })
+
+        for imdb_id in mal_id_info["imdb_ids"]:
+            if imdb_id in imdb_ids_to_update:
+                if imdb_id not in target_series:
+                    target_series[imdb_id] = []
+                target_series[imdb_id].append({
+                    "mal_id_str": mal_id_str,
+                    "name": a["name"],
+                    "season": season_num
+                })
             
     print(f"Bude aktualizováno {len(imdb_ids_to_update)} IMDb ID (pokrývající {sum(len(v) for v in target_series.values())} sérií/sezón v naší databázi).")
     

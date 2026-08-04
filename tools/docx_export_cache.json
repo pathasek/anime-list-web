@@ -1,0 +1,1901 @@
+{
+ "parser_version": 3,
+ "soubory": {
+  "Jujutsu Kaisen 0": {
+   "soubor": "Jujutsu Kaisen 0.docx",
+   "hash": "25ee90d8bc5201cebac8698bdcc5e9c9c8387e9068ff27b5e9eb006f047f2719"
+  },
+  "Jujutsu Kaisen, S01": {
+   "soubor": "Jujutsu Kaisen, S01.docx",
+   "hash": "68cef7824585d15c200cc8703684c4d63685d42c83bb7449373ffbd55881bd48"
+  },
+  "Jujutsu Kaisen, S02": {
+   "soubor": "Jujutsu Kaisen, S02.docx",
+   "hash": "1f3d1311ee57176854205da4394d26b7df387f60a1c2e59bec9986b15ba81340"
+  },
+  "Classroom of the Elite, S01": {
+   "soubor": "Classroom of the Elite, S01.docx",
+   "hash": "5f1d32cecdf3806a66e28b222e57867d0cc4321629813b7aa44307cfe3ce89d1"
+  },
+  "Classroom of the Elite, S02": {
+   "soubor": "Classroom of the Elite, S02.docx",
+   "hash": "58515882cded06fb54a82fbbbeb5004da12eb05a01f8e4a985c8d293632c7b85"
+  },
+  "My Dress-Up Darling, S01": {
+   "soubor": "My Dress-Up Darling, S01.docx",
+   "hash": "92c95c414d7fdc2a5f5fc95c8c94ce8d550a561a35319ce774b6b4032210285a"
+  },
+  "Re:Zero -Starting Life in Another World-, S01": {
+   "soubor": "Re_Zero -Starting Life in Another World-, S01.docx",
+   "hash": "1df51a40f5b094c528edb7960beb47a1f4ba2bf9f1d61fecc4d9547af5ca0512"
+  },
+  "Re:Zero -Starting Life in Another World- Memory Snow": {
+   "soubor": "Re_Zero -Starting Life in Another World- Memory Snow.docx",
+   "hash": "3e7916d447151681955b87f63e87a7a06ab8bd5209359112483cfcb7c78c3f54"
+  },
+  "Re:Zero -Starting Life in Another World- The Frozen Bond": {
+   "soubor": "Re_Zero -Starting Life in Another World- The Frozen Bond.docx",
+   "hash": "bbf94e56cde16e9bbb55a47e06d9f2fd70ce3319aa3b028e4cdda8df2ce5507a"
+  },
+  "Re:Zero -Starting Life in Another World-, S02 Part 1": {
+   "soubor": "Re_Zero -Starting Life in Another World-, S02 Part 1.docx",
+   "hash": "abf3de0650216da1d60810c038c9d212ffa1a816e926158bb63c3c81f6dad89d"
+  },
+  "Mushoku Tensei: Jobless Reincarnation - Eris the Goblin Slayer": {
+   "soubor": "Mushoku Tensei_ Jobless Reincarnation - Eris the Goblin Slayer.docx",
+   "hash": "8384bc80f42c4e27eb6ee0642346ee3a1d953609d1f4721f17085b16294c50d4"
+  },
+  "Mushoku Tensei: Jobless Reincarnation, S01 Part 1": {
+   "soubor": "Mushoku Tensei_ Jobless Reincarnation, S01 Part 1.docx",
+   "hash": "ac24600cd7db8fee5338d609e69bcdb0da34e3eed5d623f7d6912892a6593820"
+  },
+  "Mushoku Tensei: Jobless Reincarnation, S01 Part 2": {
+   "soubor": "Mushoku Tensei_ Jobless Reincarnation, S01 Part 2.docx",
+   "hash": "c20f015ac9996c9074e29453fef8299711b9ab77d94f053a48c037e995e8ce92"
+  },
+  "Mushoku Tensei: Jobless Reincarnation, S02 - Episode 0 \"Guardian Fitz\"": {
+   "soubor": "Mushoku Tensei_ Jobless Reincarnation, S02 - Episode 0 'Guardian Fitz'.docx",
+   "hash": "9df92bbf541c28538605391651c079e6aa7887714ef7b2f176ae2166e6d232ae"
+  },
+  "Mushoku Tensei: Jobless Reincarnation, S02 Part 1": {
+   "soubor": "Mushoku Tensei_ Jobless Reincarnation, S02 Part 1.docx",
+   "hash": "c2657cf31dde9434ccb2183ec2fd7d6612d34002c0835467fcf494d10b5e3f56"
+  },
+  "Spy x Family, S01 Part 1": {
+   "soubor": "Spy x Family, S01 Part 1.docx",
+   "hash": "2255a3303dcf5669582bdaf342bc578d94e3a95d19263ccbe6f1b132011035fd"
+  },
+  "That Time I Got Reincarnated as a Slime, S02 Part 1": {
+   "soubor": "That Time I Got Reincarnated as a Slime, S02 Part 1.docx",
+   "hash": "28c2ae3ac37e9a1890c40c0559559bee1e3ba5481ce23a8ac05d6badbafc49bc"
+  },
+  "That Time I Got Reincarnated as a Slime, S02 Part 2": {
+   "soubor": "That Time I Got Reincarnated as a Slime, S02 Part 2.docx",
+   "hash": "134262af2a857de69f8b176a064f303ce4350eef082443516b82667aedc455e0"
+  },
+  "Steins;Gate 0": {
+   "soubor": "Steins;Gate 0.docx",
+   "hash": "37a1c737a821c1a9a77bd2498c4393cdb2c49d4ca9647cbe3aeeb8453bb56429"
+  },
+  "Steins;Gate: Open the Missing Link - Divide By Zero": {
+   "soubor": "Steins;Gate_ Open the Missing Link - Divide By Zero.docx",
+   "hash": "783b7967007b1c2c85eaa6e235970e01dfd8f9ba324820739c7ac2529d0d7d99"
+  },
+  "Spy x Family, S01 Part 2": {
+   "soubor": "Spy x Family, S01 Part 2.docx",
+   "hash": "416fdaf3aa4e040abdccba4b5898eeae836d0e4287e7531be8729e8e4ed34f8e"
+  },
+  "Spy x Family, S02": {
+   "soubor": "Spy x Family, S02.docx",
+   "hash": "e6723f9cc2b3a8e9e35a06ae24767aa2091f602f891b6468f3d804e9c1c9f4d8"
+  },
+  "Spy x Family Code: White": {
+   "soubor": "Spy x Family Code_ White.docx",
+   "hash": "80b6e347fd8629c1ce6a4bc3b78990d93ba1fd930eab84db77dbd3ebf196f2de"
+  },
+  "Call of the Night, S01": {
+   "soubor": "Call of the Night, S01.docx",
+   "hash": "5ea8e6ad849feee4007237a50bca1741d56f95b96d9badb93b7527e2d2b57fa5"
+  },
+  "The Rising of the Shield Hero, S01": {
+   "soubor": "The Rising of the Shield Hero, S01.docx",
+   "hash": "c45615cb7979a5e4f0490657fc093f52f028d170ec4e6a98333025da5c382c3e"
+  },
+  "The Rising of the Shield Hero, S02": {
+   "soubor": "The Rising of the Shield Hero, S02.docx",
+   "hash": "fd4ebf55996c19d59fca5420f8d68ba9f814b9723ad93281ebc397ea157bfdb0"
+  },
+  "The Rising of the Shield Hero, S03": {
+   "soubor": "The Rising of the Shield Hero, S03.docx",
+   "hash": "2570f75172fb04bf189cea7d04cfcd7208646ea937d03bd91af6b279dce03d7a"
+  },
+  "Rascal Does Not Dream of Bunny Girl Senpai": {
+   "soubor": "Rascal Does Not Dream of Bunny Girl Senpai.docx",
+   "hash": "400c55d4d97bf6978b08936c529bffc4b4cb56aa6d6acaa299bfdc6052f8c66c"
+  },
+  "Rascal Does Not Dream of a Dreaming Girl": {
+   "soubor": "Rascal Does Not Dream of a Dreaming Girl.docx",
+   "hash": "6d2540fb99eb9396f7e1d2024ca8461994904b6fd574133291aacce37b20aaf9"
+  },
+  "Rascal Does Not Dream of a Knapsack Kid": {
+   "soubor": "Rascal Does Not Dream of a Knapsack Kid.docx",
+   "hash": "e29231d42b8e77c4c952c52b7a0eb19e43f908e5281fdd31313be8c1c4b6fa73"
+  },
+  "Rascal Does Not Dream of a Sister Venturing Out": {
+   "soubor": "Rascal Does Not Dream of a Sister Venturing Out.docx",
+   "hash": "ce497e8df2974a28e268f52cc7f1ac0e91212e8534e298c9731663f1cf68c16c"
+  },
+  "Black Butler, S01": {
+   "soubor": "Black Butler, S01.docx",
+   "hash": "cf544cee5a2108b0d7b344213ad5f6d6f79ad5d773fd3e6a8806b670ced9db0d"
+  },
+  "Black Butler, S01 Special": {
+   "soubor": "Black Butler, S01 Special.docx",
+   "hash": "87ab92ae400896e55c7adb4416cadc31f7fa25ecbfa2491a9a3134ed4dac6b08"
+  },
+  "Black Butler, S02 Specials": {
+   "soubor": "Black Butler, S02 Specials.docx",
+   "hash": "56e2540ae7703652e7872a6a37e565b25853a969cf7e8bac321e5b2f133fc176"
+  },
+  "Black Butler: Book of Circus": {
+   "soubor": "Black Butler_ Book of Circus.docx",
+   "hash": "1790b4ebdb67070c22d810e409cb2446c0afb1721ded0d666eb386e3819bb9a2"
+  },
+  "Black Butler: Book of Murder": {
+   "soubor": "Black Butler_ Book of Murder.docx",
+   "hash": "c03b24f701d6852cbf0e9e764e77f1499ffb9e840ec8a3a1ee18afac7fe671a0"
+  },
+  "Black Butler: Book of the Atlantic": {
+   "soubor": "Black Butler_ Book of the Atlantic.docx",
+   "hash": "e629b1aa52be7f83551032c97932e67386996c76ba40e7958965a7996c0e90f4"
+  },
+  "Black Butler: Public School Arc": {
+   "soubor": "Black Butler_ Public School Arc.docx",
+   "hash": "6a3ee95a7af08e0c95d022befd1d022103f47ec45095b741f307540485e9dbd0"
+  },
+  "Steins;Gate 0: Valentine's of Crystal Polymorphism -Bittersweet Intermedio-": {
+   "soubor": "Steins;Gate 0_ Valentine's of Crystal Polymorphism -Bittersweet Intermedio-.docx",
+   "hash": "f67748950b1fc314b594d2463cc9a567c14d766cbce92b52e26d38d93b359d5f"
+  },
+  "Steins;Gate: The Sagacious Wisdom of Cognitive Computing": {
+   "soubor": "Steins;Gate_ The Sagacious Wisdom of Cognitive Computing.docx",
+   "hash": "ae5e8a83ccb67caed1b119ae0f15ff7070bfde8a235a4e81e005d2f2859040f2"
+  },
+  "Steins;Gate: Egoistic Poriomania": {
+   "soubor": "Steins;Gate_ Egoistic Poriomania.docx",
+   "hash": "54390d4f0249e942b6f7e8f22f94c7ee7aa654895dfece485ec4b5c84a65f41d"
+  },
+  "Fullmetal Alchemist: The Sacred Star of Milos": {
+   "soubor": "Fullmetal Alchemist_ The Sacred Star of Milos.docx",
+   "hash": "e1bf73e6db002eb4e3e6179186ee835c03b818474a88e13411bf2d3d8bdf4baa"
+  },
+  "Fullmetal Alchemist: Brotherhood OVA Collection": {
+   "soubor": "Fullmetal Alchemist_ Brotherhood OVA Collection.docx",
+   "hash": "067d457003b7a5adbdca0a2a742fe89088b8e549f38d3d4022e22fe93cf06cf7"
+  },
+  "Puella Magi Madoka Magica": {
+   "soubor": "Puella Magi Madoka Magica.docx",
+   "hash": "bce57945eb4da44c5d6a21717f226794c769aeb374c9e68f7252275076a0433d"
+  },
+  "Magia Record: Puella Magi Madoka Magica Side Story, S01": {
+   "soubor": "Magia Record_ Puella Magi Madoka Magica Side Story, S01.docx",
+   "hash": "a74001e59c51f2ebce32b1b146a61a674612237fcbece8c0b550336475ce8f26"
+  },
+  "Magia Record: Puella Magi Madoka Magica Side Story, S02 - The Eve of Awakening": {
+   "soubor": "Magia Record_ Puella Magi Madoka Magica Side Story, S02 - The Eve of Awakening.docx",
+   "hash": "edbce58d2bb1699b2917452179ce7036da991de99035b631b37a1480e51f176c"
+  },
+  "Higurashi: When They Cry": {
+   "soubor": "Higurashi_ When They Cry.docx",
+   "hash": "7cd5668b01806c0ae45ff5e634a8ec22fae29ac5d84912aa966d10c0631927ee"
+  },
+  "Higurashi: When They Cry – Cat Killing Chapter": {
+   "soubor": "Higurashi_ When They Cry – Cat Killing Chapter.docx",
+   "hash": "e138186736522c1fdbfb0fafb61e84b7f16169f2e5987a9c008bc059be92acd6"
+  },
+  "Higurashi: When They Cry – Kai": {
+   "soubor": "Higurashi_ When They Cry – Kai.docx",
+   "hash": "82579582417958c045a13ff8025f0de98ec2e89a0f084009cf78de37b70f4a8b"
+  },
+  "Higurashi: When They Cry – Kira": {
+   "soubor": "Higurashi_ When They Cry – Kira.docx",
+   "hash": "6ffcbcf88c97404fe068bb85e6813153f53333dd1999c6a63989d94abffbe2c7"
+  },
+  "Higurashi: When They Cry – Outbreak": {
+   "soubor": "Higurashi_ When They Cry – Outbreak.docx",
+   "hash": "29ef9ea66c9c028cc6e216e385356c298d0fd079400f4829cbf451ceb1b54099"
+  },
+  "Higurashi: When They Cry – Gou": {
+   "soubor": "Higurashi_ When They Cry – Gou.docx",
+   "hash": "b96c330a27c4e8cef3f0ca89e4dd95fae6242f0347ddea80dad122197836b498"
+  },
+  "The Future Diary": {
+   "soubor": "The Future Diary.docx",
+   "hash": "eeb3a549a44fd60b86c6ee6e96781b97bdfa859dab6468f4a95328be434cbd0b"
+  },
+  "Shiki Specials": {
+   "soubor": "Shiki Specials.docx",
+   "hash": "a2baa8ca696e231921e214336da46bb4918039d503b50e2f249b6160d21ee601"
+  },
+  "Bakemonogatari": {
+   "soubor": "Bakemonogatari.docx",
+   "hash": "383bdd5d2a1f54a7922ae82bdfcdb788422dd6be58aef2ae5f9810b4571be0f3"
+  },
+  "Kizumonogatari Part 1: Iron-Blooded": {
+   "soubor": "Kizumonogatari Part 1_ Iron-Blooded.docx",
+   "hash": "347f1d8cf5ed49cee69c3ebcb0e500d7b75fe68c16a97f5318827c592b8bdb64"
+  },
+  "Kizumonogatari Part 2: Hot-Blooded": {
+   "soubor": "Kizumonogatari Part 2_ Hot-Blooded.docx",
+   "hash": "00bd44b38cb2a73088301a316a355ac98820135b3cea3225b1eaea63f449beb1"
+  },
+  "Kizumonogatari Part 3: Cold-Blooded": {
+   "soubor": "Kizumonogatari Part 3_ Cold-Blooded.docx",
+   "hash": "a30cd8d77bc4efcf8cd75244e3e968f5163519e203796bfaf011ca467264da85"
+  },
+  "Nisemonogatari": {
+   "soubor": "Nisemonogatari.docx",
+   "hash": "22d40aeafdc5f39512678cf63833618959267f1bd21206268513f9e8aa6d021b"
+  },
+  "Nekomonogatari Black": {
+   "soubor": "Nekomonogatari Black.docx",
+   "hash": "a2803eaf46a75fe5fecc4a07b6ea6b464fc9f664c7817f9593b06dcce8c48c15"
+  },
+  "Monogatari Series: Second Season": {
+   "soubor": "Monogatari Series_ Second Season.docx",
+   "hash": "1d3eeb00e3e679f5ae8581ac31a737a0534f15eefd4d12ca44bca3cd0a21f75c"
+  },
+  "Hanamonogatari": {
+   "soubor": "Hanamonogatari.docx",
+   "hash": "bf32f5ef2bbe7d9e2541907d84288caf64951cf797b35bd84f931ef8392ed941"
+  },
+  "Tsukimonogatari": {
+   "soubor": "Tsukimonogatari.docx",
+   "hash": "1abf40ecef066bf4e27ad05ba5e37cf31e11c7fb5129d9ef15e94a51a9aea4b6"
+  },
+  "Koyomimonogatari": {
+   "soubor": "Koyomimonogatari.docx",
+   "hash": "7fb90278b870b5c7df5b898d8cab6de728df3ae083ac9d9a1a08c3e9648121c3"
+  },
+  "Owarimonogatari, S01": {
+   "soubor": "Owarimonogatari, S01.docx",
+   "hash": "41791bf349b2751a732592a5350a02f95a5a8b3515e443fcd6148c0494147749"
+  },
+  "Owarimonogatari, S02": {
+   "soubor": "Owarimonogatari, S02.docx",
+   "hash": "e8278357714b7c24a6649a519d5ba154f5f0526e73f6d3fa3cdf9f548a2a746c"
+  },
+  "Zoku Owarimonogatari": {
+   "soubor": "Zoku Owarimonogatari.docx",
+   "hash": "720714b0d38fd60f6893b92a0f117d5ca804ad20789380de4c224e9f8399bb15"
+  },
+  "Monogatari Series: Off & Monster Season - A Cruel Fairy Tale: The Beautiful Princess": {
+   "soubor": "Monogatari Series_ Off & Monster Season - A Cruel Fairy Tale_ The Beautiful Princess.docx",
+   "hash": "55730be8e34e2befa75de49a1f79b24a874fbd65648deb396c838baad38dc383"
+  },
+  "The Melancholy of Haruhi Suzumiya, S02": {
+   "soubor": "The Melancholy of Haruhi Suzumiya, S02.docx",
+   "hash": "9feb4c0784f17a230bd8d8af01579c54dd9411ada4c8f3ba1e0da902891f7a2d"
+  },
+  "The Apothecary Diaries, S01": {
+   "soubor": "The Apothecary Diaries, S01.docx",
+   "hash": "d0fbabc20db178cce8dbef63936359af1b19b2fdffee90699b0ab37454282e6c"
+  },
+  "Tower of God, S01": {
+   "soubor": "Tower of God, S01.docx",
+   "hash": "22ee5c4972c54d45db3f92938b0e0b12e1c3eb9c93f8b038060617c30c598a4e"
+  },
+  "Tower of God, S02: Return of the Prince": {
+   "soubor": "Tower of God, S02_ Return of the Prince.docx",
+   "hash": "dbea2f40e4ad8e5309d8eb39a5a80db90406b012a58258868711fcbf96b8316b"
+  },
+  "I've Been Killing Slimes for 300 Years and Maxed Out My Level, S01": {
+   "soubor": "I've Been Killing Slimes for 300 Years and Maxed Out My Level, S01.docx",
+   "hash": "5a8780f3fb5378781e66179fef1b81f804ba835d62917e3225781fa41b28b83b"
+  },
+  "Tsukimichi -Moonlit Fantasy-, S01": {
+   "soubor": "Tsukimichi -Moonlit Fantasy-, S01.docx",
+   "hash": "4bac863a94b9807e3471e77b3ca1d92f247c24967cfbaa2f91a5e9fb8e0a9412"
+  },
+  "Ascendance of a Bookworm, S01": {
+   "soubor": "Ascendance of a Bookworm, S01.docx",
+   "hash": "19904ff38006048ba34b24b18a31ad7c28c0e73fc2dc16a9418c711260b5fc98"
+  },
+  "Ascendance of a Bookworm: Side Story": {
+   "soubor": "Ascendance of a Bookworm_ Side Story.docx",
+   "hash": "5887ae83fc5a18215ec02ab3b2a97e6546b1fad53dce95bcbd1498cc5c8f393d"
+  },
+  "Ascendance of a Bookworm, S02": {
+   "soubor": "Ascendance of a Bookworm, S02.docx",
+   "hash": "a121f0c8b281cbb566a69bbbeaeb9f78fe38510f30b29374a9bdb4496f16258f"
+  },
+  "GATE, S01 Part 1": {
+   "soubor": "GATE, S01 Part 1.docx",
+   "hash": "67e4a33701e6d50d6b82955267499a06351ff8cb8e67af356403d9c641e5e89f"
+  },
+  "I'm Standing on a Million Lives, S01": {
+   "soubor": "I'm Standing on a Million Lives, S01.docx",
+   "hash": "d02369f9aaeed05498287344c5199af64b1d9e74f934babd3be3db57d7f60492"
+  },
+  "Arifureta: From Commonplace to World's Strongest - Prologue": {
+   "soubor": "Arifureta_ From Commonplace to World's Strongest - Prologue.docx",
+   "hash": "c79c8d604afb75aaa9128066af716be37fb42c7d2a530133d3037eae18bc794e"
+  },
+  "Arifureta: From Commonplace to World's Strongest, S01": {
+   "soubor": "Arifureta_ From Commonplace to World's Strongest, S01.docx",
+   "hash": "6a1f2c3274814d8c33c1d60473f23a88efa77b461a15248ae64a4eaf26ed2e70"
+  },
+  "Arifureta: From Commonplace to World's Strongest Specials": {
+   "soubor": "Arifureta_ From Commonplace to World's Strongest Specials.docx",
+   "hash": "57754af312481d06069a0f168629ca851c571c9b89a1efa3b4d108f781de90e8"
+  },
+  "Arifureta: From a Detour to the World's Strongest": {
+   "soubor": "Arifureta_ From a Detour to the World's Strongest.docx",
+   "hash": "7187a82e08a7998497e714ad59af90a104022d2a36045700a46a5bb0c6126d89"
+  },
+  "Arifureta: From Commonplace to World's Strongest, S02": {
+   "soubor": "Arifureta_ From Commonplace to World's Strongest, S02.docx",
+   "hash": "bcd7501ea9f5f69be06a9ddd9fed9b86c14c64c22f41119900052becf636da20"
+  },
+  "Arifureta: Phantom Adventure and Miraculous Encounter": {
+   "soubor": "Arifureta_ Phantom Adventure and Miraculous Encounter.docx",
+   "hash": "9847c4c245e93e3af8332df692d0000fbad734903796aad235590827706c3187"
+  },
+  "Grimgar: Staking Our Youths on the Bath Wall - One More Centimeter": {
+   "soubor": "Grimgar_ Staking Our Youths on the Bath Wall - One More Centimeter.docx",
+   "hash": "b3d2d14399716b9496e11ed0516c9b4e0b23462dfd9d283d01e0778ccab2edf2"
+  },
+  "Saga of Tanya the Evil, S01": {
+   "soubor": "Saga of Tanya the Evil, S01.docx",
+   "hash": "dc65976d10184ba3c7975928612317da304ac18a9a780b84fca39b1a49de6219"
+  },
+  "Saga of Tanya the Evil: Operation Desert Pasta": {
+   "soubor": "Saga of Tanya the Evil_ Operation Desert Pasta.docx",
+   "hash": "2333c6e7c363ce9eb24aeb60675b820a63dce87ceeec81afe51386e2d8fb7ba7"
+  },
+  "Log Horizon, S01": {
+   "soubor": "Log Horizon, S01.docx",
+   "hash": "6a7c6c1c6bc4164e466619220fd5593ffc159c559ade16c8236d3d26f010ade7"
+  },
+  "Log Horizon, S02": {
+   "soubor": "Log Horizon, S02.docx",
+   "hash": "09fd016fc89a968d31fa5361e33d7fdfe5a1adfc5bc60eec5a20460af74583d4"
+  },
+  "Chainsaw Man: The Compilation": {
+   "soubor": "Chainsaw Man_ The Compilation.docx",
+   "hash": "bb6c4aaf320e422b910e316f76897cfd54b09e930f50887a9303a51a8f5a6add"
+  },
+  "Another World": {
+   "soubor": "Another World.docx",
+   "hash": "bc06f1fb920f0e26d997df0c4f42d79cea7c4e37b856d1f7113a74fd63ebd86a"
+  },
+  "Sound of the Sky": {
+   "soubor": "Sound of the Sky.docx",
+   "hash": "d5072d3991ba4e7ca1d8ec49ac691fc1108e87721c88561e6844e23f8d3cc27a"
+  },
+  "Kabaneri of the Iron Fortress": {
+   "soubor": "Kabaneri of the Iron Fortress.docx",
+   "hash": "348834bf27aa06ce1d1d9180d217d89fd89fc241884ef52cf70b187ebc7e1a47"
+  },
+  "Demon Slayer": {
+   "soubor": "Demon Slayer.docx",
+   "hash": "b48c01e2bcc811d08dc594da76da000df016eea9e22516dad02e3e8b8465a7ae"
+  },
+  "Demon Slayer: Mugen Train Arc": {
+   "soubor": "Demon Slayer_ Mugen Train Arc.docx",
+   "hash": "88c54e42f40df130a4bd39dda990260ac2a9c15c62f21121901814488448c362"
+  },
+  "Demon Slayer: Entertainment District Arc": {
+   "soubor": "Demon Slayer_ Entertainment District Arc.docx",
+   "hash": "cb00696a8deb14503c3563dc812475a3a3aaf4d6b2b77125299bf11208fe1984"
+  },
+  "Demon Slayer: Swordsmith Village Arc": {
+   "soubor": "Demon Slayer_ Swordsmith Village Arc.docx",
+   "hash": "daefbe5b7559a104006c7bcddcd7175fc8f6a96fb09b71e4cbccf7350b651035"
+  },
+  "Demon Slayer: Hashira Training Arc": {
+   "soubor": "Demon Slayer_ Hashira Training Arc.docx",
+   "hash": "7dcf489f388e3294ae83b0cbf27ebd7b3fefc13f6732e0c83ea7b00b670f41ab"
+  },
+  "Vinland Saga, S01": {
+   "soubor": "Vinland Saga, S01.docx",
+   "hash": "d82dfe4603a6e8e222a5e5bad5a29e5ebc4de1952a9e30c085da4c5f08757ce5"
+  },
+  "Vinland Saga, S02: Drowning in the Shadow": {
+   "soubor": "Vinland Saga, S02_ Drowning in the Shadow.docx",
+   "hash": "dc1c2ae0f1c81b192ff1998dcf9c66d3fffaafce6d0424fd51613eb052e05408"
+  },
+  "Vinland Saga, S02: Same Old Story": {
+   "soubor": "Vinland Saga, S02_ Same Old Story.docx",
+   "hash": "3b6a3a64a1109c095e4c61eda1897ed264a14dc1c57e8a9eb78ef132634995a0"
+  },
+  "Himouto! Umaru-chan": {
+   "soubor": "Himouto! Umaru-chan.docx",
+   "hash": "e6c6d2039f2f57d100424f6e7f66ce181f2cfcb4602e76fb913edf179de258c3"
+  },
+  "Himouto! Umaru-chan Specials": {
+   "soubor": "Himouto! Umaru-chan Specials.docx",
+   "hash": "410832857cce5aee1f8e0c6751893f9c3a2b2f071e18ba6c3d5a649c20456a2a"
+  },
+  "Himouto! Umaru-chan R": {
+   "soubor": "Himouto! Umaru-chan R.docx",
+   "hash": "247f369fe6c2c1361a4bcf9d1557df9eba1231c46203ab633b5c9b347ed63940"
+  },
+  "Fate/strange Fake: Whispers of Dawn": {
+   "soubor": "Fate strange Fake_ Whispers of Dawn.docx",
+   "hash": "0a2266ea9fa90b0054f7b2bc9a76227b0f29418ff7f7f97828061ab35042be59"
+  },
+  "Dorohedoro: Bonus Curse or Extra Evil": {
+   "soubor": "Dorohedoro_ Bonus Curse or Extra Evil.docx",
+   "hash": "b81dc0876f191b32c1d63d8f97460f219580cdc4e3bd6778d4da519735e89f35"
+  },
+  "Hell's Paradise, S01": {
+   "soubor": "Hell's Paradise, S01.docx",
+   "hash": "44bb2e63a7d7f55fd31d45da67b1ba30d5e949f80c30ac0c64f7796371f69826"
+  },
+  "The Ancient Magus' Bride: Those Awaiting a Star": {
+   "soubor": "The Ancient Magus' Bride_ Those Awaiting a Star.docx",
+   "hash": "a0785eae2c10d7560c53f4bb027adf8db0deff5e31fb8c50dbc5b4c846a8b223"
+  },
+  "The Ancient Magus' Bride, S01": {
+   "soubor": "The Ancient Magus' Bride, S01.docx",
+   "hash": "90e81eb8bec80796d0795db94f03da367e3bdd900907e12fab1d26ea2eea3884"
+  },
+  "The Ancient Magus' Bride: The Boy from the West and the Knight of the Blue Storm": {
+   "soubor": "The Ancient Magus' Bride_ The Boy from the West and the Knight of the Blue Storm.docx",
+   "hash": "5a963fe6bc2f96099a09fd8edb072113524d3dc490b3711e73e720fb23561afa"
+  },
+  "The Ancient Magus' Bride, S02 Part 1": {
+   "soubor": "The Ancient Magus' Bride, S02 Part 1.docx",
+   "hash": "989ce7f8278c78319e9d8d873b0d978cf3d47d1f71b3e19587f10fae002a50e1"
+  },
+  "Magi: The Labyrinth of Magic": {
+   "soubor": "Magi_ The Labyrinth of Magic.docx",
+   "hash": "78750ddb14c3e2cdbc09d7ccf56b3dfb3e5a42ab05a056e40e13881b060404ec"
+  },
+  "Magi: Adventure of Sinbad": {
+   "soubor": "Magi_ Adventure of Sinbad.docx",
+   "hash": "d7aeb9240e4fc4e04548a10f7cec95e740f66b0e82b5e0bde58be693ab37ebef"
+  },
+  "Burn the Witch #0.8": {
+   "soubor": "Burn the Witch #0.8.docx",
+   "hash": "36a8682b5a4e5333ba77951834d9342a077e1a04eaec97858d7aff1f09a97764"
+  },
+  "Dead Dead Demons Dededede Destruction Episode 0": {
+   "soubor": "Dead Dead Demons Dededede Destruction Episode 0.docx",
+   "hash": "3743b6effa2722014daf8d8d8cdd81d312fe13e26bb8996a51d14d0c091ac1d9"
+  },
+  "Psycho-Pass, S01": {
+   "soubor": "Psycho-Pass, S01.docx",
+   "hash": "cd598cefb2f9b6a6a3c7f3745f2b6fc5d6b4a9bb8c961a1da7f512186c3e918c"
+  },
+  "Psycho-Pass, S02": {
+   "soubor": "Psycho-Pass, S02.docx",
+   "hash": "4bb7bdf9506edc51d71e9a50dd1068c0b1ea5c954fb8e983c81697da194f1849"
+  },
+  "Psycho-Pass: The Movie": {
+   "soubor": "Psycho-Pass_ The Movie.docx",
+   "hash": "800d8a9fb0866325e02cfe49eacb48c0957b056c490a531bdc078c7518dea6be"
+  },
+  "Psycho-Pass: Sinners of the System Case.1 - Crime and Punishment": {
+   "soubor": "Psycho-Pass_ Sinners of the System Case.1 - Crime and Punishment.docx",
+   "hash": "e32772971cc9f427d5f150521c245d60cd34fd07f66ce251eb137dfb4daf7022"
+  },
+  "Psycho-Pass: Sinners of the System Case.2 - First Guardian": {
+   "soubor": "Psycho-Pass_ Sinners of the System Case.2 - First Guardian.docx",
+   "hash": "7a36a8b7605ee797509bded7163679658664c4e5a83dc485fced909ba636542f"
+  },
+  "Psycho-Pass: Sinners of the System Case.3 - On the Other Side of Love and Hate": {
+   "soubor": "Psycho-Pass_ Sinners of the System Case.3 - On the Other Side of Love and Hate.docx",
+   "hash": "05d4159beff6785c42a70462b94abd5356834065cc8db97ac9b2907118858056"
+  },
+  "Psycho-Pass, S03": {
+   "soubor": "Psycho-Pass, S03.docx",
+   "hash": "53dfb522e1d193b51d636558ccf447b094cbd202d69ecfcd0df88802a2a0a490"
+  },
+  "Psycho-Pass: Providence": {
+   "soubor": "Psycho-Pass_ Providence.docx",
+   "hash": "59a4133b379d407caea6a04ae7258a781da5cf5c1896dc32c5c7f80d29a69028"
+  },
+  "That Time I Got Reincarnated as a Slime, S01": {
+   "soubor": "That Time I Got Reincarnated as a Slime, S01.docx",
+   "hash": "6d69306a3ca1f4d5b0993e15236b0569c83afe5ec1ebe2c60bc22829aae85c3e"
+  },
+  "The Slime Diaries": {
+   "soubor": "The Slime Diaries.docx",
+   "hash": "e22911e858827e913369242ad89a553fa510e0315a887d48bc0620f0924c4289"
+  },
+  "That Time I Got Reincarnated as a Slime OAD": {
+   "soubor": "That Time I Got Reincarnated as a Slime OAD.docx",
+   "hash": "94cf04b997d82d1fc895f4de750192ca47cde18509f9902ee4751988842c35c5"
+  },
+  "That Time I Got Reincarnated as a Slime: Visions of Coleus": {
+   "soubor": "That Time I Got Reincarnated as a Slime_ Visions of Coleus.docx",
+   "hash": "ee333d9e9938f6cc6f03588c2fa971f6e7bd183793a97bd38c01e99ac49b0b11"
+  },
+  "That Time I Got Reincarnated as a Slime: The Movie - Scarlet Bond": {
+   "soubor": "That Time I Got Reincarnated as a Slime_ The Movie - Scarlet Bond.docx",
+   "hash": "090fbb6d57ce2573be32c1bc029b7ffc6cba527fa73395f6370c50da50fc7953"
+  },
+  "To Me, The One Who Loved You": {
+   "soubor": "To me, The One Who Loved You.docx",
+   "hash": "45eb171aadbbb69085a35863a0caee2e8791ca9e3185e573ba01d991ed132b39"
+  },
+  "Wonder Egg Priority": {
+   "soubor": "Wonder Egg Priority.docx",
+   "hash": "28c92fef81700164aa4951d727e72b80727c2f29b5ab5b06616257a7df3abce6"
+  },
+  "Ajin: Demi-Human, S01": {
+   "soubor": "Ajin_ Demi-Human, S01.docx",
+   "hash": "d1bfb491950db14f937374d0076b0388dde84a3d3a68febbc0b75d49397eb2b2"
+  },
+  "Ajin, S01 OVA": {
+   "soubor": "Ajin, S01 OVA.docx",
+   "hash": "cf0d24da6b0d5d803e406f4d2cdc5f2c5ab79cd1980922f7ad00226d61d3cc48"
+  },
+  "Ajin, S02 OVA": {
+   "soubor": "Ajin, S02 OVA.docx",
+   "hash": "39c5029cf8eee1da5420559f236ec4f69083cbcf7bb2153b69b70cc2c01c2678"
+  },
+  "Ranking of Kings": {
+   "soubor": "Ranking of Kings.docx",
+   "hash": "70b6bcdcd0b6db7cf5af7424ac90ab33aa61f15933cd28f21cd287faffd4d43c"
+  },
+  "Rage of Bahamut: Genesis": {
+   "soubor": "Rage of Bahamut_ Genesis.docx",
+   "hash": "84b1129f3b23384e96c8b4f0581a47da0bfc62f6eb287c1dd1e122b9fce62216"
+  },
+  "Rage of Bahamut: Genesis - Short Story": {
+   "soubor": "Rage of Bahamut_ Genesis - Short Story.docx",
+   "hash": "60aad0f71a4b97c3b0079203614f0c3b9a14f58593050168f5ff8da8a74d739e"
+  },
+  "Berserk (1997)": {
+   "soubor": "Berserk (1997).docx",
+   "hash": "98ade744f64eea472f0ac4edf018f1a6092bbf5089ac1c14db7a2dc6410c4eee"
+  },
+  "Berserk, S01": {
+   "soubor": "Berserk, S01.docx",
+   "hash": "0b4090edf107b3e786141b7ea170efa7635947424793d35fcef1fed2ee6c8553"
+  },
+  "Berserk: The Golden Age Arc - Memorial Edition": {
+   "soubor": "Berserk_ The Golden Age Arc - Memorial Edition.docx",
+   "hash": "a91a51d98a08631a62687ce96aaf418aed0bf9dec5e4c767dd2e5e85a6c8f932"
+  },
+  "Lord of Mysteries Specials": {
+   "soubor": "Lord of Mysteries Specials.docx",
+   "hash": "5e63200487b921b77acdbc4791993e8ea028f3d30bfb6e2b509851970c239819"
+  },
+  "That Time I Got Reincarnated as a Slime the Movie: Tears of the Azure Sea": {
+   "soubor": "That Time I Got Reincarnated as a Slime the Movie_ Tears of the Azure Sea.docx",
+   "hash": "8b3387eec69b4c1f0fcb46e5b7bf9aebe76a894a9f61d438d59a10cf113a19bd"
+  },
+  "From Old Country Bumpkin to Master Swordsman, S01": {
+   "soubor": "From Old Country Bumpkin to Master Swordsman, S01.docx",
+   "hash": "2b3f33a07a35cbb4e7a660488bf8cc9a90c995a16e871eca7c9360ea5983f36f"
+  },
+  "Grand Blue Dreaming, S01": {
+   "soubor": "Grand Blue Dreaming, S01.docx",
+   "hash": "8598788ba753188b0bfe4b165ce487df0f3b7d4dfd1aa45675cd626a00391ddf"
+  },
+  "Grand Blue Dreaming, S02": {
+   "soubor": "Grand Blue Dreaming, S02.docx",
+   "hash": "4069394413551c30a47bfa6261267efe0f5c947904d83a42ecc4879949b922cb"
+  },
+  "Wistoria: Wand and Sword, S01": {
+   "soubor": "Wistoria_ Wand and Sword, S01.docx",
+   "hash": "7135caa1fac254682bd7479f5c599f3c64768c3ac9876097b4a9ffbf4bae651b"
+  },
+  "Girls' Last Tour": {
+   "soubor": "Girls' Last Tour.docx",
+   "hash": "d62546982dc2c826c477fad4f97d5efa5417612743f60569f05c2e0b73cf7e71"
+  },
+  "Electromagnetic Girlfriend": {
+   "soubor": "Electromagnetic Girlfriend.docx",
+   "hash": "e6e04025fb91b2d3aa783d39bdf86f71678009b94b88f831223bf3fbe85b5dc0"
+  },
+  "School-Live!": {
+   "soubor": "School-Live!.docx",
+   "hash": "a6494eb76c73511b9927f8b8dbe03149e15493688ef07e3201f0b0f056fcfd1c"
+  },
+  "Combatants Will Be Dispatched!": {
+   "soubor": "Combatants Will Be Dispatched!.docx",
+   "hash": "f87158003ad2650ba7262267369274eca79a6a360ee7b1b5f9d6978356a4baeb"
+  },
+  "So I'm a Spider, So What?": {
+   "soubor": "So I'm a Spider, So What.docx",
+   "hash": "ab55abb3f24d3033368383b0b34913c5e9fb8d6b853131989c885080787890fe"
+  },
+  "The Dungeon of Black Company": {
+   "soubor": "The Dungeon of Black Company.docx",
+   "hash": "36ce6b970393b3c6912d2ad806a32e494677bdf5fba469738c48d248b6996708"
+  },
+  "I'm Standing on a Million Lives, S02": {
+   "soubor": "I'm Standing on a Million Lives, S02.docx",
+   "hash": "03a3ce862f5a4b937f456952af4e9a1ed7f54f70dddc13687d316ba992a37fa4"
+  },
+  "Grimgar: Ashes and Illusions": {
+   "soubor": "Grimgar_ Ashes and Illusions.docx",
+   "hash": "b90372d7023e23e9d1ad245c30d006d33df96e3435b265511c1f672929759931"
+  },
+  "Log Horizon: Destruction of the Round Table": {
+   "soubor": "Log Horizon_ Destruction of the Round Table.docx",
+   "hash": "b2bc80c69183e3a1bb0f7addea1789a98b58608e1de763909f5fa62a5ac46fc6"
+  },
+  "Somali and the Forest Spirit": {
+   "soubor": "Somali and the Forest Spirit.docx",
+   "hash": "adeb1dd5899465b1584beec9bf76a681cfc1f2dbbe414f509b74d94d2163e3d2"
+  },
+  "Humanity Has Declined": {
+   "soubor": "Humanity Has Declined.docx",
+   "hash": "f684aaf558a4d0f3c68f42f6f2b490fa6717b940b3df533ecb32ac4e52ef8878"
+  },
+  "Himouto! Umaru-chan OVA": {
+   "soubor": "Himouto! Umaru-chan OVA.docx",
+   "hash": "b6c395bd40942fb4e4a60f280f75505030d172c0c2ea6f8487e0119a3fc454bf"
+  },
+  "Grimoire of Zero": {
+   "soubor": "Grimoire of Zero.docx",
+   "hash": "ebabaaabd7761d4303d921450f2f8497d542bf4c18480630ab455a9450063083"
+  },
+  "The Dawn of the Witch": {
+   "soubor": "The Dawn of the Witch.docx",
+   "hash": "69efe757cedd4d958a93116f808156c87a5fc9d7b06b89b3f347c5f43c7d7764"
+  },
+  "Magi: The Kingdom of Magic": {
+   "soubor": "Magi_ The Kingdom of Magic.docx",
+   "hash": "1b28d7287104a457b57c2d270fc2018bb4fdd8ab1c631b5cd4b1b4ea3da4f618"
+  },
+  "Id:Invaded": {
+   "soubor": "Id_Invaded.docx",
+   "hash": "64f767b0a8a7a37a5bbfd91de565b2a98341add6c1024f8dedba35c161594e6c"
+  },
+  "Ajin: Demi-Human, S02": {
+   "soubor": "Ajin_ Demi-Human, S02.docx",
+   "hash": "5bf3dcdee323900b2e7dcd6857a091d73d75cdf84669e2bd8f401e52db8a224b"
+  },
+  "Rage of Bahamut: Virgin Soul": {
+   "soubor": "Rage of Bahamut_ Virgin Soul.docx",
+   "hash": "c3498c5f0ea638a3f529878b683d36b54363c7d3228480290f83b563dffc36c5"
+  },
+  "Claymore": {
+   "soubor": "Claymore.docx",
+   "hash": "fb25253bfc2e2df64f79be7696c84db08fe8aaec6b630441cfff06e2e404ee7c"
+  },
+  "Berserk, S02": {
+   "soubor": "Berserk, S02.docx",
+   "hash": "f5e77a40a9d4c773f62d647fb763c9fc8cb840b4064de6c41c414042bac8f35c"
+  },
+  "WorldEnd: What do you do at the end of the world? Are you busy? Will you save us?": {
+   "soubor": "WorldEnd_ What do you do at the end of the world Are you busy Will you save us.docx",
+   "hash": "eb761a1921987d5f38ba244b905ee5819913a2e82e25ffe57e944732277bcb96"
+  },
+  "Black Butler, S02": {
+   "soubor": "Black Butler, S02.docx",
+   "hash": "a6418285604c7fe6c09c6163241932a7468f9843d0c72b39f6a3b33cb1f6015d"
+  },
+  "Takopi's Original Sin": {
+   "soubor": "Takopi's Original Sin.docx",
+   "hash": "d254a423fc6a38c757f9095e7b0bfefab5eb98a449fda22e74d9a698f55faf4d"
+  },
+  "Steins;Gate: The Movie - Load Region of Déjà Vu": {
+   "soubor": "Steins;Gate_ The Movie - Load Region of Déjà Vu.docx",
+   "hash": "323c7736fc99d6714896d6dcdc9c4b4670ce78699d5a91e4d6ba5d990217cb5f"
+  },
+  "Tokyo Magnitude 8.0": {
+   "soubor": "Tokyo Magnitude 8.0.docx",
+   "hash": "4a4f4cf46cd550f3d17f95add3df4623ee15fa6436c3c6a8c3f1656c5e7004d6"
+  },
+  "Haibane Renmei": {
+   "soubor": "Haibane Renmei.docx",
+   "hash": "d12043f83a029b7ecc051ed4094d3d3d8dc4bf24bcc6606518225a8158f56131"
+  },
+  "The Tunnel to Summer, the Exit of Goodbyes": {
+   "soubor": "The Tunnel to Summer, the Exit of Goodbyes.docx",
+   "hash": "f34881b9e17598d0343ab8d640c2895f8fa439d1250f9ab45c11bd1affb8fa32"
+  },
+  "Magia Record: Puella Magi Madoka Magica Side Story Final Season": {
+   "soubor": "Magia Record_ Puella Magi Madoka Magica Side Story Final Season.docx",
+   "hash": "bb18f6bdd0a6706d066dc725de885b9a66c771caef92052a0780f9e8c808d58f"
+  },
+  "Cross Ange: Rondo of Angel and Dragon": {
+   "soubor": "Cross Ange_ Rondo of Angel and Dragon.docx",
+   "hash": "80c6ab0317b008be441997c5657366694acf4baa4183d4978804350c528dcb61"
+  },
+  "The Girl Who Leapt Through Time": {
+   "soubor": "The Girl Who Leapt Through Time.docx",
+   "hash": "d18d3195569abaf5685b5d7430ef50ca3c4e1447e0d4d3a716a1d451399504f9"
+  },
+  "Jin-Roh: The Wolf Brigade": {
+   "soubor": "Jin-Roh_ The Wolf Brigade.docx",
+   "hash": "8511d09a8a4160c59488ce0b66d3319e6793c4ac121bbda1ce36902d91376261"
+  },
+  "Higurashi: When They Cry – Sotsu": {
+   "soubor": "Higurashi_ When They Cry – Sotsu.docx",
+   "hash": "676c38216ec531d050446de51a3c0751f0b0bd5178f6e7e692796efa64ffd9de"
+  },
+  "The Future Diary: Redial": {
+   "soubor": "The Future Diary_ Redial.docx",
+   "hash": "14b743e95b8acb531e200ba97536ad723fce173e0a214584d5b2836c9a114b1f"
+  },
+  "From the New World": {
+   "soubor": "From the New World.docx",
+   "hash": "76597b0142fd9a30cc3568f50cfdb9e28bd68650b355d8529d459a91300c7462"
+  },
+  "Shiki": {
+   "soubor": "Shiki.docx",
+   "hash": "384939f591618cbc0b2f578db8c263df8efd1e35cac95a8b17d9c40133d0ee63"
+  },
+  "The Disappearance of Haruhi Suzumiya": {
+   "soubor": "The Disappearance of Haruhi Suzumiya.docx",
+   "hash": "57fab60145a1c7654b9082e2917b760f2d5ec756c4fa1e73bbdcc45f39d5f9c4"
+  },
+  "Bâan: The Boundary of Adulthood": {
+   "soubor": "Bâan_ The Boundary of Adulthood.docx",
+   "hash": "ea9ecf9b678942fcb906e021708589af2c835840034c8f12daf35557e7d1eee1"
+  },
+  "May I Ask for One Final Thing?": {
+   "soubor": "May I Ask for One Final Thing.docx",
+   "hash": "2f1c7c6883153ca0a569e5036b5ea30c809d1dd9ea5ee88a1fd3d6b82333ecce"
+  },
+  "Takt Op. Destiny": {
+   "soubor": "Takt Op. Destiny.docx",
+   "hash": "c958b5a1f25387be0c555ad7fe159174ed2a5dfbd6c57412703cbbef58403413"
+  },
+  "Cautious Hero: The Hero Is Overpowered but Overly Cautious": {
+   "soubor": "Cautious Hero_ The Hero Is Overpowered but Overly Cautious.docx",
+   "hash": "363fbc8d21514a6919b66194fbdeddf6dae4c23d8bd1735aa7bbf8f8f3653937"
+  },
+  "Tatsuki Fujimoto 17-26": {
+   "soubor": "Tatsuki Fujimoto 17-26.docx",
+   "hash": "2b7a62e8e18aa142538af790c1cc09b2811b0773e7b13d9ea2d5b04226a0b50a"
+  },
+  "Hello World": {
+   "soubor": "Hello World.docx",
+   "hash": "743b54f380480ce9b1995e7fe2703d7ed175732e4ab56efba1c9e149f31dc540"
+  },
+  "Voices of a Distant Star": {
+   "soubor": "Voices of a Distant Star.docx",
+   "hash": "bd95ff71eac2c677942011d889186cc956412342bc4a8949882f58864286131b"
+  },
+  "Look Back": {
+   "soubor": "Look Back.docx",
+   "hash": "4eae023f160a3246eb16ba127c2c20a0f85ee6c4944ad1e9c7e9f8c0e5ead588"
+  },
+  "The Place Promised in Our Early Days": {
+   "soubor": "The Place Promised in Our Early Days.docx",
+   "hash": "a8245e9aeb6fb2d2f8187c4fd02691deb0e89c180eba0121ece838febae61d10"
+  },
+  "She and Her Cat: Their Standing Points": {
+   "soubor": "She and Her Cat_ Their Standing Points.docx",
+   "hash": "2599b0ae710ac4a10e49b438581bf3c10d44eb3e4ca2ee2128294cd9003e2ab0"
+  },
+  "5 Centimeters per Second": {
+   "soubor": "5 Centimeters per Second.docx",
+   "hash": "e2196aac8d22e3128bb6ffbb704533d810770f51b970b0572a9d86ce7b84497c"
+  },
+  "Children Who Chase Lost Voices": {
+   "soubor": "Children Who Chase Lost Voices.docx",
+   "hash": "46fc46833291a0a59824ac3c14dec3e211196f30b280764f06296a004eb30afa"
+  },
+  "The Garden of Words": {
+   "soubor": "The Garden of Words.docx",
+   "hash": "f8cbdd15f5995eac9e0f2734a99702ad2bba74b6de590ff76449234a0118b68d"
+  },
+  "She and Her Cat: Everything Flows": {
+   "soubor": "She and Her Cat_ Everything Flows.docx",
+   "hash": "f9fe9d877e66271c5b0dc2ba3a699b2e09ac12c2fc40b9c2a0f5705d604060a8"
+  },
+  "Summer Ghost": {
+   "soubor": "Summer Ghost.docx",
+   "hash": "81ed2f8a83668b64292cc52a774681d54c24ea0cb31a005106f14fb83c2633b9"
+  },
+  "Maquia: When the Promised Flower Blooms": {
+   "soubor": "Maquia_ When the Promised Flower Blooms.docx",
+   "hash": "ca10d4645c0d3d45ec3bc874d8ebd0c801871f1faa573b4971a8930cb6317ece"
+  },
+  "Into the Forest of Fireflies' Light": {
+   "soubor": "Into the Forest of Fireflies' Light.docx",
+   "hash": "3fb5e67e1cd927a8ceda7c9e66ac661e5b279915f630f5603d6b4cfe14509e29"
+  },
+  "Grave of the Fireflies": {
+   "soubor": "Grave of the Fireflies.docx",
+   "hash": "3bef2ef61f27b84c7b60723840dc71fc8c0e43661c17b476ecb457aadcc0ae67"
+  },
+  "Ride Your Wave": {
+   "soubor": "Ride Your Wave.docx",
+   "hash": "3832096f6ad58f66e331448e36134033c0e874a3605be4148cefd00f035183aa"
+  },
+  "Wolf Children": {
+   "soubor": "Wolf Children.docx",
+   "hash": "842db950ba965faa4b22bb90e5ac4f4ff767a96f7006db215f58ee910207de1b"
+  },
+  "A Silent Voice": {
+   "soubor": "A Silent Voice.docx",
+   "hash": "4e2b3a0a5e67a2c750928d327821539d7ff5e83b774654516500539e8cba42ea"
+  },
+  "I Want to Eat Your Pancreas": {
+   "soubor": "I Want to Eat Your Pancreas.docx",
+   "hash": "46f2d5f4cd016dc775b5f0bcdf8b9020e4d2d2ee30e31765aab8ed7863693659"
+  },
+  "A Place Further Than The Universe": {
+   "soubor": "A Place Further Than The Universe.docx",
+   "hash": "1aad0c7ede291e9115ec4d8995fffd4dd774720416d9625eac86bf513e5941f3"
+  },
+  "Anohana: The Flower We Saw That Day": {
+   "soubor": "Anohana_ The Flower We Saw That Day.docx",
+   "hash": "ac1343027fd267b4709b76a237a00143f4a8152283e86bdf66f34f64f98d632a"
+  },
+  "Sound of the Sky Specials": {
+   "soubor": "Sound of the Sky Specials.docx",
+   "hash": "20838f08e3935a5c078acaedeef706f68dff4edfdae9cbc0d5371d95a5616581"
+  },
+  "Casshern Sins": {
+   "soubor": "Casshern Sins.docx",
+   "hash": "d0a8dcb8768c61afffadeb8bd85e8af26d7dad6bc435c1d10ae58d6b7234bbc3"
+  },
+  "Josee, the Tiger and the Fish": {
+   "soubor": "Josee, the Tiger and the Fish.docx",
+   "hash": "94cdb94fb09f70f4a0192b6f11edfefd7d448d8983d770bf057201dc467f4740"
+  },
+  "Kabaneri of the Iron Fortress: The Battle of Unato": {
+   "soubor": "Kabaneri of the Iron Fortress_ The Battle of Unato.docx",
+   "hash": "59aeaca2add6e12fb2d657434f4ae517582db5a944e76bad3a220b73e7183502"
+  },
+  "Monster": {
+   "soubor": "Monster.docx",
+   "hash": "f16590137250550313f9d90cf0507ca6e2968571d57e0e7c8cd5c70e1be3ce2b"
+  },
+  "Mary and the Witch's Flower": {
+   "soubor": "Mary and the Witch's Flower.docx",
+   "hash": "158940c85a490e9d91db771991b463922370f5c88d84f24573ba68026db7f7d0"
+  },
+  "Blast of Tempest": {
+   "soubor": "Blast of Tempest.docx",
+   "hash": "668d4669a1f43e97955964d45d45ce31462507e999e667ec053f5cf8348883d0"
+  },
+  "Kiki's Delivery Service": {
+   "soubor": "Kiki's Delivery Service.docx",
+   "hash": "89edbe660a7f1f51ebd1445daa1958e7c6fd24d9fe3a2f4c4a3a5f79a4f4c907"
+  },
+  "Burn the Witch": {
+   "soubor": "Burn the Witch.docx",
+   "hash": "575448a64be41f54c93ff6c60b987953e6269da9559fbfc5693534c76614ca09"
+  },
+  "Dead Dead Demons Dededede Destruction": {
+   "soubor": "Dead Dead Demons Dededede Destruction.docx",
+   "hash": "b5cbe8a98abf480f72e2aca1da8871f51a0b4ead76634bf24dcf41bbeacfab5b"
+  },
+  "Ergo Proxy": {
+   "soubor": "Ergo Proxy.docx",
+   "hash": "429e4c32646613e509c552ef5497d887723b23622ac1023974eddbe4a8671482"
+  },
+  "Patema Inverted": {
+   "soubor": "Patema Inverted.docx",
+   "hash": "3a9753d546ed91263d4013383440282b1655074597a08409669263b4458a106e"
+  },
+  "Colorful: The Motion Picture": {
+   "soubor": "Colorful_ The Motion Picture.docx",
+   "hash": "7111dc113a7ba490cf6f8535014e6bf9c70b11c9e6de20803e25a27ca1da697d"
+  },
+  "Lonely Castle in the Mirror": {
+   "soubor": "Lonely Castle in the Mirror.docx",
+   "hash": "eb0e1a9c91e4c0cdd578cd181ccf15d86e634587ed0532a4c7f6d0fd346848e2"
+  },
+  "Erased": {
+   "soubor": "Erased.docx",
+   "hash": "e83eee1fb6df4b9d02fd4930040efdda3b83c981d648e7dc49fd285680101813"
+  },
+  "When Marnie Was There": {
+   "soubor": "When Marnie Was There.docx",
+   "hash": "2af00ef3d994d3a4eaded4ca0c056146920eb97d876a13d95e719c6a253f6bc5"
+  },
+  "Noein: To Your Other Self": {
+   "soubor": "Noein_ To Your Other Self.docx",
+   "hash": "8457921fca047b41699062649151802e99b229dc123f00f0c0764ced70d0fafd"
+  },
+  "To Every You I've Loved Before": {
+   "soubor": "To Every You I've Loved Before.docx",
+   "hash": "83e7237041b440b725e807a8f8d4f2c975286aae4df174b26f5bce1b31d7eac6"
+  },
+  "Sonny Boy": {
+   "soubor": "Sonny Boy.docx",
+   "hash": "a6bcbf7c878b90350352856b9182dc76b47f016235a6030977e29cf88baa03f3"
+  },
+  "Wonder Egg Priority: My Priority": {
+   "soubor": "Wonder Egg Priority_ My Priority.docx",
+   "hash": "86ff2823a6902161f6f9c4bbb1ab90e630c3751c4e46112389f4686f4ca72cc6"
+  },
+  "Paprika": {
+   "soubor": "Paprika.docx",
+   "hash": "57da419ec1efb30554cab80a8dd221659f56487ed875fff0e73768f17debb062"
+  },
+  "Perfect Blue": {
+   "soubor": "Perfect Blue.docx",
+   "hash": "aa833fe70485fa671a60909f872f4f2532a0737907a3d0a155d7e3cc79dae250"
+  },
+  "Angel's Egg": {
+   "soubor": "Angel's Egg.docx",
+   "hash": "25fc61c57c2fa350012ca7aefcd78a74d2998984b10f8cc6ab245966e6d95d0d"
+  },
+  "The Beast Player Erin": {
+   "soubor": "The Beast Player Erin.docx",
+   "hash": "d0b6a15017689994c3b50ce60fb9049c18a5fc2447c7be5b042302c332c97d21"
+  },
+  "Nausicaä of the Valley of the Wind": {
+   "soubor": "Nausicaä of the Valley of the Wind.docx",
+   "hash": "32783e23a33163b18910c4322b8ee946a38b6c7bdd0f10e96aaf9c1948ce15a5"
+  },
+  "Princess Mononoke": {
+   "soubor": "Princess Mononoke.docx",
+   "hash": "12c685c49be7dee25012e70935896039636bf69a67f8c25634c0988449cd9608"
+  },
+  "Moribito - Guardian of the Spirit": {
+   "soubor": "Moribito - Guardian of the Spirit.docx",
+   "hash": "2058b3b474db1df2388fc5363ba48abb56fa3d176d7dbaa6959d032d7c8ed4f1"
+  },
+  "Dororo": {
+   "soubor": "Dororo.docx",
+   "hash": "117d0aa13d4c5bb838f81cbbed4a1753c2bd16c732c9d47a3d7c6076de2036d1"
+  },
+  "Blade of the Immortal": {
+   "soubor": "Blade of the Immortal.docx",
+   "hash": "e998a94f11d474464eefd9cbdca52cf5b89c0fb98025d68ae39cdeadb51d8ba1"
+  },
+  "Sword Art Online: Unanswered//butterfly": {
+   "soubor": "Sword Art Online_ Unanswered butterfly.docx",
+   "hash": "d12f8b83c330881948f02767a4fd4c329ae17812af4943aefff285a3e772f9b4"
+  },
+  "Fullmetal Alchemist: Brotherhood": {
+   "soubor": "Fullmetal Alchemist_ Brotherhood.docx",
+   "hash": "80d3b4f22e53a61f37aa2607e1a72689b01e9448bd0095b6822b3cb48baf1fcc"
+  },
+  "The Melancholy of Haruhi Suzumiya, S01": {
+   "soubor": "The Melancholy of Haruhi Suzumiya, S01.docx",
+   "hash": "2d9c9580bffaa0143d48548285679df0ead1534e462264add8be62e95fda528f"
+  },
+  "Penguindrum": {
+   "soubor": "Penguindrum.docx",
+   "hash": "eea93bf6097d6cbd8d6ba7ec0debfa923ce75ed495ab5df236dc6032e2606d66"
+  },
+  "Steins;Gate": {
+   "soubor": "Steins;Gate.docx",
+   "hash": "c6e93f3314f958f3190ba175bb31e0a1cfdc2ac433b8bdfdadb884056e626643"
+  },
+  "Higurashi: When They Cry – Rei": {
+   "soubor": "Higurashi_ When They Cry – Rei.docx",
+   "hash": "2a1bacb9f5f328705897577d6acd3574004be30d5a050da1c063076bd3033596"
+  },
+  "Re:Zero -Starting Life in Another World-, S02 Part 2": {
+   "soubor": "Re_Zero -Starting Life in Another World-, S02 Part 2.docx",
+   "hash": "96b57244d8a4255a1c99733e55f5dcb70e0644dcf5ef73a1ea6023d41a77281e"
+  },
+  "Cyberpunk: Edgerunners, S01": {
+   "soubor": "Cyberpunk_ Edgerunners, S01.docx",
+   "hash": "094b83875836fda1f516af2edb1ba1ff8554074c771775eeaa2e42e3c347adc9"
+  },
+  "Chainsaw Man": {
+   "soubor": "Chainsaw Man.docx",
+   "hash": "75caa0d2a550934480ca9e0bb5f7beae231ecff906300ae5d23ac86a09198db9"
+  },
+  "Kaiju No.8, S01": {
+   "soubor": "Kaiju No.8, S01.docx",
+   "hash": "886b54242e3bdc9654a531a5d72a4cb4a521fbfa06b3ed2455c8cf713841c594"
+  },
+  "Classroom of the Elite, S03": {
+   "soubor": "Classroom of the Elite, S03.docx",
+   "hash": "76d701c7faf5fdc038504ffa919e683d2a4c8b318809a90a4d80ef32ae87de6a"
+  },
+  "Frieren: Beyond Journey's End, S01": {
+   "soubor": "Frieren_ Beyond Journey's End, S01.docx",
+   "hash": "72f44f36dd34e8c3ab173854dd28f2f5403e35b129ae6d7ed3ccb912c5789182"
+  },
+  "Re:Zero -Starting Life in Another World-, S03": {
+   "soubor": "Re_Zero -Starting Life in Another World-, S03.docx",
+   "hash": "290409389319f7d1d5448be639faee58fcb1194fa5f28ef0396dcec4d07642f3"
+  },
+  "Mushoku Tensei: Jobless Reincarnation, S02 Part 2": {
+   "soubor": "Mushoku Tensei_ Jobless Reincarnation, S02 Part 2.docx",
+   "hash": "be90da74cb754113cfb765f718efaf90a3db507a8df4516622e722c1236d8ffb"
+  },
+  "That Time I Got Reincarnated as a Slime, S03": {
+   "soubor": "That Time I Got Reincarnated as a Slime, S03.docx",
+   "hash": "61704e3a6e69a4a552a82483d15f165be99bfc46f04e8f022aa448fdc010fa63"
+  },
+  "The Beginning After the End, S01": {
+   "soubor": "The Beginning After the End, S01.docx",
+   "hash": "cf4b4fed8638d66293ddc9fd05d11d79dd8f712496fb1961d367009e5acfb8bb"
+  },
+  "Lord of Mysteries": {
+   "soubor": "Lord of Mysteries.docx",
+   "hash": "a277de18c7c55f1b08526100297ed71940e19acf448561cfb25847c382294cf4"
+  },
+  "Call of the Night, S02": {
+   "soubor": "Call of the Night, S02.docx",
+   "hash": "91793e977808e8fa717914f612b46bba899f82914e2e9de8693a8a678694d53c"
+  },
+  "The Water Magician": {
+   "soubor": "The Water Magician.docx",
+   "hash": "915833ccca303c65f82631e0b3a645dd136faef5265f434e047a7d809593f21f"
+  },
+  "My Dress-Up Darling, S02": {
+   "soubor": "My Dress-Up Darling, S02.docx",
+   "hash": "f75f1d189c00a26a5f529da5c5f77c9fde879de97337acc8a5d54534eca04cfb"
+  },
+  "The Summer Hikaru Died, S01": {
+   "soubor": "The Summer Hikaru Died, S01.docx",
+   "hash": "10a491e73795e7d08d1efc6fd9db30395ea618f99bb2c448074b6a0bc97c467d"
+  },
+  "The Rising of the Shield Hero, S04": {
+   "soubor": "The Rising of the Shield Hero, S04.docx",
+   "hash": "0a0727e0cb5dd968141eb3b70adf80adacaafc6850b21dbd73964b95a8240430"
+  },
+  "Rascal Does Not Dream of Santa Claus": {
+   "soubor": "Rascal Does Not Dream of Santa Claus.docx",
+   "hash": "b8d49731113ad3a946434c672974ec678070b87fe8bc006992dfa7b8740d0389"
+  },
+  "Black Butler: Emerald Witch Arc": {
+   "soubor": "Black Butler_ Emerald Witch Arc.docx",
+   "hash": "545808633288d4aea43d040291ee67ac51e4bc80da445c52056a870d805ea103"
+  },
+  "Kaiju No.8, S02": {
+   "soubor": "Kaiju No.8, S02.docx",
+   "hash": "29c30da00a3c2a034c4bf6c7ab24668b8406d2b028950b142770287860e00115"
+  },
+  "Puella Magi Madoka Magica the Movie: Rebellion": {
+   "soubor": "Puella Magi Madoka Magica the Movie_ Rebellion.docx",
+   "hash": "7166a2a4f9a2cad14639ef4f1f97003ab3ae8eb568a240e557d04144578a65f4"
+  },
+  "Monogatari Series: Off & Monster Season": {
+   "soubor": "Monogatari Series_ Off & Monster Season.docx",
+   "hash": "08e2427cb970776fb9e9511881bf2fe02b4979cc0f2be8ac22d9608a3d32123b"
+  },
+  "Spice and Wolf: Merchant Meets the Wise Wolf, S01": {
+   "soubor": "Spice and Wolf_ Merchant Meets the Wise Wolf, S01.docx",
+   "hash": "92e750890ba212b7fdaf1d4bdee8419e04dff96d2db8086fb0e9e9539a9e6268"
+  },
+  "The Apothecary Diaries, S02": {
+   "soubor": "The Apothecary Diaries, S02.docx",
+   "hash": "343995716479953bc36efd30efa5bbc6b492f2effbd1740631686581b988f832"
+  },
+  "Spy x Family, S03": {
+   "soubor": "Spy x Family, S03.docx",
+   "hash": "c43bbbb6bf1f6f8dcbc19b59d7432729082f05ce658ec668117762cb4ee6ae5b"
+  },
+  "Tower of God, S02: Workshop Battle": {
+   "soubor": "Tower of God, S02_ Workshop Battle.docx",
+   "hash": "0f8483dadc06012ddf4828655c2d0cdeb6c789bf26731ff165acf75f58a53279"
+  },
+  "I've Been Killing Slimes for 300 Years and Maxed Out My Level, S02": {
+   "soubor": "I've Been Killing Slimes for 300 Years and Maxed Out My Level, S02.docx",
+   "hash": "0b53c7976a1d06158b0ed0b75e232a49b3938022f7ebfdf52855c4675735e921"
+  },
+  "Tsukimichi -Moonlit Fantasy-, S02": {
+   "soubor": "Tsukimichi -Moonlit Fantasy-, S02.docx",
+   "hash": "f45de9e7328166c758abacbe85950be32fbb2297b9c7719d3ad5be3c453ed18e"
+  },
+  "Ascendance of a Bookworm, S03": {
+   "soubor": "Ascendance of a Bookworm, S03.docx",
+   "hash": "640e847aadc7b625924ac272698d9183030da0225d0bc7cf2f04f17346e69bd5"
+  },
+  "GATE, S01 Part 2": {
+   "soubor": "GATE, S01 Part 2.docx",
+   "hash": "f901545ddf7bc99ebba1057b678f26f32d597afd7b73db64d933b1491e22e3a3"
+  },
+  "Skeleton Knight in Another World, S01": {
+   "soubor": "Skeleton Knight in Another World, S01.docx",
+   "hash": "e9dc9deae83838440f7e3f302eeab52023d989f17b820ea5d79c6aa10f908e37"
+  },
+  "Arifureta: From Commonplace to World's Strongest, S03": {
+   "soubor": "Arifureta_ From Commonplace to World's Strongest, S03.docx",
+   "hash": "5c3736063e164814c98c66ad9e68e4b28ce57392af1261693ce276da2e95d33f"
+  },
+  "Saga of Tanya the Evil: The Movie": {
+   "soubor": "Saga of Tanya the Evil_ The Movie.docx",
+   "hash": "84e9284fdbf5bb9225a7eb32bcd79e7cf681ae29347d750690d7a9820016ce0f"
+  },
+  "Chainsaw Man the Movie: Reze Arc": {
+   "soubor": "Chainsaw Man the Movie_ Reze Arc.docx",
+   "hash": "eb35cc4c4ef91f22eb11ad3cb4848d01c928f36dcdd5bf6153fd69f63078b3f2"
+  },
+  "Demon Slayer: The Movie: Infinity Castle - Part 1: Akaza Returns": {
+   "soubor": "Demon Slayer_ The Movie_ Infinity Castle - Part 1_ Akaza Returns.docx",
+   "hash": "d6e7150299e6df5202abe788f6aea2a3d4b2c968f7a8e7ed66db607d5e4ada64"
+  },
+  "Vinland Saga, S02": {
+   "soubor": "Vinland Saga, S02.docx",
+   "hash": "529ed9f77c618fd0a9b500c1aa7d9b98340d51a776f0b5e38c4ce09e361f95d2"
+  },
+  "Dorohedoro, S01": {
+   "soubor": "Dorohedoro, S01.docx",
+   "hash": "710cb804720e717b8f3bb3021680192c93c6df66fa570da4ad643e711245c4cd"
+  },
+  "Wandering Witch: The Journey of Elaina": {
+   "soubor": "Wandering Witch_ The Journey of Elaina.docx",
+   "hash": "5ca1237e67a833dc97da313e785c724cc8a6c17885d6d692056672c2b996931e"
+  },
+  "Secrets of the Silent Witch": {
+   "soubor": "Secrets of the Silent Witch.docx",
+   "hash": "33ec70300ebf5ac4507796c685399cd9f6b17672ec20830c22fee4efefbeaeb2"
+  },
+  "Once Upon a Witch's Death": {
+   "soubor": "Once Upon a Witch's Death.docx",
+   "hash": "263d8d8f52978d1a79a2bd2054cad59607c0844b7893d794afa6b5aa1e7bf77e"
+  },
+  "The Ancient Magus' Bride, S02 Part 2": {
+   "soubor": "The Ancient Magus' Bride, S02 Part 2.docx",
+   "hash": "96e9e02ed9f62407e4c3a66a790e5b83f1ba5196d295684edcd18ef8f7c32a1a"
+  },
+  "Psycho-Pass, S03: First Inspector": {
+   "soubor": "Psycho-Pass, S03_ First Inspector.docx",
+   "hash": "ea86fddb677bdfacaa6746d44d8aefe9f3370f6fb3c27813ecc95e3ed9d772bd"
+  },
+  "Sentenced to Be a Hero, S01": {
+   "soubor": "Sentenced to Be a Hero, S01.docx",
+   "hash": "161fad1832d020f507fcfba8530a8bc102f1bad5bd27eaae461eeafff4e1350a"
+  },
+  "To Your Eternity, S03": {
+   "soubor": "To Your Eternity, S03.docx",
+   "hash": "aa85c8e611404ac9ba5a7ad9282819e4e86aeddd71812d4c48f443b3ad77a277"
+  },
+  "Frieren: Beyond Journey's End, S02": {
+   "soubor": "Frieren_ Beyond Journey's End, S02.docx",
+   "hash": "ef8a22438a9cdd7cd0dc85e24bc9a5d1f881bda5a43feda21bff57dfac13c6ad"
+  },
+  "Jujutsu Kaisen: The Culling Game Part 1": {
+   "soubor": "Jujutsu Kaisen_ The Culling Game Part 1.docx",
+   "hash": "485e25f001f6ecdf86703617ffe2e1b2abc9571c974e29c79e6e88d56647bbb3"
+  },
+  "Ranking of Kings: The Treasure Chest of Courage": {
+   "soubor": "Ranking of Kings_ The Treasure Chest of Courage.docx",
+   "hash": "7f4552d2a8064e2d0a7432a7874eb719ffe81b5c37bf3a6d53db3fb8ece0b37d"
+  },
+  "The Unwanted Undead Adventurer, S01": {
+   "soubor": "The Unwanted Undead Adventurer, S01.docx",
+   "hash": "c82377ef9b8e0865af7b069a0d3defc97819e88d6fa58dcee28af260e8086fa0"
+  },
+  "Berserk of Gluttony, S01": {
+   "soubor": "Berserk of Gluttony, S01.docx",
+   "hash": "f56798f74179375942f5e822f03abd7178354737f8321e0ec2bd530b263382c8"
+  },
+  "Fate/strange Fake, S01": {
+   "soubor": "Fate strange Fake, S01.docx",
+   "hash": "5e8ea166766185a2e65893ed4c8deed8ba04e683930bd3bd8235c0243c61aff2"
+  },
+  "Dorohedoro, S02": {
+   "soubor": "Dorohedoro, S02.docx",
+   "hash": "2b0403040e627b367c0c7cc1c8419e7d3455694b48a971169829b6cf8ebe2d5f"
+  },
+  "Hell's Paradise, S02": {
+   "soubor": "Hell's Paradise, S02.docx",
+   "hash": "c63bb8577e24b0234a4ae4e02b121161372da3bb85eff1275472667a2e7192b5"
+  },
+  "Wistoria: Wand and Sword, S02": {
+   "soubor": "Wistoria_ Wand and Sword, S02.docx",
+   "hash": "73ddef1a2a7b9aa64b452a5b1b756fe9fc44b5b1f3004b9deeaebc1675c94f54"
+  },
+  "The Beginning After the End, S02": {
+   "soubor": "The Beginning After the End, S02.docx",
+   "hash": "02f8583c149595b8fd9f57806d9ca8d1c133488df25b3d7c9ad2a51d2eba7845"
+  },
+  "Agents of the Four Seasons: Dance of Spring": {
+   "soubor": "Agents of the Four Seasons_ Dance of Spring.docx",
+   "hash": "8aa2d9cc4888f491b6d6f46dd868970fb8b40b063462a92d6e5b7d6f9b6bcbad"
+  },
+  "Witch Hat Atelier, S01": {
+   "soubor": "Witch Hat Atelier, S01.docx",
+   "hash": "7be6587ac18a02bcf765250413941f1eef9d25cde2c964947c374af5921ff48e"
+  },
+  "Nippon Sangoku: The Three Nations of the Crimson Sun, S01": {
+   "soubor": "Nippon Sangoku_ The Three Nations of the Crimson Sun, S01.docx",
+   "hash": "9a100c47f7343f5247787de20514da33d1f23b79ae1ce84bbd3128e64944714f"
+  },
+  "Classroom of the Elite, S04: Second Year, First Semester": {
+   "soubor": "Classroom of the Elite, S04_ Second Year, First Semester.docx",
+   "hash": "dd9dddc0542b414605cfc8f4bedf6cd8aa96507897cefd31b189d03fa900ccd4"
+  },
+  "Petals of Reincarnation": {
+   "soubor": "Petals of Reincarnation.docx",
+   "hash": "4f8d599a284021b0b0142b9e91534f758a5932a65bfa9a6a744b451a94a335c2"
+  },
+  "NieR:Automata Ver1.1a Part 1": {
+   "soubor": "NieR_Automata Ver1.1a Part 1.docx",
+   "hash": "0505d919640bb6e305f521426200f013f3f65caba7ad0464885ee49e55fe0050"
+  },
+  "NieR:Automata Ver1.1a Part 2: Investigation Report": {
+   "soubor": "NieR_Automata Ver1.1a Part 2_ Investigation Report.docx",
+   "hash": "b3630a8101cedd7730349f3671210b64664c6022d1a963182ab243c35ec265ed"
+  },
+  "KonoSuba: God's Blessing on This Wonderful World!, S01": {
+   "soubor": "KonoSuba_ God's Blessing on This Wonderful World!, S01.docx",
+   "hash": "1833cfe6b373dd9e1b09c645f97c6b7979f878939c6b87681a3ff814f8c9b7d3"
+  },
+  "KonoSuba: God's Blessing on This Wonderful World! - God's Blessing on This Wonderful Choker!": {
+   "soubor": "KonoSuba_ God's Blessing on This Wonderful World! - God's Blessing on This Wonderful Choker!.docx",
+   "hash": "cd029421a63ecf4d1c3a67e7e3be2e458d7bd3f90bda4eb31aa6e233f0593941"
+  },
+  "KonoSuba: God's Blessing on This Wonderful World!, S02": {
+   "soubor": "KonoSuba_ God's Blessing on This Wonderful World!, S02.docx",
+   "hash": "5e9392c224c1a67831c67d3590df6e5cab6ecb5f2dfa6c1e415d4cf68e980e4a"
+  },
+  "KonoSuba: God's Blessing on This Wonderful World! 2 - God's Blessing on This Wonderful Art!": {
+   "soubor": "KonoSuba_ God's Blessing on This Wonderful World! 2 - God's Blessing on This Wonderful Art!.docx",
+   "hash": "401551f15ae08b456cdd2a2b53ebc0c8aeb69a12edee03558d78ec6db9a0819a"
+  },
+  "KonoSuba: God's Blessing on This Wonderful World! The Movie: Crimson Legend": {
+   "soubor": "KonoSuba_ God's Blessing on This Wonderful World! The Movie_ Crimson Legend.docx",
+   "hash": "fc6615346f90a2b30593610d1c892fe5a2683c4ddf072c9366735bd5f7df6f8a"
+  },
+  "KonoSuba: An Explosion on This Wonderful World!": {
+   "soubor": "KonoSuba_ An Explosion on This Wonderful World!.docx",
+   "hash": "48623a3ce546918a8e6d56400f96d2bfc8279309bf510c4ef70bddf3fe7352c4"
+  },
+  "The Eminence in Shadow, S01": {
+   "soubor": "The Eminence in Shadow, S01.docx",
+   "hash": "aada640426c5c09114432f415352a177800ca4658c8810b2ec7c9f798639c1d8"
+  },
+  "Overlord, S01": {
+   "soubor": "Overlord, S01.docx",
+   "hash": "f60bdc1e852443272170f2474623ad947c77f3ac1f6378ae4269a106c0e8f197"
+  },
+  "Legend of the Galactic Heroes: Die Neue These": {
+   "soubor": "Legend of the Galactic Heroes_ Die Neue These.docx",
+   "hash": "0a27a308fd4d00fe91295c0ffc3db4910b96dc8837d78d7b3121cf9a9c5ff617"
+  },
+  "Legend of the Galactic Heroes: Die Neue These - Stellar War Part 1": {
+   "soubor": "Legend of the Galactic Heroes_ Die Neue These - Stellar War Part 1.docx",
+   "hash": "b4010451048430c358eea201a51f222323d7866ad1c0ba61dbf65786244854e3"
+  },
+  "Legend of the Galactic Heroes: Die Neue These - Stellar War Part 2": {
+   "soubor": "Legend of the Galactic Heroes_ Die Neue These - Stellar War Part 2.docx",
+   "hash": "e3de0e97755e6194e478eae8e3aecdb0be28646e8b39e7089946460059487f36"
+  },
+  "Legend of the Galactic Heroes: Die Neue These - Stellar War Part 3": {
+   "soubor": "Legend of the Galactic Heroes_ Die Neue These - Stellar War Part 3.docx",
+   "hash": "637791deb644da3b2fa68cca66985fa3b27a486590f85565acb75ff8e0289821"
+  },
+  "Black Lagoon": {
+   "soubor": "Black Lagoon.docx",
+   "hash": "e575feb5fbe2c4939038021f80ea3eebc6d7260391a429cb8af01feddb15b9ff"
+  },
+  "Black Lagoon: The Second Barrage": {
+   "soubor": "Black Lagoon_ The Second Barrage.docx",
+   "hash": "9feaa68bba2df8382ee03edc2442f499fa11fc2a1a04557ec2e1c125c91b653c"
+  },
+  "Overlord, S02": {
+   "soubor": "Overlord, S02.docx",
+   "hash": "592484d1773093c8062354e8dc659194114ef9c8e177ed76a8ca48e05fe444c7"
+  },
+  "Overlord, S03": {
+   "soubor": "Overlord, S03.docx",
+   "hash": "a25a5a312b28977873a776ed96fa1b542e133de4b53e246275290515af92afec"
+  },
+  "Overlord: The Sacred Kingdom": {
+   "soubor": "Overlord_ The Sacred Kingdom.docx",
+   "hash": "95ce957e5e44d2e0c900f498e8cf66436c2c181d2ff7dbbd4f5aba5324341960"
+  },
+  "To Your Eternity, S01": {
+   "soubor": "To Your Eternity, S01.docx",
+   "hash": "6127b8a95a5cba85b07187aefe4d3a8ffa5895f9c7a1a946078336fbbd6c0201"
+  },
+  "No Game, No Life: Zero": {
+   "soubor": "No Game, No Life_ Zero.docx",
+   "hash": "c21ce26423e2d8323e3437ba6480459cc02aedec0bca407b6cbc81dded5cbcf5"
+  },
+  "86 Eighty-Six, S01 Part 1": {
+   "soubor": "86 Eighty-Six, S01 Part 1.docx",
+   "hash": "ee8368f280e01a03fb4a0b505ab126fece136fc5b89c62a00c1428591950988c"
+  },
+  "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S01": {
+   "soubor": "Is It Wrong to Try to Pick Up Girls in a Dungeon, S01.docx",
+   "hash": "a6984d416e57676c3f769c069ac4eb8782163c0d94e33f1d7fa7a5b513c99a75"
+  },
+  "Is It Wrong to Try to Pick Up Girls in a Dungeon?: Arrow of the Orion": {
+   "soubor": "Is It Wrong to Try to Pick Up Girls in a Dungeon_ Arrow of the Orion.docx",
+   "hash": "65f14b9bb21d22b31c38a89277812bcf858f5853d0357b8e9e4af59b1be72ae5"
+  },
+  "Is It Wrong to Try to Pick Up Girls in a Dungeon?: Is It Wrong to Expect a Hot Spring in a Dungeon?": {
+   "soubor": "Is It Wrong to Try to Pick Up Girls in a Dungeon_ Is It Wrong to Expect a Hot Spring in a Dungeon.docx",
+   "hash": "7f30f197d751c726f26ebf037329fe1738dd192d1050bcc3bdcdc197bd63c526"
+  },
+  "Is It Wrong to Try to Pick Up Girls in a Dungeon? II: Is It Wrong to go Searching for Herbs on a Deserted Island?": {
+   "soubor": "Is It Wrong to Try to Pick Up Girls in a Dungeon II_ Is It Wrong to go Searching for Herbs on a Deserted Island.docx",
+   "hash": "55b2e3a98534ad3d42a691fe600be239100765130bcafd222571309bcc245271"
+  },
+  "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S02": {
+   "soubor": "Is It Wrong to Try to Pick Up Girls in a Dungeon, S02.docx",
+   "hash": "1872290e8a244f2b7c8d1acf95a422a52aa8b6eb89431dce3f1464089f649aae"
+  },
+  "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S03": {
+   "soubor": "Is It Wrong to Try to Pick Up Girls in a Dungeon, S03.docx",
+   "hash": "3c83326a94c6d4037144e19664f729ffb306ee5bf4ff97f4ba1d358643894dbc"
+  },
+  "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S04 Part 1": {
+   "soubor": "Is It Wrong to Try to Pick Up Girls in a Dungeon, S04 Part 1.docx",
+   "hash": "8f514261ba96fc90f0ef5763efb20c492aef9a610caa57414feb9bb8ecb52e18"
+  },
+  "Violet Evergarden": {
+   "soubor": "Violet Evergarden.docx",
+   "hash": "ce5ab35e4e9648b0f962b22c5a6d70284486d6f8fa046dd976ed8a0bc382019f"
+  },
+  "Violet Evergarden: The Day You Understand \"I Love You\" Will Surely Come": {
+   "soubor": "Violet Evergarden_ The Day You Understand I Love You Will Surely Come.docx",
+   "hash": "841780be6d481f6f4b91a57085136cf3813c57366771b5d7002e0914dd1fda64"
+  },
+  "Violet Evergarden: Eternity and the Auto Memory Doll": {
+   "soubor": "Violet Evergarden_ Eternity and the Auto Memory Doll.docx",
+   "hash": "9ac4e36d07d06af72ec368b204874c9546a706e2bf997a5d0ea3a4ec4f270409"
+  },
+  "Another: The Other": {
+   "soubor": "Another_ The Other.docx",
+   "hash": "6e58145e168853efb3f9e1def88cbeb2c1908cae1cc4ec2c3ea71929b7364dc7"
+  },
+  "Sword Art Online, S02": {
+   "soubor": "Sword Art Online, S02.docx",
+   "hash": "b00a5e3eb77d9972a994da484b241fc6496e80122f24fa91e4ada9719b3c2aaf"
+  },
+  "Sword Art Online the Movie: Ordinal Scale": {
+   "soubor": "Sword Art Online the Movie_ Ordinal Scale.docx",
+   "hash": "170ba58c226b01ccb5fa5e4e91f481fd1074175cfb9d81c802f59b0d9f6eec87"
+  },
+  "Sword Art Online: Alicization": {
+   "soubor": "Sword Art Online_ Alicization.docx",
+   "hash": "6f68385230e1aa26722784a7518ce02dd690a105147e2abc7558cb6cbb9f0cdc"
+  },
+  "Sword Art Online: Alicization - War of Underworld, Part 1": {
+   "soubor": "Sword Art Online_ Alicization - War of Underworld, Part 1.docx",
+   "hash": "b67d91fc8d717280b35f90ff621e9e14b573180f00cbc58fda9ce2eafae0fa0c"
+  },
+  "Sword Art Online the Movie: Progressive - Aria of a Starless Night": {
+   "soubor": "Sword Art Online the Movie_ Progressive - Aria of a Starless Night.docx",
+   "hash": "9b91ba0f08af17de13b58e0e107d204667d881cc3ebe3ce99c7fbe57a12151c8"
+  },
+  "Sword Art Online Alternative: Gun Gale Online, S01": {
+   "soubor": "Sword Art Online Alternative_ Gun Gale Online, S01.docx",
+   "hash": "64487e02b6cf245bec1d5b4f6bf0cff0263a6ef140302822b1eddca84dd50fb0"
+  },
+  "Fate/stay night [Unlimited Blade Works] - Prologue": {
+   "soubor": "Fate stay night [Unlimited Blade Works] - Prologue.docx",
+   "hash": "25dc88d7e28944bae4d5477214370f2776d35a28288ae03809701b382b277005"
+  },
+  "Fate/stay night [Unlimited Blade Works], S01": {
+   "soubor": "Fate stay night [Unlimited Blade Works], S01.docx",
+   "hash": "b9b73dde93d9ece5f80d5e34f21605bbac0d72120e4d287e790c15f0273a1aaa"
+  },
+  "Fate/stay night: Heaven's Feel - II. Lost Butterfly": {
+   "soubor": "Fate stay night_ Heaven's Feel - II. Lost Butterfly.docx",
+   "hash": "73374b5751abfe69c4b2d613869feb3a0a2286117d7cbe2de106100263cf59dd"
+  },
+  "Fate/Zero, S01": {
+   "soubor": "Fate Zero, S01.docx",
+   "hash": "a58a0e462949b0021b562b95f4f31ecb8de89c787ef227458e2562f01f44c1f4"
+  },
+  "Fate/Zero, S02": {
+   "soubor": "Fate Zero, S02.docx",
+   "hash": "9b4c2a622cdc764e5bf1722981f9a0f12d22ba7094e5f48a7a2d9e65bdbb8f2d"
+  },
+  "Fate/Grand Order: First Order": {
+   "soubor": "Fate Grand Order_ First Order.docx",
+   "hash": "384ff0ecc2c2002678a24b5bf064b13d6fda87a9ff9adb6d243cddf5ce26503a"
+  },
+  "Fate/Grand Order: Divine Realm of the Round Table 1 - Camelot Wandering; Agateram": {
+   "soubor": "Fate Grand Order_ Divine Realm of the Round Table 1 - Camelot Wandering; Agateram.docx",
+   "hash": "9de8d5b8cd0f3af6ff45267ae732276c607c8f3fa851ebe3a32f6298ee7a1e09"
+  },
+  "Fate/Grand Order: Divine Realm of the Round Table 2 - Camelot Paladin; Agateram": {
+   "soubor": "Fate Grand Order_ Divine Realm of the Round Table 2 - Camelot Paladin; Agateram.docx",
+   "hash": "de5899dccce4d6343ab0cb08a24d67156c2c0d463f9eb85afd37233ba943b1ae"
+  },
+  "Fate/Grand Order: Absolute Demonic Front - Babylonia Initium Iter": {
+   "soubor": "Fate Grand Order_ Absolute Demonic Front - Babylonia Initium Iter.docx",
+   "hash": "babd1d5794b6fc476c88c199ae3a4ad3fd06966813aa6d3c06be830173d85166"
+  },
+  "Fate/Grand Order: Absolute Demonic Front - Babylonia": {
+   "soubor": "Fate Grand Order_ Absolute Demonic Front - Babylonia.docx",
+   "hash": "8901e15bb439517ebedf6f7e087cdc574e0b4933877869c6cd6999559e95955f"
+  },
+  "Fate/Grand Order: Moonlight/Lostroom": {
+   "soubor": "Fate Grand Order_ Moonlight Lostroom.docx",
+   "hash": "4408115a52134e43fd145dcca2fb1a337bdd9d01fc41316b8498b24fd1167382"
+  },
+  "The Garden of Sinners Chapter 1: Overlooking View": {
+   "soubor": "The Garden of Sinners Chapter 1_ Overlooking View.docx",
+   "hash": "d81f23109c0ea449226e6979854d2e728d7fe156321c9872ab067610cfb14ea8"
+  },
+  "The Garden of Sinners Chapter 2: A Study in Murder - Part 1": {
+   "soubor": "The Garden of Sinners Chapter 2_ A Study in Murder - Part 1.docx",
+   "hash": "09ccaaec1ee751ae9d9c4c9b622a706c04f907f2cf0eb57ef0fd4d791293cc7a"
+  },
+  "The Garden of Sinners Chapter 3: Remaining Sense of Pain": {
+   "soubor": "The Garden of Sinners Chapter 3_ Remaining Sense of Pain.docx",
+   "hash": "13d402a62b43566b7910a35784c32be7bba7730454b9cb3e4e69b2143a065317"
+  },
+  "The Garden of Sinners Chapter 4: The Hollow Shrine": {
+   "soubor": "The Garden of Sinners Chapter 4_ The Hollow Shrine.docx",
+   "hash": "ec9e0774abd3c9bc289d7e75fc11dfc73d937218d1d341a1c64d3cadcc37dc35"
+  },
+  "The Garden of Sinners Chapter 5: Paradox Spiral": {
+   "soubor": "The Garden of Sinners Chapter 5_ Paradox Spiral.docx",
+   "hash": "e8e7a1767123ec4185583722e188d643eeab82bfd372f8753cf036a231122fe9"
+  },
+  "The Garden of Sinners (Ch. 1 - 6) - Remix: Gate of Seventh Heaven": {
+   "soubor": "The Garden of Sinners (Ch. 1 - 6) - Remix_ Gate of Seventh Heaven.docx",
+   "hash": "41c43f3ac9e46146d62a5436fe21e37ccc065fd20615c274fa3b1ceb4bd97184"
+  },
+  "The Garden of Sinners Chapter 6: Oblivion Recording": {
+   "soubor": "The Garden of Sinners Chapter 6_ Oblivion Recording.docx",
+   "hash": "7df942d7f3c9151d89e2143199df4559ec4b05085bdabb3bff34ecee35ec9282"
+  },
+  "The Garden of Sinners Chapter 7: A Study in Murder - Part 2": {
+   "soubor": "The Garden of Sinners Chapter 7_ A Study in Murder - Part 2.docx",
+   "hash": "da00385600cd44fdcb578e0f3ef03e918f446fd7fbce41492ecff40c13f0abf7"
+  },
+  "The Garden of Sinners Chapter 8: Epilogue": {
+   "soubor": "The Garden of Sinners Chapter 8_ Epilogue.docx",
+   "hash": "bd1496257c5db03f00f54cf74d3b4876c5a52b42e91d2e3c6588d7b093cff0ae"
+  },
+  "The Garden of Sinners: Future Gospel": {
+   "soubor": "The Garden of Sinners_ Future Gospel.docx",
+   "hash": "061e5d65e430c9a3e02baa33e0da347faca33ed36187260eb13ed65ab8f512a3"
+  },
+  "Code Geass: Lelouch of the Rebellion R1": {
+   "soubor": "Code Geass_ Lelouch of the Rebellion R1.docx",
+   "hash": "54ece60eb95da93004bf40b331bdea613d30c49b9202f6b114632c9822247f59"
+  },
+  "Code Geass: Akito the Exiled 1 - The Wyvern Arrives": {
+   "soubor": "Code Geass_ Akito the Exiled 1 - The Wyvern Arrives.docx",
+   "hash": "3af17ea8b0c83c61ce7beef66ed41e2056ab93216c2cdc02733f4d16507114ca"
+  },
+  "Code Geass: Akito the Exiled 2 - The Wyvern Divided": {
+   "soubor": "Code Geass_ Akito the Exiled 2 - The Wyvern Divided.docx",
+   "hash": "77f61dcc9358d57831a101019e2f4ff00853bd15bd4e670e6aa4e85c020e2313"
+  },
+  "Code Geass: Akito the Exiled 3 - The Brightness Falls": {
+   "soubor": "Code Geass_ Akito the Exiled 3 - The Brightness Falls.docx",
+   "hash": "4bb568b6d46342859064c0411a1c0febf01b670d8f49950738007b9ab480c1e0"
+  },
+  "Code Geass: Akito the Exiled 4 - Memories of Hatred": {
+   "soubor": "Code Geass_ Akito the Exiled 4 - Memories of Hatred.docx",
+   "hash": "55fe7d4a123554bf20f6c2360b7c789513da0a8d8c182a9b1c0ccc4230651f6d"
+  },
+  "Code Geass: Akito the Exiled 5 - To Beloved Ones": {
+   "soubor": "Code Geass_ Akito the Exiled 5 - To Beloved Ones.docx",
+   "hash": "ad71790605060250352ab0bb4aac96ef484ad08243bd7da2f41bd59a0c33c147"
+  },
+  "Solo Leveling, S01": {
+   "soubor": "Solo Leveling, S01.docx",
+   "hash": "fde6d1863c88d8bf85ba88b768d397a345f87e901bc6df901339228a5d610273"
+  },
+  "Attack on Titan OAD": {
+   "soubor": "Attack on Titan OAD.docx",
+   "hash": "069b65e20f3c8d1cc1b83ccbb7add4be652309211aa48d53ec713402e9c0c363"
+  },
+  "Attack on Titan, S01": {
+   "soubor": "Attack on Titan, S01.docx",
+   "hash": "74cdcca42f10442e2774f3ae6d7c74101b7528f9ec86e88f00705616a17ca8e4"
+  },
+  "Attack on Titan, S02": {
+   "soubor": "Attack on Titan, S02.docx",
+   "hash": "fd42927f06c17e34604cbb58a6508dc06bf09cc471ee7539daa728e004907712"
+  },
+  "Attack on Titan: No Regrets": {
+   "soubor": "Attack on Titan_ No Regrets.docx",
+   "hash": "161223eebe668c08e1b4e04c0cc8f3f895dac823ac28e004413a0cc0316596ae"
+  },
+  "Attack on Titan: Lost Girls": {
+   "soubor": "Attack on Titan_ Lost Girls.docx",
+   "hash": "e888273e7550e42e83103b68fd99e34dffd1327e88f506d52ad7e3572f1f1719"
+  },
+  "Attack on Titan, S03 Part 1": {
+   "soubor": "Attack on Titan, S03 Part 1.docx",
+   "hash": "873343c65e011354f2711fd44a0a884301a74273799806b3ed4ab54b15d3423d"
+  },
+  "Attack on Titan, S03 Part 2": {
+   "soubor": "Attack on Titan, S03 Part 2.docx",
+   "hash": "e96f0641aa8018b1c467d19c9086be08bcae27ac4f69dac3038628f750af36b1"
+  },
+  "Attack on Titan: Final Season Part 1": {
+   "soubor": "Attack on Titan_ Final Season Part 1.docx",
+   "hash": "bc71f6a70a7fbe8a03eca8b036d5fdd209976a46032bbd61db14ebf7d0fd54e6"
+  },
+  "Attack on Titan: Final Season Part 2": {
+   "soubor": "Attack on Titan_ Final Season Part 2.docx",
+   "hash": "5acebdf0a0fed148a4bf001c820b70e2795f448a48c10a0bc7eb40c6ee574703"
+  },
+  "Neon Genesis Evangelion": {
+   "soubor": "Neon Genesis Evangelion.docx",
+   "hash": "337dce003aee61e3910ea5cf969e3cd17f597d7c9995b7c11c38e99d237d6aab"
+  },
+  "Evangelion: 1.0 You Are (Not) Alone": {
+   "soubor": "Evangelion_ 1.0 You Are (Not) Alone.docx",
+   "hash": "9b462a9598fcdaeab008e10fe6dbbac25faf105e3dbc4a3b3f41a11bd097acb5"
+  },
+  "Evangelion: 2.0 You Can (Not) Advance": {
+   "soubor": "Evangelion_ 2.0 You Can (Not) Advance.docx",
+   "hash": "2f2ef4c2684e884bc1f833d5c83ba02a788a78f142eb7aba9ff941c80a4ef482"
+  },
+  "Evangelion: 3.0 You Can (Not) Redo": {
+   "soubor": "Evangelion_ 3.0 You Can (Not) Redo.docx",
+   "hash": "6bf058a27e85e6342313cc617caf34ffdada756af7447a308a6cdfc4c1246c56"
+  },
+  "Shangri-La Frontier, S01": {
+   "soubor": "Shangri-La Frontier, S01.docx",
+   "hash": "5a731d0d7280039ef5583a14603a11836e698cc93e17030284a7b972a802d9a1"
+  },
+  "Made in Abyss": {
+   "soubor": "Made in Abyss.docx",
+   "hash": "a06ff61f3c37ffaf1991a2e97208fe8732fdf1d380737b4b64c46a892e5df5ef"
+  },
+  "Made in Abyss: Dawn of the Deep Soul": {
+   "soubor": "Made in Abyss_ Dawn of the Deep Soul.docx",
+   "hash": "66d94c5c56917e6d19eee53165b048296314edc7a5a4b3ccecd3cf38b2c84d05"
+  },
+  "The Promised Neverland, S01": {
+   "soubor": "The Promised Neverland, S01.docx",
+   "hash": "7ad0475efcfcf0df6fb681e1035f3ebe5ac526a197008a4da3a0de9977f700af"
+  },
+  "Goblin Slayer, S01": {
+   "soubor": "Goblin Slayer, S01.docx",
+   "hash": "f317e32a076e18ba35284a854fd500b8971b7af3d3b94d6cdc115ff4d12bd3f7"
+  },
+  "Goblin Slayer: Goblin's Crown": {
+   "soubor": "Goblin Slayer_ Goblin's Crown.docx",
+   "hash": "f868298377bc938d048dd5fe49350a65d58532fe52f51a61939aec1d5b979272"
+  },
+  "Your Lie in April: Moments": {
+   "soubor": "Your Lie in April_ Moments.docx",
+   "hash": "45aca4be26ac0da2407c7dcb12841c2bb1a7205a836a61520406e889f2121d6f"
+  },
+  "Angel Beats! Specials": {
+   "soubor": "Angel Beats! Specials.docx",
+   "hash": "e3be3754a68e0cda4b169f9f073cf55edf12d5102d3966bafc0a83388e4398aa"
+  },
+  "Angel Beats! Another Epilogue": {
+   "soubor": "Angel Beats! Another Epilogue.docx",
+   "hash": "9843a0ed86a482dcb1b49ae7f868f8b38bbed4000699f51db31a510b39284f65"
+  },
+  "Orange": {
+   "soubor": "Orange.docx",
+   "hash": "d2bbee07494c6d83b32df88a58a0c9a38a11a3adc33bd87bdbb24fb3437da437"
+  },
+  "Noragami": {
+   "soubor": "Noragami.docx",
+   "hash": "61919c2689db166b79774342a0a5cc262e6ca813a85ed37196fe53c468898c50"
+  },
+  "Noragami Aragoto OVA": {
+   "soubor": "Noragami Aragoto OVA.docx",
+   "hash": "565503a6908d66532287ce9b31ab61c48b373f88985d900f50e7202ce4d9daba"
+  },
+  "Noragami OVA": {
+   "soubor": "Noragami OVA.docx",
+   "hash": "3ca8d34ca70b83df6c9d8705a25499e957653fa39a5c02b4fcfa4929b99793f0"
+  },
+  "Death Billiards": {
+   "soubor": "Death Billiards.docx",
+   "hash": "1a2057e3fe6f258d978431d747fc184dfa013329f2b8b02c18f20dfaafe4c543"
+  },
+  "Lord El-Melloi II's Case Files: Rail Zeppelin Grace Note - A Grave Keeper, a Cat, and a Mage": {
+   "soubor": "Lord El-Melloi II's Case Files_ Rail Zeppelin Grace Note - A Grave Keeper, a Cat, and a Mage.docx",
+   "hash": "ea4dcafd3f828265784579f5f84f25a45b6139a623eeb9650cee0c4d96cece05"
+  },
+  "Elfen Lied: In the Passing Rain, or, How Can a Girl Have Reached Such Feelings?": {
+   "soubor": "Elfen Lied_ In the Passing Rain, or, How Can a Girl Have Reached Such Feelings.docx",
+   "hash": "41148f4f7f92a719fd66e59e063e7a443dbc10c73abdb027defd5cec378bdfc7"
+  },
+  "Kaiju No.8: Hoshina's Day Off": {
+   "soubor": "Kaiju No.8_ Hoshina's Day Off.docx",
+   "hash": "71c4f5e54294a5809005dfbfa0918341dba5e1ff2d0cd260f813f72a02128c06"
+  },
+  "Akame ga Kill!": {
+   "soubor": "Akame ga Kill!.docx",
+   "hash": "655012f90dd0b60b71997a0c92d5d67f761ff3c001d3d4d77ecd3c2985fd2d5a"
+  },
+  "No Game, No Life": {
+   "soubor": "No Game, No Life.docx",
+   "hash": "a779d038a22139bca6f0d5cccc33a2c87a75d129d7a4a62ab5d1c41da73c5a98"
+  },
+  "Another": {
+   "soubor": "Another.docx",
+   "hash": "f19c182c65ec654f3bc0d125d2358e9a78200a4ec60f61cf9b2db26314132a98"
+  },
+  "Chivalry of a Failed Knight": {
+   "soubor": "Chivalry of a Failed Knight.docx",
+   "hash": "ae6d331fa806b93d2018727fb8da839dbc59a7aabd85cd007714343130a73176"
+  },
+  "Deadman Wonderland": {
+   "soubor": "Deadman Wonderland.docx",
+   "hash": "fc3eac2c901c45a01b61bd30bfedb7f44ff17997b0080ae90a2d0c0fe3b294c5"
+  },
+  "Tomodachi Game": {
+   "soubor": "Tomodachi Game.docx",
+   "hash": "4b841ddf54bbd86b719ea161292767bed84f86b9b934529ee91c655976c32e01"
+  },
+  "Lord El-Melloi II's Case Files: Rail Zeppelin Grace Note": {
+   "soubor": "Lord El-Melloi II's Case Files_ Rail Zeppelin Grace Note.docx",
+   "hash": "d995d5bebdc64244772129e074386dae1ca1142e90fcf1209297d4c93a1a7c66"
+  },
+  "Spirited Away": {
+   "soubor": "Spirited Away.docx",
+   "hash": "3a1501cf0cd8f865e8ab8a34a2686d22b39bad333f8a8dc2f10430913628fa5e"
+  },
+  "Howl's Moving Castle": {
+   "soubor": "Howl's Moving Castle.docx",
+   "hash": "a459298d905fe6c4b0d0481d981c057e78748e4706d1518d73bc3e43ea298503"
+  },
+  "The Wind Rises": {
+   "soubor": "The Wind Rises.docx",
+   "hash": "8e9cef4d3e3182bd8a96075a37a061e18b2e9b4117d444be35c851f180c9aae8"
+  },
+  "NieR:Automata Ver1.1a Part 2": {
+   "soubor": "NieR_Automata Ver1.1a Part 2.docx",
+   "hash": "3eef32cbfbf46efca4f7ea19901ca4203e57664ad5ae458c049b7c57475e3308"
+  },
+  "Parasyte: The Maxim": {
+   "soubor": "Parasyte_ The Maxim.docx",
+   "hash": "305820dd911ff734580daad933c385deb52ca5de24642f94883a0ab0d0c14b73"
+  },
+  "Summer Time Rendering": {
+   "soubor": "Summer Time Rendering.docx",
+   "hash": "e0ef96d9bbc04b10cffa2def7ce71aabd68d5966c4e78f99db37e40e8d0dbf50"
+  },
+  "Charlotte": {
+   "soubor": "Charlotte.docx",
+   "hash": "aa469025ba230c18ab55336761dec5ea2daf2f432a8b6defdbb279e112682e3a"
+  },
+  "Charlotte: The Strong Ones": {
+   "soubor": "Charlotte_ The Strong Ones.docx",
+   "hash": "2c73f442e1140ae6ba27dc3e30c5c4a20eb90e01798f9d514979340085720269"
+  },
+  "Violet Evergarden: The Movie": {
+   "soubor": "Violet Evergarden_ The Movie.docx",
+   "hash": "daca843c9b635e3057f7df258dee161428d8346acc34bc1d64d47c749e9cbefc"
+  },
+  "Suzume": {
+   "soubor": "Suzume.docx",
+   "hash": "c7e5f66896c09e2e947945fbda1ddf94f84890a7d6720bb7e3e00bac044f78ee"
+  },
+  "Vivy: Fluorite Eye's Song": {
+   "soubor": "Vivy_ Fluorite Eye's Song.docx",
+   "hash": "81156cb64a5a9bf309647e597243f93cdda05377a8a308480104e5b0de25ae62"
+  },
+  "Fate/stay night: Heaven's Feel - III. Spring Song": {
+   "soubor": "Fate stay night_ Heaven's Feel - III. Spring Song.docx",
+   "hash": "58da326178f9aa7af8ecc0849ee95aa9bc3365323626c837489890e4775eb566"
+  },
+  "Fate/Apocrypha": {
+   "soubor": "Fate Apocrypha.docx",
+   "hash": "b6f5515a95c3e0c5b2d1279adc9c8cdce3172c018bb2d33c9714a3172924e89f"
+  },
+  "Fate/Grand Order: Final Singularity - Grand Temple of Time: Solomon": {
+   "soubor": "Fate Grand Order_ Final Singularity - Grand Temple of Time_ Solomon.docx",
+   "hash": "6f5f50ee145bcb60dae158c1a73dab90427999b6cc9497e373f87729fdca0803"
+  },
+  "The Garden of Sinners: Future Gospel - Extra Chorus": {
+   "soubor": "The Garden of Sinners_ Future Gospel - Extra Chorus.docx",
+   "hash": "47b317697447b15d8e85d7b89265fdb508e8bac4ae144945ab611c4934def327"
+  },
+  "Lazarus": {
+   "soubor": "Lazarus.docx",
+   "hash": "8feaceefc138f3dd79f7af7a531af1663bf20120d90081f0159da8c884568815"
+  },
+  "Code Geass: Lelouch of the Rebellion R2": {
+   "soubor": "Code Geass_ Lelouch of the Rebellion R2.docx",
+   "hash": "e430bc8a04f8d2189af1adc7d3a0c1fb1c964720937f9b6b0d9cb337d5b3e839"
+  },
+  "Moonrise": {
+   "soubor": "Moonrise.docx",
+   "hash": "f58de82cc6849e181f20d72db18f8c0486c252c2117692c4db6b65d8a3399886"
+  },
+  "Attack on Titan: Final Season - The Final Chapters": {
+   "soubor": "Attack on Titan_ Final Season - The Final Chapters.docx",
+   "hash": "08e4edd604cdc50a06f1889ccc3b02ef86437a2981ff50ffb9d855cfd809ae07"
+  },
+  "Neon Genesis Evangelion: The End of Evangelion": {
+   "soubor": "Neon Genesis Evangelion_ The End of Evangelion.docx",
+   "hash": "e1456f65ebf0a4cb515fbd59e4c4d3141d772b17d8ea69599a4b759fecf9ceec"
+  },
+  "Evangelion: 3.0+1.0 Thrice Upon a Time": {
+   "soubor": "Evangelion_ 3.0+1.0 Thrice Upon a Time.docx",
+   "hash": "e1877081b13e04de163ad647cae092fadcd0a130cf0a3cc89f84de6a5833cf91"
+  },
+  "Darling in the FranXX": {
+   "soubor": "Darling in the FranXX.docx",
+   "hash": "e38df4c5ea47f0c6feef92186136fc85de07661a437b8fbba24e443408100af1"
+  },
+  "The Promised Neverland, S02": {
+   "soubor": "The Promised Neverland, S02.docx",
+   "hash": "5a26190c07a4349c923b051567b8b38fdbf17b1ffa9b5bf39b990aa07f279b2a"
+  },
+  "Deadman Wonderland: The Red Knife Wielder": {
+   "soubor": "Deadman Wonderland_ The Red Knife Wielder.docx",
+   "hash": "7f244ff8b5e68c7308908ca90a6a6f09914b2121faef710b0a8067fc19a6f807"
+  },
+  "Your Lie in April": {
+   "soubor": "Your Lie in April.docx",
+   "hash": "be5023d7e4e7404300b975b3052de654522b8306d34d9b0c2d95104f6311afa7"
+  },
+  "Angel Beats!": {
+   "soubor": "Angel Beats!.docx",
+   "hash": "40478c5d633f9a196ce3f62cc599aac265f004abdb12814ff366abd82597f125"
+  },
+  "Plastic Memories": {
+   "soubor": "Plastic Memories.docx",
+   "hash": "013341b0a927db20127501441388b9e3e1fe2fd6abcf2daeb12ef13acf2f0634"
+  },
+  "Orange: Mirai": {
+   "soubor": "Orange_ Mirai.docx",
+   "hash": "005cf57446e9c7786b03a03c9eefd79b22513b84f7ef074659b145f0cbc1d9b6"
+  },
+  "Inuyashiki: Last Hero": {
+   "soubor": "Inuyashiki_ Last Hero.docx",
+   "hash": "b8761090bf5eb55ff0ff0571d653d2882d77740b747c836410858608f696762f"
+  },
+  "Serial Experiments Lain": {
+   "soubor": "Serial Experiments Lain.docx",
+   "hash": "532ada336fd09cf52fbf7f8ddc82d88dc544d16cb62cc797f4d6a02dfcb09de6"
+  },
+  "Lycoris Recoil: Friends Are Thieves of Time.": {
+   "soubor": "Lycoris Recoil_ Friends Are Thieves of Time..docx",
+   "hash": "89eed614d46d1e918ec48365c429f7462b401b9a5320f986cfe7d1cbf4c79e0c"
+  },
+  "Death Parade": {
+   "soubor": "Death Parade.docx",
+   "hash": "8d64ad642c4cfe368beee5a6163c8eae97404325934a812412e80281d234c9bf"
+  },
+  "Lord El-Melloi II's Case Files: Rail Zeppelin Grace Note - Waver, Reunion, and the Magic Lantern": {
+   "soubor": "Lord El-Melloi II's Case Files_ Rail Zeppelin Grace Note - Waver, Reunion, and the Magic Lantern.docx",
+   "hash": "db5f3755de3eee716f1d4d884ecbac93198720a219ada8d9e48220a01ceea2df"
+  },
+  "Astra Lost in Space": {
+   "soubor": "Astra Lost in Space.docx",
+   "hash": "dc98c5672538215214ead9056b677f87a1b54ac5e4a705ed612579230478f681"
+  },
+  "Terror in Resonance": {
+   "soubor": "Terror in Resonance.docx",
+   "hash": "7a730f11613c26e468a785cee4bbfce8f13b5153a0791dc30535200853a112ee"
+  },
+  "Elfen Lied": {
+   "soubor": "Elfen Lied.docx",
+   "hash": "6cfda2b1c970f3cae4437281667f6608e42fe74f52bfe6ddb19679f4528d68db"
+  },
+  "Your Name.": {
+   "soubor": "Your Name..docx",
+   "hash": "56acb3e3f6b798f8a2d13d85a665fd6fb03f1288e4ca54f392b67258bd47f722"
+  },
+  "Weathering with You": {
+   "soubor": "Weathering with You.docx",
+   "hash": "7f5b1c211902b22fdb36f25d5253aad2cf3f718e63c9b4a46e81b2f7c872940f"
+  },
+  "Death Note": {
+   "soubor": "Death Note.docx",
+   "hash": "2ac7b9958ee84ff205439aeb790c5630c28bd9ba7a2f3d16f2300ce57982669c"
+  },
+  "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S04 Part 2": {
+   "soubor": "Is It Wrong to Try to Pick Up Girls in a Dungeon, S04 Part 2.docx",
+   "hash": "5911afc12742df6350192b577d156f377c5b10c0b7b619303da99b044339893c"
+  },
+  "Fate/stay night [Unlimited Blade Works], S02": {
+   "soubor": "Fate stay night [Unlimited Blade Works], S02.docx",
+   "hash": "710a94e6c810fffdd4d03d4f048fb7958468ca3db120ca11487335d4bc528b15"
+  },
+  "Girls und Panzer": {
+   "soubor": "Girls und Panzer.docx",
+   "hash": "5eaa024393df8504e6526bbb97041edc2d86785c676c62ec071fde6125d89499"
+  },
+  "Girls und Panzer Der Film": {
+   "soubor": "Girls und Panzer Der Film.docx",
+   "hash": "ca401562b59a64eeaba7fee795c9af2795757a3b8023f0c0f9dc62a158acee13"
+  },
+  "Fate/stay night [Unlimited Blade Works], S02: Sunny Day": {
+   "soubor": "Fate stay night [Unlimited Blade Works], S02_ Sunny Day.docx",
+   "hash": "311e98a894504cfac85769949484ce2ad05affe08023dbde1337bdb10cf0174f"
+  },
+  "Yukikaze": {
+   "soubor": "Yukikaze.docx",
+   "hash": "a88d4977058d1782b5e066f8b89e4abd460eb094257ab3d9735fd5386531e2fa"
+  },
+  "Legend of the Galactic Heroes: Die Neue These - Collision": {
+   "soubor": "Legend of the Galactic Heroes_ Die Neue These - Collision.docx",
+   "hash": "0e6a276508d0818abcbaced4707501a2251bb0d0e1556aab647b9b02f7c27f5c"
+  },
+  "Code Geass: Lelouch of the Re;surrection": {
+   "soubor": "Code Geass_ Lelouch of the Re;surrection.docx",
+   "hash": "155b2d21c676e499ef76fd3f410b7a0f28211449bf0de06f2ebf6d2f4e012ea0"
+  },
+  "Fate/stay night: Heaven's Feel - I. Presage Flower": {
+   "soubor": "Fate stay night_ Heaven's Feel - I. Presage Flower.docx",
+   "hash": "93b5830302f340f25079d98edd3e4920f7a2a3b1849400ac1fa75e3b8a3f7f63"
+  },
+  "Sword Art Online, S01": {
+   "soubor": "Sword Art Online, S01.docx",
+   "hash": "0143efbc560ccb27a304a538afbc93b62434713082f29e933ea338c32f040808"
+  },
+  "KonoSuba: God's Blessing on This Wonderful World!, S03": {
+   "soubor": "KonoSuba_ God's Blessing on This Wonderful World!, S03.docx",
+   "hash": "853c94a98d9b5e4b77eceef2ece4c978eaf6480da34014e036ae9289c575c12c"
+  },
+  "The Eminence in Shadow, S02": {
+   "soubor": "The Eminence in Shadow, S02.docx",
+   "hash": "bc52c1edbc9113bafafa6f27b6103bc1547924fa147ac8840f6e55193b80b132"
+  },
+  "Legend of the Galactic Heroes: Die Neue These - Intrigue": {
+   "soubor": "Legend of the Galactic Heroes_ Die Neue These - Intrigue.docx",
+   "hash": "a69c6f7a527fb8c622bc0bdc3ba390706037485ac571119a42def34767b9db56"
+  },
+  "Black Lagoon: Roberta's Blood Trail": {
+   "soubor": "Black Lagoon_ Roberta's Blood Trail.docx",
+   "hash": "2cc218e716a368f871c81f7a5dd5403005715d078bea110249f0f61f40d8b89b"
+  },
+  "Overlord, S04": {
+   "soubor": "Overlord, S04.docx",
+   "hash": "d32becc81fcb3a683e2821fa9ff56cee7e6d8025fe1e05e5b973449fa7340789"
+  },
+  "To Your Eternity, S02": {
+   "soubor": "To Your Eternity, S02.docx",
+   "hash": "ec4da0b30aea89b3ffb53788843992717b1192f1241b49e772b49404a8b479bb"
+  },
+  "86 Eighty-Six, S01 Part 2": {
+   "soubor": "86 Eighty-Six, S01 Part 2.docx",
+   "hash": "8f6e12922593202b82fb7f151139527aaf1cb80f3a034bc728645e35601120be"
+  },
+  "Is It Wrong to Try to Pick Up Girls in a Dungeon? III: Is It Wrong to Try to Find a Hot Spring in Orario?": {
+   "soubor": "Is It Wrong to Try to Pick Up Girls in a Dungeon III_ Is It Wrong to Try to Find a Hot Spring in Orario.docx",
+   "hash": "54e4f13f40acbd7da346e50c17deadfb749dbde31c820be7a0e799fbe231eca7"
+  },
+  "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S05": {
+   "soubor": "Is It Wrong to Try to Pick Up Girls in a Dungeon, S05.docx",
+   "hash": "7e97d6c25de3a603b09f50eabaa67c2c4ffab07a3d373cfeb65bc77e2a0cbadd"
+  },
+  "Sword Art Online: Alicization - War of Underworld, Part 2": {
+   "soubor": "Sword Art Online_ Alicization - War of Underworld, Part 2.docx",
+   "hash": "4104f43ea38e02859fb98f1c9e3742f2f50e8bc4f7a22cbe5979f97983e1a7f9"
+  },
+  "Sword Art Online the Movie: Progressive - Scherzo of Deep Night": {
+   "soubor": "Sword Art Online the Movie_ Progressive - Scherzo of Deep Night.docx",
+   "hash": "8f9dff1ed4e33c2e18bca529e51aee39318bc36d053dc4abf6d3756210ba7c83"
+  },
+  "Sword Art Online Alternative: Gun Gale Online, S02": {
+   "soubor": "Sword Art Online Alternative_ Gun Gale Online, S02.docx",
+   "hash": "ba0e49fe3dee1df7699de450918fc023aa39c9a73416dbe4decf6c165f57559e"
+  },
+  "Solo Leveling, S02: Arise from the Shadow": {
+   "soubor": "Solo Leveling, S02_ Arise from the Shadow.docx",
+   "hash": "7f9460f4c4f767f24ae8c167c034bf66feb7a37a34c71f8b167200ac92aa877f"
+  },
+  "KonoSuba: God's Blessing on This Wonderful World! 3 OVA": {
+   "soubor": "KonoSuba_ God's Blessing on This Wonderful World! 3 OVA.docx",
+   "hash": "5f8ba4bbc65d698619bec34ead5d88ad2e10531fe7b1d91160b3fa856dc9ad6c"
+  },
+  "Shangri-La Frontier, S02": {
+   "soubor": "Shangri-La Frontier, S02.docx",
+   "hash": "f48081ed00af5f466802d6ed90209002325a15109526942e114287a1bba9344e"
+  },
+  "Heavenly Delusion": {
+   "soubor": "Heavenly Delusion.docx",
+   "hash": "81810242e7c5ea5c5a868e982b567dade8e3d70131e7fef1023f9ce454dc121c"
+  },
+  "Made in Abyss: The Golden City of the Scorching Sun": {
+   "soubor": "Made in Abyss_ The Golden City of the Scorching Sun.docx",
+   "hash": "6a0249a469d26094ccc536695317c066d4ec4fb851f9e91b407aea607d4bf2e2"
+  },
+  "Goblin Slayer, S02": {
+   "soubor": "Goblin Slayer, S02.docx",
+   "hash": "7ec0414e28c47864e1fe383070d6e29e341aeef1f111111655bdb1f648df9740"
+  },
+  "Bocchi the Rock!, S01": {
+   "soubor": "Bocchi the Rock!, S01.docx",
+   "hash": "c3d65281fbf44a4a4adbaa91efba5da6e66cf720cc5ce3fdd6f6a323e590a6f0"
+  },
+  "Noragami Aragoto": {
+   "soubor": "Noragami Aragoto.docx",
+   "hash": "21742c773e86d270e38fd015e2b22e5a68eabb65c11258c0e37a1360876e7ce5"
+  },
+  "Lycoris Recoil": {
+   "soubor": "Lycoris Recoil.docx",
+   "hash": "2f1b591e385a44230288a38dfbc3c39ad1e1e423395a19cf4c46eb605c32b355"
+  },
+  "Ragna Crimson": {
+   "soubor": "Ragna Crimson.docx",
+   "hash": "db286f6361703da89f1ba13935a6f1e221d3d135b4fa4244187d7008d88fd340"
+  }
+ }
+}

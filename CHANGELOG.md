@@ -4,6 +4,47 @@ Tento soubor shrnuje všechny nedávné změny, opravy a vylepšení implementov
 
 ---
 
+## [1.2.0] - 2026-08-04
+
+### 📄 Chytrý export DOCX rozborů
+- **`export_docx_categories.py` je nově inkrementální.** Otisk obsahu (`word/document.xml` plus `word/numbering.xml`, očištěný o náhodné identifikátory Wordu) se drží v `tools/docx_export_cache.json`, takže se parsují jen změněné rozbory a zbytek se převezme z minulého běhu. Z 474 souborů při každém exportu je běžný běh dnes prakticky nulový. Kompletní přeparse vynutí `--full`, zkušební výstup jinam `--out`.
+- **Cache se váže na `PARSER_VERSION`.** Když se změní pravidla parsování, cache se sama zahodí a vše se naparsuje znovu, aby v JSONu nezůstaly výsledky podle staré logiky.
+- **Nový kontrolní výpis po každém exportu:** tituly bez jediné kategorie a tituly s míň epizodami, než kolik jich má v `anime_list.json`. Nadpis mimo `HEADING_MAP` totiž propadne tiše a dosud se to poznalo až na webu.
+
+### 🔧 Opravy parseru rozborů (18 titulů)
+- **Kategorie už nevisí na nadpisu „Animace".** Rozbor, který má první kapitolu pojmenovanou jinak (např. „2. Analýza animace (2D)" u Tower of God), přicházel o **všechny** kategorie, i o ty, které se namapovat uměly. Nově se při prázdném výsledku jede druhý průchod, kde jako začátek stačí libovolná namapovaná kategorie. Dokumenty, které se parsovaly správně, se tím nemůžou rozbít, protože pro ně druhý průchod vůbec nenastane.
+- **Nadpisy typu „5. Technická analýza animace: 2D a Background Art"** se rozpoznají odloupnutím uvozovacího „analýza / rozbor / dekonstrukce". Schválně jen u číslovaných sekcí: nečíslovaný tučný podnadpis uvnitř textu („Analýza Adaptace:") by se jinak namapoval na kategorii, utnul rozepsaný text a část rozboru by se ztratila.
+- **Rozpoznávání epizod zvládá i „2.1 Epizoda 1: …", „1. Děj Epizody 1: …" a „1.1 Angel Beats! Special 1: …".** Pojistky, které tam musí zůstat: nadpis souhrnu děje není epizoda, i když v něm číslo epizody padne („1. Shrnutí Děje (Chronologicky EP 13–EP 24)"), a uvnitř rozepsaného děje se na epizodu láme jen nadpis začínající rovnou klíčem, jinak by filmy a speciály přišly o tlačítko „Děj".
+- **Poslední epizoda se už neztrácí.** U rozborů bez nadpisu „Animace" nebyla nikdy uložena, protože se čekalo na další nadpis, který nepřišel.
+- Výsledek ověřen porovnáním celého výstupu proti předchozímu: **žádný titul nepřišel o kategorii, epizodu, děj ani o kus textu**, přibylo 568 tisíc znaků. Zbývají dva neúplné rozbory (`Fullmetal Alchemist: Brotherhood OVA Collection`, `Is It Wrong to Try to Pick Up Girls in a Dungeon?, S05`), ty hlásí nový kontrolní výpis.
+
+### 🖼️ Předstažené postery pro Cestu Anime
+- **Nový `tools/download_journey_posters.py`:** stáhne postery z MAL do `public/images/posters/` (482 souborů, 5,7 MB, zmenšeno na 140 px) a vytvoří index `public/data/posters_index.json`. Inkrementální, stahuje jen nové tituly a postery se změněnou adresou.
+- **Pás anime v maximalizované Cestě bere postery z repozitáře.** Dřív se tahaly za běhu z Jikanu, což se na mém počítači neprojevilo (poster zůstal v `localStorage`), ale na cizím počítači to znamenalo stovky dotazů přes rate limit, spoustu chyb 504 a místo posterů moje vlastní náhledovky na šířku.
+- **Nouzová náhledovka se už neukládá natrvalo.** Když Jikan i AniList selhaly, zapsala se do `localStorage` a poster se pak nedotáhl nikdy, ani když API zase začalo odpovídat.
+- Karty „Nejlepší Anime" a orby v minimalizovaném pásu **zůstávají na vlastních náhledovkách**, tam je to záměr.
+
+### 🏆 Ostřejší postery v Top Favorites
+- **Nový `tools/build_top_favorites_thumbs.py`** používá stejný postup jako `build_cover_thumbs.py` u obalů OST: karta kreslí poster do pole 222 x 334 px, ale většina souborů má 1000 x 1426 px a prohlížeč je zmenšuje 4,5x metodou, která rozbíjí tenkou linku anime kresby. Zmenšeniny na 450 px jsou hotové filtrem LANCZOS s jemným doostřením, takže prohlížeč nezmenšuje nic. Nejvíc to bylo vidět u Witch Hat Atelier, Madoka Magica a DanMachi; Spice and Wolf vypadal dobře, protože jeho soubor má jen 425 px.
+- Postery, které už jsou dost malé, se do `thumbs/` jen zkopírují. Soubor tam musí být pro každý poster anime, jinak by prohlížeč u chybějící zmenšeniny nejdřív dostal chybu 404 a teprve pak sáhl po originálu.
+- **Obrázků postav se to netýká**, ty zůstávají beze změny. Skript si bere seznam z `top_favorites.json` (jen `top10_anime` a `hm_anime`), takže na postavy nemůže sáhnout omylem.
+- Přenášená data u posterů anime: 7,2 MB → 3,1 MB. Skript je inkrementální (přepočítá jen to, co má novější originál) a je napojený na export.
+- **Opravena mezera u obalů OST:** `build_cover_thumbs.py` dosud přeskakoval každou zmenšeninu, která existovala, takže **vyměněný obal si nechal starou zmenšeninu** a na webu se změna neprojevila. Nově se porovnávají časy souborů, stejně jako u posterů.
+- **Obě sady zmenšenin se teď dělají samy** jako součást `export_data.py`. Nový nebo vyměněný obrázek se zmenší při nejbližším exportu, bez ručního spouštění.
+
+### 🚑 Opravy exportní pipeline (nalezeno při ostrém běhu)
+- **`download_imdb_cache.py` padal na `unhashable type: list`.** Zdroj mapování MAL → IMDb (Fribb) začal vracet `imdb_id` jako seznam místo řetězce, takže se skript nedokončil a IMDb cache ležela 65 dní neaktualizovaná. Nově se zvládají obě podoby a berou se **všechna** ID, ne jen první (46 titulů jich má víc než jedno). **Pokrytí epizod IMDb hodnocením stouplo z 88,5 % na 96,1 %** (2996 z 3116 epizod).
+- **`download_jikan_cache.py` padal na `int(None)`.** Pole `episodes` může být přímo `null` u právě vysílaných a plánovaných titulů a `.get('episodes', 0)` to nezachytí, protože klíč existuje. Opraveno na `int(a.get('episodes') or 0)`.
+- **Export se zasekával na dotazu od gitu.** Repozitář leží v OneDrive, který drží zámky na souborech, takže automatický úklid gitu neuspěl smazat už zabalené objekty a zeptal se `Deletion of directory '.git/objects/xx' failed. Should I try again? (y/n)`. Export běží bez konzole, na kterou by šlo odpovědět, takže tam zůstal viset s hotovým commitem a neprovedeným pushem. Git příkazy v exportu teď dostávají `-c gc.auto=0`; ruční `git gc` funguje dál.
+
+### 🔗 Ostatní
+- **IMDb cache se obnovuje s exportem.** `export_data.py` spustí `download_imdb_cache.py`, ale jen když je cache starší než 7 dní (stahuje datové sady o desítkách MB). Selhání refreshe export neshodí. Dosavadní cache byla stará 65 dní, což je důvod, proč IMDb hodnocení chybělo u části epizod.
+- **`meta referrer` změněn z `no-referrer` na `strict-origin`.** YouTube u licencovaných skladeb (např. „Gats" z kanálu Susumu Hirasawa - Topic) vyžaduje vědět, která stránka přehrávač vkládá, a bez toho vrací chybu 153 místo hudby. Na server teď chodí jen holá doména. Indexaci to neovlivňuje, tu drží `meta robots` a `robots.txt`.
+- **Nadpis karty na Dashboardu** přejmenován na „Sledování Anime (Dashboard)".
+- **README odkazuje na živý web.**
+
+---
+
 ## [1.1.1] - 2026-08-02
 
 ### 🧭 Dashboard

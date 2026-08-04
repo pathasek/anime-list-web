@@ -4995,5 +4995,45 @@
   "album": null,
   "confidence": null,
   "checked": 1784299846
+ },
+ "witch hat atelier s01": {
+  "anime_name": "Witch Hat Atelier, S01",
+  "album": {
+   "album_title": "Witch Hat Atelier (Original Anime Soundtrack)",
+   "artists": "Yuka Kitamura",
+   "year": "2026",
+   "track_count": 46,
+   "duration": "2 hours",
+   "playlist_id": "OLAK5uy_n2m0UHhrH_UIQKy1jNC33DPBZcEfyuQNQ",
+   "thumbnail": "https://yt3.googleusercontent.com/2IhXUglgklXVGTgoNkRGdaObyFosJw1LZiNeUGgwYMp2_oIZIfvDUAQqm1zx9JRYzN3JGCd4UXnxfwBfyA=w544-h544-l90-rj"
+  },
+  "confidence": "high",
+  "checked": 1785691843
+ },
+ "nippon sangoku the three nations of the crimson sun s01": {
+  "anime_name": "Nippon Sangoku: The Three Nations of the Crimson Sun, S01",
+  "album": {
+   "album_title": "NIPPON SANGOKU: The Three Nations of the Crimson Sun (Original Series Soundtrack)",
+   "artists": "Kevin Penkin",
+   "year": "2026",
+   "track_count": 39,
+   "duration": "1 hour, 47 minutes",
+   "playlist_id": "OLAK5uy_mKmcblSpEBMywogdRVy1t8p9GmgGSWuzE",
+   "thumbnail": "https://yt3.googleusercontent.com/KtBz5jRZ0hmeUbD3K070i0s0pSy8L3HQbVmh3LvQFtaQ9Km6atopBvonKbUaP8x3xoq6OosppyElWgY-=w544-h544-l90-rj"
+  },
+  "confidence": "high",
+  "checked": 1785691846
+ },
+ "po black clover 7th princess time loop gnosia time loop dalsi": {
+  "anime_name": "Po Black Clover? 7Th Princess (time loop), Gnosia (time loop), … další?",
+  "album": null,
+  "confidence": null,
+  "checked": 1785691846
+ },
+ "black clover sword of the wizard king": {
+  "anime_name": "Black Clover: Sword of the Wizard King",
+  "album": null,
+  "confidence": null,
+  "checked": 1785782973
  }
 }

@@ -198,11 +198,19 @@ def main():
         mal_url = a.get('mal_url')
         if mal_url:
             mal_id = extract_mal_id(mal_url)
-            if mal_id and int(a.get('episodes', 0)) > 0:
+            # Pozor: `episodes` může být přímo null (právě vysílané a plánované
+            # tituly), a to `.get('episodes', 0)` nezachytí, protože klíč
+            # existuje a vrátí se None. Skript na tom padal na
+            # „int() argument must be ... not 'NoneType'".
+            try:
+                pocet_epizod = int(a.get('episodes') or 0)
+            except (TypeError, ValueError):
+                pocet_epizod = 0
+            if mal_id and pocet_epizod > 0:
                 queue.append({
                     'name': a.get('name'),
                     'malId': mal_id,
-                    'episodes': int(a.get('episodes', 0))
+                    'episodes': pocet_epizod
                 })
 
     print(f"Loaded {len(queue)} anime with valid MyAnimeList links.")

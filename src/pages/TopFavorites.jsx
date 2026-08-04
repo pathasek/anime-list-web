@@ -2,6 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './TopFavorites.css';
 
+// Cesta k předgenerované zmenšenině posteru (tools/build_top_favorites_thumbs.py).
+// Poster se kreslí do pole 222 x 334 px, ale většina souborů má 1000 px šířky
+// a prohlížeč je zmenšuje metodou, která rozbíjí tenkou linku anime kresby
+// (kostičkovaný dojem u Witch Hat Atelier, Madoka Magica, DanMachi). Zmenšeniny
+// jsou hotové filtrem LANCZOS, takže prohlížeč nezmenšuje nic.
+// Postery, které už jsou malé (Spice and Wolf má 425 px), zmenšeninu nemají
+// a komponenta se u nich sama vrátí k originálu. Postav se to netýká.
+const posterThumbPath = (src) => {
+    const PREFIX = 'images/top_favorites/';
+    if (!src || !src.startsWith(PREFIX)) return null;
+    const file = src.slice(PREFIX.length);
+    if (file.includes('/')) return null;
+    return `${PREFIX}thumbs/${file.replace(/\.(jpe?g|png|webp)$/i, '')}.jpg`;
+};
+
 const TopFavorites = () => {
     const [data, setData] = useState({ top10_anime: [], hm_anime: [], top10_chars: [] });
     const [animeMap, setAnimeMap] = useState({});
@@ -120,7 +135,25 @@ const TopFavorites = () => {
                                     {isHM ? 'HM' : `#${index + 1}`}
                                 </div>
                                 {finalImage ? (
-                                    <img src={imageHash ? `${finalImage}?v=${imageHash}` : finalImage} alt={name} className="favorite-image" loading="lazy" />
+                                    (() => {
+                                        // Zmenšenina jen u posterů anime, postavy zůstávají beze změny
+                                        const zdroj = (isAnimeLists && posterThumbPath(finalImage)) || finalImage;
+                                        const verze = (s) => (imageHash ? `${s}?v=${imageHash}` : s);
+                                        return (
+                                            <img
+                                                src={verze(zdroj)}
+                                                alt={name}
+                                                className="favorite-image"
+                                                loading="lazy"
+                                                onError={(e) => {
+                                                    // Zmenšenina ještě není vygenerovaná → originál
+                                                    if (e.currentTarget.dataset.fallback) return;
+                                                    e.currentTarget.dataset.fallback = '1';
+                                                    e.currentTarget.src = verze(finalImage);
+                                                }}
+                                            />
+                                        );
+                                    })()
                                 ) : (
                                     <div className="favorite-image-placeholder">No Image</div>
                                 )}

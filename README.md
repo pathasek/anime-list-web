@@ -1,5 +1,7 @@
 # 🏮 Anime List Web
 
+### 👉 [Otevřít živý web](https://pathasek.github.io/anime-list-web/)
+
 Aplikace **Anime List Web** je interaktivní a vizuálně bohaté webové centrum určené pro sledování, analýzu a detailní hodnocení anime seriálů a filmů. Nabízí pokročilé statistiky, analytické grafy, AI textové rozbory epizod a široké možnosti přizpůsobení.
 
 ![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?style=flat&logo=vite&logoColor=white)
