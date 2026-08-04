@@ -13590,6 +13590,14 @@
       {
         "episode": "EP 4",
         "rating": 7.25
+      },
+      {
+        "episode": "EP 5",
+        "rating": 7.0
+      },
+      {
+        "episode": "EP 6",
+        "rating": 6.75
       }
     ]
   }
