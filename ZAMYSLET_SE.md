@@ -7,3 +7,31 @@
 7) A Town with an Ocean view je jiná verze než mám na Spotify
 8) Sledovaná Anime (Data projekt) -> Sledovaní Anime (Dashboard)
 9) Přidat AniDB relation chart map pro série do svého listu Anime List Web
+
+
+Já bych chtěl udělat rozsáhlou revizi recenzní.
+
+
+
+Většina z nich od srpna 2025 do dubna 2026 je napsaná s asistencí AI a úplně se mi nelíbí - chtěl bych je přepsat znovu s AI, ale tentokrát s lepším promptem a mým stylem.
+
+
+
+Anime, které jsem viděl poprvé nebo rewatched od května 2026 má vykřičník, ale je to už lepší.
+
+
+
+Prosím, sestav comprehensive prompt v "task.md" s názvem třeba: "Plán přepsání recenzní.md" a vysvětlivku budoucího plánu - přepsání recenzní pomocí AI, ale kvalitněji.
+
+
+
+Zapiš tam všechny anime, které mají recenze a i speciální typy (kde není recenzne, ale nějaký text v poznámce je u daného Anime (třeba Steins;Gate...)).
+
+
+
+Tento dokument ulož v projektu taky.
+
+
+
+Předchozí dokument se mi líbí a nech ho být (20K+ slov).
+
