@@ -8,6 +8,8 @@ import re
 import sys
 from collections import deque
 
+import jikan_health
+
 # Reconfigure stdout/stderr to UTF-8 to prevent Windows CP1250 charmap encoding crashes on unicode titles
 if sys.platform.startswith('win'):
     try:
@@ -39,6 +41,11 @@ PASS_PAUSE_S = 60
 # minuty. Beh se ukonci hned a zbytek se odlozi na priste.
 CIRCUIT_BREAK_AFTER = 3
 MIN_INTERVAL_S = 1.0 / RATE_PER_SECOND
+
+# Po prvnim totalnim selhani (oba endpointy) se dalsi tituly zkousi uz jen
+# jednim pokusem bez plnych backoffu - rychle sondovani, nez pripadne sepne
+# pojistka. Jakmile neco projde, vraci se plne retry.
+_fast_fail = False
 
 # Paths
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -105,7 +112,7 @@ def make_request(url, retries=RETRY_MAX):
     Vyhodi TransientAPIError, pokud se pozadavek nepodarilo dokoncit ani po
     vycerpani vsech pokusu.
     """
-    total_attempts = retries + 1
+    total_attempts = 1 if _fast_fail else (retries + 1)
     last_error = 'neznama chyba'
 
     for attempt in range(total_attempts):
@@ -180,10 +187,18 @@ def fetch_episode_list(mal_id):
     return all_episodes
 
 def main():
+    global _fast_fail
     print("=" * 60)
     print("Jikan API Cache Downloader for Git Persistence")
     print("=" * 60)
-    
+
+    # Sdilena pojistka: kdyz uz jiny skript (nebo minuly beh) vyhodnotil, ze
+    # Jikan lezi, nema smysl tady platit plne retry a backoffy znovu.
+    if jikan_health.je_vypadek():
+        print("Jikan je podle sdilene pojistky mimo provoz, stahovani se preskakuje.")
+        print("(Zaznam vyprsi do 30 minut od nahlaseni; chybejici anime se dotahnou pri pristim behu.)")
+        return
+
     if not os.path.exists(anime_list_path):
         print(f"Error: anime_list.json not found at {anime_list_path}")
         return
@@ -229,6 +244,7 @@ def main():
 
     total_anime = len(queue)
     save_counter = 0
+    zmeneno = False   # jestli se do cache vubec neco pridalo (kvuli zapisu na konci)
     failed = []   # (nazev, mal_id, duvod) - zaznamy, ktere se zamerne neulozily
 
     pending = list(queue)
@@ -247,6 +263,7 @@ def main():
 
         failed = []
         consecutive_fails = 0      # pojistka se posuzuje v ramci jednoho pruchodu
+        _fast_fail = False
         for idx, anime in enumerate(pending):
             mal_id_str = str(anime['malId'])
             anime_name = anime['name']
@@ -298,7 +315,9 @@ def main():
                     cached_list = cache['episode_lists'][mal_id_str]
                     print(f"  -> Fetched {len(mapped_eps)} episodes list.")
                     save_counter += 1
+                    zmeneno = True
                     consecutive_fails = 0
+                    _fast_fail = False
                 else:
                     # Fallback: hlavni info o anime (filmy, OVA, specialy - ty seznam
                     # epizod nemaji). Zkousi se i kdyz /episodes selhalo: pokud nam
@@ -319,11 +338,14 @@ def main():
                         print(f"  -> Nic se nepodarilo ziskat. Preskakuji BEZ zapisu, zkusi se pri dalsim behu.")
                         failed.append({'anime': anime, 'name': anime_name, 'mal_id': mal_id_str, 'reason': 'API nedostupne'})
                         consecutive_fails += 1
+                        _fast_fail = True
                         if consecutive_fails >= CIRCUIT_BREAK_AFTER:
                             api_down = True
+                            jikan_health.nahlas_vypadek()
                             print(f"\n  [POJISTKA] {consecutive_fails} anime po sobe selhalo na obou endpointech.")
                             print(f"  Jikan je zjevne mimo provoz - nema smysl u kazdeho dalsiho cekat pres pul minuty.")
-                            print(f"  Koncim; zbytek se dotahne pri dalsim spusteni.")
+                            print(f"  Vypadek nahlasen do sdilene pojistky (jikan_health), ostatni skripty")
+                            print(f"  ho ted nebudou zkouset. Koncim; zbytek se dotahne pri dalsim spusteni.")
                             break
                         continue
 
@@ -379,7 +401,9 @@ def main():
                     cached_list = cache['episode_lists'][mal_id_str]
                     print(f"  -> Vygenerovano z hlavniho info: {note}.")
                     save_counter += 1
+                    zmeneno = True
                     consecutive_fails = 0
+                    _fast_fail = False
 
             # Incremental save every 10 API operations to avoid losing progress
             if save_counter >= 10:
@@ -400,9 +424,13 @@ def main():
             break
         pending = [f['anime'] for f in failed]
 
-    # Final Save
-    with open(jikan_cache_path, 'w', encoding='utf-8') as f:
-        json.dump(cache, f, ensure_ascii=False, indent=2)
+    # Final Save - jen kdyz se neco pridalo. Soubor ma nekolik MB a kazdy
+    # zbytecny prepis znamena novy mtime a dalsi synchronizaci OneDrive.
+    if zmeneno:
+        with open(jikan_cache_path, 'w', encoding='utf-8') as f:
+            json.dump(cache, f, ensure_ascii=False, indent=2)
+    else:
+        print("\nCache beze zmeny, soubor se neprepisuje.")
     
     print("\n" + "=" * 60)
     print("FINISHED! Static Jikan cache successfully built and written to:")

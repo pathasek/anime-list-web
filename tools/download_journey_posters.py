@@ -37,6 +37,8 @@ import urllib.request
 
 from PIL import Image
 
+import jikan_health
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 APP_ROOT = os.path.dirname(BASE_DIR)
 DATA_DIR = os.path.join(APP_ROOT, "public", "data")
@@ -147,6 +149,7 @@ def main():
     bez_adresy = []
     chyby = []
     dotazu_na_jikan = 0
+    jikan_selhani = 0
 
     for mal_id, url in sorted(adresy.items(), key=lambda x: int(x[0])):
         soubor = os.path.join(OUT_DIR, f"{mal_id}.jpg")
@@ -166,13 +169,22 @@ def main():
 
         if not url:
             # Adresa není v žádné cachi, zkusíme API (těch případů je pár)
+            if jikan_health.je_vypadek():
+                # Sdílená pojistka: Jikan leží, nezkoušet, dotáhne se příště
+                bez_adresy.append(mal_id)
+                continue
             if dotazu_na_jikan:
                 time.sleep(JIKAN_PAUZA)
             dotazu_na_jikan += 1
             url = dotahni_z_jikanu(mal_id)
             if not url:
+                jikan_selhani += 1
+                if jikan_selhani >= 3:
+                    jikan_health.nahlas_vypadek()
+                    print("  3 selhání Jikanu po sobě: hlásím výpadek do sdílené pojistky.")
                 bez_adresy.append(mal_id)
                 continue
+            jikan_selhani = 0
 
         try:
             uloz_poster(url, soubor)

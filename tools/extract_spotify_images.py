@@ -30,26 +30,47 @@ def copy_spotify_images():
                 ext = os.path.splitext(src_img)[1].lower()
                 dest_filename = f"{item}{ext}"
                 dest_path = os.path.join(dest_dir, dest_filename)
-                
-                shutil.copy2(src_img, dest_path)
-                
+
+                # Kopíruje se jen nový/změněný soubor: copy2 zachovává mtime,
+                # takže shoda velikosti a času znamená stejný obrázek. Dřív se
+                # všech ~32 obrázků přepisovalo při každém běhu.
+                zkopirovat = True
+                try:
+                    ss = os.stat(src_img)
+                    ds = os.stat(dest_path)
+                    if ss.st_size == ds.st_size and abs(ss.st_mtime - ds.st_mtime) < 2:
+                        zkopirovat = False
+                except OSError:
+                    pass
+
+                if zkopirovat:
+                    shutil.copy2(src_img, dest_path)
+                    print(f"Copied {item} -> {dest_filename}")
+
                 # Mapping is original folder name -> relative path
                 mapping[item] = f"images/spotify/{dest_filename}"
-                
+
                 # Also add mapping for colon version (Windows replaces : with _)
                 if "_" in item:
                     # Replace "_ " with ": " first as it's the most common pattern
                     colon_item = item.replace("_ ", ": ").replace("_", ":")
                     if colon_item != item:
                         mapping[colon_item] = f"images/spotify/{dest_filename}"
-                
-                print(f"Copied {item} -> {dest_filename}")
 
-    # Output map to data folder
+    # Output map to data folder (zapisuje se jen při změně obsahu)
     map_dst = os.path.join(app_root, "public", "data", "spotify_images.json")
-    with open(map_dst, "w", encoding="utf-8") as f:
-        json.dump(mapping, f, ensure_ascii=False, indent=2)
-    print("Exported spotify_images.json map")
+    stara_mapa = None
+    try:
+        with open(map_dst, "r", encoding="utf-8") as f:
+            stara_mapa = json.load(f)
+    except Exception:
+        pass
+    if stara_mapa != mapping:
+        with open(map_dst, "w", encoding="utf-8") as f:
+            json.dump(mapping, f, ensure_ascii=False, indent=2)
+        print("Exported spotify_images.json map")
+    else:
+        print("spotify_images.json beze změny")
     
 if __name__ == "__main__":
     copy_spotify_images()

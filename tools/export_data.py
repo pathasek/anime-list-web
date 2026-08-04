@@ -1,6 +1,12 @@
 """
 Export Excel anime data to JSON format for web application
 """
+import warnings
+
+# openpyxl hlásí u tohoto sešitu neškodná varování o nepodporovaných
+# rozšířeních (Slicer, Conditional Formatting) — jen zaplevelují log exportu
+warnings.filterwarnings("ignore", category=UserWarning, module="openpyxl")
+
 import openpyxl
 import json
 import os
@@ -17,6 +23,8 @@ import zipfile
 from xml.etree import ElementTree as ET
 import win32com.client
 import hashlib
+
+import jikan_health
 
 
 def anime_list_root():
@@ -767,10 +775,126 @@ def get_file_hash(filepath):
     except:
         return None
 
+def _parsuj_alt_text(alt_text):
+    """Rozparsuje alt-text tvaru na CHAR_ID / ANIME_NAME / NAME.
+
+    Stejná logika jako dřívější čtení přes Excel COM, jen vytažená stranou,
+    aby ji mohla používat i cesta přes zip i COM fallback."""
+    parsed_data = {}
+    if "CHAR_ID:" in alt_text or "ANIME_NAME:" in alt_text:
+        char_match = re.search(r'CHAR_ID:(\d+)', alt_text)
+        if char_match:
+            parsed_data["CHAR_ID"] = char_match.group(1)
+
+        anime_match = re.search(r'ANIME_NAME:(.+?)(?=;[A-Z_]+:|$)', alt_text)
+        if anime_match:
+            parsed_data["ANIME_NAME"] = anime_match.group(1).strip()
+
+        name_match = re.search(r'NAME:(.+?)(?=;[A-Z_]+:|$)', alt_text)
+        if name_match:
+            parsed_data["NAME"] = name_match.group(1).strip()
+    else:
+        parsed_data["NAME"] = alt_text.strip()
+    return parsed_data
+
+
+def _najdi_drawing_xml(zf):
+    """Vrátí cestu k drawing XML listu OBECNÉ INFORMACE uvnitř xlsm zipu."""
+    xml_content = zf.read('xl/workbook.xml')
+    match = re.search(rb'<sheet[^>]+name="OBEC[^"]+"[^>]+r:id="([^"]+)"', xml_content)
+    if not match:
+        raise Exception("Sheet OBECNE INFORMACE not found in XML")
+    sheet_rid = match.group(1).decode('utf-8')
+
+    xml_content = zf.read('xl/_rels/workbook.xml.rels')
+    match = re.search(rb'<Relationship[^>]+Id="' + sheet_rid.encode() + rb'"[^>]+Target="([^"]+)"', xml_content)
+    sheet_path = 'xl/' + match.group(1).decode('utf-8')
+
+    xml_content = zf.read(sheet_path)
+    match = re.search(rb'<drawing r:id="([^"]+)"', xml_content)
+    if not match:
+        raise Exception("No drawing found in sheet")
+    drawing_rid = match.group(1).decode('utf-8')
+
+    rels_path = sheet_path.replace('worksheets/', 'worksheets/_rels/') + '.rels'
+    xml_content = zf.read(rels_path)
+    match = re.search(rb'<Relationship[^>]+Id="' + drawing_rid.encode() + rb'"[^>]+Target="([^"]+)"', xml_content)
+    return 'xl/' + match.group(1).decode('utf-8').replace('../', '')
+
+
+def _shapes_pres_com_fallback(wb_path):
+    """Záložní čtení alt-textů přes Excel COM (původní cesta).
+
+    Použije se jen když zip nevydá žádné tvary a neběžíme orchestrovaně —
+    při souběhu s Excel makrem by se COM mohl chytit cizí instance a viset."""
+    print("  COM fallback: Connecting to Excel to read shape Alternative Text...")
+    shapes_data = {}
+    excel_was_open = False
+    xl = None
+    try:
+        try:
+            xl = win32com.client.GetActiveObject("Excel.Application")
+            excel_was_open = True
+        except:
+            xl = win32com.client.Dispatch('Excel.Application')
+
+        wb_com = None
+        for w in xl.Workbooks:
+            if w.FullName.lower() == wb_path.lower():
+                wb_com = w
+                excel_was_open = True
+                break
+
+        if not wb_com:
+            wb_com = xl.Workbooks.Open(wb_path, ReadOnly=True)
+
+        ws_com = wb_com.Sheets('OBECNÉ INFORMACE')
+
+        def get_all_shapes(shapes_collection):
+            found_shapes = []
+            for shape in shapes_collection:
+                try:
+                    name = str(shape.Name)
+                    if name.startswith('Top10_') or name.startswith('HM_'):
+                        found_shapes.append(shape)
+                    if shape.Type == 6:  # msoGroup
+                        found_shapes.extend(get_all_shapes(shape.GroupItems))
+                except:
+                    pass
+            return found_shapes
+
+        for shape in get_all_shapes(ws_com.Shapes):
+            name = str(shape.Name)
+            if name.startswith('HM_Char_'):
+                continue
+            alt_text = shape.AlternativeText
+            if alt_text:
+                shapes_data[name] = {
+                    "shape_name": name,
+                    "data": _parsuj_alt_text(alt_text),
+                    "image_file": None
+                }
+
+        if not excel_was_open:
+            wb_com.Close(SaveChanges=False)
+            xl.Quit()
+
+        print(f"  Found {len(shapes_data)} valid shapes via COM.")
+    except Exception as e:
+        print(f"  Error reading shapes via COM: {e}")
+        try:
+            if not excel_was_open and xl is not None:
+                xl.Quit()
+        except:
+            pass
+    return shapes_data
+
+
 def export_top_favorites(wb_path, output_dir):
     """
-    Export Top 10 and HM Anime/Characters data using win32com for AlternativeText
-    and zipfile for extracting the raw embedded images perfectly.
+    Export Top 10 and HM Anime/Characters data. Alt-texty tvarů i vložené
+    obrázky se čtou přímo ze zipu sešitu (bez spouštění Excelu), COM zůstává
+    jen jako fallback.
     """
     images_dir = os.path.join(output_dir, "..", "images", "top_favorites")
     os.makedirs(images_dir, exist_ok=True)
@@ -797,180 +921,120 @@ def export_top_favorites(wb_path, output_dir):
             print("  Failed to load cached JSON, re-extracting...")
             pass
 
-    print("  Connecting to Excel via COM to read shape Alternative Text...")
-    
-    shapes_data = {}
-    
-    # We must use win32com to read AlternativeText reliably
-    excel_was_open = False
-    try:
-        # Get active instance if it exists, otherwise create new
-        try:
-            xl = win32com.client.GetActiveObject("Excel.Application")
-            excel_was_open = True
-        except:
-            xl = win32com.client.Dispatch('Excel.Application')
-            
-        # Check if the workbook is already open
-        wb_com = None
-        for w in xl.Workbooks:
-            if w.FullName.lower() == wb_path.lower():
-                wb_com = w
-                excel_was_open = True
-                break
-                
-        if not wb_com:
-            wb_com = xl.Workbooks.Open(wb_path, ReadOnly=True)
-            
-        ws_com = wb_com.Sheets('OBECNÉ INFORMACE')
-        
-        def get_all_shapes(shapes_collection):
-            found_shapes = []
-            for shape in shapes_collection:
-                try:
-                    name = str(shape.Name)
-                    if name.startswith('Top10_') or name.startswith('HM_'):
-                        found_shapes.append(shape)
-                    if shape.Type == 6:  # msoGroup
-                        found_shapes.extend(get_all_shapes(shape.GroupItems))
-                except:
-                    pass
-            return found_shapes
+    # Alt-texty tvarů se čtou přímo ze zipu sešitu (atribut descr elementu
+    # cNvPr v drawing XML). Ověřeno proti Excel COM AlternativeText: na všech
+    # 73 tvarech znak po znaku shodné, včetně parsování CHAR_ID/ANIME_NAME.
+    # Excel se tak vůbec nespouští a export smí běžet souběžně s makrem.
+    print("  Reading shape alt texts + images from workbook zip (bez Excelu)...")
 
-        all_target_shapes = get_all_shapes(ws_com.Shapes)
-        
-        for shape in all_target_shapes:
-            name = str(shape.Name)
-            # We already filtered by startsWith in get_all_shapes, but just in case
-            if name.startswith('Top10_') or name.startswith('HM_'):
-                # Exclude HM Characters as requested by user
-                if name.startswith('HM_Char_'):
-                    continue
-                    
-                alt_text = shape.AlternativeText
-                if alt_text:
-                    parsed_data = {}
-                    import re
-                    if "CHAR_ID:" in alt_text or "ANIME_NAME:" in alt_text:
-                        char_match = re.search(r'CHAR_ID:(\d+)', alt_text)
-                        if char_match:
-                            parsed_data["CHAR_ID"] = char_match.group(1)
-                            
-                        # Handle ANIME_NAME extraction up to the next semicolon that is followed by a known tag
-                        # or until the end of the string.
-                        anime_match = re.search(r'ANIME_NAME:(.+?)(?=;[A-Z_]+:|$)', alt_text)
-                        if anime_match:
-                            parsed_data["ANIME_NAME"] = anime_match.group(1).strip()
-                            
-                        # Handle NAME extraction
-                        name_match = re.search(r'NAME:(.+?)(?=;[A-Z_]+:|$)', alt_text)
-                        if name_match:
-                            parsed_data["NAME"] = name_match.group(1).strip()
-                    else:
-                        parsed_data["NAME"] = alt_text.strip()
-                        
-                    shapes_data[name] = {
-                        "shape_name": name,
-                        "data": parsed_data,
-                        "image_file": None  # Will be mapped below
-                    }
-                    
-        # Only close if we opened it
-        if not excel_was_open:
-            wb_com.Close(SaveChanges=False)
-            xl.Quit()
-            
-        print(f"  Found {len(shapes_data)} valid shapes via COM.")
-    except Exception as e:
-        print(f"  Error reading shapes via COM: {e}")
-        try:
-            if not excel_was_open:
-                xl.Quit()
-        except:
-            pass
-        return {"top10_anime": [], "hm_anime": [], "top10_chars": []}
-        
-    print("  Extracting exact original images via Zip/XML parsing...")
+    shapes_data = {}
+    shape_embeds = {}
+
     # Copy file to temp just to be safe while unzipping
     temp_fd, temp_path = tempfile.mkstemp(suffix=".xlsm")
     os.close(temp_fd)
-    
+
     try:
         shutil.copy2(wb_path, temp_path)
-        
+
         with zipfile.ZipFile(temp_path, 'r') as zf:
-            # 1. xl/workbook.xml -> find sheet name
-            xml_content = zf.read('xl/workbook.xml')
-            match = re.search(rb'<sheet[^>]+name="OBEC[^"]+"[^>]+r:id="([^"]+)"', xml_content)
-            if not match:
-                print("  Could not find OBECNE INFORMACE sheet in XML.")
-                raise Exception("Sheet not found")
-            sheet_rid = match.group(1).decode('utf-8')
-            
-            # 2. xl/_rels/workbook.xml.rels
-            xml_content = zf.read('xl/_rels/workbook.xml.rels')
-            match = re.search(rb'<Relationship[^>]+Id="' + sheet_rid.encode() + rb'"[^>]+Target="([^"]+)"', xml_content)
-            sheet_target = match.group(1).decode('utf-8')
-            sheet_path = 'xl/' + sheet_target
-            
-            # 3. xl/worksheets/sheetX.xml -> drawing rId
-            xml_content = zf.read(sheet_path)
-            match = re.search(rb'<drawing r:id="([^"]+)"', xml_content)
-            if not match:
-                raise Exception("No drawing found in sheet")
-            drawing_rid = match.group(1).decode('utf-8')
-            
-            # 4. xl/worksheets/_rels/sheetX.xml.rels
-            rels_path = sheet_path.replace('worksheets/', 'worksheets/_rels/') + '.rels'
-            xml_content = zf.read(rels_path)
-            match = re.search(rb'<Relationship[^>]+Id="' + drawing_rid.encode() + rb'"[^>]+Target="([^"]+)"', xml_content)
-            drawing_target = match.group(1).decode('utf-8').replace('../', '')
-            drawing_path = 'xl/' + drawing_target
-            
-            # 5. xl/drawings/drawingX.xml -> parse shapes and find blip embeds
-            xml_content = zf.read(drawing_path).decode('utf-8')
-            blocks = re.split(r'</xdr:sp>|</xdr:pic>', xml_content)
-            
-            shape_rids = {}
-            for block in blocks:
-                name_match = re.search(r'<xdr:cNvPr[^>]+name="([^"]+)"', block)
-                if name_match:
-                    name = name_match.group(1)
-                    if name in shapes_data:
-                        blip_match = re.search(r'<a:blip[^>]+r:embed="([^"]+)"', block)
-                        if blip_match:
-                            shape_rids[name] = blip_match.group(1)
-            
-            # 6. xl/drawings/_rels/drawingX.xml.rels
+            drawing_path = _najdi_drawing_xml(zf)
+            root = ET.fromstring(zf.read(drawing_path))
+
+            R_NS = '{http://schemas.openxmlformats.org/officeDocument/2006/relationships}'
+            for el in root.iter():
+                tag = el.tag.rsplit('}', 1)[-1]
+                if tag not in ('sp', 'pic'):
+                    continue
+                cnv = None
+                embed = None
+                for sub in el.iter():
+                    st = sub.tag.rsplit('}', 1)[-1]
+                    if st == 'cNvPr' and cnv is None:
+                        cnv = sub
+                    elif st == 'blip' and embed is None:
+                        embed = sub.get(R_NS + 'embed')
+                if cnv is None:
+                    continue
+                name = cnv.get('name') or ''
+                if not (name.startswith('Top10_') or name.startswith('HM_')):
+                    continue
+                # Exclude HM Characters as requested by user
+                if name.startswith('HM_Char_'):
+                    continue
+                if embed and not name.startswith(('Top10_Anime_', 'Top10_CharAnime_')):
+                    # Vložené obrázky Top10 anime se nevytahují: image_file jim
+                    # vzápětí přepíše poster z Jikanu (Jikan_*.jpg). Dřívější
+                    # regexové čtení je kvůli seskupení tvarů stejně nevytáhlo,
+                    # takže by šlo jen o mrtvé soubory navíc v repozitáři.
+                    shape_embeds[name] = embed
+                alt_text = cnv.get('descr')
+                if alt_text:
+                    shapes_data[name] = {
+                        "shape_name": name,
+                        "data": _parsuj_alt_text(alt_text),
+                        "image_file": None  # Will be mapped below
+                    }
+
+            if not shapes_data:
+                print("  Warning: zip nevydal žádné alt-texty tvarů.")
+                if os.environ.get("NLM_ORCHESTRATED"):
+                    # Souběžný běh s Excel makrem: COM fallback je zakázaný,
+                    # ať se export nechytí cizí instance Excelu. Volající
+                    # zachová minulý top_favorites.json (viz has_items check).
+                    print("  Orchestrovaný běh: COM fallback zakázán, končím bez dat.")
+                    return {"top10_anime": [], "hm_anime": [], "top10_chars": []}
+                shapes_data = _shapes_pres_com_fallback(wb_path)
+                if not shapes_data:
+                    return {"top10_anime": [], "hm_anime": [], "top10_chars": []}
+            else:
+                print(f"  Found {len(shapes_data)} valid shapes (zip descr).")
+
+            # Extrakce originálních obrázků (stejné rels mapování jako dřív)
             drw_rels_path = drawing_path.replace('drawings/', 'drawings/_rels/') + '.rels'
             xml_content = zf.read(drw_rels_path).decode('utf-8')
-            
+
             rid_map = {}
             rels = re.finditer(r'<Relationship[^>]+Id="([^"]+)"[^>]+Target="([^"]+)"', xml_content)
             for rel in rels:
                 rid_map[rel.group(1)] = rel.group(2).replace('../', '')
-            
-            # Extract and copy the actual images
-            for name, embed_rid in shape_rids.items():
+
+            for name, embed_rid in shape_embeds.items():
+                if name not in shapes_data:
+                    continue
                 if embed_rid in rid_map:
                     image_zip_path = 'xl/' + rid_map[embed_rid]
                     ext = image_zip_path.split('.')[-1]
                     output_file_name = f"{name}.{ext}"
                     output_file_path = os.path.join(images_dir, output_file_name)
-                    
+
                     try:
                         with zf.open(image_zip_path) as img_file:
+                            img_bytes = img_file.read()
+                        # Nezměněný obrázek se nepřepisuje: zachová se mtime,
+                        # takže build_top_favorites_thumbs nepřegenerovává
+                        # zmenšeniny, které se reálně nezměnily.
+                        stejny = False
+                        if os.path.exists(output_file_path):
+                            try:
+                                with open(output_file_path, 'rb') as f_old:
+                                    stejny = f_old.read() == img_bytes
+                            except Exception:
+                                stejny = False
+                        if not stejny:
                             with open(output_file_path, 'wb') as out_file:
-                                out_file.write(img_file.read())
+                                out_file.write(img_bytes)
                         shapes_data[name]["image_file"] = f"images/top_favorites/{output_file_name}"
                     except Exception as e:
                         print(f"  Warning: failed to extract {image_zip_path}: {e}")
 
     except Exception as e:
-        print(f"  Error extracting images via Zip: {e}")
+        print(f"  Error extracting shapes/images via Zip: {e}")
+        if not shapes_data:
+            return {"top10_anime": [], "hm_anime": [], "top10_chars": []}
     finally:
         os.remove(temp_path)
-        
+
     # Categorize into lists and sort them by rank
     # Rank is the number at the end, e.g. "Top10_Char_5" -> 5
     def get_rank(name):
@@ -1035,8 +1099,7 @@ def export_top_favorites(wb_path, output_dir):
 
     print("  Fetching Top 10 Anime imagery from Jikan API by MAL ID (Skipping HM Anime)...")
     import requests
-    import time
-    
+
     for sdata in top10_anime:
         anime_name = sdata["data"].get("NAME") or sdata["data"].get("ANIME_NAME")
         if anime_name:
@@ -1050,6 +1113,9 @@ def export_top_favorites(wb_path, output_dir):
             sdata["image_file"] = f"images/top_favorites/{output_file_name}"
             
             if not os.path.exists(output_file_path):
+                if jikan_health.je_vypadek():
+                    print(f"    Jikan je mimo provoz (sdílená pojistka), poster pro {anime_name} se zkusí příště.")
+                    continue
                 print(f"    Fetching Jikan API for: {anime_name}")
                 mal_id = get_mal_id(anime_name)
                 
@@ -1062,7 +1128,7 @@ def export_top_favorites(wb_path, output_dir):
                         # Priority search for exact title without members sort if it might lead to irrelevant popular shows
                         url = f"https://api.jikan.moe/v4/anime?q={anime_name}&limit=1"
                         
-                    resp = requests.get(url)
+                    resp = requests.get(url, timeout=10)
                     resp.raise_for_status()
                     data = resp.json()
                     
@@ -1073,7 +1139,7 @@ def export_top_favorites(wb_path, output_dir):
                         img_url = data["data"][0]["images"]["jpg"]["large_image_url"]
                         
                     if img_url:
-                        img_resp = requests.get(img_url)
+                        img_resp = requests.get(img_url, timeout=15)
                         img_resp.raise_for_status()
                         
                         with open(output_file_path, 'wb') as f:
@@ -1085,24 +1151,63 @@ def export_top_favorites(wb_path, output_dir):
                     print(f"      Fetch failed for {anime_name} at {url}: {e}")
 
     print("  Fetching missing Character Names from Jikan API by CHAR_ID...")
+    # Jména postav se nemění — jednou stažené jméno drží lokální cache
+    # (tools/top_chars_cache.json) a API se volá jen pro nová CHAR_ID.
+    # Dřív se všech 10 jmen tahalo při každém běhu se změněným sešitem.
+    char_cache_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "top_chars_cache.json")
+    try:
+        with open(char_cache_path, 'r', encoding='utf-8') as f:
+            char_cache = json.load(f)
+    except Exception:
+        char_cache = {}
+    char_cache_zmenena = False
+    jikan_selhani_po_sobe = 0
+
     for sdata in top10_chars:
         char_id = sdata["data"].get("CHAR_ID")
-        # Always fetch NAME using CHAR_ID because visual shape text is often just the anime name!
-        if char_id:
-            print(f"    Fetching Jikan Character API for ID: {char_id}")
-            try:
-                url = f"https://api.jikan.moe/v4/characters/{char_id}"
-                resp = requests.get(url)
-                resp.raise_for_status()
-                data = resp.json()
-                
-                if data.get("data") and data["data"].get("name"):
-                    sdata["data"]["ANIME_NAME"] = sdata["data"].get("NAME", "")
-                    sdata["data"]["NAME"] = data["data"]["name"]
-                    time.sleep(1)
-            except Exception as e:
-                 print(f"      Character Fetch failed for {char_id}: {e}")
-                 sdata["data"]["NAME"] = "Unknown Character"
+        # Shape text je často jen název anime, skutečné jméno má MAL podle CHAR_ID
+        if not char_id:
+            continue
+
+        cached_name = char_cache.get(char_id)
+        if cached_name:
+            sdata["data"]["ANIME_NAME"] = sdata["data"].get("NAME", "")
+            sdata["data"]["NAME"] = cached_name
+            continue
+
+        if jikan_health.je_vypadek():
+            print(f"    Jikan je mimo provoz (sdílená pojistka), CHAR_ID {char_id} se zkusí příště.")
+            sdata["data"]["NAME"] = "Unknown Character"
+            continue
+
+        print(f"    Fetching Jikan Character API for ID: {char_id}")
+        try:
+            url = f"https://api.jikan.moe/v4/characters/{char_id}"
+            resp = requests.get(url, timeout=10)
+            resp.raise_for_status()
+            data = resp.json()
+
+            if data.get("data") and data["data"].get("name"):
+                sdata["data"]["ANIME_NAME"] = sdata["data"].get("NAME", "")
+                sdata["data"]["NAME"] = data["data"]["name"]
+                char_cache[char_id] = data["data"]["name"]
+                char_cache_zmenena = True
+                jikan_selhani_po_sobe = 0
+                time.sleep(1)
+        except Exception as e:
+            print(f"      Character Fetch failed for {char_id}: {e}")
+            sdata["data"]["NAME"] = "Unknown Character"
+            jikan_selhani_po_sobe += 1
+            if jikan_selhani_po_sobe >= 3:
+                jikan_health.nahlas_vypadek()
+                print("      3 selhání po sobě: hlásím výpadek Jikanu do sdílené pojistky.")
+
+    if char_cache_zmenena:
+        try:
+            with open(char_cache_path, 'w', encoding='utf-8') as f:
+                json.dump(char_cache, f, ensure_ascii=False, indent=1)
+        except Exception as e:
+            print(f"  Warning: nelze uložit cache jmen postav: {e}")
 
     result = {
         "top10_anime": top10_anime,
@@ -1120,9 +1225,21 @@ def export_top_favorites(wb_path, output_dir):
 
     return result
 
+def run_krok(popis, argv, cwd=None):
+    """Spustí podskript a vypíše, jak dlouho běžel — regrese jsou pak vidět hned."""
+    t = time.monotonic()
+    subprocess.run(argv, check=True, cwd=cwd)
+    print(f"[TIMER] {popis}: {time.monotonic() - t:.1f}s")
+
+
 def main():
-    if len(sys.argv) > 1:
-        file_path = sys.argv[1]
+    t_total = time.monotonic()
+    # --no-push = testovací běh: všechno se vygeneruje, ale bez commitu a push
+    no_push = "--no-push" in sys.argv[1:]
+    pos_args = [a for a in sys.argv[1:] if not a.startswith("--")]
+
+    if len(pos_args) > 0:
+        file_path = pos_args[0]
     else:
         # Cesta se odvozuje od umístění skriptu, ne napevno — celá složka
         # Anime_List se tak dá přesunout nebo přejmenovat a export běží dál.
@@ -1130,12 +1247,12 @@ def main():
         file_path = os.path.join(anime_list_root(), "Anime list.xlsm")
 
 
-    if len(sys.argv) > 2:
-        output_dir = sys.argv[2]
+    if len(pos_args) > 1:
+        output_dir = pos_args[1]
     else:
         # Skript žije v anime-list-web/tools/ → data jsou o úroveň výš (anime-list-web/public/data)
         output_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "public", "data")
-    
+
     print(f"Loading Excel file: {file_path}")
     
     # Excel locks the active file (PermissionError). We must copy it to a temp file to read it.
@@ -1146,15 +1263,23 @@ def main():
         shutil.copy2(file_path, temp_path)
         # We don't use read_only=True anymore because it strips hyperlinks resulting in AttributeError
         # But we're safe because we copy the file first
-        wb = openpyxl.load_workbook(temp_path, data_only=True)
+        #
+        # Obě podoby sešitu (hodnoty + vzorce/komentáře) se načítají souběžně
+        # ve dvou vláknech. Zip dekomprese GIL pouští, XML parsování ne, takže
+        # zisk není poloviční, ale je zadarmo: stejná knihovna, stejná data.
+        t_load = time.monotonic()
+        from concurrent.futures import ThreadPoolExecutor
+        with ThreadPoolExecutor(max_workers=2) as _pool:
+            _f_data = _pool.submit(openpyxl.load_workbook, temp_path, data_only=True)
+            _f_full = _pool.submit(openpyxl.load_workbook, temp_path, data_only=False)
+            wb = _f_data.result()
+            wb_comments = _f_full.result()
+        print(f"[TIMER] Načtení obou sešitů (souběžně): {time.monotonic() - t_load:.1f}s")
         
         os.makedirs(output_dir, exist_ok=True)
         
         # Export each dataset
         print("Exporting Anime List (with comments)...")
-        # Load workbook again without data_only to get comments.
-        print("  Loading formula workbook for comments...")
-        wb_comments = openpyxl.load_workbook(temp_path, data_only=False)
         anime_list = export_anime_list(wb, wb_comments)
         with open(os.path.join(output_dir, "anime_list.json"), "w", encoding="utf-8") as f:
             json.dump(anime_list, f, ensure_ascii=False, indent=2)
@@ -1222,7 +1347,6 @@ def main():
     
         # Export metadata for version checking
         print("Exporting Metadata...")
-        import time
         metadata = {
             "lastUpdated": int(time.time() * 1000)
         }
@@ -1237,107 +1361,84 @@ def main():
         print("Running map_from_folder.py to restore thumbnail paths...")
         try:
             script_path = os.path.join(script_root, "map_from_folder.py")
-            subprocess.run([sys.executable, script_path], check=True, cwd=script_root)
+            run_krok("map_from_folder.py", [sys.executable, script_path], cwd=script_root)
             print("Thumbnails mapped successfully!")
         except Exception as e:
             print(f"Failed to run map_from_folder.py: {e}")
 
-        # 2. Copy Spotify images
-        print("Running extract_spotify_images.py to copy Spotify images...")
-        try:
-            spotify_script = os.path.join(script_root, "extract_spotify_images.py")
-            subprocess.run([sys.executable, spotify_script], check=True, cwd=script_root)
-            print("Spotify images copied successfully!")
-        except Exception as e:
-            print(f"Failed to run extract_spotify_images.py: {e}")
+        # 2. Zbytek podskriptů běží souběžně v „lajnách" (B2). Pravidla:
+        #  - oba Jikan skripty sdílí rate limit 3/s a 60/min, proto jedou za
+        #    sebou v jedné lajně (postery navíc čtou čerstvou jikan_cache),
+        #  - build_cover_thumbs čte Spotify obaly, běží až po extract_spotify_images,
+        #  - výstup lajny se bufferuje a vypíše vcelku, ať se logy nemíchají,
+        #  - git commit přijde až po doběhnutí všech lajn.
+        def _spust_lajnu(kroky):
+            """Spustí kroky lajny sériově; vrátí nasbíraný výstup vcelku."""
+            buf = []
+            env_potomka = os.environ.copy()
+            env_potomka["PYTHONIOENCODING"] = "utf-8"
+            for popis, argv in kroky:
+                t = time.monotonic()
+                try:
+                    res = subprocess.run(argv, cwd=script_root, check=True,
+                                         capture_output=True, text=True,
+                                         encoding="utf-8", errors="replace",
+                                         env=env_potomka)
+                    vystup = (res.stdout or "") + (res.stderr or "")
+                    buf.append(f"--- {popis} ---\n{vystup}"
+                               f"[TIMER] {popis}: {time.monotonic() - t:.1f}s\n")
+                except subprocess.CalledProcessError as e:
+                    vystup = (e.stdout or "") + (e.stderr or "")
+                    buf.append(f"--- {popis} SELHAL (kód {e.returncode}) ---\n{vystup}\n")
+                except Exception as e:
+                    buf.append(f"--- {popis} SELHAL ---\n{e}\n")
+            return "".join(buf)
 
-        # 3. Download Jikan cache
-        print("Running download_jikan_cache.py to update Jikan episode descriptions...")
-        try:
-            jikan_script = os.path.join(script_root, "download_jikan_cache.py")
-            subprocess.run([sys.executable, jikan_script], check=True, cwd=script_root)
-            print("Jikan cache updated successfully!")
-        except Exception as e:
-            print(f"Failed to run download_jikan_cache.py: {e}")
-
-        # 4. Export DOCX categories
-        print("Running export_docx_categories.py to update DOCX category reviews...")
-        try:
-            docx_script = os.path.join(script_root, "export_docx_categories.py")
-            subprocess.run([sys.executable, docx_script], check=True, cwd=script_root)
-            print("DOCX category reviews updated successfully!")
-        except Exception as e:
-            print(f"Failed to run export_docx_categories.py: {e}")
-
-        # 5. Build YT Music OST albums
-        print("Running build_ytmusic_ost.py to update full OST albums from YT Music...")
-        try:
-            ytmusic_script = os.path.join(script_root, "build_ytmusic_ost.py")
-            subprocess.run([sys.executable, ytmusic_script], check=True, cwd=script_root)
-            print("YT Music OST albums updated successfully!")
-        except Exception as e:
-            print(f"Failed to run build_ytmusic_ost.py: {e}")
-
-        # 6. Download AnimeThemes cache
-        print("Running download_animethemes_cache.py to update AnimeThemes OP/ED catalogue...")
-        try:
-            animethemes_script = os.path.join(script_root, "download_animethemes_cache.py")
-            subprocess.run([sys.executable, animethemes_script], check=True, cwd=script_root)
-            print("AnimeThemes OP/ED catalogue updated successfully!")
-        except Exception as e:
-            print(f"Failed to run download_animethemes_cache.py: {e}")
-
-        # 7. Refresh IMDb cache
+        # IMDb refresh se rozhoduje předem (týdenní odstup, viz komentář níž),
+        # a když je na řadě, přidá se jako vlastní lajna.
         # Skript stahuje z IMDb datové sady o desítkách MB, takže nemá smysl ho
         # pouštět při každém exportu. Týdenní odstup stačí: epizodní známky se
         # mění pomalu a u právě vysílaných sérií se dopočítají příště.
-        print("Kontroluji stari IMDb cache...")
+        imdb_kroky = []
         try:
             imdb_cache_file = os.path.join(output_dir, "imdb_cache.json")
             stari_dnu = None
             if os.path.exists(imdb_cache_file):
                 stari_dnu = (time.time() - os.path.getmtime(imdb_cache_file)) / 86400
-
             if stari_dnu is not None and stari_dnu < 7:
-                print(f"  IMDb cache je stara {stari_dnu:.1f} dne, refresh se preskakuje "
+                print(f"IMDb cache je stara {stari_dnu:.1f} dne, refresh se preskakuje "
                       f"(obnovuje se jednou za 7 dni).")
             else:
                 duvod = "cache neexistuje" if stari_dnu is None else f"cache je stara {stari_dnu:.1f} dne"
-                print(f"  Spoustim download_imdb_cache.py ({duvod})...")
-                imdb_script = os.path.join(script_root, "download_imdb_cache.py")
-                subprocess.run([sys.executable, imdb_script], check=True, cwd=script_root)
-                print("  IMDb cache aktualizovana.")
+                print(f"IMDb cache: spusti se download_imdb_cache.py ({duvod}).")
+                imdb_kroky.append(("download_imdb_cache.py",
+                                   [sys.executable, os.path.join(script_root, "download_imdb_cache.py")]))
         except Exception as e:
-            # Selhani refreshe nesmi shodit export, web pojede na starsi cachi.
-            print(f"  Varovani: aktualizace IMDb cache selhala: {e}")
+            # Selhani kontroly nesmi shodit export, web pojede na starsi cachi.
+            print(f"  Varovani: kontrola stari IMDb cache selhala: {e}")
 
-        # 8a. Zmenseniny obrazku (obaly OST + postery Top Favorites)
-        # Velky obrazek v malem poli vypada kostickovane, protoze ho prohlizec
-        # zmensuje rychlou metodou. Oba skripty proto zmenseninu predgeneruji
-        # filtrem LANCZOS. Prepocitava se jen to, co ma novejsi original nez
-        # zmenseninu, takze bezny beh neudela nic a trva sekundy.
-        for thumbs_script, popis in (
-            ("build_cover_thumbs.py", "OST cover thumbnails"),
-            ("build_top_favorites_thumbs.py", "Top Favorites thumbnails"),
-        ):
-            print(f"Running {thumbs_script} to update {popis}...")
-            try:
-                subprocess.run([sys.executable, os.path.join(script_root, thumbs_script)],
-                               check=True, cwd=script_root)
-                print(f"{popis} updated successfully!")
-            except Exception as e:
-                print(f"Failed to run {thumbs_script}: {e}")
+        def _krok(nazev):
+            return (nazev, [sys.executable, os.path.join(script_root, nazev)])
 
-        # 8. Predstazeni posteru pro Cestu Anime
-        # Inkrementalni: stahuje jen nova anime a postery, kterym se na MAL
-        # zmenila adresa. Bezny beh tedy neudela nic a trva sekundy.
-        print("Running download_journey_posters.py to update anime posters...")
-        try:
-            posters_script = os.path.join(script_root, "download_journey_posters.py")
-            subprocess.run([sys.executable, posters_script], check=True, cwd=script_root)
-            print("Anime posters updated successfully!")
-        except Exception as e:
-            print(f"Failed to run download_journey_posters.py: {e}")
+        lajny = [
+            [_krok("download_jikan_cache.py"), _krok("download_journey_posters.py")],
+            [_krok("extract_spotify_images.py"), _krok("build_cover_thumbs.py")],
+            [_krok("export_docx_categories.py")],
+            [_krok("build_ytmusic_ost.py")],
+            [_krok("download_animethemes_cache.py")],
+            [_krok("build_top_favorites_thumbs.py")],
+        ]
+        if imdb_kroky:
+            lajny.append(imdb_kroky)
+
+        print("Spouštím podskripty souběžně (výpisy přijdou po blocích)...")
+        t_lajny = time.monotonic()
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+        with ThreadPoolExecutor(max_workers=4) as pool:
+            futures = [pool.submit(_spust_lajnu, kroky) for kroky in lajny]
+            for f in as_completed(futures):
+                print(f.result(), end="", flush=True)
+        print(f"[TIMER] Vsechny podskripty (soubezne): {time.monotonic() - t_lajny:.1f}s")
 
         # 9. Push to GitHub
         # `-c gc.auto=0` je tu schvalne. Repozitar lezi ve slozce OneDrive,
@@ -1348,27 +1449,44 @@ def main():
         # skript na tom uvizne. Uklid tedy pri automatickem behu vypiname,
         # rucni `git gc` funguje dal beze zmeny.
         GIT = ["git", "-c", "gc.auto=0"]
-        print("Pushing data to GitHub...")
-        try:
-            web_dir = os.path.abspath(os.path.join(output_dir, "..", ".."))
-            subprocess.run(GIT + ["add", "public/data/*", "public/images/*"], cwd=web_dir, check=True)
-            subprocess.run(GIT + ["commit", "-m", "Auto-update dat z Excelu (Background)"], cwd=web_dir, check=True)
-            subprocess.run(GIT + ["push", "origin", "main"], cwd=web_dir, check=True)
-            print("Git push completed successfully!")
-        except Exception as e:
+        if no_push:
+            print("Přepínač --no-push: commit a push se přeskakují (testovací běh).")
+        else:
+            print("Pushing data to GitHub...")
             try:
-                # POZOR: `add -A` vezme i rozpracovane zmeny ve zdrojacich, ne
-                # jen data, a hned je pushne, coz je nasazeni. Je to zachranna
-                # vetev pro pripad, kdy prvni pokus selze; kdyz se spusti behem
-                # rozdelane prace, dostane se na web i to, co jeste nemelo jit.
-                subprocess.run(GIT + ["add", "-A"], cwd=web_dir, check=True)
-                subprocess.run(GIT + ["commit", "-m", "Auto-update dat z Excelu (Background Fallback)"], cwd=web_dir, check=True)
-                subprocess.run(GIT + ["push", "origin", "main"], cwd=web_dir, check=True)
-                print("Git fallback push completed successfully!")
-            except Exception as ge:
-                print(f"Failed to push to GitHub: {ge}")
+                web_dir = os.path.abspath(os.path.join(output_dir, "..", ".."))
+                subprocess.run(GIT + ["add", "public/data/*", "public/images/*"], cwd=web_dir, check=True)
+                # Když se reálně nic nezměnilo, nemá smysl commitovat a spouštět
+                # nasazení. Samotný timestamp v metadata.json se za změnu
+                # nepočítá a vrátí se zpět, ať klientům zbytečně neinvaliduje cache.
+                res = subprocess.run(GIT + ["diff", "--cached", "--name-only"],
+                                     cwd=web_dir, check=True, capture_output=True, text=True)
+                zmenene = [l.strip() for l in res.stdout.splitlines() if l.strip()]
+                if not zmenene or zmenene == ["public/data/metadata.json"]:
+                    subprocess.run(GIT + ["reset", "-q", "--", "public/data", "public/images"],
+                                   cwd=web_dir, check=False)
+                    if zmenene:
+                        subprocess.run(GIT + ["checkout", "-q", "--", "public/data/metadata.json"],
+                                       cwd=web_dir, check=False)
+                    print("Data se nezměnila, commit a nasazení se přeskakují.")
+                else:
+                    subprocess.run(GIT + ["commit", "-m", "Auto-update dat z Excelu (Background)"], cwd=web_dir, check=True)
+                    subprocess.run(GIT + ["push", "origin", "main"], cwd=web_dir, check=True)
+                    print("Git push completed successfully!")
+            except Exception as e:
+                try:
+                    # Záchranná větev: schválně už jen public/, žádné `git add -A`.
+                    # Dřívější add -A umělo vzít i rozpracované zdrojáky a rovnou
+                    # je nasadit na web.
+                    subprocess.run(GIT + ["add", "public/data", "public/images"], cwd=web_dir, check=True)
+                    subprocess.run(GIT + ["commit", "-m", "Auto-update dat z Excelu (Background Fallback)"], cwd=web_dir, check=True)
+                    subprocess.run(GIT + ["push", "origin", "main"], cwd=web_dir, check=True)
+                    print("Git fallback push completed successfully!")
+                except Exception as ge:
+                    print(f"Failed to push to GitHub: {ge}")
 
     finally:
+        print(f"[TIMER] Celkem export_data.py: {time.monotonic() - t_total:.1f}s")
         # Cleanup the temp file
         if 'wb' in locals():
             wb.close()

@@ -4,6 +4,32 @@ Tento soubor shrnuje všechny nedávné změny, opravy a vylepšení implementov
 
 ---
 
+## [1.4.0] - 2026-08-04 (pozdní večer)
+
+### 🚀 Druhá vlna zrychlení (B2 + C1 + C2)
+- **Podskripty exportu běží souběžně v „lajnách".** `map_from_folder.py` doběhne první (přepisuje `anime_list.json`), pak jedou paralelně: [Jikan cache → postery], [Spotify obaly → jejich zmenšeniny], rozbory, YT Music, AnimeThemes, zmenšeniny Top Favorites a případně IMDb. Oba Jikan skripty zůstávají schválně za sebou v jedné lajně (společný rate limit 3/s a 60/min). Výstup každého skriptu se bufferuje a vypisuje vcelku, ať se souběžné logy nemíchají; git commit čeká na všechny lajny. Souhrn podskriptů: ~12 s → 4,8 s.
+- **In-process NotebookLM klient (C1).** Orchestrátor už nespouští na každý příkaz nový Python proces (~1 až 2 s režie na list/delete/upload), ale volá knihovnu `notebooklm_tools` přímo, s thread-local klienty pro paralelní workery. Trojí pojistka: při jakékoli chybě operace automaticky přejde na původní subprocess cestu, celý mechanismus se vypíná přes `NLM_INPROC=0`, a po novém loginu se klienti vyrábí znovu (čerstvé cookies). Otestováno na dočasném testovacím notebooku (create → upload souboru → list → rename → delete zdroje → delete notebooku, vše in-process) a čtením ostrého notebooku: množiny ID z in-proc a CLI listu jsou identické.
+- **Souběžné načtení obou podob sešitu (C2): poctivý výsledek je ~0.** Načtení hodnot i vzorců běží ve dvou vláknech, ale openpyxl parsování drží GIL: 17,7 s proti dřívějším 8,9 + 8,6 s sekvenčně. Ponecháno (neškodí a na studené OneDrive cache může něco málo dát); skutečné zrychlení by chtělo výměnu čtecí knihovny, což je riziko třídy C3 a bylo zamítnuto.
+- Webový řetěz při ležícím Jikanu: **23 s** (původně ~127 s, po první vlně 30 až 32 s).
+
+---
+
+## [1.3.0] - 2026-08-04 (večer)
+
+### ⚡ Zrychlení automatického běhu (NotebookLM + web)
+- **Webový export běží souběžně s Excel makrem.** Orchestrátor (`Anime NotebookLM Updater.py` v kořeni `Anime_List/`) spouští 4 vlákna místo 3: mazání zdrojů, Excel makro, file watcher a nově `export_data.py` jako samostatnou větev. Na výstupech makra nezávisí; jediná vazba (čtení alt-textů přes Excel COM) odpadla, viz níže. Celek se zkracuje zhruba o délku makra a `excel_done` nově znamená jen „makro hotovo", takže watcher nečeká na web.
+- **Alt-texty tvarů Top Favorites se čtou ze zipu sešitu** (atribut `descr` elementu `cNvPr` v drawing XML) místo přes Excel COM. Ověřeno proti `Shape.AlternativeText` na všech 73 tvarech: znak po znaku shodné a výsledný `top_favorites.json` bit po bitu identický. COM zůstává jen jako fallback a při orchestrovaném běhu (`NLM_ORCHESTRATED=1`) je zakázaný.
+- **Sdílená pojistka výpadku Jikanu** (`tools/jikan_health.py`): kdo výpadek vyhodnotí (3 totální selhání po sobě), zapíše ho do temp souboru a ostatní skripty (jména postav v `export_data.py`, `download_jikan_cache.py`, `download_journey_posters.py`) ho po dobu platnosti (30 min) rovnou přeskočí. Při výpadku to šetří 1,5 až 2 minuty. `download_jikan_cache.py` navíc po prvním totálním selhání zrychlí sondování na jeden pokus místo plných backoffů.
+- **Jména postav Top 10 se cachují** (`tools/top_chars_cache.json`), API se volá jen pro nová CHAR_ID. Všechna `requests.get` v exportu dostala `timeout`, dřív uměla viset neomezeně.
+- **Nezměněné soubory se nepřepisují:** obrázky extrahované ze sešitu se porovnávají po bajtech (takže se zbytečně nepřegenerovávají zmenšeniny Top Favorites), Spotify obaly se kopírují jen při změně, `spotify_images.json` a `jikan_cache.json` se zapisují jen při změně obsahu. Míň práce pro OneDrive i git.
+- **Běh beze změn už nenasazuje:** když se v `public/` nic nezměnilo, commit a push se přeskočí a timestamp v `metadata.json` se vrátí zpět, ať klientům zbytečně neinvaliduje cache. Záchranná git větev už nepoužívá `add -A`, přidává jen `public/` (dřív uměla nasadit i rozpracované zdrojáky).
+- **Měření kroků:** `export_data.py` i orchestrátor vypisují `[TIMER]` řádky (načtení sešitů, každý podskript, fáze běhu), regrese rychlosti budou vidět na první pohled. Nový přepínač `--no-push` pro testovací běhy bez commitu.
+- **NotebookLM část:** hashe docx se přebírají z cache podle mtime a velikosti (474 zipů se nehashuje při každém běhu), po auth chybě se jde rovnou na login bez druhého marného pokusu, přejmenování notebooku jen jednou denně, mazání staré verze zdroje se přesunulo do upload workeru (skenování watcheru nic neblokuje) a opravená inicializace COM v `resolve_lnk` (příčina chyby `-2147221020` u WMI cleanupu).
+- **`notebooklm-mcp-cli` upgradováno 0.7.7 → 0.9.6** (instalace je přes pip, ne uv, takže `uv tool upgrade` z hlášky by nefungoval). Monkey-patch `NLM_NO_HEADLESS` byl na 0.7.7 celou dobu tiše mrtvý (marker nesedí na skutečný text `base.py`); patche jsou přecílené na 0.9.x, po aplikaci se ohlásí a když nesedí, hlasitě varují. Přihlášení po upgradu ověřeno (`nlm login --check`); verze 0.8.2 navíc průběžně obnovuje cookies (RotateCookies), takže interaktivních loginů by mělo ubýt, a 0.9.3 zvládá migraci účtů na `notebook.google.com`.
+- Testováno dvěma ostrými běhy `export_data.py --no-push`: výstupní data identická s předchozími, webový řetěz 30 až 32 s při ležícím Jikanu (dřív ~127 s). První ostrý běh celé automatizace chce dohled u konzole; záloha orchestrátoru je vedle něj v `Anime NotebookLM Updater.py.bak`.
+
+---
+
 ## [1.2.0] - 2026-08-04
 
 ### 📄 Chytrý export DOCX rozborů
