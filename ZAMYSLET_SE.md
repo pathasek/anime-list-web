@@ -19,3 +19,4 @@ Předchozí dokument se mi líbí a nech ho být (20K+ slov).
 21) Zkusit vymyslet kodex/wiki pro Anime z mých rozborů a sematické/quick vyhledávání na webu
 22) Na menších PC zařízeních (laptop) se automaticky nerovná OST player v "FAVOURITE OP/ED/OST" - není vidět hlavička playeru - nejde kvůli tomu vidět "X" - u menších playerů chci zmenšit poměr, u velkých chci nechat - current nastavení je pro 1920x1080 přijatelné a chci pro toto rozlišení nechat)
 23) Dále jsem si všiml, že dnes ráno (06.08.2026) se nepřehrávají písničky BEST PIECES přehrávač - černá obrazovka. Reklama se přehraje, ale písnička ne. Písnička bez reklamy funguje ale - zvláštní - ověřit. Včera to fungovalo v pohodě i tak...
+24) Změnit kvalitu/čtivost u rozborů modalů - bolí oči
