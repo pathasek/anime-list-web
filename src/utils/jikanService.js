@@ -454,6 +454,12 @@ async function saveDownloadProgress(progress) {
     }
 }
 
+// Endpoint /api/excel-running existuje jen jako middleware Vite dev serveru
+// (viz vite.config.js), na nasazeném statickém webu nikdy nebude dostupný.
+const EXCEL_CHECK_AVAILABLE = import.meta.env.DEV
+const EXCEL_CHECK_CACHE_MS = 5000
+let _excelCheckCache = { value: false, at: 0 }
+
 /**
  * Veřejná kontrola „běží Excel?" pro interaktivní komponenty: při odchodu
  * z tabu smí jejich rozdělané dotazy doběhnout na pozadí JEN když Excel
@@ -464,16 +470,25 @@ export async function isExcelRunning() {
 }
 
 async function checkIsExcelRunning() {
+    if (!EXCEL_CHECK_AVAILABLE) return false
+
+    const now = Date.now()
+    if (now - _excelCheckCache.at < EXCEL_CHECK_CACHE_MS) {
+        return _excelCheckCache.value
+    }
+
+    let result = false
     try {
         const response = await fetch('/api/excel-running')
         if (response.ok) {
             const data = await response.json()
-            return !!data.excelRunning
+            result = !!data.excelRunning
         }
     } catch {
         // Fallback when endpoint is not available
     }
-    return false
+    _excelCheckCache = { value: result, at: now }
+    return result
 }
 
 /**
