@@ -5823,12 +5823,15 @@ button.fav-ost-row-play:hover {
   --bg-hover: #f0e6f6;
 
   --accent-primary: #a855f7;
-  --accent-secondary: #c084fc;
-  --accent-pink: #f472b6;
-  --accent-cyan: #22d3ee;
-  --accent-emerald: #34d399;
-  --accent-amber: #fbbf24;
-  --accent-red: #f87171;
+  /* Ztmaveno pro čitelnost na světlé kartě (badge/texty nových designů měly
+     nízký kontrast). Původně světlé pastely: secondary #c084fc, pink #f472b6,
+     cyan #22d3ee, emerald #34d399, amber #fbbf24. Primary zůstává (byl OK). */
+  --accent-secondary: #7c3aed;
+  --accent-pink: #be185d;
+  --accent-cyan: #0e7490;
+  --accent-emerald: #047857;
+  --accent-amber: #b45309;
+  --accent-red: #dc2626;
 
   --text-primary: #1e1b2e;
   --text-secondary: #6b5f7c;
@@ -5913,8 +5916,10 @@ button.fav-ost-row-play:hover {
   --accent-secondary: #2b8a5a;
   --accent-pink: #c0392b;
   --accent-cyan: #2980b9;
-  --accent-emerald: #27ae60;
-  --accent-amber: #f39c12;
+  /* Ztmaveno pro čitelnost na bílé kartě (emerald #27ae60 a amber #f39c12 měly
+     nízký kontrast u badge/textů nových designů). */
+  --accent-emerald: #1e8449;
+  --accent-amber: #b9770e;
   --accent-red: #e74c3c;
 
   --text-primary: #1a1a1a;
@@ -7245,6 +7250,12 @@ button.fav-ost-row-play:hover {
 }
 
 /* ─── Cyberpunk Theme ─── */
+/* Původní růžová/červená byla #ff0055 (HSL 340°, 100 %, 50 %) na skoro černé
+   spolu s azurovou #00f3ff — učebnicová chromostereopsie (červená a modrá se
+   nedají zaostřit najednou, barvy „vibrují" a pálí oči), navíc jako TEXT a
+   OBRYSY všude. Podle doporučení stačí jednu z dvojice odsytit: červenou jsem
+   zjemnil na #f5427c (méně sytá, světlejší → lepší čitelnost, míň vibrace),
+   akcentní červenou na #f1506e. Cyberpunk nádech (růžová + azur + glow) zůstává. */
 [data-theme="cyberpunk"] {
   --bg-primary: #05010a;
   --bg-secondary: #120024;
@@ -7252,29 +7263,29 @@ button.fav-ost-row-play:hover {
   --bg-card: #0f0319;
   --bg-hover: #24003d;
 
-  --accent-primary: #ff0055;
+  --accent-primary: #f5427c;
   --accent-secondary: #00f3ff;
-  --accent-pink: #ff0055;
+  --accent-pink: #f5427c;
   --accent-cyan: #00f3ff;
   --accent-emerald: #00ff66;
   --accent-amber: #ffcc00;
-  --accent-red: #ff3366;
+  --accent-red: #f1506e;
 
   --text-primary: #00f3ff;
-  --text-secondary: #ff0055;
+  --text-secondary: #f5427c;
   --text-muted: #817293;
 
-  --border-color: #ff0055;
+  --border-color: #f5427c;
   --border-light: #00f3ff;
 
-  --gradient-primary: linear-gradient(135deg, #ff0055 0%, #00f3ff 100%);
-  --gradient-pink: linear-gradient(135deg, #ff0055 0%, #00f3ff 100%);
-  --gradient-card: linear-gradient(145deg, rgba(255, 0, 85, 0.1) 0%, transparent 100%);
+  --gradient-primary: linear-gradient(135deg, #f5427c 0%, #00f3ff 100%);
+  --gradient-pink: linear-gradient(135deg, #f5427c 0%, #00f3ff 100%);
+  --gradient-card: linear-gradient(145deg, rgba(245, 66, 124, 0.1) 0%, transparent 100%);
 
-  --shadow-sm: 0 1px 3px rgba(255, 0, 85, 0.3);
-  --shadow-md: 0 4px 12px rgba(255, 0, 85, 0.4);
-  --shadow-lg: 0 8px 24px rgba(255, 0, 85, 0.5);
-  --shadow-glow: 0 0 16px rgba(255, 0, 85, 0.6);
+  --shadow-sm: 0 1px 3px rgba(245, 66, 124, 0.3);
+  --shadow-md: 0 4px 12px rgba(245, 66, 124, 0.4);
+  --shadow-lg: 0 8px 24px rgba(245, 66, 124, 0.5);
+  --shadow-glow: 0 0 16px rgba(245, 66, 124, 0.6);
 }
 
 /* Modální okno pro detail kategorie z DOCX */

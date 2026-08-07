@@ -106,14 +106,18 @@
 }
 
 .favp-random-btn {
-    color: var(--text-secondary);
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
+    /* Hezká azurová jako doplněk k fialovému „Hádej OP/ED". Napříč tématy
+       stejná (stejně jako fialová u Hádej), fialová + azurová ladí všude. */
+    color: #eafaff;
+    background: linear-gradient(135deg, #35b6f0, #1f7fd6);
+    border: 1px solid rgba(53, 182, 240, 0.5);
+    box-shadow: 0 2px 12px rgba(53, 182, 240, 0.22);
 }
 
 .favp-random-btn:hover {
-    border-color: #3db4f2;
-    color: #5fc2f5;
+    box-shadow: 0 4px 18px rgba(53, 182, 240, 0.42);
+    transform: translateY(-1px);
+    border-color: rgba(53, 182, 240, 0.7);
 }
 
 /* Stat karty s levým proužkem a podílem z celku */
