@@ -581,8 +581,13 @@ const jikanStatsCache = {}
 // breaker: po prvním úplném selhání Jikanu v této session jdou další
 // tooltipsy rovnou na AniList, ať každý hover nečeká sekundy na marný backoff.
 let _jikanStatsDown = false
+// Krátká negativní cache: po selhání (typicky AniList 429) chvíli nezkoušet
+// stejné anime znovu, ať rychlé přejíždění karet degradovaný limit dál nebombarduje.
+const _statsFailUntil = {}
 
 async function fetchScoreStats(malId) {
+    if (_statsFailUntil[malId] && _statsFailUntil[malId] > Date.now()) return null
+
     if (!_jikanStatsDown) {
         const jikan = await jikanFetchWithRetry(`https://api.jikan.moe/v4/anime/${malId}/statistics`, 3, 'high')
         if (jikan?.data?.scores?.length) {
@@ -592,25 +597,47 @@ async function fetchScoreStats(malId) {
         console.warn('[Stats] Jikan /statistics nedostupné (výpadek Jikan scraperu, MAL stats stránka sama funguje) — přepínám na AniList fallback pro tuto session')
     }
 
-    const resp = await fetch('https://graphql.anilist.co', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({
-            query: 'query ($idMal: Int) { Media(idMal: $idMal, type: ANIME) { stats { scoreDistribution { score amount } } } }',
-            variables: { idMal: malId }
-        })
-    })
-    if (!resp.ok) return null
-    const json = await resp.json()
-    const dist = json?.data?.Media?.stats?.scoreDistribution
-    if (!dist || dist.length === 0) return null
-    const total = dist.reduce((sum, d) => sum + (d.amount || 0), 0)
-    const scores = dist.map(d => ({
-        score: Math.round(d.score / 10),
-        votes: d.amount || 0,
-        percentage: total > 0 ? ((d.amount || 0) / total) * 100 : 0
-    }))
-    return { scores, total, source: 'AniList' }
+    // Po selhání si anime na chvíli zapamatujeme, ať hover neposílá dotaz za dotazem.
+    const fail = () => { _statsFailUntil[malId] = Date.now() + 60000; return null }
+
+    // AniList fallback s ošetřením rate limitu (429). AniList je dlouhodobě
+    // degradovaný na ~30 req/min, takže při rychlém přejíždění karet padal na
+    // 429 a tooltip hlásil „nedostupné". Respektujeme Retry-After a krátce
+    // zkusíme znovu, místo okamžitého selhání.
+    for (let attempt = 0; attempt < 3; attempt++) {
+        let resp
+        try {
+            resp = await fetch('https://graphql.anilist.co', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({
+                    query: 'query ($idMal: Int) { Media(idMal: $idMal, type: ANIME) { stats { scoreDistribution { score amount } } } }',
+                    variables: { idMal: malId }
+                })
+            })
+        } catch {
+            return fail()
+        }
+        if (resp.status === 429) {
+            if (attempt === 2) return fail()
+            const ra = parseInt(resp.headers.get('Retry-After') || '', 10)
+            const waitMs = Number.isFinite(ra) ? Math.min(ra * 1000, 8000) : 1000 * (attempt + 1)
+            await new Promise(r => setTimeout(r, waitMs))
+            continue
+        }
+        if (!resp.ok) return fail()
+        const json = await resp.json()
+        const dist = json?.data?.Media?.stats?.scoreDistribution
+        if (!dist || dist.length === 0) return fail()
+        const total = dist.reduce((sum, d) => sum + (d.amount || 0), 0)
+        const scores = dist.map(d => ({
+            score: Math.round(d.score / 10),
+            votes: d.amount || 0,
+            percentage: total > 0 ? ((d.amount || 0) / total) * 100 : 0
+        }))
+        return { scores, total, source: 'AniList' }
+    }
+    return fail()
 }
 
 function ScoreDistributionTooltip({ malId }) {
@@ -1001,9 +1028,26 @@ function RecCard({ rec, rank, sourceAnimeId, sourceScore, settings }) {
             {/* Střední sloupec */}
             <div className="rec-info-cell">
                 <div className="rec-title-block">
-                    <a className="rec-title" href={`https://myanimelist.net/anime/${details.mal_id}`} target="_blank" rel="noopener noreferrer">
-                        {title}
-                    </a>
+                    <div className="rec-title-line">
+                        <a className="rec-title" href={`https://myanimelist.net/anime/${details.mal_id}`} target="_blank" rel="noopener noreferrer">
+                            {title}
+                        </a>
+                        <div className="rec-links-row">
+                            {hasMalRec && (
+                                <a href={recLink} target="_blank" rel="noopener noreferrer" className="rec-link-btn">
+                                    <img src={malIcon} alt="" />Uživatelský posudek (MAL)
+                                </a>
+                            )}
+                            <a href={`https://myanimelist.net/anime/${details.mal_id}`} target="_blank" rel="noopener noreferrer" className="rec-link-btn">
+                                <img src={malIcon} alt="" />MAL
+                            </a>
+                            {anilistUrl && (
+                                <a href={anilistUrl} target="_blank" rel="noopener noreferrer" className="rec-link-btn">
+                                    <img src={anilistIcon} alt="" />AniList
+                                </a>
+                            )}
+                        </div>
+                    </div>
                     <div className="rec-meta-row">
                         {metaPlain.map((m, i) => (
                             <Fragment key={m.key}>
@@ -1054,22 +1098,6 @@ function RecCard({ rec, rank, sourceAnimeId, sourceScore, settings }) {
                     </div>
                 )}
 
-                {/* Odkazy */}
-                <div className="rec-links-row">
-                    {hasMalRec && (
-                        <a href={recLink} target="_blank" rel="noopener noreferrer" className="rec-link-btn">
-                            <img src={malIcon} alt="" />Uživatelský posudek (MAL)
-                        </a>
-                    )}
-                    <a href={`https://myanimelist.net/anime/${details.mal_id}`} target="_blank" rel="noopener noreferrer" className="rec-link-btn">
-                        <img src={malIcon} alt="" />MAL
-                    </a>
-                    {anilistUrl && (
-                        <a href={anilistUrl} target="_blank" rel="noopener noreferrer" className="rec-link-btn">
-                            <img src={anilistIcon} alt="" />AniList
-                        </a>
-                    )}
-                </div>
             </div>
 
             {/* Pravý sloupec: MAL skóre + relevance (design 1b) */}

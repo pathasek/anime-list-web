@@ -384,6 +384,19 @@
     gap: 5px;
 }
 
+/* Řádek s názvem: název vlevo, odkazy (MAL/AniList/posudek) vpravo od jména */
+.rec-title-line {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.rec-title-line .rec-links-row {
+    margin-left: auto;
+    margin-top: 0;
+}
+
 .rec-title {
     font-size: 1.19rem;
     font-weight: 700;

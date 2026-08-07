@@ -1,10 +1,9 @@
 /* TopFavorites.css — design 1A z Claude Design (barvy přes proměnné témat).
    Název, FH i odkazy žijí ve spodním overlay posteru a ukazují se na hover. */
 .top-favorites-page {
-    padding: 2rem;
-    padding-top: 0;
-    max-width: 1400px;
-    margin: 0 auto;
+    /* Šířku řídí .main-content (2rem), stejně jako Recommendations a Plan to Watch.
+       Bez max-width a bez extra okrajů, ať obsah vyplní obrazovku. */
+    padding: 0;
 }
 
 .favorites-content {

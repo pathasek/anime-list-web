@@ -103,7 +103,6 @@ const TopFavorites = () => {
                         <span className="star-icon">★</span>
                     </div>
                     <div className="header-line"></div>
-                    <span className="section-meta">{items.length.toLocaleString('cs-CZ')} položek</span>
                 </div>
 
                 <div className="favorites-grid">

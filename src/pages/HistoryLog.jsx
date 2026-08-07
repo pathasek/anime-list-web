@@ -15,13 +15,22 @@ const HEATMAP_COLOR_LEVEL_3 = 13
 const HEATMAP_COLOR_LEVEL_4 = 19
 // Colors adjusted slightly to fit the dark theme natively better, but based on the VBA green scale
 const getHeatmapColor = (eps) => {
-    if (eps === 0) return 'var(--color-bg-elevated)'; // Empty cell color
+    if (eps === 0) return 'var(--bg-tertiary)'; // Prázdná buňka: jemná dlaždice řízená tématem
     if (eps <= HEATMAP_COLOR_LEVEL_1) return '#0e4429';
     if (eps <= HEATMAP_COLOR_LEVEL_2) return '#006d32';
     if (eps <= HEATMAP_COLOR_LEVEL_3) return '#26a641';
     if (eps <= HEATMAP_COLOR_LEVEL_4) return '#39d353';
     return '#52ff73'; // > Level 4
 }
+
+// Akcentní proužek u záznamů dne. Jeden den může mít i 11+ anime, proto dost
+// odlišných barev, aby se v rámci jednoho dne proužky neopakovaly. Vychází z
+// kategorické palety aplikace (utils/chartSettings.js), proloženo pro kontrast
+// mezi sousedními řádky. Záměrně kategorické (ne podle tématu), jako grafy.
+const ENTRY_ACCENTS = [
+    '#6366f1', '#f59e0b', '#10b981', '#ec4899', '#06b6d4', '#f97316',
+    '#a855f7', '#84cc16', '#ef4444', '#14b8a6', '#d946ef', '#8b5cf6',
+]
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
@@ -972,11 +981,16 @@ function HistoryLog() {
 
         // Total calendar days in range (first → last)
         let totalDaysInRange = days
-        if (uniqueDays.size >= 2) {
+        let firstDate = null, lastDate = null
+        if (uniqueDays.size >= 1) {
             const sorted = Array.from(uniqueDays).sort()
-            const first = new Date(sorted[0])
-            const last = new Date(sorted[sorted.length - 1])
-            totalDaysInRange = Math.round((last - first) / (1000 * 60 * 60 * 24)) + 1
+            firstDate = sorted[0]
+            lastDate = sorted[sorted.length - 1]
+            if (uniqueDays.size >= 2) {
+                const first = new Date(firstDate)
+                const last = new Date(lastDate)
+                totalDaysInRange = Math.round((last - first) / (1000 * 60 * 60 * 24)) + 1
+            }
         }
 
         // Nejaktivnější měsíc (v aktuálně filtrovaném rozsahu) — pro staty grafu
@@ -992,8 +1006,18 @@ function HistoryLog() {
             ? { label: new Date(`${bestMonth.k}-01T12:00:00`).toLocaleDateString('cs-CZ', { month: 'long', year: 'numeric' }), eps: bestMonth.v }
             : null
 
-        return { episodes, time, days, totalDaysInRange, epsPerDay, minsPerDay, bestMonth: bestMonthObj }
+        return { episodes, time, days, totalDaysInRange, firstDate, lastDate, epsPerDay, minsPerDay, bestMonth: bestMonthObj }
     }, [groupedHistory])
+
+    // Celkový počet dní se záznamem (nefiltrovaně) pro popisek „X z Y zobrazených dní"
+    const totalDayCount = useMemo(() => {
+        const s = new Set()
+        historyLog.forEach(h => { if (h.date) s.add(h.date.split('T')[0]) })
+        return s.size
+    }, [historyLog])
+
+    // Rozsah dat + aktivní dny do podtitulku (filtrovaně, jako epizody/čas)
+    const fmtSpanDate = (iso) => new Date(iso).toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric', year: 'numeric' })
 
     const scrollToDate = (dateStr) => {
         const groupIndex = groupedHistory.findIndex(g => g.date && g.date.startsWith(dateStr));
@@ -1038,75 +1062,63 @@ function HistoryLog() {
         <div className="fade-in" style={{ opacity: isRestoringScroll ? 0 : 1, transition: 'opacity 0.2s' }}>
             {/* Header and Streaks */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)', marginBottom: 'var(--spacing-lg)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--spacing-lg)' }}>
-                    <h2 style={{ margin: 0 }}>
-                        History Log
-                        <span style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginLeft: '12px' }}>
-                            ({pluralEpizoda(totalStats.episodes)}, {formatTime(totalStats.time)})
-                        </span>
-                    </h2>
-
-                    <div className="history-streaks-container" style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '16px',
-                        background: 'var(--color-bg-elevated)',
-                        borderRadius: 'var(--radius-md)',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-                        padding: 'var(--spacing-sm) var(--spacing-lg)'
-                    }}>
-                        {/* Current Streak */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <span title="Aktuální Streak" style={{ fontSize: '1.2rem' }}>🔥</span>
-                            <span style={{
-                                fontWeight: '800',
-                                color: watchStreak.current >= watchStreak.longest ? 'var(--accent-emerald)' : 'var(--accent-amber)',
-                                fontSize: '1.1rem'
-                            }}>
-                                {watchStreak.current}
-                            </span>
-                            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                                {watchStreak.current === 1 ? 'den' : watchStreak.current >= 2 && watchStreak.current <= 4 ? 'dny' : 'dní'}
-                            </span>
-                            {watchStreak.currentStart && (
-                                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                                    ({watchStreak.currentStart.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric', year: '2-digit' })} - {watchStreak.currentEnd.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric', year: '2-digit' })})
-                                </span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 'var(--spacing-lg)' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                        <h2 style={{ margin: 0 }}>History Log</h2>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                            <span><strong style={{ color: 'var(--text-primary)', fontWeight: 700 }}>{totalStats.episodes.toLocaleString('cs-CZ')}</strong> epizod</span>
+                            <span style={{ opacity: 0.4 }}>·</span>
+                            <span style={{ color: 'var(--text-primary)', fontWeight: 700 }}>{totalStats.time >= 60 ? `${Math.floor(totalStats.time / 60).toLocaleString('cs-CZ')} h ${totalStats.time % 60} min` : `${totalStats.time} min`}</span>
+                            {totalStats.firstDate && (
+                                <>
+                                    <span style={{ opacity: 0.4 }}>·</span>
+                                    <span>
+                                        {fmtSpanDate(totalStats.firstDate)} – {fmtSpanDate(totalStats.lastDate)}
+                                        {' · '}
+                                        {totalStats.days.toLocaleString('cs-CZ')} aktivních dní z {totalStats.totalDaysInRange.toLocaleString('cs-CZ')}
+                                    </span>
+                                </>
                             )}
                         </div>
+                    </div>
 
-                        <div style={{ width: '1px', height: '24px', background: 'var(--border-color)' }} />
-
-                        {/* Longest Streak */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <span title="Nejdelší Streak" style={{ fontSize: '1.2rem' }}>🏆</span>
-                            <span style={{
-                                fontWeight: '800',
-                                color: 'var(--text-primary)',
-                                fontSize: '1.1rem'
-                            }}>
-                                {watchStreak.longest}
-                            </span>
-                            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                                {watchStreak.longest === 1 ? 'den' : watchStreak.longest >= 2 && watchStreak.longest <= 4 ? 'dny' : 'dní'}
-                            </span>
-                            {watchStreak.longestStart && (
-                                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                                    ({watchStreak.longestStart.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric', year: '2-digit' })} - {watchStreak.longestEnd.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric', year: '2-digit' })})
+                    <div style={{ display: 'flex', alignItems: 'stretch', gap: '10px', flexWrap: 'wrap' }}>
+                        {/* Aktuální série */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '11px', background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '0 16px', height: '56px' }}>
+                            <span title="Aktuální Streak" style={{ fontSize: '1.15rem', lineHeight: 1 }}>🔥</span>
+                            <span style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                <span style={{ display: 'flex', alignItems: 'baseline', gap: '5px' }}>
+                                    <span style={{ fontSize: '1.25rem', fontWeight: 800, lineHeight: 1, color: watchStreak.current >= watchStreak.longest ? 'var(--accent-emerald)' : 'var(--accent-amber)' }}>{watchStreak.current}</span>
+                                    <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{pluralDen(watchStreak.current)}</span>
                                 </span>
-                            )}
+                                <span style={{ fontSize: '0.66rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+                                    Aktuální série{watchStreak.currentStart ? ` · ${fmtDateShort(watchStreak.currentStart)} – ${fmtDateShort(watchStreak.currentEnd)}` : ''}
+                                </span>
+                            </span>
                         </div>
 
-                        <div style={{ width: '1px', height: '24px', background: 'var(--border-color)' }} />
+                        {/* Nejdelší série */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '11px', background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '0 16px', height: '56px' }}>
+                            <span title="Nejdelší Streak" style={{ fontSize: '1.15rem', lineHeight: 1 }}>🏆</span>
+                            <span style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                <span style={{ display: 'flex', alignItems: 'baseline', gap: '5px' }}>
+                                    <span style={{ fontSize: '1.25rem', fontWeight: 800, lineHeight: 1, color: 'var(--text-primary)' }}>{watchStreak.longest}</span>
+                                    <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{pluralDen(watchStreak.longest)}</span>
+                                </span>
+                                <span style={{ fontSize: '0.66rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+                                    Nejdelší série{watchStreak.longestStart ? ` · ${fmtDateShort(watchStreak.longestStart)} – ${fmtDateShort(watchStreak.longestEnd)}` : ''}
+                                </span>
+                            </span>
+                        </div>
 
                         {/* Plán 6 Ú5: tlačítko historie streaků */}
                         <button
                             className="media-icon-btn"
                             title="Historie streaků"
                             onClick={() => setShowStreakHistory(true)}
-                            style={{ width: '30px', height: '30px', fontSize: '0.95rem' }}
+                            style={{ width: '56px', height: '56px', fontSize: '1.15rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-card)' }}
                         >
-                            🕐
+                            🕘
                         </button>
                     </div>
                 </div>
@@ -1114,16 +1126,16 @@ function HistoryLog() {
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--spacing-lg)', alignItems: 'stretch' }}>
                     {chartData ? (
                         <div className="themed-outline" style={{
-                            background: 'var(--bg-secondary)',
-                            borderRadius: 'var(--radius-md)',
-                            padding: 'var(--spacing-md)',
+                            background: 'var(--bg-card)',
+                            borderRadius: 'var(--radius-lg)',
+                            padding: '18px',
                             border: '1px solid var(--border-color)',
                             display: 'flex',
                             flexDirection: 'column',
                             minHeight: '220px'
                         }}>
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
-                                <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: '500' }}>
+                            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '14px', flexWrap: 'wrap', gap: '8px 16px' }}>
+                                <div style={{ fontSize: '0.7rem', color: 'var(--text-primary)', fontWeight: 800, letterSpacing: '0.09em', textTransform: 'uppercase' }}>
                                     GRAF ZHLÉDNUTÝCH EPIZOD {dateRange.start || dateRange.end || yearFilter !== 'all' ? '(FILTROVÁNO)' : ''}
                                 </div>
                                 {/* Daily Averages - top right */}
@@ -1156,13 +1168,6 @@ function HistoryLog() {
                                             <span style={{ color: 'var(--text-muted)' }}>{totalStats.bestMonth.eps} EP</span>
                                         </div>
                                     )}
-                                    <div 
-                                        style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.75rem', cursor: 'help' }}
-                                        title={`Sledováno v ${totalStats.days} dnech z celkových ${totalStats.totalDaysInRange} kalendářních dnů v tomto období.`}
-                                    >
-                                        <span style={{ color: 'var(--text-muted)' }}>Aktivních dnů:</span>
-                                        <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{totalStats.days}/{totalStats.totalDaysInRange}</span>
-                                    </div>
                                 </div>
                             </div>
                             <div style={{ flex: 1, position: 'relative', minHeight: '180px' }}>
@@ -1170,25 +1175,25 @@ function HistoryLog() {
                             </div>
                         </div>
                     ) : (
-                        <div className="themed-outline" style={{ background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', padding: 'var(--spacing-md)', border: '1px solid var(--border-color)' }}>
-                            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>GRAF ZHLÉDNUTÝCH EPIZOD</div>
+                        <div className="themed-outline" style={{ background: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', padding: '18px', border: '1px solid var(--border-color)' }}>
+                            <div style={{ fontSize: '0.7rem', color: 'var(--text-primary)', fontWeight: 800, letterSpacing: '0.09em', textTransform: 'uppercase' }}>GRAF ZHLÉDNUTÝCH EPIZOD</div>
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '180px', color: 'var(--text-muted)' }}>Méně dat pro zobrazení</div>
                         </div>
                     )}
 
                     {/* Heatmap Section */}
                     <div className="themed-outline" style={{
-                        background: 'var(--bg-secondary)',
-                        borderRadius: 'var(--radius-md)',
-                        padding: 'var(--spacing-md)',
+                        background: 'var(--bg-card)',
+                        borderRadius: 'var(--radius-lg)',
+                        padding: '18px',
                         border: '1px solid var(--border-color)',
                         display: 'flex',
                         flexDirection: 'column',
                         minHeight: '220px',
                         overflow: 'hidden' // Prevent full container scroll if possible
                     }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '6px 16px', marginBottom: '8px' }}>
-                            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: '500' }}>
+                        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', flexWrap: 'wrap', gap: '6px 16px', marginBottom: '14px' }}>
+                            <div style={{ fontSize: '0.7rem', color: 'var(--text-primary)', fontWeight: 800, letterSpacing: '0.09em', textTransform: 'uppercase' }}>
                                 HEATMAPA AKTIVITY ZA POSLEDNÍ ROK
                             </div>
                             {heatmapStats && (
@@ -1327,15 +1332,16 @@ function HistoryLog() {
             </div>
 
             {/* Search and Filters */}
-            <div className="search-bar">
-                <div style={{ position: 'relative', flex: 1, display: 'flex', alignItems: 'center' }}>
+            <div className="search-bar" style={{ flexWrap: 'wrap' }}>
+                <div style={{ position: 'relative', flex: 1, minWidth: '240px', display: 'flex', alignItems: 'center' }}>
+                    <span style={{ position: 'absolute', left: '14px', fontSize: '0.9rem', opacity: 0.55, pointerEvents: 'none' }}>🔍</span>
                     <input
                         type="text"
                         className="search-input"
                         placeholder="Hledat anime..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        style={{ width: '100%', paddingRight: '2rem' }}
+                        style={{ width: '100%', height: '44px', padding: '0 2.2rem 0 2.5rem', background: 'var(--bg-card)' }}
                     />
                     {searchTerm && (
                         <button
@@ -1364,7 +1370,7 @@ function HistoryLog() {
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value)}
                         className="select"
-                        style={{ padding: '0.4rem 0.8rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', fontSize: '0.9rem' }}
+                        style={{ height: '44px', padding: '0 0.9rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-card)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', fontSize: '0.85rem', fontWeight: 500 }}
                     >
                         <option value="date">Řadit dle: Data</option>
                         <option value="animeCount">Řadit dle: Počtu Anime</option>
@@ -1372,31 +1378,31 @@ function HistoryLog() {
                         <option value="time">Řadit dle: Času</option>
                     </select>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
                             {!dateRange.start && (
-                                <span style={{ position: 'absolute', left: '10px', color: 'var(--text-muted)', fontSize: '0.85rem', pointerEvents: 'none' }}>Od...</span>
+                                <span style={{ position: 'absolute', left: '12px', color: 'var(--text-muted)', fontSize: '0.85rem', pointerEvents: 'none' }}>Od...</span>
                             )}
                             <input
                                 type="date"
                                 value={dateRange.start}
                                 onChange={(e) => setDateRange(prev => ({ ...prev, start: e.target.value }))}
                                 className="select"
-                                style={{ padding: '0.4rem 0.8rem', paddingLeft: dateRange.start ? '0.8rem' : '2.5rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-secondary)', color: dateRange.start ? 'var(--text-primary)' : 'transparent', border: '1px solid var(--border-color)', fontSize: '0.9rem' }}
+                                style={{ height: '44px', padding: '0 0.8rem', paddingLeft: dateRange.start ? '0.8rem' : '2.5rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-card)', color: dateRange.start ? 'var(--text-primary)' : 'transparent', border: '1px solid var(--border-color)', fontSize: '0.85rem' }}
                                 title="Od data"
                             />
                         </div>
-                        <span style={{ color: 'var(--text-muted)' }}>-</span>
+                        <span style={{ color: 'var(--text-muted)' }}>–</span>
                         <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
                             {!dateRange.end && (
-                                <span style={{ position: 'absolute', left: '10px', color: 'var(--text-muted)', fontSize: '0.85rem', pointerEvents: 'none' }}>Do...</span>
+                                <span style={{ position: 'absolute', left: '12px', color: 'var(--text-muted)', fontSize: '0.85rem', pointerEvents: 'none' }}>Do...</span>
                             )}
                             <input
                                 type="date"
                                 value={dateRange.end}
                                 onChange={(e) => setDateRange(prev => ({ ...prev, end: e.target.value }))}
                                 className="select"
-                                style={{ padding: '0.4rem 0.8rem', paddingLeft: dateRange.end ? '0.8rem' : '2.5rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-secondary)', color: dateRange.end ? 'var(--text-primary)' : 'transparent', border: '1px solid var(--border-color)', fontSize: '0.9rem' }}
+                                style={{ height: '44px', padding: '0 0.8rem', paddingLeft: dateRange.end ? '0.8rem' : '2.5rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-card)', color: dateRange.end ? 'var(--text-primary)' : 'transparent', border: '1px solid var(--border-color)', fontSize: '0.85rem' }}
                                 title="Do data"
                             />
                         </div>
@@ -1406,22 +1412,30 @@ function HistoryLog() {
                         <button
                             onClick={() => setDateRange({ start: '', end: '' })}
                             className="filter-btn"
-                            style={{ padding: '0.4rem 0.8rem' }}
+                            style={{ height: '44px', padding: '0 0.9rem' }}
                         >
                             Vymazat datum
                         </button>
                     )}
 
-                    {years.map(y => (
-                        <button
-                            key={y}
-                            className={`filter-btn ${yearFilter === y ? 'active' : ''}`}
-                            onClick={() => setYearFilter(y)}
-                        >
-                            {y === 'all' ? 'Všechny roky' : y}
-                        </button>
-                    ))}
+                    <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '5px', alignItems: 'center' }}>
+                        {years.map(y => (
+                            <button
+                                key={y}
+                                className={`hl-year-btn ${yearFilter === y ? 'active' : ''}`}
+                                onClick={() => setYearFilter(y)}
+                            >
+                                {y === 'all' ? 'Všechny roky' : y}
+                            </button>
+                        ))}
+                    </div>
                 </div>
+            </div>
+
+            {/* Počet zobrazených dní */}
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: 'var(--spacing-md)' }}>
+                {groupedHistory.length.toLocaleString('cs-CZ')} z {totalDayCount.toLocaleString('cs-CZ')} zobrazených dní
+                {searchTerm ? ` · hledání „${searchTerm}"` : ''}
             </div>
 
             {/* History Groups */}
@@ -1429,93 +1443,94 @@ function HistoryLog() {
                 {groupedHistory.slice(0, visibleCount).map((group, idx) => (
                     <div
                         key={idx}
-                        className={`card ${highlightedDate === group.date ? 'highlight-pulse' : ''}`}
+                        className={`hl-day-card ${highlightedDate === group.date ? 'highlight-pulse' : ''}`}
                         id={`date-${group.date}`}
+                        style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}
                     >
-                        <div className="card-header">
-                            <div className="card-title">
-                                <span style={{
-                                    display: 'inline-block',
-                                    width: '10px',
-                                    height: '10px',
-                                    borderRadius: '50%',
-                                    background: 'var(--accent-primary)',
-                                    marginRight: '8px'
-                                }}></span>
-                                {formatDate(group.date)}
-                            </div>
-                            <div style={{ display: 'flex', gap: 'var(--spacing-lg)', fontSize: '0.875rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '14px 18px', borderBottom: '1px solid var(--border-color)', flexWrap: 'wrap' }}>
+                            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent-primary)', flexShrink: 0 }}></span>
+                            <span style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-primary)' }}>{formatDate(group.date)}</span>
+                            <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'baseline', gap: '20px', fontSize: '0.8rem', fontWeight: 600 }}>
                                 {(() => {
                                     // Počet UNIKÁTNÍCH anime zhlédnutých daný den (ne počet řádků)
                                     const animeCount = new Set(group.entries.map(e => e.name).filter(Boolean)).size
                                     return (
-                                        <span style={{ color: 'var(--accent-secondary)' }}>
-                                            {animeCount} Anime
-                                        </span>
+                                        <span style={{ color: 'var(--accent-secondary)' }}>{animeCount} Anime</span>
                                     )
                                 })()}
-                                <span style={{ color: 'var(--accent-cyan)' }}>
-                                    {pluralEpizoda(group.totalEpisodes)}
-                                </span>
-                                <span style={{ color: 'var(--accent-amber)' }}>
-                                    {formatTime(group.totalTime)}
-                                </span>
+                                <span style={{ color: 'var(--accent-cyan)' }}>{pluralEpizoda(group.totalEpisodes)}</span>
+                                <span style={{ color: 'var(--accent-amber)' }}>{formatTime(group.totalTime)}</span>
                             </div>
                         </div>
 
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '16px 18px' }}>
                             {group.entries.map((entry, entryIdx) => (
                                 <div
                                     key={entryIdx}
+                                    className="hl-entry"
                                     style={{
                                         display: 'flex',
-                                        flexDirection: 'column', // Stack vertically on all screens to ensure space
-                                        justifyContent: 'center',
-                                        alignItems: 'flex-start',
-                                        gap: '6px',
-                                        padding: 'var(--spacing-sm) var(--spacing-md)',
+                                        flexDirection: 'column',
+                                        gap: '8px',
+                                        padding: '12px 15px',
                                         background: 'var(--bg-tertiary)',
-                                        borderRadius: 'var(--radius-sm)',
-                                        borderLeft: '3px solid var(--accent-secondary)'
+                                        border: '1px solid var(--border-color)',
+                                        borderLeft: `3px solid ${ENTRY_ACCENTS[entryIdx % ENTRY_ACCENTS.length]}`,
+                                        borderRadius: 'var(--radius-md)'
                                     }}
                                 >
-                                    <div style={{ fontWeight: '500', width: '100%', wordBreak: 'break-word', lineHeight: '1.4' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', width: '100%' }}>
                                         <Link
                                             to={animePath(entry.name)}
                                             className="anime-link"
+                                            style={{ fontWeight: 700, wordBreak: 'break-word', lineHeight: 1.4 }}
                                         >
                                             {entry.name}
                                         </Link>
                                         {entry.rewatch && (
                                             <span style={{
-                                                marginLeft: '8px',
-                                                fontSize: '0.85rem',
-                                                fontStyle: 'italic',
-                                                color: 'var(--text-muted)',
-                                                fontWeight: 'normal'
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                height: '20px',
+                                                padding: '0 8px',
+                                                borderRadius: '6px',
+                                                fontSize: '0.7rem',
+                                                fontWeight: 700,
+                                                background: 'color-mix(in srgb, var(--accent-amber) 16%, transparent)',
+                                                color: 'var(--accent-amber)',
+                                                whiteSpace: 'nowrap'
                                             }}>
-                                                ({entry.rewatch}. Rewatch)
+                                                ↻ {entry.rewatch}. Rewatch
                                             </span>
                                         )}
                                     </div>
-                                    <div style={{
-                                        display: 'flex',
-                                        gap: 'var(--spacing-lg)',
-                                        fontSize: '0.85rem',
-                                        color: 'var(--text-secondary)',
-                                        alignItems: 'center'
-                                    }}>
+                                    <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
                                         <span style={{
-                                            padding: '2px 8px',
-                                            background: 'rgba(99, 102, 241, 0.2)',
-                                            borderRadius: '4px',
-                                            color: 'var(--accent-primary)',
-                                            fontWeight: '600'
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            height: '23px',
+                                            padding: '0 10px',
+                                            borderRadius: '7px',
+                                            fontSize: '0.75rem',
+                                            fontWeight: 700,
+                                            background: 'color-mix(in srgb, var(--accent-secondary) 16%, transparent)',
+                                            color: 'var(--accent-secondary)'
                                         }}>
                                             {entry.episodes}
                                         </span>
-                                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                            ⏱️ {entry.time}
+                                        <span style={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '6px',
+                                            height: '23px',
+                                            padding: '0 10px',
+                                            borderRadius: '7px',
+                                            fontSize: '0.75rem',
+                                            fontWeight: 600,
+                                            background: 'color-mix(in srgb, var(--accent-amber) 10%, transparent)',
+                                            color: 'var(--accent-amber)'
+                                        }}>
+                                            <span style={{ opacity: 0.75 }}>⏱</span>{entry.time}
                                         </span>
                                     </div>
                                 </div>
