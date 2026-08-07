@@ -18,7 +18,8 @@
     align-items: flex-end;
     justify-content: space-between;
     gap: 24px;
-    padding-top: 1.5rem;
+    /* Bez horní mezery navíc: stejná vzdálenost od vrchu jako Recommendations
+       a Favourite OP/ED/OST (jen 2rem z .main-content). */
     flex-wrap: wrap;
 }
 

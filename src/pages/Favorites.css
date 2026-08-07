@@ -37,6 +37,41 @@
     flex-wrap: wrap;
 }
 
+/* ─── Minimalizované grafy (styl z Claude Design), scopnuté JEN na Favourites,
+   ať se nezmění Dashboard (sdílí .dashboard-group / .mini-chart-*). ─── */
+.favp-charts .mini-chart-wrapper {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+}
+.favp-charts .mini-chart-wrapper:hover {
+    border-color: var(--accent-primary);
+    box-shadow: none;
+}
+/* Sbalovací tlačítko skupiny jako tmavý čtvereček (mock), ne fialový chevron */
+.favp-charts .group-expand-btn {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    border-radius: 8px;
+}
+.favp-charts .group-expand-btn:hover {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+/* Počet grafů vedle názvu skupiny (pilulka jako v mocku) */
+.favp-group-count {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    background: var(--bg-tertiary);
+    border-radius: 999px;
+    padding: 2px 9px;
+}
+
 .favp-quiz-btn,
 .favp-random-btn {
     display: inline-flex;

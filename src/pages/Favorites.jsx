@@ -67,7 +67,10 @@ const miniPieOptions = {
         datalabels: { display: false },
         excelImageBackground: false
     },
-    layout: { padding: 4 }
+    layout: { padding: 4 },
+    // Donut místo plného koláče (styl minimalizovaných grafů z Claude Design).
+    // Plný koláč zůstává v rozbaleném grafu (pieOptions), tohle je jen náhled.
+    cutout: '55%'
 }
 
 // ── Karta „OST Only (As a Whole)" ───────────────────────────────────────────
@@ -1524,12 +1527,13 @@ function Favorites() {
             </div>
 
             {/* 3. Collapsible Charts Section */}
-            <div className="dashboard-groups-grid" style={{ marginBottom: 'var(--spacing-xl)' }}>
+            <div className="dashboard-groups-grid favp-charts" style={{ marginBottom: 'var(--spacing-xl)' }}>
                 {/* GROUP 1: Základní statistiky */}
                 <DashboardGroup
                     id="fav_basic"
                     title="Základní statistiky OP/ED/OST"
                     icon="📊"
+                    headerExtra={<span className="favp-group-count">3 grafy</span>}
                     fullWidth
                     isExpanded={expandedGroups.has('fav_basic')}
                     onToggle={() => toggleGroup('fav_basic')}
@@ -1551,7 +1555,8 @@ function Favorites() {
                                 <div className="mini-chart-container">
                                     <Bar data={topSeriesFinalData} options={{
                                         ...miniChartOptions,
-                                        scales: { y: { min: 8 } }
+                                        // Bez display:false by spread osy odkryl (jinak než ostatní dlaždice)
+                                        scales: { x: { display: false }, y: { display: false, min: 8 } }
                                     }} />
                                 </div>
                                 <div className="mini-chart-label">Top Série</div>
@@ -1638,6 +1643,7 @@ function Favorites() {
                     id="fav_analytics"
                     title="Analytika OP/ED"
                     icon="🎵"
+                    headerExtra={<span className="favp-group-count">6 grafů</span>}
                     fullWidth
                     isExpanded={expandedGroups.has('fav_analytics')}
                     onToggle={() => toggleGroup('fav_analytics')}
@@ -1959,7 +1965,7 @@ function Favorites() {
             </div>
 
             {/* Search and Filters (design 1a: ikona v poli, segmentový typ filtr) */}
-            <div className="favp-search-row">
+            <div className="favp-search-row" id="favp-table-top">
                 <div className="favp-search-box">
                     <span className="favp-search-icon" aria-hidden="true">🔍</span>
                     <input
@@ -2071,21 +2077,27 @@ function Favorites() {
                                         {fav.type}
                                     </span>
                                 </td>
-                                <td style={{ color: 'var(--accent-primary)', fontWeight: '500', maxWidth: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={fav.song}>
+                                <td style={{ maxWidth: '200px' }} title={fav.song}>
                                     {/* Design 1a: stavová ikonka zdroje přehrání — plná = Gdrive
-                                        klip, obrys = znělka z AnimeThemes, tečka = nepřehratelné */}
-                                    <span
-                                        className={`favp-play-dot ${hasVideo ? (isAt ? 'at' : 'gdrive') : 'none'}`}
-                                        title={hasVideo
-                                            ? (isAt ? 'Nemám stažené, přehraje se znělka z AnimeThemes' : 'Můj stažený klip (Google Drive)')
-                                            : 'Klip zatím není k dispozici'}
-                                        aria-hidden="true"
-                                    >
-                                        {hasVideo ? (
-                                            <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-                                        ) : '·'}
+                                        klip, obrys = znělka z AnimeThemes, tečka = nepřehratelné.
+                                        Flex s align-items:center → ikona je svisle zarovnaná s názvem
+                                        (dřív ji držel nepřesný vertical-align hack). */}
+                                    <span style={{ display: 'flex', alignItems: 'center', minWidth: 0 }}>
+                                        <span
+                                            className={`favp-play-dot ${hasVideo ? (isAt ? 'at' : 'gdrive') : 'none'}`}
+                                            title={hasVideo
+                                                ? (isAt ? 'Nemám stažené, přehraje se znělka z AnimeThemes' : 'Můj stažený klip (Google Drive)')
+                                                : 'Klip zatím není k dispozici'}
+                                            aria-hidden="true"
+                                        >
+                                            {hasVideo ? (
+                                                <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                                            ) : '·'}
+                                        </span>
+                                        <span style={{ color: 'var(--accent-primary)', fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minWidth: 0 }}>
+                                            {fav.song}
+                                        </span>
                                     </span>
-                                    {fav.song}
                                 </td>
                                 <td style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', maxWidth: '150px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={fav.author}>
                                     {fav.author || '-'}
@@ -2550,6 +2562,44 @@ function Favorites() {
                     title="Zpět nahoru"
                 >
                     ↑
+                </button>,
+                document.body
+            )}
+
+            {/* Plovoucí tlačítko pro sbalení tabulky OP/ED, když je rozbalená — ať se
+                nemusí scrollovat dolů ke sbalovacímu tlačítku (přání: zavřít tabulku
+                i uprostřed). Po sbalení skok na začátek tabulky, ať uživatel nezůstane
+                v prázdnu pod OST sekcí. */}
+            {isTableExpanded && createPortal(
+                <button
+                    onClick={() => {
+                        setIsTableExpanded(false)
+                        requestAnimationFrame(() => {
+                            document.getElementById('favp-table-top')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                        })
+                    }}
+                    style={{
+                        position: 'fixed',
+                        bottom: showScrollTop ? '90px' : '30px',
+                        right: '30px',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        background: 'var(--bg-card)',
+                        color: 'var(--text-primary)',
+                        border: '1px solid var(--accent-primary)',
+                        borderRadius: 'var(--radius-full)',
+                        padding: '11px 18px',
+                        cursor: 'pointer',
+                        boxShadow: 'var(--shadow-lg)',
+                        zIndex: 9999,
+                        fontSize: '0.85rem',
+                        fontWeight: 700,
+                        animation: 'fadeIn 0.3s ease-out'
+                    }}
+                    title="Sbalit tabulku OP/ED"
+                >
+                    ▲ Sbalit tabulku
                 </button>,
                 document.body
             )}

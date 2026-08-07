@@ -1428,7 +1428,10 @@ def main():
             [_krok("export_docx_categories.py"), _krok("build_ost_types.py")],
             [_krok("build_ytmusic_ost.py")],
             [_krok("download_animethemes_cache.py")],
-            [_krok("build_top_favorites_thumbs.py")],
+            # Zmenšeniny (CPU-bound, Pillow) jedou za sebou v jedné lajně, ať si
+            # neberou jádra navzájem. Oba skripty jsou inkrementální (přegenerují
+            # jen obálku novější než její zmenšenina), po prvním běhu jsou rychlé.
+            [_krok("build_top_favorites_thumbs.py"), _krok("build_journey_thumbs.py")],
         ]
         if imdb_kroky:
             lajny.append(imdb_kroky)

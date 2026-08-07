@@ -1064,7 +1064,7 @@ function HistoryLog() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)', marginBottom: 'var(--spacing-lg)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 'var(--spacing-lg)' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                        <h2 style={{ margin: 0 }}>History Log</h2>
+                        <h2 style={{ margin: 0, fontSize: '1.7rem', fontWeight: 800, letterSpacing: '-0.02em' }}>History Log</h2>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
                             <span><strong style={{ color: 'var(--text-primary)', fontWeight: 700 }}>{totalStats.episodes.toLocaleString('cs-CZ')}</strong> epizod</span>
                             <span style={{ opacity: 0.4 }}>·</span>
@@ -1496,8 +1496,8 @@ function HistoryLog() {
                                                 borderRadius: '6px',
                                                 fontSize: '0.7rem',
                                                 fontWeight: 700,
-                                                background: 'color-mix(in srgb, var(--accent-amber) 16%, transparent)',
-                                                color: 'var(--accent-amber)',
+                                                background: 'color-mix(in srgb, var(--accent-pink) 16%, transparent)',
+                                                color: 'var(--accent-pink)',
                                                 whiteSpace: 'nowrap'
                                             }}>
                                                 ↻ {entry.rewatch}. Rewatch
@@ -1513,8 +1513,8 @@ function HistoryLog() {
                                             borderRadius: '7px',
                                             fontSize: '0.75rem',
                                             fontWeight: 700,
-                                            background: 'color-mix(in srgb, var(--accent-secondary) 16%, transparent)',
-                                            color: 'var(--accent-secondary)'
+                                            background: 'color-mix(in srgb, var(--accent-emerald) 18%, transparent)',
+                                            color: 'var(--accent-emerald)'
                                         }}>
                                             {entry.episodes}
                                         </span>

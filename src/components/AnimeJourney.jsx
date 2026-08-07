@@ -15,6 +15,18 @@ import './animeJourney.css'
 // Cache pro postery v paměti (zkrátí re-rendery)
 const posterMemoryCache = {}
 
+// Cesta k předgenerované zmenšenině obálky pro minimalizovaný pás
+// (tools/build_journey_thumbs.py). Dlaždice ~80 px kreslí obálku ~1000 px;
+// prohlížeč ji zmenšuje >10x rychlou metodou a kresba působí měkce. Zmenšenina
+// (176 px, LANCZOS) je ostrá. Fallback na originál řeší onError, kdyby chyběla.
+const journeyThumb = (src) => {
+    const PREFIX = 'images/anime/'
+    if (!src || !src.startsWith(PREFIX)) return null
+    const file = src.slice(PREFIX.length)
+    if (file.includes('/')) return null
+    return `${PREFIX}journey_thumbs/${file.replace(/\.(jpe?g|png|webp)$/i, '')}.jpg`
+}
+
 // Minimalizovaný pás: dlaždice 82×46 px (16:9) s diagonálním střihem 7 px.
 // MINI_SLOT je rozteč, při které do sebe střihy sousedních dlaždic přesně
 // zapadnou, takže pás tvoří souvislý „filmový pruh" bez mezer.
@@ -455,9 +467,13 @@ export default function AnimeJourney({ animeList, historyLog, episodeRatings, ra
 
     useEffect(() => {
         let cancelled = false
+        // Bez cache-busteru `?v=Date.now()`: ten se při každém F5 stahoval znovu a
+        // předdekódování náhledovek pásu se tak spouštělo až během prvního tahu
+        // (prvních ~1,5 s drhlo). Takto jdou data z cache s revalidací (ETag),
+        // po nasazení jsou zas čerstvá, a warm-up proběhne už při načtení stránky.
         Promise.all([
-            fetch('data/top_favorites.json?v=' + Date.now()).then(r => r.json()).catch(() => null),
-            fetch('data/category_ratings.json?v=' + Date.now()).then(r => r.json()).catch(() => []),
+            fetch('data/top_favorites.json').then(r => r.json()).catch(() => null),
+            fetch('data/category_ratings.json').then(r => r.json()).catch(() => []),
         ]).then(([topFav, catR]) => {
             if (cancelled) return
             setExtras({
@@ -579,7 +595,7 @@ export default function AnimeJourney({ animeList, historyLog, episodeRatings, ra
         if (!mini) return
         const seen = new Set()
         mini.tiles.forEach(({ m }) => {
-            const src = m.best?.thumbnail
+            const src = journeyThumb(m.best?.thumbnail) || m.best?.thumbnail
             if (!src || seen.has(src)) return
             seen.add(src)
             const im = new Image()
@@ -617,7 +633,17 @@ export default function AnimeJourney({ animeList, historyLog, episodeRatings, ra
                                         <span className="aj-tile-inner">
                                             <span className="aj-tile-media">
                                                 {m.best?.thumbnail
-                                                    ? <img src={m.best.thumbnail} alt="" draggable={false} />
+                                                    ? <img
+                                                        src={journeyThumb(m.best.thumbnail) || m.best.thumbnail}
+                                                        alt=""
+                                                        draggable={false}
+                                                        onError={(e) => {
+                                                            // Zmenšenina chybí → originál
+                                                            if (e.currentTarget.dataset.fb) return
+                                                            e.currentTarget.dataset.fb = '1'
+                                                            e.currentTarget.src = m.best.thumbnail
+                                                        }}
+                                                    />
                                                     : <span className="aj-tile-ph">🎬</span>}
                                                 <span className="aj-tile-scrim" />
                                                 <span className="aj-tile-text">
