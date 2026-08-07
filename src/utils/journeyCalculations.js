@@ -338,6 +338,13 @@ export function buildJourney({ animeList, historyLog, top10Names = [], hmNames =
         const durBySeries = new Map()
         let longest = null
         for (const a of monthAll) {
+            // Rozkoukaná/pending anime (AIRING!/PENDING) se do „Nejdelší“ počítají
+            // jen skutečně odkoukaným časem z history logu (ongoing větev níž), ne
+            // celou délkou (episodes × episode_duration). Bez toho by se u dílu,
+            // který má vyplněné end_date i přes PENDING (dokoukáno „dnes“, ještě
+            // nehodnoceno → rating „X“), sečetla plná délka série (např. 170 EP)
+            // s odkoukanými díly měsíce (52 EP) → nesmyslných 222 EP / 88,3 h.
+            if (ongoingByName.has(lc(a.name))) continue
             const d = durOf(a)
             const eps = num(a.episodes) || 0
             const sk = lc(a.series)

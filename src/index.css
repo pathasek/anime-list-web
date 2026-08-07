@@ -1195,18 +1195,114 @@ tr:hover td {
   min-width: 0;
 }
 
+/* Dlouhý název se zalomí uvnitř své karty (stejně jako „Právě sledované"),
+   místo aby na jednom řádku přetekl přes okraj do prázdna vedle. Marquee-posun
+   se u Pending neuplatní — jméno je celé vidět na 1–2 řádcích. */
+.pending-card .marquee-link,
+.pending-card .marquee-text {
+  display: block;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.pending-card .marquee-link:hover .marquee-text {
+  animation: none;
+}
+
 /* ─── Kalendář vysílání (maximalizovaný Status) ─── */
 .airing-cal-card {
   display: flex;
   flex-direction: column;
+  /* Kvůli odznaku nezhlédnutých v titulku: podle skutečné šířky karty (ne okna)
+     se rozhodne, jestli se u odznaku ukážou i slova, nebo jen čísla. */
+  container: airingcal / inline-size;
 }
 
 .airing-cal-titlebar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 8px 10px;
   text-align: left;
+  flex-wrap: wrap;
+}
+
+/* Levá část titulku: název + odznak nezhlédnutých dílů (napravo od textu) */
+.airing-cal-titlebar-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+/* Odznak „kolik je odvysíláno, ale nezhlédnuto" — ladí s legendou (amber),
+   drží se nenápadně vedle názvu, nepůsobí jako druhý nadpis. */
+.airing-cal-unseen {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 1px 5px 1px 8px;
+  border-radius: 999px;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.22);
+  color: #fcd34d;
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.airing-cal-unseen .airing-cal-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.airing-cal-unseen b {
+  font-weight: 700;
+}
+
+.airing-cal-unseen-label {
+  color: rgba(253, 224, 71, 0.72);
+  font-weight: 500;
+}
+
+/* „‹ N starší" — diskrétní klikací zkratka: skočí na měsíc nejstaršího
+   nezhlédnutého dílu (jinak schovaný v minulosti). */
+.airing-cal-unseen-old {
+  margin-left: 1px;
+  padding: 0 2px 0 6px;
+  border: none;
+  border-left: 1px solid rgba(251, 191, 36, 0.28);
+  border-radius: 0;
+  background: transparent;
+  color: #fcd34d;
+  font: inherit;
+  letter-spacing: 0;
+  text-transform: none;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: opacity 0.15s ease;
+}
+
+.airing-cal-unseen-old:hover {
+  opacity: 1;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Úzká karta (typicky 2sloupcový Status): nech u odznaku jen tečku + čísla,
+   ať se titulek vejde na jeden řádek vedle navigace. Širší karta ukáže i slova. */
+@container airingcal (max-width: 560px) {
+  .airing-cal-unseen-label,
+  .airing-cal-unseen-word {
+    display: none;
+  }
 }
 
 .airing-cal-nav {

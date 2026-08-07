@@ -862,6 +862,32 @@ function AiringCalendar({ airingAnime }) {
         return byDay
     }, [animeEvents])
 
+    // Kolik dílů je odvysíláno, ale ještě nezhlédnuto (napříč sledovanými), a
+    // kolik z nich spadá do minulých měsíců (mimo aktuální měsíc) — takové resty
+    // se v kalendáři snadno přehlédnou, proto se na ně upozorní zvlášť.
+    const unseenStats = useMemo(() => {
+        const monthStart = new Date(today.getFullYear(), today.getMonth(), 1).getTime()
+        let total = 0, past = 0, earliestTs = null
+        for (const evs of Object.values(animeEvents || {})) {
+            for (const ev of evs) {
+                if (ev.kind !== 'unseen') continue
+                total++
+                if (ev.ts < monthStart) past++
+                if (earliestTs === null || ev.ts < earliestTs) earliestTs = ev.ts
+            }
+        }
+        return { total, past, earliestTs }
+        // today je stabilní v rámci session; do závislostí nepatří (nový objekt každý render)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [animeEvents])
+
+    // Skok na měsíc nejstaršího nezhlédnutého dílu — najde resty schované v minulosti.
+    const jumpToEarliestUnseen = () => {
+        if (unseenStats.earliestTs == null) return
+        const d = new Date(unseenStats.earliestTs)
+        setViewYM({ y: d.getFullYear(), m: d.getMonth() })
+    }
+
     const { y, m } = viewYM
     const first = new Date(y, m, 1)
     const startOffset = (first.getDay() + 6) % 7 // pondělí = první sloupec
@@ -881,7 +907,29 @@ function AiringCalendar({ airingAnime }) {
     return (
         <div className="full-chart-wrapper text-list airing-cal-card">
             <div className="chart-title airing-cal-titlebar">
-                <span>🗓️ Kalendář vysílání</span>
+                <span className="airing-cal-titlebar-left">
+                    <span>🗓️ Kalendář vysílání</span>
+                    {unseenStats.total > 0 && (
+                        <span
+                            className="airing-cal-unseen"
+                            title={`Odvysíláno, ale zatím nezhlédnuto: ${unseenStats.total} ${unseenStats.total === 1 ? 'díl' : unseenStats.total < 5 ? 'díly' : 'dílů'}`}
+                        >
+                            <i className="airing-cal-dot unseen" />
+                            <b>{unseenStats.total}</b>
+                            <span className="airing-cal-unseen-label">nezhlédnuto</span>
+                            {unseenStats.past > 0 && (
+                                <button
+                                    type="button"
+                                    className="airing-cal-unseen-old"
+                                    onClick={jumpToEarliestUnseen}
+                                    title={`${unseenStats.past} z minulých měsíců — klikni pro přechod na nejstarší nezhlédnutý díl`}
+                                >
+                                    ‹ {unseenStats.past}<span className="airing-cal-unseen-word"> starší</span>
+                                </button>
+                            )}
+                        </span>
+                    )}
+                </span>
                 <span className="airing-cal-nav">
                     <button type="button" onClick={() => shiftMonth(-1)} aria-label="Předchozí měsíc">‹</button>
                     <button
