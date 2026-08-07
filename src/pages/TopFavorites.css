@@ -1,4 +1,5 @@
-/* TopFavorites.css */
+/* TopFavorites.css — design 1A z Claude Design (barvy přes proměnné témat).
+   Název, FH i odkazy žijí ve spodním overlay posteru a ukazují se na hover. */
 .top-favorites-page {
     padding: 2rem;
     padding-top: 0;
@@ -6,53 +7,85 @@
     margin: 0 auto;
 }
 
-.page-header {
-    text-align: center;
-    margin-bottom: 3rem;
-    margin-top: 2rem;
-}
-
-.page-header h1 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.page-header .subtitle {
-    color: var(--text-secondary);
-    font-size: 1.1rem;
-}
-
 .favorites-content {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.25rem;
 }
 
-/* ─── Horní přepínač sekcí (TOP 10 / HM / Postavy) ─── */
+/* ─── Hlavička stránky (titulek + počet + podtitulek, přepínač vpravo) ─── */
+.tf-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    padding-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.tf-header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.tf-header-title-row {
+    display: flex;
+    align-items: baseline;
+    gap: 11px;
+}
+
+.tf-header-title-row h2 {
+    margin: 0;
+    font-size: 1.7rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+}
+
+.tf-count-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 26px;
+    padding: 0 10px;
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--bg-primary);
+    background: var(--accent-primary);
+    border-radius: var(--radius-full, 999px);
+    position: relative;
+    top: -2px;
+    font-variant-numeric: tabular-nums;
+}
+
+.tf-subtitle {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+/* ─── Přepínač sekcí jako segmentový ovladač (design 1A) ─── */
 .tf-switcher {
     display: flex;
-    justify-content: center;
-    gap: 8px;
-    padding-top: 1.5rem;
+    gap: 6px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 4px;
 }
 
 .tf-switch-btn {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    color: var(--text-secondary);
-    border-radius: var(--radius-full, 999px);
-    padding: 8px 22px;
-    font-size: 0.85rem;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-muted);
+    border-radius: 9px;
+    height: 36px;
+    padding: 0 20px;
+    font-size: 0.75rem;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     cursor: pointer;
     transition: color var(--transition-fast, 150ms), border-color var(--transition-fast, 150ms), background var(--transition-fast, 150ms);
@@ -60,38 +93,32 @@
 
 .tf-switch-btn:hover {
     color: var(--accent-primary);
-    border-color: var(--accent-primary);
 }
 
 .tf-switch-btn.active {
-    background: linear-gradient(90deg, color-mix(in srgb, var(--accent-primary) 22%, transparent), color-mix(in srgb, var(--accent-secondary) 12%, transparent));
+    background: linear-gradient(90deg, color-mix(in srgb, var(--accent-primary) 24%, transparent), color-mix(in srgb, var(--accent-secondary) 13%, transparent));
     border-color: var(--accent-primary);
     color: var(--text-primary);
-    box-shadow: 0 0 14px color-mix(in srgb, var(--accent-primary) 25%, transparent);
+}
+
+/* ─── Panel se sekcí (design 1A: obsah v jednom rámu) ─── */
+.tf-panel {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 28px;
 }
 
 .favorites-section {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-}
-
-/* Specific styling for HM section to make it slightly less pronounced visually */
-.hm-section .section-header h2 {
-    color: var(--text-secondary);
-    font-size: 1.6rem;
-}
-
-.hm-section .rank-badge {
-    background: var(--bg-modifier-hover);
-    color: var(--text-secondary);
+    gap: 1.25rem;
 }
 
 .section-header {
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 1rem;
 }
 
 .section-title {
@@ -110,6 +137,10 @@
     margin: 0;
 }
 
+.hm-section .section-title h2 {
+    color: var(--text-secondary);
+}
+
 .star-icon {
     color: var(--accent-primary);
     font-size: 0.8rem;
@@ -122,68 +153,81 @@
     background: var(--border-color);
 }
 
+.section-meta {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
 .favorites-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 1.5rem;
+    gap: 18px;
 }
 
 .favorite-card {
     position: relative;
-    background: var(--bg-secondary);
+    background: var(--bg-tertiary);
     border-radius: 12px;
     overflow: hidden;
     border: 1px solid var(--border-color);
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
+    transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
     aspect-ratio: 2/3;
     /* Standard anime poster ratio */
 }
 
 .favorite-card:hover {
-    transform: translateY(-8px);
+    transform: translateY(-6px);
     border-color: var(--accent-primary);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), 0 0 15px color-mix(in srgb, var(--accent-primary) 20%, transparent);
 }
 
 .rank-badge {
     position: absolute;
     top: 10px;
     left: 10px;
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px;
+    height: 26px;
+    padding: 0 8px;
+    border-radius: 8px;
+    font-size: 0.82rem;
     font-weight: 800;
-    font-size: 1.1rem;
-    padding: 0.3rem 0.6rem;
-    border-radius: 6px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.01em;
+    background: rgba(12, 12, 15, 0.82);
+    color: #ebebeb;
+    border: 1px solid rgba(255, 255, 255, 0.18);
     z-index: 2;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(4px);
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.55);
 }
 
-/* Ensure #1, #2, #3 get distinct colors with heavy contrast text */
+/* Medaile pro #1, #2, #3 (design 1A) */
 .favorite-card:nth-child(1) .rank-badge {
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.9), rgba(218, 165, 32, 0.9));
-    color: #000;
-    text-shadow: none;
+    background: linear-gradient(135deg, #ffd700, #daa520);
+    color: #231a00;
+    border-color: rgba(255, 215, 0, 0.6);
 }
 
 .favorite-card:nth-child(2) .rank-badge {
-    background: linear-gradient(135deg, rgba(224, 224, 224, 0.9), rgba(169, 169, 169, 0.9));
-    color: #000;
-    text-shadow: none;
+    background: linear-gradient(135deg, #e0e0e0, #a9a9a9);
+    color: #1a1a1a;
+    border-color: rgba(224, 224, 224, 0.55);
 }
 
 .favorite-card:nth-child(3) .rank-badge {
-    background: linear-gradient(135deg, rgba(205, 127, 50, 0.9), rgba(139, 69, 19, 0.9));
+    background: linear-gradient(135deg, #cd7f32, #8b4513);
+    color: #fff;
+    border-color: rgba(205, 127, 50, 0.6);
 }
 
-/* Ensure the HM badges dont inherit top 3 colors */
+/* HM badge nesmí zdědit medailové barvy */
 .hm-section .favorite-card:nth-child(n) .rank-badge {
-    background: rgba(0, 0, 0, 0.8);
-    color: var(--text-secondary);
+    background: rgba(12, 12, 15, 0.85);
+    color: var(--text-muted);
+    border-color: rgba(255, 255, 255, 0.14);
 }
 
 .favorite-image {
@@ -191,6 +235,7 @@
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease;
+    display: block;
 }
 
 .favorite-card:hover .favorite-image {
@@ -203,26 +248,27 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bg-modifier-hover);
+    background: var(--bg-tertiary);
     color: var(--text-muted);
     font-size: 0.9rem;
 }
 
+/* ─── Spodní overlay (design 1A): gradient + název + doplněk + odkazy,
+       viditelné až po najetí myší ─── */
 .favorite-hover-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(2px);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 3;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    padding: 1rem;
+    justify-content: flex-end;
+    gap: 9px;
+    padding: 12px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.55) 34%, transparent 62%);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    z-index: 3;
 }
 
-/* On mobile, standard hover doesn't exist, we can show it lightly or rely on tap */
 @media (hover: hover) {
     .favorite-card:hover .favorite-hover-overlay {
         opacity: 1;
@@ -230,131 +276,71 @@
 }
 
 @media (hover: none) {
-
-    /* Always slightly visible on touch devices so users know it's there */
+    /* Na dotykových zařízeních hover neexistuje — overlay musí být vidět,
+       jinak by se uživatel k odkazům vůbec nedostal */
     .favorite-hover-overlay {
         opacity: 1;
-        background: rgba(0, 0, 0, 0.3);
-        backdrop-filter: none;
     }
 }
 
-.hover-actions-top {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-}
-
-.hover-btn {
-    padding: 0.4rem 0.8rem;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    color: white;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    backdrop-filter: blur(4px);
-}
-
-.mal-btn {
-    background: rgba(46, 81, 162, 0.8);
-    border: 1px solid #2e51a2;
-}
-
-.mal-btn:hover {
-    background: #2e51a2;
-    transform: scale(1.05);
-}
-
-.detail-btn {
-    background: rgba(99, 102, 241, 0.8);
-    border: 1px solid var(--accent-primary);
-}
-
-.detail-btn:hover {
-    background: var(--accent-color);
-    transform: scale(1.05);
-}
-
-.hover-actions-bottom {
-    display: flex;
-    align-items: flex-end;
-    margin-bottom: 2.5rem;
-    /* above the gradient info box */
-}
-
-.hover-fh {
-    font-size: 1.1rem;
-    font-weight: 800;
-    color: white;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-}
-
-.hover-char-top {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 1rem;
-}
-
-.hover-char-name {
-    font-size: 1.2rem;
-    font-weight: 800;
-    color: white;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-    text-align: center;
-}
-
-.hover-char-anime {
+.tf-overlay-name {
     font-size: 0.85rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.85);
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-    text-align: center;
-    margin-top: 0.25rem;
-}
-
-.hover-char-link {
-    align-self: center;
-    margin-bottom: 3rem;
-    background: rgba(46, 81, 162, 0.8);
-    padding: 0.5rem 1rem;
-    border: 1px solid #2e51a2;
-}
-
-.hover-char-link:hover {
-    background: #2e51a2;
-    transform: scale(1.05);
-}
-
-.favorite-info {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 1rem;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.7) 50%, transparent 100%);
-    z-index: 2;
-    transform: translateY(0);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.char-card:hover .favorite-info {
-    opacity: 0;
-}
-
-.favorite-name {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 600;
-    color: white;
-    text-align: center;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    font-weight: 700;
+    line-height: 1.25;
+    color: #fff;
+    text-wrap: pretty;
     display: -webkit-box;
-    line-clamp: 2;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+}
+
+.tf-overlay-subline {
+    font-size: 0.69rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.tf-overlay-links {
+    display: flex;
+    gap: 6px;
+}
+
+.tf-overlay-btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 28px;
+    border-radius: 7px;
+    font-size: 0.69rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #fbd7ba;
+    background: rgba(20, 20, 25, 0.82);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(6px);
+    text-decoration: none;
+    transition: border-color 0.15s, color 0.15s;
+}
+
+.tf-overlay-btn img {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    flex-shrink: 0;
+    display: block;
+}
+
+.tf-overlay-btn:hover {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
 }
 
 /* Responsive Layout */
@@ -375,8 +361,18 @@
         padding: 1rem;
     }
 
-    .page-header h1 {
-        font-size: 2rem;
+    .tf-header {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .tf-switcher {
+        align-self: center;
+    }
+
+    .tf-panel {
+        padding: 16px;
     }
 
     .favorites-grid {
@@ -386,10 +382,6 @@
 
     .section-title h2 {
         font-size: 1rem;
-    }
-
-    .favorite-name {
-        font-size: 0.9rem;
     }
 }
 
@@ -402,7 +394,9 @@
     }
 
     .rank-badge {
-        font-size: 0.8rem;
-        padding: 0.2rem 0.4rem;
+        min-width: 24px;
+        height: 22px;
+        font-size: 0.7rem;
+        padding: 0 6px;
     }
 }

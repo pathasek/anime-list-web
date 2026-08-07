@@ -27,3 +27,8 @@ dist-ssr
 .*_cache_partial.json
 __pycache__/
 *.pyc
+
+# Sloučený mezivýstup DOCX rozborů (42 MB): čte ho inkrementální parser
+# a build_ost_types.py, web používá per-anime soubory v public/data/.
+# Po čerstvém klonu se prostě jednou přeparsuje všechno.
+tools/category_texts_full.json

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import malIcon from '../assets/mal-favicon.svg';
 import './TopFavorites.css';
 
 // Cesta k předgenerované zmenšenině posteru (tools/build_top_favorites_thumbs.py).
@@ -23,6 +24,13 @@ const TF_SECTIONS = [
     { id: 'hm', label: 'HM' },
     { id: 'chars', label: 'Postavy' },
 ];
+
+// Podtitulek hlavičky podle zvolené sekce (design 1A)
+const TF_SUBTITLES = {
+    top10: 'Můj žebříček nejlepších sérií',
+    hm: 'Honourable Mentions: série těsně pod desítkou',
+    chars: 'Moje nejoblíbenější postavy',
+};
 
 const TopFavorites = () => {
     const [data, setData] = useState({ top10_anime: [], hm_anime: [], top10_chars: [] });
@@ -95,6 +103,7 @@ const TopFavorites = () => {
                         <span className="star-icon">★</span>
                     </div>
                     <div className="header-line"></div>
+                    <span className="section-meta">{items.length.toLocaleString('cs-CZ')} položek</span>
                 </div>
 
                 <div className="favorites-grid">
@@ -150,7 +159,7 @@ const TopFavorites = () => {
                         }
 
                         return (
-                            <div className={`favorite-card hover-glow ${!isAnimeLists ? 'char-card' : 'anime-card'}`} key={item.shape_name}>
+                            <div className={`favorite-card ${!isAnimeLists ? 'char-card' : 'anime-card'}`} key={item.shape_name}>
                                 <div className="rank-badge">
                                     {isHM ? 'HM' : `#${index + 1}`}
                                 </div>
@@ -178,43 +187,42 @@ const TopFavorites = () => {
                                     <div className="favorite-image-placeholder">No Image</div>
                                 )}
 
+                                {/* Design 1A: název, doplněk i odkazy žijí ve spodním
+                                    overlay na posteru a ukážou se až po najetí myší */}
                                 <div className="favorite-hover-overlay">
+                                    <div className="tf-overlay-name">{name}</div>
                                     {isAnimeLists ? (
                                         <>
-                                            <div className="hover-actions-top">
+                                            {fhDisplay && (
+                                                <div className="tf-overlay-subline">
+                                                    FH {fhDisplay.toString().replace('.', ',')}/10{ratedItemsCount > 1 ? ' (AVG)' : ''}
+                                                </div>
+                                            )}
+                                            <div className="tf-overlay-links">
                                                 {mappedAnime && mappedAnime.mal_url && (
-                                                    <a href={mappedAnime.mal_url} target="_blank" rel="noopener noreferrer" className="hover-btn mal-btn" title="View on MyAnimeList">
-                                                        MAL
+                                                    <a href={mappedAnime.mal_url} target="_blank" rel="noopener noreferrer" className="tf-overlay-btn" title="Otevřít na MyAnimeList">
+                                                        <img src={malIcon} alt="" />MAL
                                                     </a>
                                                 )}
                                                 {detailLink && (
-                                                    <Link to={detailLink} className="hover-btn detail-btn" title="View List">
+                                                    <Link to={detailLink} className="tf-overlay-btn" title="Zobrazit v seznamu">
                                                         List
                                                     </Link>
                                                 )}
                                             </div>
-                                            <div className="hover-actions-bottom">
-                                                {fhDisplay ? (
-                                                    <span className="hover-fh">FH {fhDisplay.toString().replace('.', ',')}/10 {ratedItemsCount > 1 ? '(AVG)' : ''}</span>
-                                                ) : null}
-                                            </div>
                                         </>
                                     ) : (
                                         <>
-                                            <div className="hover-char-top" style={{ marginBottom: 'var(--spacing-md)' }}>
-                                                <span className="hover-char-anime" style={{ fontWeight: '600', color: 'white', fontSize: '1rem' }}>
-                                                    {item.data.ANIME_NAME || 'Unknown Anime'}
-                                                </span>
+                                            {item.data.ANIME_NAME && (
+                                                <div className="tf-overlay-subline">{item.data.ANIME_NAME}</div>
+                                            )}
+                                            <div className="tf-overlay-links">
+                                                <a href={`https://myanimelist.net/character/${item.data.CHAR_ID}`} target="_blank" rel="noopener noreferrer" className="tf-overlay-btn" title="Otevřít na MyAnimeList">
+                                                    <img src={malIcon} alt="" />MyAnimeList
+                                                </a>
                                             </div>
-                                            <a href={`https://myanimelist.net/character/${item.data.CHAR_ID}`} target="_blank" rel="noopener noreferrer" className="hover-char-link hover-btn">
-                                                MyAnimeList
-                                            </a>
                                         </>
                                     )}
-                                </div>
-
-                                <div className="favorite-info">
-                                    <h3 className="favorite-name">{name}</h3>
                                 </div>
                             </div>
                         );
@@ -228,28 +236,42 @@ const TopFavorites = () => {
                     (data.hm_anime && data.hm_anime.length > 0) ||
                     (data.top10_chars && data.top10_chars.length > 0);
 
+    const sectionItems = section === 'top10' ? data.top10_anime
+        : section === 'hm' ? data.hm_anime : data.top10_chars;
+
     return (
         <div className="top-favorites-page fade-in">
             <div className="favorites-content">
                 {hasData ? (
                     <>
-                        <div className="tf-switcher" role="tablist" aria-label="Sekce Top Favorites">
-                            {TF_SECTIONS.map(s => (
-                                <button
-                                    key={s.id}
-                                    type="button"
-                                    role="tab"
-                                    aria-selected={section === s.id}
-                                    className={`tf-switch-btn ${section === s.id ? 'active' : ''}`}
-                                    onClick={() => switchSection(s.id)}
-                                >
-                                    {s.label}
-                                </button>
-                            ))}
+                        <div className="tf-header">
+                            <div className="tf-header-text">
+                                <div className="tf-header-title-row">
+                                    <h2>Top Favourites</h2>
+                                    <span className="tf-count-pill">{(sectionItems || []).length}</span>
+                                </div>
+                                <div className="tf-subtitle">{TF_SUBTITLES[section]}</div>
+                            </div>
+                            <div className="tf-switcher" role="tablist" aria-label="Sekce Top Favorites">
+                                {TF_SECTIONS.map(s => (
+                                    <button
+                                        key={s.id}
+                                        type="button"
+                                        role="tab"
+                                        aria-selected={section === s.id}
+                                        className={`tf-switch-btn ${section === s.id ? 'active' : ''}`}
+                                        onClick={() => switchSection(s.id)}
+                                    >
+                                        {s.label}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
-                        {section === 'top10' && renderSection('TOP 10 Anime', data.top10_anime, true)}
-                        {section === 'hm' && renderSection('Honourable Mentions', data.hm_anime, true, true)}
-                        {section === 'chars' && renderSection('TOP 10 Characters', data.top10_chars, false)}
+                        <div className="tf-panel">
+                            {section === 'top10' && renderSection('TOP 10 Anime', data.top10_anime, true)}
+                            {section === 'hm' && renderSection('Honourable Mentions', data.hm_anime, true, true)}
+                            {section === 'chars' && renderSection('TOP 10 Characters', data.top10_chars, false)}
+                        </div>
                     </>
                 ) : (
                     <div className="no-favorites" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>

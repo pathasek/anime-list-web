@@ -45,7 +45,7 @@ Klíčové soubory a co v nich je:
 | `history_log.json` | denní záznamy sledování; pole `rewatch` (`null` / `"1"` / `"2"`) |
 | `category_ratings.json` | hodnocení kategorií |
 | `episode_ratings.json` | hodnocení epizod |
-| `category_texts.json` | **moje texty z Wordu** (26 MB) — nikdy negeneruj ani nepřepisuj |
+| `category_texts/<klíč>.json` + `category_texts_index.json` | **moje texty z Wordu** (rozbory, per-anime + index) — nikdy negeneruj ani nepřepisuj. Sloučený mezivýstup `tools/category_texts_full.json` (42 MB, mimo git) platí totéž |
 | `notes.json` | **moje poznámky** — totéž |
 | `favorites*.json`, `op_ed_videos.json`, `animethemes_op_ed.json` | OP/ED/OST |
 

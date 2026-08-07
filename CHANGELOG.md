@@ -4,6 +4,26 @@ Tento soubor shrnuje všechny nedávné změny, opravy a vylepšení implementov
 
 ---
 
+## [1.7.0] - 2026-08-07 (noc)
+
+### 🎨 Redesign čtyř stránek podle Claude Design (projekt „Anime List")
+Barvy všude mapované na proměnné témat (9 barevných témat funguje dál), veškerá stávající funkčnost zachována. Ikony MAL/AniList jako lokální SVG v `src/assets/`.
+
+- **Doporučení (1b):** hlavička s počtem v pilulce a podtitulkem „Na základě X · MAL + AniList", kompaktní stavový řádek s tečkou a tenkým proužkem, karta v mřížce poster (s pořadím) | obsah | pravý sloupec (MAL skóre + relevance ring 72 px). Tagy s odděleným procentem (sbaleně 12), relace jako pilly, odkazy s ikonami služeb. Breakdown relevance přepracován na řádky s barem, body, poznámkou a násobkem. Zachováno nad rámec designu: synopse Více/Méně (clamp 2 řádky), pilulky „V plánu" a „Zhlédnuto · FH", empty state, průběh s ETA a Zrušit, dropdown výběru, nastavení, persistence.
+- **Top Favourites (1A):** hlavička s počtem a podtitulkem, segmentový přepínač sekcí, obsah v panelu, karty jen jako postery s rank badge (medaile pro top 3). Na přání: název, FH i tlačítka MAL/List jsou skryté a ukážou se až na hover (na dotykových zařízeních viditelné trvale); u postav se neukazuje ID, jméno postavy/anime a odkaz jsou také na hover.
+- **Plan to Watch:** hlavička s počtem a „řazeno podle", stat karty s barevným proužkem a poznámkou, hledání s ikonou, segmentové filtry s počty, tabulka v zaobleném rámu se zebrou a status pilulkami s tečkou. Typové štítky (`type-badge`) ponechány standardizované beze změny; zachován linkify v důvodech, Více/Méně, mobilní karty.
+- **Favourite OP/ED/OST (horní část):** hlavička s podtitulkem a přestylovanými tlačítky Hádej/Náhodný, stat karty s podílem z celku, hledání s ikonou + segmentový typ filtr, tabulka s akcentovou linkou pod hlavičkou a stavovou ikonkou zdroje přehrání u songu (plná = Gdrive klip, obrys = AnimeThemes, tečka = bez klipu). Chart.js grafy (mini náhledy i plné) beze změny, OST sekce a chráněný přehrávač nedotčeny.
+
+---
+
+## [1.6.1] - 2026-08-07 (večer)
+
+### ⚡ Rozbory fáze 2: monolit už jen jako mezivýstup mimo git
+- `export_docx_categories.py` píše sloučený JSON nově do `tools/category_texts_full.json` (mezivýstup pro inkrementální merge a `build_ost_types.py`, v `.gitignore`); po čerstvém klonu se prostě jednou přeparsuje všechno. Web i deploy jedou čistě z per-anime souborů + indexu. Ověřeno: 474 rozborů převzato beze změny, `ost_types.json` bajtově identický.
+- Živý provoz po nasazení 1.6.0 ověřen (PRIO 2): start DOMContentLoaded ~380 ms, shell 91 kB gzip; detail stahuje index 15 kB + rozbor ~75 kB gzip místo 42,9 MB; per-URL blackout Jikanu zapisuje eskalace do localStorage; pás Cesty jede na kompozitoru (animace `aj-drift-x`, náhledovky předdekódované).
+
+---
+
 ## [1.6.0] - 2026-08-07
 
 ### ⚡ Rozbory: per-anime soubory místo 42MB monolitu

@@ -15,7 +15,11 @@ from docx.oxml.ns import qn
 SRC_DIR = r"C:\AL\Anime hodnocení a rozbory\Faktické rozbory (Gemini AI)\Vytvořené faktické rozbory"
 # Target output — skript žije v anime-list-web/tools/ → app root je o úroveň výš
 APP_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT_FILE = os.path.join(APP_ROOT, "public", "data", "category_texts.json")
+# Sloučený monolit je od 7. 8. 2026 jen MEZIVÝSTUP (čte ho inkrementální merge
+# níže a build_ost_types.py). Web ho nezná — stahuje per-anime soubory + index
+# z public/data/. V gitu není (.gitignore); po čerstvém klonu se prostě jednou
+# přeparsuje všechno.
+OUT_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "category_texts_full.json")
 # Per-anime rozdělení monolitu: web stahuje jen rozbor otevřeného anime.
 # Index mapuje přesný název anime na soubor + lehká metadata pro průřezové
 # funkce (badge „má rozbor" apod.), takže JS nemusí zrcadlit normalizaci názvů.
@@ -865,7 +869,8 @@ def main():
     _force_utf8_stdio()
 
     parser = argparse.ArgumentParser(
-        description="Export DOCX rozborů do public/data/category_texts.json")
+        description="Export DOCX rozborů: per-anime soubory + index do "
+                    "public/data/, sloučený mezivýstup do tools/")
     parser.add_argument("--full", action="store_true",
                         help="přeparsovat všechny rozbory a ignorovat cache")
     parser.add_argument("--out", default=OUT_FILE,

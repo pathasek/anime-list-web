@@ -1423,7 +1423,8 @@ def main():
         lajny = [
             [_krok("download_jikan_cache.py"), _krok("download_journey_posters.py")],
             [_krok("extract_spotify_images.py"), _krok("build_cover_thumbs.py")],
-            # build_ost_types čte category_texts.json, proto až po rozborech
+            # build_ost_types čte tools/category_texts_full.json (mezivýstup
+            # rozborů), proto až po rozborech
             [_krok("export_docx_categories.py"), _krok("build_ost_types.py")],
             [_krok("build_ytmusic_ost.py")],
             [_krok("download_animethemes_cache.py")],

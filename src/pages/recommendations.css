@@ -1,6 +1,95 @@
 /* ============================
    Recommendations Page Styles
+   (design 1b z Claude Design — barvy mapované na proměnné témat)
    ============================ */
+
+/* Hlavička stránky */
+.rec-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+.rec-header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.rec-header-title-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+
+.rec-header-title-row h2 {
+    margin: 0;
+    font-size: 1.7rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.rec-count-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 26px;
+    padding: 0 10px;
+    font-size: 1rem;
+    line-height: 1;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    color: var(--bg-primary);
+    background: var(--accent-primary);
+    border-radius: var(--radius-full);
+    position: relative;
+    top: -2px;
+}
+
+.rec-subtitle {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+.rec-subtitle strong {
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+/* Sekundární tlačítko (Nastavení) */
+.rec-ghost-btn {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--text-secondary);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 0 16px;
+    height: 44px;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.rec-ghost-btn:hover {
+    background: var(--bg-tertiary);
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+.rec-ghost-btn-icon {
+    font-size: 0.95rem;
+    line-height: 1;
+    opacity: 0.9;
+}
 
 /* Search / Selector */
 .rec-selector-container {
@@ -10,23 +99,45 @@
 
 .rec-search-row {
     display: flex;
-    gap: var(--spacing-md);
+    gap: 10px;
     align-items: center;
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
     flex-wrap: wrap;
+}
+
+.rec-search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    opacity: 0.55;
+    pointer-events: none;
+    z-index: 6;
+}
+
+.rec-search-input {
+    height: 44px;
+    padding-left: 42px !important;
+    border-radius: var(--radius-md);
 }
 
 .rec-clear-btn {
     position: absolute;
-    right: 10px;
+    right: 9px;
     top: 50%;
     transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
     background: none;
     border: none;
     color: var(--text-muted);
-    font-size: 1.2rem;
+    font-size: 1.05rem;
     cursor: pointer;
-    padding: 2px 6px;
+    padding: 0;
     border-radius: 50%;
     line-height: 1;
     transition: color 0.15s, background 0.15s;
@@ -121,94 +232,430 @@
     color: var(--border-color);
 }
 
-/* Progress Bar */
-.rec-progress-container {
-    margin: var(--spacing-lg) 0;
+/* Stavový řádek (design 1b): tečka + text + tenký proužek + čas */
+.rec-status-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
     background: var(--bg-secondary);
-    border-radius: var(--radius-md);
-    padding: var(--spacing-lg);
     border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+    margin-bottom: var(--spacing-lg);
 }
 
-.rec-progress-bar-track {
-    width: 100%;
-    height: 8px;
+.rec-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: var(--text-muted);
+}
+
+.rec-status-dot.done {
+    background: var(--accent-emerald);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-emerald) 15%, transparent);
+}
+
+.rec-status-dot.busy {
+    background: var(--accent-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-primary) 15%, transparent);
+    animation: rec-dot-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes rec-dot-pulse {
+    50% { opacity: 0.45; }
+}
+
+.rec-status-text {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.rec-status-track {
+    flex: 1;
+    height: 3px;
+    border-radius: 2px;
     background: var(--bg-tertiary);
-    border-radius: 4px;
     overflow: hidden;
-    margin-top: var(--spacing-sm);
+    min-width: 60px;
 }
 
-.rec-progress-bar-fill {
+.rec-status-fill {
+    display: block;
     height: 100%;
+    border-radius: 2px;
     background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-    border-radius: 4px;
     transition: width 0.3s ease;
 }
 
-.rec-progress-text {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.85rem;
-    color: var(--text-secondary);
+.rec-status-eta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
 }
 
 /* Recommendation Cards Grid */
 .rec-cards-grid {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-md);
+    gap: 12px;
 }
 
+/* Karta 1b: poster | obsah | pravý sloupec se skóre a relevancí */
 .rec-card {
+    position: relative;
     display: grid;
-    grid-template-columns: 60px 140px 1fr;
-    gap: var(--spacing-md);
+    grid-template-columns: 148px 1fr 104px;
+    gap: 20px;
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    padding: var(--spacing-md);
-    transition: border-color 0.2s, transform 0.15s;
+    border-radius: 14px;
+    padding: 16px;
+    transition: border-color 0.2s, background 0.2s;
 }
 
 .rec-card:hover {
-    border-color: var(--accent-primary);
-    transform: translateY(-1px);
-    /* Ensure hovered card sits above subsequent cards */
-    position: relative;
+    border-color: color-mix(in srgb, var(--text-muted) 55%, var(--border-color));
+    background: color-mix(in srgb, var(--bg-secondary) 92%, var(--text-primary));
     z-index: 10;
 }
 
-/* Relevance Ring */
-.rec-relevance-cell {
+/* Poster + pořadí */
+.rec-poster-cell {
+    position: relative;
+}
+
+.rec-poster-cell img {
+    width: 148px;
+    height: 210px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    display: block;
+}
+
+.rec-poster-empty {
+    width: 148px;
+    height: 210px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background: repeating-linear-gradient(135deg, var(--bg-tertiary) 0 8px, var(--bg-secondary) 8px 16px);
+    display: flex;
+    align-items: flex-end;
+    padding: 10px;
+    color: var(--text-muted);
+    font-size: 0.65rem;
+}
+
+.rec-rank-badge {
+    position: absolute;
+    top: -7px;
+    left: -7px;
+    min-width: 26px;
+    height: 26px;
+    padding: 0 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Střední sloupec */
+.rec-info-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+}
+
+.rec-title-block {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.rec-title {
+    font-size: 1.19rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    text-decoration: none;
+    transition: color 0.15s;
+    align-self: flex-start;
+}
+
+.rec-title:hover {
+    color: var(--accent-primary);
+}
+
+.rec-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+.rec-meta-sep {
+    opacity: 0.5;
+}
+
+.rec-meta-type {
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.rec-meta-votes {
+    color: var(--accent-primary);
+    font-weight: 600;
+    cursor: default;
+}
+
+.rec-meta-pill {
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+.rec-meta-pill.ptw {
+    background: color-mix(in srgb, var(--accent-secondary) 16%, transparent);
+    color: color-mix(in srgb, var(--accent-secondary) 60%, var(--text-primary));
+}
+
+.rec-meta-pill.watched {
+    background: color-mix(in srgb, var(--accent-emerald) 15%, transparent);
+    color: var(--accent-emerald);
+}
+
+/* Synopse: sbaleně přesně 2 řádky (1b), Více/Méně zůstává */
+.rec-synopsis {
+    margin: 0;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: var(--text-secondary);
+    text-wrap: pretty;
+}
+
+.rec-synopsis.clamped {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.rec-synopsis-toggle {
+    background: none;
+    border: none;
+    color: var(--accent-primary);
+    cursor: pointer;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0;
+    align-self: flex-start;
+    margin-top: -4px;
+}
+
+/* AniList tagy (1b: jméno + procento, barvy podle rank) */
+.rec-tags-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.rec-tag {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 5px;
+    padding: 3px 9px;
+    border-radius: 8px;
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+.rec-tag em {
+    font-style: normal;
+    opacity: 0.6;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+}
+
+.rec-tag.tier-1 {
+    background: color-mix(in srgb, var(--accent-emerald) 14%, transparent);
+    color: var(--accent-emerald);
+}
+
+.rec-tag.tier-2 {
+    background: color-mix(in srgb, var(--accent-primary) 13%, transparent);
+    color: color-mix(in srgb, var(--accent-primary) 75%, var(--text-primary));
+}
+
+.rec-tag.tier-3 {
+    background: var(--bg-tertiary);
+    color: var(--text-muted);
+}
+
+.rec-tag-more {
+    font-family: inherit;
+    padding: 3px 9px;
+    border-radius: 8px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--accent-primary);
+    cursor: pointer;
+    transition: border-color 0.15s;
+}
+
+.rec-tag-more:hover {
+    border-color: var(--accent-primary);
+}
+
+/* Relace série (1b: fialové pilly) */
+.rec-relations-info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+}
+
+.rec-relations-info span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--accent-secondary) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent-secondary) 28%, transparent);
+    color: color-mix(in srgb, var(--accent-secondary) 60%, var(--text-primary));
+    font-weight: 600;
+}
+
+/* Odkazy (1b: pilly s ikonami služeb) */
+.rec-links-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 2px;
+}
+
+.rec-link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 5px 10px 5px 6px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+}
+
+.rec-link-btn img {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    flex-shrink: 0;
+    display: block;
+}
+
+.rec-link-btn:hover {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+/* Pravý sloupec: MAL skóre + relevance */
+.rec-side-cell {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 4px;
+    gap: 14px;
+}
+
+.rec-score-wrap {
+    position: relative;
+    width: 100%;
+}
+
+.rec-mal-score {
+    width: 100%;
+    text-align: center;
+    border-radius: 10px;
+    padding: 8px 6px;
+    font-weight: 800;
+    font-size: 1.25rem;
+    line-height: 1;
+    color: #141014;
+    cursor: help;
+    font-variant-numeric: tabular-nums;
+    filter: brightness(0.9) contrast(1.05);
+}
+
+.rec-mal-score.no-score {
+    background: var(--bg-tertiary) !important;
+    color: var(--text-muted);
+    filter: none;
+}
+
+.rec-score-caption {
+    text-align: center;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-top: 5px;
+    font-weight: 600;
+}
+
+.rec-relevance-cell {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
 }
 
 .rec-relevance-ring {
     position: relative;
-    width: 64px;
-    height: 64px;
+    width: 72px;
+    height: 72px;
+    filter: brightness(0.9) saturate(1.15);
 }
 
 .rec-relevance-ring svg {
-    width: 64px;
-    height: 64px;
+    width: 72px;
+    height: 72px;
     transform: rotate(-90deg);
+    display: block;
 }
 
 .rec-relevance-ring .ring-bg {
     fill: none;
     stroke: var(--bg-tertiary);
-    stroke-width: 4;
+    stroke-width: 5;
 }
 
 .rec-relevance-ring .ring-fill {
     fill: none;
-    stroke-width: 4;
+    stroke-width: 5;
     stroke-linecap: round;
     transition: stroke-dashoffset 0.6s ease;
 }
@@ -219,180 +666,17 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.95rem;
-    font-weight: 700;
+    font-size: 1.25rem;
+    font-weight: 800;
     color: var(--text-primary);
-    transform: rotate(0deg);
+    font-variant-numeric: tabular-nums;
 }
 
 .rec-relevance-label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-}
-
-.rec-poster-cell {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: visible;
-    position: relative;
-    z-index: 1;
-}
-
-.rec-poster-zoom-wrapper {
-    position: relative;
-    overflow: visible;
-    /* User requested to remove zoom cursor */
-    cursor: default;
-}
-
-.rec-poster-cell img {
-    width: 130px;
-    height: 185px;
-    object-fit: cover;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border-color);
-    transition: transform 0.35s ease, box-shadow 0.35s ease;
-    position: relative;
-}
-
-/* Info Area */
-.rec-info-cell {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
-    min-width: 0;
-}
-
-.rec-info-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: var(--spacing-md);
-    flex-wrap: wrap;
-}
-
-.rec-title {
-    font-size: 1.05rem;
+    font-size: 0.62rem;
     font-weight: 700;
-    color: var(--text-primary);
-}
-
-.rec-title a {
-    color: inherit;
-    text-decoration: none;
-    transition: color 0.15s;
-}
-
-.rec-title a:hover {
-    color: var(--accent-primary);
-}
-
-.rec-mal-score {
-    padding: 4px 10px;
-    border-radius: var(--radius-sm);
-    font-weight: 800;
-    font-size: 1.15rem;
-    white-space: nowrap;
-    min-width: 55px;
-    text-align: center;
-}
-
-.rec-synopsis {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    line-height: 1.5;
-    overflow: hidden;
-}
-
-.rec-synopsis-toggle {
-    background: none;
-    border: none;
-    color: var(--accent-primary);
-    cursor: pointer;
-    font-size: 0.8rem;
-    padding: 0;
-    margin-left: 4px;
-}
-
-.rec-meta-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    align-items: center;
-    font-size: 0.78rem;
-}
-
-.rec-meta-badge {
-    padding: 2px 8px;
-    border-radius: 12px;
-    background: var(--bg-tertiary);
-    color: var(--text-secondary);
-    font-weight: 500;
-}
-
-.rec-meta-badge.ptw {
-    background: rgba(99, 102, 241, 0.2);
-    color: var(--accent-primary);
-}
-
-.rec-meta-badge.votes {
-    background: rgba(245, 158, 11, 0.2);
-    color: #f59e0b;
-}
-
-.rec-links-row {
-    display: flex;
-    gap: var(--spacing-sm);
-    margin-top: var(--spacing-sm);
-}
-
-.rec-link-btn {
-    font-size: 0.75rem;
-    padding: 3px 8px;
-    border-radius: var(--radius-sm);
-    background: var(--bg-tertiary);
-    color: var(--accent-primary);
-    text-decoration: none;
-    font-weight: 500;
-    transition: background 0.15s;
-    border: none;
-    cursor: pointer;
-}
-
-.rec-link-btn:hover {
-    background: rgba(99, 102, 241, 0.2);
-}
-
-/* Tags Tooltip / Expandable */
-.rec-tags-section {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    font-size: 0.73rem;
-}
-
-.rec-tag {
-    padding: 2px 7px;
-    border-radius: 10px;
-    font-weight: 500;
-}
-
-.rec-tag.tier-1 {
-    background: rgba(16, 185, 129, 0.2);
-    color: var(--accent-emerald);
-}
-
-.rec-tag.tier-2 {
-    background: rgba(99, 102, 241, 0.15);
-    color: var(--accent-primary);
-}
-
-.rec-tag.tier-3 {
-    background: var(--bg-tertiary);
-    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
 }
 
 /* Relevance Breakdown Tooltip - base */
@@ -400,19 +684,12 @@
     position: absolute;
     background: var(--bg-primary);
     border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    padding: var(--spacing-sm) var(--spacing-md);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    padding: 14px 16px;
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6);
     font-size: 0.75rem;
     z-index: 1000;
     min-width: 220px;
-}
-
-/* Relevance breakdown: appears above ring, aligned to left edge */
-.rec-relevance-tooltip {
-    bottom: calc(100% + 8px);
-    left: 0;
 }
 
 /* Score stats: appears below score badge, aligned to right edge */
@@ -421,16 +698,95 @@
     right: 0;
 }
 
-/* Přepracovaný tooltip statistiky hodnocení — skutečné CSS bary s barvami
-   hodnocení (--rating-N) místo ASCII bloků */
+/* Rozpad relevance (design 1b: label + bar + body, poznámka a násobek pod tím) */
+.rec-bd-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    padding-bottom: 9px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.rec-bd-head strong {
+    color: var(--accent-primary);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+}
+
+.rec-bd-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+}
+
+.rec-bd-row {
+    display: grid;
+    grid-template-columns: 1fr 84px 52px;
+    align-items: center;
+    gap: 4px 10px;
+}
+
+.rec-bd-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.rec-bd-track {
+    height: 5px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.07);
+    overflow: hidden;
+    display: block;
+}
+
+.rec-bd-fill {
+    display: block;
+    height: 100%;
+    border-radius: 3px;
+    background: var(--accent-primary);
+}
+
+.rec-bd-pts {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #fbbf24;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.rec-bd-note {
+    grid-column: 1 / 3;
+    font-size: 0.69rem;
+    color: var(--text-muted);
+    margin-top: -2px;
+}
+
+.rec-bd-mult {
+    font-size: 0.66rem;
+    color: var(--text-muted);
+    opacity: 0.8;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    margin-top: -2px;
+    white-space: nowrap;
+}
+
+/* Tooltip statistiky hodnocení — bary s barvami hodnocení (--rating-N) */
 .rec-stats-tooltip-v2 {
     width: 340px;
     z-index: 1001;
     padding: 14px 16px;
     background: rgba(17, 17, 23, 0.98);
     border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
+    border-radius: 12px;
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6);
     pointer-events: none;
     color: var(--text-primary);
 }
@@ -440,8 +796,8 @@
     align-items: center;
     gap: 8px;
     padding-bottom: 8px;
-    margin-bottom: 8px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 9px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     font-size: 0.85rem;
     font-weight: 700;
 }
@@ -482,9 +838,16 @@
 .rec-stats-row {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 9px;
     font-size: 0.78rem;
     line-height: 1.35;
+    border-radius: 6px;
+    padding: 1px 4px;
+    margin: 0 -4px;
+}
+
+.rec-stats-row.top {
+    background: rgba(255, 255, 255, 0.06);
 }
 
 .rec-stats-row.top .rec-stats-val {
@@ -502,7 +865,7 @@
 
 .rec-stats-track {
     flex: 1;
-    height: 10px;
+    height: 9px;
     background: rgba(255, 255, 255, 0.06);
     border-radius: 5px;
     overflow: hidden;
@@ -528,29 +891,6 @@
     font-style: normal;
     color: var(--text-muted);
     font-size: 0.9em;
-}
-
-.rec-breakdown-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 2px 0;
-    gap: 12px;
-}
-
-.rec-breakdown-row.total {
-    border-top: 1px solid var(--border-color);
-    margin-top: 4px;
-    padding-top: 4px;
-    font-weight: 700;
-}
-
-.rec-breakdown-label {
-    color: var(--text-secondary);
-}
-
-.rec-breakdown-value {
-    color: var(--text-primary);
-    font-weight: 600;
 }
 
 /* Settings Modal */
@@ -686,21 +1026,6 @@
     transform: translateX(20px);
 }
 
-/* Relations Info */
-.rec-relations-info {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-}
-
-.rec-relations-info span {
-    padding: 1px 6px;
-    background: var(--bg-tertiary);
-    border-radius: 8px;
-}
-
 /* Empty State */
 .rec-empty-state {
     text-align: center;
@@ -717,52 +1042,40 @@
 /* Mobile responsive */
 @media (max-width: 768px) {
     .rec-card {
-        grid-template-columns: 1fr;
-        text-align: center;
+        grid-template-columns: 96px 1fr;
+        gap: 12px;
     }
 
-    .rec-relevance-cell {
+    .rec-poster-cell img,
+    .rec-poster-empty {
+        width: 96px;
+        height: 136px;
+    }
+
+    .rec-rank-badge {
+        top: -6px;
+        left: -6px;
+        min-width: 22px;
+        height: 22px;
+        font-size: 0.68rem;
+    }
+
+    /* Pravý sloupec se na mobilu položí vodorovně pod obsah */
+    .rec-side-cell {
+        grid-column: 1 / -1;
         flex-direction: row;
         justify-content: center;
-        gap: var(--spacing-md);
+        align-items: flex-start;
+        gap: 24px;
     }
 
-    .rec-poster-cell img {
-        width: 80px;
-        height: 113px;
-        margin: 0 auto;
-    }
-
-    .rec-info-header {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .rec-meta-row {
-        justify-content: center;
-    }
-
-    .rec-tags-section {
-        justify-content: center;
-    }
-
-    .rec-links-row {
-        justify-content: center;
+    .rec-score-wrap {
+        width: 104px;
     }
 
     .rec-breakdown-tooltip {
         min-width: 180px;
         white-space: normal;
-    }
-
-    .rec-relevance-tooltip {
-        left: 50%;
-        transform: translateX(-50%);
-    }
-
-    .rec-relevance-tooltip::after {
-        left: 50%;
-        transform: translateX(-50%);
     }
 
     .rec-stats-tooltip {
@@ -771,14 +1084,18 @@
         transform: translateX(-50%);
     }
 
-    .rec-stats-tooltip::after {
-        right: auto;
-        left: 50%;
-        transform: translateX(-50%);
-    }
-
     .rec-search-row {
         flex-direction: column;
+        align-items: stretch;
+    }
+
+    .rec-status-bar {
+        flex-wrap: wrap;
+        row-gap: 6px;
+    }
+
+    .rec-status-text {
+        white-space: normal;
     }
 
     .rec-selector-container .search-results-dropdown {
@@ -792,25 +1109,26 @@
 
 /* Premium Action Buttons */
 .rec-action-btn {
-    padding: 10px 20px;
+    padding: 0 22px;
+    height: 44px;
     border: none;
     border-radius: var(--radius-md);
-    font-size: 0.9rem;
-    font-weight: 600;
+    font-size: 0.85rem;
+    font-weight: 700;
     cursor: pointer;
     white-space: nowrap;
     transition: all 0.2s ease;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
 }
 
 .rec-action-btn-primary {
     background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
     color: #fff;
-    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+    box-shadow: 0 2px 12px color-mix(in srgb, var(--accent-primary) 22%, transparent);
 }
 
 .rec-action-btn-primary:hover:not(:disabled) {
-    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.5);
+    box-shadow: 0 4px 18px color-mix(in srgb, var(--accent-primary) 40%, transparent);
     transform: translateY(-1px);
 }
 

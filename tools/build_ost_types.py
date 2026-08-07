@@ -6,8 +6,9 @@ Tenhle skript čte text OST kapitoly rozboru a klíčovými slovy z něj odvodí
 1 až 3 hudební štítky (Orchestral, Electronic, ...). Ruční výjimky mají
 přednost a žijí v tools/ost_types_overrides.json ({ "Anime": ["Tag", ...] }).
 
-Vstup:  public/data/category_texts.json  (píše export_docx_categories.py,
-        proto tenhle skript běží ve stejné lajně exportu až po něm)
+Vstup:  tools/category_texts_full.json   (sloučený mezivýstup rozborů; píše ho
+        export_docx_categories.py, proto tenhle skript běží ve stejné lajně
+        exportu až po něm — web sám čte jen per-anime soubory v public/data/)
 Výstup: public/data/ost_types.json       { "Anime jméno": ["Tag", ...] }
 
 Párování klíčových slov je bez diakritiky a lowercase, řadí se podle počtu
@@ -20,7 +21,7 @@ import unicodedata
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 WEB = os.path.abspath(os.path.join(BASE, ".."))
-SRC = os.path.join(WEB, "public", "data", "category_texts.json")
+SRC = os.path.join(BASE, "category_texts_full.json")
 OUT = os.path.join(WEB, "public", "data", "ost_types.json")
 OVERRIDES = os.path.join(BASE, "ost_types_overrides.json")
 

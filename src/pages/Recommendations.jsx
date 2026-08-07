@@ -1,7 +1,9 @@
-import { useState, useEffect, useLayoutEffect, useMemo, useCallback, useRef } from 'react'
+import { useState, useEffect, useLayoutEffect, useMemo, useCallback, useRef, Fragment } from 'react'
 import { createPortal } from 'react-dom'
 import { useLocation } from 'react-router-dom'
 import { pauseBackgroundDownload, resumeBackgroundDownload, isExcelRunning, fetchWithRetry as jikanFetchWithRetry } from '../utils/jikanService'
+import malIcon from '../assets/mal-favicon.svg'
+import anilistIcon from '../assets/anilist-logo.svg'
 import './recommendations.css'
 
 // ============================================================
@@ -59,6 +61,9 @@ const DEFAULTS = {
 }
 
 const ANILIST_API_URL = 'https://graphql.anilist.co'
+
+// Kolik AniList tagů karta ukazuje sbaleně (design 1b), zbytek přes „+N"
+const TAGS_COLLAPSED = 12
 
 // ============================================================
 // SETTINGS PERSISTENCE
@@ -748,17 +753,20 @@ function ScoreDistributionTooltip({ malId }) {
 // ============================================================
 // RELEVANCE BREAKDOWN TOOLTIP
 // ============================================================
-// Řádek rozpadu relevance. Na modulové úrovni (čistě prezentační, jen props),
-// aby se nevytvářela komponenta při renderu (react-hooks/static-components).
-function Row({ label, status, mult, weight, result }) {
+// Řádek rozpadu relevance (design 1b: label + bar + body, pod tím poznámka a
+// násobek). Na modulové úrovni (čistě prezentační, jen props), aby se
+// nevytvářela komponenta při renderu (react-hooks/static-components).
+function Row({ label, status, mult, weight, result, noteColor }) {
+    const pct = Math.round(Math.max(0, Math.min(1, mult || 0)) * 100)
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '12px' }}>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '2px' }}>
-                {label}: <i style={{ color: 'var(--text-muted)' }}>({status})</i>
+        <div className="rec-bd-row">
+            <span className="rec-bd-label">{label}</span>
+            <span className="rec-bd-track">
+                <span className="rec-bd-fill" style={{ width: `${pct}%` }} />
             </span>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-primary)' }}>
-                ({(mult || 0).toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})} * {weight}) = <strong style={{ color: '#fbbf24' }}>{(result || 0).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})} b.</strong>
-            </span>
+            <span className="rec-bd-pts">{(result || 0).toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} b.</span>
+            <span className="rec-bd-note" style={noteColor ? { color: noteColor } : undefined}>{status}</span>
+            <span className="rec-bd-mult">{(mult || 0).toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} × {weight}</span>
         </div>
     )
 }
@@ -823,8 +831,8 @@ function RelevanceBreakdown({ data, settings, sourceScore, anchorRef }) {
                 top: 0,
                 right: 'auto',
                 bottom: 'auto',
-                width: '320px',
-                padding: '16px',
+                width: '360px',
+                padding: '14px 16px',
                 textAlign: 'left',
                 background: 'rgba(20, 20, 25, 0.98)',
                 border: '1px solid var(--border-color)',
@@ -836,63 +844,67 @@ function RelevanceBreakdown({ data, settings, sourceScore, anchorRef }) {
                 ...positionStyle
             }}
         >
-            <div style={{ marginBottom: '8px', paddingBottom: '4px', borderBottom: '1px dashed #000', fontSize: '0.95rem' }}>
-                Celková Relevance: <strong>{data.total.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})} / {getMaxRelevance(settings)}</strong>
+            <div className="rec-bd-head">
+                <span>Celková relevance</span>
+                <strong>{data.total.toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 1})} / {getMaxRelevance(settings)}</strong>
             </div>
 
-            <Row 
-                label={`V plánu (Plan to Watch)`}
-                status={data.plan_s ? 'Ano' : 'Ne'}
-                mult={data.plan_p / settings.RELEVANCE_W_IN_PLAN} 
-                weight={settings.RELEVANCE_W_IN_PLAN} 
-                result={data.plan_p} 
-            />
-            <Row 
-                label={`MAL Skóre (${data.mal_s_val.toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})}/10)`}
-                status={malCompare}
-                mult={data.mal_p / settings.RELEVANCE_W_MAL_SCORE} 
-                weight={settings.RELEVANCE_W_MAL_SCORE} 
-                result={data.mal_p} 
-            />
-            <Row 
-                label={`Žánry a Témata`}
-                status={data.genre_p >= settings.RELEVANCE_W_GENRE_THEME/2 ? 'Nadprůměrná shoda' : 'Podprůměrná shoda'}
-                mult={data.genre_p / settings.RELEVANCE_W_GENRE_THEME} 
-                weight={settings.RELEVANCE_W_GENRE_THEME} 
-                result={data.genre_p} 
-            />
-            <Row 
-                label={`Délka Anime`}
-                status={lengthStr}
-                mult={data.length_p / settings.RELEVANCE_W_LENGTH} 
-                weight={settings.RELEVANCE_W_LENGTH} 
-                result={data.length_p} 
-            />
-            <Row
-                label={`Hlasy doporučení`}
-                status={(data.votes_jikan !== undefined)
-                    ? `MAL ${data.votes_jikan}× · AniList ${data.votes_anilist || 0}×`
-                    : `${data.votes_c}x doporučeno`}
-                mult={data.votes_p / settings.RELEVANCE_W_VOTES}
-                weight={settings.RELEVANCE_W_VOTES}
-                result={data.votes_p}
-            />
-            {data.tags_p !== undefined && settings.RELEVANCE_W_TAGS > 0 && (
+            <div className="rec-bd-rows">
                 <Row
-                    label={`AniList tagy`}
-                    status={data.tags_s === 0.5 ? 'Neutrální (bez shody tagů)' : data.tags_p >= settings.RELEVANCE_W_TAGS * 0.85 ? 'Silná shoda s mými tagy' : 'Shoda s mými tagy'}
-                    mult={data.tags_p / settings.RELEVANCE_W_TAGS}
-                    weight={settings.RELEVANCE_W_TAGS}
-                    result={data.tags_p}
+                    label={`V plánu (Plan to Watch)`}
+                    status={data.plan_s ? 'Ano' : 'Ne'}
+                    mult={data.plan_p / settings.RELEVANCE_W_IN_PLAN}
+                    weight={settings.RELEVANCE_W_IN_PLAN}
+                    result={data.plan_p}
                 />
-            )}
-            <Row
-                label={`Popularita`}
-                status={getPopularityTierName(data.members_c, settings)}
-                mult={data.pop_p / settings.RELEVANCE_W_POPULARITY}
-                weight={settings.RELEVANCE_W_POPULARITY}
-                result={data.pop_p}
-            />
+                <Row
+                    label={`MAL skóre (${data.mal_s_val.toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})}/10)`}
+                    status={malCompare}
+                    noteColor={(sourceScore && data.mal_s_val > sourceScore) ? 'var(--accent-emerald)' : undefined}
+                    mult={data.mal_p / settings.RELEVANCE_W_MAL_SCORE}
+                    weight={settings.RELEVANCE_W_MAL_SCORE}
+                    result={data.mal_p}
+                />
+                <Row
+                    label={`Žánry a témata`}
+                    status={data.genre_p >= settings.RELEVANCE_W_GENRE_THEME/2 ? 'Nadprůměrná shoda' : 'Podprůměrná shoda'}
+                    mult={data.genre_p / settings.RELEVANCE_W_GENRE_THEME}
+                    weight={settings.RELEVANCE_W_GENRE_THEME}
+                    result={data.genre_p}
+                />
+                <Row
+                    label={`Délka anime`}
+                    status={lengthStr}
+                    mult={data.length_p / settings.RELEVANCE_W_LENGTH}
+                    weight={settings.RELEVANCE_W_LENGTH}
+                    result={data.length_p}
+                />
+                <Row
+                    label={`Hlasy doporučení`}
+                    status={(data.votes_jikan !== undefined)
+                        ? `MAL ${data.votes_jikan}× · AniList ${data.votes_anilist || 0}×`
+                        : `${data.votes_c}x doporučeno`}
+                    mult={data.votes_p / settings.RELEVANCE_W_VOTES}
+                    weight={settings.RELEVANCE_W_VOTES}
+                    result={data.votes_p}
+                />
+                {data.tags_p !== undefined && settings.RELEVANCE_W_TAGS > 0 && (
+                    <Row
+                        label={`AniList tagy`}
+                        status={data.tags_s === 0.5 ? 'Neutrální (bez shody tagů)' : data.tags_p >= settings.RELEVANCE_W_TAGS * 0.85 ? 'Silná shoda s mými tagy' : 'Shoda s mými tagy'}
+                        mult={data.tags_p / settings.RELEVANCE_W_TAGS}
+                        weight={settings.RELEVANCE_W_TAGS}
+                        result={data.tags_p}
+                    />
+                )}
+                <Row
+                    label={`Popularita`}
+                    status={getPopularityTierName(data.members_c, settings)}
+                    mult={data.pop_p / settings.RELEVANCE_W_POPULARITY}
+                    weight={settings.RELEVANCE_W_POPULARITY}
+                    result={data.pop_p}
+                />
+            </div>
         </div>,
         document.body
     )
@@ -902,7 +914,7 @@ function RelevanceBreakdown({ data, settings, sourceScore, anchorRef }) {
 // ============================================================
 // RECOMMENDATION CARD
 // ============================================================
-function RecCard({ rec, sourceAnimeId, sourceScore, settings }) {
+function RecCard({ rec, rank, sourceAnimeId, sourceScore, settings }) {
     const [synopsisExpanded, setSynopsisExpanded] = useState(false)
     const [showBreakdown, setShowBreakdown] = useState(false)
     const [tagsExpanded, setTagsExpanded] = useState(false)
@@ -931,7 +943,7 @@ function RecCard({ rec, sourceAnimeId, sourceScore, settings }) {
     // Plán 6 Ú1: normalizace na dynamické maximum vah (s tagy už není max 110)
     const maxTotal = getMaxRelevance(settings) || 100
     const score = Math.min(100, Math.max(0, (relevance.total / maxTotal) * 100))
-    const circumference = 2 * Math.PI * 28 // Updated from 20 to 28
+    const circumference = 2 * Math.PI * 31 // design 1b: ring 72 px, r = 31
     const offset = circumference - (score / 100) * circumference
     const ringColor = getColorGradient(score, 0, 100)
 
@@ -939,16 +951,15 @@ function RecCard({ rec, sourceAnimeId, sourceScore, settings }) {
 
     const title = details.title_english || details.title || 'Unknown'
     const synopsis = cleanSynopsis(details.synopsis)
-    const synopsisShort = synopsis.length > 200 ? synopsis.substring(0, 200) + '...' : synopsis
 
     const relevanceLabel = score >= settings.THRESHOLD_HIGH ? 'Vysoká'
         : score >= settings.THRESHOLD_MEDIUM ? 'Střední' : 'Nízká'
     const relevanceLabelColor = score >= settings.THRESHOLD_HIGH ? 'var(--accent-emerald)'
         : score >= settings.THRESHOLD_MEDIUM ? '#f59e0b' : 'var(--accent-red)'
 
-    // AniList tags
+    // AniList tags (1b ukazuje sbaleně 12)
     const tags = anilistData?.tags || []
-    const tagsToShow = tagsExpanded ? tags : tags.slice(0, 6)
+    const tagsToShow = tagsExpanded ? tags : tags.slice(0, TAGS_COLLAPSED)
 
     // Relations
     const rel = anilistData?.relations
@@ -959,112 +970,81 @@ function RecCard({ rec, sourceAnimeId, sourceScore, settings }) {
     const recLink = `https://myanimelist.net/recommendations/anime/${sourceAnimeId}-${details.mal_id}`
     const anilistUrl = anilistData?.siteUrl || null
 
+    // Metařádek 1b: textové položky oddělené tečkou, pilly bez oddělovače
+    const metaPlain = []
+    if (details.type) metaPlain.push({ key: 'type', cls: 'rec-meta-type', text: details.type })
+    if (details.episodes) metaPlain.push({ key: 'eps', text: `${details.episodes} EP` })
+    if (rel?.season_text && rel.season_text !== 'N/A') metaPlain.push({ key: 'season', text: rel.season_text })
+    metaPlain.push({
+        key: 'votes', cls: 'rec-meta-votes',
+        title: 'Počet uživatelských doporučení na MAL a AniList',
+        text: relevance.votes_jikan !== undefined
+            ? [
+                relevance.votes_jikan > 0 ? `MAL ${relevance.votes_jikan}×` : null,
+                relevance.votes_anilist > 0 ? `AniList ${relevance.votes_anilist}×` : null,
+              ].filter(Boolean).join(' · ') || '0× doporučeno'
+            : `${relevance.votes_c}× doporučeno`,
+    })
+
     return (
         <div className="rec-card">
-            {/* Relevance Ring */}
-            <div className="rec-relevance-cell" ref={relevanceCellRef} style={{ position: 'relative' }}>
-                <div className="rec-relevance-ring"
-                    onMouseEnter={() => setShowBreakdown(true)}
-                    onMouseLeave={() => setShowBreakdown(false)}
-                    onClick={() => setShowBreakdown(!showBreakdown)}
-                    style={{ cursor: 'pointer', filter: 'brightness(0.85) saturate(1.2)' }}
-                >
-                    <svg viewBox="0 0 64 64">
-                        <circle className="ring-bg" cx="32" cy="32" r="28" />
-                        <circle className="ring-fill" cx="32" cy="32" r="28"
-                            stroke={ringColor}
-                            strokeDasharray={circumference}
-                            strokeDashoffset={offset}
-                        />
-                    </svg>
-                    <div className="rec-relevance-value">{score.toFixed(0)}</div>
-                </div>
-                <span className="rec-relevance-label" style={{ color: relevanceLabelColor }}>
-                    {relevanceLabel}
-                </span>
-                {showBreakdown && <RelevanceBreakdown data={relevance} settings={settings} sourceScore={sourceScore} anchorRef={relevanceCellRef} />}
-            </div>
-
-            {/* Poster */}
+            {/* Poster + pořadí */}
             <div className="rec-poster-cell">
                 {details.images?.jpg?.image_url ? (
-                    <div className="rec-poster-zoom-wrapper">
-                        <img src={details.images.jpg.image_url} alt={title} loading="lazy" />
-                    </div>
+                    <img src={details.images.jpg.image_url} alt={title} loading="lazy" />
                 ) : (
-                    <div style={{ width: 100, height: 142, background: 'var(--bg-tertiary)', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', fontSize: '0.7rem' }}>No Image</div>
+                    <div className="rec-poster-empty">Bez obrázku</div>
                 )}
+                <span className="rec-rank-badge">{rank}</span>
             </div>
 
-            {/* Info */}
+            {/* Střední sloupec */}
             <div className="rec-info-cell">
-                <div className="rec-info-header">
-                    <div className="rec-title">
-                        <a href={`https://myanimelist.net/anime/${details.mal_id}`} target="_blank" rel="noopener noreferrer">
-                            {title}
-                        </a>
+                <div className="rec-title-block">
+                    <a className="rec-title" href={`https://myanimelist.net/anime/${details.mal_id}`} target="_blank" rel="noopener noreferrer">
+                        {title}
+                    </a>
+                    <div className="rec-meta-row">
+                        {metaPlain.map((m, i) => (
+                            <Fragment key={m.key}>
+                                {i > 0 && <span className="rec-meta-sep">·</span>}
+                                <span className={m.cls} title={m.title}>{m.text}</span>
+                            </Fragment>
+                        ))}
+                        {relevance.plan_s === 1 && <span className="rec-meta-pill ptw">V plánu</span>}
+                        {rec.isWatched && (
+                            <span className="rec-meta-pill watched">
+                                Zhlédnuto{rec.myRating ? ` · FH ${Math.round(rec.myRating)}/10` : ''}
+                            </span>
+                        )}
                     </div>
-                    <div 
-                        className="rec-mal-score-wrapper" 
-                        onMouseEnter={() => setShowStats(true)} 
-                        onMouseLeave={() => setShowStats(false)}
-                        style={{ position: 'relative', filter: 'brightness(0.85) contrast(1.1)' }}
-                    >
-                        <div className="rec-mal-score" style={{ background: malScoreColor, color: '#000', textShadow: 'none', cursor: 'help', fontFamily: "'Aptos Narrow', 'Arial Narrow', sans-serif" }}>
-                            {details.score ? `${details.score.toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})}/10` : 'N/A'}
-                        </div>
-                        {showStats && <ScoreDistributionTooltip malId={details.mal_id} />}
-                    </div>
                 </div>
 
-                {/* Meta badges */}
-                <div className="rec-meta-row">
-                    {details.type && <span className="rec-meta-badge">{details.type}</span>}
-                    {details.episodes && <span className="rec-meta-badge">{details.episodes} EP</span>}
-                    {rel && <span className="rec-meta-badge">{rel.season_text}</span>}
-                    {relevance.plan_s === 1 && <span className="rec-meta-badge ptw">📋 V plánu</span>}
-                    {rec.isWatched && (
-                        <span className="rec-meta-badge" style={{ background: 'rgba(52, 211, 153, 0.15)', color: 'var(--accent-emerald)', borderColor: 'rgba(52, 211, 153, 0.4)' }}>
-                            ✅ Zhlédnuto{rec.myRating ? ` · FH ${Math.round(rec.myRating)}/10` : ''}
-                        </span>
-                    )}
-                    <span className="rec-meta-badge votes" title="Počet uživatelských doporučení na MAL a AniList">
-                        👍 {relevance.votes_jikan !== undefined
-                            ? [
-                                relevance.votes_jikan > 0 ? `MAL ${relevance.votes_jikan}×` : null,
-                                relevance.votes_anilist > 0 ? `AniList ${relevance.votes_anilist}×` : null,
-                              ].filter(Boolean).join(' · ') || '0× doporučeno'
-                            : `${relevance.votes_c}× doporučeno`}
-                    </span>
-                </div>
+                {/* Synopse: sbaleně 2 řádky (1b), tlačítko Více/Méně zůstává */}
+                <p className={`rec-synopsis${synopsisExpanded ? '' : ' clamped'}`}>{synopsis}</p>
+                {synopsis.length > 200 && (
+                    <button className="rec-synopsis-toggle" onClick={() => setSynopsisExpanded(!synopsisExpanded)}>
+                        {synopsisExpanded ? 'Méně' : 'Více'}
+                    </button>
+                )}
 
-                {/* Synopsis */}
-                <div className="rec-synopsis">
-                    {synopsisExpanded ? synopsis : synopsisShort}
-                    {synopsis.length > 200 && (
-                        <button className="rec-synopsis-toggle" onClick={() => setSynopsisExpanded(!synopsisExpanded)}>
-                            {synopsisExpanded ? 'Méně' : 'Více'}
-                        </button>
-                    )}
-                </div>
-
-                {/* AniList Tags */}
+                {/* AniList tagy */}
                 {tags.length > 0 && (
                     <div className="rec-tags-section">
                         {tagsToShow.map((tag, i) => (
                             <span key={i} title={tag.description} style={{ cursor: tag.description ? 'help' : 'default' }} className={`rec-tag ${tag.rank >= 80 ? 'tier-1' : tag.rank >= 60 ? 'tier-2' : 'tier-3'}`}>
-                                {tag.name} {tag.rank}%
+                                {tag.name}<em>{tag.rank}%</em>
                             </span>
                         ))}
-                        {tags.length > 6 && (
-                            <button className="rec-link-btn" onClick={() => setTagsExpanded(!tagsExpanded)}>
-                                {tagsExpanded ? 'Méně' : `+${tags.length - 6}`}
+                        {tags.length > TAGS_COLLAPSED && (
+                            <button className="rec-tag-more" onClick={() => setTagsExpanded(!tagsExpanded)}>
+                                {tagsExpanded ? 'Méně' : `+${tags.length - TAGS_COLLAPSED}`}
                             </button>
                         )}
                     </div>
                 )}
 
-                {/* Relations */}
+                {/* Relace série */}
                 {rel && (rel.cnt_seq_pre > 0 || rel.cnt_side > 0 || rel.cnt_spin > 0) && (
                     <div className="rec-relations-info">
                         {rel.cnt_seq_pre > 0 && <span>{rel.cnt_seq_pre}× Sequel/Prequel</span>}
@@ -1074,21 +1054,60 @@ function RecCard({ rec, sourceAnimeId, sourceScore, settings }) {
                     </div>
                 )}
 
-                {/* Links */}
+                {/* Odkazy */}
                 <div className="rec-links-row">
                     {hasMalRec && (
                         <a href={recLink} target="_blank" rel="noopener noreferrer" className="rec-link-btn">
-                            👥 Uživatelský posudek (MAL)
+                            <img src={malIcon} alt="" />Uživatelský posudek (MAL)
                         </a>
                     )}
                     <a href={`https://myanimelist.net/anime/${details.mal_id}`} target="_blank" rel="noopener noreferrer" className="rec-link-btn">
-                        🔗 MAL
+                        <img src={malIcon} alt="" />MAL
                     </a>
                     {anilistUrl && (
                         <a href={anilistUrl} target="_blank" rel="noopener noreferrer" className="rec-link-btn">
-                            🔗 AniList
+                            <img src={anilistIcon} alt="" />AniList
                         </a>
                     )}
+                </div>
+            </div>
+
+            {/* Pravý sloupec: MAL skóre + relevance (design 1b) */}
+            <div className="rec-side-cell">
+                <div
+                    className="rec-score-wrap"
+                    onMouseEnter={() => setShowStats(true)}
+                    onMouseLeave={() => setShowStats(false)}
+                >
+                    <div className={`rec-mal-score${details.score ? '' : ' no-score'}`} style={{ background: malScoreColor }}>
+                        {details.score ? `${details.score.toLocaleString('cs-CZ', {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : 'N/A'}
+                    </div>
+                    <div className="rec-score-caption">MAL</div>
+                    {showStats && <ScoreDistributionTooltip malId={details.mal_id} />}
+                </div>
+
+                <div
+                    className="rec-relevance-cell"
+                    ref={relevanceCellRef}
+                    onMouseEnter={() => setShowBreakdown(true)}
+                    onMouseLeave={() => setShowBreakdown(false)}
+                    onClick={() => setShowBreakdown(!showBreakdown)}
+                >
+                    <div className="rec-relevance-ring">
+                        <svg viewBox="0 0 72 72">
+                            <circle className="ring-bg" cx="36" cy="36" r="31" />
+                            <circle className="ring-fill" cx="36" cy="36" r="31"
+                                stroke={ringColor}
+                                strokeDasharray={circumference}
+                                strokeDashoffset={offset}
+                            />
+                        </svg>
+                        <div className="rec-relevance-value">{score.toFixed(0)}</div>
+                    </div>
+                    <span className="rec-relevance-label" style={{ color: relevanceLabelColor }}>
+                        {relevanceLabel}
+                    </span>
+                    {showBreakdown && <RelevanceBreakdown data={relevance} settings={settings} sourceScore={sourceScore} anchorRef={relevanceCellRef} />}
                 </div>
             </div>
         </div>
@@ -1495,30 +1514,36 @@ function Recommendations() {
     }
 
     return (
-        <div className="fade-in">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-xl)', flexWrap: 'wrap', gap: 'var(--spacing-md)' }}>
-                <h2 style={{ margin: 0 }}>
-                    Recommendations
-                    {recommendations.length > 0 && (
-                        <span style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginLeft: '12px' }}>
-                            ({recommendations.length})
-                        </span>
+        <div className="fade-in rec-page">
+            <div className="rec-header">
+                <div className="rec-header-text">
+                    <div className="rec-header-title-row">
+                        <h2>Doporučení</h2>
+                        {recommendations.length > 0 && (
+                            <span className="rec-count-pill">{recommendations.length}</span>
+                        )}
+                    </div>
+                    {selectedAnime && (
+                        <div className="rec-subtitle">
+                            Na základě <strong>{selectedAnime.name}</strong> · MAL{settings.useAniListRecs !== false ? ' + AniList' : ''}
+                        </div>
                     )}
-                </h2>
+                </div>
                 <button
-                    className="rec-action-btn rec-action-btn-cancel"
+                    className="rec-ghost-btn"
                     onClick={() => setShowSettings(true)}
                 >
-                    ⚙️ Nastavení
+                    <span className="rec-ghost-btn-icon">⚙️</span>Nastavení
                 </button>
             </div>
 
             {/* Anime Selector */}
             <div className="rec-search-row">
                 <div className="rec-selector-container" ref={dropdownRef}>
+                    <span className="rec-search-icon" aria-hidden="true">🔍</span>
                     <input
                         type="text"
-                        className="search-input"
+                        className="search-input rec-search-input"
                         placeholder="Vyber anime ze svého seznamu..."
                         value={searchTerm}
                         onChange={e => {
@@ -1584,7 +1609,7 @@ function Recommendations() {
                     onClick={generateRecommendations}
                     disabled={!selectedAnime || isProcessing}
                 >
-                    {isProcessing ? '⏳ Zpracovávám...' : '🔍 Najít doporučení'}
+                    {isProcessing ? '⏳ Zpracovávám...' : 'Najít doporučení'}
                 </button>
 
                 {isProcessing && (
@@ -1594,34 +1619,32 @@ function Recommendations() {
                 )}
             </div>
 
-            {/* Progress */}
+            {/* Stavový řádek (design 1b): tečka + text + tenký proužek + čas */}
             {(isProcessing || progress.text) && (
-                <div className="rec-progress-container">
-                    <div className="rec-progress-text">
-                        <span>{progress.text}</span>
-                        <span>{progress.eta}</span>
+                <div className={`rec-status-bar${isProcessing ? ' processing' : ''}`}>
+                    <span className={`rec-status-dot${isProcessing ? ' busy' : (progress.text.startsWith('Hotovo') ? ' done' : ' idle')}`} />
+                    <span className="rec-status-text">{progress.text}</span>
+                    <div className="rec-status-track">
+                        <div
+                            className="rec-status-fill"
+                            style={{ width: progress.total > 0 ? `${(progress.current / progress.total) * 100}%` : (isProcessing ? '0%' : '100%') }}
+                        />
                     </div>
-                    {progress.total > 0 && (
-                        <div className="rec-progress-bar-track">
-                            <div
-                                className="rec-progress-bar-fill"
-                                style={{ width: `${(progress.current / progress.total) * 100}%` }}
-                            />
-                        </div>
-                    )}
+                    {progress.eta && <span className="rec-status-eta">{progress.eta}</span>}
                 </div>
             )}
 
             {/* Results */}
             {recommendations.length > 0 && (
                 <div className="rec-cards-grid">
-                    {recommendations.map((rec) => {
+                    {recommendations.map((rec, i) => {
                         const malIdMatch = selectedAnime?.mal_url?.match(/\/anime\/(\d+)/)
                         const sourceId = malIdMatch ? parseInt(malIdMatch[1]) : 0
                         return (
                             <RecCard
                                 key={rec.details.mal_id}
                                 rec={rec}
+                                rank={i + 1}
                                 sourceAnimeId={sourceId}
                                 sourceScore={rec.sourceScore || 0}
                                 settings={settings}

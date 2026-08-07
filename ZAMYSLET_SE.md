@@ -9,9 +9,9 @@ Detaily v CHANGELOG.md (1.5.0) a dokumentace/ZDROJ_PRAVDY.md.
 1) Písničky se nepřehrají, když hrají v MS EDGE tabu a ten tab není selected (respektive hrají, ale nepustí se další písnička) -> OST player v FAVOURITE OP/ED/OST
    [STAV 6. 8.: otevřené. Příčina i návrh opravy v ZDROJ_PRAVDY §8 (Edge škrtí časovače neaktivního tabu, týká se jen pieces režimu). Oprava = zásah do chráněného přehrávače, jen na výslovný pokyn a se zálohou.]
 3) Použít Claude DESIGN pro Top Favourites a úplně předělat/optimalizovat
-   [STAV 6. 8.: částečně. Horní přepínač TOP 10 / HM / Postavy hotový; plný redesign stránky zatím ne, chce to design podklad.]
+   [STAV 7. 8.: HOTOVO. Top Favourites plně předělané podle designu 1A (panel, segmentový přepínač, karty jen postery s medailemi, název + MAL/List + FH až na hover, u postav bez ID). CHANGELOG 1.7.0.]
 4) Použít Claude DESIGN prvky pro vylepšení některých věcí v Dashboard a jinde
-   [STAV 6. 8.: částečně. Dabing (kartové bary) a Cesta Anime (filmový pás) hotové; další prvky podle podkladů.]
+   [STAV 7. 8.: rozšířeno. Kromě Dabingu a Cesty Anime nově předělané i Recommendations (1b), Plan to Watch a horní část Favourite OP/ED/OST podle Claude Designu (barvy přes proměnné témat, funkčnost zachovaná). CHANGELOG 1.7.0. Další prvky podle dalších podkladů.]
 9) Přidat AniDB relation chart map pro série do svého listu Anime List Web
    [STAV: research hotový (ZDROJ_PRAVDY §8, varianta B). Potřebuje tvou registraci AniDB API klienta, pak jednorázově ~20 min stahování s trvalou cache.]
 10) Já bych chtěl udělat rozsáhlou revizi recenzní.

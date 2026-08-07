@@ -26,6 +26,7 @@ import {
     Legend
 } from 'chart.js'
 import { Pie, Bar, Radar, Line } from 'react-chartjs-2'
+import './Favorites.css'
 import { animePath } from '../utils/animeSlug'
 
 ChartJS.register(
@@ -1466,71 +1467,28 @@ function Favorites() {
 
     return (
         <div className="fade-in">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-lg)', flexWrap: 'wrap', gap: 'var(--spacing-md)' }}>
-                <h2 style={{ margin: 0 }}>
-                    Favourite OP/ED/OST
-                </h2>
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
-                <button
-                    type="button"
-                    onClick={() => setQuizOpen(true)}
-                    style={{
-                        background: 'linear-gradient(135deg, #7c3aed 0%, #db2777 100%)',
-                        color: 'white',
-                        padding: '10px 20px',
-                        borderRadius: 'var(--radius-md)',
-                        border: '1px solid rgba(255,255,255,0.05)',
-                        fontSize: '0.85rem',
-                        fontWeight: 'bold',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        cursor: 'pointer',
-                        boxShadow: '0 4px 12px rgba(124, 58, 237, 0.25)',
-                        transition: 'all 0.2s'
-                    }}
-                    title="Minihra: pustí se jen hudba OP/ED a hádáš anime"
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'translateY(-1px)';
-                        e.currentTarget.style.boxShadow = '0 6px 16px rgba(124, 58, 237, 0.4)';
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'translateY(0)';
-                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(124, 58, 237, 0.25)';
-                    }}
-                >
-                    🎮 Hádej OP/ED
-                </button>
-                <button
-                    type="button"
-                    onClick={playRandomOpEd}
-                    style={{
-                        background: 'linear-gradient(135deg, #095aba 0%, #1e40af 100%)',
-                        color: 'white',
-                        padding: '10px 20px',
-                        borderRadius: 'var(--radius-md)',
-                        border: '1px solid rgba(255,255,255,0.05)',
-                        fontSize: '0.85rem',
-                        fontWeight: 'bold',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        cursor: 'pointer',
-                        boxShadow: '0 4px 12px rgba(9, 90, 186, 0.2)',
-                        transition: 'all 0.2s'
-                    }}
-                    title="Přehraje náhodný OP/ED z tabulky (Gdrive klip, nebo znělka z AnimeThemes)"
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'translateY(-1px)';
-                        e.currentTarget.style.boxShadow = '0 6px 16px rgba(9, 90, 186, 0.35)';
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'translateY(0)';
-                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(9, 90, 186, 0.2)';
-                    }}
-                >
-                    🎲 Náhodný OP/ED
-                </button>
+            <div className="favp-header">
+                <div className="favp-header-text">
+                    <h2>Favourite OP/ED/OST</h2>
+                    <div className="favp-subtitle">Openings, endings a soundtracky</div>
+                </div>
+                <div className="favp-header-actions">
+                    <button
+                        type="button"
+                        className="favp-quiz-btn"
+                        onClick={() => setQuizOpen(true)}
+                        title="Minihra: pustí se jen hudba OP/ED a hádáš anime"
+                    >
+                        <span aria-hidden="true">🎮</span>Hádej OP/ED
+                    </button>
+                    <button
+                        type="button"
+                        className="favp-random-btn"
+                        onClick={playRandomOpEd}
+                        title="Přehraje náhodný OP/ED z tabulky (Gdrive klip, nebo znělka z AnimeThemes)"
+                    >
+                        <span aria-hidden="true">🎲</span>Náhodný OP/ED
+                    </button>
                 </div>
             </div>
 
@@ -1541,24 +1499,28 @@ function Favorites() {
                 </Suspense>
             )}
 
-            {/* 2. Stats Grid (Counts) */}
-            <div className="stats-grid">
-                <div className="stat-card">
-                    <div className="stat-value">{stats?.total || 0}</div>
-                    <div className="stat-label">Celkem songů</div>
-                </div>
-                <div className="stat-card pink">
-                    <div className="stat-value">{stats?.types?.OP || 0}</div>
-                    <div className="stat-label">Openings</div>
-                </div>
-                <div className="stat-card cyan">
-                    <div className="stat-value">{stats?.types?.ED || 0}</div>
-                    <div className="stat-label">Endings</div>
-                </div>
-                <div className="stat-card amber">
-                    <div className="stat-value">{stats?.withRating || 0}</div>
-                    <div className="stat-label">S hodnocením</div>
-                </div>
+            {/* 2. Stat karty (design 1a: levý proužek + podíl z celku) */}
+            <div className="favp-stats">
+                {[
+                    { label: 'Celkem songů', value: stats?.total || 0, color: 'var(--accent-primary)', base: null },
+                    { label: 'Openings', value: stats?.types?.OP || 0, color: '#f472b6', base: stats?.total },
+                    { label: 'Endings', value: stats?.types?.ED || 0, color: 'var(--accent-cyan)', base: stats?.total },
+                    { label: 'S hodnocením', value: stats?.withRating || 0, color: '#f59e0b', base: stats?.total },
+                ].map(s => {
+                    const share = s.base ? Math.round((s.value / s.base) * 100) : null
+                    return (
+                        <div key={s.label} className="favp-stat-card" style={{ '--stat-color': s.color }}>
+                            <span className="favp-stat-label">{s.label}</span>
+                            <span className="favp-stat-value">{s.value.toLocaleString('cs-CZ')}</span>
+                            <span className="favp-stat-share-row">
+                                <span className="favp-stat-track">
+                                    <span className="favp-stat-fill" style={{ width: `${share ?? 0}%` }} />
+                                </span>
+                                <span className="favp-stat-share">{share !== null ? `${share} % z celku` : 'základ pro podíly'}</span>
+                            </span>
+                        </div>
+                    )
+                })}
             </div>
 
             {/* 3. Collapsible Charts Section */}
@@ -1996,81 +1958,67 @@ function Favorites() {
                 </DashboardGroup>
             </div>
 
-            {/* Search and Filters */}
-            <div className="search-bar">
-                <div style={{ position: 'relative', flex: 1, display: 'flex', alignItems: 'center' }}>
+            {/* Search and Filters (design 1a: ikona v poli, segmentový typ filtr) */}
+            <div className="favp-search-row">
+                <div className="favp-search-box">
+                    <span className="favp-search-icon" aria-hidden="true">🔍</span>
                     <input
                         type="text"
-                        className="search-input"
+                        className="search-input favp-search-input"
                         placeholder="Hledat anime, song, autora..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        style={{ width: '100%', paddingRight: '2rem' }}
                     />
                     {searchTerm && (
                         <button
+                            className="favp-clear-btn"
                             onClick={() => setSearchTerm('')}
-                            style={{
-                                position: 'absolute',
-                                right: '12px',
-                                background: 'transparent',
-                                border: 'none',
-                                color: 'var(--text-muted)',
-                                cursor: 'pointer',
-                                fontSize: '1.2rem',
-                                padding: '0 4px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                            }}
                             title="Vymazat hledání"
                         >
                             ×
                         </button>
                     )}
                 </div>
-                <div className="filter-group">
+                <div className="favp-type-seg">
                     {['all', 'OP', 'ED', 'OST'].map(t => (
                         <button
                             key={t}
-                            className={`filter-btn ${typeFilter === t ? 'active' : ''}`}
+                            className={`favp-seg-btn ${typeFilter === t ? 'active' : ''}`}
                             onClick={() => setTypeFilter(t)}
                         >
                             {t === 'all' ? 'Vše' : t}
                         </button>
                     ))}
-                    <select
-                        value={ratingFilter}
-                        onChange={(e) => setRatingFilter(e.target.value)}
-                        className="filter-btn"
-                        style={{ outline: 'none' }}
-                    >
-                        <option value="all">Všechna hodnocení</option>
-                        <option value="9+">9+ (Excelentní)</option>
-                        <option value="8+">8+ (Velmi dobré)</option>
-                        <option value="7+">7+ (Dobré)</option>
-                        <option value="rated">Ohodnocené</option>
-                        <option value="frisson">Má Frisson</option>
-                    </select>
-                    <select
-                        value={languageFilter}
-                        onChange={(e) => setLanguageFilter(e.target.value)}
-                        className="filter-btn"
-                        style={{ outline: 'none' }}
-                    >
-                        <option value="all">Všechny jazyky</option>
-                        <option value="JAP">Pouze JAP</option>
-                        <option value="ENG">Pouze ENG</option>
-                        <option value="LAT">Latina (LAT)</option>
-                        <option value="GER">Němčina (GER)</option>
-                        <option value="MIX">Kombinace (%)</option>
-                    </select>
                 </div>
+                <select
+                    value={ratingFilter}
+                    onChange={(e) => setRatingFilter(e.target.value)}
+                    className="favp-select"
+                >
+                    <option value="all">Všechna hodnocení</option>
+                    <option value="9+">9+ (Excelentní)</option>
+                    <option value="8+">8+ (Velmi dobré)</option>
+                    <option value="7+">7+ (Dobré)</option>
+                    <option value="rated">Ohodnocené</option>
+                    <option value="frisson">Má Frisson</option>
+                </select>
+                <select
+                    value={languageFilter}
+                    onChange={(e) => setLanguageFilter(e.target.value)}
+                    className="favp-select"
+                >
+                    <option value="all">Všechny jazyky</option>
+                    <option value="JAP">Pouze JAP</option>
+                    <option value="ENG">Pouze ENG</option>
+                    <option value="LAT">Latina (LAT)</option>
+                    <option value="GER">Němčina (GER)</option>
+                    <option value="MIX">Kombinace (%)</option>
+                </select>
             </div>
 
             {/* Table */}
-            <div className="table-container hide-mobile">
-                <table style={{ fontSize: '0.85rem' }}>
+            <div className="table-container favp-table-wrap hide-mobile">
+                <table className="favp-table" style={{ fontSize: '0.85rem' }}>
                     <thead>
                         <tr>
                             <th onClick={() => handleSort('index')}># {getSortIcon('index')}</th>
@@ -2124,11 +2072,19 @@ function Favorites() {
                                     </span>
                                 </td>
                                 <td style={{ color: 'var(--accent-primary)', fontWeight: '500', maxWidth: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={fav.song}>
-                                    {hasVideo && (
-                                        <span className={`fav-play-hint${isAt ? ' is-at' : ''}`} aria-hidden="true">
+                                    {/* Design 1a: stavová ikonka zdroje přehrání — plná = Gdrive
+                                        klip, obrys = znělka z AnimeThemes, tečka = nepřehratelné */}
+                                    <span
+                                        className={`favp-play-dot ${hasVideo ? (isAt ? 'at' : 'gdrive') : 'none'}`}
+                                        title={hasVideo
+                                            ? (isAt ? 'Nemám stažené, přehraje se znělka z AnimeThemes' : 'Můj stažený klip (Google Drive)')
+                                            : 'Klip zatím není k dispozici'}
+                                        aria-hidden="true"
+                                    >
+                                        {hasVideo ? (
                                             <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-                                        </span>
-                                    )}
+                                        ) : '·'}
+                                    </span>
                                     {fav.song}
                                 </td>
                                 <td style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', maxWidth: '150px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={fav.author}>
@@ -2290,13 +2246,12 @@ function Favorites() {
             </div>
 
             {filteredFavorites.length > 8 && (
-                <div style={{ display: 'flex', justifyContent: 'center', marginTop: 'var(--spacing-lg)' }}>
+                <div className="favp-table-toggle-row">
                     <button
-                        className="filter-btn"
+                        className="favp-table-toggle"
                         onClick={() => setIsTableExpanded(!isTableExpanded)}
-                        style={{ padding: '8px 24px', fontWeight: 'bold' }}
                     >
-                        {isTableExpanded ? 'SBALIT TABULKU OP/ED ▲' : 'ROZBALIT TABULKU OP/ED ▼'}
+                        {isTableExpanded ? 'Sbalit tabulku OP/ED ▲' : 'Rozbalit tabulku OP/ED ▼'}
                     </button>
                 </div>
             )}

@@ -1,5 +1,9 @@
 import { useState, useEffect, useMemo } from 'react'
 import { createPortal } from 'react-dom'
+import './PlanToWatch.css'
+
+// Popisky sloupců pro podtitulek („řazeno podle …")
+const SORT_LABELS = { name: 'Název', type: 'Typ', episodes: 'Ep.' }
 
 function PlanToWatch() {
     const [planList, setPlanList] = useState([])
@@ -145,6 +149,7 @@ function PlanToWatch() {
         return sortConfig.direction === 'asc' ? ' ↑' : ' ↓'
     }
 
+    // Standardizované typové štítky (stejné jako v seznamu anime) — neměnit
     const getTypeBadgeClass = (type) => {
         const t = type?.toLowerCase() || ''
         if (t.includes('movie')) return 'movie'
@@ -152,6 +157,17 @@ function PlanToWatch() {
         if (t.includes('ona')) return 'ona'
         if (t.includes('multiple')) return 'special'
         return 'tv'
+    }
+
+    // Pill statusu (design: tečka + text, barvy podle stavu)
+    const StatusPill = ({ notes }) => {
+        const cls = notes === 'AIRING!' ? 'airing' : notes === 'Nadcházející' ? 'upcoming' : 'released'
+        const label = notes === 'AIRING!' ? 'Airing' : notes === 'Nadcházející' ? 'Nadcházející' : 'Vydáno'
+        return (
+            <span className={`ptw-status-pill ${cls}`}>
+                <span className="ptw-status-dot" />{label}
+            </span>
+        )
     }
 
     const ExpandableSource = ({ text }) => {
@@ -176,8 +192,8 @@ function PlanToWatch() {
                 {linkify(displayText)}
                 {isLong && (
                     <button
+                        className="ptw-source-toggle"
                         onClick={() => { setExpanded(!expanded) }}
-                        style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', marginLeft: '4px', fontSize: '0.75rem', textDecoration: 'underline' }}
                     >
                         {expanded ? 'Méně' : 'Více'}
                     </button>
@@ -190,99 +206,101 @@ function PlanToWatch() {
         return <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)' }}>Načítání...</div>
     }
 
+    const filterDefs = [
+        { id: 'all', label: 'Vše', dot: null, count: stats?.total || 0 },
+        { id: 'airing', label: 'Airing', dot: 'var(--accent-red)', count: stats?.airingCount || 0 },
+        { id: 'released', label: 'Vydáno', dot: 'var(--accent-emerald)', count: stats?.releasedCount || 0 },
+        { id: 'upcoming', label: 'Nadcházející', dot: 'var(--accent-cyan)', count: stats?.upcomingCount || 0 },
+    ]
+
     return (
         <div className="fade-in">
-            <h2 style={{ marginBottom: 'var(--spacing-xl)' }}>
-                Plan to Watch
-                <span style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginLeft: '12px' }}>
-                    ({filteredList.length} z {planList.length})
-                </span>
-            </h2>
+            <div className="ptw-header">
+                <div className="ptw-header-text">
+                    <div className="ptw-header-title-row">
+                        <h2>Plan to Watch</h2>
+                        <span className="ptw-count-pill">{filteredList.length}</span>
+                    </div>
+                    <div className="ptw-subtitle">
+                        {filteredList.length.toLocaleString('cs-CZ')} z {planList.length.toLocaleString('cs-CZ')} položek
+                        {sortConfig.key ? ` · řazeno podle „${SORT_LABELS[sortConfig.key] || sortConfig.key}"` : ''}
+                    </div>
+                </div>
+            </div>
 
-            {/* Stats Grid */}
-            <div className="stats-grid">
-                <div className="stat-card">
-                    <div className="stat-value">{stats?.total || 0}</div>
-                    <div className="stat-label">Anime k zhlédnutí</div>
+            {/* Stat karty (design: levý barevný proužek, hodnota + jednotka + poznámka) */}
+            <div className="ptw-stats">
+                <div className="ptw-stat-card" style={{ '--stat-color': 'var(--accent-primary)' }}>
+                    <span className="ptw-stat-label">Anime k zhlédnutí</span>
+                    <span className="ptw-stat-value-row">
+                        <span className="ptw-stat-value">{stats?.total || 0}</span>
+                    </span>
+                    <span className="ptw-stat-note">Po odfiltrování placeholderů</span>
                 </div>
-                <div className="stat-card pink">
-                    <div className="stat-value">{stats?.totalEpisodes?.toLocaleString() || 0}</div>
-                    <div className="stat-label">Celkem epizod</div>
+                <div className="ptw-stat-card" style={{ '--stat-color': 'var(--accent-secondary)' }}>
+                    <span className="ptw-stat-label">Celkem epizod</span>
+                    <span className="ptw-stat-value-row">
+                        <span className="ptw-stat-value">{(stats?.totalEpisodes || 0).toLocaleString('cs-CZ')}</span>
+                        <span className="ptw-stat-unit">ep</span>
+                    </span>
+                    <span className="ptw-stat-note">Součet napříč listem</span>
                 </div>
-                <div className="stat-card cyan">
-                    <div className="stat-value">{(stats?.estimatedDays || 0).toLocaleString('cs-CZ')} dní</div>
-                    <div className="stat-label">Odhadovaný čas</div>
+                <div className="ptw-stat-card" style={{ '--stat-color': 'var(--accent-cyan)' }}>
+                    <span className="ptw-stat-label">Odhadovaný čas</span>
+                    <span className="ptw-stat-value-row">
+                        <span className="ptw-stat-value">{(stats?.estimatedDays || 0).toLocaleString('cs-CZ')}</span>
+                        <span className="ptw-stat-unit">dní</span>
+                    </span>
+                    <span className="ptw-stat-note">Ze skutečného total_time</span>
                 </div>
-                <div className="stat-card emerald">
-                    <div className="stat-value">{stats?.airingCount || 0}</div>
-                    <div className="stat-label">Právě vysílá</div>
+                <div className="ptw-stat-card" style={{ '--stat-color': 'var(--accent-emerald)' }}>
+                    <span className="ptw-stat-label">Právě vysílá</span>
+                    <span className="ptw-stat-value-row">
+                        <span className="ptw-stat-value">{stats?.airingCount || 0}</span>
+                    </span>
+                    <span className="ptw-stat-note">Sledovat weekly</span>
                 </div>
             </div>
 
             {/* Search and Filters */}
-            <div className="search-bar">
-                <div style={{ position: 'relative', flex: 1, display: 'flex', alignItems: 'center' }}>
+            <div className="ptw-search-row">
+                <div className="ptw-search-box">
+                    <span className="ptw-search-icon" aria-hidden="true">🔍</span>
                     <input
                         type="text"
-                        className="search-input"
+                        className="search-input ptw-search-input"
                         placeholder="Hledat anime nebo důvod..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        style={{ width: '100%', paddingRight: '2rem' }}
                     />
                     {searchTerm && (
                         <button
+                            className="ptw-clear-btn"
                             onClick={() => setSearchTerm('')}
-                            style={{
-                                position: 'absolute',
-                                right: '12px',
-                                background: 'transparent',
-                                border: 'none',
-                                color: 'var(--text-muted)',
-                                cursor: 'pointer',
-                                fontSize: '1.2rem',
-                                padding: '0 4px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                            }}
                             title="Vymazat hledání"
                         >
                             ×
                         </button>
                     )}
                 </div>
-                <div className="filter-group">
-                    <button
-                        className={`filter-btn ${statusFilter === 'all' ? 'active' : ''}`}
-                        onClick={() => setStatusFilter('all')}
-                    >
-                        Vše
-                    </button>
-                    <button
-                        className={`filter-btn ${statusFilter === 'airing' ? 'active' : ''}`}
-                        onClick={() => setStatusFilter('airing')}
-                    >
-                        🔴 Airing
-                    </button>
-                    <button
-                        className={`filter-btn ${statusFilter === 'released' ? 'active' : ''}`}
-                        onClick={() => setStatusFilter('released')}
-                    >
-                        Vydáno
-                    </button>
-                    <button
-                        className={`filter-btn ${statusFilter === 'upcoming' ? 'active' : ''}`}
-                        onClick={() => setStatusFilter('upcoming')}
-                    >
-                        ⏳ Nadcházející
-                    </button>
+                <div className="ptw-filter-group">
+                    {filterDefs.map(f => (
+                        <button
+                            key={f.id}
+                            className={`ptw-filter-btn ${statusFilter === f.id ? 'active' : ''}`}
+                            onClick={() => setStatusFilter(f.id)}
+                        >
+                            {f.dot && <span className="ptw-filter-dot" style={{ background: f.dot }} />}
+                            {f.label}
+                            <em>{f.count}</em>
+                        </button>
+                    ))}
                 </div>
             </div>
 
             {/* Table */}
-            <div className="table-container hide-mobile">
-                <table>
+            <div className="ptw-table-wrap hide-mobile">
+                <table className="ptw-table">
                     <thead>
                         <tr>
                             <th onClick={() => handleSort('name')} className={sortConfig.key === 'name' ? 'sorted' : ''}>
@@ -291,7 +309,7 @@ function PlanToWatch() {
                             <th onClick={() => handleSort('type')} className={sortConfig.key === 'type' ? 'sorted' : ''}>
                                 Typ{getSortIndicator('type')}
                             </th>
-                            <th onClick={() => handleSort('episodes')} className={sortConfig.key === 'episodes' ? 'sorted' : ''}>
+                            <th onClick={() => handleSort('episodes')} className={`ptw-th-center ${sortConfig.key === 'episodes' ? 'sorted' : ''}`}>
                                 Ep.{getSortIndicator('episodes')}
                             </th>
 
@@ -303,8 +321,9 @@ function PlanToWatch() {
                         {filteredList.map((item, idx) => (
                             <tr key={idx}>
                                 <td>
-                                    <div style={{ fontWeight: '500', maxWidth: '300px' }}>
-                                        {item.name}
+                                    <div className="ptw-name-cell">
+                                        <span className="ptw-row-index">{idx + 1}</span>
+                                        <span className="ptw-name">{item.name}</span>
                                     </div>
                                 </td>
                                 <td>
@@ -312,34 +331,15 @@ function PlanToWatch() {
                                         {item.type || '-'}
                                     </span>
                                 </td>
-                                <td style={{ textAlign: 'center' }}>
+                                <td className="ptw-td-eps">
                                     {item.episodes && !isNaN(parseInt(item.episodes)) ? parseInt(item.episodes) : '-'}
                                 </td>
 
-                                <td style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', maxWidth: '350px' }}>
+                                <td className="ptw-td-source">
                                     <ExpandableSource text={item.source} />
                                 </td>
                                 <td>
-                                    {item.notes === 'AIRING!' ? (
-                                        <span style={{
-                                            padding: '4px 8px',
-                                            background: 'rgba(239, 68, 68, 0.2)',
-                                            color: 'var(--accent-red)',
-                                            borderRadius: '4px',
-                                            fontSize: '0.75rem',
-                                            fontWeight: '600'
-                                        }}>
-                                            🔴 AIRING
-                                        </span>
-                                    ) : item.notes === 'Nadcházející' ? (
-                                        <span style={{ color: 'var(--accent-cyan)', fontSize: '0.875rem', fontWeight: '500' }}>
-                                            ⏳ Nadcházející
-                                        </span>
-                                    ) : (
-                                        <span style={{ color: 'var(--accent-emerald)', fontSize: '0.875rem' }}>
-                                            ✓ Vydáno
-                                        </span>
-                                    )}
+                                    <StatusPill notes={item.notes} />
                                 </td>
                             </tr>
                         ))}
@@ -360,26 +360,7 @@ function PlanToWatch() {
                                     <span className={`type-badge ${getTypeBadgeClass(item.type)}`} style={{ padding: '2px 8px', fontSize: '0.65rem' }}>
                                         {item.type || '-'}
                                     </span>
-                                    {item.notes === 'AIRING!' ? (
-                                        <span style={{
-                                            padding: '2px 8px',
-                                            background: 'rgba(239, 68, 68, 0.2)',
-                                            color: 'var(--accent-red)',
-                                            borderRadius: '4px',
-                                            fontSize: '0.65rem',
-                                            fontWeight: '600'
-                                        }}>
-                                            🔴 AIRING
-                                        </span>
-                                    ) : item.notes === 'Nadcházející' ? (
-                                        <span style={{ color: 'var(--accent-cyan)', fontSize: '0.75rem', fontWeight: '600' }}>
-                                            ⏳ NADCHÁZEJÍCÍ
-                                        </span>
-                                    ) : (
-                                        <span style={{ color: 'var(--accent-emerald)', fontSize: '0.75rem', fontWeight: '600' }}>
-                                            ✓ VYDÁNO
-                                        </span>
-                                    )}
+                                    <StatusPill notes={item.notes} />
                                 </div>
                             </div>
                         </div>

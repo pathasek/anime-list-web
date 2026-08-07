@@ -1,0 +1,390 @@
+/* Favorites.css — horní část stránky Favourite OP/ED/OST podle designu
+   z Claude Design (barvy přes proměnné témat). OST sekce a přehrávač
+   (chráněné komponenty) se tenhle soubor netýká. */
+
+/* Hlavička */
+.favp-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+.favp-header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.favp-header-text h2 {
+    margin: 0;
+    font-size: 1.7rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.favp-subtitle {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+.favp-header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.favp-quiz-btn,
+.favp-random-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-family: inherit;
+    height: 44px;
+    padding: 0 18px;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: box-shadow 0.2s, transform 0.2s, border-color 0.15s, color 0.15s;
+}
+
+.favp-quiz-btn span,
+.favp-random-btn span {
+    font-size: 0.95rem;
+    line-height: 1;
+}
+
+.favp-quiz-btn {
+    color: #f6e6ff;
+    background: linear-gradient(135deg, #a85df0, #7c3aed);
+    border: 1px solid rgba(168, 93, 240, 0.5);
+    box-shadow: 0 2px 12px rgba(168, 93, 240, 0.22);
+}
+
+.favp-quiz-btn:hover {
+    box-shadow: 0 4px 18px rgba(168, 93, 240, 0.42);
+    transform: translateY(-1px);
+}
+
+.favp-random-btn {
+    color: var(--text-secondary);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+}
+
+.favp-random-btn:hover {
+    border-color: #3db4f2;
+    color: #5fc2f5;
+}
+
+/* Stat karty s levým proužkem a podílem z celku */
+.favp-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: var(--spacing-lg);
+}
+
+.favp-stat-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px 18px;
+    overflow: hidden;
+}
+
+.favp-stat-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--stat-color, var(--accent-primary));
+}
+
+.favp-stat-label {
+    font-size: 0.69rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.favp-stat-value {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    font-variant-numeric: tabular-nums;
+    color: var(--stat-color, var(--accent-primary));
+}
+
+.favp-stat-share-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.favp-stat-track {
+    flex: 1;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.07);
+    overflow: hidden;
+    display: block;
+}
+
+.favp-stat-fill {
+    display: block;
+    height: 100%;
+    border-radius: 2px;
+    background: var(--stat-color, var(--accent-primary));
+}
+
+.favp-stat-share {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Hledání + filtry */
+.favp-search-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+.favp-search-box {
+    position: relative;
+    flex: 1;
+    min-width: 220px;
+}
+
+.favp-search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    opacity: 0.55;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.favp-search-input {
+    width: 100%;
+    height: 44px;
+    padding-left: 42px !important;
+    padding-right: 40px;
+    border-radius: var(--radius-md);
+}
+
+.favp-clear-btn {
+    position: absolute;
+    right: 9px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: color 0.15s, background 0.15s;
+}
+
+.favp-clear-btn:hover {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.15);
+}
+
+.favp-type-seg {
+    display: flex;
+    gap: 6px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 4px;
+    height: 44px;
+    align-items: center;
+}
+
+.favp-seg-btn {
+    font-family: inherit;
+    height: 34px;
+    padding: 0 16px;
+    border-radius: 9px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--text-muted);
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.favp-seg-btn:hover {
+    color: var(--accent-primary);
+}
+
+.favp-seg-btn.active {
+    background: linear-gradient(90deg, color-mix(in srgb, var(--accent-primary) 22%, transparent), color-mix(in srgb, var(--accent-secondary) 12%, transparent));
+    border-color: var(--accent-primary);
+    color: var(--text-primary);
+}
+
+.favp-select {
+    font-family: inherit;
+    height: 44px;
+    padding: 0 14px;
+    border-radius: var(--radius-md);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    outline: none;
+}
+
+/* Tabulka OP/ED: zaoblený rám, akcentová linka pod hlavičkou, zebra */
+.favp-table-wrap {
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.favp-table thead th {
+    background: var(--bg-secondary);
+    border-bottom: 2px solid var(--accent-primary);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.favp-table thead th:hover {
+    color: var(--accent-primary);
+}
+
+.favp-table tbody tr:nth-child(even) {
+    background: color-mix(in srgb, var(--bg-secondary) 45%, transparent);
+}
+
+.favp-table tbody td:first-child {
+    font-variant-numeric: tabular-nums;
+}
+
+/* Stavová ikonka zdroje přehrání u songu */
+.favp-play-dot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-right: 7px;
+    vertical-align: -4px;
+}
+
+.favp-play-dot.gdrive {
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+    border: 1px solid var(--accent-primary);
+}
+
+.favp-play-dot.at {
+    background: transparent;
+    color: #5fc2f5;
+    border: 1px solid rgba(95, 194, 245, 0.5);
+}
+
+.favp-play-dot.none {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    font-weight: 800;
+}
+
+/* Tlačítko rozbalení tabulky (design: patka tabulky) */
+.favp-table-toggle-row {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--spacing-lg);
+}
+
+.favp-table-toggle {
+    font-family: inherit;
+    height: 40px;
+    padding: 0 24px;
+    border-radius: var(--radius-md);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: var(--text-secondary);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    transition: border-color 0.15s, color 0.15s;
+}
+
+.favp-table-toggle:hover {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .favp-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .favp-search-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .favp-type-seg {
+        justify-content: center;
+    }
+
+    .favp-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .favp-header-actions {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .favp-stats {
+        grid-template-columns: 1fr;
+    }
+}
