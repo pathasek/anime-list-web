@@ -17,6 +17,13 @@ const posterThumbPath = (src) => {
     return `${PREFIX}thumbs/${file.replace(/\.(jpe?g|png|webp)$/i, '')}.jpg`;
 };
 
+// Sekce stránky pro horní přepínač (pořadí = pořadí tlačítek)
+const TF_SECTIONS = [
+    { id: 'top10', label: 'TOP 10' },
+    { id: 'hm', label: 'HM' },
+    { id: 'chars', label: 'Postavy' },
+];
+
 const TopFavorites = () => {
     const [data, setData] = useState({ top10_anime: [], hm_anime: [], top10_chars: [] });
     const [animeMap, setAnimeMap] = useState({});
@@ -24,6 +31,19 @@ const TopFavorites = () => {
     const [imageHash, setImageHash] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    // Zvolená sekce přežívá odchod na detail v sessionStorage, takže „Zpět"
+    // vrátí stránku přesně jak byla (stejný vzor jako skupiny na Dashboardu).
+    const [section, setSection] = useState(() => {
+        try {
+            const saved = sessionStorage.getItem('tf-section');
+            if (TF_SECTIONS.some(s => s.id === saved)) return saved;
+        } catch { /* poškozený záznam — použije se default */ }
+        return 'top10';
+    });
+    const switchSection = (id) => {
+        setSection(id);
+        try { sessionStorage.setItem('tf-section', id); } catch { /* quota */ }
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -213,9 +233,23 @@ const TopFavorites = () => {
             <div className="favorites-content">
                 {hasData ? (
                     <>
-                        {renderSection('TOP 10 Anime', data.top10_anime, true)}
-                        {renderSection('Honourable Mentions', data.hm_anime, true, true)}
-                        {renderSection('TOP 10 Characters', data.top10_chars, false)}
+                        <div className="tf-switcher" role="tablist" aria-label="Sekce Top Favorites">
+                            {TF_SECTIONS.map(s => (
+                                <button
+                                    key={s.id}
+                                    type="button"
+                                    role="tab"
+                                    aria-selected={section === s.id}
+                                    className={`tf-switch-btn ${section === s.id ? 'active' : ''}`}
+                                    onClick={() => switchSection(s.id)}
+                                >
+                                    {s.label}
+                                </button>
+                            ))}
+                        </div>
+                        {section === 'top10' && renderSection('TOP 10 Anime', data.top10_anime, true)}
+                        {section === 'hm' && renderSection('Honourable Mentions', data.hm_anime, true, true)}
+                        {section === 'chars' && renderSection('TOP 10 Characters', data.top10_chars, false)}
                     </>
                 ) : (
                     <div className="no-favorites" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>

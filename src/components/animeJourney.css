@@ -66,7 +66,7 @@
 
 /* ── Minimalizovaný pás ─────────────────────────────────────────────
    Kompaktní jednořádková lišta ve výšce původního řádku filtru.
-   Kolečka plují po diagonále a na obou koncích mizí do stínu. */
+   Kolečka jezdí po sinusové „cestě“ a na obou koncích mizí do stínu. */
 .aj-mini-card {
     padding: 6px 14px;
     margin-bottom: var(--spacing-lg);
@@ -82,84 +82,152 @@
     white-space: nowrap;
 }
 
+/* Souhrn celé cesty — vyplní volné místo u titulku, kolečka zůstávají čistá */
+.aj-mini-summary {
+    flex: 0 0 auto;
+    font-size: 0.74rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    padding-right: 12px;
+    border-right: 1px solid var(--border-color);
+}
+.aj-mini-summary b { color: var(--text-secondary); font-weight: 700; }
+
 .aj-mini-band {
     position: relative;
     flex: 1 1 auto;
     min-width: 0;
     height: 52px;
     overflow: hidden;
-    /* Stín na obou koncích — kolečka vplouvají a vyplouvají z tmy */
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
-    mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+    cursor: grab;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 11%, #000 89%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 11%, #000 89%, transparent 100%);
 }
+.aj-mini-band.dragging { cursor: grabbing; }
+
+/* Idle drift jede na kompozitoru (CSS animace, název a délku nastavuje JS).
+   Animace SCHVÁLNĚ běží na vnitřní vrstvě s obsahem (.aj-mini-drag): vrstvu
+   s aktivní kompozitorovou animací Chrome rasterizuje celou dopředu, takže
+   tah neodhaluje nerasterizované dlaždice (to sekalo první tah po načtení).
+   Tažení posouvá vnější .aj-mini-track (vlastní vrstva, obsah už hotový);
+   do animace se pozice přepíše jedním seekem až po puštění. */
 .aj-mini-track {
-    display: flex;
-    align-items: center;
-    /* Rozestup řeší margin-right na .aj-orb, NE flex `gap`. U zdvojené smyčky
-       totiž translateX(-50%) musí odpovídat šířce jedné kopie VČETNĚ koncové
-       mezery; flex `gap` mezi kopiemi chybí (gap je jen mezi prvky), takže by
-       reset smyčky poskočil o půl mezery (viditelný „hard stop/start"). */
-    width: max-content;
-    height: 100%;
-    animation-name: aj-drift;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
+    position: absolute;
+    inset: 0 auto 0 0;
+    height: 52px;
     will-change: transform;
 }
-.aj-mini-band:hover .aj-mini-track { animation-play-state: paused; }
-
-@keyframes aj-drift {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
+.aj-mini-band:hover .aj-mini-drag,
+.aj-mini-band.dragging .aj-mini-drag { animation-play-state: paused; }
+@keyframes aj-drift-x {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(calc(var(--aj-copy-width, 0) * -1px), 0, 0); }
 }
-
-/* Kolečko měsíce — diagonální schod se opakuje po 4 (jako Excel timeline) */
-.aj-orb {
-    flex: 0 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 7px;
+.aj-mini-drag {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 100%;
+    height: 52px;
+    will-change: transform;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+/* ── Dlaždice měsíce (82×46, 16:9) ──────────────────────────────────
+   Diagonální střih 7 px; rozteč 75 px = střihy sousedů do sebe zapadají
+   a pás tvoří souvislý filmový pruh. Všechny sedí na jedné lince.
+   Okraj dělá VRSTVENÍ, ne border: vnější vrstva (aj-tile-inner) nese barvu
+   linky a vnitřní média vrstva je o 1 px menší se stejným střihem — border
+   na ořezaném obdélníku se na diagonálách ošklivě usekával.
+   Poslední měsíc se schválně nezvýrazňuje (na přání, 6. 8. 2026). */
+.aj-tile {
+    position: absolute;
+    left: 0;
+    top: 3px;
+    width: 82px;
+    height: 46px;
     background: none;
     border: none;
     padding: 0;
     cursor: pointer;
-    color: var(--text-secondary);
-    font-size: 0.75rem;
-    white-space: nowrap;
-    margin-right: 26px;
-    transform: translateY(calc(var(--step) * -7px + 10px));
-    transition: color .15s;
+    transform: translateX(calc(var(--x) * 1px));
 }
-.aj-orb:hover { color: var(--accent-primary); }
-.aj-orb-img {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
+.aj-tile-inner {
+    position: absolute;
+    inset: 0;
+    display: block;
     overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: rgba(255, 255, 255, 0.13);
+    clip-path: polygon(7px 0, 100% 0, calc(100% - 7px) 100%, 0 100%);
+    transition: background .18s ease;
+}
+/* Hover mění JEN barvu linky. Žádný transform: i malý posun/lift jel přes
+   sub-pixelové pozice a převzorkoval obrázek (viditelná změna kvality). */
+.aj-tile:hover .aj-tile-inner {
+    background: var(--accent-primary);
+}
+/* Při tažení bez přechodů: ať uvnitř jedoucí vrstvy nic nepracuje navíc */
+.aj-mini-band.dragging .aj-tile-inner {
+    transition: none;
+}
+.aj-tile-media {
+    position: absolute;
+    inset: 1px;
+    display: block;
+    overflow: hidden;
     background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, .35);
-    transition: border-color .15s, transform .15s;
+    clip-path: polygon(7px 0, 100% 0, calc(100% - 7px) 100%, 0 100%);
 }
-.aj-orb:hover .aj-orb-img {
-    border-color: var(--accent-primary);
-    transform: scale(1.12);
-}
-.aj-orb-img img {
+.aj-tile-media img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
+    -webkit-user-drag: none;
+    user-select: none;
 }
-.aj-orb-ph { font-size: 0.8rem; opacity: .5; }
-.aj-orb-text b { color: #34d399; font-weight: 700; }
+.aj-tile-ph {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-size: 1rem;
+    opacity: .5;
+}
+/* 17px pruh u dolní hrany pro text, ať je náhledovka celá vidět */
+.aj-tile-scrim {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 17px;
+    background: linear-gradient(180deg, rgba(8, 8, 11, 0) 0%, rgba(8, 8, 11, .86) 46%, rgba(8, 8, 11, .96) 100%);
+}
+.aj-tile-text {
+    position: absolute;
+    left: 9px;
+    right: 9px;
+    bottom: 2px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px;
+    white-space: nowrap;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, .9);
+}
+.aj-tile-label {
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: .2px;
+    color: var(--text-secondary);
+}
+.aj-tile-text b {
+    font-size: 0.66rem;
+    color: #34d399;
+    font-weight: 800;
+}
 
-@media (prefers-reduced-motion: reduce) {
-    .aj-mini-track { animation: none; }
-    .aj-mini-band { overflow-x: auto; }
-    .aj-orb { transform: none; }
+@media (max-width: 768px) {
+    .aj-mini-summary { display: none; }
 }
 
 /* ── Maximalizovaná timeline (výška odvozená z viewportu, aby se vešla do okna) ── */

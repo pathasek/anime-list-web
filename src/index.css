@@ -1771,8 +1771,8 @@ a.anime-link:hover {
   margin-top: 2px;
 }
 
-/* ─── Compact Dub Charts (always-expanded row) ─── */
-.dub-charts-row {
+/* ─── Dabing (kartový bar-row, always-expanded) ─── */
+.dub-stat-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-md);
@@ -1780,42 +1780,65 @@ a.anime-link:hover {
 }
 
 /* Sjednoceno s .full-chart-wrapper (stejné pozadí, rádius, stín, padding) */
-.dub-chart-card {
+.dub-stat-card {
   background: linear-gradient(145deg, rgba(22, 22, 31, 0.95) 0%, rgba(13, 13, 20, 0.98) 100%);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--radius-lg);
   padding: var(--spacing-md);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03);
-  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
-.dub-chart-card:hover {
-  border-color: rgba(99, 102, 241, 0.25);
-  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-}
-
-/* Sjednoceno s .full-chart-wrapper .chart-title (stejný font/odsazení/levý okraj) */
-.dub-chart-title {
+/* Hlavička karty ve stylu .chart-title (levý akcentní okraj) */
+.dub-stat-head {
   font-size: 0.82rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text-secondary);
-  margin: 0 0 var(--spacing-sm) 0;
-  text-align: center;
-  background: linear-gradient(90deg, rgba(99, 102, 241, 0.08), transparent 70%);
+  margin: 0 0 var(--spacing-md) 0;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent-primary) 12%, transparent), transparent 70%);
   padding: 8px 12px;
   border-radius: var(--radius-sm);
-  border-left: 3px solid rgba(99, 102, 241, 0.4);
+  border-left: 3px solid var(--accent-primary);
 }
 
-/* Sjednocená výška s ostatními „short-stacked" grafy (160px) */
-.dub-chart-body {
-  height: 160px;
-  position: relative;
+.dub-stat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.dub-stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.dub-stat-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+.dub-stat-name {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+.dub-stat-value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+.dub-stat-track {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+.dub-stat-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease;
 }
 
 /* ─── Premium Preview Common (Clean Version) ─── */
@@ -2619,24 +2642,30 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   animation: fadeIn 0.3s ease forwards;
 }
 
-/* ─── Responsive ─── */
-
-/* Mobile Header - hidden on desktop */
-.mobile-header {
-  display: none;
+/* Fallback líně načítané stránky (route-level code splitting) */
+.route-loading {
+  padding: 40px;
+  text-align: center;
+  color: var(--text-secondary);
 }
 
-.sidebar-overlay {
+/* ─── Responsive ─── */
+
+/* Mobilní prvky (header, spodní lišta, panel Ostatní) - na desktopu schované */
+.mobile-header,
+.mobile-bottombar,
+.mobile-more-sheet,
+.mobile-more-overlay {
   display: none;
 }
 
 @media (max-width: 1024px) {
 
-  /* Mobile Header */
+  /* Mobile Header (jen logo, hamburger nahradila spodní lišta) */
   .mobile-header {
     display: flex;
     align-items: center;
-    gap: var(--spacing-md);
+    justify-content: center;
     position: fixed;
     top: 0;
     left: 0;
@@ -2646,25 +2675,6 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     border-bottom: 1px solid var(--border-color);
     padding: 0 var(--spacing-md);
     z-index: 200;
-  }
-
-  .mobile-menu-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    background: transparent;
-    border: none;
-    color: var(--text-primary);
-    cursor: pointer;
-    border-radius: var(--radius-md);
-    transition: background var(--transition-fast);
-  }
-
-  .mobile-menu-btn:hover,
-  .mobile-menu-btn:active {
-    background: var(--bg-hover);
   }
 
   .mobile-logo {
@@ -2679,31 +2689,12 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     background-clip: text;
   }
 
-  /* Sidebar Overlay */
-  .sidebar-overlay {
-    display: block;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 150;
-    animation: fadeIn 0.2s ease;
-  }
-
-  /* Sidebar */
+  /* Sidebar je čistě desktopová věc, na mobilu zůstává schovaný */
   .sidebar {
     transform: translateX(-100%);
-    transition: transform var(--transition-normal);
     top: 60px;
     height: calc(100vh - 60px);
     z-index: 200;
-  }
-
-  .sidebar.open {
-    transform: translateX(0);
-    box-shadow: var(--shadow-lg);
   }
 
   .main-content {
@@ -2711,6 +2702,111 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     padding-top: 80px;
     padding-left: var(--spacing-md);
     padding-right: var(--spacing-md);
+    /* Ať obsah nekončí pod spodní lištou */
+    padding-bottom: calc(76px + env(safe-area-inset-bottom));
+  }
+
+  /* ─── Spodní navigační lišta ─── */
+  .mobile-bottombar {
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 60px;
+    padding-bottom: env(safe-area-inset-bottom);
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    z-index: 250;
+  }
+
+  .mobile-tab {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 0 2px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color var(--transition-fast);
+  }
+
+  .mobile-tab:hover,
+  .mobile-tab:active {
+    color: var(--text-secondary);
+  }
+
+  .mobile-tab.active {
+    color: var(--accent-primary);
+  }
+
+  .mobile-tab-label {
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* ─── Panel „Ostatní" nad lištou ─── */
+  .mobile-more-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 240;
+    animation: fadeIn 0.2s ease;
+  }
+
+  .mobile-more-sheet {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: calc(60px + env(safe-area-inset-bottom));
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding: var(--spacing-md);
+    z-index: 245;
+    animation: sheetUp 0.22s ease;
+  }
+
+  @keyframes sheetUp {
+    from {
+      transform: translateY(12px);
+      opacity: 0;
+    }
+
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+
+  .mobile-more-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .mobile-more-update {
+    padding: var(--spacing-md);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
   }
 }
 
@@ -2743,7 +2839,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     grid-template-columns: 1fr !important;
   }
 
-  .dub-charts-row {
+  .dub-stat-row {
     grid-template-columns: 1fr !important;
   }
 
@@ -2879,6 +2975,8 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   .main-content {
     padding: var(--spacing-sm);
     padding-top: 70px;
+    /* Shorthand výš by jinak zrušil místo pro spodní lištu */
+    padding-bottom: calc(76px + env(safe-area-inset-bottom));
   }
 
   .mobile-header {
@@ -4930,6 +5028,30 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
   .fav-ost-list {
     max-height: calc(34vh - 44px);
+  }
+}
+
+/* Laptop (#22, 6. 8. 2026): pod 1600 px šířky se rozevřený přehrávač nevešel
+   na výšku. Kotva je dole a roste nahoru, takže hlavička s křížkem „Zavřít"
+   končila NAD horním okrajem obrazovky. Menší měřítko + užší karta + strop
+   playlistu podle výšky viewportu. 1920×1080 a větší zůstává beze změny,
+   mobil (≤768 px) má vlastní pravidla výš. */
+@media (min-width: 769px) and (max-width: 1599px) {
+  .ost-floating-player:not(.minimized) {
+    /* Zvětšení 1.1 z velkých monitorů se na laptop nevejde */
+    transform: scale(1);
+  }
+
+  .fav-ost-player:not(.minimized) {
+    width: min(380px, 92vw);
+  }
+
+  .fav-ost-playlist {
+    max-height: min(480px, calc(100vh - 320px));
+  }
+
+  .fav-ost-list {
+    max-height: min(420px, calc(100vh - 364px));
   }
 }
 .fav-ost-row-play {

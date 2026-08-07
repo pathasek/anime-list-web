@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo, useRef, useLayoutEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useParams, useNavigate, useLocation, Link } from 'react-router-dom'
-import { loadData, getDataVersion, STORAGE_KEYS } from '../utils/dataStore'
+import { loadData, STORAGE_KEYS } from '../utils/dataStore'
+import { loadCategoryTextsFor } from '../utils/categoryTexts'
 import { customSeasonOrders } from '../utils/customSeasonOrders'
 import {
     Chart as ChartJS,
@@ -29,27 +30,6 @@ import { extractMalId } from '../utils/jikanService'
 import { animePath, resolveAnimeName, safeDecode } from '../utils/animeSlug'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, CategoryScale, LinearScale, BarElement)
-
-// Module-level cache for the (large) category texts file. Episode ratings and
-// notes go through the shared dataStore, so they are downloaded only once and
-// invalidated by the metadata version check like the rest of the data.
-let cachedCategoryTexts = null
-
-async function loadCategoryTexts() {
-    if (cachedCategoryTexts) return cachedCategoryTexts
-    try {
-        // Use the server data version instead of Date.now() as the cache buster,
-        // so the browser HTTP cache can reuse this multi-MB file between visits
-        // and it is re-downloaded only when the data actually changes.
-        const version = await getDataVersion()
-        const response = await fetch('data/category_texts.json?v=' + version)
-        if (!response.ok) return {}
-        cachedCategoryTexts = await response.json()
-        return cachedCategoryTexts
-    } catch {
-        return {}
-    }
-}
 
 function AnimeDetail() {
     const { theme } = useTheme();
@@ -151,9 +131,8 @@ function AnimeDetail() {
             loadData(STORAGE_KEYS.CATEGORY_RATINGS, 'data/category_ratings.json'),
             loadData(STORAGE_KEYS.HISTORY_LOG, 'data/history_log.json'),
             loadData(STORAGE_KEYS.EPISODE_RATINGS, 'data/episode_ratings.json'),
-            loadData(STORAGE_KEYS.NOTES, 'data/notes.json'),
-            loadCategoryTexts()
-        ]).then(([animeList, ratings, historyLog, epRatings, notes, categoryTexts]) => {
+            loadData(STORAGE_KEYS.NOTES, 'data/notes.json')
+        ]).then(([animeList, ratings, historyLog, epRatings, notes]) => {
             // Ignore results that arrive after navigating to a different anime
             if (cancelled) return
 
@@ -163,6 +142,18 @@ function AnimeDetail() {
             const decodedName = resolveAnimeName(name, animeList)
             const found = decodedName ? animeList.find(a => a.name === decodedName) : undefined
             setAnime(found)
+
+            // Rozbor se dotahuje MIMO hlavní render (bez await): detail se
+            // vykreslí hned z malých dat a texty doskočí, jakmile dorazí.
+            // Per-anime soubor (data/category_texts/<klíč>.json, ~90 kB) místo
+            // dřívějšího 40MB monolitu — stahuje se jen rozbor tohohle anime.
+            if (found) {
+                loadCategoryTextsFor(found.name).then(entry => {
+                    if (!cancelled) setCategoryReviews(entry ? { [found.name]: entry } : {})
+                })
+            } else {
+                setCategoryReviews({})
+            }
 
             // Task 17: díly stejné série (pro badge s prev/next a modal se
             // všemi díly). Řazení shodné se stránkou hodnocení: vlastní pořadí
@@ -189,9 +180,6 @@ function AnimeDetail() {
             // Find category ratings
             const foundRatings = ratings.find(r => r.name === decodedName)
             setCategoryRatings(foundRatings?.categories || null)
-
-            // Find category reviews
-            setCategoryReviews(categoryTexts || {})
 
             // Find episode ratings
             const foundEpRatings = epRatings.find(r => r.name === decodedName)

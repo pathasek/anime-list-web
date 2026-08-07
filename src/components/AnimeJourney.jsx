@@ -15,6 +15,13 @@ import './animeJourney.css'
 // Cache pro postery v paměti (zkrátí re-rendery)
 const posterMemoryCache = {}
 
+// Minimalizovaný pás: dlaždice 82×46 px (16:9) s diagonálním střihem 7 px.
+// MINI_SLOT je rozteč, při které do sebe střihy sousedních dlaždic přesně
+// zapadnou, takže pás tvoří souvislý „filmový pruh" bez mezer.
+const TILE_W = 82
+const TILE_SKEW = 7
+const MINI_SLOT = TILE_W - TILE_SKEW
+
 // Postery předstažené do repozitáře skriptem tools/download_journey_posters.py.
 // Dřív se tahaly za běhu z Jikanu, což na cizím počítači s prázdnou cache
 // znamenalo stovky dotazů přes rate limit. Index říká, pro která malId soubor
@@ -294,6 +301,144 @@ function MonthCard({ m, onOpenDetail }) {
     )
 }
 
+// Idle drift běží na KOMPOZITORU přes CSS animaci (aj-drift-x) — plynulý i po
+// přepnutí okna. Animace jede na VNITŘNÍ vrstvě s obsahem (.aj-mini-drag):
+// vrstvu s aktivní kompozitorovou animací Chrome rasterizuje celou dopředu,
+// takže první tah po načtení neodhaluje nerasterizované dlaždice (to seklo).
+// Tažení animaci NIKDY neseekuje po snímcích (synchronizace s hlavním vláknem
+// sekala): pauzu drží CSS třída .dragging a posun kreslí VNĚJŠÍ .aj-mini-track
+// vlastním transformem. Až po puštění se JEDNÍM seekem přepíše pozice do
+// animace a track se vynuluje — obojí v témže snímku, takže nic neposkočí.
+function useMiniDrift(copyWidth, months, maximized) {
+    const bandRef = useRef(null)
+    const trackRef = useRef(null)
+    const dragRef = useRef(null)
+    const state = useRef({ dragging: false, moved: false, startX: 0, o0: 0, dx: 0, anim: null, raf: 0 })
+
+    useEffect(() => {
+        // maximized je v deps schválně: po maximalizaci a minimalizaci se pás
+        // remountuje na nové DOM uzly, effect musí zase nastavit animaci i listenery.
+        const band = bandRef.current
+        const track = trackRef.current
+        const drag = dragRef.current
+        if (!band || !track || !drag || !copyWidth || maximized) return
+        // Reset po remountu: klik na dlaždici maximalizuje pás dřív, než přijde
+        // pointerup, takže by tu zůstal „duch" tažení (dragging=true), který by
+        // blokoval kliky a hýbal pásem při pouhém hoveru.
+        state.current = { dragging: false, moved: false, startX: 0, o0: 0, dx: 0, anim: null, raf: 0, wraf: 0, wheelDelta: 0 }
+        const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+        const duration = Math.max(24, months * 2.4)
+        const durMs = duration * 1000
+
+        drag.style.setProperty('--aj-copy-width', String(copyWidth))
+        if (!reduce) {
+            drag.style.animationName = 'aj-drift-x'
+            drag.style.animationDuration = duration + 's'
+        }
+
+        const getAnim = () => drag.getAnimations().find(a => a.animationName === 'aj-drift-x') || null
+        const mod = (v) => ((v % copyWidth) + copyWidth) % copyWidth
+
+        const down = (e) => {
+            const s = state.current
+            s.dragging = true; s.moved = false; s.startX = e.clientX
+            // Pointer capture ZÁMĚRNĚ až při skutečném tažení (v `move`), jinak by
+            // spolkl prostý klik na kolečko a nešla by otevřít maximalizovaná Cesta.
+        }
+        const move = (e) => {
+            const s = state.current
+            if (!s.dragging) return
+            if (!(e.buttons & 1)) { up(); return }   // pointerup propadl (mimo okno apod.)
+            const dx = e.clientX - s.startX
+            if (!s.moved && Math.abs(dx) <= 5) return   // pod prahem je to pořád klik, ne tah
+            if (!s.moved) {
+                s.moved = true
+                // Animace se chytí JEDNOU; .dragging ji pauzne přes CSS
+                // (API pause()/play() by trvale přebilo hover-pauzu).
+                s.anim = getAnim()
+                const ct = s.anim && typeof s.anim.currentTime === 'number' ? s.anim.currentTime : 0
+                s.o0 = ((ct % durMs) / durMs) * copyWidth   // px posun v okamžiku chycení
+                band.classList.add('dragging')
+                try { band.setPointerCapture(e.pointerId) } catch { /* noop */ }
+            }
+            if (!s.anim) return             // reduced motion: bez driftu se netahá
+            // Jen zápis transformu vnější vrstvy (track), škrcený na jeden za
+            // snímek. Posun o celou kopii je díky zdvojenému obsahu vizuálně
+            // neutrální, takže se dx nemusí nijak ořezávat.
+            s.dx = dx
+            if (!s.raf) {
+                s.raf = requestAnimationFrame(() => {
+                    s.raf = 0
+                    if (!state.current.moved || !trackRef.current) return
+                    const net = mod(s.o0 - s.dx)
+                    trackRef.current.style.transform = `translate3d(${(s.o0 - net).toFixed(1)}px,0,0)`
+                })
+            }
+        }
+        const up = () => {
+            const s = state.current
+            if (!s.dragging) return
+            s.dragging = false
+            if (s.raf) { cancelAnimationFrame(s.raf); s.raf = 0 }
+            if (s.moved && s.anim) {
+                // Jediný seek za celé tažení + vynulování tracku v témže snímku
+                const net = mod(s.o0 - s.dx)
+                try { s.anim.currentTime = (net / copyWidth) * durMs } catch { /* noop */ }
+                if (trackRef.current) trackRef.current.style.transform = ''
+            }
+            s.anim = null
+            band.classList.remove('dragging')
+        }
+        // Tah nesmí propadnout jako klik na měsíc
+        const click = (e) => { if (state.current.moved) { e.preventDefault(); e.stopPropagation() } }
+        // Vodorovné kolečko (touchpad) posouvá pás: jeden seek za snímek.
+        // Při hoveru drží pauzu CSS, takže seek jen přesune zastavený pás.
+        let wheelAnim = null
+        const wheel = (e) => {
+            const dxw = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : 0
+            if (!dxw) return
+            e.preventDefault()
+            const s = state.current
+            if (s.dragging) return
+            if (!wheelAnim) wheelAnim = getAnim()
+            if (!wheelAnim) return
+            s.wheelDelta = (s.wheelDelta || 0) + dxw
+            if (!s.wraf) {
+                s.wraf = requestAnimationFrame(() => {
+                    s.wraf = 0
+                    const a = wheelAnim
+                    if (!a) return
+                    const ct = typeof a.currentTime === 'number' ? a.currentTime : 0
+                    let t = ct + (s.wheelDelta / copyWidth) * durMs
+                    s.wheelDelta = 0
+                    t = ((t % durMs) + durMs) % durMs
+                    try { a.currentTime = t } catch { /* noop */ }
+                })
+            }
+        }
+
+        band.addEventListener('pointerdown', down)
+        band.addEventListener('pointermove', move)
+        band.addEventListener('pointerup', up)
+        band.addEventListener('pointercancel', up)
+        band.addEventListener('click', click, true)
+        band.addEventListener('wheel', wheel, { passive: false })
+        return () => {
+            const s = state.current
+            if (s.raf) { cancelAnimationFrame(s.raf); s.raf = 0 }
+            if (s.wraf) { cancelAnimationFrame(s.wraf); s.wraf = 0 }
+            band.removeEventListener('pointerdown', down)
+            band.removeEventListener('pointermove', move)
+            band.removeEventListener('pointerup', up)
+            band.removeEventListener('pointercancel', up)
+            band.removeEventListener('click', click, true)
+            band.removeEventListener('wheel', wheel)
+        }
+    }, [copyWidth, months, maximized])
+
+    return { bandRef, trackRef, dragRef }
+}
+
 export default function AnimeJourney({ animeList, historyLog, episodeRatings, range }) {
     const [extras, setExtras] = useState(null) // { top10Names, hmNames, categoryRatings }
     // Maximalizovaný stav přežívá navigaci detail→zpět díky sessionStorage
@@ -409,43 +554,81 @@ export default function AnimeJourney({ animeList, historyLog, episodeRatings, ra
         el.scrollBy({ left: dir * el.clientWidth * 0.85, behavior: 'smooth' })
     }, [])
 
+    // Dlaždice sedí všechny na jedné lince (žádný svislý posun) — prostorovost
+    // dělá jen diagonální střih. Track je zdvojený kvůli nekonečné smyčce.
+    const mini = useMemo(() => {
+        const n = visible?.length || 0
+        if (!n) return null
+        const copyWidth = n * MINI_SLOT
+        // Poslední dlaždice přesahuje rozteč o diagonální střih
+        const totalWidth = copyWidth * 2 + TILE_SKEW
+        const tiles = []
+        for (let i = 0; i < n * 2; i++) {
+            const m = visible[i % n]
+            tiles.push({ m, x: i * MINI_SLOT, i })
+        }
+        return { copyWidth, totalWidth, tiles, n }
+    }, [visible])
+
+    const { bandRef, trackRef, dragRef } = useMiniDrift(mini?.copyWidth || 0, mini?.n || 0, maximized)
+
+    // Předdekódování náhledovek pásu. Bez něj se JPEG stahoval a dekódoval až
+    // ve chvíli, kdy dlaždici poprvé odhalil tah, a první ~sekunda tažení
+    // jednorázově drhla (další tahy už byly plynulé díky dekódovací cache).
+    useEffect(() => {
+        if (!mini) return
+        const seen = new Set()
+        mini.tiles.forEach(({ m }) => {
+            const src = m.best?.thumbnail
+            if (!src || seen.has(src)) return
+            seen.add(src)
+            const im = new Image()
+            im.src = src
+            if (im.decode) im.decode().catch(() => { /* dekódování počká na paint */ })
+        })
+    }, [mini])
+
     if (!visible) return null
 
     if (!maximized) {
         // ── Minimalizovaný pás ────────────────────────────────────────────
-        // Jeden kompaktní řádek ve výšce původního řádku filtru. Kolečka
-        // plují po diagonále a na obou koncích mizí do stínu (mask gradient);
-        // v jeden moment je vidět jen pár měsíců. Track je zdvojený, aby
-        // smyčka navazovala; hover pauzuje, klik otevře daný měsíc.
-        const loop = [...visible, ...visible]
+        // Kolečka jezdí po sinusové cestě (vlna je funkce x, ne indexu, takže
+        // šev zdvojené smyčky nepřeskočí). Drift řídí rAF, pás lze táhnout.
+        if (!mini) return null
         return (
             <div className="card aj-card aj-mini-card">
                 <div className="aj-mini-row">
                     <h3 className="aj-title aj-title-sm"><RoadIcon size={18} /> Cesta Anime</h3>
-                    <div className="aj-mini-band">
-                        <div className="aj-mini-track" style={{ animationDuration: `${Math.max(24, visible.length * 2.4)}s` }}>
-                            {loop.map((m, i) => (
-                                <button
-                                    key={`${m.key}-${i}`}
-                                    type="button"
-                                    className="aj-orb"
-                                    // Diagonální schod podle pozice v JEDNÉ kopii (ne ve zdvojené
-                                    // smyčce) — jinak při počtu měsíců mimo násobek 4 druhá kopie
-                                    // začíná na jiné výšce a reset smyčky svisle poskočí.
-                                    style={{ '--step': (i % visible.length) % 4 }}
-                                    onClick={() => openAt(m.key)}
-                                    title={`${m.label}: +${m.plusCount} anime (celkem ${m.runningTotal})${m.best ? ` · Nejlepší: ${m.best.name} (${m.best.ratingText})` : ''}`}
-                                >
-                                    <span className="aj-orb-img">
-                                        {m.best?.thumbnail
-                                            ? <img src={m.best.thumbnail} alt="" loading="lazy" />
-                                            : <span className="aj-orb-ph">🎬</span>}
-                                    </span>
-                                    <span className="aj-orb-text">
-                                        {monthLabelShort(m.key)} <b>+{m.plusCount}</b>
-                                    </span>
-                                </button>
-                            ))}
+                    <span className="aj-mini-summary" title="Souhrn celé cesty">
+                        {mini.n} měsíců&nbsp;·&nbsp;<b>{visible.at(-1)?.runningTotal || 0}</b> anime
+                    </span>
+                    <div className="aj-mini-band" ref={bandRef}>
+                        <div className="aj-mini-track" ref={trackRef} style={{ width: mini.totalWidth }}>
+                            <div className="aj-mini-drag" ref={dragRef}>
+                                {mini.tiles.map(({ m, x, i }) => (
+                                    <button
+                                        key={`${m.key}-${i}`}
+                                        type="button"
+                                        className="aj-tile"
+                                        style={{ '--x': x }}
+                                        onClick={() => openAt(m.key)}
+                                        title={`${m.label}: +${m.plusCount} anime (celkem ${m.runningTotal})${m.best ? ` · Nejlepší: ${m.best.name} (${m.best.ratingText})` : ''}`}
+                                    >
+                                        <span className="aj-tile-inner">
+                                            <span className="aj-tile-media">
+                                                {m.best?.thumbnail
+                                                    ? <img src={m.best.thumbnail} alt="" draggable={false} />
+                                                    : <span className="aj-tile-ph">🎬</span>}
+                                                <span className="aj-tile-scrim" />
+                                                <span className="aj-tile-text">
+                                                    <span className="aj-tile-label">{monthLabelShort(m.key)}</span>
+                                                    <b>+{m.plusCount}</b>
+                                                </span>
+                                            </span>
+                                        </span>
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                     </div>
                     <button type="button" className="aj-max-btn" onClick={() => toggleMax(true)}>⤢</button>

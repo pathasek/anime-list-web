@@ -161,6 +161,80 @@ let _queueProcessing = false
 // Po 429 od Jikanu se celá fronta zdrží (cooldown) — hammering dalšími
 // requesty by rate-limit okno jen prodlužoval a zdržoval i prioritní dotazy
 let _cooldownUntil = 0
+// Pojistka výpadku (obdoba tools/jikan_health.py): když po sobě definitivně
+// selže několik requestů (429/504 storm při ležícím Jikanu), downloader na
+// pozadí se na čtvrt hodiny zastaví. Bez toho se retry smyčky točily celou
+// session, žraly síť i hlavní vlákno a web působil líně. Prioritní dotazy
+// (hover, detail) se pouští dál — první úspěch pauzu zase zruší.
+const BREAKER_FAILURES = 5
+const BREAKER_PAUSE_MS = 15 * 60 * 1000
+let _consecutiveFailures = 0
+let _pausedUntil = 0
+
+// ---- Per-URL blackout ------------------------------------------------------
+// Některé KONKRÉTNÍ dotazy selhávají trvale (např. /anime/{id}/statistics vrací
+// věčně 504, viz ZDROJ_PRAVDY §6), zatímco zbytek API šlape. Takový endpoint
+// dostává po každém definitivním selhání eskalující blackout až na 14 dní.
+// Chytrá pojistka: úder se NEpočítá, když zrovna běží celkový výpadek
+// (pojistka výše) — jinak by si jeden storm zablacklistoval půlku katalogu.
+// Úspěch záznam maže. Persistuje se v localStorage přes session.
+const BLACKOUT_KEY = 'jikan_url_blackouts'
+const BLACKOUT_STEPS_MS = [
+    60 * 60 * 1000,           // 1 h
+    6 * 60 * 60 * 1000,       // 6 h
+    24 * 60 * 60 * 1000,      // 1 den
+    3 * 24 * 60 * 60 * 1000,  // 3 dny
+    7 * 24 * 60 * 60 * 1000,  // 7 dní
+    14 * 24 * 60 * 60 * 1000, // 14 dní (strop)
+]
+const BLACKOUT_PRUNE_MS = 30 * 24 * 60 * 60 * 1000  // záznamy starší 30 dní pryč
+let _blackouts = null
+
+function _loadBlackouts() {
+    if (_blackouts) return _blackouts
+    try {
+        _blackouts = JSON.parse(localStorage.getItem(BLACKOUT_KEY) || '{}')
+        const now = Date.now()
+        for (const [url, rec] of Object.entries(_blackouts)) {
+            if (!rec || (rec.lastFail && now - rec.lastFail > BLACKOUT_PRUNE_MS)) {
+                delete _blackouts[url]
+            }
+        }
+    } catch { _blackouts = {} }
+    return _blackouts
+}
+
+function _saveBlackouts() {
+    try { localStorage.setItem(BLACKOUT_KEY, JSON.stringify(_blackouts || {})) } catch { /* quota */ }
+}
+
+function _isBlackedOut(url) {
+    const rec = _loadBlackouts()[url]
+    return !!(rec && rec.until && rec.until > Date.now())
+}
+
+function _recordUrlFailure(url) {
+    // Během celkového výpadku se konkrétní URL netrestá
+    if (_consecutiveFailures >= BREAKER_FAILURES || _pausedUntil > Date.now()) return
+    const b = _loadBlackouts()
+    const rec = b[url] || { strikes: 0 }
+    rec.strikes = Math.min(rec.strikes + 1, BLACKOUT_STEPS_MS.length)
+    rec.lastFail = Date.now()
+    rec.until = Date.now() + BLACKOUT_STEPS_MS[rec.strikes - 1]
+    b[url] = rec
+    if (rec.strikes >= 3) {
+        console.warn(`[Jikan] URL selhává opakovaně (${rec.strikes}x), blackout do ${new Date(rec.until).toLocaleString('cs-CZ')}: ${url}`)
+    }
+    _saveBlackouts()
+}
+
+function _recordUrlSuccess(url) {
+    const b = _loadBlackouts()
+    if (b[url]) {
+        delete b[url]
+        _saveBlackouts()
+    }
+}
 
 function processQueue() {
     if (_queueProcessing) return
@@ -170,6 +244,15 @@ function processQueue() {
     for (let i = _requestQueue.length - 1; i >= 0; i--) {
         if (_requestQueue[i].signal?.aborted) {
             _requestQueue.splice(i, 1)[0].resolve(false)
+        }
+    }
+    // Při aktivní pojistce výpadku se background požadavky rovnou odmítnou
+    // (resolve(false) → volající je přeskočí a zkusí příště)
+    if (_pausedUntil > Date.now()) {
+        for (let i = _requestQueue.length - 1; i >= 0; i--) {
+            if (_requestQueue[i].priority !== 'high') {
+                _requestQueue.splice(i, 1)[0].resolve(false)
+            }
         }
     }
     if (_requestQueue.length === 0) return
@@ -215,6 +298,9 @@ function acquireRequestSlot(priority = 'low', signal = null) {
  * @returns {Promise<any>}
  */
 export async function fetchWithRetry(url, retries = RETRY_MAX, priority = 'low', signal = null) {
+    // Trvale selhávající endpoint v blackoutu se vůbec nezkouší (šetří slot
+    // fronty i retry čas); vyprší sám, nebo ho smaže první úspěch po vypršení.
+    if (_isBlackedOut(url)) return null
     for (let attempt = 0; attempt <= retries; attempt++) {
         try {
             if (signal?.aborted) return null
@@ -240,10 +326,24 @@ export async function fetchWithRetry(url, retries = RETRY_MAX, priority = 'low',
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`)
             }
 
-            return await response.json()
+            const data = await response.json()
+            // Úspěch resetuje pojistku výpadku (a případnou pauzu ukončí hned)
+            _consecutiveFailures = 0
+            _pausedUntil = 0
+            _recordUrlSuccess(url)
+            return data
         } catch (error) {
             if (attempt === retries) {
                 console.error(`[Jikan] Failed after ${retries + 1} attempts:`, url, error.message)
+                // Pořadí je záměrné: úder pro konkrétní URL se vyhodnotí PŘED
+                // zvednutím globálního čítače, ať pátý storm-fail nedostane
+                // blackout jen proto, že pojistka sepnula až po něm.
+                _recordUrlFailure(url)
+                _consecutiveFailures++
+                if (_consecutiveFailures >= BREAKER_FAILURES && _pausedUntil <= Date.now()) {
+                    _pausedUntil = Date.now() + BREAKER_PAUSE_MS
+                    console.warn(`[Jikan] ${_consecutiveFailures} selhání po sobě — background stahování se na 15 min zastavuje (pojistka výpadku).`)
+                }
                 return null
             }
             const waitMs = RETRY_BASE_MS * Math.pow(2, attempt)

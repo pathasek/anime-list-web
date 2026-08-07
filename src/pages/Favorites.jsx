@@ -341,10 +341,10 @@ function OstWholeCard({ card, onPlayPlaylist, onPlayBest }) {
                         </div>
                     )}
 
-                    {/* Žánrové štítky */}
-                    {card.genres.length > 0 && (
+                    {/* Hudební typy OST (z rozborů) — nahradily žánry anime */}
+                    {card.ostTypes.length > 0 && (
                         <div className="fav-whole-tags">
-                            {card.genres.map(g => <span key={g} className="fav-whole-tag genre">{g}</span>)}
+                            {card.ostTypes.map(g => <span key={g} className="fav-whole-tag genre">{g}</span>)}
                         </div>
                     )}
 
@@ -457,6 +457,7 @@ function Favorites() {
     const [animeThemes, setAnimeThemes] = useState([])     // záložní znělky z AnimeThemes (statický katalog)
     const [ytmusicAlbums, setYtmusicAlbums] = useState([]) // YT Music alba — počet skladeb u karet As a Whole
     const [playlistDurations, setPlaylistDurations] = useState({}) // počet + délka přímo z YT playlistů
+    const [ostTypesMap, setOstTypesMap] = useState({})     // hudební typy OST z rozborů (tools/build_ost_types.py)
     const [wholeSearch, setWholeSearch] = useState('')     // hledání v kartách As a Whole
     // Řazení sekce „OST Only (The Best)": 'none' = pořadí z Excelu.
     // Drží se mezi návštěvami, stejně jako shuffle v přehrávači.
@@ -540,9 +541,11 @@ function Favorites() {
             fetch('data/ytmusic_ost.json?v=' + Date.now()).then(r => r.json()).catch(() => null),
             // Počet skladeb a délka spočítané přímo z mých YouTube playlistů
             // (tools/build_ytmusic_durations.py). Oba údaje z jednoho zdroje.
-            fetch('data/ost_playlist_durations.json?v=' + Date.now()).then(r => r.json()).catch(() => null)
+            fetch('data/ost_playlist_durations.json?v=' + Date.now()).then(r => r.json()).catch(() => null),
+            // Hudební typy OST odvozené z rozborů (tools/build_ost_types.py)
+            fetch('data/ost_types.json?v=' + Date.now()).then(r => r.json()).catch(() => ({}))
         ])
-            .then(([favData, ostData, spotData, opEdData, animeListData, atData, ymData, durData]) => {
+            .then(([favData, ostData, spotData, opEdData, animeListData, atData, ymData, durData, typesData]) => {
                 animeListRef.current = animeListData || []
                 const decorated = (favData || []).map(fav => {
                     const favKey = normalizeAnimeKey(fav.anime_name)
@@ -566,6 +569,7 @@ function Favorites() {
                 if (atData && atData.themes) setAnimeThemes(atData.themes)
                 if (ymData && ymData.albums) setYtmusicAlbums(ymData.albums)
                 if (durData && durData.playlists) setPlaylistDurations(durData.playlists)
+                if (typesData) setOstTypesMap(typesData)
                 setLoading(false)
             })
             .catch(err => {
@@ -912,6 +916,9 @@ function Favorites() {
                 hours: minutes / 60,
                 genres: topOf(members.flatMap(a => splitTags(a.genres)), 3),
                 themes: topOf(members.flatMap(a => splitTags(a.themes)), 2),
+                // Hudební typy OST z rozborů (build_ost_types.py) — na kartě
+                // NAHRAZUJÍ žánry anime; žánry zůstávají v datech kvůli hledání.
+                ostTypes: topOf(members.flatMap(a => ostTypesMap[a.name] || []), 3),
                 // Počet skladeb a délka. Pořadí zdrojů:
                 //   1. ost_playlist_durations.json — obojí spočítané z TÉHOŽ
                 //      playlistu, takže k sobě zaručeně patří.
@@ -956,7 +963,7 @@ function Favorites() {
                     || (a.anime_name || '').localeCompare(b.anime_name || '', 'cs')),
             }
         })
-    }, [sortedWhole, wholeGroups, ostTables, spotifyImages, ytmusicAlbums, playlistCounts, playlistDurations, favorites, anilistVersion])
+    }, [sortedWhole, wholeGroups, ostTables, spotifyImages, ytmusicAlbums, playlistCounts, playlistDurations, favorites, anilistVersion, ostTypesMap])
 
     const visibleWholeCards = useMemo(() => {
         const q = wholeSearch.trim().toLowerCase()
@@ -965,6 +972,7 @@ function Favorites() {
             c.anime_name.toLowerCase().includes(q)
             || (c.artists && c.artists.toLowerCase().includes(q))
             || c.genres.some(g => g.toLowerCase().includes(q))
+            || c.ostTypes.some(t => t.toLowerCase().includes(q))
             || c.themes.some(t => t.toLowerCase().includes(q))
             || c.best.some(b => (b.ost_name || '').toLowerCase().includes(q))
         )

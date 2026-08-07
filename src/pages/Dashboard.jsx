@@ -1912,30 +1912,8 @@ function Dashboard() {
             }]
         };
 
-        // 18. Dub charts data
-        const dubCountData = {
-            labels: excelData.dubCount.map(d => d.label),
-            datasets: [{
-                data: excelData.dubCount.map(d => d.count),
-                backgroundColor: createHorizontalGradient('rgba(91, 155, 213, 0.5)', 'rgba(91, 155, 213, 0.9)')
-            }]
-        };
-
-        const dubAvgRatingData = {
-            labels: excelData.dubAvgRating.map(d => d.label),
-            datasets: [{
-                data: excelData.dubAvgRating.map(d => d.avg),
-                backgroundColor: createHorizontalGradient('rgba(237, 125, 49, 0.5)', 'rgba(237, 125, 49, 0.9)')
-            }]
-        };
-
-        const dubTotalTimeData = {
-            labels: excelData.dubTotalTime.map(d => d.label),
-            datasets: [{
-                data: excelData.dubTotalTime.map(d => d.hours),
-                backgroundColor: createHorizontalGradient('rgba(112, 173, 71, 0.5)', 'rgba(112, 173, 71, 0.9)')
-            }]
-        };
+        // 18. Dabing: kartový bar-row bere data přímo z excelData
+        //     (dubCount / dubTotalTime / dubAvgRating), žádné Chart.js configy.
 
         // 19. AniList Tags (Bar)
         const tagsData = {
@@ -1950,7 +1928,7 @@ function Dashboard() {
             typesPieData, typesKombiData, typesDistData, studiosPieData, studiosBestData,
             seasonsData, ageVekuData, avgAgeData, tematPopData, tematBestData,
             zanruData, zanruBestData, ratingPieData, ratingTimelineData, epBucketsData,
-            hoverTimeComboData, statusPieData, dubCountData, dubAvgRatingData, dubTotalTimeData,
+            hoverTimeComboData, statusPieData,
             tagsData, activeTypes, distScoreLabels
         };
     }, [stats]);
@@ -1968,7 +1946,7 @@ function Dashboard() {
         typesPieData, typesKombiData, typesDistData, studiosPieData, studiosBestData,
         seasonsData, ageVekuData, avgAgeData, tematPopData, tematBestData,
         zanruData, zanruBestData, ratingPieData, epBucketsData,
-        hoverTimeComboData, dubCountData, dubAvgRatingData, dubTotalTimeData,
+        hoverTimeComboData,
         tagsData, activeTypes, distScoreLabels
     } = chartConfigs;
 
@@ -2661,32 +2639,56 @@ function Dashboard() {
                 )
             }
 
-            // ─── DUB (always expanded) ───
-            case 'dub':
+            // ─── DABING (always expanded) ───
+            // Kartový bar-row. Data z Excelu (pole `dub`): ENG/JAP/CZ/CHN. Pořadí
+            // podle počtu; čas a hodnocení dohledáme podle labelu. CZ → „CZ dub".
+            case 'dub': {
+                const dubColors = ['var(--accent-primary)', 'var(--accent-secondary)', 'var(--accent-cyan, #00a9e0)', 'var(--accent-emerald, #a0ce4e)']
+                const dubLabel = (l) => (l === 'CZ' ? 'CZ dub' : l)
+                const timeMap = Object.fromEntries(excelData.dubTotalTime.map(d => [d.label, d.hours]))
+                const avgMap = Object.fromEntries(excelData.dubAvgRating.map(d => [d.label, d.avg]))
+                const dubRows = excelData.dubCount.filter((d) => d.label !== 'Neznámý').map((d, i) => ({
+                    key: d.label,
+                    label: dubLabel(d.label),
+                    color: dubColors[i % dubColors.length],
+                    count: d.count,
+                    hours: timeMap[d.label],
+                    avg: avgMap[d.label],
+                }))
+                const maxCount = Math.max(1, ...dubRows.map(r => r.count))
+                const maxHours = Math.max(1, ...dubRows.map(r => r.hours || 0))
+                const dubCards = [
+                    { title: 'Dabing celkem', pick: (r) => r.count, max: maxCount, fmt: (v) => v.toLocaleString('cs-CZ') },
+                    { title: 'Čas podle dabingu', pick: (r) => r.hours, max: maxHours, fmt: (v) => (v != null ? `${Math.round(v).toLocaleString('cs-CZ')} h` : '—') },
+                    { title: 'Ø Hodnocení', pick: (r) => r.avg, max: 10, fmt: (v) => (v != null ? v.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—') },
+                ]
                 return (
-                    <div className="dub-charts-row">
-                        <div className="dub-chart-card">
-                            <div className="dub-chart-title">Počet Anime</div>
-                            <div className="dub-chart-body">
-                                <Bar data={dubCountData} options={getOptions(horizontalBarOptionsExcel, 'GrafDabingu')} />
+                    <div className="dub-stat-row">
+                        {dubCards.map((card) => (
+                            <div className="dub-stat-card" key={card.title}>
+                                <div className="dub-stat-head">{card.title}</div>
+                                <div className="dub-stat-list">
+                                    {dubRows.map((r) => {
+                                        const v = card.pick(r)
+                                        const pct = v != null ? Math.max(3, (v / card.max) * 100) : 0
+                                        return (
+                                            <div className="dub-stat-item" key={r.key}>
+                                                <div className="dub-stat-line">
+                                                    <span className="dub-stat-name">{r.label}</span>
+                                                    <span className="dub-stat-value">{card.fmt(v)}</span>
+                                                </div>
+                                                <div className="dub-stat-track">
+                                                    <span className="dub-stat-fill" style={{ width: `${pct}%`, background: r.color }} />
+                                                </div>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
                             </div>
-                        </div>
-                        <div className="dub-chart-card">
-                            <div className="dub-chart-title">Průměrné hodnocení</div>
-                            <div className="dub-chart-body">
-                                <Bar data={dubAvgRatingData} options={getOptions(horizontalBarOptionsExcel, 'GrafDabingAvg', null, {
-                                    scales: { x: { min: excelData.dubAvgRating.length ? floorTo025(Math.min(...excelData.dubAvgRating.map(d => d.avg))) : 0 } }
-                                })} />
-                            </div>
-                        </div>
-                        <div className="dub-chart-card">
-                            <div className="dub-chart-title">Celkový čas (hodiny)</div>
-                            <div className="dub-chart-body">
-                                <Bar data={dubTotalTimeData} options={getOptions(horizontalBarOptionsExcel, 'GrafCasDabing')} />
-                            </div>
-                        </div>
+                        ))}
                     </div>
                 )
+            }
 
             // ─── STATUS ───
             case 'status':

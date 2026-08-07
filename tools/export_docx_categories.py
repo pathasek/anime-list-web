@@ -16,13 +16,18 @@ SRC_DIR = r"C:\AL\Anime hodnocení a rozbory\Faktické rozbory (Gemini AI)\Vytvo
 # Target output — skript žije v anime-list-web/tools/ → app root je o úroveň výš
 APP_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT_FILE = os.path.join(APP_ROOT, "public", "data", "category_texts.json")
+# Per-anime rozdělení monolitu: web stahuje jen rozbor otevřeného anime.
+# Index mapuje přesný název anime na soubor + lehká metadata pro průřezové
+# funkce (badge „má rozbor" apod.), takže JS nemusí zrcadlit normalizaci názvů.
+TEXTS_DIR = os.path.join(APP_ROOT, "public", "data", "category_texts")
+INDEX_FILE = os.path.join(APP_ROOT, "public", "data", "category_texts_index.json")
 # Cache pro inkrementální běh (leží vedle ostatních cache souborů v tools/)
 CACHE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "docx_export_cache.json")
 
 # Verze parseru. Když se změní pravidla parsování, musí se všechno přeparsovat
 # znovu, jinak by v JSONu zůstaly staré výsledky ze zacachovaných souborů.
 # Zvyšuj při každé změně logiky parseru.
-PARSER_VERSION = 3
+PARSER_VERSION = 7
 
 HEADING_MAP = {
     # Animace
@@ -341,7 +346,11 @@ _STORY_RE = re.compile(r'shrnut|narativni\s+syntez|narativni\s+a\s+scenick|podro
 # Nadpis dokumentu (ne sekce Shrnutí) — vyloučit, ať detektor nechytá titulek
 _TITLE_RE = re.compile(r'analyticka\s+(?:studie|zprava)|komplexni\s+analyt|komplexni\s+dekonstrukce')
 # Přechod na sekci kategorií („Deskriptivní analýza komponentů") = konec story
-_COMPONENT_RE = re.compile(r'deskriptivni\s+analyz|deskriptivni\s+.*komponent|analyza\s+komponent|popisna\s+analyz')
+# Přechod na sekci kategorií („Deskriptivní analýza komponentů", „Deskriptivní
+# popis kategorií", …) = konec děje i epizodních rozborů.
+_COMPONENT_RE = re.compile(
+    r'deskriptivni\s+(?:analyz|popis)|deskriptivni\s+.*komponent|'
+    r'analyza\s+komponent|popisna\s+analyz|popis\s+kategorii')
 # Číslovaná top-level sekce NE-dějové analýzy (postavy/animace/vizuál/hudba…) =
 # konec „Děje" u akademických rozborů, které nemají „Deskriptivní analýzu" ani
 # holé „Animace" (např. Hrob světlušek: „3. Komplexní analýza postav" ukončí děj).
@@ -366,6 +375,23 @@ def _matches_component_heading(text):
 # Číslovaná sekce ne-dějové analýzy → ukončí „Děj"
 def _is_academic_stop(text):
     return _top_secnum(text) is not None and bool(_ACADEMIC_STOP.search(_norm_heading(text)))
+
+
+# Osamocená uvozovka v nadpisu epizody. Část rozborů (typicky celé AI
+# generované série, např. Solo Leveling) má ve ZDROJOVÉM docx systematicky
+# „EP 1: I'm Used to It" (Jsem na to zvyklý)" - úvodní uvozovka chybí a ta
+# koncová pak na webu vypadá useknutá. Export je věrný zdroji, ale na přání
+# se osamocené uvozovky MAŽOU (nejsou reálnou součástí názvu epizody).
+# Nalezeno 38 titulků z 4312. Vyvážené páry uvozovek se nechávají být;
+# lichý počet > 1 se nechává taky (radši nic než hádat, který je navíc).
+def _narovnat_uvozovky_titulku(t):
+    if not t:
+        return t
+    if t.count('"') == 1:
+        t = t.replace('"', '')
+        # po smazání může zbýt zdvojená mezera („Point"  (Bod…")
+        t = re.sub(r'\s{2,}', ' ', t).strip()
+    return t
 
 
 # Nadpis epizody. Kromě prostého „EP 3" musí zvládnout i víceúrovňové číslování
@@ -483,7 +509,29 @@ def parse_docx_categories(docx_path: str, start_on_any_category: bool = False) -
                             "text": "\n".join(current_paragraphs).strip()
                         }
                     current_ep_num = matched_ep_num
-                    current_ep_title = text
+                    current_ep_title = _narovnat_uvozovky_titulku(text)
+                    current_paragraphs = []
+                    list_counters.clear()
+                    list_base_ilvl.clear()
+
+                elif (not has_started and current_ep_num is not None
+                        and len(text) < 130
+                        and any(r.bold for r in block.runs if r.text.strip())
+                        and _matches_component_heading(text)):
+                    # Přechod na sekci kategorií („Část 2: Deskriptivní analýza
+                    # komponentů" a podobné hlavičky): epizodní rozbory tady
+                    # končí. Hlavička ani nic pod ní (až do první kategorie,
+                    # např. „Animace") nepatří do textu poslední epizody.
+                    # `any(r.bold)` místo `para_is_bold`: v některých docx je
+                    # hlavička rozbitá na nekonzistentní runy (např. „*3.
+                    # Deskriptivní …**"), přesto ji musíme poznat.
+                    if current_ep_num and current_paragraphs:
+                        episodes[current_ep_num] = {
+                            "title": current_ep_title,
+                            "text": "\n".join(current_paragraphs).strip()
+                        }
+                    current_ep_num = None
+                    current_ep_title = None
                     current_paragraphs = []
                     list_counters.clear()
                     list_base_ilvl.clear()
@@ -728,6 +776,91 @@ def vypis_kontrolu(result: dict, list_items: list):
     print("Nadpis mimo HEADING_MAP propadne tiše, proto tenhle výpis existuje.")
 
 
+def file_key(name: str) -> str:
+    """URL-safe klíč souboru per-anime rozboru.
+
+    Unikátnost napříč všemi názvy anime je ověřená (489 názvů, 0 kolizí),
+    ale web klíč NEODVOZUJE — čte ho z indexu, takže případná změna tohohle
+    vzorce nic nerozbije, jen přejmenuje soubory.
+    """
+    s = unicodedata.normalize('NFKD', name or '')
+    s = ''.join(c for c in s if not unicodedata.combining(c))
+    s = s.lower()
+    s = re.sub(r'[^a-z0-9]+', '-', s)
+    s = s.strip('-')
+    return s or 'rozbor'
+
+
+def zapis_per_anime(result: dict):
+    """Zapíše per-anime soubory + index a smaže osiřelé soubory.
+
+    Soubor se přepisuje jen při změně obsahu, ať se zbytečně nehýbou mtime
+    a běh beze změn zůstane během beze změn i pro git.
+    """
+    os.makedirs(TEXTS_DIR, exist_ok=True)
+
+    index = {}
+    obsazene = {}   # klíč -> název anime (pojistka proti kolizi)
+    zapsano = 0
+
+    for name, entry in result.items():
+        key = file_key(name)
+        if key in obsazene:
+            # Stabilní rozlišení nezávislé na pořadí: otisk názvu.
+            key = f"{key}-{hashlib.sha256(name.encode('utf-8')).hexdigest()[:6]}"
+            print(f"Varování: kolize klíče souboru pro '{name}' a "
+                  f"'{obsazene[file_key(name)]}' — použit klíč '{key}'.")
+        obsazene[key] = name
+
+        kategorie = [k for k, v in entry.items()
+                     if k not in ("episodes", "story")
+                     and isinstance(v, str) and v.strip()]
+        ep_klice = list((entry.get("episodes") or {}).keys())
+        index[name] = {
+            "file": key,
+            "categories": kategorie,
+            "episodes": ep_klice,
+            "story": bool(entry.get("story")),
+        }
+
+        cesta = os.path.join(TEXTS_DIR, key + ".json")
+        novy = json.dumps(entry, ensure_ascii=False, separators=(",", ":"))
+        stary = None
+        try:
+            with open(cesta, 'r', encoding='utf-8') as f:
+                stary = f.read()
+        except OSError:
+            pass
+        if stary != novy:
+            with open(cesta, 'w', encoding='utf-8') as f:
+                f.write(novy)
+            zapsano += 1
+
+    # Osiřelé soubory (rozbor zmizel nebo se změnil klíč) nesmí strašit v repu
+    chtene = {k + ".json" for k in obsazene}
+    smazano = 0
+    for jmeno in sorted(os.listdir(TEXTS_DIR)):
+        if jmeno.endswith(".json") and jmeno not in chtene:
+            os.remove(os.path.join(TEXTS_DIR, jmeno))
+            smazano += 1
+            print(f"Smazán osiřelý per-anime rozbor: {jmeno}")
+
+    novy_index = json.dumps(index, ensure_ascii=False, separators=(",", ":"))
+    stary_index = None
+    try:
+        with open(INDEX_FILE, 'r', encoding='utf-8') as f:
+            stary_index = f.read()
+    except OSError:
+        pass
+    if stary_index != novy_index:
+        with open(INDEX_FILE, 'w', encoding='utf-8') as f:
+            f.write(novy_index)
+
+    print(f"Per-anime rozbory: {len(index)} souborů v category_texts/ "
+          f"({zapsano} zapsáno/aktualizováno, {smazano} osiřelých smazáno), "
+          f"index {os.path.basename(INDEX_FILE)}.")
+
+
 def main():
     _force_utf8_stdio()
 
@@ -860,6 +993,9 @@ def main():
     if args.out == OUT_FILE:
         with open(CACHE_FILE, 'w', encoding='utf-8') as f:
             json.dump(cache, f, ensure_ascii=False, indent=1)
+        # Per-anime soubory a index jen při ostrém běhu — zkušební --out nesmí
+        # sahat na produkční data v public/.
+        zapis_per_anime(result)
 
     print(f"Hotovo! Vyexportováno {len(result)} rozborů do {args.out} "
           f"({prohnano} nově naparsováno, {prevzato} beze změny převzato z minula).")

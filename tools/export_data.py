@@ -1423,7 +1423,8 @@ def main():
         lajny = [
             [_krok("download_jikan_cache.py"), _krok("download_journey_posters.py")],
             [_krok("extract_spotify_images.py"), _krok("build_cover_thumbs.py")],
-            [_krok("export_docx_categories.py")],
+            # build_ost_types čte category_texts.json, proto až po rozborech
+            [_krok("export_docx_categories.py"), _krok("build_ost_types.py")],
             [_krok("build_ytmusic_ost.py")],
             [_krok("download_animethemes_cache.py")],
             [_krok("build_top_favorites_thumbs.py")],
@@ -1449,6 +1450,21 @@ def main():
         # skript na tom uvizne. Uklid tedy pri automatickem behu vypiname,
         # rucni `git gc` funguje dal beze zmeny.
         GIT = ["git", "-c", "gc.auto=0"]
+
+        def _srovnat_s_remote(web_dir):
+            """Rebase lokálního main na origin/main před pushem. Bez toho push
+            spadne na 'fetch first', kdykoli mezitím přibyl commit odjinud
+            (jiný stroj, webové UI, souběžná session) - stalo se 6. 8. 2026.
+            Autostash schová rozpracované zdrojáky a po rebase je vrátí.
+            Konflikt rebase se vzdá (abort), ať repozitář nezůstane rozpůlený,
+            a řešení se nechá na člověku."""
+            try:
+                subprocess.run(GIT + ["-c", "rebase.autoStash=true", "pull", "--rebase", "origin", "main"],
+                               cwd=web_dir, check=True)
+            except Exception:
+                subprocess.run(GIT + ["rebase", "--abort"], cwd=web_dir, check=False)
+                print("git pull --rebase selhal (konflikt?), push se zkusí bez něj.")
+
         if no_push:
             print("Přepínač --no-push: commit a push se přeskakují (testovací běh).")
         else:
@@ -1471,6 +1487,7 @@ def main():
                     print("Data se nezměnila, commit a nasazení se přeskakují.")
                 else:
                     subprocess.run(GIT + ["commit", "-m", "Auto-update dat z Excelu (Background)"], cwd=web_dir, check=True)
+                    _srovnat_s_remote(web_dir)
                     subprocess.run(GIT + ["push", "origin", "main"], cwd=web_dir, check=True)
                     print("Git push completed successfully!")
             except Exception as e:
@@ -1479,7 +1496,13 @@ def main():
                     # Dřívější add -A umělo vzít i rozpracované zdrojáky a rovnou
                     # je nasadit na web.
                     subprocess.run(GIT + ["add", "public/data", "public/images"], cwd=web_dir, check=True)
-                    subprocess.run(GIT + ["commit", "-m", "Auto-update dat z Excelu (Background Fallback)"], cwd=web_dir, check=True)
+                    # Commit jen když je co commitnout. Když primární větev spadla
+                    # až na pushi (commit už existuje), prázdný commit by tu s
+                    # check=True celou záchranu shodil - přesně to se stalo 6. 8. 2026.
+                    staged = subprocess.run(GIT + ["diff", "--cached", "--quiet"], cwd=web_dir, check=False)
+                    if staged.returncode != 0:
+                        subprocess.run(GIT + ["commit", "-m", "Auto-update dat z Excelu (Background Fallback)"], cwd=web_dir, check=True)
+                    _srovnat_s_remote(web_dir)
                     subprocess.run(GIT + ["push", "origin", "main"], cwd=web_dir, check=True)
                     print("Git fallback push completed successfully!")
                 except Exception as ge:

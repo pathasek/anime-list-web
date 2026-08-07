@@ -4,6 +4,61 @@ Tento soubor shrnuje všechny nedávné změny, opravy a vylepšení implementov
 
 ---
 
+## [1.6.0] - 2026-08-07
+
+### ⚡ Rozbory: per-anime soubory místo 42MB monolitu
+- **Web už nestahuje celý `category_texts.json` (42,9 MB).** Export (`export_docx_categories.py`) vedle monolitu nově generuje `public/data/category_texts/<klíč>.json` pro každé anime (474 souborů, průměr 88 kB, největší 217 kB) a lehký index `category_texts_index.json` (~130 kB): přesný název anime → soubor + kategorie s textem + klíče epizodních rozborů + příznak rozboru děje. Klíč souboru se v JS neodvozuje, čte se z indexu (žádné zrcadlení normalizace názvů; unikátnost klíčů ověřena přes všech 489 názvů). Osiřelé soubory se mažou, nezměněné se nepřepisují, takže běh beze změn zůstává během beze změn i pro git.
+- **Detail anime** stahuje jen rozbor otevřeného titulu přes novou sdílenou utilitu `src/utils/categoryTexts.js` (`loadCategoryTextsFor`, memory cache per název, cache-buster podle verze dat, 404 → null).
+- **Stránka hodnocení**: badge „má rozbor" v tabulkách kategorií i epizod jedou z indexu — `hasDocxEpisodeInIndex` sdílí logiku relativního číslování rozdělených sezón s `getDocxEpisode` (společné jádro `resolveDocxEpisodeKey` v `utils/docxEpisode.js`). Plné texty se dotahují per-anime: pro vybrané anime, pro všechny díly vybrané série (timeline, radar, názvy epizod) a při kliku na buňku tabulky až v okamžiku otevření modalu.
+- **Monolit v `public/data/` zatím zůstává:** živý web se starým JS ho pořád čte a automatický export commituje jen `public/`. Přesun monolitu mimo web (intermediate v `tools/`) je fáze 2 až po nasazení tohohle JS — viz ZDROJ_PRAVDY.
+
+## [1.5.0] - 2026-08-06
+
+### 🛣️ Cesta Anime: minimalizovaný pás jako filmový pruh
+- **Dlaždice 82 × 46 px (16:9) místo koleček.** Diagonální střih 7 px a rozteč 75 px do sebe přesně zapadají, takže pás tvoří souvislý filmový pruh. Všechny dlaždice sedí **na jedné lince** (žádné svislé poskakování — starý `--step` po 4 z 11 měsíců poskakoval na švu smyčky). Náhledovka nejlepšího anime měsíce je celá vidět, text sedí v 17px tmavém pruhu u dolní hrany: měsíc vlevo, „+N" vpravo. Okraj dlaždic dělá **vrstvení** (vnější vrstva = barva linky, vnitřní média vrstva o 1 px menší se stejným střihem) — border na ořezaném obdélníku se na diagonálách usekával. Poslední měsíc se **nijak nezvýrazňuje** (na přání; dřívější prstenec s pulsem působil jako zaseknutý stav a repaintoval).
+- **Idle drift běží na kompozitoru** (CSS animace `aj-drift-x`), plynulý i po přepnutí okna. Pauza při hoveru i tažení přes CSS `animation-play-state`.
+- **Tažení jako karusel bez lagů:** při chycení se animace jen pauzne a posun kreslí vnitřní vrstva vlastním transformem; do animace se pozice přepíše JEDNÍM seekem až při puštění (obojí v témže snímku, nic neposkočí). Průběžné seekování animace po snímcích dusilo hlavní vlákno. Funguje i vodorovné kolečko myši/touchpadu (seek škrcený na jeden za snímek). Krátký tah pod 5 px zůstává klikem na měsíc; obrázky nejdou uchopit a hover mění **jen barvu linky** dlaždice — jakýkoli transform (lift, scale) jel přes sub-pixelové pozice a viditelně převzorkoval obrázek.
+- **Náhledovky se předdekódovávají hned po načtení pásu.** Dřív měly `loading="lazy"` a JPEG se stahoval a dekódoval až ve chvíli, kdy dlaždici poprvé odhalil tah — první ~1,5 s tažení jednorázově drhla. Teď se všechny unikátní náhledovky dekódují dopředu (`Image.decode()`).
+- **CSS animace běží na vrstvě s obsahem** (`.aj-mini-drag`), ne na obalu: vrstvu s aktivní kompozitorovou animací Chrome rasterizuje celou dopředu, takže první tah po refreshi neodhaluje nerasterizované dlaždice (druhá příčina úvodního sekání). Tažení posouvá vnější, už rasterizovaný track.
+- **Souhrn cesty u titulku** (počet měsíců · celkem anime, bez hodin na přání).
+- Opraveny regrese z prvních iterací: klik na dlaždici po minimalizaci (duch tažení blokoval kliky), mrtvá animace po remountu pásu, lag prohlížeče při tažení a po přepnutí okna.
+
+### 🎙️ Dabing: kartový redesign (Dashboard)
+- Tři Chart.js grafy nahrazeny kartami **Dabing celkem / Čas podle dabingu / Ø hodnocení** s barevnými progress-bary (akcentové barvy tématu, CHN emerald). Stejná data z Excelu (pole `dub`), „CZ" se zobrazuje jako **„CZ dub"**, řádek „Neznámý" se skrývá.
+
+### 🏆 Top Favorites: horní přepínač
+- Nad stránkou segmentový přepínač **TOP 10 / HM / Postavy**, renderuje se jen zvolená sekce. Volba přežívá odchod na detail (sessionStorage, stejný vzor jako skupiny Dashboardu).
+
+### 📱 Mobil: spodní navigační lišta místo hamburgeru
+- Hamburger menu zrušeno. Fixní spodní lišta s taby **Dashboard · History Log · Anime List · OP/ED/OST · Ostatní**; „Ostatní" otevírá panel se zbytkem navigace (Anime hodnocení, Top Favorites, Plan to Watch, Recommendations, Anime Wrapped), přepínačem témat a datem poslední aktualizace. Horní pruh nese už jen logo, obsah dostal spodní odsazení, desktop sidebar beze změny.
+
+### 🎼 OST karty: hudební typy místo žánrů anime
+- Nový generátor `tools/build_ost_types.py`: z textu OST kapitoly rozborů (`category_texts.json`) odvodí klíčovými slovy 1 až 3 hudební štítky (Orchestral, Piano, Electronic, Ambient, Rock, Jazz, Vocal, Folk/Celtic, Chiptune) → `public/data/ost_types.json` (462 z 474 rozborů). Ruční výjimky: `tools/ost_types_overrides.json`. Běží v exportní lajně hned po rozborech.
+- Karty „Whole OST" zobrazují tyhle hudební typy místo žánrů anime (Fantasy, Action…); hledání najde obojí.
+
+### 🎧 OST přehrávač: hlavička viditelná na laptopech (#22)
+- Pod 1600 px šířky se rozevřený přehrávač zmenší (scale 1.1 → 1, šířka 420 → 380 px) a strop playlistu se odvíjí od výšky viewportu, takže hlavička s křížkem „Zavřít" už neutíká nad horní okraj obrazovky. 1920×1080 a větší beze změny, mobil má vlastní pravidla.
+
+### ⚡ Výkon: rychlejší start i přechod do detailu
+- **Route-level code splitting.** Web byl jeden ~1,07MB bundle a každé načtení parsovalo všech 10 stránek + Chart.js najednou. Stránky se teď stahují až při první návštěvě (React.lazy): úvodní shell **284 kB (−73 %)**, Chart.js je sdílený chunk 204 kB jen pro stránky s grafy, detail anime přidává jen ~30 kB.
+- **Detail anime nečeká na rozbory.** `category_texts.json` má po plném přeparse ~42 MB a PRVNÍ otevření detailu na něj čekalo celé (stažení + parse), než se vůbec něco vykreslilo. Soubor se teď dotahuje mimo hlavní načtení: detail se ukáže hned z malých dat a texty rozborů doskočí (stejný vzor používá stránka hodnocení).
+- **Pojistka výpadku Jikanu v prohlížeči** (obdoba `tools/jikan_health.py`): po 5 definitivních selháních po sobě se background stahování epizod na 15 minut zastaví. Bez toho se při ležícím Jikanu (429/504, poslední dny běžné) točily retry smyčky celou session a web působil líně. Prioritní dotazy (hover, detail) jedou dál a první úspěch pauzu ruší.
+- **Per-URL blackout pro trvale vadné endpointy:** konkrétní dotaz, který selhává opakovaně i mimo celkové výpadky (typicky `/anime/{id}/statistics` s věčnou 504), dostává eskalující zákaz 1 h → 6 h → 1 d → 3 d → 7 d → 14 d (persistuje v localStorage, úspěch záznam maže). Úder se nepočítá během celkového výpadku, aby si storm nezablacklistoval půlku katalogu.
+- **Jikan downloader startuje až v klidu po prvním renderu** (requestIdleCallback): parse 2MB statické cache a rozjezd fronty nesoutěží s vykreslením Dashboardu. `anime_list` pro sync se navíc bere ze sdílené dataStore cache místo druhého fetche.
+- Kandidát na příště (větší zásah): rozdělit `category_texts.json` na per-anime soubory už v exportu, ať se nikdy nestahuje 42MB monolit. Vyžaduje úpravu stránky hodnocení, která dnes drží celý slovník kvůli průřezovým funkcím.
+
+### 📖 Rozbory: osamocené uvozovky v titulcích epizod
+- 38 z 4312 epizodních titulků mělo ve ZDROJOVÉM docx osamocenou uvozovku („EP 8: Freezing Point" (Bod mrazu)" — typicky celé AI generované série, např. Solo Leveling). Parser (v7) je nově maže: lichá uvozovka není součást názvu. Vyvážené páry zůstávají.
+
+### 🎼 OST typy: 0 overridů
+- Po plném přeparse rozborů (v7) má i Cross Ange OST text, takže se typy odvodí deterministicky a jediný ruční override byl smazán. Lexikon rozšířen jen o vzácné stylové termíny (valčík, cembalo, big band) — obecná slova (zpěv, píseň, balada) schválně ne, inflatovala by Vocal přes zmínky OP/ED (ověřeno: +112 anime).
+
+### 🔧 Export: push už nespadne na divergenci s GitHubem
+- Před `git push` se nově dělá `git pull --rebase origin main` (s autostash; konflikt se vzdá a ohlásí). Bez toho push spadl na „fetch first", kdykoli mezitím přibyl commit odjinud — stalo se 6. 8. 2026.
+- Záchranná větev commitne jen když je co commitnout; dřív prázdný commit shodil celou záchranu, i když stačilo pushnout už hotový commit.
+
+---
+
 ## [1.4.0] - 2026-08-04 (pozdní večer)
 
 ### 🚀 Druhá vlna zrychlení (B2 + C1 + C2)

@@ -1,5 +1,5 @@
 {
- "parser_version": 3,
+ "parser_version": 7,
  "soubory": {
   "Jujutsu Kaisen 0": {
    "soubor": "Jujutsu Kaisen 0.docx",
@@ -63,7 +63,7 @@
   },
   "Spy x Family, S01 Part 1": {
    "soubor": "Spy x Family, S01 Part 1.docx",
-   "hash": "2255a3303dcf5669582bdaf342bc578d94e3a95d19263ccbe6f1b132011035fd"
+   "hash": "0162962c38b48162e47586e4f69007ba3b0d800840cf6c2547e51b95366f353b"
   },
   "That Time I Got Reincarnated as a Slime, S02 Part 1": {
    "soubor": "That Time I Got Reincarnated as a Slime, S02 Part 1.docx",
@@ -83,15 +83,15 @@
   },
   "Spy x Family, S01 Part 2": {
    "soubor": "Spy x Family, S01 Part 2.docx",
-   "hash": "416fdaf3aa4e040abdccba4b5898eeae836d0e4287e7531be8729e8e4ed34f8e"
+   "hash": "a75e077a838116a40e3832904a77cab3bc170b7fae28fbb653f1b3cc4b0a1a55"
   },
   "Spy x Family, S02": {
    "soubor": "Spy x Family, S02.docx",
-   "hash": "e6723f9cc2b3a8e9e35a06ae24767aa2091f602f891b6468f3d804e9c1c9f4d8"
+   "hash": "51d282463b3d88739608ac19eacc2af323d3bdab657bd6a628d9b49ff130e852"
   },
   "Spy x Family Code: White": {
    "soubor": "Spy x Family Code_ White.docx",
-   "hash": "80b6e347fd8629c1ce6a4bc3b78990d93ba1fd930eab84db77dbd3ebf196f2de"
+   "hash": "68be629ff1ba9c43d673723245d6a524fdd1b5763da855810d56eda050cd0b7e"
   },
   "Call of the Night, S01": {
    "soubor": "Call of the Night, S01.docx",
@@ -435,7 +435,7 @@
   },
   "The Ancient Magus' Bride: Those Awaiting a Star": {
    "soubor": "The Ancient Magus' Bride_ Those Awaiting a Star.docx",
-   "hash": "a0785eae2c10d7560c53f4bb027adf8db0deff5e31fb8c50dbc5b4c846a8b223"
+   "hash": "e96179af9e759168225e0f12af7f0a57942cfa767fba3b996f1fdec77e573901"
   },
   "The Ancient Magus' Bride, S01": {
    "soubor": "The Ancient Magus' Bride, S01.docx",
@@ -443,11 +443,11 @@
   },
   "The Ancient Magus' Bride: The Boy from the West and the Knight of the Blue Storm": {
    "soubor": "The Ancient Magus' Bride_ The Boy from the West and the Knight of the Blue Storm.docx",
-   "hash": "5a963fe6bc2f96099a09fd8edb072113524d3dc490b3711e73e720fb23561afa"
+   "hash": "82fe091e00a8b65215e5f14faccb9103f0567877e551850c923a10fad7c9495c"
   },
   "The Ancient Magus' Bride, S02 Part 1": {
    "soubor": "The Ancient Magus' Bride, S02 Part 1.docx",
-   "hash": "989ce7f8278c78319e9d8d873b0d978cf3d47d1f71b3e19587f10fae002a50e1"
+   "hash": "b33ec26c20c70e736ce2e32731b5c8ab7a15eec4c71e4da3c9e2c28d9eda9577"
   },
   "Magi: The Labyrinth of Magic": {
    "soubor": "Magi_ The Labyrinth of Magic.docx",
@@ -699,7 +699,7 @@
   },
   "Cross Ange: Rondo of Angel and Dragon": {
    "soubor": "Cross Ange_ Rondo of Angel and Dragon.docx",
-   "hash": "80c6ab0317b008be441997c5657366694acf4baa4183d4978804350c528dcb61"
+   "hash": "f77f3cb00297aef45caeae4788297a831309be6942197b4df034f029dbaf9523"
   },
   "The Girl Who Leapt Through Time": {
    "soubor": "The Girl Who Leapt Through Time.docx",
@@ -1059,7 +1059,7 @@
   },
   "Spy x Family, S03": {
    "soubor": "Spy x Family, S03.docx",
-   "hash": "c43bbbb6bf1f6f8dcbc19b59d7432729082f05ce658ec668117762cb4ee6ae5b"
+   "hash": "054b0ea1dbcae36e459f5bd8a222d36855d1220911470cc610732c04afe67150"
   },
   "Tower of God, S02: Workshop Battle": {
    "soubor": "Tower of God, S02_ Workshop Battle.docx",
@@ -1123,7 +1123,7 @@
   },
   "The Ancient Magus' Bride, S02 Part 2": {
    "soubor": "The Ancient Magus' Bride, S02 Part 2.docx",
-   "hash": "96e9e02ed9f62407e4c3a66a790e5b83f1ba5196d295684edcd18ef8f7c32a1a"
+   "hash": "9876ffd685b9c2651a68b43159afdd3e14ea15fbcf39d9af9b49ce66dcca847b"
   },
   "Psycho-Pass, S03: First Inspector": {
    "soubor": "Psycho-Pass, S03_ First Inspector.docx",
@@ -1251,7 +1251,7 @@
   },
   "Legend of the Galactic Heroes: Die Neue These - Stellar War Part 3": {
    "soubor": "Legend of the Galactic Heroes_ Die Neue These - Stellar War Part 3.docx",
-   "hash": "e784d657c9bdb12f200b9e2080bcda349533abe839b3c5f183193cabb286f4ee"
+   "hash": "e3b015b84313c5c2aaeae523f6b49754c14ff8ca6ea0c93469b0ec29b91d3c7f"
   },
   "Black Lagoon": {
    "soubor": "Black Lagoon.docx",

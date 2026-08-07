@@ -25,22 +25,9 @@ import InfoIcon from '../components/InfoIcon'
 import { useModalScrollLock } from '../utils/useModalScrollLock'
 import { useModalTables } from '../utils/useModalTables'
 import { useRatingGuide } from '../utils/ratingGuide'
-import { getDocxEpisode } from '../utils/docxEpisode'
+import { getDocxEpisode, hasDocxEpisodeInIndex } from '../utils/docxEpisode'
+import { loadCategoryTextsIndex, loadCategoryTextsFor } from '../utils/categoryTexts'
 import { animePath } from '../utils/animeSlug'
-
-// Cache pro AI rozbory kategorií/epizod (category_texts.json — víc MB, načíst jen jednou)
-let cachedCategoryTexts = null
-async function loadCategoryTexts() {
-    if (cachedCategoryTexts) return cachedCategoryTexts
-    try {
-        const response = await fetch('data/category_texts.json?v=' + Date.now())
-        if (!response.ok) return {}
-        cachedCategoryTexts = await response.json()
-        return cachedCategoryTexts
-    } catch {
-        return {}
-    }
-}
 
 // B4-6: Jikan tituly epizod u specials/ONA často začínají redundantním prefixem
 // s názvem anime („Lord of Mysteries Special: City of Silver") — v úzkém seznamu
@@ -482,7 +469,11 @@ function AnimeRatings() {
     const [episodeRatings, setEpisodeRatings] = useState([])
     const [notes, setNotes] = useState([])
     const [imdbCache, setImdbCache] = useState({})
-    const [categoryReviews, setCategoryReviews] = useState(null)   // AI rozbory kategorií/epizod
+    // AI rozbory: lehký index (badge „má rozbor", přehledy) + plné texty.
+    // categoryReviews už NENÍ celý 40MB monolit — plní se líně per anime
+    // (vybrané anime, díly vybrané série, kliknuté buňky tabulek).
+    const [categoryIndex, setCategoryIndex] = useState(null)
+    const [categoryReviews, setCategoryReviews] = useState(null)
     const episodeModalRef = useRef(null)                           // imperativní ovládání rozboru epizody
     const [loading, setLoading] = useState(true)
 
@@ -795,8 +786,9 @@ function AnimeRatings() {
             }
             setLoading(false)
 
-            // AI rozbory epizod (dotáhnou se na pozadí, graf je použije jakmile dorazí)
-            loadCategoryTexts().then(ct => { if (isMounted) setCategoryReviews(ct || {}) })
+            // Index rozborů (~130 kB) na pozadí — badge a přehledy ho použijí,
+            // jakmile dorazí. Plné texty se stahují per-anime podle výběru.
+            loadCategoryTextsIndex().then(ix => { if (isMounted) setCategoryIndex(ix || {}) })
         }).catch(err => {
             console.error("Failed to load data for Anime Ratings:", err)
             if (isMounted) {
@@ -808,6 +800,43 @@ function AnimeRatings() {
             isMounted = false
         }
     }, [])
+
+    // Plné texty vybraného anime (řádek 1: graf epizod, klik na bod, radar).
+    useEffect(() => {
+        if (!selectedAnimeTitle) return
+        let cancelled = false
+        loadCategoryTextsFor(selectedAnimeTitle).then(entry => {
+            if (cancelled || !entry) return
+            setCategoryReviews(prev => prev?.[selectedAnimeTitle]
+                ? prev
+                : { ...(prev || {}), [selectedAnimeTitle]: entry })
+        })
+        return () => { cancelled = true }
+    }, [selectedAnimeTitle])
+
+    // Plné texty všech dílů vybrané série (timeline, tooltips s názvy epizod,
+    // radar série, porovnání sezón). Soubory jsou malé (~90 kB) a jednou
+    // stažené drží modulová cache v categoryTexts.js.
+    useEffect(() => {
+        if (!selectedSeriesObj) return
+        let cancelled = false
+        Promise.all(
+            selectedSeriesObj.items.map(a => loadCategoryTextsFor(a.name).then(entry => [a.name, entry]))
+        ).then(pairs => {
+            if (cancelled) return
+            const nove = pairs.filter(([, entry]) => entry)
+            if (!nove.length) return
+            setCategoryReviews(prev => {
+                let changed = false
+                const next = { ...(prev || {}) }
+                for (const [n, entry] of nove) {
+                    if (!next[n]) { next[n] = entry; changed = true }
+                }
+                return changed ? next : prev
+            })
+        })
+        return () => { cancelled = true }
+    }, [selectedSeriesObj])
 
     // ============================================
     // JIKAN: Preload Jikan episode lists for all seasons in selected series franchise
@@ -1123,8 +1152,10 @@ function AnimeRatings() {
     // Vybraný díl → rovnou jeho rozbor; Ø průměr série → výběr dílu.
     const [radarPartChooser, setRadarPartChooser] = useState(null) // { cat, parts: [names] } | null
 
-    const openRadarCategoryReview = useCallback((animeName, cat) => {
-        const rev = categoryReviews?.[animeName]
+    const openRadarCategoryReview = useCallback(async (animeName, cat) => {
+        // Texty dílů série jsou zpravidla předstažené efektem; fallback fetch
+        // pokryje klik dřív, než dorazí (modal je imperativní, await nevadí).
+        const rev = categoryReviews?.[animeName] || await loadCategoryTextsFor(animeName)
         const text = rev?.[cat]
         if (!text) return false
         const availableCats = rev ? Object.keys(rev).filter(k => k !== 'episodes' && k !== 'story' && typeof rev[k] === 'string' && rev[k].trim().length > 0) : []
@@ -1149,8 +1180,9 @@ function AnimeRatings() {
 
     // Plán 6 Ú7: klik na buňku kategorie v kompletní tabulce → stejný modal s rozborem
     // jako v detailu anime (plný název, bez ořezávání série)
-    const openTableCategoryReview = useCallback((animeName, cat, rating) => {
-        const rev = categoryReviews?.[animeName]
+    const openTableCategoryReview = useCallback(async (animeName, cat, rating) => {
+        // Tabulka jede přes lehký index; plný text se dotáhne až na klik.
+        const rev = categoryReviews?.[animeName] || await loadCategoryTextsFor(animeName)
         const text = rev?.[cat]
         if (!text) return
         const availableCats = rev ? Object.keys(rev).filter(k => k !== 'episodes' && k !== 'story' && typeof rev[k] === 'string' && rev[k].trim().length > 0) : []
@@ -1177,13 +1209,13 @@ function AnimeRatings() {
             openRadarCategoryReview(compareSeason, cat)
             return
         }
-        const withText = ratedSeriesParts.filter(a => categoryReviews?.[a.name]?.[cat])
+        const withText = ratedSeriesParts.filter(a => categoryIndex?.[a.name]?.categories?.includes(cat))
         if (withText.length === 1) {
             openRadarCategoryReview(withText[0].name, cat)
         } else if (withText.length > 1) {
             setRadarPartChooser({ cat, parts: withText.map(a => a.name) })
         }
-    }, [compareSeason, ratedSeriesParts, categoryReviews, openRadarCategoryReview])
+    }, [compareSeason, ratedSeriesParts, categoryIndex, openRadarCategoryReview])
 
     // Helper to calculate weighted category average (AVG CAT)
     const getAvgCat = (animeName) => {
@@ -1659,14 +1691,13 @@ function AnimeRatings() {
         return { min: dynMin, max: dynMax, avg }
     }, [seriesTimelineData, ratingSource, animeList, imdbCache, franchiseJikanCache])
 
-    // B4-2: má vybraná série aspoň jeden DOCX rozbor epizod? (řídí info text pod titulkem)
+    // B4-2: má vybraná série aspoň jeden DOCX rozbor epizod? (řídí info text
+    // pod titulkem). Jede z lehkého indexu — nečeká na per-anime texty.
     const seriesHasDocxReviews = useMemo(() => {
-        if (!selectedSeriesObj || !categoryReviews) return false
-        return selectedSeriesObj.items.some(item => {
-            const eps = categoryReviews[item.name]?.episodes
-            return eps && Object.keys(eps).length > 0
-        })
-    }, [selectedSeriesObj, categoryReviews])
+        if (!selectedSeriesObj || !categoryIndex) return false
+        return selectedSeriesObj.items.some(item =>
+            (categoryIndex[item.name]?.episodes?.length || 0) > 0)
+    }, [selectedSeriesObj, categoryIndex])
 
     const timelineOptions = useMemo(() => {
         if (!seriesTimelineData) return {}
@@ -2585,9 +2616,10 @@ function AnimeRatings() {
         }
     }, [animeList, episodeRatings, tableSearchQuery, tableSortColumn, tableSortDirection])
 
-    // Otevře rozbor epizody ze buňky tabulky (stejné chování jako klik v grafu)
-    const openTableEpisodeReview = useCallback((animeName, epNum, rating) => {
-        const entry = categoryReviews?.[animeName]
+    // Otevře rozbor epizody ze buňky tabulky (stejné chování jako klik v grafu).
+    // Buňky se podbarvují podle indexu; plný text se dotáhne až na klik.
+    const openTableEpisodeReview = useCallback(async (animeName, epNum, rating) => {
+        const entry = categoryReviews?.[animeName] || await loadCategoryTextsFor(animeName)
         const docxEp = getDocxEpisode(entry, epNum)
         if (!docxEp) return
         const row = episodeTableData.items.find(r => r.name === animeName)
@@ -4200,7 +4232,7 @@ function AnimeRatings() {
                                                                     {epCols.map(n => {
                                                                         const val = row.byNum.get(n)
                                                                         const has = val !== undefined
-                                                                        const hasReview = has && !!getDocxEpisode(categoryReviews?.[row.name], n)
+                                                                        const hasReview = has && hasDocxEpisodeInIndex(categoryIndex?.[row.name], n)
                                                                         return (
                                                                             <td
                                                                                 key={n}
@@ -4380,7 +4412,7 @@ function AnimeRatings() {
                                                         </td>
                                                         {allCategoryColumns.map(cat => {
                                                             const val = item.categories[cat]
-                                                            const hasReview = !!categoryReviews?.[item.name]?.[cat]
+                                                            const hasReview = !!categoryIndex?.[item.name]?.categories?.includes(cat)
                                                             return (
                                                                 <td
                                                                     key={cat}

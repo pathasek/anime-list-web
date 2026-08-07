@@ -1,21 +1,25 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 import { HashRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom'
-import Dashboard from './pages/Dashboard'
-import AnimeList from './pages/AnimeList'
-import AnimeDetail from './pages/AnimeDetail'
-import HistoryLog from './pages/HistoryLog'
-import Favorites from './pages/Favorites'
-import PlanToWatch from './pages/PlanToWatch'
-import AnimeRatings from './pages/AnimeRatings'
-import TopFavorites from './pages/TopFavorites'
-import Wrapped from './pages/Wrapped'
-import Recommendations from './pages/Recommendations'
 import { ThemeProvider, useTheme } from './components/ThemeProvider'
 import ThemeSwitcher from './components/ThemeSwitcher'
 import { OstPlayerProvider } from './components/OstPlayerProvider'
 import { runBackgroundSync, importJikanStaticCache } from './utils/jikanService'
-import { preloadAllData } from './utils/dataStore'
+import { preloadAllData, loadData, STORAGE_KEYS } from './utils/dataStore'
 import './index.css'
+
+// Stránky se stahují až při první návštěvě (route-level code splitting).
+// Bez toho byl celý web jeden ~1MB bundle a KAŽDÉ načtení stránky parsovalo
+// i Chart.js, kvíz a všech 10 stránek najednou.
+const Dashboard = lazy(() => import('./pages/Dashboard'))
+const AnimeList = lazy(() => import('./pages/AnimeList'))
+const AnimeDetail = lazy(() => import('./pages/AnimeDetail'))
+const HistoryLog = lazy(() => import('./pages/HistoryLog'))
+const Favorites = lazy(() => import('./pages/Favorites'))
+const PlanToWatch = lazy(() => import('./pages/PlanToWatch'))
+const AnimeRatings = lazy(() => import('./pages/AnimeRatings'))
+const TopFavorites = lazy(() => import('./pages/TopFavorites'))
+const Wrapped = lazy(() => import('./pages/Wrapped'))
+const Recommendations = lazy(() => import('./pages/Recommendations'))
 
 // Icons as simple SVG components
 const Icons = {
@@ -195,59 +199,48 @@ const Icons = {
       </svg>
     );
   },
-  Menu: () => (
-    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-    </svg>
-  ),
-  Close: () => (
-    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+  More: () => (
+    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+      <circle cx="5" cy="12" r="2" />
+      <circle cx="12" cy="12" r="2" />
+      <circle cx="19" cy="12" r="2" />
     </svg>
   )
 }
 
-// Wrapper component to handle sidebar close on navigation
+// Routy schované na mobilu pod tlačítkem „Ostatní" ve spodní liště
+const MOBILE_MORE_PATHS = ['/ratings', '/top-favorites', '/plan-to-watch', '/recommendations', '/wrapped']
+
+// Wrapper component to handle mobile navigation state
 function AppContent({ stats }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  // Panel „Ostatní" spodní lišty (mobil). Hamburger menu bylo nahrazeno
+  // spodní lištou, sidebar zůstává jen pro desktop.
+  const [moreOpen, setMoreOpen] = useState(false)
   const location = useLocation()
 
-  // Close sidebar when route changes (mobile)
+  // Close the "Ostatní" sheet when route changes (mobile)
   useEffect(() => {
-    setSidebarOpen(false)
+    setMoreOpen(false)
   }, [location.pathname])
 
   const handleNavClick = () => {
-    setSidebarOpen(false)
+    setMoreOpen(false)
   }
+
+  const moreActive = MOBILE_MORE_PATHS.some(p => location.pathname.startsWith(p))
 
   return (
     <div className="app-container">
-      {/* Mobile Header */}
+      {/* Mobile Header (jen logo, navigace je ve spodní liště) */}
       <header className="mobile-header">
-        <button
-          className="mobile-menu-btn"
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          aria-label="Toggle menu"
-        >
-          {sidebarOpen ? <Icons.Close /> : <Icons.Menu />}
-        </button>
         <div className="mobile-logo">
           <Icons.Logo />
           <span>Anime List</span>
         </div>
       </header>
 
-      {/* Overlay for mobile */}
-      {sidebarOpen && (
-        <div
-          className="sidebar-overlay"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
       {/* Sidebar */}
-      <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
+      <aside className="sidebar">
         <div className="sidebar-logo">
           <Icons.Logo />
           <h1>Anime List</h1>
@@ -317,20 +310,95 @@ function AppContent({ stats }) {
 
       {/* Main Content */}
       <main className="main-content">
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/anime" element={<AnimeList />}>
-            <Route path=":name" element={<AnimeDetail />} />
-          </Route>
-          <Route path="/ratings" element={<AnimeRatings />} />
-          <Route path="/top-favorites" element={<TopFavorites />} />
-          <Route path="/history" element={<HistoryLog />} />
-          <Route path="/favorites" element={<Favorites />} />
-          <Route path="/plan-to-watch" element={<PlanToWatch />} />
-          <Route path="/recommendations" element={<Recommendations />} />
-          <Route path="/wrapped" element={<Wrapped />} />
-        </Routes>
+        <Suspense fallback={<div className="route-loading">Načítání…</div>}>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/anime" element={<AnimeList />}>
+              <Route path=":name" element={<AnimeDetail />} />
+            </Route>
+            <Route path="/ratings" element={<AnimeRatings />} />
+            <Route path="/top-favorites" element={<TopFavorites />} />
+            <Route path="/history" element={<HistoryLog />} />
+            <Route path="/favorites" element={<Favorites />} />
+            <Route path="/plan-to-watch" element={<PlanToWatch />} />
+            <Route path="/recommendations" element={<Recommendations />} />
+            <Route path="/wrapped" element={<Wrapped />} />
+          </Routes>
+        </Suspense>
       </main>
+
+      {/* Panel „Ostatní" (mobil): zbytek navigace + téma + poslední aktualizace */}
+      {moreOpen && (
+        <div className="mobile-more-overlay" onClick={() => setMoreOpen(false)} />
+      )}
+      {moreOpen && (
+        <div className="mobile-more-sheet">
+          <nav className="mobile-more-nav">
+            <NavLink to="/ratings" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
+              <Icons.Chart />
+              <span>Anime hodnocení</span>
+            </NavLink>
+            <NavLink to="/top-favorites" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
+              <span style={{ fontSize: '1.2rem', paddingRight: '0.4rem' }}>🏆</span>
+              <span>Top Favorites</span>
+            </NavLink>
+            <NavLink to="/plan-to-watch" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
+              <Icons.Bookmark />
+              <span>Plan to Watch</span>
+            </NavLink>
+            <NavLink to="/recommendations" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
+              <Icons.Star />
+              <span>Recommendations</span>
+            </NavLink>
+            <NavLink to="/wrapped" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
+              <span style={{ fontSize: '1.2rem', paddingRight: '0.4rem' }}>🎁</span>
+              <span>Anime Wrapped</span>
+            </NavLink>
+          </nav>
+          <ThemeSwitcher />
+          {stats && (
+            <div className="mobile-more-update">
+              <div style={{ color: 'var(--text-muted)', marginBottom: '4px' }}>Poslední aktualizace</div>
+              <div style={{ color: 'var(--accent-primary)', fontWeight: '600' }}>
+                {stats.last_update ? new Date(stats.last_update).toLocaleDateString('cs-CZ') : 'N/A'}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Spodní lišta (mobil): hlavní taby, „Ostatní" otevírá panel se zbytkem */}
+      <nav className="mobile-bottombar">
+        <NavLink to="/" className={({ isActive }) => `mobile-tab ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
+          <Icons.Dashboard />
+          <span className="mobile-tab-label">Dashboard</span>
+        </NavLink>
+        <NavLink to="/history" className={({ isActive }) => `mobile-tab ${isActive ? 'active' : ''}`} onClick={() => {
+          sessionStorage.removeItem('history_log_scroll_y');
+          sessionStorage.removeItem('history_log_visible_count');
+          handleNavClick();
+        }}>
+          <Icons.History />
+          <span className="mobile-tab-label">History Log</span>
+        </NavLink>
+        <NavLink to="/anime" className={({ isActive }) => `mobile-tab ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
+          <Icons.List />
+          <span className="mobile-tab-label">Anime List</span>
+        </NavLink>
+        <NavLink to="/favorites" className={({ isActive }) => `mobile-tab ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
+          <Icons.Music />
+          <span className="mobile-tab-label">OP/ED/OST</span>
+        </NavLink>
+        <button
+          type="button"
+          className={`mobile-tab ${moreActive || moreOpen ? 'active' : ''}`}
+          onClick={() => setMoreOpen(o => !o)}
+          aria-expanded={moreOpen}
+        >
+          <Icons.More />
+          <span className="mobile-tab-label">Ostatní</span>
+        </button>
+      </nav>
     </div>
   )
 }
@@ -347,26 +415,36 @@ function App() {
       .then(data => setStats(data))
       .catch(err => console.error('Failed to load stats:', err))
 
-    // Start background download for Jikan API v4 episodes 24/7 across the entire application
-    fetch('data/anime_list.json')
-      .then(res => res.json())
-      .then(al => {
-        // First bulk import the static cache deployed on the server
-        fetch('data/jikan_cache.json')
-          .then(res => {
-            if (!res.ok) throw new Error('Static Jikan cache not available on server');
-            return res.json();
-          })
-          .then(async (staticCache) => {
-            await importJikanStaticCache(staticCache);
-            runBackgroundSync(al);
-          })
-          .catch(err => {
-            console.warn('[Jikan] Could not load static cache on startup, running clean downloader:', err);
-            runBackgroundSync(al);
-          });
-      })
-      .catch(err => console.error('Failed to start Jikan downloader in App:', err))
+    // Jikan downloader startuje až v klidu po prvním renderu: parse 2MB
+    // statické cache a rozjezd fronty soutěžily s vykreslením Dashboardu.
+    // anime_list se bere přes dataStore (sdílená cache), ne druhým fetchem.
+    const startJikan = () => {
+      loadData(STORAGE_KEYS.ANIME_LIST, 'data/anime_list.json')
+        .then(al => {
+          // First bulk import the static cache deployed on the server
+          fetch('data/jikan_cache.json')
+            .then(res => {
+              if (!res.ok) throw new Error('Static Jikan cache not available on server');
+              return res.json();
+            })
+            .then(async (staticCache) => {
+              await importJikanStaticCache(staticCache);
+              runBackgroundSync(al);
+            })
+            .catch(err => {
+              console.warn('[Jikan] Could not load static cache on startup, running clean downloader:', err);
+              runBackgroundSync(al);
+            });
+        })
+        .catch(err => console.error('Failed to start Jikan downloader in App:', err))
+    }
+    const idleId = ('requestIdleCallback' in window)
+      ? window.requestIdleCallback(startJikan, { timeout: 8000 })
+      : setTimeout(startJikan, 4000)
+    return () => {
+      if ('cancelIdleCallback' in window) window.cancelIdleCallback(idleId)
+      else clearTimeout(idleId)
+    }
   }, [])
 
   return (
