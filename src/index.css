@@ -6473,6 +6473,35 @@ button.fav-ost-row-play:hover {
   --rating-1: #c0392b;
 }
 
+/* ── Standardizace barev badges pro téma Re:Zero ──
+   Sjednocuje barvy sdílených badges (ostatní záložky) s tím, co má záložka
+   Anime List (paleta z návrhu). Mění se JEN barvy — velikosti a tvary tříd
+   (.type-badge, .status-badge) zůstávají beze změny, takže Plan to Watch
+   i ostatní si drží svou velikost. */
+[data-theme="rezero"] .type-badge.tv { background: rgba(99, 102, 241, 0.18); color: #8f9bf7; }
+[data-theme="rezero"] .type-badge.movie { background: rgba(168, 93, 240, 0.18); color: #c39bf5; }
+[data-theme="rezero"] .type-badge.ova { background: rgba(238, 154, 70, 0.16); color: #e0a75c; }
+[data-theme="rezero"] .type-badge.ona { background: rgba(160, 206, 78, 0.16); color: #a0ce4e; }
+[data-theme="rezero"] .type-badge.special { background: rgba(236, 72, 153, 0.14); color: #e488b4; }
+
+[data-theme="rezero"] .status-badge.airing {
+  background: color-mix(in srgb, var(--accent-emerald) 12%, transparent);
+  color: var(--accent-emerald);
+  border: 1px solid color-mix(in srgb, var(--accent-emerald) 40%, transparent);
+  box-shadow: none;
+}
+[data-theme="rezero"] .status-badge.airing::after { display: none; }
+[data-theme="rezero"] .status-badge.pending {
+  background: color-mix(in srgb, var(--accent-amber) 12%, transparent);
+  color: var(--accent-amber);
+  border: 1px solid color-mix(in srgb, var(--accent-amber) 40%, transparent);
+}
+[data-theme="rezero"] .status-badge.finished {
+  background: color-mix(in srgb, var(--accent-cyan) 12%, transparent);
+  color: var(--accent-cyan);
+  border: 1px solid color-mix(in srgb, var(--accent-cyan) 35%, transparent);
+}
+
 /* Witch Miasma vignette effect — odstraněno na přání (návrh ho nemá). */
 
 /* Vodoznak s insignií na pozadí sidebaru odstraněn na přání. */
@@ -9294,6 +9323,11 @@ button.fav-ost-row-play:hover {
   position: fixed; z-index: 200; padding: 8px; border-radius: 14px;
   background: rgba(12, 12, 15, 0.97);
   border: 1px solid #3b3a42; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85); pointer-events: none;
+  animation: alPreviewIn 0.13s ease-out;
+}
+@keyframes alPreviewIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
 }
 .al-preview-img {
   display: block; width: 100%; border-radius: 9px; background-color: #1c1c22;

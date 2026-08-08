@@ -237,13 +237,15 @@ const HoverPreview = forwardRef(function HoverPreview(_, ref) {
             if (ir > cr) { dh = cw / ir; dy = (ch - dh) / 2 } else { dw = ch * ir; dx = (cw - dw) / 2 }
             try { ctx.clearRect(0, 0, cw, ch); ctx.drawImage(imgEl, dx, dy, dw, dh); return true } catch { return false }
         }
-        draw(state.img)
-        let cancelled = false
-        const full = new Image()
-        full.decoding = 'async'
-        full.onload = () => { if (!cancelled && canvasRef.current === canvas) draw(full) }
-        full.src = state.src
-        return () => { cancelled = true; full.onload = null }
+        // Kreslí se PŘÍMO z už načteného řádkového obrázku — drawImage použije jeho
+        // plné rozlišení (naturalWidth ~1600), takže je to instantní I ostré, bez
+        // jakéhokoli nového stahování (to bylo příčinou 7s prodlevy).
+        if (!draw(state.img) && state.img) {
+            // řádkový obrázek se teprve načítá → překresli, až dorazí (BEZ nového requestu)
+            const onload = () => { if (canvasRef.current === canvas) draw(state.img) }
+            state.img.addEventListener('load', onload, { once: true })
+            return () => state.img.removeEventListener('load', onload)
+        }
     }, [state])
 
     if (!state) return null
@@ -748,41 +750,6 @@ function AnimeList() {
         observer.observe(sentinelRef.current)
         return () => observer.disconnect()
     }, [filteredList.length])
-
-    // Předstahování náhledů: obrázky viditelných řádků se na pozadí (v nečinnosti)
-    // stáhnou dopředu do cache prohlížeče, aby velký plovoucí náhled po najetí
-    // nečekal na síť. Bitmapy se NEdrží (jen krátce do doběhnutí stažení), takže
-    // to nežere paměť — velké obrázky (1600 px) by jinak zabraly stovky MB.
-    const inflightRef = useRef(new Set())
-    useEffect(() => {
-        if (viewMode !== 'table' || loading) return
-        const urls = filteredList.slice(0, displayCount)
-            .map(a => a.thumbnail && a.thumbnail.replace(/#/g, '%23'))
-            .filter(Boolean)
-        let cancelled = false
-        let i = 0
-        // Timeout zajistí, že předstahování naběhne rychle i když prohlížeč není
-        // nečinný (hned po Ctrl+F5 běží i načítání dat a Jikan sync).
-        const idleCb = ('requestIdleCallback' in window)
-            ? (fn) => window.requestIdleCallback(fn, { timeout: 1200 })
-            : (fn) => setTimeout(() => fn({ timeRemaining: () => 8 }), 120)
-        const cancelIdle = ('cancelIdleCallback' in window) ? window.cancelIdleCallback : clearTimeout
-        const inflight = inflightRef.current
-        let handle
-        const pump = (deadline) => {
-            // max ~6 souběžných stahování (limit prohlížeče na doménu)
-            while (!cancelled && i < urls.length && inflight.size < 6 && (!deadline || deadline.timeRemaining() > 2)) {
-                const img = new Image()
-                inflight.add(img)
-                const done = () => { inflight.delete(img); if (!cancelled) handle = idleCb(pump) }
-                img.onload = done
-                img.onerror = done
-                img.src = urls[i++]
-            }
-        }
-        handle = idleCb(pump)
-        return () => { cancelled = true; if (handle) cancelIdle(handle); inflight.clear() }
-    }, [filteredList, displayCount, viewMode, loading])
 
     // Uloženo při dočasném zúžení na jednu sérii (toggleSeriesFilter) — deklarováno
     // před efekty/handlery, které je čtou (react-hooks/immutability).
