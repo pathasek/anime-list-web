@@ -10,6 +10,7 @@ import { buildJourney, monthLabelShort, fmtHours } from '../utils/journeyCalcula
 import AnimeJourneyMonthModal from './AnimeJourneyMonthModal'
 import { extractMalId, getAnimeInfo } from '../utils/jikanService'
 import { animePath } from '../utils/animeSlug'
+import { loadData, STORAGE_KEYS } from '../utils/dataStore'
 import './animeJourney.css'
 
 // Cache pro postery v paměti (zkrátí re-rendery)
@@ -473,7 +474,9 @@ export default function AnimeJourney({ animeList, historyLog, episodeRatings, ra
         // po nasazení jsou zas čerstvá, a warm-up proběhne už při načtení stránky.
         Promise.all([
             fetch('data/top_favorites.json').then(r => r.json()).catch(() => null),
-            fetch('data/category_ratings.json').then(r => r.json()).catch(() => []),
+            // Sdílená cache (dataStore) — na Dashboardu ho už načetl preloadAllData,
+            // takže se category_ratings.json nestahuje a neparsuje podruhé.
+            loadData(STORAGE_KEYS.CATEGORY_RATINGS, 'data/category_ratings.json').catch(() => []),
         ]).then(([topFav, catR]) => {
             if (cancelled) return
             setExtras({

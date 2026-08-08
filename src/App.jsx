@@ -5,7 +5,11 @@ import ThemeSwitcher from './components/ThemeSwitcher'
 import { OstPlayerProvider } from './components/OstPlayerProvider'
 import { runBackgroundSync, importJikanStaticCache } from './utils/jikanService'
 import { preloadAllData, loadData, STORAGE_KEYS } from './utils/dataStore'
+import rezeroInsignia from './assets/rezero-insignia.svg'
 import './index.css'
+
+// Sbalený sidebar se pamatuje mezi návštěvami
+const SIDEBAR_COLLAPSED_KEY = 'sidebar_collapsed'
 
 // Stránky se stahují až při první návštěvě (route-level code splitting).
 // Bez toho byl celý web jeden ~1MB bundle a KAŽDÉ načtení stránky parsovalo
@@ -56,6 +60,24 @@ const Icons = {
   Star: () => (
     <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.382-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+    </svg>
+  ),
+  // Pohár a dárek nahradily emoji 🏆 a 🎁, ať sidebar nemíchá dva různé styly.
+  // Stejný rukopis jako zbytek: viewBox 24, stroke 2, bez výplně.
+  Trophy: () => (
+    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4h10v5a5 5 0 01-10 0V4zM7 6H4v1a3 3 0 003 3M17 6h3v1a3 3 0 01-3 3M12 14v4M8 21h8" />
+    </svg>
+  ),
+  Gift: () => (
+    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 11h16v9a1 1 0 01-1 1H5a1 1 0 01-1-1v-9zM3 7h18v4H3V7zM12 7v14M12 7C10 3.5 8.5 2.5 7 3.2 5.5 3.9 6 6.6 12 7zM12 7c2-3.5 3.5-4.5 5-3.8 1.5.7 1 3.4-5 3.8z" />
+    </svg>
+  ),
+  Clock: () => (
+    <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 20 20">
+      <circle cx="10" cy="10" r="7.4" />
+      <path d="M10 5.8V10l2.8 1.9" />
     </svg>
   ),
   Logo: () => {
@@ -211,12 +233,56 @@ const Icons = {
 // Routy schované na mobilu pod tlačítkem „Ostatní" ve spodní liště
 const MOBILE_MORE_PATHS = ['/ratings', '/top-favorites', '/plan-to-watch', '/recommendations', '/wrapped']
 
+// History Log si pamatuje pozici scrollu; při kliknutí v menu chceme začít shora.
+const resetHistoryScroll = () => {
+  sessionStorage.removeItem('history_log_scroll_y')
+  sessionStorage.removeItem('history_log_visible_count')
+}
+
+// Položky sidebaru rozdělené do sekcí. Pořadí odpovídá původnímu menu.
+const NAV_GROUPS = [
+  {
+    label: 'Přehled',
+    items: [
+      { to: '/', label: 'Dashboard', Icon: Icons.Dashboard },
+      { to: '/anime', label: 'Anime List', Icon: Icons.List },
+      { to: '/history', label: 'History Log', Icon: Icons.History, onSelect: resetHistoryScroll },
+      { to: '/ratings', label: 'Anime hodnocení', Icon: Icons.Chart }
+    ]
+  },
+  {
+    label: 'Oblíbené',
+    items: [
+      { to: '/top-favorites', label: 'Top Favorites', Icon: Icons.Trophy },
+      { to: '/favorites', label: 'Favourite OP/ED/OST', Icon: Icons.Music },
+      { to: '/plan-to-watch', label: 'Plan to Watch', Icon: Icons.Bookmark }
+    ]
+  },
+  {
+    label: 'Objevování',
+    items: [
+      { to: '/recommendations', label: 'Recommendations', Icon: Icons.Star },
+      { to: '/wrapped', label: 'Anime Wrapped', Icon: Icons.Gift }
+    ]
+  }
+]
+
 // Wrapper component to handle mobile navigation state
-function AppContent({ stats }) {
+function AppContent({ stats, animeCount }) {
   // Panel „Ostatní" spodní lišty (mobil). Hamburger menu bylo nahrazeno
   // spodní lištou, sidebar zůstává jen pro desktop.
   const [moreOpen, setMoreOpen] = useState(false)
+  const [collapsed, setCollapsed] = useState(
+    () => localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === '1'
+  )
   const location = useLocation()
+
+  const toggleSidebar = () => {
+    setCollapsed(c => {
+      localStorage.setItem(SIDEBAR_COLLAPSED_KEY, c ? '0' : '1')
+      return !c
+    })
+  }
 
   // Close the "Ostatní" sheet when route changes (mobile)
   useEffect(() => {
@@ -230,7 +296,7 @@ function AppContent({ stats }) {
   const moreActive = MOBILE_MORE_PATHS.some(p => location.pathname.startsWith(p))
 
   return (
-    <div className="app-container">
+    <div className={`app-container ${collapsed ? 'sidebar-collapsed' : ''}`}>
       {/* Mobile Header (jen logo, navigace je ve spodní liště) */}
       <header className="mobile-header">
         <div className="mobile-logo">
@@ -240,72 +306,80 @@ function AppContent({ stats }) {
       </header>
 
       {/* Sidebar */}
-      <aside className="sidebar">
+      <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
         <div className="sidebar-logo">
-          <Icons.Logo />
-          <h1>Anime List</h1>
+          <button
+            type="button"
+            className="sidebar-logo-btn"
+            onClick={toggleSidebar}
+            title={collapsed ? 'Rozbalit menu' : 'Sbalit menu'}
+            aria-label={collapsed ? 'Rozbalit menu' : 'Sbalit menu'}
+          >
+            <img src={rezeroInsignia} alt="" />
+          </button>
+          {!collapsed && (
+            <div className="sidebar-logo-text">
+              <h1>Anime List</h1>
+              {animeCount > 0 && (
+                <span className="sidebar-logo-count">
+                  {animeCount.toLocaleString('cs-CZ')} titulů
+                </span>
+              )}
+            </div>
+          )}
+          {!collapsed && (
+            <button
+              type="button"
+              className="sidebar-collapse-btn"
+              onClick={toggleSidebar}
+              title="Sbalit menu"
+              aria-label="Sbalit menu"
+            >
+              ‹
+            </button>
+          )}
         </div>
 
+        <span className="sidebar-divider" aria-hidden="true"></span>
+
         <nav className="sidebar-nav">
-          <NavLink to="/" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
-            <Icons.Dashboard />
-            <span>Dashboard</span>
-          </NavLink>
-          <NavLink to="/anime" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
-            <Icons.List />
-            <span>Anime List</span>
-          </NavLink>
-          <NavLink to="/history" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={() => {
-            sessionStorage.removeItem('history_log_scroll_y');
-            sessionStorage.removeItem('history_log_visible_count');
-            handleNavClick();
-          }}>
-            <Icons.History />
-            <span>History Log</span>
-          </NavLink>
-          <NavLink to="/ratings" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
-            <Icons.Chart />
-            <span>Anime hodnocení</span>
-          </NavLink>
-          <NavLink to="/top-favorites" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
-            <span style={{ fontSize: '1.2rem', paddingRight: '0.4rem' }}>🏆</span>
-            <span>Top Favorites</span>
-          </NavLink>
-          <NavLink to="/favorites" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
-            <Icons.Music />
-            <span>Favourite OP/ED/OST</span>
-          </NavLink>
-          <NavLink to="/plan-to-watch" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
-            <Icons.Bookmark />
-            <span>Plan to Watch</span>
-          </NavLink>
-          <NavLink to="/recommendations" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
-            <Icons.Star />
-            <span>Recommendations</span>
-          </NavLink>
-          <NavLink to="/wrapped" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
-            <span style={{ fontSize: '1.2rem', paddingRight: '0.4rem' }}>🎁</span>
-            <span>Anime Wrapped</span>
-          </NavLink>
+          {NAV_GROUPS.map(group => (
+            <div className="nav-group" key={group.label}>
+              {!collapsed && <span className="nav-group-label">{group.label}</span>}
+              {group.items.map(item => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  title={item.label}
+                  className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                  onClick={() => {
+                    if (item.onSelect) item.onSelect()
+                    handleNavClick()
+                  }}
+                >
+                  <span className="nav-link-icon"><item.Icon /></span>
+                  {!collapsed && <span className="nav-link-label">{item.label}</span>}
+                </NavLink>
+              ))}
+            </div>
+          ))}
         </nav>
 
-        <ThemeSwitcher />
+        <div className="sidebar-footer">
+          <ThemeSwitcher collapsed={collapsed} />
 
-        {/* Stats in sidebar footer */}
-        {stats && (
-          <div style={{
-            marginTop: 'auto',
-            padding: 'var(--spacing-md)',
-            background: 'var(--bg-tertiary)',
-            borderRadius: 'var(--radius-md)',
-            fontSize: '0.875rem'
-          }}>
-            <div style={{ color: 'var(--text-muted)', marginBottom: '4px' }}>Poslední aktualizace</div>
-            <div style={{ color: 'var(--accent-primary)', fontWeight: '600' }}>
-              {stats.last_update ? new Date(stats.last_update).toLocaleDateString('cs-CZ') : 'N/A'}
+          {stats && !collapsed && (
+            <div className="sidebar-update">
+              <span className="sidebar-update-icon"><Icons.Clock /></span>
+              <span className="sidebar-update-text">
+                <span className="sidebar-update-label">Poslední aktualizace</span>
+                <span className="sidebar-update-value">
+                  {stats.last_update ? new Date(stats.last_update).toLocaleDateString('cs-CZ') : 'N/A'}
+                </span>
+              </span>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </aside>
 
       {/* Main Content */}
@@ -339,7 +413,7 @@ function AppContent({ stats }) {
               <span>Anime hodnocení</span>
             </NavLink>
             <NavLink to="/top-favorites" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
-              <span style={{ fontSize: '1.2rem', paddingRight: '0.4rem' }}>🏆</span>
+              <Icons.Trophy />
               <span>Top Favorites</span>
             </NavLink>
             <NavLink to="/plan-to-watch" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
@@ -351,7 +425,7 @@ function AppContent({ stats }) {
               <span>Recommendations</span>
             </NavLink>
             <NavLink to="/wrapped" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={handleNavClick}>
-              <span style={{ fontSize: '1.2rem', paddingRight: '0.4rem' }}>🎁</span>
+              <Icons.Gift />
               <span>Anime Wrapped</span>
             </NavLink>
           </nav>
@@ -405,13 +479,21 @@ function AppContent({ stats }) {
 
 function App() {
   const [stats, setStats] = useState(null)
+  const [animeCount, setAnimeCount] = useState(0)
 
   useEffect(() => {
     // Preload all list and detail data in the background
     preloadAllData()
 
-    fetch('data/stats.json')
-      .then(res => res.json())
+    // Počet titulů pod názvem v sidebaru. Bere se ze sdílené cache, kterou
+    // preloadAllData právě rozjelo, takže to není další stažení souboru.
+    loadData(STORAGE_KEYS.ANIME_LIST, 'data/anime_list.json')
+      .then(list => setAnimeCount(Array.isArray(list) ? list.length : 0))
+      .catch(() => {})
+
+    // Přes sdílenou cache, ať se stats.json nestahuje a neparsuje podruhé
+    // (Dashboard čte tentýž klíč).
+    loadData(STORAGE_KEYS.STATS, 'data/stats.json')
       .then(data => setStats(data))
       .catch(err => console.error('Failed to load stats:', err))
 
@@ -451,7 +533,7 @@ function App() {
     <ThemeProvider>
       <HashRouter>
         <OstPlayerProvider>
-          <AppContent stats={stats} />
+          <AppContent stats={stats} animeCount={animeCount} />
         </OstPlayerProvider>
       </HashRouter>
     </ThemeProvider>

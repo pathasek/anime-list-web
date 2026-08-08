@@ -11,8 +11,22 @@ const STORAGE_KEYS = {
     CATEGORY_RATINGS: 'category_ratings_data',
     EPISODE_RATINGS: 'episode_ratings_data',
     NOTES: 'notes_data',
+    STATS: 'stats_data',
     USER_EDITS: 'user_edits'
 }
+
+// Cachované datové klíče, které se při nové verzi dat (metadata.json) musí
+// zahodit. USER_EDITS sem NEPATŘÍ — to jsou lokální úpravy uživatele.
+const CACHED_DATA_KEYS = [
+    STORAGE_KEYS.ANIME_LIST,
+    STORAGE_KEYS.HISTORY_LOG,
+    STORAGE_KEYS.FAVORITES,
+    STORAGE_KEYS.PLAN_TO_WATCH,
+    STORAGE_KEYS.CATEGORY_RATINGS,
+    STORAGE_KEYS.EPISODE_RATINGS,
+    STORAGE_KEYS.NOTES,
+    STORAGE_KEYS.STATS
+]
 
 // In-memory cache to prevent slow localStorage reads and JSON parsing
 const memoryCache = {}
@@ -53,15 +67,7 @@ async function checkServerVersion() {
             // Clear cached data keys — both localStorage and the in-memory cache,
             // otherwise data already read synchronously via getCachedData() would
             // keep serving the stale version for the whole session.
-            [
-                STORAGE_KEYS.ANIME_LIST,
-                STORAGE_KEYS.HISTORY_LOG,
-                STORAGE_KEYS.FAVORITES,
-                STORAGE_KEYS.PLAN_TO_WATCH,
-                STORAGE_KEYS.CATEGORY_RATINGS,
-                STORAGE_KEYS.EPISODE_RATINGS,
-                STORAGE_KEYS.NOTES
-            ].forEach(k => {
+            CACHED_DATA_KEYS.forEach(k => {
                 localStorage.removeItem(k)
                 delete memoryCache[k]
             })
@@ -105,7 +111,20 @@ export async function getDataVersion() {
  * @param {string} jsonPath - Path to JSON file
  * @returns {Promise<any[]>}
  */
-export async function loadData(key, jsonPath) {
+// Dedup souběžných dotazů na tentýž klíč. Bez něj dva volající, kteří žádají
+// stejný soubor dřív, než dorazí první fetch (App preloadAllData + stránka,
+// nebo dvojí spuštění efektů v React StrictMode), stáhnou a naparsují MB dat
+// dvakrát. Sdílíme jeden probíhající příslib.
+const _loadInflight = new Map()
+
+export function loadData(key, jsonPath) {
+    if (_loadInflight.has(key)) return _loadInflight.get(key)
+    const p = _loadDataInner(key, jsonPath).finally(() => _loadInflight.delete(key))
+    _loadInflight.set(key, p)
+    return p
+}
+
+async function _loadDataInner(key, jsonPath) {
     // Wait for version check to complete so we don't load stale cache.
     // This must happen before reading memoryCache, because the version check
     // invalidates both caches when the server has newer data.

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from 'react'
+import { useState, useEffect, useMemo, useRef, useTransition, forwardRef, useImperativeHandle } from 'react'
 import { createPortal } from 'react-dom'
 import { useNavigate, useLocation, Outlet, useParams } from 'react-router-dom'
 import { loadData, getCachedData, STORAGE_KEYS } from '../utils/dataStore'
@@ -34,6 +34,18 @@ const FilterDropdown = ({ label, options, currentFilters, onFilterChange, type, 
         onFilterChange(type, option, next)
     }
 
+    // Pravý klik cykluje pozpátku (0 → vyloučit → zahrnout → 0), stejně jako návrh
+    const handleCycleBack = (option, e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        const current = currentFilters[option] || 0
+        let next = 0
+        if (current === 0) next = -1
+        else if (current === -1) next = 1
+        else next = 0
+        onFilterChange(type, option, next)
+    }
+
     const clearThisFilter = (e) => {
         e.stopPropagation()
         onFilterChange(type, null, 'clear')
@@ -43,12 +55,12 @@ const FilterDropdown = ({ label, options, currentFilters, onFilterChange, type, 
     return (
         <div className={`filter-dropdown-container dropdown-${type}`}>
             <button
-                className={`filter-btn ${activeCount > 0 ? 'active' : ''}`}
+                className={`al-filter-btn ${activeCount > 0 ? 'active' : ''}`}
                 onClick={() => setIsOpen(!isOpen)}
-                style={{ display: 'flex', alignItems: 'center' }}
             >
-                {label} {activeCount > 0 && <span className="filter-badge-count">{activeCount}</span>}
-                <span style={{ marginLeft: '6px', fontSize: '0.7rem' }}>▼</span>
+                <span>{label}</span>
+                {activeCount > 0 && <span className="al-filter-badge">{activeCount}</span>}
+                <span className="al-filter-caret">▼</span>
             </button>
             {isOpen && (
                 <div className={`filter-dropdown-menu ${alignRight ? 'right-aligned' : ''}`}>
@@ -76,7 +88,8 @@ const FilterDropdown = ({ label, options, currentFilters, onFilterChange, type, 
                                     key={opt}
                                     className={`filter-dropdown-item ${statusClass}`}
                                     onClick={(e) => handleCycle(opt, e)}
-                                    title={descriptions && descriptions[opt] ? descriptions[opt] : undefined}
+                                    onContextMenu={(e) => handleCycleBack(opt, e)}
+                                    title={descriptions && descriptions[opt] ? descriptions[opt] : 'Klik = zahrnout · další klik = vyloučit · pravý klik zpět'}
                                 >
                                     <span>{opt}</span>
                                     {status === 1 && <span style={{ fontSize: '0.8rem' }}>+</span>}
@@ -99,6 +112,150 @@ const FilterDropdown = ({ label, options, currentFilters, onFilterChange, type, 
     )
 }
 
+// Barvy žánrů přesně podle návrhu: [podklad, text]. Bez rámečku.
+const GENRE_STYLE = {
+    Action: ['rgba(244,115,111,.13)', '#f4938f'],
+    Adventure: ['rgba(238,154,70,.13)', '#e0a75c'],
+    Comedy: ['rgba(251,191,36,.12)', '#e6bf5a'],
+    Drama: ['rgba(168,93,240,.13)', '#bf9cef'],
+    Fantasy: ['rgba(99,102,241,.14)', '#9096f0'],
+    Romance: ['rgba(236,72,153,.13)', '#e488b4'],
+    'Sci-Fi': ['rgba(34,193,195,.13)', '#5fc2c4'],
+    Suspense: ['rgba(160,206,78,.12)', '#a6c66a'],
+    Horror: ['rgba(190,60,60,.14)', '#e07878'],
+    Mystery: ['rgba(129,140,248,.13)', '#a5abf5'],
+    Sports: ['rgba(52,211,153,.12)', '#5fd0a0'],
+    Supernatural: ['rgba(217,70,239,.12)', '#d18cf0'],
+    'Slice of Life': ['rgba(250,204,21,.1)', '#dcc35f'],
+    'Avant Garde': ['rgba(148,163,184,.12)', '#9aa5b4']
+}
+const genreStyle = (g) => GENRE_STYLE[g] || ['#23232c', '#8f8478']
+
+// Barvy typů anime přesně podle návrhu: [podklad, text]
+const TYPE_STYLE = {
+    TV: ['rgba(99,102,241,.18)', '#8f9bf7'],
+    Movie: ['rgba(168,93,240,.18)', '#c39bf5'],
+    ONA: ['rgba(160,206,78,.16)', '#a0ce4e'],
+    OVA: ['rgba(238,154,70,.16)', '#e0a75c'],
+    Special: ['rgba(236,72,153,.14)', '#e488b4'],
+    'TV Special': ['rgba(236,72,153,.14)', '#e488b4'],
+    Music: ['rgba(34,193,195,.16)', '#5fc2c4'],
+    Donghua: ['rgba(244,115,111,.16)', '#f4938f']
+}
+const typeStyle = (t) => TYPE_STYLE[t] || ['rgba(120,113,140,.18)', '#8a8290']
+
+// Ikonky do karet (převzaté z návrhu): studio, počet epizod, dosledování
+const IconStudio = () => (
+    <svg className="al-card-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M2 13.5V6l4.2 2.4V6L10.4 8.4V2.5h3.6v11" /><path d="M1.2 13.5h13.6" />
+    </svg>
+)
+const IconEp = () => (
+    <svg className="al-card-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="1.5" y="3.5" width="13" height="9.5" rx="1.5" /><path d="M5 3.5V13M11 3.5V13" />
+    </svg>
+)
+const IconWatched = () => (
+    <svg className="al-card-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="1.8" y="3" width="12.4" height="11.2" rx="2" /><path d="M1.8 6.4h12.4M5 1.6v2.6M11 1.6v2.6" /><path d="M5.6 10.4l1.7 1.7 3.2-3.4" />
+    </svg>
+)
+
+// Barva hodnocení jako CSS proměnná tématu (modul-level, aby ji šlo použít
+// i v useMemo pro souhrnnou kartu průměru bez temporal dead zone).
+const ratingColorVar = (rating) => {
+    const r = parseFloat(rating)
+    if (r >= 10) return 'var(--rating-10)'
+    if (r >= 9) return 'var(--rating-9)'
+    if (r >= 8) return 'var(--rating-8)'
+    if (r >= 7) return 'var(--rating-7)'
+    if (r >= 6) return 'var(--rating-6)'
+    if (r >= 5) return 'var(--rating-5)'
+    if (r >= 4) return 'var(--rating-4)'
+    if (r >= 3) return 'var(--rating-3)'
+    if (r >= 2) return 'var(--rating-2)'
+    return 'var(--rating-1)'
+}
+
+// Volby řazení pro dropdown (režim Karty) — zrcadlí klikací hlavičky tabulky
+const SORT_OPTIONS = [
+    { key: 'default', label: 'Řadit dle: Výchozí' },
+    { key: 'name', label: 'Řadit dle: Názvu' },
+    { key: 'type', label: 'Řadit dle: Typu' },
+    { key: 'studio', label: 'Řadit dle: Studia' },
+    { key: 'genres', label: 'Řadit dle: Žánrů' },
+    { key: 'episodes', label: 'Řadit dle: Počtu ep.' },
+    { key: 'rating', label: 'Řadit dle: Hodnocení' },
+    { key: 'end_date', label: 'Řadit dle: Dosledování' },
+    { key: 'status', label: 'Řadit dle: Statusu' }
+]
+
+// Plovoucí velký náhled jako samostatná komponenta s imperativním API (show/hide
+// přes ref). Klíčové pro výkon: najetí myší NEPŘEKRESLÍ celou tabulku (50–150
+// řádků), jen tenhle malý náhled. Kreslí se přes canvas z už načteného řádkového
+// obrázku (drawImage) → instantní, bez čekání na síť/dekódování; pak se z plného
+// rozlišení překreslí kvůli ostrosti.
+const HoverPreview = forwardRef(function HoverPreview(_, ref) {
+    const [state, setState] = useState(null)
+    const canvasRef = useRef(null)
+
+    useImperativeHandle(ref, () => ({
+        show(imgEl, src, name, rect) {
+            if (!src) return
+            const margin = 16
+            const pw = Math.min(760, window.innerWidth - 2 * margin)
+            const ph = Math.round(pw * 428 / 760)
+            const totalH = ph + 34
+            let left
+            if (rect.right + margin + pw <= window.innerWidth) left = rect.right + margin
+            else if (rect.left - margin - pw >= 0) left = rect.left - margin - pw
+            else left = Math.max(margin, (window.innerWidth - pw) / 2)
+            let top = rect.top + rect.height / 2 - totalH / 2
+            top = Math.max(margin, Math.min(top, window.innerHeight - totalH - margin))
+            setState({ left, top, width: pw, height: ph, name, img: imgEl, src })
+        },
+        hide() { setState(s => (s ? null : s)) }
+    }), [])
+
+    useEffect(() => {
+        if (!state) return
+        const canvas = canvasRef.current
+        if (!canvas) return
+        const w = state.width, h = state.height
+        const dpr = window.devicePixelRatio || 1
+        canvas.width = Math.round(w * dpr)
+        canvas.height = Math.round(h * dpr)
+        const ctx = canvas.getContext('2d')
+        ctx.imageSmoothingEnabled = true
+        ctx.imageSmoothingQuality = 'high'
+        const draw = (imgEl) => {
+            if (!imgEl || !imgEl.complete || !imgEl.naturalWidth) return false
+            const cw = canvas.width, ch = canvas.height
+            const ir = imgEl.naturalWidth / imgEl.naturalHeight
+            const cr = cw / ch
+            let dw = cw, dh = ch, dx = 0, dy = 0
+            if (ir > cr) { dh = cw / ir; dy = (ch - dh) / 2 } else { dw = ch * ir; dx = (cw - dw) / 2 }
+            try { ctx.clearRect(0, 0, cw, ch); ctx.drawImage(imgEl, dx, dy, dw, dh); return true } catch { return false }
+        }
+        draw(state.img)
+        let cancelled = false
+        const full = new Image()
+        full.decoding = 'async'
+        full.onload = () => { if (!cancelled && canvasRef.current === canvas) draw(full) }
+        full.src = state.src
+        return () => { cancelled = true; full.onload = null }
+    }, [state])
+
+    if (!state) return null
+    return createPortal(
+        <div className="al-preview" style={{ left: `${state.left}px`, top: `${state.top}px`, width: `${state.width + 16}px` }}>
+            <canvas ref={canvasRef} className="al-preview-img" style={{ width: `${state.width}px`, height: `${state.height}px` }} />
+            <div className="al-preview-name">{state.name}</div>
+        </div>,
+        document.body
+    )
+})
+
 function AnimeList() {
     const navigate = useNavigate()
     const location = useLocation()
@@ -117,6 +274,8 @@ function AnimeList() {
     const [loading, setLoading] = useState(!initialCache)
     const [searchTerm, setSearchTerm] = useState('')
     const [sortConfig, setSortConfig] = useState({ key: 'default', direction: 'asc' })
+    // Přepínač zobrazení Tabulka / Karty (nový, z redesignu) — volba se pamatuje
+    const [viewMode, setViewMode] = useState(() => localStorage.getItem('animeListView') || 'table')
     const defaultFilters = {
         status: { 'AIRING!': 1 },
         type: {},
@@ -143,6 +302,7 @@ function AnimeList() {
     })
     const [seriesFilter, setSeriesFilter] = useState(null)
     const [expandedImage, setExpandedImage] = useState(null)
+    const previewRef = useRef(null) // imperativní API plovoucího náhledu (mimo re-render tabulky)
     const { name: isDetailOpen } = useParams()
     const [showScrollTop, setShowScrollTop] = useState(false)
     const [displayCount, setDisplayCount] = useState(() => {
@@ -151,24 +311,47 @@ function AnimeList() {
     })
     const sentinelRef = useRef(null)
     const isInitialMountRestored = useRef(false)
+    // Rušení filtru série vykreslí naráz hodně řádků — přes transition, ať UI nezamrzne
+    const [isPending, startTransition] = useTransition()
+    const pendingScrollRestore = useRef(false)
+
+    // Přepínač zobrazení: uložit volbu a schovat plovoucí náhled
+    useEffect(() => {
+        localStorage.setItem('animeListView', viewMode)
+        previewRef.current?.hide()
+    }, [viewMode])
 
     // Scroll listener to update scroll position dynamically
     useEffect(() => {
+        let raf = null
+        let pendingY = 0
         const handleScroll = () => {
             const currentY = window.scrollY || document.documentElement.scrollTop;
             setShowScrollTop(currentY > 1000);
+            // Plovoucí náhled je ukotvený k pozici řádku — při scrollu ho schovej
+            previewRef.current?.hide();
 
             // Only update saved scroll after initial restoration has completed
-            if (isInitialMountRestored.current) {
-                if (currentY > 0) {
-                    sessionStorage.setItem('animeListScroll', String(currentY));
-                } else if (currentY === 0 && document.documentElement.scrollHeight > window.innerHeight) {
+            if (!isInitialMountRestored.current) return;
+
+            // sessionStorage.setItem je synchronní — throttle přes rAF, ať rychlý
+            // scroll dlouhého seznamu nezapisuje na každý scroll event (jank).
+            pendingY = currentY
+            if (raf) return
+            raf = requestAnimationFrame(() => {
+                raf = null
+                if (pendingY > 0) {
+                    sessionStorage.setItem('animeListScroll', String(pendingY));
+                } else if (pendingY === 0 && document.documentElement.scrollHeight > window.innerHeight) {
                     sessionStorage.setItem('animeListScroll', '0');
                 }
-            }
+            })
         };
         window.addEventListener('scroll', handleScroll, true);
-        return () => window.removeEventListener('scroll', handleScroll, true);
+        return () => {
+            window.removeEventListener('scroll', handleScroll, true);
+            if (raf) cancelAnimationFrame(raf);
+        };
     }, []);
 
     // Save displayCount dynamically when it changes
@@ -530,6 +713,28 @@ function AnimeList() {
         return result
     }, [animeList, searchTerm, filters, sortConfig, seriesFilter])
 
+    // Souhrn statusů pro karty v hlavičce (z redesignu) — reflektuje aktivní filtr
+    const statusSummary = useMemo(() => {
+        const counts = { 'PENDING': 0, 'AIRING!': 0, 'FINISHED': 0 }
+        const rated = []
+        filteredList.forEach(a => {
+            const s = a.status || 'FINISHED'
+            if (counts[s] !== undefined) counts[s]++
+            const rv = Number(a.rating)
+            if (!isNaN(rv) && rv > 0) rated.push(rv)
+        })
+        const avg = rated.length ? rated.reduce((x, y) => x + y, 0) / rated.length : null
+        // Pořadí i průměrné hodnocení podle návrhu: Dokončeno → Airing → Pending → ø
+        return [
+            { key: 'FINISHED', label: 'Dokončeno', value: String(counts['FINISHED']), color: 'var(--accent-cyan)' },
+            { key: 'AIRING!', label: 'Airing', value: String(counts['AIRING!']), color: 'var(--accent-emerald)' },
+            { key: 'PENDING', label: 'Pending', value: String(counts['PENDING']), color: 'var(--accent-amber)' },
+            { key: 'avg', label: 'ø Hodnocení', value: avg != null ? avg.toLocaleString('cs-CZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '–', color: avg != null ? ratingColorVar(avg) : 'var(--accent-primary)' }
+        ]
+    }, [filteredList])
+
+    const anyFilterActive = Object.values(filters).some(cat => Object.values(cat).some(v => v !== 0)) || !!searchTerm || !!seriesFilter
+
     // Infinite scroll observer setup
     useEffect(() => {
         if (!sentinelRef.current) return
@@ -543,6 +748,41 @@ function AnimeList() {
         observer.observe(sentinelRef.current)
         return () => observer.disconnect()
     }, [filteredList.length])
+
+    // Předstahování náhledů: obrázky viditelných řádků se na pozadí (v nečinnosti)
+    // stáhnou dopředu do cache prohlížeče, aby velký plovoucí náhled po najetí
+    // nečekal na síť. Bitmapy se NEdrží (jen krátce do doběhnutí stažení), takže
+    // to nežere paměť — velké obrázky (1600 px) by jinak zabraly stovky MB.
+    const inflightRef = useRef(new Set())
+    useEffect(() => {
+        if (viewMode !== 'table' || loading) return
+        const urls = filteredList.slice(0, displayCount)
+            .map(a => a.thumbnail && a.thumbnail.replace(/#/g, '%23'))
+            .filter(Boolean)
+        let cancelled = false
+        let i = 0
+        // Timeout zajistí, že předstahování naběhne rychle i když prohlížeč není
+        // nečinný (hned po Ctrl+F5 běží i načítání dat a Jikan sync).
+        const idleCb = ('requestIdleCallback' in window)
+            ? (fn) => window.requestIdleCallback(fn, { timeout: 1200 })
+            : (fn) => setTimeout(() => fn({ timeRemaining: () => 8 }), 120)
+        const cancelIdle = ('cancelIdleCallback' in window) ? window.cancelIdleCallback : clearTimeout
+        const inflight = inflightRef.current
+        let handle
+        const pump = (deadline) => {
+            // max ~6 souběžných stahování (limit prohlížeče na doménu)
+            while (!cancelled && i < urls.length && inflight.size < 6 && (!deadline || deadline.timeRemaining() > 2)) {
+                const img = new Image()
+                inflight.add(img)
+                const done = () => { inflight.delete(img); if (!cancelled) handle = idleCb(pump) }
+                img.onload = done
+                img.onerror = done
+                img.src = urls[i++]
+            }
+        }
+        handle = idleCb(pump)
+        return () => { cancelled = true; if (handle) cancelIdle(handle); inflight.clear() }
+    }, [filteredList, displayCount, viewMode, loading])
 
     // Uloženo při dočasném zúžení na jednu sérii (toggleSeriesFilter) — deklarováno
     // před efekty/handlery, které je čtou (react-hooks/immutability).
@@ -572,7 +812,7 @@ function AnimeList() {
     }
 
     const getSortIndicator = (key) => {
-        if (sortConfig.key !== key) return ''
+        if (sortConfig.key !== key) return ' ↕'
         return sortConfig.direction === 'asc' ? ' ↑' : ' ↓'
     }
 
@@ -622,6 +862,24 @@ function AnimeList() {
         return d.toLocaleDateString('cs-CZ', { year: 'numeric', month: 'numeric', day: 'numeric' })
     }
 
+    // Split genres string ("Action;Adventure") into a trimmed array
+    const genreList = (anime) => (anime.genres || '').split(';').map(g => g.trim()).filter(Boolean)
+
+    // Rating label helper ("8/10" / "X/10")
+    const ratingText = (anime) => {
+        if (anime.rating && !isNaN(Number(anime.rating))) {
+            const v = Number(anime.rating)
+            return `${v % 1 === 0 ? parseInt(anime.rating) : parseFloat(anime.rating).toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 2 })}/10`
+        }
+        return 'X/10'
+    }
+
+    const goToDetail = (anime) => {
+        sessionStorage.setItem('animeListScroll', window.scrollY)
+        sessionStorage.setItem('animeListDisplayCount', displayCount)
+        navigate(animePath(anime.name))
+    }
+
     // Check if anime is part of a series using exported series field
     function isPartOfSeries(anime) {
         if (!anime) return false
@@ -637,17 +895,7 @@ function AnimeList() {
     const toggleSeriesFilter = (anime) => {
         const baseName = extractSeriesBaseName(anime)
         if (seriesFilter === baseName) {
-            if (savedDisplayCount !== null) {
-                setDisplayCount(savedDisplayCount)
-            }
-            setSeriesFilter(null)
-
-            // Wait for React to re-render the full list, then restore scroll position
-            setTimeout(() => {
-                window.scrollTo({ top: savedScrollPos, behavior: 'instant' })
-                setSavedScrollPos(0)
-                setSavedDisplayCount(null)
-            }, 50)
+            clearSeriesFilter()
         } else {
             // Save current scroll position and displayCount before filtering shrinks the page
             setSavedScrollPos(window.scrollY)
@@ -659,6 +907,28 @@ function AnimeList() {
         }
     }
 
+    // Zrušení filtru série — přes transition, ať vykreslení mnoha řádků nezamrzne
+    // UI. Scroll se obnoví, až transition dorendruje (efekt níže na isPending).
+    const clearSeriesFilter = () => {
+        pendingScrollRestore.current = true
+        startTransition(() => {
+            if (savedDisplayCount !== null) setDisplayCount(savedDisplayCount)
+            setSeriesFilter(null)
+        })
+    }
+
+    // Obnova scrollu po dokončení transition (řádky už jsou vykreslené)
+    useEffect(() => {
+        if (!isPending && pendingScrollRestore.current) {
+            pendingScrollRestore.current = false
+            requestAnimationFrame(() => {
+                window.scrollTo({ top: savedScrollPos, behavior: 'instant' })
+                setSavedScrollPos(0)
+                setSavedDisplayCount(null)
+            })
+        }
+    }, [isPending])
+
     // Get MAL URL - use direct URL or fallback to search
     const getMALUrl = (anime) => {
         if (anime.mal_url) return anime.mal_url
@@ -667,58 +937,92 @@ function AnimeList() {
         return cleanName ? `https://myanimelist.net/anime.php?q=${encodeURIComponent(cleanName)}&cat=anime` : null
     }
 
-
+    const subtitle = (() => {
+        if (loading) return 'Načítám data…'
+        const shownN = Math.min(displayCount, filteredList.length)
+        return `Zobrazeno ${shownN} z ${filteredList.length} (celkem ${animeList.length}) · ${anyFilterActive ? 'aktivní filtr' : 'žádný aktivní filtr'}`
+    })()
 
     if (loading) {
         return <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)' }}>Načítání...</div>
     }
 
     return (
-        <div style={{ position: 'relative' }}>
+        <div className="al-root" style={{ position: 'relative' }}>
             <div className="fade-in">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-xl)' }}>
-                <h2 style={{ margin: 0 }}>
-                    Anime List
-                    <span style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginLeft: '12px' }}>
-                        ({filteredList.length} z {animeList.length})
-                    </span>
-                </h2>
-            </div>
-
-            {/* Search and Filters */}
-            <div className="search-bar">
-                <div style={{ position: 'relative', flex: 1, display: 'flex', alignItems: 'center' }}>
-                    <input
-                        type="text"
-                        className="search-input"
-                        placeholder="Hledat anime, studio, žánr..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        style={{ width: '100%', paddingRight: '2rem' }}
-                    />
-                    {searchTerm && (
-                        <button
-                            onClick={() => setSearchTerm('')}
-                            style={{
-                                position: 'absolute',
-                                right: '12px',
-                                background: 'transparent',
-                                border: 'none',
-                                color: 'var(--text-muted)',
-                                cursor: 'pointer',
-                                fontSize: '1.2rem',
-                                padding: '0 4px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                            }}
-                            title="Vymazat hledání"
-                        >
-                            ×
-                        </button>
-                    )}
+                {/* Header: nadpis + počet + podtitulek + souhrn statusů */}
+                <div className="al-header">
+                    <div className="al-header-left">
+                        <div className="al-title-row">
+                            <h2 className="al-title">Anime List</h2>
+                            <span className="al-count-pill">{filteredList.length}</span>
+                        </div>
+                        <div className="al-subtitle">{subtitle}</div>
+                    </div>
+                    <div className="al-status-cards">
+                        {statusSummary.map(s => (
+                            <div key={s.key} className="al-status-card" style={{ borderLeftColor: s.color }}>
+                                <span className="al-status-card-value" style={{ color: s.color }}>{s.value}</span>
+                                <span className="al-status-card-label">{s.label}</span>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-                <div className="filter-group" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
+
+                {/* Search + přepínač zobrazení */}
+                <div className="al-toolbar-top">
+                    <div className="al-search">
+                        <span className="al-search-icon">🔍</span>
+                        <input
+                            type="text"
+                            className="al-search-input"
+                            placeholder="Hledat anime, studio, žánr..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                        {searchTerm && (
+                            <button className="al-search-clear" onClick={() => setSearchTerm('')} title="Vymazat hledání">×</button>
+                        )}
+                    </div>
+                    <div className="al-view-toggle">
+                        <button
+                            className={`al-view-btn ${viewMode === 'table' ? 'active' : ''}`}
+                            onClick={() => setViewMode('table')}
+                            title="Kompaktní tabulka se všemi sloupci"
+                        >☰ Tabulka</button>
+                        <button
+                            className={`al-view-btn ${viewMode === 'grid' ? 'active' : ''}`}
+                            onClick={() => setViewMode('grid')}
+                            title="Mřížka náhledů 16:9 s jednotnou výškou karet"
+                        >▦ Karty</button>
+                    </div>
+                </div>
+
+                {/* Řazení (jen v režimu Karty) + filtry */}
+                <div className="al-filters">
+                    {viewMode === 'grid' && (
+                        <>
+                            <select
+                                className="al-sort-select"
+                                value={sortConfig.key}
+                                onChange={(e) => {
+                                    const key = e.target.value
+                                    setSortConfig(prev => ({ key, direction: key === 'default' ? 'asc' : prev.direction }))
+                                }}
+                                title="Řadit podle"
+                            >
+                                {SORT_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
+                            </select>
+                            <button
+                                className="al-sort-dir"
+                                onClick={() => setSortConfig(prev => ({ ...prev, direction: prev.direction === 'asc' ? 'desc' : 'asc' }))}
+                                disabled={sortConfig.key === 'default'}
+                                title="Přepnout směr řazení"
+                            >
+                                {sortConfig.direction === 'asc' ? '↑ Vzestupně' : '↓ Sestupně'}
+                            </button>
+                        </>
+                    )}
                     <FilterDropdown label="Status" options={filterOptions.statuses} currentFilters={filters.status} onFilterChange={handleFilterChange} type="status" />
                     <FilterDropdown label="Typ" options={filterOptions.types} currentFilters={filters.type} onFilterChange={handleFilterChange} type="type" />
                     <FilterDropdown label="Žánry" options={filterOptions.genres} currentFilters={filters.genre} onFilterChange={handleFilterChange} type="genre" />
@@ -732,405 +1036,405 @@ function AnimeList() {
                     <FilterDropdown label="Dabing" options={filterOptions.dubs} currentFilters={filters.dub} onFilterChange={handleFilterChange} type="dub" alignRight={true} />
 
                     {Object.values(filters).some(cat => Object.values(cat).some(v => v !== 0)) && (
-                        <button className="clear-filter-btn" style={{ width: 'auto', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '6px 12px', marginTop: 0 }} onClick={clearAllFilters}>
-                            Zrušit filtry
+                        <button className="al-clear-all" onClick={clearAllFilters}>
+                            ✕ Zrušit filtry
                         </button>
                     )}
                 </div>
-            </div>
 
-            {/* Table */}
-            <div className="table-container hide-mobile">
-                <table>
-                    <thead>
-                        <tr>
-                            <th onClick={() => handleSort('index')} className={sortConfig.key === 'index' ? 'sorted' : ''}>
-                                #{getSortIndicator('index')}
-                            </th>
-                            <th style={{ width: '90px' }}>Náhled</th>
-                            <th onClick={() => handleSort('name')} className={sortConfig.key === 'name' ? 'sorted' : ''}>
-                                Název{getSortIndicator('name')}
-                            </th>
-                            <th onClick={() => handleSort('type')} className={sortConfig.key === 'type' ? 'sorted' : ''}>
-                                Typ{getSortIndicator('type')}
-                            </th>
-                            <th onClick={() => handleSort('studio')} className={sortConfig.key === 'studio' ? 'sorted' : ''}>
-                                Studio{getSortIndicator('studio')}
-                            </th>
-                            <th onClick={() => handleSort('genres')} className={sortConfig.key === 'genres' ? 'sorted' : ''}>
-                                Žánry{getSortIndicator('genres')}
-                            </th>
-                            <th onClick={() => handleSort('episodes')} className={sortConfig.key === 'episodes' ? 'sorted' : ''}>
-                                Ep.{getSortIndicator('episodes')}
-                            </th>
-                            <th onClick={() => handleSort('rating')} className={sortConfig.key === 'rating' ? 'sorted' : ''}>
-                                Hodnocení <span title="Pro detaily rozklikněte hodnocení v rámečku" style={{ cursor: 'help', fontSize: '0.8rem', opacity: 0.8 }}>ℹ️</span>{getSortIndicator('rating')}
-                            </th>
-                            <th onClick={() => handleSort('end_date')} className={sortConfig.key === 'end_date' ? 'sorted' : ''}>
-                                Dosledováno{getSortIndicator('end_date')}
-                            </th>
-                            <th onClick={() => handleSort('status')} className={sortConfig.key === 'status' ? 'sorted' : ''}>
-                                Status{getSortIndicator('status')}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredList.slice(0, displayCount).map((anime, idx) => (
-                            <tr key={idx}>
-                                <td style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-                                    {idx + 1}.
-                                </td>
-                                <td style={{ padding: '4px' }}>
-                                    {anime.thumbnail ? (
-                                        <div
-                                            style={{
-                                                width: '80px',
-                                                height: '45px',
-                                                position: 'relative',
-                                                overflow: 'visible'
-                                            }}
-                                            onMouseEnter={(e) => {
-                                                const td = e.currentTarget.closest('td');
-                                                if (td) {
-                                                    td.style.position = 'relative';
-                                                    td.style.zIndex = '1000';
-                                                }
-                                                const img = e.currentTarget.querySelector('img');
-                                                if (!img) return;
-                                                const rect = e.currentTarget.getBoundingClientRect();
-                                                const viewportW = window.innerWidth;
-                                                const viewportH = window.innerHeight;
-                                                const isBottom = rect.top > viewportH * 0.5;
-                                                const isRight = rect.left > viewportW * 0.5;
-                                                const originY = isBottom ? 'bottom' : 'top';
-                                                const originX = isRight ? 'right' : 'left';
-                                                img.style.transformOrigin = `${originY} ${originX}`;
-                                                img.style.transform = 'scale(6)';
-                                                img.style.zIndex = '1000';
-                                                img.style.boxShadow = '0 8px 24px rgba(0,0,0,0.8)';
-                                                img.style.borderRadius = '2px';
-                                            }}
-                                            onMouseLeave={(e) => {
-                                                const td = e.currentTarget.closest('td');
-                                                if (td) {
-                                                    td.style.position = '';
-                                                    td.style.zIndex = '';
-                                                }
-                                                const img = e.currentTarget.querySelector('img');
-                                                if (!img) return;
-                                                img.style.transform = 'scale(1)';
-                                                img.style.zIndex = '500';
-                                                img.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)';
-                                                img.style.borderRadius = '4px';
-                                                setTimeout(() => { img.style.zIndex = '1'; }, 350);
-                                            }}
-                                        >
-                                            <img
-                                                src={anime.thumbnail.replace(/#/g, '%23')}
-                                                alt={anime.name}
-                                                style={{
-                                                    width: '80px',
-                                                    height: '45px',
-                                                    minWidth: '80px',
-                                                    minHeight: '45px',
-                                                    objectFit: 'contain',
-                                                    backgroundColor: 'rgba(0,0,0,0.3)',
-                                                    borderRadius: '4px',
-                                                    boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
-                                                    transition: 'transform 0.35s ease, box-shadow 0.35s ease',
-                                                    cursor: 'zoom-in',
-                                                    pointerEvents: 'none',
-                                                    position: 'relative',
-                                                    display: 'block'
-                                                }}
-                                                loading="lazy"
-                                            />
-                                        </div>
-                                    ) : (
-                                        <div style={{
-                                            width: '80px',
-                                            height: '45px',
-                                            backgroundColor: 'var(--bg-secondary)',
-                                            borderRadius: '4px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            fontSize: '0.7rem',
-                                            color: 'var(--text-muted)'
-                                        }}>
-                                            ?
-                                        </div>
-                                    )}
-                                </td>
-                                <td>
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', maxWidth: '320px' }}>
-                                        <div style={{ lineHeight: '1.4' }}>
-                                            <a
-                                                href={getMALUrl(anime)}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="anime-link"
-                                                style={{ fontWeight: '500' }}
-                                                title={anime.mal_url ? "Otevřít na MyAnimeList" : "Hledat na MyAnimeList"}
+                {/* Banner aktivního filtru série */}
+                {seriesFilter && (
+                    <div className="al-series-banner">
+                        <span className="al-series-banner-label">Zúženo na sérii</span>
+                        <span className="al-series-banner-name">{seriesFilter}</span>
+                        <button className="al-series-banner-clear" onClick={clearSeriesFilter}>Zrušit filtr série</button>
+                    </div>
+                )}
+
+                {/* ── Zobrazení: Tabulka ── */}
+                {viewMode === 'table' && (
+                    <>
+                        <div className="table-container al-table hide-mobile">
+                            <table>
+                                {/* Šířky = obsah z návrhu + 14px mezery (7px/stranu); Název = zbytek (1fr) */}
+                                <colgroup>
+                                    <col style={{ width: '71px' }} />{/* # (46 + okraj 18 + 7) */}
+                                    <col style={{ width: '106px' }} />{/* Náhled (92 + 14) */}
+                                    <col />{/* Název — auto = zbytek (jako 1fr) */}
+                                    <col style={{ width: '80px' }} />{/* Typ (66 + 14) */}
+                                    <col style={{ width: '172px' }} />{/* Studio (158 + 14) */}
+                                    <col style={{ width: '222px' }} />{/* Žánry (208 + 14) */}
+                                    <col style={{ width: '72px' }} />{/* Ep. (58 + 14) */}
+                                    <col style={{ width: '124px' }} />{/* Hodnocení (96 + 14 + info ikona) */}
+                                    <col style={{ width: '122px' }} />{/* Dosledováno (108 + 14) */}
+                                    <col style={{ width: '137px' }} />{/* Status (112 + 7 + okraj 18) */}
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th onClick={() => handleSort('index')} className={sortConfig.key === 'index' ? 'sorted' : ''}>
+                                            #{getSortIndicator('index')}
+                                        </th>
+                                        <th style={{ width: '92px' }}>Náhled</th>
+                                        <th onClick={() => handleSort('name')} className={sortConfig.key === 'name' ? 'sorted' : ''}>
+                                            Název{getSortIndicator('name')}
+                                        </th>
+                                        <th onClick={() => handleSort('type')} className={sortConfig.key === 'type' ? 'sorted' : ''}>
+                                            Typ{getSortIndicator('type')}
+                                        </th>
+                                        <th onClick={() => handleSort('studio')} className={sortConfig.key === 'studio' ? 'sorted' : ''}>
+                                            Studio{getSortIndicator('studio')}
+                                        </th>
+                                        <th onClick={() => handleSort('genres')} className={sortConfig.key === 'genres' ? 'sorted' : ''}>
+                                            Žánry{getSortIndicator('genres')}
+                                        </th>
+                                        <th onClick={() => handleSort('episodes')} className={sortConfig.key === 'episodes' ? 'sorted' : ''} style={{ textAlign: 'right' }}>
+                                            Ep.{getSortIndicator('episodes')}
+                                        </th>
+                                        <th onClick={() => handleSort('rating')} className={sortConfig.key === 'rating' ? 'sorted' : ''} style={{ textAlign: 'center' }}>
+                                            Hodnocení
+                                            <span
+                                                className="al-info-icon"
+                                                title="Kliknutím na hodnocení v řádku zobrazíte detailní rozbor"
+                                                onClick={(e) => e.stopPropagation()}
                                             >
-                                                {anime.name.replace(/ (\d+)$/, '\u00A0$1')}
-                                            </a>
-                                            {isPartOfSeries(anime) && (
-                                                <span
-                                                    onClick={(e) => {
-                                                        e.preventDefault()
-                                                        e.stopPropagation()
-                                                        toggleSeriesFilter(anime)
-                                                    }}
-                                                    className={`series-badge ${seriesFilter === extractSeriesBaseName(anime) ? 'active' : ''}`}
-                                                    style={{
-                                                        fontSize: '0.65rem',
-                                                        marginLeft: '8px',
-                                                        display: 'inline-block',
-                                                        verticalAlign: 'middle',
-                                                        padding: '2px 6px',
-                                                        borderRadius: '4px',
-                                                        background: seriesFilter === extractSeriesBaseName(anime) ? 'var(--accent-primary)' : 'var(--bg-tertiary)',
-                                                        color: 'white',
-                                                        whiteSpace: 'nowrap',
-                                                        cursor: 'pointer',
-                                                        border: `1px solid ${seriesFilter === extractSeriesBaseName(anime) ? 'var(--accent-primary)' : 'var(--border-color)'}`,
-                                                        boxShadow: seriesFilter === extractSeriesBaseName(anime) ? '0 0 10px rgba(99, 102, 241, 0.4)' : 'none'
-                                                    }}
-                                                    title={seriesFilter === extractSeriesBaseName(anime) ? "Zrušit filtr série" : "Filtrovat tuhle sérii"}
-                                                >
-                                                    Série
+                                                <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6">
+                                                    <circle cx="8" cy="8" r="6.6" />
+                                                    <path d="M8 7.4v3.4" strokeLinecap="round" />
+                                                    <circle cx="8" cy="4.9" r="0.5" fill="currentColor" stroke="none" />
+                                                </svg>
+                                            </span>
+                                            {getSortIndicator('rating')}
+                                        </th>
+                                        <th onClick={() => handleSort('end_date')} className={sortConfig.key === 'end_date' ? 'sorted' : ''} style={{ textAlign: 'right' }}>
+                                            Dosledováno{getSortIndicator('end_date')}
+                                        </th>
+                                        <th onClick={() => handleSort('status')} className={sortConfig.key === 'status' ? 'sorted' : ''} style={{ textAlign: 'right' }}>
+                                            Status{getSortIndicator('status')}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {filteredList.slice(0, displayCount).map((anime, idx) => (
+                                        <tr key={idx}>
+                                            <td style={{ color: '#4f4b55', fontSize: '0.75rem', fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
+                                                {idx + 1}.
+                                            </td>
+                                            <td>
+                                                {anime.thumbnail ? (
+                                                    <div
+                                                        className="al-thumb"
+                                                        onMouseEnter={(e) => previewRef.current?.show(e.currentTarget.querySelector('img'), anime.thumbnail.replace(/#/g, '%23'), anime.name, e.currentTarget.getBoundingClientRect())}
+                                                        onMouseLeave={() => previewRef.current?.hide()}
+                                                    >
+                                                        <img
+                                                            src={anime.thumbnail.replace(/#/g, '%23')}
+                                                            alt={anime.name}
+                                                            loading="lazy"
+                                                        />
+                                                    </div>
+                                                ) : (
+                                                    <div className="al-thumb al-thumb-empty">?</div>
+                                                )}
+                                            </td>
+                                            <td>
+                                                <div className="al-name-cell">
+                                                    <a
+                                                        href={getMALUrl(anime)}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="anime-link"
+                                                        style={{ fontWeight: '600' }}
+                                                        title={anime.mal_url ? "Otevřít na MyAnimeList" : "Hledat na MyAnimeList"}
+                                                    >
+                                                        {anime.name.replace(/ (\d+)$/, ' $1')}
+                                                    </a>
+                                                    {isPartOfSeries(anime) && (
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.preventDefault()
+                                                                e.stopPropagation()
+                                                                toggleSeriesFilter(anime)
+                                                            }}
+                                                            className={`al-series-badge ${seriesFilter === extractSeriesBaseName(anime) ? 'active' : ''}`}
+                                                            title={seriesFilter === extractSeriesBaseName(anime) ? "Zrušit filtr série" : "Filtrovat tuhle sérii"}
+                                                        >
+                                                            Série
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span className="al-type-badge" style={{ background: typeStyle(anime.type)[0], color: typeStyle(anime.type)[1] }}>
+                                                    {anime.type || '-'}
                                                 </span>
-                                            )}
+                                            </td>
+                                            <td style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', maxWidth: '160px' }}>
+                                                <span className="al-cell-clamp2" title={anime.studio || ''}>{anime.studio?.substring(0, 40) || '-'}</span>
+                                            </td>
+                                            <td style={{ maxWidth: '220px' }}>
+                                                {genreList(anime).length > 0 ? (
+                                                    <div className="al-genre-chips al-genre-chips-row" title={genreList(anime).join(', ')}>
+                                                        {genreList(anime).map((g, i) => (
+                                                            <span key={i} className="al-genre-chip" style={{ background: genreStyle(g)[0], color: genreStyle(g)[1] }}>{g}</span>
+                                                        ))}
+                                                    </div>
+                                                ) : <span style={{ color: 'var(--text-muted)' }}>—</span>}
+                                            </td>
+                                            <td style={{ textAlign: 'right', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>
+                                                {anime.episodes || '–'}
+                                            </td>
+                                            <td style={{ textAlign: 'center' }}>
+                                                <span
+                                                    className={`al-rating ${getRatingClass(anime.rating)}`}
+                                                    onClick={() => goToDetail(anime)}
+                                                    title="Zobrazit detailní hodnocení"
+                                                >
+                                                    {ratingText(anime)}
+                                                </span>
+                                            </td>
+                                            <td style={{ textAlign: 'right', fontSize: '0.78rem', color: (anime.end_date && anime.end_date !== 'X') ? '#9d94a8' : '#4f4b55', whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>
+                                                {formatDate(anime.end_date)}
+                                            </td>
+                                            <td style={{ textAlign: 'right' }}>
+                                                <span className={`al-status-pill ${(anime.status || 'FINISHED').toLowerCase().replace('!', '')}`}>
+                                                    <span className="al-status-dot" />
+                                                    {anime.status || 'FINISHED'}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                            {filteredList.length === 0 && (
+                                <div className="al-empty">Žádné anime neodpovídá filtrům.</div>
+                            )}
+                        </div>
+
+                        {/* Mobilní karty (jako dosud) */}
+                        <div className="mobile-card-list hide-desktop">
+                            {filteredList.slice(0, displayCount).map((anime, idx) => (
+                                <div key={idx} className="mobile-card">
+                                    <div className="mobile-card-header">
+                                        <div style={{ display: 'flex', gap: 'var(--spacing-md)', width: '100%', alignItems: 'center' }}>
+                                            <div style={{ minWidth: '80px', cursor: 'pointer' }} onClick={(e) => { e.stopPropagation(); anime.thumbnail && setExpandedImage(anime.thumbnail.replace(/#/g, '%23')); }}>
+                                                {anime.thumbnail ? (
+                                                    <img
+                                                        src={anime.thumbnail.replace(/#/g, '%23')}
+                                                        alt={anime.name}
+                                                        style={{
+                                                            width: '80px', height: '45px', objectFit: 'cover', backgroundColor: 'rgba(0,0,0,0.1)',
+                                                            borderRadius: '4px', boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
+                                                        }}
+                                                        loading="lazy"
+                                                    />
+                                                ) : (
+                                                    <div style={{
+                                                        width: '80px', height: '45px', backgroundColor: 'var(--bg-tertiary)',
+                                                        borderRadius: '4px', display: 'flex', alignItems: 'center',
+                                                        justifyContent: 'center', fontSize: '1rem', color: 'var(--text-muted)'
+                                                    }}>?</div>
+                                                )}
+                                            </div>
+
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, minWidth: 0 }}>
+                                                <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', minWidth: 0 }}>
+                                                    <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 'bold', flexShrink: 0 }}>
+                                                        #{idx + 1}
+                                                    </div>
+                                                    <div className="mobile-card-title" style={{ overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', wordBreak: 'break-word', minWidth: 0, paddingRight: '10px' }}>
+                                                        <a
+                                                            href={getMALUrl(anime)}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="anime-link"
+                                                        >
+                                                            {anime.name}
+                                                        </a>
+                                                    </div>
+                                                </div>
+
+                                                <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap' }}>
+                                                    <span className={`type-badge ${getTypeBadgeClass(anime.type)}`} style={{ padding: '2px 6px', fontSize: '0.65rem' }}>
+                                                        {anime.type || '-'}
+                                                    </span>
+                                                    <span className={`al-status-pill ${(anime.status || 'FINISHED').toLowerCase().replace('!', '')}`} style={{ fontSize: '0.6rem', padding: '2px 8px' }}>
+                                                        <span className="al-status-dot" />
+                                                        {anime.status || 'FINISHED'}
+                                                    </span>
+                                                    {isPartOfSeries(anime) && (
+                                                        <button
+                                                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleSeriesFilter(anime) }}
+                                                            className={`al-series-badge ${seriesFilter === extractSeriesBaseName(anime) ? 'active' : ''}`}
+                                                        >Série</button>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            <div
+                                                style={{ textAlign: 'right', minWidth: '50px', marginLeft: 'auto', cursor: 'pointer', display: 'flex', alignItems: 'baseline', justifyContent: 'flex-end', gap: '2px' }}
+                                                onClick={() => goToDetail(anime)}
+                                            >
+                                                <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: anime.rating && !isNaN(Number(anime.rating)) ? getRatingColor(anime.rating) : 'var(--text-muted)' }}>
+                                                    {anime.rating && !isNaN(Number(anime.rating)) ? (Number(anime.rating) % 1 === 0 ? parseInt(anime.rating) : parseFloat(anime.rating).toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 2 })) : 'X'}
+                                                </span>
+                                                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>/10</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </td>
-                                <td>
-                                    <span className={`type-badge ${getTypeBadgeClass(anime.type)}`}>
-                                        {anime.type || '-'}
-                                    </span>
-                                </td>
-                                <td style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', maxWidth: '150px' }}>
-                                    {anime.studio?.substring(0, 30) || '-'}
-                                </td>
-                                <td style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', maxWidth: '200px' }}>
-                                    {anime.genres || '-'}
-                                </td>
-                                <td style={{ textAlign: 'center' }}>
-                                    {anime.episodes || '-'}
-                                </td>
-                                <td>
-                                    {anime.rating && !isNaN(Number(anime.rating)) ? (
-                                        <span
-                                            className={`rating-badge ${getRatingClass(anime.rating)}`}
-                                            style={{ cursor: 'pointer' }}
-                                            onClick={() => {
-                                                sessionStorage.setItem('animeListScroll', window.scrollY)
-                                                sessionStorage.setItem('animeListDisplayCount', displayCount)
-                                                navigate(animePath(anime.name))
-                                            }}
-                                            title="Zobrazit detailní hodnocení"
-                                        >
-                                            {Number(anime.rating) % 1 === 0 ? parseInt(anime.rating) : parseFloat(anime.rating).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 2})}/10
-                                        </span>
-                                    ) : (
-                                        <span
-                                            className="rating-badge"
-                                            style={{ cursor: 'pointer', backgroundColor: 'var(--bg-tertiary)', color: 'var(--text-muted)' }}
-                                            onClick={() => {
-                                                sessionStorage.setItem('animeListScroll', window.scrollY)
-                                                sessionStorage.setItem('animeListDisplayCount', displayCount)
-                                                navigate(animePath(anime.name))
-                                            }}
-                                            title="Zobrazit detailní hodnocení"
-                                        >
-                                            X/10
-                                        </span>
-                                    )}
-                                </td>
-                                <td style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                                    {formatDate(anime.end_date)}
-                                </td>
-                                <td>
-                                    <span className={`status-badge ${(anime.status || 'FINISHED').toLowerCase().replace('!', '')}`}>
-                                        {anime.status || 'FINISHED'}
-                                    </span>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
 
-            {/* Mobile Cards */}
-            <div className="mobile-card-list hide-desktop">
-                {filteredList.slice(0, displayCount).map((anime, idx) => (
-                    <div key={idx} className="mobile-card">
-                        <div className="mobile-card-header">
-                            <div style={{ display: 'flex', gap: 'var(--spacing-md)', width: '100%', alignItems: 'center' }}>
-                                {/* Image on the left */}
-                                <div style={{ minWidth: '80px', cursor: 'pointer' }} onClick={(e) => { e.stopPropagation(); anime.thumbnail && setExpandedImage(anime.thumbnail.replace(/#/g, '%23')); }}>
-                                    {anime.thumbnail ? (
-                                        <img
-                                            src={anime.thumbnail.replace(/#/g, '%23')}
-                                            alt={anime.name}
-                                            style={{
-                                                width: '80px', height: '45px', objectFit: 'cover', backgroundColor: 'rgba(0,0,0,0.1)',
-                                                borderRadius: '4px', boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
-                                            }}
-                                            loading="lazy"
-                                        />
-                                    ) : (
-                                        <div style={{
-                                            width: '80px', height: '45px', backgroundColor: 'var(--bg-tertiary)',
-                                            borderRadius: '4px', display: 'flex', alignItems: 'center',
-                                            justifyContent: 'center', fontSize: '1rem', color: 'var(--text-muted)'
-                                        }}>?</div>
-                                    )}
-                                </div>
-
-                                {/* Content container */}
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, minWidth: 0 }}>
-                                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', minWidth: 0 }}>
-                                        <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 'bold', flexShrink: 0 }}>
-                                            #{idx + 1}
+                                    <div className="mobile-card-grid">
+                                        <div className="mobile-card-row">
+                                            <span>Epizody:</span>
+                                            <span style={{ color: 'var(--text-primary)', fontWeight: '500' }}>{anime.episodes || '-'}</span>
                                         </div>
-                                        <div className="mobile-card-title" style={{ overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', wordBreak: 'break-word', minWidth: 0, paddingRight: '10px' }}>
+                                        <div className="mobile-card-row">
+                                            <span>Zhlédnuto:</span>
+                                            <span style={{ color: 'var(--text-primary)' }}>{formatDate(anime.end_date)}</span>
+                                        </div>
+                                        <div className="mobile-card-row" style={{ gridColumn: '1 / -1' }}>
+                                            <span>Studio:</span>
+                                            <span style={{ color: 'var(--text-primary)', textAlign: 'right' }}>{anime.studio?.substring(0, 30) || '-'}</span>
+                                        </div>
+                                        <div className="mobile-card-row" style={{ gridColumn: '1 / -1' }}>
+                                            <span>Žánry:</span>
+                                            <span style={{ color: 'var(--text-primary)', textAlign: 'right' }}>{anime.genres || '-'}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </>
+                )}
+
+                {/* ── Zobrazení: Karty (mřížka 16:9) ── */}
+                {viewMode === 'grid' && (
+                    filteredList.length === 0 ? (
+                        <div className="al-empty">Žádné anime neodpovídá filtrům.</div>
+                    ) : (
+                        <div className="al-grid">
+                            {filteredList.slice(0, displayCount).map((anime, idx) => (
+                                <div key={idx} className="al-card">
+                                    <div
+                                        className="al-card-poster"
+                                        onClick={() => goToDetail(anime)}
+                                    >
+                                        {anime.thumbnail ? (
+                                            <img src={anime.thumbnail.replace(/#/g, '%23')} alt={anime.name} loading="lazy" />
+                                        ) : (
+                                            <span className="al-card-noposter">?</span>
+                                        )}
+                                    </div>
+                                    <div className="al-card-body">
+                                        <div className="al-card-top">
+                                            <span className="al-type-badge al-type-badge-card" style={{ background: typeStyle(anime.type)[0], color: typeStyle(anime.type)[1] }}>{anime.type || '-'}</span>
                                             <a
                                                 href={getMALUrl(anime)}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="anime-link"
+                                                className="al-card-name anime-link"
+                                                title={anime.name}
                                             >
                                                 {anime.name}
                                             </a>
+                                            <span
+                                                className={`al-rating ${getRatingClass(anime.rating)}`}
+                                                onClick={() => goToDetail(anime)}
+                                                title="Zobrazit detailní hodnocení"
+                                            >
+                                                {ratingText(anime)}
+                                            </span>
+                                        </div>
+
+                                        <div className="al-card-mid">
+                                            <div className="al-genre-chips">
+                                                {genreList(anime).map((g, i) => (
+                                                    <span key={i} className="al-genre-chip" style={{ background: genreStyle(g)[0], color: genreStyle(g)[1] }}>{g}</span>
+                                                ))}
+                                            </div>
+                                            {anime.studio && (
+                                                <span className="al-card-studio" title={`Studio: ${anime.studio}`}>
+                                                    <IconStudio />
+                                                    <span className="al-card-studio-txt">{anime.studio.split(';')[0].trim()}</span>
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        <div className="al-card-foot">
+                                            <span className={`al-status-pill ${(anime.status || 'FINISHED').toLowerCase().replace('!', '')}`}>
+                                                <span className="al-status-dot" />
+                                                {anime.status || 'FINISHED'}
+                                            </span>
+                                            <span className="al-card-ep" title="Počet epizod">
+                                                <IconEp />
+                                                {anime.episodes ? `${anime.episodes} EP` : '– EP'}
+                                            </span>
+                                            <span
+                                                className="al-card-watched"
+                                                style={anime.end_date && anime.end_date !== 'X' ? undefined : { color: 'var(--text-muted)' }}
+                                                title={anime.end_date && anime.end_date !== 'X' ? `Dosledováno (poslední díl): ${formatDate(anime.end_date)}` : 'Zatím nedokoukáno'}
+                                            >
+                                                <IconWatched />
+                                                {formatDate(anime.end_date)}
+                                            </span>
                                         </div>
                                     </div>
-
-                                    <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap' }}>
-                                        <span className={`type-badge ${getTypeBadgeClass(anime.type)}`} style={{ padding: '2px 6px', fontSize: '0.65rem' }}>
-                                            {anime.type || '-'}
-                                        </span>
-                                        <span className={`status-badge ${(anime.status || 'FINISHED').toLowerCase().replace('!', '')}`} style={{ padding: '2px 6px', fontSize: '0.65rem', minWidth: 'auto' }}>
-                                            {anime.status || 'FINISHED'}
-                                        </span>
-                                        {isPartOfSeries(anime) && (
-                                            <span
-                                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleSeriesFilter(anime) }}
-                                                style={{
-                                                    fontSize: '0.65rem', padding: '2px 6px', borderRadius: '4px',
-                                                    background: seriesFilter === extractSeriesBaseName(anime) ? 'var(--accent-primary)' : 'var(--bg-tertiary)',
-                                                    color: 'white', cursor: 'pointer',
-                                                    border: `1px solid ${seriesFilter === extractSeriesBaseName(anime) ? 'var(--accent-primary)' : 'var(--border-color)'}`
-                                                }}
-                                            >Série</span>
-                                        )}
-                                    </div>
                                 </div>
-
-                                {/* Big Rating on the right */}
-                                {anime.rating && !isNaN(Number(anime.rating)) ? (
-                                    <div
-                                        style={{ textAlign: 'right', minWidth: '50px', marginLeft: 'auto', cursor: 'pointer', display: 'flex', alignItems: 'baseline', justifyContent: 'flex-end', gap: '2px' }}
-                                        onClick={() => {
-                                            sessionStorage.setItem('animeListScroll', window.scrollY)
-                                            sessionStorage.setItem('animeListDisplayCount', displayCount)
-                                            navigate(animePath(anime.name))
-                                        }}
-                                    >
-                                        <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: getRatingColor(anime.rating) }}>
-                                            {Number(anime.rating) % 1 === 0 ? parseInt(anime.rating) : parseFloat(anime.rating).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 2})}
-                                        </span>
-                                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>/10</span>
-                                    </div>
-                                ) : (
-                                    <div
-                                        style={{ textAlign: 'right', minWidth: '50px', marginLeft: 'auto', cursor: 'pointer', display: 'flex', alignItems: 'baseline', justifyContent: 'flex-end', gap: '2px' }}
-                                        onClick={() => {
-                                            sessionStorage.setItem('animeListScroll', window.scrollY)
-                                            sessionStorage.setItem('animeListDisplayCount', displayCount)
-                                            navigate(animePath(anime.name))
-                                        }}
-                                    >
-                                        <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--text-muted)' }}>
-                                            X
-                                        </span>
-                                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>/10</span>
-                                    </div>
-                                )}
-                            </div>
+                            ))}
                         </div>
+                    )
+                )}
 
-                        <div className="mobile-card-grid">
-                            <div className="mobile-card-row">
-                                <span>Epizody:</span>
-                                <span style={{ color: 'var(--text-primary)', fontWeight: '500' }}>{anime.episodes || '-'}</span>
-                            </div>
-                            <div className="mobile-card-row">
-                                <span>Zhlédnuto:</span>
-                                <span style={{ color: 'var(--text-primary)' }}>{formatDate(anime.end_date)}</span>
-                            </div>
-                            <div className="mobile-card-row" style={{ gridColumn: '1 / -1' }}>
-                                <span>Studio:</span>
-                                <span style={{ color: 'var(--text-primary)', textAlign: 'right' }}>{anime.studio?.substring(0, 30) || '-'}</span>
-                            </div>
-                            <div className="mobile-card-row" style={{ gridColumn: '1 / -1' }}>
-                                <span>Žánry:</span>
-                                <span style={{ color: 'var(--text-primary)', textAlign: 'right' }}>{anime.genres || '-'}</span>
-                            </div>
+                {/* Infinite Scroll Sentinel and Show All button (obě zobrazení) */}
+                {displayCount < filteredList.length && (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', marginTop: 'var(--spacing-lg)', marginBottom: 'var(--spacing-md)' }}>
+                        <div ref={sentinelRef} style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                            Načítání dalších záznamů...
                         </div>
+                        <button
+                            className="al-load-more"
+                            onClick={() => setDisplayCount(filteredList.length)}
+                        >
+                            ZOBRAZIT VŠE (Ctrl+F vyhledávání)
+                        </button>
                     </div>
-                ))}
-            </div>
+                )}
 
-            {/* Infinite Scroll Sentinel and Show All button */}
-            {displayCount < filteredList.length && (
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', marginTop: 'var(--spacing-lg)', marginBottom: 'var(--spacing-md)' }}>
-                    <div ref={sentinelRef} style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                        Načítání dalších záznamů...
-                    </div>
-                    <button
-                        className="filter-btn"
-                        onClick={() => setDisplayCount(filteredList.length)}
-                        style={{ padding: '8px 16px', fontSize: '0.8rem' }}
-                    >
-                        ZOBRAZIT VŠE (Ctrl+F vyhledávání)
-                    </button>
-                </div>
-            )}
-
-            {/* Full-screen Image Modal */}
-            {expandedImage && createPortal(
-                <div
-                    style={{
-                        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-                        backgroundColor: 'rgba(0, 0, 0, 0.9)', zIndex: 999999,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        padding: '16px'
-                    }}
-                    onClick={() => setExpandedImage(null)}
-                >
-                    <img
-                        src={expandedImage}
-                        alt="Zvětšený náhled"
+                {/* Full-screen Image Modal (mobil) */}
+                {expandedImage && createPortal(
+                    <div
                         style={{
-                            maxWidth: '90vw',
-                            maxHeight: '90vh',
-                            objectFit: 'contain',
-                            borderRadius: '8px',
-                            boxShadow: '0 4px 24px rgba(0,0,0,0.5)',
-                            display: 'block'
+                            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+                            backgroundColor: 'rgba(0, 0, 0, 0.9)', zIndex: 999999,
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            padding: '16px'
                         }}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setExpandedImage(null);
-                        }}
-                    />
-                </div>,
-                document.body
-            )}
+                        onClick={() => setExpandedImage(null)}
+                    >
+                        <img
+                            src={expandedImage}
+                            alt="Zvětšený náhled"
+                            style={{
+                                maxWidth: '90vw',
+                                maxHeight: '90vh',
+                                objectFit: 'contain',
+                                borderRadius: '8px',
+                                boxShadow: '0 4px 24px rgba(0,0,0,0.5)',
+                                display: 'block'
+                            }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setExpandedImage(null);
+                            }}
+                        />
+                    </div>,
+                    document.body
+                )}
 
             </div>
+
+            {/* Plovoucí velký náhled — vlastní komponenta s imperativním API,
+                aby najetí myší nepřekreslovalo celou tabulku */}
+            <HoverPreview ref={previewRef} />
 
             {/* Detail overlay */}
             {isDetailOpen && (
@@ -1150,7 +1454,7 @@ function AnimeList() {
                     }}
                     style={{
                         position: 'fixed',
-                        bottom: '30px', /* Posunuto dolů pro lepší ergonomii na telefonu/desktopu */
+                        bottom: '30px',
                         right: '30px',
                         background: 'var(--accent-primary)',
                         color: 'white',
@@ -1163,7 +1467,7 @@ function AnimeList() {
                         justifyContent: 'center',
                         cursor: 'pointer',
                         boxShadow: 'var(--shadow-lg)',
-                        zIndex: 9999, // Extremely high z-index to be over everything
+                        zIndex: 9999,
                         fontSize: '1.5rem',
                         animation: 'fadeIn 0.3s ease-out'
                     }}

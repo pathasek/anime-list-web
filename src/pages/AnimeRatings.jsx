@@ -28,6 +28,7 @@ import { useRatingGuide } from '../utils/ratingGuide'
 import { getDocxEpisode, hasDocxEpisodeInIndex } from '../utils/docxEpisode'
 import { loadCategoryTextsIndex, loadCategoryTextsFor } from '../utils/categoryTexts'
 import { animePath } from '../utils/animeSlug'
+import { loadData, STORAGE_KEYS, getDataVersion } from '../utils/dataStore'
 
 // B4-6: Jikan tituly epizod u specials/ONA často začínají redundantním prefixem
 // s názvem anime („Lord of Mysteries Special: City of Silver") — v úzkém seznamu
@@ -759,13 +760,16 @@ function AnimeRatings() {
     // Load data
     useEffect(() => {
         let isMounted = true
-        Promise.all([
-            fetch('data/anime_list.json?v=' + Date.now()).then(r => r.json()),
-            fetch('data/category_ratings.json?v=' + Date.now()).then(r => r.json()),
-            fetch('data/episode_ratings.json?v=' + Date.now()).then(r => r.json()),
-            fetch('data/notes.json?v=' + Date.now()).then(r => r.json()),
-            fetch('data/imdb_cache.json?v=' + Date.now()).then(r => r.json()).catch(() => ({}))
-        ]).then(([al, cr, er, nt, ic]) => {
+        // Keyed soubory přes sdílenou cache (dataStore), imdb_cache nemá klíč,
+        // tak aspoň stabilní verzní parametr místo Date.now() — URL se drží přes
+        // navigace, takže ho obslouží HTTP cache a nestahuje se znovu.
+        getDataVersion().then(version => Promise.all([
+            loadData(STORAGE_KEYS.ANIME_LIST, 'data/anime_list.json'),
+            loadData(STORAGE_KEYS.CATEGORY_RATINGS, 'data/category_ratings.json'),
+            loadData(STORAGE_KEYS.EPISODE_RATINGS, 'data/episode_ratings.json'),
+            loadData(STORAGE_KEYS.NOTES, 'data/notes.json'),
+            fetch(`data/imdb_cache.json?v=${version}`).then(r => r.json()).catch(() => ({}))
+        ])).then(([al, cr, er, nt, ic]) => {
             if (!isMounted) return
 
             // Sort anime list by reading primarily those that have category ratings

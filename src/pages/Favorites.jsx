@@ -11,6 +11,7 @@ import { normalizeAnimeKey, extractYoutubeId, extractYoutubePlaylistId, findOpEd
 import { getDominantColor } from '../utils/dominantColor'
 import { getPlaylistCounts, OST_COUNTS_EVENT } from '../utils/ostPlaylistCounts'
 import { getAnilistArtists, ANILIST_ARTISTS_EVENT } from '../utils/anilistStaffCache'
+import { loadData, STORAGE_KEYS, getDataVersion } from '../utils/dataStore'
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -533,22 +534,25 @@ function Favorites() {
     }, [loading])
 
     useEffect(() => {
-        Promise.all([
-            fetch('data/favorites.json?v=' + Date.now()).then(r => r.json()),
-            fetch('data/favorites_ost.json?v=' + Date.now()).then(r => r.json()).catch(() => null),
-            fetch('data/spotify_images.json?v=' + Date.now()).then(r => r.json()).catch(() => ({})),
-            fetch('data/op_ed_videos.json?v=' + Date.now()).then(r => r.json()).catch(() => null),
-            fetch('data/anime_list.json?v=' + Date.now()).then(r => r.json()).catch(() => []),
+        // favorites + anime_list přes sdílenou cache (dataStore); ostatní nemají
+        // klíč, tak aspoň stabilní verzní parametr místo Date.now(), ať je
+        // obslouží HTTP cache a nestahují se znovu při každém otevření záložky.
+        getDataVersion().then(version => Promise.all([
+            loadData(STORAGE_KEYS.FAVORITES, 'data/favorites.json'),
+            fetch(`data/favorites_ost.json?v=${version}`).then(r => r.json()).catch(() => null),
+            fetch(`data/spotify_images.json?v=${version}`).then(r => r.json()).catch(() => ({})),
+            fetch(`data/op_ed_videos.json?v=${version}`).then(r => r.json()).catch(() => null),
+            loadData(STORAGE_KEYS.ANIME_LIST, 'data/anime_list.json').catch(() => []),
             // Katalog AnimeThemes: záloha pro OP/ED, které nemám na Google Drive
-            fetch('data/animethemes_op_ed.json?v=' + Date.now()).then(r => r.json()).catch(() => null),
+            fetch(`data/animethemes_op_ed.json?v=${version}`).then(r => r.json()).catch(() => null),
             // YT Music katalog: počet skladeb a délka alba pro karty As a Whole
-            fetch('data/ytmusic_ost.json?v=' + Date.now()).then(r => r.json()).catch(() => null),
+            fetch(`data/ytmusic_ost.json?v=${version}`).then(r => r.json()).catch(() => null),
             // Počet skladeb a délka spočítané přímo z mých YouTube playlistů
             // (tools/build_ytmusic_durations.py). Oba údaje z jednoho zdroje.
-            fetch('data/ost_playlist_durations.json?v=' + Date.now()).then(r => r.json()).catch(() => null),
+            fetch(`data/ost_playlist_durations.json?v=${version}`).then(r => r.json()).catch(() => null),
             // Hudební typy OST odvozené z rozborů (tools/build_ost_types.py)
-            fetch('data/ost_types.json?v=' + Date.now()).then(r => r.json()).catch(() => ({}))
-        ])
+            fetch(`data/ost_types.json?v=${version}`).then(r => r.json()).catch(() => ({}))
+        ]))
             .then(([favData, ostData, spotData, opEdData, animeListData, atData, ymData, durData, typesData]) => {
                 animeListRef.current = animeListData || []
                 const decorated = (favData || []).map(fav => {

@@ -309,35 +309,40 @@ function HistoryLog() {
     }, [visibleCount])
 
     useEffect(() => {
+        let raf = null
+        let pendingY = 0
         const handleScroll = (e) => {
             // Ignorujeme scroll při navigaci, abychom nepřepsali uloženou pozici
             if (sessionStorage.getItem('history_log_navigating') === 'true') return;
 
             const target = e.target;
             let currentY = window.scrollY;
-            
+
             if (target && target.scrollTop !== undefined && target !== document) {
                 currentY = target.scrollTop;
             } else if (document.documentElement && document.documentElement.scrollTop) {
                 currentY = document.documentElement.scrollTop;
             }
 
-            // Průběžně ukládáme scroll pozici, pokud je větší než 0
-            if (currentY > 0) {
-                sessionStorage.setItem('history_log_scroll_y', currentY);
-            }
+            setShowScrollTop(currentY > 1000)
 
-            if (currentY > 1000) {
-                setShowScrollTop(true)
-            } else {
-                setShowScrollTop(false)
-            }
+            // sessionStorage.setItem je synchronní — throttle přes rAF, ať rychlý
+            // scroll dlouhé historie nezapisuje na každý scroll event (jank).
+            pendingY = currentY
+            if (raf) return
+            raf = requestAnimationFrame(() => {
+                raf = null
+                if (pendingY > 0 && sessionStorage.getItem('history_log_navigating') !== 'true') {
+                    try { sessionStorage.setItem('history_log_scroll_y', pendingY) } catch { /* quota */ }
+                }
+            })
         }
 
         // UseCapture = true zajistí, že chytíme scroll z jakéhokoliv elementu
         window.addEventListener('scroll', handleScroll, true)
         return () => {
             window.removeEventListener('scroll', handleScroll, true)
+            if (raf) cancelAnimationFrame(raf)
         }
     }, [])
 

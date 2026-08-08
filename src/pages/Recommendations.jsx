@@ -2,6 +2,7 @@ import { useState, useEffect, useLayoutEffect, useMemo, useCallback, useRef, Fra
 import { createPortal } from 'react-dom'
 import { useLocation } from 'react-router-dom'
 import { pauseBackgroundDownload, resumeBackgroundDownload, isExcelRunning, fetchWithRetry as jikanFetchWithRetry } from '../utils/jikanService'
+import { loadData, STORAGE_KEYS } from '../utils/dataStore'
 import malIcon from '../assets/mal-favicon.svg'
 import anilistIcon from '../assets/anilist-logo.svg'
 import './recommendations.css'
@@ -589,12 +590,27 @@ async function fetchScoreStats(malId) {
     if (_statsFailUntil[malId] && _statsFailUntil[malId] > Date.now()) return null
 
     if (!_jikanStatsDown) {
-        const jikan = await jikanFetchWithRetry(`https://api.jikan.moe/v4/anime/${malId}/statistics`, 3, 'high')
+        // Jikan /statistics dlouhodobě vrací 504. Dřív se zkoušel 3× s backoffem
+        // (1+2+4 s), takže první hover čekal několik sekund, než spadl na AniList.
+        // Teď: jediný pokus (retries=0) s tvrdým stropem 500 ms. Když Jikan
+        // neodpoví užitečně do půl sekundy, hned se přepneme na AniList fallback
+        // pro celou session. Jakmile se Jikan probere, první hover ho zase chytí
+        // a tooltip se vrátí k MAL datům.
+        const JIKAN_STATS_TIMEOUT_MS = 500
+        let timeoutId
+        const timeout = new Promise(resolve => {
+            timeoutId = setTimeout(() => resolve(null), JIKAN_STATS_TIMEOUT_MS)
+        })
+        const jikan = await Promise.race([
+            jikanFetchWithRetry(`https://api.jikan.moe/v4/anime/${malId}/statistics`, 0, 'high'),
+            timeout
+        ])
+        clearTimeout(timeoutId)
         if (jikan?.data?.scores?.length) {
             return { ...jikan.data, source: 'MAL' }
         }
         _jikanStatsDown = true
-        console.warn('[Stats] Jikan /statistics nedostupné (výpadek Jikan scraperu, MAL stats stránka sama funguje) — přepínám na AniList fallback pro tuto session')
+        console.warn('[Stats] Jikan /statistics neodpovědělo do 500 ms — přepínám na AniList fallback pro tuto session')
     }
 
     // Po selhání si anime na chvíli zapamatujeme, ať hover neposílá dotaz za dotazem.
@@ -1228,9 +1244,11 @@ function Recommendations() {
 
     // Load data
     useEffect(() => {
+        // Sdílená cache (dataStore) místo fetch('...?v='+Date.now()) — data se
+        // nestahují a neparsují znovu, když je už načetla jiná stránka/preload.
         Promise.all([
-            fetch('data/anime_list.json?v=' + Date.now()).then(r => r.json()),
-            fetch('data/plan_to_watch.json?v=' + Date.now()).then(r => r.json()).catch(() => []),
+            loadData(STORAGE_KEYS.ANIME_LIST, 'data/anime_list.json'),
+            loadData(STORAGE_KEYS.PLAN_TO_WATCH, 'data/plan_to_watch.json').catch(() => []),
         ]).then(([anime, ptw]) => {
             setAnimeList(anime)
             setPtwList(ptw)

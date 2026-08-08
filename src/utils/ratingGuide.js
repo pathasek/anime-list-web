@@ -4,13 +4,18 @@
 // zabudované konstanty; když soubor chybí nebo je neúplný, zůstávají fallbacky
 // v kódu (RatingGuideModals.jsx, AnimeRatings.jsx).
 import { useEffect, useState } from 'react'
+import { getDataVersion } from './dataStore'
 
 let cache = null
 let promise = null
 
 function loadRatingGuide() {
     if (!promise) {
-        promise = fetch('data/rating_guide.json?v=' + Date.now())
+        // Stabilní verzní parametr místo Date.now(): URL se drží přes F5, takže
+        // ho po prvním stažení obslouží HTTP cache. Modulový `promise` navíc
+        // drží výsledek přes celou session.
+        promise = getDataVersion()
+            .then(v => fetch(`data/rating_guide.json?v=${v}`))
             .then(r => (r.ok ? r.json() : null))
             .catch(() => null)
             .then(json => { cache = json; return json })

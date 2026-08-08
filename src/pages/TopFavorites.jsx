@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import malIcon from '../assets/mal-favicon.svg';
+import { loadData, STORAGE_KEYS, getDataVersion } from '../utils/dataStore';
 import './TopFavorites.css';
 
 // Cesta k předgenerované zmenšenině posteru (tools/build_top_favorites_thumbs.py).
@@ -56,17 +57,16 @@ const TopFavorites = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [favoritesRes, animeListRes, hashRes] = await Promise.all([
-                    fetch(`data/top_favorites.json?v=${Date.now()}`),
-                    fetch(`data/anime_list.json?v=${Date.now()}`),
+                // anime_list přes sdílenou cache (dataStore); top_favorites nemá
+                // klíč, tak aspoň stabilní verzní parametr místo Date.now().
+                const version = await getDataVersion();
+                const [favData, animeListData, hashRes] = await Promise.all([
+                    fetch(`data/top_favorites.json?v=${version}`).then(r => { if (!r.ok) throw new Error('Failed to fetch data'); return r.json(); }),
+                    loadData(STORAGE_KEYS.ANIME_LIST, 'data/anime_list.json'),
                     fetch('data/top_favorites_hash.txt').then(r => r.ok ? r.text() : '').catch(() => '')
                 ]);
 
-                if (!favoritesRes.ok || !animeListRes.ok) throw new Error('Failed to fetch data');
-
-                const favData = await favoritesRes.json();
-                const animeListData = await animeListRes.json();
-                const imgHash = hashRes.trim();
+                const imgHash = (hashRes || '').trim();
 
                 // Map anime list data by name for easy lookup of poster image
                 const map = {};

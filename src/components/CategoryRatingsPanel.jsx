@@ -20,6 +20,7 @@ import { RatingInfoButton, CategoryGuideModal } from './RatingGuideModals'
 import { useOstPlayer } from './OstPlayerProvider'
 import { useModalScrollLock } from '../utils/useModalScrollLock'
 import { useModalTables } from '../utils/useModalTables'
+import { getDataVersion } from '../utils/dataStore'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip)
 
@@ -140,34 +141,39 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
     const [guideOpen, setGuideOpen] = useState(false)    // Průvodce hodnocením kategorií
 
     useEffect(() => {
-        if (cachedOpEdVideos === null) {
-            fetch('data/op_ed_videos.json?v=' + Date.now())
-                .then(r => (r.ok ? r.json() : null))
-                .then(d => { cachedOpEdVideos = (d && d.videos) || []; setOpEdVideos(cachedOpEdVideos) })
-                .catch(() => { cachedOpEdVideos = []; setOpEdVideos([]) })
-        }
-        if (cachedOstPieces === null) {
-            fetch('data/favorites_ost.json?v=' + Date.now())
-                .then(r => (r.ok ? r.json() : null))
-                .then(d => {
-                    cachedOstPieces = (d && d.pieces) || [];
-                    cachedOstWhole = (d && d.whole) || [];
-                    setOstPieces(cachedOstPieces)
-                    setOstWhole(cachedOstWhole)
-                })
-                .catch(() => {
-                    cachedOstPieces = [];
-                    cachedOstWhole = [];
-                    setOstPieces([])
-                    setOstWhole([])
-                })
-        }
-        if (cachedYtmusicOst === null) {
-            fetch('data/ytmusic_ost.json?v=' + Date.now())
-                .then(r => (r.ok ? r.json() : null))
-                .then(d => { cachedYtmusicOst = (d && d.albums) || []; setYtmusicOst(cachedYtmusicOst) })
-                .catch(() => { cachedYtmusicOst = []; setYtmusicOst([]) })
-        }
+        // Stabilní verzní parametr místo Date.now() (soubory nemají klíč v
+        // dataStore) — URL se drží přes navigace, takže je obslouží HTTP cache.
+        // Modulové cachedOpEd*/cachedOst* stejně drží data přes celou session.
+        getDataVersion().then(version => {
+            if (cachedOpEdVideos === null) {
+                fetch(`data/op_ed_videos.json?v=${version}`)
+                    .then(r => (r.ok ? r.json() : null))
+                    .then(d => { cachedOpEdVideos = (d && d.videos) || []; setOpEdVideos(cachedOpEdVideos) })
+                    .catch(() => { cachedOpEdVideos = []; setOpEdVideos([]) })
+            }
+            if (cachedOstPieces === null) {
+                fetch(`data/favorites_ost.json?v=${version}`)
+                    .then(r => (r.ok ? r.json() : null))
+                    .then(d => {
+                        cachedOstPieces = (d && d.pieces) || [];
+                        cachedOstWhole = (d && d.whole) || [];
+                        setOstPieces(cachedOstPieces)
+                        setOstWhole(cachedOstWhole)
+                    })
+                    .catch(() => {
+                        cachedOstPieces = [];
+                        cachedOstWhole = [];
+                        setOstPieces([])
+                        setOstWhole([])
+                    })
+            }
+            if (cachedYtmusicOst === null) {
+                fetch(`data/ytmusic_ost.json?v=${version}`)
+                    .then(r => (r.ok ? r.json() : null))
+                    .then(d => { cachedYtmusicOst = (d && d.albums) || []; setYtmusicOst(cachedYtmusicOst) })
+                    .catch(() => { cachedYtmusicOst = []; setYtmusicOst([]) })
+            }
+        })
     }, [])
 
     // Plán 6b: ostatní OP/ED z AnimeThemes.moe (jen v detailu anime —

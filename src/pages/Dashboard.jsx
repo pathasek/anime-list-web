@@ -25,6 +25,7 @@ import { calculateExcelChartsData } from '../utils/excelChartCalculations'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { extractMalId, getAnimeInfo, getOrFetchEpisodeList, getCachedEpisodeList, getNextBroadcastDate, isExcelRunning } from '../utils/jikanService'
 import { animePath } from '../utils/animeSlug'
+import { loadData, STORAGE_KEYS } from '../utils/dataStore'
 
 // Register Chart.js components
 ChartJS.register(
@@ -1054,46 +1055,8 @@ function Dashboard() {
     // se z ní nejbližší nižší násobek rozteče řádků.
     const airingScrollRef = useRef(null)
     const airingGridRef = useRef(null)
-    useEffect(() => {
-        const scroll = airingScrollRef.current
-        const grid = airingGridRef.current
-        if (!scroll || !grid || typeof ResizeObserver === 'undefined') return
-        const fit = () => {
-            const cards = grid.children
-            if (!cards.length) return
-            const avail = scroll.clientHeight
-            if (avail <= 0) return
-            const gap = parseFloat(getComputedStyle(grid).rowGap) || 0
-            // Přirozená výška karty se musí měřit BEZ našeho roztažení, jinak
-            // by se počítalo z hodnoty, kterou jsme sami nastavili.
-            const prev = grid.style.gridAutoRows
-            grid.style.gridAutoRows = 'min-content'
-            let natural = 0
-            for (const c of cards) natural = Math.max(natural, c.getBoundingClientRect().height)
-            if (natural <= 0) { grid.style.gridAutoRows = prev; return }
-            // Kolik celých řádků se vejde — a rozteč se pak dopočítá tak, aby
-            // je vyplnily přesně. Výšky okna se nedotýkáme (je daná flexem
-            // panelu), jen se do ní karty rovnoměrně roztáhnou.
-            // Tolerance: karta bývá o pár pixelů vyšší, než kolik na řádek
-            // vychází. Bez ní by se počet řádků skokem propadl o jedna (dva
-            // řádky → jeden), takže by dole zase vykukoval proužek dalšího
-            // řádku. Pár pixelů přesahu není v kartě vidět.
-            const TOLERANCE = 12
-            const rows = Math.max(1, Math.floor((avail + gap + TOLERANCE) / (natural + gap)))
-            const pitch = (avail - (rows - 1) * gap) / rows
-            // Pojistka pro opravdu vysoký obsah: roztažení na celé okno by
-            // z karty udělalo obří poloprázdný blok, to radši přirozenou výšku.
-            grid.style.gridAutoRows = pitch > natural * 1.35 ? '' : `${pitch}px`
-        }
-        const ro = new ResizeObserver(fit)
-        ro.observe(scroll)
-        ro.observe(grid)
-        fit()
-        return () => {
-            ro.disconnect()
-            grid.style.gridAutoRows = ''
-        }
-    })
+    // Efekt pro dopočet rozteče karet „Právě sledované" je níž, až za memem
+    // sortedAiringAnime (jinak by na jeho referenci padl na temporal dead zone).
 
     // Airing Anime sorting state
     const [airingSortKeys, setAiringSortKeys] = useState({})
@@ -1273,11 +1236,15 @@ function Dashboard() {
 
 
     useEffect(() => {
+        // Sdílená cache (dataStore) místo fetch('...?v='+Date.now()): data se
+        // stáhnou a naparsují jednou za session, ne znovu při každém návratu na
+        // Dashboard, a nezdvojují se s App.jsx preloadAllData při startu.
+        // Čerstvost hlídá metadata.json uvnitř loadData.
         Promise.all([
-            fetch('data/anime_list.json?v=' + Date.now()).then(r => r.json()),
-            fetch('data/history_log.json?v=' + Date.now()).then(r => r.json()),
-            fetch('data/stats.json?v=' + Date.now()).then(r => r.json()).catch(() => null),
-            fetch('data/episode_ratings.json?v=' + Date.now()).then(r => r.json()).catch(() => [])
+            loadData(STORAGE_KEYS.ANIME_LIST, 'data/anime_list.json'),
+            loadData(STORAGE_KEYS.HISTORY_LOG, 'data/history_log.json'),
+            loadData(STORAGE_KEYS.STATS, 'data/stats.json').catch(() => null),
+            loadData(STORAGE_KEYS.EPISODE_RATINGS, 'data/episode_ratings.json').catch(() => [])
         ])
             .then(([anime, history, statsJson, epRatings]) => {
                 setAnimeList(anime)
@@ -1654,6 +1621,53 @@ function Dashboard() {
             return keyA - keyB;
         });
     }, [stats?.excelData?.airingAnime, airingSortKeys]);
+
+    // Dopočet rozteče řádků karet „Právě sledované" (viz refy nahoře).
+    // Závisí na sortedAiringAnime: efekt se převáže, jen když se karty změní.
+    // Dřív mu chybělo dependency pole, takže běžel po KAŽDÉM renderu Dashboardu
+    // a při každém vytvářel nový ResizeObserver + střídal čtení layoutu se
+    // zápisem stylů (layout thrashing) — hlavní příčina sekání úvodní stránky.
+    // Průběžné změny velikosti (načtení posterů, resize okna) hlídá ResizeObserver.
+    useEffect(() => {
+        const scroll = airingScrollRef.current
+        const grid = airingGridRef.current
+        if (!scroll || !grid || typeof ResizeObserver === 'undefined') return
+        const fit = () => {
+            const cards = grid.children
+            if (!cards.length) return
+            const avail = scroll.clientHeight
+            if (avail <= 0) return
+            const gap = parseFloat(getComputedStyle(grid).rowGap) || 0
+            // Přirozená výška karty se musí měřit BEZ našeho roztažení, jinak
+            // by se počítalo z hodnoty, kterou jsme sami nastavili.
+            const prev = grid.style.gridAutoRows
+            grid.style.gridAutoRows = 'min-content'
+            let natural = 0
+            for (const c of cards) natural = Math.max(natural, c.getBoundingClientRect().height)
+            if (natural <= 0) { grid.style.gridAutoRows = prev; return }
+            // Kolik celých řádků se vejde — a rozteč se pak dopočítá tak, aby
+            // je vyplnily přesně. Výšky okna se nedotýkáme (je daná flexem
+            // panelu), jen se do ní karty rovnoměrně roztáhnou.
+            // Tolerance: karta bývá o pár pixelů vyšší, než kolik na řádek
+            // vychází. Bez ní by se počet řádků skokem propadl o jedna (dva
+            // řádky → jeden), takže by dole zase vykukoval proužek dalšího
+            // řádku. Pár pixelů přesahu není v kartě vidět.
+            const TOLERANCE = 12
+            const rows = Math.max(1, Math.floor((avail + gap + TOLERANCE) / (natural + gap)))
+            const pitch = (avail - (rows - 1) * gap) / rows
+            // Pojistka pro opravdu vysoký obsah: roztažení na celé okno by
+            // z karty udělalo obří poloprázdný blok, to radši přirozenou výšku.
+            grid.style.gridAutoRows = pitch > natural * 1.35 ? '' : `${pitch}px`
+        }
+        const ro = new ResizeObserver(fit)
+        ro.observe(scroll)
+        ro.observe(grid)
+        fit()
+        return () => {
+            ro.disconnect()
+            grid.style.gridAutoRows = ''
+        }
+    }, [sortedAiringAnime])
 
     // ==========================================
     // EXCEL EXACT CHART CONFIGURATIONS
@@ -3494,7 +3508,9 @@ function Dashboard() {
     return (
 
         <div className="fade-in">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-xl)' }}>
+            {/* Horní mezera je záměrně stejná jako spodní: --spacing-md z paddingu
+                .main-content plus tenhle margin dá dohromady --spacing-xl */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'var(--spacing-md)', marginBottom: 'var(--spacing-xl)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
                     <h2 style={{ margin: 0 }}>Dashboard</h2>
                     {/* Časový filtr přesunut z vlastního řádku k nadpisu (Plán 9, Ú3) */}

@@ -54,23 +54,34 @@ const renderThemeIcon = (themeId, defaultIcon) => {
     }
 };
 
-export default function ThemeSwitcher() {
+// `collapsed` používá sbalený sidebar: zůstane jen ikona, popisky se schovají.
+export default function ThemeSwitcher({ collapsed = false }) {
     const { theme, setTheme, themes } = useTheme();
     const [isOpen, setIsOpen] = useState(false);
+    const activeTheme = themes.find(t => t.id === theme);
 
     return (
         <div className="theme-switcher">
             <button
-                className="theme-switcher-toggle"
+                className={`theme-switcher-toggle ${isOpen ? 'open' : ''}`}
                 onClick={() => setIsOpen(!isOpen)}
                 aria-label="Přepnout téma"
-                title="Přepnout grafické téma"
+                aria-expanded={isOpen}
+                title={activeTheme ? `Grafické téma: ${activeTheme.label}` : 'Přepnout grafické téma'}
             >
-                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                        d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-                </svg>
-                <span>Téma</span>
+                <span className="theme-switcher-icon">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                            d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                    </svg>
+                </span>
+                {!collapsed && <span className="theme-switcher-label">Téma</span>}
+                {!collapsed && (
+                    <span className="theme-switcher-active">
+                        {activeTheme ? activeTheme.label : ''}
+                        <span className="theme-switcher-arrow" aria-hidden="true">{isOpen ? '▴' : '▾'}</span>
+                    </span>
+                )}
             </button>
 
             {isOpen && (

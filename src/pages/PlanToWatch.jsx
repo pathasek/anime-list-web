@@ -1,9 +1,21 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
+import { loadData, STORAGE_KEYS } from '../utils/dataStore'
 import './PlanToWatch.css'
 
 // Popisky sloupců pro podtitulek („řazeno podle …")
 const SORT_LABELS = { name: 'Název', type: 'Typ', episodes: 'Ep.' }
+
+// Změřená průměrná šířka znaku v písmu sloupce „Důvod / Zdroj" (0.78rem Inter)
+const SOURCE_CHAR_W = 6.5
+// Vodorovné odsazení buňky, které se do textu nepočítá
+const SOURCE_CELL_PADDING = 36
+// Zalamování po slovech nechá na konci řádku kus místa nevyužitý
+const SOURCE_FILL = 0.9
+// Místo, které si na druhém řádku vezme „… Více"
+const SOURCE_TOGGLE_CHARS = 10
+// Limit pro mobilní karty, kde se šířka sloupce neměří
+const SOURCE_LIMIT_MOBILE = 160
 
 function PlanToWatch() {
     const [planList, setPlanList] = useState([])
@@ -17,14 +29,33 @@ function PlanToWatch() {
         window.addEventListener('scroll', handleScroll, true);
         return () => window.removeEventListener('scroll', handleScroll, true);
     }, []);
+
     const [loading, setLoading] = useState(true)
+    // Šířka sloupce „Důvod / Zdroj". Podle ní se počítá, kolik textu se vejde
+    // na dva řádky, aby tlačítko „Více" naskočilo jen když je opravdu potřeba.
+    const [sourceColW, setSourceColW] = useState(0)
+    const tableRef = useRef(null)
     const [searchTerm, setSearchTerm] = useState('')
     const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' })
     const [statusFilter, setStatusFilter] = useState('all')
 
+    // Šířku sloupce hlídáme přes ResizeObserver, ne přes okno: sloupec se mění
+    // i sbalením sidebaru, kdy se šířka okna nezmění.
     useEffect(() => {
-        fetch('data/plan_to_watch.json?v=' + Date.now())
-            .then(r => r.json())
+        const table = tableRef.current
+        if (!table) return
+        const measure = () => {
+            const th = table.querySelector('thead th:nth-child(4)')
+            if (th) setSourceColW(th.getBoundingClientRect().width)
+        }
+        measure()
+        const ro = new ResizeObserver(measure)
+        ro.observe(table)
+        return () => ro.disconnect()
+    }, [loading]);
+
+    useEffect(() => {
+        loadData(STORAGE_KEYS.PLAN_TO_WATCH, 'data/plan_to_watch.json')
             .then(data => {
                 // Filter out invalid entries (placeholders like InterestStacks)
                 const validData = data.filter(item =>
@@ -170,7 +201,15 @@ function PlanToWatch() {
         )
     }
 
-    const ExpandableSource = ({ text }) => {
+    // Kolik znaků se vejde na dva řádky sloupce i s tlačítkem. Než se sloupec
+    // poprvé změří, drží se původní hodnota 100.
+    const sourceLimit = sourceColW > 0
+        ? Math.max(50, Math.floor(
+            ((sourceColW - SOURCE_CELL_PADDING) / SOURCE_CHAR_W) * 2 * SOURCE_FILL
+        ) - SOURCE_TOGGLE_CHARS)
+        : 100
+
+    const ExpandableSource = ({ text, limit }) => {
         const [expanded, setExpanded] = useState(false);
         if (!text) return '-';
 
@@ -178,17 +217,21 @@ function PlanToWatch() {
             const urlRegex = /(https?:\/\/[^\s]+)/g;
             return t.split(urlRegex).map((part, i) => {
                 if (part.match(urlRegex)) {
-                    return <a key={i} href={part} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)', textDecoration: 'underline' }}>{part.length > 50 ? part.substring(0, 50) + '...' : part}</a>
+                    // Odkaz se nedá zalomit kdekoli, takže dlouhá adresa spolkne
+                    // celý řádek. 34 znaků se do jednoho řádku sloupce vejde.
+                    return <a key={i} href={part} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)', textDecoration: 'underline' }}>{part.length > 34 ? part.substring(0, 34) + '...' : part}</a>
                 }
                 return part;
             });
         };
 
-        const isLong = text.length > 100;
-        const displayText = expanded ? text : (isLong ? text.substring(0, 100) + '...' : text);
+        // Tlačítko dává smysl jen když se text celý nevejde; kratší důvody
+        // zůstávají bez něj.
+        const isLong = text.length > limit;
+        const displayText = expanded || !isLong ? text : text.substring(0, limit) + '...';
 
         return (
-            <div>
+            <div className={`ptw-source-cell ${expanded ? 'is-expanded' : ''}`}>
                 {linkify(displayText)}
                 {isLong && (
                     <button
@@ -300,7 +343,7 @@ function PlanToWatch() {
 
             {/* Table */}
             <div className="ptw-table-wrap hide-mobile">
-                <table className="ptw-table">
+                <table className="ptw-table" ref={tableRef}>
                     <thead>
                         <tr>
                             <th onClick={() => handleSort('name')} className={sortConfig.key === 'name' ? 'sorted' : ''}>
@@ -323,7 +366,7 @@ function PlanToWatch() {
                                 <td>
                                     <div className="ptw-name-cell">
                                         <span className="ptw-row-index">{idx + 1}</span>
-                                        <span className="ptw-name">{item.name}</span>
+                                        <span className="ptw-name" title={item.name}>{item.name}</span>
                                     </div>
                                 </td>
                                 <td>
@@ -336,7 +379,7 @@ function PlanToWatch() {
                                 </td>
 
                                 <td className="ptw-td-source">
-                                    <ExpandableSource text={item.source} />
+                                    <ExpandableSource text={item.source} limit={sourceLimit} />
                                 </td>
                                 <td>
                                     <StatusPill notes={item.notes} />
@@ -382,7 +425,7 @@ function PlanToWatch() {
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', width: '100%' }}>
                                     <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Zdroj / Důvod:</span>
                                     <div style={{ fontSize: '0.85rem' }}>
-                                        <ExpandableSource text={item.source} />
+                                        <ExpandableSource text={item.source} limit={SOURCE_LIMIT_MOBILE} />
                                     </div>
                                 </div>
                             </div>

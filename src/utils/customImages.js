@@ -1,4 +1,19 @@
 import { useState, useEffect } from 'react'
+import { getDataVersion } from './dataStore'
+
+// Sdílený příslib: custom_images.json se stáhne a naparsuje jen jednou za
+// session, i když hook useCustomImages použije víc stránek. Stabilní verzní
+// parametr (místo Date.now()) navíc pustí HTTP cache při F5.
+let _configPromise = null
+function loadCustomImages() {
+  if (!_configPromise) {
+    _configPromise = getDataVersion()
+      .then(v => fetch(`data/custom_images.json?v=${v}`))
+      .then(r => r.json())
+      .catch(() => ({ page_backgrounds: {}, custom_images: [] }))
+  }
+  return _configPromise
+}
 
 /**
  * Hook to load custom image configuration from custom_images.json.
@@ -8,10 +23,9 @@ export function useCustomImages() {
   const [config, setConfig] = useState(null)
 
   useEffect(() => {
-    fetch('data/custom_images.json?v=' + Date.now())
-      .then(r => r.json())
-      .then(setConfig)
-      .catch(() => setConfig({ page_backgrounds: {}, custom_images: [] }))
+    let alive = true
+    loadCustomImages().then(c => { if (alive) setConfig(c) })
+    return () => { alive = false }
   }, [])
 
   return config

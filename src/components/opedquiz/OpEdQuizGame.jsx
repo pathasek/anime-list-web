@@ -7,6 +7,7 @@ import { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import { POINTS, buildPool, generateGame } from './quizEngine'
 import { useModalScrollLock } from '../../utils/useModalScrollLock'
+import { loadData, STORAGE_KEYS, getDataVersion } from '../../utils/dataStore'
 import './opedquiz.css'
 
 // Infinity = nekonečný režim (batch 3 task 5c): hraje se, dokud hráč hru
@@ -80,12 +81,14 @@ export default function OpEdQuizGame({ onClose }) {
     // Data si hra načítá sama — nulová vazba na stav stránky Favorites
     useEffect(() => {
         let cancelled = false
-        Promise.all([
-            fetch('data/animethemes_op_ed.json?v=' + Date.now()).then(r => r.json()).catch(() => null),
-            fetch('data/op_ed_videos.json?v=' + Date.now()).then(r => r.json()).catch(() => null),
-            fetch('data/anime_list.json?v=' + Date.now()).then(r => r.json()),
-            fetch('data/favorites.json?v=' + Date.now()).then(r => r.json()).catch(() => null),
-        ])
+        // anime_list + favorites přes sdílenou cache (dataStore); katalogy nemají
+        // klíč, tak aspoň stabilní verzní parametr místo Date.now().
+        getDataVersion().then(version => Promise.all([
+            fetch(`data/animethemes_op_ed.json?v=${version}`).then(r => r.json()).catch(() => null),
+            fetch(`data/op_ed_videos.json?v=${version}`).then(r => r.json()).catch(() => null),
+            loadData(STORAGE_KEYS.ANIME_LIST, 'data/anime_list.json'),
+            loadData(STORAGE_KEYS.FAVORITES, 'data/favorites.json').catch(() => null),
+        ]))
             .then(([themesJson, opEd, animeList, favJson]) => {
                 if (cancelled) return
                 setRaw({

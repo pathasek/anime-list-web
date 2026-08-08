@@ -4,6 +4,19 @@ Tento soubor shrnuje všechny nedávné změny, opravy a vylepšení implementov
 
 ---
 
+## [1.8.0] - 2026-08-08
+
+### ⚡ Výkonový audit: oprava sekání a sjednocení načítání dat
+Reakce na hlášení „web se seká". Audit (statická analýza + živé profilování) našel několik příčin, všechny opravené a ověřené (lint 0 errors, build OK, žádné JS chyby).
+
+- **Hlavní příčina — Dashboard layout thrashing:** `useEffect` pro dopočet rozteče karet „Právě sledované" neměl dependency array, takže běžel po KAŽDÉM renderu Dashboardu, pokaždé tvořil nový `ResizeObserver` a střídal čtení layoutu (`getComputedStyle` + `getBoundingClientRect` přes všechny karty) se zápisem stylů. Přesunut za memo `sortedAiringAnime` (jinak temporal dead zone) a navázán na `[sortedAiringAnime]`. Ověřeno: při 8 vynucených re-renderech vzniklo **0 nových `ResizeObserver` a 0 layout readů** (dřív by to byl thrashing na každý render). Průběžné změny velikosti (načtení posterů, resize) dál hlídá `ResizeObserver`.
+- **Cache-buster `?v=Date.now()` → sdílená cache:** tenhle vzor obcházel HTTP i sdílenou cache, takže se datové JSON (často 1 až 2 MB) stahovaly a synchronně parsovaly na hlavním vlákně při každém otevření stránky. Sjednoceno na `loadData()`/`getDataVersion()` z `dataStore.js` napříč **všemi** stránkami a komponentami (Dashboard, AnimeRatings, Favorites, Recommendations, TopFavorites, PlanToWatch, AnimeJourney, OpEdQuizGame, CategoryRatingsPanel, `ratingGuide.js`, `customImages.js`). Keyed soubory jdou přes `loadData` (in-memory + localStorage cache, čerstvost přes `metadata.json`), keyless přes stabilní verzní parametr (HTTP cache). Ověřeno: po projití všech stránek se **`anime_list.json` (1 MB) stáhne 1× za celou session** místo 6+×.
+- **Zdvojené stahování při startu + dedup:** `stats.json` má nově klíč v `dataStore` (`STATS`, přidán do invalidace `CACHED_DATA_KEYS`) a App i Dashboard čtou tentýž klíč. `loadData` dostal **dedup souběžných dotazů** (in-flight mapa), takže App `preloadAllData` + stránka + dvojité efekty React StrictMode sdílí jeden fetch. Cold start: každý keyed soubor přesně 1×.
+- **Statistiky hodnocení: rychlejší přepnutí na AniList:** Jikan `/anime/{id}/statistics` dlouhodobě vrací 504 a dřív se zkoušel 3× s backoffem (1+2+4 s), takže první hover čekal ~7 s. Teď jediný pokus (`retries=0`) se stropem **500 ms** přes `Promise.race`; při nedostupnosti se hned přepne na AniList fallback pro celou session. Naměřeno ~200 ms do zobrazení dat.
+- **Throttle scroll zápisů:** `sessionStorage.setItem` na scroll eventech v `HistoryLog` a `AnimeList` je nově throttlovaný přes `requestAnimationFrame` (stejný vzor, jaký už měl Dashboard), aby rychlý scroll dlouhých seznamů nezapisoval na každý event.
+
+---
+
 ## [1.7.0] - 2026-08-07 (noc)
 
 ### 🎨 Redesign čtyř stránek podle Claude Design (projekt „Anime List")
