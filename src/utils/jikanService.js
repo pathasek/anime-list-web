@@ -171,6 +171,24 @@ const BREAKER_PAUSE_MS = 15 * 60 * 1000
 let _consecutiveFailures = 0
 let _pausedUntil = 0
 
+// ---- Kooperativní ústup při 429 (sdílená IP quota s Excelem) ----------------
+// Jikan počítá limit na IP, takže web i Excel (VBA plnící „MAL Cache") čerpají
+// ze stejné quoty. Když web dostane 429, je to skoro jistě proto, že quotu
+// zrovna bere Excel (web sám při rozestupu API_DELAY_MS na limit prakticky
+// nenarazí). V tu chvíli web dobrovolně ustoupí: dotazy na POZADÍ výrazně
+// zpomalí a nechá quotu Excelu, zatímco UŽIVATELSKÉ (high) dotazy jedou dál jen
+// mírně zpomalené.
+//
+// Důležité — proti „zaseknutí naprázdno": tohle NENÍ tvrdá pauza a NIKDY se
+// nespustí bez reálného 429. Okno se drží jen krátce po POSLEDNÍM 429 a každým
+// dalším 429 se obnovuje. Jakmile Excel skončí (nebo neběžel), 429 přestanou
+// chodit a web se do YIELD_WINDOW_MS vrátí na plné tempo sám. Pozadí se ani
+// během ústupu úplně nezastaví (jede po YIELD_LOW_DELAY_MS).
+const YIELD_WINDOW_MS = 20 * 1000      // jak dlouho jeden 429 drží ústup (obnovuje se dalším 429)
+const YIELD_LOW_DELAY_MS = 5000        // rozestup dotazů na pozadí během ústupu (~0,2 req/s)
+const YIELD_HIGH_DELAY_MS = 1200       // rozestup uživatelských dotazů během ústupu (pořád svižné)
+let _yieldUntil = 0
+
 // ---- Per-URL blackout ------------------------------------------------------
 // Některé KONKRÉTNÍ dotazy selhávají trvale (např. /anime/{id}/statistics vrací
 // věčně 504, viz ZDROJ_PRAVDY §6), zatímco zbytek API šlape. Takový endpoint
@@ -269,7 +287,13 @@ function processQueue() {
     const item = _requestQueue.shift()
     const now = Date.now()
     const timeSinceLast = now - _lastRequestAt
-    const wait = Math.max(0, API_DELAY_MS - timeSinceLast, _cooldownUntil - now)
+    // Během kooperativního ústupu (krátce po 429) drží pozadí velký rozestup a
+    // quotu přenechává Excelu; uživatelské (high) dotazy zůstávají svižné. Bez
+    // 429 je _yieldUntil v minulosti a platí normální API_DELAY_MS.
+    const spacing = _yieldUntil > now
+        ? (item.priority === 'high' ? YIELD_HIGH_DELAY_MS : YIELD_LOW_DELAY_MS)
+        : API_DELAY_MS
+    const wait = Math.max(0, spacing - timeSinceLast, _cooldownUntil - now)
 
     setTimeout(() => {
         if (item.signal?.aborted) {
@@ -310,9 +334,11 @@ export async function fetchWithRetry(url, retries = RETRY_MAX, priority = 'low',
 
             // Rate limited — wait and retry (a zdržet i celou frontu)
             if (response.status === 429) {
+                // Kooperativní ústup: 429 = quotu nejspíš bere Excel → přenech mu
+                // ji. Okno se obnovuje každým 429 a samo vyprší brzy po posledním.
+                _yieldUntil = Date.now() + YIELD_WINDOW_MS
                 const waitMs = RETRY_BASE_MS * Math.pow(2, attempt)
                 _cooldownUntil = Math.max(_cooldownUntil, Date.now() + waitMs)
-                console.warn(`[Jikan] Rate limited (429). Waiting ${waitMs}ms before retry ${attempt + 1}/${retries}`)
                 await delay(waitMs)
                 continue
             }
