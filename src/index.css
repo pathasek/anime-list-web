@@ -457,22 +457,32 @@ a.echidna-notebook-container:focus-visible {
 
 /* ─── Sidebar: patička ─── */
 .sidebar-footer {
+  position: relative;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
   padding: 12px;
-  border-top: 1px solid var(--border-color);
 }
 
+/* Stejná vlasová linka jako pod hlavičkou, ne plný rámeček */
+.sidebar-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 16px;
+  right: 16px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+}
+
+/* Patička záměrně bez výplně a rámečku: vyplněné karty v úzkém sloupci
+   přebíjely samotné menu, které je až do najetí myší průhledné. */
 .sidebar-update {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
+  gap: 12px;
+  padding: 4px 11px 2px;
 }
 
 .sidebar-update-icon {
@@ -6362,11 +6372,7 @@ button.fav-ost-row-play:hover {
 }
 
 [data-theme="excel-table"] .sidebar-divider,
-[data-theme="excel-table"] .sidebar-footer {
-  border-color: rgba(255, 255, 255, 0.18);
-}
-
-[data-theme="excel-table"] .sidebar-divider {
+[data-theme="excel-table"] .sidebar-footer::before {
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
 }
 
@@ -6382,8 +6388,7 @@ button.fav-ost-row-play:hover {
 }
 
 [data-theme="excel-table"] .sidebar-logo-btn,
-[data-theme="excel-table"] .sidebar-collapse-btn,
-[data-theme="excel-table"] .theme-switcher-toggle {
+[data-theme="excel-table"] .sidebar-collapse-btn {
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.25);
 }
@@ -6407,9 +6412,11 @@ button.fav-ost-row-play:hover {
 
 /* Excel theme sidebar footer override */
 [data-theme="excel-table"] .sidebar-update {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.25);
   color: rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="excel-table"] .theme-switcher-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 [data-theme="excel-table"] .sidebar-update-icon,
@@ -6872,6 +6879,7 @@ button.fav-ost-row-play:hover {
   position: relative;
 }
 
+/* Stejný tvar jako položka menu: průhledné, podbarví se až při najetí */
 .theme-switcher-toggle {
   display: flex;
   align-items: center;
@@ -6880,8 +6888,8 @@ button.fav-ost-row-play:hover {
   padding: 0 11px;
   border-radius: var(--radius-md);
   color: var(--text-secondary);
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-color);
+  background: transparent;
+  border: 1px solid transparent;
   cursor: pointer;
   font-family: inherit;
   font-size: 0.8125rem;
@@ -6920,14 +6928,14 @@ button.fav-ost-row-play:hover {
   opacity: 0.7;
 }
 
-.theme-switcher-toggle:hover,
-.theme-switcher-toggle.open {
-  border-color: var(--accent-primary);
-  color: var(--accent-primary);
+.theme-switcher-toggle:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
 }
 
 .theme-switcher-toggle.open {
-  background: color-mix(in srgb, var(--accent-primary) 10%, var(--bg-tertiary));
+  background: color-mix(in srgb, var(--accent-primary) 12%, transparent);
+  color: var(--accent-primary);
 }
 
 /* Sbalený sidebar: zbude jen ikona, panel se musí rozevřít doprava */
