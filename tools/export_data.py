@@ -1428,6 +1428,12 @@ def main():
             [_krok("export_docx_categories.py"), _krok("build_ost_types.py")],
             [_krok("build_ytmusic_ost.py")],
             [_krok("download_animethemes_cache.py")],
+            # OP/ED videa z Google Drive: op_ed_videos.json se generuje z veřejné
+            # složky přes Drive API (klíč v reference/gdrive_config.json, mimo
+            # repo). Nově nahrané klipy (jako Black Clover) se tak dostanou na
+            # web při dalším exportu bez ručního zásahu. Při výpadku API jen
+            # zaloguje a export pokračuje.
+            [_krok("build_gdrive_op_ed.py")],
             # Zmenšeniny (CPU-bound, Pillow) jedou za sebou v jedné lajně, ať si
             # neberou jádra navzájem. Oba skripty jsou inkrementální (přegenerují
             # jen obálku novější než její zmenšenina), po prvním běhu jsou rychlé.

@@ -99,8 +99,16 @@ export function findOpEdVideo(opEdVideos, { animeName, animeSeries, type, song }
     )
     if (candidates.length === 1) return candidates[0]
     if (candidates.length > 1) {
-        // Víc kandidátů (např. v1/v2) — preferuj shodu podle názvu písničky.
-        return (songKey && candidates.find(songMatches)) || candidates[0]
+        // Víc kandidátů. Když sedí název písničky, ber tu verzi (v1/v2 téže písně).
+        const matched = songKey ? candidates.find(songMatches) : null
+        if (matched) return matched
+        // Jinak jde buď o verze téže písně (v1/v2, zaměnitelné), nebo o různé
+        // písně, z nichž řádek žádnou na Drive nemá (např. anime s více OP,
+        // ale stažený jen jeden). U různých písní se vrátí null, ať naskočí
+        // záloha AnimeThemes se správnou písní místo cizího klipu.
+        const base = candidates[0]
+        const sameSong = candidates.every(c => !c.song || !base.song || songsLooselyMatch(c.song, base.song))
+        return sameSong ? base : null
     }
 
     // 2) Fallback: shoda podle základního názvu série + názvu písničky.
