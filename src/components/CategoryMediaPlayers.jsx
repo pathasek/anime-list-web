@@ -52,7 +52,9 @@ export function ScrollableText({ text, className, children }) {
 // Ztmavené pozadí, vlastní <video> s ovládáním + tlačítko fullscreen, zavření (X / Esc / klik do pozadí).
 // B3-6: nejdřív zkusí přímé <video autoPlay> (plné ovládání), při selhání
 // fallback na GDrive /preview iframe (vyžaduje klik na play — limit Google Drive).
-export function VideoModal({ media, onClose, onNext }) {
+// Navíc: navPrev/navNext/navIndex/navTotal → šipky ◀ ▶ pro přepínání mezi klipy
+// (OP/ED) přímo v hlavičce modalu. onNext zůstává původní „🎲 Další" (Favorites).
+export function VideoModal({ media, onClose, onNext, navPrev, navNext, navIndex, navTotal }) {
     // Zamknout scroll pozadí, dokud je video otevřené
     useModalScrollLock(!!media)
 
@@ -69,7 +71,16 @@ export function VideoModal({ media, onClose, onNext }) {
 
     return createPortal(
         <div className="media-modal-backdrop" onClick={onClose}>
-            <VideoModalInner key={mediaKey} media={media} onClose={onClose} onNext={onNext} />
+            <VideoModalInner
+                key={mediaKey}
+                media={media}
+                onClose={onClose}
+                onNext={onNext}
+                navPrev={navPrev}
+                navNext={navNext}
+                navIndex={navIndex}
+                navTotal={navTotal}
+            />
         </div>,
         document.body
     )
@@ -92,7 +103,7 @@ async function findAnimeThemesUrl(media) {
     return match?.url || null
 }
 
-function VideoModalInner({ media, onClose, onNext }) {
+function VideoModalInner({ media, onClose, onNext, navPrev, navNext, navIndex, navTotal }) {
     // Pořadí pokusů o přehrání:
     //   PC:    1) 'video' — přímý <video> stream z GDrive (AV1; plné nativní ovládání)
     //          2) 'iframe' — GDrive /preview jako poslední záchrana (omezené Drive UI)
@@ -174,6 +185,27 @@ function VideoModalInner({ media, onClose, onNext }) {
                     {subtitle && <span className="media-modal-subtitle">{subtitle}</span>}
                 </div>
                 <div className="media-modal-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {(navPrev || navNext) && (
+                        <div className="modal-ep-nav" title="Přepínat mezi klipy OP/ED">
+                            <button
+                                type="button"
+                                className="modal-ep-nav-btn"
+                                onClick={navPrev}
+                                disabled={!navPrev}
+                                aria-label="Předchozí klip"
+                                title={navPrev ? 'Předchozí klip' : 'První klip'}
+                            >◀</button>
+                            <span className="modal-ep-nav-pos">{navIndex}/{navTotal}</span>
+                            <button
+                                type="button"
+                                className="modal-ep-nav-btn"
+                                onClick={navNext}
+                                disabled={!navNext}
+                                aria-label="Další klip"
+                                title={navNext ? 'Další klip' : 'Poslední klip'}
+                            >▶</button>
+                        </div>
+                    )}
                     {onNext && (
                         <button
                             className="media-icon-btn"

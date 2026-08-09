@@ -278,6 +278,36 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
         }
     }, [searchYoutube, playTrack])
 
+    // Klipy OP/ED (kind 'video') v pořadí OP → ED — šipky ◀ ▶ v modalu přepínají
+    // mezi nimi. OST (YouTube / floating přehrávač) sem nepatří, jen video klipy.
+    const videoTracks = useMemo(() => {
+        return [...(media.OP || []), ...(media.ED || [])].filter(t => t.kind === 'video')
+    }, [media])
+
+    // Aktuální pozice otevřeného klipu (podle url/file_id); -1 = klip mimo seznam
+    const videoIdx = useMemo(() => {
+        if (!videoModal) return -1
+        return videoTracks.findIndex(t =>
+            (t.url && t.url === videoModal.url) ||
+            (t.file_id && t.file_id === videoModal.file_id)
+        )
+    }, [videoModal, videoTracks])
+
+    const goVideo = useCallback((dir) => {
+        const idx = videoIdx
+        if (idx < 0) return
+        const target = videoTracks[idx + dir]
+        if (target) playTrack(target)
+    }, [videoIdx, videoTracks, playTrack])
+
+    // Props pro VideoModal: šipky ◀ ▶ jen když je klip v seznamu a není sám
+    const videoNav = useMemo(() => ({
+        navPrev: videoIdx > 0 ? () => goVideo(-1) : null,
+        navNext: (videoIdx >= 0 && videoIdx < videoTracks.length - 1) ? () => goVideo(1) : null,
+        navIndex: videoIdx >= 0 ? videoIdx + 1 : null,
+        navTotal: videoTracks.length
+    }), [videoIdx, videoTracks, goVideo])
+
     const chartRef = useRef(null)
     const wrapRef = useRef(null)
     const [labelPos, setLabelPos] = useState([])
@@ -526,6 +556,33 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
             })
         }
 
+        // Název rozboru epizody (pro hlavičku modalu i navigaci mezi epizodami).
+        // episodes[epNum] je objekt { title, text } (starší data mohou být holý
+        // string) — modal potřebuje STRING do formatCategoryMarkdown.
+        const episodeTitleFor = (epNum) => {
+            const ep = reviews.episodes[epNum]
+            return (ep && typeof ep === 'object' && ep.title) ? ep.title : `Epizoda ${epNum}`
+        }
+
+        // Otevře rozbor epizody. epNum si nese číslo, aby modal poznal, že
+        // přepíná EPIZODY (ne kategorie) — šipky ◀ ▶ procházejí rozbory epizod.
+        const openEpisodeReview = (epNum) => {
+            const ep = reviews.episodes[epNum]
+            const epText = (ep && typeof ep === 'object') ? ep.text : ep
+            setActiveReview({
+                category: episodeTitleFor(epNum),
+                text: epText,
+                rating: null,
+                icon: '📝',
+                epNum: Number(epNum)
+            })
+        }
+
+        // Navigovatelné názvy epizod (v pořadí podle čísla) — modal přepíná
+        // jen mezi nimi; kategorie si přepínání drží samostatně (reviewedCategories).
+        const episodeNavTitles = episodeNumbers.map(episodeTitleFor)
+        const isEpisodeReview = !!activeReview?.epNum
+
         return (
             <div className="card" style={{ marginBottom: 'var(--spacing-xl)' }}>
                 <div className="category-ratings-header" style={{ marginBottom: '14px' }}>
@@ -582,24 +639,14 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                             </h4>
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '8px' }}>
                                 {episodeNumbers.map(epNum => {
-                                    // episodes[epNum] je objekt { title, text } (starší data mohou
-                                    // být holý string). Modal potřebuje STRING do formatCategoryMarkdown
-                                    // — předání objektu dřív shazovalo celou stránku (text.split).
-                                    const ep = reviews.episodes[epNum]
-                                    const epText = (ep && typeof ep === 'object') ? ep.text : ep
-                                    const epTitle = (ep && typeof ep === 'object' && ep.title) ? ep.title : `Epizoda ${epNum}`
+                                    const epTitle = episodeTitleFor(epNum)
                                     return (
                                         <button
                                             key={epNum}
                                             type="button"
                                             className="episode-review-btn-chip"
                                             title={epTitle}
-                                            onClick={() => setActiveReview({
-                                                category: epTitle,
-                                                text: epText,
-                                                rating: null,
-                                                icon: '📝'
-                                            })}
+                                            onClick={() => openEpisodeReview(epNum)}
                                         >
                                             Epizoda {epNum}
                                         </button>
@@ -635,7 +682,7 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                                                 {track.isExtra && (
                                                     <span className="media-track-extra-tag">{track.extraTag || 'AnimeThemes'}</span>
                                                 )}
-                                                {track.artist && <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textOverflow: 'ellipsis', overflow: 'hidden' }}>{track.artist}</div>}
+                                                {track.artist && <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>{track.artist}</div>}
                                             </div>
                                         </button>
                                     ))
@@ -645,8 +692,8 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                     )}
                 </div>
 
-                {/* OP/ED videoklip v překryvném okně */}
-                <VideoModal media={videoModal} onClose={() => setVideoModal(null)} />
+                {/* OP/ED videoklip v překryvném okně (šipky ◀ ▶ mezi klipy) */}
+                <VideoModal media={videoModal} onClose={() => setVideoModal(null)} {...videoNav} />
 
                 {/* OST v plovoucím YouTube přehrávači */}
                 <FloatingOstPlayer
@@ -657,11 +704,20 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                     onClose={() => setFloatingOst(null)}
                 />
 
-                {/* Detailní rozbor konkrétní kategorie */}
+                {/* Detailní rozbor konkrétní kategorie / epizody. Když je otevřený
+                    rozbor epizody, přepíná ◀ ▶ mezi epizodami; jinak mezi kategoriemi. */}
                 <CategoryDetailModal
                     activeReview={activeReview}
-                    categories={reviewedCategories}
-                    onSelect={(cat) => setActiveReview({ category: cat, text: reviews[cat], rating: null })}
+                    categories={isEpisodeReview ? episodeNavTitles : reviewedCategories}
+                    onSelect={(target) => {
+                        if (isEpisodeReview) {
+                            // target je název epizody → zpět na číslo
+                            const idx = episodeNavTitles.indexOf(target)
+                            if (idx >= 0) openEpisodeReview(episodeNumbers[idx])
+                        } else {
+                            setActiveReview({ category: target, text: reviews[target], rating: null })
+                        }
+                    }}
                     onClose={() => setActiveReview(null)}
                 />
             </div>
@@ -934,8 +990,8 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
             {/* Průvodce hodnocením kategorií */}
             <CategoryGuideModal open={guideOpen} onClose={() => setGuideOpen(false)} weights={categoryWeights} />
 
-            {/* OP/ED videoklip v překryvném okně */}
-            <VideoModal media={videoModal} onClose={() => setVideoModal(null)} />
+            {/* OP/ED videoklip v překryvném okně (šipky ◀ ▶ mezi klipy) */}
+            <VideoModal media={videoModal} onClose={() => setVideoModal(null)} {...videoNav} />
 
             {/* OST v plovoucím YouTube přehrávači (zůstane, dokud se neopustí detail) */}
             <FloatingOstPlayer

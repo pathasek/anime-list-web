@@ -8554,6 +8554,11 @@ button.fav-ost-row-play:hover {
   align-items: center;
   gap: 10px;
   padding: 8px 12px;
+  /* Jednotná výška všech tlačítek skladeb bez ohledu na to, jestli mají
+     řádek s umělcem; text se svisle středí přes align-items: center. */
+  height: 50px;
+  line-height: 1.25;
+  overflow: hidden;
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
