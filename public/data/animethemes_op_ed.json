@@ -1,8 +1,8 @@
 {
- "generated": "2026-08-08T23:12:22",
+ "generated": "2026-08-09T15:45:13",
  "source": "AnimeThemes.moe API",
- "anime_count": 401,
- "count": 1074,
+ "anime_count": 411,
+ "count": 1095,
  "themes": [
   {
    "mal_id": 48561,
@@ -11817,6 +11817,237 @@
    "artist": null,
    "audio_url": "https://a.animethemes.moe/BlackClover-ED14.ogg",
    "video_url": "https://v.animethemes.moe/BlackClover-ED14.webm"
+  },
+  {
+   "mal_id": 56352,
+   "anime_name": "7th Time Loop: The Villainess Enjoys a Carefree Life Married to Her Worst Enemy!",
+   "series": null,
+   "type": "OP",
+   "label": "OP1",
+   "song": "Another Birthday",
+   "artist": "Shunichi Toki",
+   "audio_url": "https://a.animethemes.moe/7thTimeLoop-OP1.ogg",
+   "video_url": "https://v.animethemes.moe/7thTimeLoop-OP1.webm"
+  },
+  {
+   "mal_id": 56352,
+   "anime_name": "7th Time Loop: The Villainess Enjoys a Carefree Life Married to Her Worst Enemy!",
+   "series": null,
+   "type": "ED",
+   "label": "ED1",
+   "song": "Kienai",
+   "artist": "THE BINARY",
+   "audio_url": "https://a.animethemes.moe/7thTimeLoop-ED1.ogg",
+   "video_url": "https://v.animethemes.moe/7thTimeLoop-ED1.webm"
+  },
+  {
+   "mal_id": 7785,
+   "anime_name": "The Tatami Galaxy",
+   "series": "The Tatami Galaxy",
+   "type": "OP",
+   "label": "OP1",
+   "song": "Maigo Inu to Ame no Beat",
+   "artist": "Asian Kung-Fu Generation",
+   "audio_url": "https://a.animethemes.moe/YojouhanShinwaTaikei-OP1.ogg",
+   "video_url": "https://v.animethemes.moe/YojouhanShinwaTaikei-OP1.webm"
+  },
+  {
+   "mal_id": 7785,
+   "anime_name": "The Tatami Galaxy",
+   "series": "The Tatami Galaxy",
+   "type": "OP",
+   "label": "OP2",
+   "song": "Kamisama no Iutoori",
+   "artist": "Etsuko Yakushimaru",
+   "audio_url": "https://a.animethemes.moe/YojouhanShinwaTaikei-OP2.ogg",
+   "video_url": "https://v.animethemes.moe/YojouhanShinwaTaikei-OP2.webm"
+  },
+  {
+   "mal_id": 7785,
+   "anime_name": "The Tatami Galaxy",
+   "series": "The Tatami Galaxy",
+   "type": "ED",
+   "label": "ED1",
+   "song": "Kamisama no Iutoori",
+   "artist": "Etsuko Yakushimaru",
+   "audio_url": "https://a.animethemes.moe/YojouhanShinwaTaikei-ED1.ogg",
+   "video_url": "https://v.animethemes.moe/YojouhanShinwaTaikei-ED1.webm"
+  },
+  {
+   "mal_id": 34537,
+   "anime_name": "Night Is Short, Walk on Girl",
+   "series": "The Tatami Galaxy",
+   "type": "ED",
+   "label": "ED1",
+   "song": "Kouya wo Aruke",
+   "artist": "Asian Kung-Fu Generation",
+   "audio_url": "https://a.animethemes.moe/YoruWaMijikashiArukeYoOtome-ED1.ogg",
+   "video_url": "https://v.animethemes.moe/YoruWaMijikashiArukeYoOtome-ED1.webm"
+  },
+  {
+   "mal_id": 42249,
+   "anime_name": "Tokyo Revengers, S01",
+   "series": "Tokyo Revengers",
+   "type": "OP",
+   "label": "OP1",
+   "song": "Cry Baby",
+   "artist": "Official HIGE DANdism",
+   "audio_url": "https://a.animethemes.moe/TokyoRevengers-OP1-NCBD1080.ogg",
+   "video_url": "https://v.animethemes.moe/TokyoRevengers-OP1-NCBD1080.webm"
+  },
+  {
+   "mal_id": 42249,
+   "anime_name": "Tokyo Revengers, S01",
+   "series": "Tokyo Revengers",
+   "type": "ED",
+   "label": "ED1",
+   "song": "Koko de Iki wo Shite",
+   "artist": null,
+   "audio_url": "https://a.animethemes.moe/TokyoRevengers-ED1-NCBD1080.ogg",
+   "video_url": "https://v.animethemes.moe/TokyoRevengers-ED1-NCBD1080.webm"
+  },
+  {
+   "mal_id": 42249,
+   "anime_name": "Tokyo Revengers, S01",
+   "series": "Tokyo Revengers",
+   "type": "ED",
+   "label": "ED2",
+   "song": "Tokyo Wonder",
+   "artist": null,
+   "audio_url": "https://a.animethemes.moe/TokyoRevengers-ED2-NCBD1080.ogg",
+   "video_url": "https://v.animethemes.moe/TokyoRevengers-ED2-NCBD1080.webm"
+  },
+  {
+   "mal_id": 50608,
+   "anime_name": "Tokyo Revengers: Christmas Showdown",
+   "series": "Tokyo Revengers",
+   "type": "OP",
+   "label": "OP1",
+   "song": "White Noise",
+   "artist": "Official HIGE DANdism",
+   "audio_url": "https://a.animethemes.moe/TokyoRevengersS2-OP1-NCBD1080.ogg",
+   "video_url": "https://v.animethemes.moe/TokyoRevengersS2-OP1-NCBD1080.webm"
+  },
+  {
+   "mal_id": 50608,
+   "anime_name": "Tokyo Revengers: Christmas Showdown",
+   "series": "Tokyo Revengers",
+   "type": "ED",
+   "label": "ED1",
+   "song": "Kizutsukedo, Aishiteru.",
+   "artist": "TUYU",
+   "audio_url": "https://a.animethemes.moe/TokyoRevengersS2-ED1-NCBD1080.ogg",
+   "video_url": "https://v.animethemes.moe/TokyoRevengersS2-ED1-NCBD1080.webm"
+  },
+  {
+   "mal_id": 54918,
+   "anime_name": "Tokyo Revengers: Tenjiku Arc",
+   "series": "Tokyo Revengers",
+   "type": "OP",
+   "label": "OP1",
+   "song": "White Noise",
+   "artist": "Official HIGE DANdism",
+   "audio_url": "https://a.animethemes.moe/TokyoRevengersS3-OP1.ogg",
+   "video_url": "https://v.animethemes.moe/TokyoRevengersS3-OP1.webm"
+  },
+  {
+   "mal_id": 54918,
+   "anime_name": "Tokyo Revengers: Tenjiku Arc",
+   "series": "Tokyo Revengers",
+   "type": "ED",
+   "label": "ED1",
+   "song": "Say My Name",
+   "artist": "HEY-SMITH",
+   "audio_url": "https://a.animethemes.moe/TokyoRevengersS3-ED1.ogg",
+   "video_url": "https://v.animethemes.moe/TokyoRevengersS3-ED1.webm"
+  },
+  {
+   "mal_id": 44074,
+   "anime_name": "Link Click, S01",
+   "series": "Link Click",
+   "type": "OP",
+   "label": "OP1",
+   "song": "Dive Back In Time",
+   "artist": "Bai Sha JAWS",
+   "audio_url": "https://a.animethemes.moe/ShiguangDailiren-OP1.ogg",
+   "video_url": "https://v.animethemes.moe/ShiguangDailiren-OP1.webm"
+  },
+  {
+   "mal_id": 44074,
+   "anime_name": "Link Click, S01",
+   "series": "Link Click",
+   "type": "ED",
+   "label": "ED1",
+   "song": "OverThink",
+   "artist": "Fan Ka",
+   "audio_url": "https://a.animethemes.moe/ShiguangDailiren-ED1.ogg",
+   "video_url": "https://v.animethemes.moe/ShiguangDailiren-ED1.webm"
+  },
+  {
+   "mal_id": 49413,
+   "anime_name": "Link Click, S02",
+   "series": "Link Click",
+   "type": "OP",
+   "label": "OP1",
+   "song": "VORTEX",
+   "artist": "Bai Sha JAWS",
+   "audio_url": "https://a.animethemes.moe/ShiguangDailirenS2-OP1.ogg",
+   "video_url": "https://v.animethemes.moe/ShiguangDailirenS2-OP1.webm"
+  },
+  {
+   "mal_id": 49413,
+   "anime_name": "Link Click, S02",
+   "series": "Link Click",
+   "type": "ED",
+   "label": "ED1",
+   "song": "THE TIDES",
+   "artist": "Bai Sha JAWS, Fan Ka",
+   "audio_url": "https://a.animethemes.moe/ShiguangDailirenS2-ED1.ogg",
+   "video_url": "https://v.animethemes.moe/ShiguangDailirenS2-ED1.webm"
+  },
+  {
+   "mal_id": 56752,
+   "anime_name": "Link Click: Bridon Arc",
+   "series": "Link Click",
+   "type": "OP",
+   "label": "OP1",
+   "song": "The Eye",
+   "artist": "Bai Sha JAWS",
+   "audio_url": "https://a.animethemes.moe/ShiguangDailirenYingduPian-OP1.ogg",
+   "video_url": "https://v.animethemes.moe/ShiguangDailirenYingduPian-OP1.webm"
+  },
+  {
+   "mal_id": 56752,
+   "anime_name": "Link Click: Bridon Arc",
+   "series": "Link Click",
+   "type": "ED",
+   "label": "ED1",
+   "song": "Lull",
+   "artist": "AK Liu Zhang",
+   "audio_url": "https://a.animethemes.moe/ShiguangDailirenYingduPian-ED1.ogg",
+   "video_url": "https://v.animethemes.moe/ShiguangDailirenYingduPian-ED1.webm"
+  },
+  {
+   "mal_id": 60427,
+   "anime_name": "Gnosia",
+   "series": null,
+   "type": "OP",
+   "label": "OP1",
+   "song": "Bake no Kawa",
+   "artist": "TeddyLoid, MAISONdes, Giga, Kobo Kanaeru, Teto Kasane",
+   "audio_url": "https://a.animethemes.moe/Gnosia-OP1.ogg",
+   "video_url": "https://v.animethemes.moe/Gnosia-OP1.webm"
+  },
+  {
+   "mal_id": 60427,
+   "anime_name": "Gnosia",
+   "series": null,
+   "type": "ED",
+   "label": "ED1",
+   "song": "Loo% Who%",
+   "artist": "Ling Tosite Sigure",
+   "audio_url": "https://a.animethemes.moe/Gnosia-ED1.ogg",
+   "video_url": "https://v.animethemes.moe/Gnosia-ED1.webm"
   }
  ]
 }
