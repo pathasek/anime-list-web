@@ -78,6 +78,10 @@
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
+  /* Odsazení plovoucích tlačítek (šipka „nahoru" a spol.) od spodní hrany.
+     Na mobilu ho přebíjí spodní lišta, viz @media (max-width: 1024px). */
+  --fab-bottom: 30px;
+
   /* Transitions */
   --transition-fast: 150ms ease;
   --transition-normal: 250ms ease;
@@ -1276,10 +1280,34 @@ tr:hover td {
   height: auto !important;
 }
 
+/* Pending drží výšku přesně jednoho řádku karet. Dřív se s pátou a další
+   položkou panel roztahoval (max-height 45 %) a ukrajoval místo „Právě
+   sledovaným". Zbytek karet se odroluje uvnitř panelu. */
 .status-right-col .pending-panel {
   flex: 0 0 auto;
   height: auto !important;
-  max-height: 45%;
+  max-height: none;
+}
+
+/* Poster 45×64 px + svislý padding karty 2×6 px + rámeček 2×1 px */
+.status-right-col .pending-panel .pending-grid {
+  grid-auto-rows: 78px;
+}
+
+.status-right-col .pending-panel .chart-body {
+  max-height: 78px;
+}
+
+/* Karta se do pevného řádku musí vejít i s dlouhým názvem */
+.status-right-col .pending-panel .pending-card {
+  overflow: hidden;
+}
+
+.status-right-col .pending-panel .pending-card .marquee-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* ─── Nadpis sekce (jednotný napříč všemi taby) ─────────────────────────────
@@ -1772,7 +1800,17 @@ tr:hover td {
     grid-template-columns: 1fr;
   }
 
+  /* Pod sebou má pravý blok celou šířku a Pending nikomu místo nebere —
+     jeden řádek by tu naopak znamenal rolování přes jednu kartu. */
   .status-right-col .pending-panel {
+    max-height: none;
+  }
+
+  .status-right-col .pending-panel .pending-grid {
+    grid-auto-rows: auto;
+  }
+
+  .status-right-col .pending-panel .chart-body {
     max-height: none;
   }
 }
@@ -3057,6 +3095,12 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 @media (max-width: 1024px) {
 
+  /* Plovoucí tlačítka musí nad spodní lištu (60 px + safe area), jinak šipka
+     „nahoru" sedí přesně na tlačítku „Ostatní" a překrývá ho. */
+  :root {
+    --fab-bottom: calc(76px + env(safe-area-inset-bottom));
+  }
+
   /* Mobile Header (jen logo, hamburger nahradila spodní lišta) */
   .mobile-header {
     display: flex;
@@ -3830,12 +3874,12 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 16px;
+  padding: 10px 14px;
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   transition: all var(--transition-fast);
-  gap: var(--spacing-sm);
+  gap: 10px;
 }
 
 .category-rating-card:hover {
@@ -3848,11 +3892,11 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 .category-card-left {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
-  overflow: hidden;
-  /* Aby se dlouhý název („Story Conclusion") smrsknul s výpustkou místo
-     roztlačení karty přes okraj obrazovky. */
+  gap: 10px;
+  /* Bez overflow: hidden — ořezávalo odznak rozboru 📝, který čouhá z rohu
+     ikony. Výpustku dlouhého názvu drží min-width: 0 na celém řetězu. */
   min-width: 0;
+  flex: 1;
 }
 
 .category-card-right {
@@ -3860,6 +3904,41 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   align-items: center;
   gap: var(--spacing-md);
   flex-shrink: 0;
+}
+
+/* Prostřední sloupec karty: řádek s názvem a pod ním pruh hodnocení */
+.category-card-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.category-card-titlerow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  /* Sražený řádek: karta si tak drží stejnou výšku jako před redesignem */
+  line-height: 1.4;
+}
+
+/* Pruh hodnocení. Škála je 5–10 (nižší známku kategorie nedostávají), na
+   škále 0–10 by se karty od sebe skoro nelišily. */
+.category-card-bar {
+  display: block;
+  height: 4px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--text-muted) 24%, transparent);
+  overflow: hidden;
+}
+
+.category-card-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  transition: width var(--transition-normal);
 }
 
 .category-card-icon {
@@ -3873,6 +3952,18 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   flex-shrink: 0;
 }
 
+/* V kartě má ikona vlastní rámeček (.category-card-icon-wrapper) a barvu
+   podle hodnocení, kterou dědí z wrapperu. Modal si ponechává původní tvar.
+   Roztažení na celý rámeček drží glyf přesně uprostřed. */
+.category-rating-card .category-card-icon {
+  background: none;
+  padding: 0;
+  color: inherit;
+  width: 100%;
+  height: 100%;
+  line-height: 0;
+}
+
 .category-card-name {
   font-weight: 600;
   font-size: 0.9rem;
@@ -3882,27 +3973,22 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   text-overflow: ellipsis;
 }
 
-/* Jednotná šířka pro váhový boxík */
 .category-card-weight {
-  display: inline-block;
-  width: 75px;
-  text-align: center;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-color);
+  flex-shrink: 0;
   color: var(--text-muted);
-  padding: 3px 0;
-  border-radius: var(--radius-sm);
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-size: 0.68rem;
+  font-weight: 700;
   white-space: nowrap;
 }
 
 .category-card-value {
-  font-weight: 700;
+  font-weight: 800;
   font-size: 1.15rem;
+  line-height: 1.1;
   color: var(--accent-primary);
   min-width: 32px;
   text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 /* ===== OP/ED/OST média: karta s přehráváním + hover okénko ===== */
@@ -3918,35 +4004,48 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   color: var(--accent-primary);
 }
 
+/* Play/hledat na kartě kategorie: sedí na konci řádku s názvem, ať mají
+   karty klidnou pravou hranu. Výška 20 px odpovídá řádku, takže se karta
+   při najetí myší nepřekresluje na jinou výšku. */
 .category-card-play-hint {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+  margin-left: auto;
+  height: 20px;
   opacity: 0;
-  transform: scale(0.8);
-  transition: all var(--transition-fast);
+  transform: scale(0.85);
+  transition: opacity var(--transition-fast), transform var(--transition-fast),
+    background-color var(--transition-fast), border-color var(--transition-fast),
+    color var(--transition-fast);
   flex-shrink: 0;
 }
 
 .category-card-play-hint.has-local {
-  background: var(--accent-primary);
-  color: #fff;
-  padding: 3px 8px;
+  gap: 5px;
+  padding: 0 8px 0 9px;
   border-radius: var(--radius-full);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+  background: var(--accent-primary);
+  border: 1px solid var(--accent-primary);
+  color: #fff;
+  line-height: 1;
+}
+
+/* Verzálky bez dolních dotahů sedí vysoko, proto posun o vlásek dolů */
+.category-card-play-label {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  padding-top: 1px;
 }
 
 .category-card-play-hint.is-search {
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid var(--border-color);
-  color: var(--text-secondary);
-  width: 22px;
-  height: 22px;
+  width: 20px;
   border-radius: 50%;
+  background: var(--bg-hover);
+  border: 1px solid var(--border-light);
+  color: var(--text-secondary);
 }
 
 .category-rating-card.has-media:hover .category-card-play-hint {
@@ -4026,7 +4125,10 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   color: var(--accent-primary);
   background: rgba(99, 102, 241, 0.12);
   border: 1px solid rgba(99, 102, 241, 0.3);
-  padding: 2px 6px;
+  /* Verzálky („OST", „OP 1") nemají dolní dotahy a sedí v řádku o 1,6 px
+     výš, než by měly. Padding je proto o vlásek přesunutý nahoru; celková
+     výška odznaku zůstává stejná (3+1 = 2+2). */
+  padding: 3px 6px 1px;
   border-radius: var(--radius-full);
   min-width: 34px;
   text-align: center;
@@ -5919,6 +6021,287 @@ button.fav-ost-row-play:hover {
   display: block;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
+}
+
+/* ─── Detail anime: badge stavu a odkaz na MAL ─────────────────────────────
+   Vlastní třídy schválně: globální .status-badge a .ext-link--mal používají
+   i ostatní záložky a ty se měnit nemají. */
+.detail-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  /* Horní padding opticky vyrovnává verzálky — Inter je bez dolních dotahů
+     sází vysoko (stejný trik jako .al-status-pill v Anime Listu). */
+  padding: 2px 11px 0;
+  border-radius: var(--radius-full);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  background: color-mix(in srgb, var(--ds-color) 11%, transparent);
+  color: var(--ds-color);
+  border: 1px solid color-mix(in srgb, var(--ds-color) 38%, transparent);
+}
+
+.detail-status-badge .detail-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+  display: block;
+}
+
+/* Stejné barvy jako odznaky stavu v Anime Listu (.al-status-pill) */
+.detail-status-badge.finished { --ds-color: var(--accent-cyan); }
+.detail-status-badge.airing { --ds-color: var(--accent-emerald); }
+.detail-status-badge.pending { --ds-color: var(--accent-amber); }
+
+.detail-mal-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 1px 10px 0;
+  border-radius: var(--radius-sm);
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--text-secondary);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  text-decoration: none;
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.detail-mal-link:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.detail-mal-icon {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* ─── Detail anime: kruh s finálním hodnocením (FH) ─── */
+.detail-fh {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.detail-fh-circle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px solid var(--fh-color);
+  background: color-mix(in srgb, var(--fh-color) 12%, transparent);
+  cursor: help;
+}
+
+.detail-fh-value {
+  font-size: 1.65rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--fh-color);
+  font-variant-numeric: tabular-nums;
+}
+
+.detail-fh-max {
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-top: 2px;
+  color: var(--fh-color);
+  opacity: 0.7;
+}
+
+/* ─── Detail anime: tlačítko „Najít doporučení" ─── */
+.detail-recommend-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  /* Stejná výška jako mělo původní tlačítko: naměřeno 37,19 px (padding
+     2× 0,6rem + ikona 18 px; button nedědí line-height 1,6 z body, jede
+     na `normal`, proto o výšce rozhodovala ikona, ne text). */
+  height: 37px;
+  padding: 0 20px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  /* Tmavý inkoust na akcentu, jako v návrhu (#1a1208 na #ee9a46) */
+  color: color-mix(in srgb, var(--accent-primary) 15%, #000);
+  /* Druhý odstín gradientu = akcent o kousek tmavší a posunutý do červené,
+     jako v návrhu (#ee9a46 → #e07f4f). Dřív byl natvrdo indigový, takže
+     v Re:Zero šlo tlačítko z oranžové do fialové. */
+  background: linear-gradient(135deg,
+      var(--accent-primary),
+      color-mix(in srgb, color-mix(in srgb, var(--accent-primary) 70%, var(--accent-red)) 94%, #000));
+  border: none;
+  border-radius: var(--radius-md);
+  /* Návrh má jen jemný stín pod tlačítkem, ne svítící aureolu (a tlačítko se
+     na hover nenadzvedává) — hodnoty 1:1 z návrhu. */
+  box-shadow: 0 2px 12px color-mix(in srgb, var(--accent-primary) 22%, transparent);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: box-shadow var(--transition-fast);
+}
+
+.detail-recommend-btn:hover {
+  box-shadow: 0 4px 18px color-mix(in srgb, var(--accent-primary) 42%, transparent);
+}
+
+/* Tmavý inkoust sedí na 8 z 9 témat (změřený kontrast: Re:Zero 9,34:1,
+   Obsidian Grey 19,15:1, nejhůř Neon Dark 4,7:1 — všude lepší než bílá).
+   Výjimka je Excel Classic s tmavě zeleným akcentem, tam vyhrává bílá. */
+[data-theme="excel-table"] .detail-recommend-btn {
+  color: #fff;
+}
+
+/* ─── Detail anime: Historie sledování ─────────────────────────────────────
+   Skupiny podle rewatche; barvu skupiny nese proměnná --wh-color, kterou
+   nastavuje JSX z palety tématu. */
+.watch-hist-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+  margin-bottom: var(--spacing-md);
+}
+
+.watch-hist-meta {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.watch-hist-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.watch-hist-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.watch-hist-group-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.watch-hist-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 21px;
+  padding: 0 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  background: color-mix(in srgb, var(--wh-color) 12%, transparent);
+  color: var(--wh-color);
+  border: 1px solid color-mix(in srgb, var(--wh-color) 34%, transparent);
+}
+
+.watch-hist-rule {
+  flex: 1;
+  height: 1px;
+  background: var(--border-color);
+  display: block;
+}
+
+.watch-hist-group-meta {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.watch-hist-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-left: 3px solid var(--wh-color);
+  border-radius: var(--radius-md);
+}
+
+.watch-hist-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  width: 122px;
+  flex-shrink: 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.watch-hist-date svg {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.watch-hist-eps {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 118px;
+  height: 23px;
+  padding: 0 10px;
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.watch-hist-time {
+  margin-left: auto;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+@media (max-width: 600px) {
+  .watch-hist-row {
+    flex-wrap: wrap;
+    gap: 6px 10px;
+  }
+
+  .watch-hist-date,
+  .watch-hist-eps {
+    width: auto;
+  }
 }
 
 .chart-header-flex {
@@ -8319,8 +8702,17 @@ button.fav-ost-row-play:hover {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+}
+
+.category-rating-card .category-card-icon svg {
+  width: 17px;
+  height: 17px;
+  display: block;
 }
 
 .category-card-icon {
@@ -8349,9 +8741,22 @@ button.fav-ost-row-play:hover {
   z-index: 2;
 }
 
-.category-rating-card.has-review:hover .category-card-icon {
-  opacity: 0;
-  transform: scale(0.6);
+/* V kartě je 📝 malý odznak v rohu ikony a je vidět pořád (dřív se ikona
+   kategorie na hover překlápěla na 📝 a schovávala se). */
+.category-rating-card .category-card-review-icon {
+  left: auto;
+  top: auto;
+  right: -5px;
+  bottom: -5px;
+  width: 15px;
+  height: 15px;
+  font-size: 8px;
+  line-height: 1;
+  background: var(--bg-hover);
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  opacity: 1;
+  transform: none;
 }
 
 .category-rating-card.has-review:hover .category-card-review-icon {
@@ -8361,13 +8766,16 @@ button.fav-ost-row-play:hover {
 
 /* Rozbor děje: ikona sedí staticky ZA názvem kategorie („za slovem Plot“),
    ne přes ikonu kategorie (task 10a). Reveal na hover karty zůstává. */
-.category-card-review-icon-story {
+.category-rating-card .category-card-review-icon-story {
   position: static;
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   flex-shrink: 0;
-  margin-left: 4px;
-  font-size: 0.85rem;
+  margin-left: 0;
+  font-size: 0.8rem;
+  background: color-mix(in srgb, var(--accent-primary) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-primary) 40%, transparent);
+  border-radius: var(--radius-sm);
 }
 
 /* Text „Děj" napravo od ikony rozboru děje — objeví se při hoveru karty */

@@ -39,9 +39,43 @@ const PlayIcon = () => (
     </svg>
 )
 
+// Play na kartě kategorie: zaoblený trojúhelník posazený na optický střed
+// kolečka (geometrický střed by táhl doleva).
+const CardPlayIcon = () => (
+    <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+        <path d="M5.6 3.4 12.1 7.4a.7.7 0 0 1 0 1.2l-6.5 4a.7.7 0 0 1-1.1-.6V4a.7.7 0 0 1 1.1-.6z" />
+    </svg>
+)
+
 
 const fmtWeight = (w) => w.toLocaleString('cs-CZ', { maximumFractionDigits: 1 })
 const fmtRating = (r) => r.toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 2 })
+
+// Barva podle známky. Proměnné --rating-* přebarvuje každé téma, takže karty
+// zůstávají čitelné i ve světlých motivech.
+const ratingVar = (r) => {
+    const v = Number(r)
+    if (!Number.isFinite(v)) return 'var(--accent-primary)'
+    if (v >= 10) return 'var(--rating-10)'
+    if (v >= 9) return 'var(--rating-9)'
+    if (v >= 8) return 'var(--rating-8)'
+    if (v >= 7) return 'var(--rating-7)'
+    if (v >= 6) return 'var(--rating-6)'
+    if (v >= 5) return 'var(--rating-5)'
+    if (v >= 4) return 'var(--rating-4)'
+    if (v >= 3) return 'var(--rating-3)'
+    if (v >= 2) return 'var(--rating-2)'
+    return 'var(--rating-1)'
+}
+
+// Výplň pruhu na kartě. Kategorie hodnotím od 5 do 10, proto se škáluje
+// 5–10, ne 0–10 (jinak by všechny pruhy vypadaly skoro stejně).
+const ratingBarWidth = (r) => {
+    const v = Number(r)
+    if (!Number.isFinite(v)) return '0%'
+    const pct = ((Math.min(10, v) - 5) / 5) * 100
+    return `${Math.max(0, Math.min(100, pct))}%`
+}
 
 // Reads the current --accent-primary CSS variable as {r, g, b}
 function readAccentRgb() {
@@ -792,7 +826,8 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                                 } : undefined}
                             >
                                 <div className="category-card-left">
-                                    <span className="category-card-icon-wrapper">
+                                    {/* Barva ikony, pruhu i hodnoty se řídí známkou; ikona ji dědí z wrapperu */}
+                                    <span className="category-card-icon-wrapper" style={{ color: ratingVar(rating) }}>
                                         <span className="category-card-icon">{iconFor(cat)}</span>
                                         {hasReview && (
                                             <span
@@ -807,40 +842,57 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                                             </span>
                                         )}
                                     </span>
-                                    <span className="category-card-name" title={cat}>{cat}</span>
-                                    {/* Rozbor děje — až ZA slovem Plot (task 10a) */}
-                                    {storyReview && (
-                                        <>
-                                            <span
-                                                className="category-card-review-icon category-card-review-icon-story"
-                                                title="Zobrazit rozbor děje"
-                                                onClick={(e) => {
-                                                    e.stopPropagation()
-                                                    openStoryReview()
-                                                }}
-                                            >
-                                                📖
-                                            </span>
-                                            <span className="category-card-story-label" aria-hidden="true">Děj</span>
-                                        </>
-                                    )}
-                                    {isMedia && (
-                                        <span className={`category-card-play-hint${hasTracks ? ' has-local' : ' is-search'}`} aria-hidden="true">
-                                            {hasTracks ? (
-                                                <>PLAY <PlayIcon /></>
-                                            ) : (
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                                                    <polyline points="15 3 21 3 21 9" />
-                                                    <line x1="10" y1="14" x2="21" y2="3" />
-                                                </svg>
+                                    <span className="category-card-main">
+                                        <span className="category-card-titlerow">
+                                            <span className="category-card-name" title={cat}>{cat}</span>
+                                            {/* Rozbor děje — až ZA slovem Plot (task 10a) */}
+                                            {storyReview && (
+                                                <>
+                                                    <span
+                                                        className="category-card-review-icon category-card-review-icon-story"
+                                                        title="Zobrazit rozbor děje"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation()
+                                                            openStoryReview()
+                                                        }}
+                                                    >
+                                                        📖
+                                                    </span>
+                                                    <span className="category-card-story-label" aria-hidden="true">Děj</span>
+                                                </>
+                                            )}
+                                            <span className="category-card-weight">váha: {fmtWeight(categoryWeights[cat] || 1)}</span>
+                                            {isMedia && (
+                                                <span
+                                                    className={`category-card-play-hint${hasTracks ? ' has-local' : ' is-search'}`}
+                                                    title={hasTracks ? 'Přehrát' : 'Vyhledat na YouTube'}
+                                                    aria-hidden="true"
+                                                >
+                                                    {hasTracks ? (
+                                                        <>
+                                                            <span className="category-card-play-label">PLAY</span>
+                                                            <CardPlayIcon />
+                                                        </>
+                                                    ) : (
+                                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                                                            <polyline points="15 3 21 3 21 9" />
+                                                            <line x1="10" y1="14" x2="21" y2="3" />
+                                                        </svg>
+                                                    )}
+                                                </span>
                                             )}
                                         </span>
-                                    )}
+                                        <span className="category-card-bar">
+                                            <span
+                                                className="category-card-bar-fill"
+                                                style={{ width: ratingBarWidth(rating), background: ratingVar(rating) }}
+                                            />
+                                        </span>
+                                    </span>
                                 </div>
                                 <div className="category-card-right">
-                                    <span className="category-card-weight">váha: {fmtWeight(categoryWeights[cat] || 1)}</span>
-                                    <span className="category-card-value">{fmtRating(rating)}</span>
+                                    <span className="category-card-value" style={{ color: ratingVar(rating) }}>{fmtRating(rating)}</span>
                                 </div>
 
                                 {isMedia && (

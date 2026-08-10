@@ -116,7 +116,10 @@ export function formatReview(text, animeName) {
       const color = getRatingColor(score);
       parts.push(
         <span key={parts.length}>
-          {prefix && <span style={{ fontWeight: 'bold' }}>{prefix} </span>}
+          {/* Uvozující sloveso („uděluji", „dávám") je součástí věty, ne
+              zvýrazněné známky — zůstává v běžném řezu. Mezera za ním už je
+              v zachycené skupině, další se nepřidává. */}
+          {prefix && <span>{prefix}</span>}
           <span style={{ fontWeight: 'bold' }}>FH </span>
           <span style={{ fontWeight: 'bold', color }}>{match[7]}/10</span>
         </span>

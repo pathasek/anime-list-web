@@ -28,8 +28,33 @@ import { getDocxEpisode } from '../utils/docxEpisode'
 import { RatingInfoButton, EpisodeGuideModal, FinalGuideModal } from '../components/RatingGuideModals'
 import { extractMalId } from '../utils/jikanService'
 import { animePath, resolveAnimeName, safeDecode } from '../utils/animeSlug'
+import malIcon from '../assets/mal-favicon.svg'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, CategoryScale, LinearScale, BarElement)
+
+// Barvy skupin v Historii sledování. První sledování je vždy modré, každý
+// další rewatch dostane jinou barvu z palety tématu (po vyčerpání se cyklí).
+const REWATCH_COLORS = [
+    'var(--accent-amber)',
+    'var(--accent-pink)',
+    'var(--accent-emerald)',
+    'var(--accent-secondary)',
+    'var(--accent-primary)',
+    'var(--accent-red)'
+]
+const rewatchColor = (rw) => rw === 0 ? 'var(--accent-cyan)' : REWATCH_COLORS[(rw - 1) % REWATCH_COLORS.length]
+
+const pluralZaznam = (n) => n === 1 ? 'záznam' : (n >= 2 && n <= 4 ? 'záznamy' : 'záznamů')
+
+// „654" → „10 h 54 min"; pod hodinu jen minuty
+const formatWatchMinutes = (mins) => {
+    const h = Math.floor(mins / 60)
+    const m = mins % 60
+    return h > 0 ? `${h} h ${m} min` : `${m} min`
+}
+
+// Barva podle finálního hodnocení (proměnné --rating-* drží aktuální téma)
+const finalRatingVar = (r) => r >= 10 ? 'var(--rating-10)' : r >= 9 ? 'var(--rating-9)' : r >= 8 ? 'var(--rating-8)' : r >= 7 ? 'var(--rating-7)' : r >= 6 ? 'var(--rating-6)' : r >= 5 ? 'var(--rating-5)' : r >= 4 ? 'var(--rating-4)' : r >= 3 ? 'var(--rating-3)' : r >= 2 ? 'var(--rating-2)' : 'var(--rating-1)'
 
 function AnimeDetail() {
     const { theme } = useTheme();
@@ -486,6 +511,41 @@ function AnimeDetail() {
         )
     }
 
+    // Badge stavu, odkaz na MAL a tlačítko doporučení se v hlavičce vyskytují
+    // ve dvou/třech variantách rozložení — vizuál je jen na jednom místě.
+    const statusBadge = anime.status ? (
+        <span className={`detail-status-badge ${anime.status.toLowerCase().replace('!', '')}`}>
+            <span className="detail-status-dot" aria-hidden="true" />
+            {anime.status}
+        </span>
+    ) : null
+
+    const malBadge = anime.mal_url ? (
+        <a
+            href={anime.mal_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="detail-mal-link"
+            title="Otevřít na MyAnimeList"
+        >
+            <img src={malIcon} alt="" className="detail-mal-icon" />
+            MAL
+        </a>
+    ) : null
+
+    // Obsah tlačítka „Najít doporučení". Samotné <button> se píše na místě,
+    // protože dvě ze tří variant na sobě nesou ref pro měření šířky řádku.
+    const recommendInner = (
+        <>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+                <circle cx="7" cy="7" r="4.6" />
+                <path d="M10.4 10.4L14 14" />
+            </svg>
+            Najít doporučení
+        </>
+    )
+    const goRecommendations = () => navigate('/recommendations', { state: { presetAnime: anime } })
+
     return (
         <div className="fade-in">
             <button
@@ -537,38 +597,11 @@ function AnimeDetail() {
                                         <span className={`type-badge ${getTypeBadgeClass(anime.type)}`} style={{ fontSize: '0.8rem' }}>
                                             {anime.type}
                                         </span>
-                                        {anime.status && (
-                                            <span className={`status-badge ${anime.status.toLowerCase().replace('!', '')}`}>
-                                                {anime.status}
-                                            </span>
-                                        )}
-                                        {anime.mal_url && (
-                                            <a href={anime.mal_url} target="_blank" rel="noopener noreferrer"
-                                                className="ext-link ext-link--mal">
-                                                🔗 MAL
-                                            </a>
-                                        )}
+                                        {statusBadge}
+                                        {malBadge}
                                     </span>
-                                    <button
-                                        className="recommend-btn"
-                                        style={{
-                                            display: 'inline-flex', flexShrink: 0,
-                                            alignItems: 'center', gap: '0.6rem',
-                                            padding: '0.6rem 1.2rem', fontSize: '0.9rem', fontWeight: 'bold',
-                                            background: 'linear-gradient(135deg, var(--accent-primary), #4f46e5)',
-                                            color: 'white', border: 'none', borderRadius: 'var(--radius-md)',
-                                            boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
-                                            cursor: 'pointer', transition: 'all 0.2s ease',
-                                        }}
-                                        onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(99, 102, 241, 0.6)'; }}
-                                        onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(99, 102, 241, 0.4)'; }}
-                                        onClick={() => navigate('/recommendations', { state: { presetAnime: anime } })}
-                                    >
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                            <circle cx="11" cy="11" r="8"></circle>
-                                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                        </svg>
-                                        Najít doporučení
+                                    <button type="button" className="recommend-btn detail-recommend-btn" onClick={goRecommendations}>
+                                        {recommendInner}
                                     </button>
                                 </div>
                             </div>
@@ -581,17 +614,8 @@ function AnimeDetail() {
                                     <span className={`type-badge ${getTypeBadgeClass(anime.type)}`} style={{ fontSize: '0.8rem' }}>
                                         {anime.type}
                                     </span>
-                                    {anime.status && (
-                                        <span className={`status-badge ${anime.status.toLowerCase().replace('!', '')}`}>
-                                            {anime.status}
-                                        </span>
-                                    )}
-                                    {anime.mal_url && (
-                                        <a href={anime.mal_url} target="_blank" rel="noopener noreferrer"
-                                            style={{ fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                                            🔗 MAL
-                                        </a>
-                                    )}
+                                    {statusBadge}
+                                    {malBadge}
                                 </span>
                             )
                             return (
@@ -602,25 +626,12 @@ function AnimeDetail() {
                                         {!badgesRow2 && (
                                             <button
                                                 ref={recommendBtnRef}
-                                                className="recommend-btn"
-                                                style={{
-                                                    display: 'inline-flex', alignItems: 'center', gap: '0.6rem',
-                                                    padding: '0.6rem 1.2rem', fontSize: '0.9rem', fontWeight: 'bold',
-                                                    background: 'linear-gradient(135deg, var(--accent-primary), #4f46e5)',
-                                                    color: 'white', border: 'none', borderRadius: 'var(--radius-md)',
-                                                    boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
-                                                    cursor: 'pointer', transition: 'all 0.2s ease',
-                                                    marginLeft: 'auto',
-                                                }}
-                                                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(99, 102, 241, 0.6)'; }}
-                                                onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(99, 102, 241, 0.4)'; }}
-                                                onClick={() => navigate('/recommendations', { state: { presetAnime: anime } })}
+                                                type="button"
+                                                className="recommend-btn detail-recommend-btn"
+                                                style={{ marginLeft: 'auto' }}
+                                                onClick={goRecommendations}
                                             >
-                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                    <circle cx="11" cy="11" r="8"></circle>
-                                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                                </svg>
-                                                Najít doporučení
+                                                {recommendInner}
                                             </button>
                                         )}
                                     </div>
@@ -629,24 +640,11 @@ function AnimeDetail() {
                                             {badgeGroup}
                                             <button
                                                 ref={recommendBtnRef}
-                                                className="recommend-btn"
-                                                style={{
-                                                    display: 'inline-flex', alignItems: 'center', gap: '0.6rem',
-                                                    padding: '0.6rem 1.2rem', fontSize: '0.9rem', fontWeight: 'bold',
-                                                    background: 'linear-gradient(135deg, var(--accent-primary), #4f46e5)',
-                                                    color: 'white', border: 'none', borderRadius: 'var(--radius-md)',
-                                                    boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
-                                                    cursor: 'pointer', transition: 'all 0.2s ease',
-                                                }}
-                                                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(99, 102, 241, 0.6)'; }}
-                                                onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(99, 102, 241, 0.4)'; }}
-                                                onClick={() => navigate('/recommendations', { state: { presetAnime: anime } })}
+                                                type="button"
+                                                className="recommend-btn detail-recommend-btn"
+                                                onClick={goRecommendations}
                                             >
-                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                    <circle cx="11" cy="11" r="8"></circle>
-                                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                                </svg>
-                                                Najít doporučení
+                                                {recommendInner}
                                             </button>
                                         </div>
                                     )}
@@ -657,27 +655,14 @@ function AnimeDetail() {
                         {/* Rating + Key Info Row */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xl)', marginBottom: 'var(--spacing-lg)', flexWrap: 'wrap' }}>
                             {/* Big Rating Circle */}
-                            {anime.rating && !isNaN(Number(anime.rating)) && (() => {
-                                const rv = (r) => r >= 10 ? 'var(--rating-10)' : r >= 9 ? 'var(--rating-9)' : r >= 8 ? 'var(--rating-8)' : r >= 7 ? 'var(--rating-7)' : r >= 6 ? 'var(--rating-6)' : r >= 5 ? 'var(--rating-5)' : r >= 4 ? 'var(--rating-4)' : r >= 3 ? 'var(--rating-3)' : r >= 2 ? 'var(--rating-2)' : 'var(--rating-1)';
-                                const ratingVar = rv(Number(anime.rating));
-                                return (
-                                <div style={{ position: 'relative', width: '72px', height: '72px', flexShrink: 0 }}>
-                                    <div style={{
-                                        width: '72px', height: '72px',
-                                        borderRadius: '50%',
-                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                        flexDirection: 'column',
-                                        border: `3px solid ${ratingVar}`,
-                                        background: `color-mix(in srgb, ${ratingVar} 12%, transparent)`
-                                    }}>
-                                        <span style={{
-                                            fontSize: '1.5rem', fontWeight: '800', lineHeight: 1,
-                                            color: ratingVar
-                                        }}>
-                                            {Number(anime.rating) % 1 === 0 ? parseInt(anime.rating) : parseFloat(anime.rating).toLocaleString('cs-CZ', {minimumFractionDigits: 1, maximumFractionDigits: 2})}
+                            {anime.rating && !isNaN(Number(anime.rating)) && (
+                                <div className="detail-fh" style={{ '--fh-color': finalRatingVar(Number(anime.rating)) }}>
+                                    <span className="detail-fh-circle" title="Finální hodnocení (FH)">
+                                        <span className="detail-fh-value">
+                                            {Number(anime.rating) % 1 === 0 ? parseInt(anime.rating) : parseFloat(anime.rating).toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 2 })}
                                         </span>
-                                        <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', lineHeight: 1 }}>/10</span>
-                                    </div>
+                                        <span className="detail-fh-max">/10</span>
+                                    </span>
                                     {/* "?" v prázdném rohu vedle kruhu — absolutní pozice, layout se nemění.
                                         Odsazené dál od kruhu, ať mezi ikonami zůstane viditelná mezera. */}
                                     <RatingInfoButton
@@ -686,8 +671,7 @@ function AnimeDetail() {
                                         onClick={() => setFhGuideOpen(true)}
                                     />
                                 </div>
-                                );
-                            })()}
+                            )}
 
                             <div style={{
                                 display: 'flex',
@@ -953,37 +937,60 @@ function AnimeDetail() {
                 </div>
             )}
 
-            {/* Watching History */}
-            {history.length > 0 && (
-                <div className="card">
-                    <h3 style={{ marginBottom: 'var(--spacing-md)' }}>Historie sledování</h3>
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th>Datum</th>
-                                <th>Epizody</th>
-                                <th>Čas</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {history.map((h, i) => (
-                                <tr key={i}>
-                                    <td style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                        {h.date ? new Date(h.date).toLocaleDateString('cs-CZ') : 'N/A'}
-                                        {h.rewatch && (
-                                            <span style={{ color: 'var(--text-muted)', fontStyle: 'italic', fontSize: '0.85em' }}>
-                                                {h.rewatch}. Rewatch
+            {/* Watching History — rozdělená na první sledování a jednotlivé rewatche */}
+            {history.length > 0 && (() => {
+                const groups = []
+                history.forEach(h => {
+                    const rw = Number(h.rewatch) || 0
+                    let g = groups.find(x => x.rw === rw)
+                    if (!g) { g = { rw, items: [] }; groups.push(g) }
+                    g.items.push(h)
+                })
+                groups.sort((a, b) => a.rw - b.rw)
+
+                return (
+                    <div className="card">
+                        <div className="watch-hist-head">
+                            <h3 style={{ margin: 0 }}>Historie sledování</h3>
+                            <span className="watch-hist-meta">
+                                {history.length} {pluralZaznam(history.length)}
+                                {anime.rewatch_count > 0 && ` · ${anime.rewatch_count}× rewatch`}
+                            </span>
+                        </div>
+                        <div className="watch-hist-groups">
+                            {groups.map(g => {
+                                const mins = g.items.reduce((s, h) => s + (parseInt(h.time, 10) || 0), 0)
+                                return (
+                                    <div key={g.rw} className="watch-hist-group" style={{ '--wh-color': rewatchColor(g.rw) }}>
+                                        <div className="watch-hist-group-head">
+                                            <span className="watch-hist-chip">
+                                                {g.rw === 0 ? '1. sledování' : `${g.rw}. rewatch`}
                                             </span>
-                                        )}
-                                    </td>
-                                    <td>{h.episodes}</td>
-                                    <td>{h.time}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            )}
+                                            <span className="watch-hist-rule" aria-hidden="true" />
+                                            <span className="watch-hist-group-meta">
+                                                {g.items.length} {pluralZaznam(g.items.length)} · {formatWatchMinutes(mins)}
+                                            </span>
+                                        </div>
+                                        {g.items.map((h, i) => (
+                                            <div key={i} className="watch-hist-row">
+                                                <span className="watch-hist-date">
+                                                    <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                                        <rect x="1.8" y="3" width="12.4" height="11.2" rx="2" />
+                                                        <path d="M1.8 6.4h12.4M5 1.6v2.6M11 1.6v2.6" />
+                                                    </svg>
+                                                    {h.date ? new Date(h.date).toLocaleDateString('cs-CZ') : 'N/A'}
+                                                </span>
+                                                <span className="watch-hist-eps">{h.episodes}</span>
+                                                <span className="watch-hist-time">{h.time}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    </div>
+                )
+            })()}
 
             {/* Průvodce hodnocením epizod a finálním hodnocením */}
             <EpisodeGuideModal open={epGuideOpen} onClose={() => setEpGuideOpen(false)} />

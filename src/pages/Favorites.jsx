@@ -2546,7 +2546,7 @@ function Favorites() {
                     }}
                     style={{
                         position: 'fixed',
-                        bottom: '30px', /* Posunuto dolů pro lepší ergonomii na telefonu/desktopu */
+                        bottom: 'var(--fab-bottom)', /* na mobilu nad spodní lištou, ať nesedí na „Ostatní" */
                         right: '30px',
                         background: 'var(--accent-primary)',
                         color: 'white',
@@ -2584,7 +2584,7 @@ function Favorites() {
                     }}
                     style={{
                         position: 'fixed',
-                        bottom: showScrollTop ? '90px' : '30px',
+                        bottom: showScrollTop ? 'calc(var(--fab-bottom) + 60px)' : 'var(--fab-bottom)',
                         right: '30px',
                         display: 'inline-flex',
                         alignItems: 'center',

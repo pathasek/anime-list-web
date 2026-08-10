@@ -4,6 +4,26 @@ Tento soubor shrnuje všechny nedávné změny, opravy a vylepšení implementov
 
 ---
 
+## [1.9.0] - 2026-08-10
+
+### 🎨 Redesign prvků detailu anime podle návrhu (jen vizuál, funkčnost beze změny)
+Barvy jdou přes proměnné témat, takže všech 9 témat funguje dál. Ověřeno: lint 0 errors, build OK, žádné JS chyby.
+
+- **Karty kategorií** (`CategoryRatingsPanel`, tedy detail anime i stránka Hodnocení): ikona v zaobleném rámečku obarvená podle známky, název s váhou na jednom řádku, pod ním pruh hodnocení (škála 5 až 10, ne 0 až 10) a hodnota v barvě známky. Odznak rozboru 📝 je nově trvale v rohu ikony místo překlopení ikony na hover (`overflow: hidden` na kartě se muselo zrušit, jinak odznak ořezávalo). Výška karty zůstala stejná jako předtím. Tlačítko PLAY u OP/ED/OST sedí na konci řádku, má zaoblený trojúhelník a nemění výšku karty.
+- **Historie sledování** v detailu: místo tabulky skupiny podle rewatche (první sledování zvlášť, každý rewatch zvlášť) s pilulkou, počtem záznamů a součtem času. Každý rewatch dostává jinou barvu z palety tématu (`--accent-amber` → `pink` → `emerald` → `secondary` → `primary` → `red`, první sledování `--accent-cyan`); barva se propisuje i do levého proužku řádků.
+- **Odznak stavu a odkaz na MAL** v detailu: vlastní třídy `.detail-status-badge` / `.detail-mal-link` (globální `.status-badge` a `.ext-link--mal` používají ostatní záložky a zůstávají beze změny). Pilulka s tečkou, barvy sjednocené s Anime Listem (FINISHED = `--accent-cyan`), MAL s lokálním SVG logem místo emoji řetízku.
+- **Kruh finálního hodnocení a tlačítko „Najít doporučení":** nová typografie (tabulární číslice, `/10` v barvě známky), tlačítko přes třídu `.detail-recommend-btn` místo inline stylů a `onMouseEnter` handlerů, pro všechny tři varianty rozložení hlavičky. Gradient, stín i barva textu se odvozují z `--accent-primary`, takže tlačítko odpovídá návrhu v každém tématu (dřív byl druhý odstín gradientu natvrdo indigový a text bílý, takže v Re:Zero šlo tlačítko z oranžové do fialové). Text je tmavý inkoust jako v návrhu; změřený kontrast vychází líp než bílá u 8 z 9 témat, výjimku Excel Classic (tmavě zelený akcent) drží explicitní override.
+
+### 🔤 Drobnosti
+- **Odznaky v rozbalovacím seznamu OP/ED/OST** („OST", „OP 1", „Celý playlist") měly text o 1,6 px výš, než měl být: verzálky nemají dolní dotahy a v řádku sedí vysoko. Padding je posunutý o pixel nahoru, výška odznaku zůstává stejná (naměřeno: nesouměrnost 1,64 px → 0,36 px).
+- **Recenze: uvozující sloveso u finálního hodnocení už není tučné.** `formatReview` sázel „uděluji"/„dávám" tučně spolu s „FH" a přidával za ně druhou mezeru. Sloveso je součástí věty, ne zvýrazněné známky. Projeví se všude, kde se recenze vykresluje (detail anime i obě místa na stránce Hodnocení).
+
+### 🖥️ Dashboard a mobil
+- **Pending v maximalizovaném Statusu** drží výšku právě jednoho řádku karet a zbytek se odroluje uvnitř. Dřív se panel s pátou a další položkou roztahoval (max-height 45 %) a ukrajoval místo „Právě sledovaným" (naměřeno: panel 234 → 157 px, sledované 270 → 347 px).
+- **Plovoucí šipka „nahoru"** už na mobilu nesedí na tlačítku „Ostatní" ve spodní liště. Odsazení řídí nová proměnná `--fab-bottom` (desktop 30 px, do 1024 px `calc(76px + safe-area)`), takže se stejně chová na všech stránkách, které šipku mají.
+
+---
+
 ## [1.8.0] - 2026-08-08
 
 ### ⚡ Výkonový audit: oprava sekání a sjednocení načítání dat

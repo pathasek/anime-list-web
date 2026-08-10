@@ -1421,7 +1421,7 @@ function AnimeList() {
                     }}
                     style={{
                         position: 'fixed',
-                        bottom: '30px',
+                        bottom: 'var(--fab-bottom)', /* na mobilu nad spodní lištou, ať nesedí na „Ostatní" */
                         right: '30px',
                         background: 'var(--accent-primary)',
                         color: 'white',

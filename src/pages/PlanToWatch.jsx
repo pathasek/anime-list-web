@@ -445,7 +445,7 @@ function PlanToWatch() {
                     }}
                     style={{
                         position: 'fixed',
-                        bottom: '30px', /* Posunuto dolů pro lepší ergonomii na telefonu/desktopu */
+                        bottom: 'var(--fab-bottom)', /* na mobilu nad spodní lištou, ať nesedí na „Ostatní" */
                         right: '30px',
                         background: 'var(--accent-primary)',
                         color: 'white',
