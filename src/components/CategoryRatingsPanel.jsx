@@ -845,23 +845,21 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                                     <span className="category-card-main">
                                         <span className="category-card-titlerow">
                                             <span className="category-card-name" title={cat}>{cat}</span>
-                                            {/* Rozbor děje — až ZA slovem Plot (task 10a) */}
-                                            {storyReview && (
-                                                <>
-                                                    <span
-                                                        className="category-card-review-icon category-card-review-icon-story"
-                                                        title="Zobrazit rozbor děje"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation()
-                                                            openStoryReview()
-                                                        }}
-                                                    >
-                                                        📖
-                                                    </span>
-                                                    <span className="category-card-story-label" aria-hidden="true">Děj</span>
-                                                </>
-                                            )}
                                             <span className="category-card-weight">váha: {fmtWeight(categoryWeights[cat] || 1)}</span>
+                                            {/* Rozbor děje — až ZA váhou, zarovnaný doprava */}
+                                            {storyReview && (
+                                                <span
+                                                    className="category-card-story-wrapper"
+                                                    title="Zobrazit rozbor děje"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation()
+                                                        openStoryReview()
+                                                    }}
+                                                >
+                                                    <span className="category-card-story-icon" aria-hidden="true">📖</span>
+                                                    <span className="category-card-story-label">Děj</span>
+                                                </span>
+                                            )}
                                             {isMedia && (
                                                 <span
                                                     className={`category-card-play-hint${hasTracks ? ' has-local' : ' is-search'}`}

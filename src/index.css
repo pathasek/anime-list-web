@@ -8764,35 +8764,57 @@ button.fav-ost-row-play:hover {
   transform: scale(1);
 }
 
-/* Rozbor děje: ikona sedí staticky ZA názvem kategorie („za slovem Plot“),
-   ne přes ikonu kategorie (task 10a). Reveal na hover karty zůstává. */
-.category-rating-card .category-card-review-icon-story {
-  position: static;
-  width: 22px;
-  height: 22px;
-  flex-shrink: 0;
-  margin-left: 0;
-  font-size: 0.8rem;
-  background: color-mix(in srgb, var(--accent-primary) 16%, transparent);
-  border: 1px solid color-mix(in srgb, var(--accent-primary) 40%, transparent);
+/* Rozbor děje: sjednocené tlačítko zarovnané doprava, které se objeví na hover */
+.category-card-story-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 7px;
+  background: color-mix(in srgb, var(--accent-primary) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-primary) 30%, transparent);
   border-radius: var(--radius-sm);
-}
-
-/* Text „Děj" napravo od ikony rozboru děje — objeví se při hoveru karty */
-.category-card-story-label {
-  flex-shrink: 0;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--text-secondary);
+  color: var(--text-primary);
+  cursor: pointer;
+  margin-left: auto;
   opacity: 0;
-  transform: translateX(-4px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transform: translateX(8px);
+  transition: all 0.2s ease;
   pointer-events: none;
+  height: 20px;
+  box-sizing: border-box;
 }
 
-.category-rating-card:hover .category-card-story-label {
+.category-rating-card:hover .category-card-story-wrapper {
   opacity: 1;
   transform: translateX(0);
+  pointer-events: auto;
+}
+
+.category-card-story-wrapper:hover {
+  background: color-mix(in srgb, var(--accent-primary) 24%, transparent);
+  border-color: var(--accent-primary);
+  transform: scale(1.05);
+}
+
+.category-card-story-icon {
+  font-size: 0.8rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.category-card-story-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.category-card-story-wrapper:hover .category-card-story-label {
+  color: var(--text-primary);
 }
 
 @keyframes fadeIn {
