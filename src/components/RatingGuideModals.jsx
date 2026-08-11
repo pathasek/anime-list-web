@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { iconFor } from './categoryIcons'
 import { useModalScrollLock } from '../utils/useModalScrollLock'
 import { useRatingGuide } from '../utils/ratingGuide'
+import { EPISODE_TIERS } from '../utils/episodeChart'
 
 // ---- Animační hook: plynulý morphing mezi "pózami" hodnot ------------------
 // Drží holdMs, pak morphMs plynule interpoluje na další pózu (ease-in-out).
@@ -318,15 +319,8 @@ export function CategoryGuideModal({ open, onClose, weights }) {
 // ============================================================
 // 2) PRŮVODCE HODNOCENÍM EPIZOD
 // ============================================================
-// Texty = fallback, primárně z data/rating_guide.json (WORD na ploše)
-const EPISODE_TIERS = [
-    { name: 'Absolute Cinema', range: '10', color: 'rgb(29, 161, 242)', text: 'Epizoda, u které jsem zapomněl dýchat. Perfektní režie, animace i emoce — moment, kvůli kterému se anime sleduje.' },
-    { name: 'Awesome', range: '9 – 9,75', color: 'rgb(24, 106, 59)', text: 'Výjimečná epizoda s vrcholem, zvratem nebo payoff momentem, který dlouho rezonuje. Jen kousek od dokonalosti.' },
-    { name: 'Great', range: '8 – 8,75', color: 'rgb(40, 180, 99)', text: 'Silná epizoda, která výrazně posouvá příběh nebo postavy. Žádná hluchá pasáž, chci hned pustit další díl.' },
-    { name: 'Good', range: '7 – 7,75', color: 'rgb(244, 208, 63)', text: 'Solidní standard dobrého anime. Funguje, baví, ale nemá moment, který by přesáhl rámec epizody.' },
-    { name: 'Regular', range: '6 – 6,75', color: 'rgb(243, 156, 18)', text: 'Průměrná, spíš přechodová epizoda — setup, oddech nebo pomalejší tempo. Nezklame, ale ani nenadchne.' },
-    { name: 'Bad', range: '< 6', color: 'rgb(99, 57, 116)', text: 'Epizoda, která mě vyloženě nebavila — filler, nelogičnosti nebo rozbité tempo. Naštěstí vzácnost.' }
-]
+// Texty a barvy stupňů jsou v utils/episodeChart.js, ať je sdílí
+// průvodce i legenda a tooltip grafu „Hodnocení epizod“.
 
 export function EpisodeGuideModal({ open, onClose }) {
     const guide = useRatingGuide()

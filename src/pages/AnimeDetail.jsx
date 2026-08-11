@@ -26,6 +26,14 @@ import { useModalTables } from '../utils/useModalTables'
 import { formatCategoryMarkdown } from '../utils/formatCategoryMarkdown'
 import { getDocxEpisode } from '../utils/docxEpisode'
 import { RatingInfoButton, EpisodeGuideModal, FinalGuideModal } from '../components/RatingGuideModals'
+import EpisodeChartHeader from '../components/EpisodeChartHeader'
+import {
+    episodeAvgLinePlugin,
+    episodeCrosshairPlugin,
+    episodeHaloPlugin,
+    trendAreaGradient,
+    makeEpisodeTooltip
+} from '../utils/episodeChart'
 import { extractMalId } from '../utils/jikanService'
 import { animePath, resolveAnimeName, safeDecode } from '../utils/animeSlug'
 import malIcon from '../assets/mal-favicon.svg'
@@ -275,7 +283,11 @@ function AnimeDetail() {
                 borderColor: c.textMuted,
                 borderWidth: 2.8,
                 pointRadius: 0,
-                fill: false,
+                pointHoverRadius: 0,
+                pointHitRadius: 0,
+                // Jemný přechod pod křivkou trendu (redesign)
+                fill: 'start',
+                backgroundColor: trendAreaGradient,
                 tension: 0.45
             })
         }
@@ -288,10 +300,10 @@ function AnimeDetail() {
             borderWidth: 1.5,
             tension: 0.15,
             pointBackgroundColor: episodeRatings.map(ep => getPointColor(ep.rating)),
-            pointBorderColor: c.pointBorder,
-            pointBorderWidth: 1,
-            pointRadius: 5.5,
-            pointHoverRadius: 7.5,
+            pointBorderColor: c.isLight ? '#ffffff' : '#14141a',
+            pointBorderWidth: 1.8,
+            pointRadius: n > 40 ? 2.8 : 5.5,
+            pointHoverRadius: n > 40 ? 5.5 : 7.5,
             showLine: true,
             clip: false
         })
@@ -349,15 +361,36 @@ function AnimeDetail() {
         })
     }
 
+    // Číselný průměr epizod pro čárkovanou čáru v grafu
+    const avgEpisodeValue = useMemo(() => {
+        if (!episodeRatings || episodeRatings.length === 0) return null
+        const valid = episodeRatings
+            .map(ep => typeof ep.rating === 'number' ? ep.rating : parseFloat(ep.rating))
+            .filter(r => isFinite(r))
+        if (valid.length === 0) return null
+        return valid.reduce((a, r) => a + r, 0) / valid.length
+    }, [episodeRatings])
+
     const barOptions = {
         responsive: true,
         maintainAspectRatio: false,
+        interaction: {
+            mode: 'index',
+            intersect: false
+        },
         onClick: (event, elements) => {
             if (elements && elements.length > 0) {
                 openEpisodeModal(elements[0].index + 1);
             }
         },
-        onHover: (event, chartElement) => {
+        onHover: (event, chartElement, chart) => {
+            if (chart) {
+                const idx = chartElement.length ? chartElement[0].index : -1;
+                if (idx !== chart._lastActiveIndex) {
+                    chart._lastActiveIndex = idx;
+                    chart.update('none');
+                }
+            }
             if (event && event.native && event.native.target) {
                 if (chartElement.length && categoryReviews && anime) {
                     const idx = chartElement[0].index;
@@ -394,28 +427,31 @@ function AnimeDetail() {
                 }
             },
             x: {
-                ticks: { color: c.textMuted },
+                ticks: {
+                    color: (context) => {
+                        const activeIndex = context.chart._lastActiveIndex;
+                        if (activeIndex !== undefined && activeIndex !== -1) {
+                            if (context.index === activeIndex) {
+                                return c.isLight ? '#000000' : '#ebebeb';
+                            }
+                        }
+                        return c.textMuted;
+                    }
+                },
                 grid: { display: false }
             }
         },
         plugins: {
             legend: { display: false },
+            episodeAvgLine: { value: avgEpisodeValue },
             tooltip: {
-                callbacks: {
-                    title: (context) => {
-                        if (context && context[0] && categoryReviews && anime) {
-                            const idx = context[0].dataIndex;
-                            const docxEp = getDocxEpisode(categoryReviews[anime.name], idx + 1);
-                            return docxEp ? `📝 ${docxEp.title}` : `Epizoda ${idx + 1}`;
-                        }
-                        return '';
-                    },
-                    label: (context) => {
-                        const v = typeof context.raw === 'number' ? context.raw : parseFloat(context.raw);
-                        if (!isFinite(v)) return '';
-                        return `Hodnocení: ${parseFloat(v.toFixed(2)).toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}/10`;
-                    }
-                }
+                // Vlastní HTML tooltip podle redesignu (název epizody, hodnota, stupeň)
+                enabled: false,
+                external: makeEpisodeTooltip((idx) => {
+                    if (!categoryReviews || !anime) return null
+                    const docxEp = getDocxEpisode(categoryReviews[anime.name], idx + 1)
+                    return docxEp ? docxEp.title : null
+                })
             }
         }
     }
@@ -443,6 +479,7 @@ function AnimeDetail() {
         const sum = valid.reduce((a, r) => a + r, 0)
         return (sum / valid.length).toLocaleString('cs-CZ', { maximumFractionDigits: 2 })
     }, [episodeRatings])
+
 
     // Calculate rewatch strings for the tooltip dynamically from history
     const rewatchTooltipStr = useMemo(() => {
@@ -860,7 +897,7 @@ function AnimeDetail() {
             {/* Narrative Review / Note */}
             {note && (
                 <div className="card" style={{ marginBottom: 'var(--spacing-xl)' }}>
-                    <h3 style={{ marginBottom: 'var(--spacing-md)' }}>📝 Recenze / Poznámky</h3>
+                    <h3 className="detail-section-title" style={{ marginBottom: 'var(--spacing-md)' }}>📝 Recenze / Poznámky</h3>
                     <p style={{ fontFamily: "'Open Sans', var(--font-family)", lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>{formatReview(note.replace(/_x000D_/g, ''), anime.name)}</p>
                 </div>
             )}
@@ -881,58 +918,21 @@ function AnimeDetail() {
 
             {/* Episode Ratings */}
             {episodeRatings && episodeChartData && !['movie', 'film', 'music'].includes((anime.type || '').toLowerCase()) && (
-                <div className="card" style={{ marginBottom: 'var(--spacing-xl)' }}>
-                    <div className="chart-header-flex" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '4px', marginBottom: '16px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', flexWrap: 'wrap', gap: '12px' }}>
-                            <h3 style={{ margin: 0 }}>
-                                Hodnocení epizod
-                                <span style={{ marginLeft: 'var(--spacing-md)', fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
-                                    (Průměr: <span style={{ fontWeight: 'bold' }}>{avgEpisodeRating}</span>)
-                                </span>
-                                <RatingInfoButton
-                                    label="Jak hodnotím epizody"
-                                    style={{ marginLeft: '10px' }}
-                                    onClick={() => setEpGuideOpen(true)}
-                                />
-                            </h3>
+                <div className="card episode-ratings-section" style={{ marginBottom: 'var(--spacing-xl)' }}>
+                    <EpisodeChartHeader
+                        avg={avgEpisodeRating}
+                        onGuideOpen={() => setEpGuideOpen(true)}
+                        note={!!(categoryReviews && anime && categoryReviews[anime.name]?.episodes)}
+                    />
 
-                            {/* Custom Legend */}
-                            <div className="chart-legend-container">
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
-                                    <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgb(29, 161, 242)' }}></span>
-                                    <span>Absolute Cinema</span>
-                                </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
-                                    <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgb(24, 106, 59)' }}></span>
-                                    <span>Awesome</span>
-                                </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
-                                    <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgb(40, 180, 99)' }}></span>
-                                    <span>Great</span>
-                                </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
-                                    <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgb(244, 208, 63)' }}></span>
-                                    <span>Good</span>
-                                </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
-                                    <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgb(243, 156, 18)' }}></span>
-                                    <span>Regular</span>
-                                </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
-                                    <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgb(99, 57, 116)' }}></span>
-                                    <span>Bad</span>
-                                </div>
-                            </div>
-                        </div>
-                        {categoryReviews && anime && categoryReviews[anime.name]?.episodes && (
-                            <p className="category-ratings-info-text" style={{ margin: '4px 0 0 0' }}>
-                                Faktické rozbory epizod byly vygenerovány AI z webových zdrojů a mohou obsahovat chyby. Kliknutím na bod (tečku) konkrétní epizody v grafu zobrazíte její detailní rozbor.
-                            </p>
-                        )}
-                    </div>
-
-                    <div style={{ height: '350px' }}>
-                        <Chart type="line" data={episodeChartData} options={barOptions} key={c.isLight ? 'ep-l' : 'ep-d'} />
+                    <div style={{ height: '350px', position: 'relative' }}>
+                        <Chart
+                            type="line"
+                            data={episodeChartData}
+                            options={barOptions}
+                            plugins={[episodeAvgLinePlugin, episodeCrosshairPlugin, episodeHaloPlugin]}
+                            key={c.isLight ? 'ep-l' : 'ep-d'}
+                        />
                     </div>
                 </div>
             )}

@@ -32,3 +32,6 @@ __pycache__/
 # a build_ost_types.py, web používá per-anime soubory v public/data/.
 # Po čerstvém klonu se prostě jednou přeparsuje všechno.
 tools/category_texts_full.json
+
+# Temporary design analysis and drafts
+temp_design_analysis/

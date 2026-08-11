@@ -18,6 +18,14 @@ import { formatReview } from '../utils/formatReview'
 import { getThemeChartColors } from '../utils/chartTheme'
 import { useTheme } from '../components/ThemeProvider'
 import { RatingInfoButton, CategoryGuideModal, EpisodeGuideModal, FinalGuideModal } from '../components/RatingGuideModals'
+import EpisodeChartHeader from '../components/EpisodeChartHeader'
+import {
+    episodeAvgLinePlugin,
+    episodeCrosshairPlugin,
+    episodeHaloPlugin,
+    trendAreaGradient,
+    makeEpisodeTooltip
+} from '../utils/episodeChart'
 import CategoryRatingsPanel from '../components/CategoryRatingsPanel'
 import { formatCategoryMarkdown } from '../utils/formatCategoryMarkdown'
 import CategoryRadar from '../components/CategoryRadar'
@@ -1357,13 +1365,10 @@ function AnimeRatings() {
     }, [selectedTimelineEp, seriesTimelineData])
 
     const getPointColor = (rating) => {
-        if (rating >= 9.75) return 'rgb(29, 161, 242)' // Cinema (light blue)
-        if (rating >= 9.0) return 'rgb(24, 106, 59)'   // Awesome (dark green)
-        if (rating >= 8.0) return 'rgb(40, 180, 99)'   // Great (green)
-        if (rating >= 7.0) return 'rgb(244, 208, 63)'  // Good (yellow)
-        if (rating >= 6.0) return 'rgb(243, 156, 18)'  // Regular (orange)
-        if (rating >= 5.0) return 'rgb(99, 57, 116)'   // Bad (purple)
-        return 'rgb(239, 68, 68)'                      // Garbage (red)
+        const r = parseFloat(rating);
+        if (!isFinite(r)) return 'rgba(255, 255, 255, 0.2)';
+        const level = r >= 9.75 ? '10' : r >= 9.0 ? '9' : r >= 8.0 ? '8' : r >= 7.0 ? '7' : r >= 6.0 ? '6' : '5';
+        return getComputedStyle(document.documentElement).getPropertyValue(`--rating-${level}`).trim() || '#f8696b';
     }
 
     const getPointTextColor = (rating) => {
@@ -1850,6 +1855,16 @@ function AnimeRatings() {
         return (valid.reduce((a, r) => a + r, 0) / valid.length).toLocaleString('cs-CZ', { maximumFractionDigits: 2 })
     }, [selectedAnimeEpisodes])
 
+    // Číselný průměr epizod pro čárkovanou čáru v grafu
+    const avgEpisodeValue = useMemo(() => {
+        if (!selectedAnimeEpisodes || selectedAnimeEpisodes.length === 0) return null
+        const valid = selectedAnimeEpisodes
+            .map(ep => typeof ep.rating === 'number' ? ep.rating : parseFloat(ep.rating))
+            .filter(r => isFinite(r))
+        if (valid.length === 0) return null
+        return valid.reduce((a, r) => a + r, 0) / valid.length
+    }, [selectedAnimeEpisodes])
+
     // Má vybrané anime AI rozbory epizod? (řídí zobrazení poznámky a klikací body)
     const selectedEpisodeReviews = categoryReviews?.[selectedAnimeTitle]?.episodes || null
 
@@ -1896,7 +1911,11 @@ function AnimeRatings() {
                 borderColor: c.textMuted,
                 borderWidth: 2.8,
                 pointRadius: 0,
-                fill: false,
+                pointHoverRadius: 0,
+                pointHitRadius: 0,
+                // Jemný přechod pod křivkou trendu (redesign)
+                fill: 'start',
+                backgroundColor: trendAreaGradient,
                 tension: 0.45
             })
         }
@@ -1909,10 +1928,10 @@ function AnimeRatings() {
             borderWidth: 1.5,
             tension: 0.15,
             pointBackgroundColor: selectedAnimeEpisodes.map(ep => getPointColor(ep.rating)),
-            pointBorderColor: c.pointBorder,
-            pointBorderWidth: 1,
-            pointRadius: 5.5,
-            pointHoverRadius: 7.5,
+            pointBorderColor: c.isLight ? '#ffffff' : '#14141a',
+            pointBorderWidth: 1.8,
+            pointRadius: selectedAnimeEpisodes.length > 40 ? 2.8 : 5.5,
+            pointHoverRadius: selectedAnimeEpisodes.length > 40 ? 5.5 : 7.5,
             showLine: true,
             clip: false
         })
@@ -1948,6 +1967,10 @@ function AnimeRatings() {
 
     const episodeBarOptions = useMemo(() => ({
         responsive: true, maintainAspectRatio: false, animation: false,
+        interaction: {
+            mode: 'index',
+            intersect: false
+        },
         // Klik na bod epizody otevře její AI rozbor (imperativně — bez re-renderu stránky)
         onClick: (event, elements) => {
             if (elements && elements.length > 0 && selectedAnimeEpisodes && selectedAnimeTitle) {
@@ -1980,7 +2003,14 @@ function AnimeRatings() {
                 }
             }
         },
-        onHover: (event, chartElement) => {
+        onHover: (event, chartElement, chart) => {
+            if (chart) {
+                const idx = chartElement.length ? chartElement[0].index : -1;
+                if (idx !== chart._lastActiveIndex) {
+                    chart._lastActiveIndex = idx;
+                    chart.update('none');
+                }
+            }
             if (event && event.native && event.native.target) {
                 if (chartElement.length && categoryReviews && selectedAnimeTitle) {
                     const idx = chartElement[0].index
@@ -2011,29 +2041,36 @@ function AnimeRatings() {
                     borderDash: [5, 5]
                 }
             },
-            x: { ticks: { color: c.textMuted, font: { size: 10 } }, grid: { display: false } }
+            x: {
+                ticks: {
+                    color: (context) => {
+                        const activeIndex = context.chart._lastActiveIndex;
+                        if (activeIndex !== undefined && activeIndex !== -1) {
+                            if (context.index === activeIndex) {
+                                return c.isLight ? '#000000' : '#ebebeb';
+                            }
+                        }
+                        return c.textMuted;
+                    },
+                    font: { size: 10 }
+                },
+                grid: { display: false }
+            }
         },
         plugins: {
             legend: { display: false },
+            episodeAvgLine: { value: avgEpisodeValue },
             tooltip: {
-                callbacks: {
-                    title: (context) => {
-                        if (context && context[0] && categoryReviews && selectedAnimeTitle) {
-                            const idx = context[0].dataIndex
-                            const docxEp = getDocxEpisode(categoryReviews[selectedAnimeTitle], idx + 1)
-                            return docxEp ? `📝 ${docxEp.title}` : `Epizoda ${idx + 1}`
-                        }
-                        return ''
-                    },
-                    label: (context) => {
-                        const v = typeof context.raw === 'number' ? context.raw : parseFloat(context.raw)
-                        if (!isFinite(v)) return ''
-                        return `Hodnocení: ${parseFloat(v.toFixed(2)).toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}/10`
-                    }
-                }
+                // Vlastní HTML tooltip podle redesignu (název epizody, hodnota, stupeň)
+                enabled: false,
+                external: makeEpisodeTooltip((idx) => {
+                    if (!categoryReviews || !selectedAnimeTitle) return null
+                    const docxEp = getDocxEpisode(categoryReviews[selectedAnimeTitle], idx + 1)
+                    return docxEp ? docxEp.title : null
+                })
             }
         }
-    }), [epChartMin, epChartMax, c, selectedEpisodeReviews, selectedAnimeEpisodes])
+    }), [epChartMin, epChartMax, c, selectedEpisodeReviews, selectedAnimeEpisodes, avgEpisodeValue])
 
     // ============================================
     // ROW 2 DATA MEMOIZATION
@@ -3164,12 +3201,12 @@ function AnimeRatings() {
                                                 {timelineChartData && (
                                                     <div className="chart-legend-container" style={{ justifyContent: 'flex-end', marginTop: '-8px', maxWidth: '100%' }}>
                                                         {[
-                                                            ['rgb(29, 161, 242)', 'Absolute Cinema'],
-                                                            ['rgb(24, 106, 59)', 'Awesome'],
-                                                            ['rgb(40, 180, 99)', 'Great'],
-                                                            ['rgb(244, 208, 63)', 'Good'],
-                                                            ['rgb(243, 156, 18)', 'Regular'],
-                                                            ['rgb(99, 57, 116)', 'Bad'],
+                                                            ['var(--rating-10)', 'Absolute Cinema'],
+                                                             ['var(--rating-9)', 'Awesome'],
+                                                             ['var(--rating-8)', 'Great'],
+                                                             ['var(--rating-7)', 'Good'],
+                                                             ['var(--rating-6)', 'Regular'],
+                                                             ['var(--rating-5)', 'Bad'],
                                                         ].map(([col, lbl]) => (
                                                             <div key={lbl} style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
                                                                 <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: col }}></span>
@@ -3818,46 +3855,20 @@ function AnimeRatings() {
                                 {/* Hodnocení epizod přes celou šířku — hlavička, legenda, AI poznámka
                                     a klikací body pro rozbor epizod, stejně jako v detailu anime */}
                                 {episodeChartData && (
-                                    <div className="ratings-panel episode-chart-panel">
-                                        <div className="chart-header-flex" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '4px', marginBottom: '12px' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', flexWrap: 'wrap', gap: '12px' }}>
-                                                <h3 style={{ margin: 0 }}>
-                                                    Hodnocení epizod
-                                                    {avgEpisodeRating && (
-                                                        <span style={{ marginLeft: 'var(--spacing-md)', fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
-                                                            (Průměr: <span style={{ fontWeight: 'bold' }}>{avgEpisodeRating}</span>)
-                                                        </span>
-                                                    )}
-                                                    <RatingInfoButton
-                                                        label="Jak hodnotím epizody"
-                                                        style={{ marginLeft: '10px' }}
-                                                        onClick={() => setEpGuideOpen(true)}
-                                                    />
-                                                </h3>
-                                                <div className="chart-legend-container">
-                                                    {[
-                                                        ['rgb(29, 161, 242)', 'Absolute Cinema'],
-                                                        ['rgb(24, 106, 59)', 'Awesome'],
-                                                        ['rgb(40, 180, 99)', 'Great'],
-                                                        ['rgb(244, 208, 63)', 'Good'],
-                                                        ['rgb(243, 156, 18)', 'Regular'],
-                                                        ['rgb(99, 57, 116)', 'Bad'],
-                                                    ].map(([col, lbl]) => (
-                                                        <div key={lbl} style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}>
-                                                            <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: col }}></span>
-                                                            <span>{lbl}</span>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                            {selectedEpisodeReviews && (
-                                                <p className="category-ratings-info-text" style={{ margin: '4px 0 0 0' }}>
-                                                    Faktické rozbory epizod byly vygenerovány AI z webových zdrojů a mohou obsahovat chyby. Kliknutím na bod (tečku) konkrétní epizody v grafu zobrazíte její detailní rozbor.
-                                                </p>
-                                            )}
-                                        </div>
+                                    <div className="ratings-panel episode-chart-panel episode-ratings-section">
+                                        <EpisodeChartHeader
+                                            avg={avgEpisodeRating}
+                                            onGuideOpen={() => setEpGuideOpen(true)}
+                                            note={!!selectedEpisodeReviews}
+                                        />
                                         <div style={{ flex: 1, position: 'relative', minHeight: 0 }}>
-                                            <Chart type="line" data={episodeChartData} options={episodeBarOptions} key={c.isLight ? 'ep-l' : 'ep-d'} />
+                                            <Chart
+                                                type="line"
+                                                data={episodeChartData}
+                                                options={episodeBarOptions}
+                                                plugins={[episodeAvgLinePlugin, episodeCrosshairPlugin, episodeHaloPlugin]}
+                                                key={c.isLight ? 'ep-l' : 'ep-d'}
+                                            />
                                         </div>
                                     </div>
                                 )}

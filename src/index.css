@@ -4053,6 +4053,28 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   transform: scale(1);
 }
 
+/* PLAY je vlastní tlačítko: klik na něj pustí hudbu, klik kamkoliv jinam
+   na kartě otevře rozbor. Proto musí být zřetelně klikatelné. */
+.category-card-play-hint {
+  cursor: pointer;
+}
+
+.category-card-play-hint:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Na dotykových zařízeních žádný hover není — tlačítko by zůstalo neviditelné
+   a písničku by nešlo pustit vůbec. */
+@media (hover: none) {
+  .category-rating-card.has-media .category-card-play-hint {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .category-rating-card.has-media:hover .category-card-play-hint.is-search {
   background: #ff0000;
   border-color: #ff0000;
@@ -5986,6 +6008,21 @@ button.fav-ost-row-play:hover {
 }
 
 /* ─── Anime Detail Refinements ─── */
+
+/* ─── Detail anime: sjednocené nadpisy sekcí ──────────────────────────────
+   „Hodnocení podle kategorií", „Recenze / Poznámky", „Hodnocení epizod" a
+   „Historie sledování" sdílí font (Outfit), velikost (1.3rem) i pozici v
+   sekci: jsou prvními prvky karet, takže mezeru nad textem drží horní padding
+   karty a díky stejné velikosti a řádkové výšce vychází všude vizuálně
+   stejně. */
+.detail-section-title,
+.category-ratings-header h3,
+.ep-chart-title,
+.watch-hist-head h3 {
+  font-family: 'Outfit', var(--font-family);
+  font-size: 1.3rem;
+}
+
 .hero-section {
   display: flex;
   align-items: flex-start;
@@ -6271,11 +6308,12 @@ button.fav-ost-row-play:hover {
   justify-content: center;
   width: 118px;
   height: 23px;
-  padding: 0 10px;
+  padding: 2px 10px 0 10px;
   flex-shrink: 0;
   border-radius: var(--radius-full);
   font-size: 0.72rem;
   font-weight: 700;
+  line-height: 1;
   background: var(--bg-tertiary);
   color: var(--text-secondary);
   border: 1px solid var(--border-color);
@@ -6301,6 +6339,198 @@ button.fav-ost-row-play:hover {
   .watch-hist-date,
   .watch-hist-eps {
     width: auto;
+  }
+}
+
+/* ─── Graf „Hodnocení epizod" (redesign) ─────────────────────────────────── */
+
+/* Karta i panel dostanou jemný akcentový rám, aby sekce držela pohromadě. */
+.episode-ratings-section {
+  border: 1px solid color-mix(in srgb, var(--accent-primary) 32%, transparent);
+}
+
+.ep-chart-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.ep-chart-head-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.ep-chart-title {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.ep-chart-avg {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 9px;
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--accent-primary) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-primary) 28%, transparent);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.ep-chart-avg-label {
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--accent-primary) 70%, var(--text-secondary));
+}
+
+.ep-chart-avg-value {
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: var(--accent-primary);
+}
+
+.ep-chart-head .ep-chart-guide {
+  flex-shrink: 0;
+}
+
+/* Legenda čar (trend a průměr) */
+.ep-chart-lineleg {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.ep-chart-lineleg-mark {
+  width: 20px;
+  height: 0;
+}
+
+.ep-chart-lineleg-mark.is-trend {
+  border-top: 2.8px solid color-mix(in srgb, var(--text-primary) 62%, transparent);
+  border-radius: 2px;
+}
+
+.ep-chart-lineleg-mark.is-avg {
+  border-top: 1px dashed color-mix(in srgb, var(--accent-primary) 70%, transparent);
+}
+
+/* Legenda stupňů hodnocení */
+.ep-chart-tiers {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.ep-chart-tier {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--text-primary) 3%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-primary) 7%, transparent);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.ep-chart-tier-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  box-shadow: 0 0 6px currentColor;
+  flex-shrink: 0;
+}
+
+.ep-chart-note {
+  margin: 5px 0 0;
+  line-height: 1.35;
+}
+
+/* Vlastní tooltip nad plátnem grafu */
+.ep-chart-tip {
+  position: absolute;
+  pointer-events: none;
+  transform: translate(-50%, -100%);
+  background: var(--bg-tertiary);
+  border: 1px solid color-mix(in srgb, var(--accent-primary) 35%, transparent);
+  border-radius: 10px;
+  padding: 8px 12px;
+  box-shadow: var(--shadow-lg);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.12s;
+  z-index: 3;
+}
+
+.ep-chart-tip-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.ep-chart-tip-icon {
+  font-size: 0.72rem;
+  letter-spacing: 0;
+}
+
+.ep-chart-tip-body {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 1px;
+}
+
+.ep-chart-tip-value {
+  font-size: 1.12rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.ep-chart-tip-unit {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+
+.ep-chart-tip-tier {
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .ep-chart-head-row {
+    gap: 8px;
+  }
+
+  .ep-chart-tiers {
+    margin-left: 0;
+    justify-content: flex-start;
   }
 }
 

@@ -801,11 +801,15 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                             })
                         }
 
+                        // U mediálních karet (OP/ED/OST) má rozbor přednost: klik kdekoliv
+                        // na kartě otevře rozbor, přehrání spustí jen tlačítko PLAY.
+                        // Dřív se u OST vždy rovnou pustila písnička a rozbor nešlo otevřít
+                        // jinak než přes malou ikonu 📝.
                         const handleCardClickInner = () => {
-                            if (isMedia) {
-                                handleCardClick(cat, tracks)
-                            } else if (hasReview) {
+                            if (hasReview) {
                                 setActiveReview({ category: cat, text: reviewText, rating: rating })
+                            } else if (isMedia) {
+                                handleCardClick(cat, tracks)
                             } else if (storyReview) {
                                 openStoryReview()
                             }
@@ -864,7 +868,20 @@ function CategoryRatingsPanel({ categoryRatings, categoryWeights, avgRating, ani
                                                 <span
                                                     className={`category-card-play-hint${hasTracks ? ' has-local' : ' is-search'}`}
                                                     title={hasTracks ? 'Přehrát' : 'Vyhledat na YouTube'}
-                                                    aria-hidden="true"
+                                                    role="button"
+                                                    tabIndex={0}
+                                                    aria-label={hasTracks ? `Přehrát ${cat}` : `Vyhledat ${cat} na YouTube`}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation()
+                                                        handleCardClick(cat, tracks)
+                                                    }}
+                                                    onKeyDown={(e) => {
+                                                        if (e.key === 'Enter' || e.key === ' ') {
+                                                            e.preventDefault()
+                                                            e.stopPropagation()
+                                                            handleCardClick(cat, tracks)
+                                                        }
+                                                    }}
                                                 >
                                                     {hasTracks ? (
                                                         <>
