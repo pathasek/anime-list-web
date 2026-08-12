@@ -91,8 +91,20 @@ function detailOf(members, categoryByName, episodesByName) {
 
 /**
  * Hlavní výpočet: měsíce s kompletními statistikami.
+ *
+ * Každý měsíc má DVĚ kolekce anime a je důležité je neplést:
+ *  - `items` — co jsem v měsíci DOKONČIL (podle `end_date`). Řídí počet „+N“,
+ *    kumulativní „celkem“, Nejlepší anime měsíce a pásek plakátů.
+ *  - `watchedItems` — co jsem v měsíci KOUKAL (z history logu, bez rewatche).
+ *    Řídí „Nejdelší“ a rozpad typů/žánrů/témat/tagů.
+ * Bez toho dělení se binge napříč měsíci (Black Clover: 118 EP v červenci,
+ * 52 EP + film v srpnu) naskládal celý do měsíce dokončení — červenec pak
+ * tvrdil, že nejdelší bylo Grand Blue (10,8 h), a srpen hlásil nejdelší
+ * 69,4 h, ačkoli za celý měsíc bylo nakoukáno jen 41,6 h.
+ * Anime koukané přes dva měsíce se v obou započítá do tagů 1x — to je záměr.
+ *
  * @returns [{ key, label, plusCount, runningTotal, best, longest, watchedMins,
- *             types, genres, themes, tags, items }]
+ *             types, genres, themes, tags, items, watchedItems }]
  * best = { name, rating, ratingText, isSeries, reason: 'top10'|'hm'|'detail'|'standard',
  *          thumbnail, memberNames }
  */
@@ -105,7 +117,9 @@ export function buildJourney({ animeList, historyLog, top10Names = [], hmNames =
     // ── Sběr: měsíční koše + první výskyt sérií (VŽDY celá historie) ──
     const monthly = new Map()          // key → [anime]
     const firstAppearance = new Map()  // lc(série) → nejstarší end_date timestamp
+    const animeByName = new Map()      // lc(název) → anime (napojení history logu)
     for (const a of animeList || []) {
+        if (a.name) animeByName.set(lc(a.name), a)
         const key = monthKeyOf(a.end_date)
         if (!key) continue
         if (a.series) {
@@ -125,20 +139,19 @@ export function buildJourney({ animeList, historyLog, top10Names = [], hmNames =
     const rewatchMinsByMonth = new Map()
     const rewatchTitlesByMonth = new Map()
 
-    // Rozkoukaná anime (AIRING! / PENDING) mají end_date "X", takže je monthKeyOf
-    // vyřadí a do měsíčních košů výše vůbec nespadnou. Do „Nejdelší“ ale patří:
-    // zhlédnuté epizody se už znovu koukat nebudou.
-    // Minuty se berou z history logu, ne z `episodes × episode_duration` — série
-    // běžící přes několik měsíců (např. 15 dílů duben–červenec) se tím rozdělí do
-    // správných měsíců místo naskládání celého součtu do jednoho.
+    // Minuty a epizody pro „Nejdelší“ i pro rozpad tagů se berou VÝHRADNĚ
+    // z history logu, ne z `episodes × episode_duration`: jen log ví, kdy se
+    // které díly koukaly, takže série běžící přes několik měsíců se rozdělí do
+    // správných měsíců místo naskládání celého součtu do měsíce dokončení.
+    // Platí to pro všechna anime, ne jen rozkoukaná (AIRING!/PENDING) — ta mají
+    // end_date "X", takže je monthKeyOf vyřadí z měsíčních košů, ale do
+    // „Nejdelší“ patří stejně jako dokončená.
     // KLÍČOVÉ: rewatch řádky se přeskakují. Bez toho filtru by se do „Nejdelší“
     // počítalo i opakované koukání (viz zrevertovaný commit 1d1759c).
-    const ongoingByName = new Map()
-    for (const a of animeList || []) {
-        if (a.status === 'AIRING!' || a.status === 'PENDING') ongoingByName.set(lc(a.name), a)
-    }
     // monthKey → Map(klíč série/anime → { name, mins, eps, firstName, isSeries })
-    const ongoingByMonth = new Map()
+    const watchedSeriesByMonth = new Map()
+    // monthKey → Map(lc(název) → anime) — podklad pro typy/žánry/témata/tagy
+    const watchedAnimeByMonth = new Map()
 
     for (const h of historyLog || []) {
         const key = monthKeyOf(h.date)
@@ -155,15 +168,18 @@ export function buildJourney({ animeList, historyLog, top10Names = [], hmNames =
         })()
         if (eps) watchedEpsByMonth.set(key, (watchedEpsByMonth.get(key) || 0) + eps)
 
-        if (!h.rewatch && (mins || eps) && ongoingByName.size) {
-            const a = ongoingByName.get(lc(h.name))
+        if (!h.rewatch && (mins || eps)) {
+            const a = animeByName.get(lc(h.name))
             if (a) {
                 const sk = lc(a.series) || lc(a.name)
-                if (!ongoingByMonth.has(key)) ongoingByMonth.set(key, new Map())
-                const bucket = ongoingByMonth.get(key)
+                if (!watchedSeriesByMonth.has(key)) watchedSeriesByMonth.set(key, new Map())
+                const bucket = watchedSeriesByMonth.get(key)
                 const prev = bucket.get(sk)
                     || { name: a.series || a.name, mins: 0, eps: 0, firstName: a.name, isSeries: !!a.series }
                 bucket.set(sk, { ...prev, mins: prev.mins + mins, eps: prev.eps + eps })
+
+                if (!watchedAnimeByMonth.has(key)) watchedAnimeByMonth.set(key, new Map())
+                watchedAnimeByMonth.get(key).set(lc(a.name), a)
             }
         }
 
@@ -182,10 +198,8 @@ export function buildJourney({ animeList, historyLog, top10Names = [], hmNames =
     const hmSet = new Set(hmNames.map(lc).filter(Boolean))
     const winners = new Set() // „paměť vítězů“ TOP10/HM — série vyhrává jen jednou
 
-    const durOf = (a) => {
-        const eps = num(a.episodes), d = num(a.episode_duration)
-        return eps !== null && d !== null ? eps * d : 0
-    }
+    // Pozn.: dřívější `durOf` (episodes × episode_duration) je pryč — délky teď
+    // vždy pocházejí z history logu, viz komentář u watchedSeriesByMonth.
     const firstAppearanceMonth = (seriesLc) =>
         firstAppearance.has(seriesLc) ? monthKeyOf(new Date(firstAppearance.get(seriesLc)).toISOString()) : ''
 
@@ -333,44 +347,24 @@ export function buildJourney({ animeList, historyLog, top10Names = [], hmNames =
             if (best.reason === 'top10' || best.reason === 'hm') winners.add(lc(best.name))
         }
 
-        // ── Nejdelší anime (VŽDY z celého měsíce, ne HM podmnožiny — VBA oprava) ──
-        // Série sčítá minuty i epizody svých dílů v měsíci.
-        const durBySeries = new Map()
+        // ── Nejdelší anime (chronologicky: co se v měsíci reálně koukalo) ──
+        // Bere se celý měsíc, ne HM podmnožina (VBA oprava). Série sčítá minuty
+        // i epizody všech svých dílů odkoukaných v měsíci — včetně filmů, ty
+        // spadnou do měsíce zhlédnutí (Black Clover: film 111 min do srpna).
         let longest = null
-        for (const a of monthAll) {
-            // Rozkoukaná/pending anime (AIRING!/PENDING) se do „Nejdelší“ počítají
-            // jen skutečně odkoukaným časem z history logu (ongoing větev níž), ne
-            // celou délkou (episodes × episode_duration). Bez toho by se u dílu,
-            // který má vyplněné end_date i přes PENDING (dokoukáno „dnes“, ještě
-            // nehodnoceno → rating „X“), sečetla plná délka série (např. 170 EP)
-            // s odkoukanými díly měsíce (52 EP) → nesmyslných 222 EP / 88,3 h.
-            if (ongoingByName.has(lc(a.name))) continue
-            const d = durOf(a)
-            const eps = num(a.episodes) || 0
-            const sk = lc(a.series)
-            if (sk) {
-                const prev = durBySeries.get(sk) || { name: a.series, mins: 0, eps: 0, firstName: a.name }
-                durBySeries.set(sk, { name: a.series, mins: prev.mins + d, eps: prev.eps + eps, firstName: prev.firstName, isSeries: true })
-            } else if (!longest || d > longest.mins) longest = { name: a.name, mins: d, eps, firstName: a.name, isSeries: false }
+        for (const s of watchedSeriesByMonth.get(key)?.values() || []) {
+            if (!longest || s.mins > longest.mins) longest = s
         }
 
-        // Rozkoukaná anime (AIRING!/PENDING) — přičíst k sérii, která už v měsíci
-        // je (Grand Blue S03 k dokoukaným S01+S02), nebo přidat jako novou položku
-        // (Black Clover, který v měsíci nic dokončeného nemá).
-        for (const [sk, o] of ongoingByMonth.get(key) || []) {
-            const prev = durBySeries.get(sk)
-            if (prev) durBySeries.set(sk, { ...prev, mins: prev.mins + o.mins, eps: prev.eps + o.eps })
-            else durBySeries.set(sk, { name: o.name, mins: o.mins, eps: o.eps, firstName: o.firstName, isSeries: o.isSeries })
-        }
+        // ── Anime koukaná v měsíci (podklad pro chipy a chord diagramy) ──
+        const watchedItems = [...(watchedAnimeByMonth.get(key)?.values() || [])]
 
-        for (const s of durBySeries.values()) if (!longest || s.mins > longest.mins) longest = s
-
-        // ── Top typy/žánry/témata/tagy (celý měsíc; tagy s exkluzí vítězů) ──
-        const types = topItems(monthAll.map(a => a.type).filter(Boolean), 3)
-        const genres = topItems(monthAll.flatMap(a => splitList(a.genres)), 3)
-        const themes = topItems(monthAll.flatMap(a => splitList(a.themes)), 3)
+        // ── Top typy/žánry/témata/tagy (z koukaných; tagy s exkluzí vítězů) ──
+        const types = topItems(watchedItems.map(a => a.type).filter(Boolean), 3)
+        const genres = topItems(watchedItems.flatMap(a => splitList(a.genres)), 3)
+        const themes = topItems(watchedItems.flatMap(a => splitList(a.themes)), 3)
         const exclude = new Set([...genres, ...themes].map(x => lc(x.name)))
-        const tags = topItems(monthAll.flatMap(a => splitList(a.tags)), 6, exclude)
+        const tags = topItems(watchedItems.flatMap(a => splitList(a.tags)), 6, exclude)
 
         out.push({
             key, label: monthLabel(key),
@@ -386,6 +380,7 @@ export function buildJourney({ animeList, historyLog, top10Names = [], hmNames =
                 hoursText: fmtHours(rewatchMinsByMonth.get(key) || 0)
             },
             types, genres, themes, tags,
+            watchedItems,
             items: [...monthAll].sort((a, b) => {
                 const da = a.end_date ? new Date(a.end_date).getTime() : 0
                 const db = b.end_date ? new Date(b.end_date).getTime() : 0

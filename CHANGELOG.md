@@ -4,6 +4,18 @@ Tento soubor shrnuje všechny nedávné změny, opravy a vylepšení implementov
 
 ---
 
+## [1.9.1] - 2026-08-12
+
+### 📅 Cesta Anime počítá chronologicky
+Statistiky měsíce se dřív bez výjimky vázaly na datum dokončení (`end_date`), takže binge natažený přes dva měsíce spadl celý do měsíce, kdy skončil. Black Clover (118 EP v červenci, 52 EP a film v srpnu) proto v srpnu hlásil „Nejdelší 69,4 h", ačkoli za celý srpen bylo nakoukáno jen 41,6 h, a v červenci o něm karta nevěděla vůbec (ukazovala Grand Blue, 10,8 h). Ověřeno: lint 0 errors, build OK, žádné JS chyby.
+
+- **„Nejdelší" se bere z History logu** (bez rewatche), ne z `episodes × episode_duration`. Nově tedy sedí na měsíc, ve kterém se díly opravdu koukaly: červenec 2026 Black Clover 46,9 h / 118 EP, srpen 2026 Black Clover 22,6 h / 53 EP (včetně filmu, ten patří do měsíce zhlédnutí). Posunulo se 7 z 28 měsíců.
+- **Typy, Žánry, Témata a Tagy** na kartě měsíce a **tři chord diagramy** v detailu měsíce stojí na stejné kolekci, tedy na tom, co se v měsíci koukalo. Anime tažené přes dva měsíce se započítá v obou (1x v každém).
+- **Beze změny zůstává, co je vázané na dokončení:** počet „+N", kumulativní „celkem", Nejlepší anime měsíce (i logika TOP10/HM a paměť vítězů), pásek plakátů a sekce „Všechna anime měsíce". Ověřeno napříč všemi 28 měsíci, že se ani jedna z těchto hodnot nezměnila.
+- Doplněny vysvětlující popisky (tooltipy) u „Nejdelší" a u chipů, ať je poznat, že mluví o koukání, ne o dokončení.
+
+---
+
 ## [1.9.0] - 2026-08-10
 
 ### 🎨 Redesign prvků detailu anime podle návrhu (jen vizuál, funkčnost beze změny)

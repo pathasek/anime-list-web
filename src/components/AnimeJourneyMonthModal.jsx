@@ -101,6 +101,10 @@ export default function AnimeJourneyMonthModal({ month, onClose, onPrev, onNext,
     if (!month) return null
 
     const items = month.items || []
+    // Chordy kreslí tytéž žánry/témata/tagy jako chipy na kartě, takže musí stát
+    // na stejné kolekci — na tom, co se v měsíci koukalo, ne co se dokončilo.
+    // Jinak by dvě místa ukazovala pro stejný měsíc jiná čísla.
+    const watched = month.watchedItems || []
     const rated = items.filter(a => a.rating !== null && a.rating !== undefined && a.rating !== '' && !isNaN(parseFloat(a.rating)))
     const avgRating = rated.length
         ? rated.reduce((s, a) => s + parseFloat(a.rating), 0) / rated.length
@@ -197,7 +201,10 @@ export default function AnimeJourneyMonthModal({ month, onClose, onPrev, onNext,
                     {/* ── Nejdelší ── */}
                     {month.longest && (
                         <div className="ajm-section">
-                            <h4 className="ajm-section-title">Nejdelší v měsíci</h4>
+                            <h4
+                                className="ajm-section-title"
+                                title="Nejvíc odkoukaného času v měsíci podle History logu (bez rewatche). U série se sčítají všechny její díly a filmy zhlédnuté v tomto měsíci."
+                            >Nejdelší v měsíci</h4>
                             <div className="ajm-longest">
                                 <Link
                                     to={month.longest.isSeries
@@ -242,12 +249,13 @@ export default function AnimeJourneyMonthModal({ month, onClose, onPrev, onNext,
                         <h4 className="ajm-section-title">Co se v měsíci potkávalo</h4>
                         <p className="ajm-hint">
                             Oblouk je jedna hodnota, stuha mezi nimi znamená, že se sešly u téhož anime.
-                            Najetím myší se ostatní ztlumí.
+                            Najetím myší se ostatní ztlumí. Počítá se, co jsi v měsíci koukal
+                            (z History logu, bez rewatche), ne jen dokončené tituly.
                         </p>
                         <div className="ajm-chords">
-                            <ChordBlock title="Žánry" items={items} field="genres" topN={12} />
-                            <ChordBlock title="Témata" items={items} field="themes" topN={12} />
-                            <ChordBlock title="AniList tagy" items={items} field="tags" topN={15} />
+                            <ChordBlock title="Žánry" items={watched} field="genres" topN={12} />
+                            <ChordBlock title="Témata" items={watched} field="themes" topN={12} />
+                            <ChordBlock title="AniList tagy" items={watched} field="tags" topN={15} />
                         </div>
                     </div>
                 </div>

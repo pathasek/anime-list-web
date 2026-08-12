@@ -755,7 +755,7 @@
   },
   "Voices of a Distant Star": {
    "soubor": "Voices of a Distant Star.docx",
-   "hash": "bd95ff71eac2c677942011d889186cc956412342bc4a8949882f58864286131b"
+   "hash": "47f7abad87eac51d02c898287c231e571b39fc5802700dfd8ed4b4cc269a43c4"
   },
   "Look Back": {
    "soubor": "Look Back.docx",
@@ -763,7 +763,7 @@
   },
   "The Place Promised in Our Early Days": {
    "soubor": "The Place Promised in Our Early Days.docx",
-   "hash": "a8245e9aeb6fb2d2f8187c4fd02691deb0e89c180eba0121ece838febae61d10"
+   "hash": "678e3c44d809d5dbc51f8649a81d4948822e0667570e337c3cf9e257a9bdcd92"
   },
   "She and Her Cat: Their Standing Points": {
    "soubor": "She and Her Cat_ Their Standing Points.docx",
@@ -1291,7 +1291,7 @@
   },
   "Is It Wrong to Try to Pick Up Girls in a Dungeon?: Arrow of the Orion": {
    "soubor": "Is It Wrong to Try to Pick Up Girls in a Dungeon_ Arrow of the Orion.docx",
-   "hash": "65f14b9bb21d22b31c38a89277812bcf858f5853d0357b8e9e4af59b1be72ae5"
+   "hash": "9fd8fb00e4b0c65e6798af731d28f531cec2ccacd6c99f1340958275b3a154fe"
   },
   "Is It Wrong to Try to Pick Up Girls in a Dungeon?: Is It Wrong to Expect a Hot Spring in a Dungeon?": {
    "soubor": "Is It Wrong to Try to Pick Up Girls in a Dungeon_ Is It Wrong to Expect a Hot Spring in a Dungeon.docx",
@@ -1904,6 +1904,14 @@
   "Black Clover: Sword of the Wizard King": {
    "soubor": "Black Clover_ Sword of the Wizard King.docx",
    "hash": "9590d297f69a731ef6d37ecb30a053270b792f229ec2ad9382680ba0320abb4b"
+  },
+  "7th Time Loop: The Villainess Enjoys a Carefree Life Married to Her Worst Enemy!": {
+   "soubor": "7th Time Loop_ The Villainess Enjoys a Carefree Life Married to Her Worst Enemy!.docx",
+   "hash": "57d704f20ba4a71185543f7f775e3a7f47bb2c8e4afcf6007c5a3aab201e20df"
+  },
+  "The Tatami Galaxy": {
+   "soubor": "The Tatami Galaxy.docx",
+   "hash": "db720594cf0de7a2750680e11ad3f6e4b54a295cc78e2b94397c8a1b8888af2a"
   }
  }
 }

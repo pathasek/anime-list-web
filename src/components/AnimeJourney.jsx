@@ -269,7 +269,10 @@ function MonthCard({ m, onOpenDetail }) {
                         : animePath(m.longest.firstName || m.longest.name)
                     return (
                         <div className="aj-fact">
-                            <span className="aj-fact-label">Nejdelší</span>
+                            <span
+                                className="aj-fact-label"
+                                title="Nejvíc odkoukaného času v měsíci podle History logu (bez rewatche). U série se sčítají všechny její díly a filmy zhlédnuté v tomto měsíci."
+                            >Nejdelší</span>
                             <span className="aj-fact-value" title={`${m.longest.name} (${meta})`}>
                                 <Link
                                     to={target}
@@ -295,7 +298,10 @@ function MonthCard({ m, onOpenDetail }) {
                 )}
             </div>
 
-            <div className="aj-chip-rows">
+            <div
+                className="aj-chip-rows"
+                title="Z anime, která jsi v měsíci koukal (z History logu, bez rewatche), ne jen z dokončených"
+            >
                 <ChipRow label="Typy" items={m.types} />
                 <ChipRow label="Žánry" items={m.genres} />
                 <ChipRow label="Témata" items={m.themes} />
