@@ -1135,14 +1135,19 @@
 }
 
 .rec-action-btn-primary {
-    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-    color: #fff;
+    background: linear-gradient(135deg,
+        var(--accent-primary),
+        color-mix(in srgb, color-mix(in srgb, var(--accent-primary) 70%, var(--accent-red)) 94%, #000));
+    color: color-mix(in srgb, var(--accent-primary) 15%, #000);
     box-shadow: 0 2px 12px color-mix(in srgb, var(--accent-primary) 22%, transparent);
 }
 
 .rec-action-btn-primary:hover:not(:disabled) {
-    box-shadow: 0 4px 18px color-mix(in srgb, var(--accent-primary) 40%, transparent);
-    transform: translateY(-1px);
+    box-shadow: 0 4px 18px color-mix(in srgb, var(--accent-primary) 42%, transparent);
+}
+
+[data-theme="excel-table"] .rec-action-btn-primary {
+    color: #fff;
 }
 
 .rec-action-btn-primary:disabled {
