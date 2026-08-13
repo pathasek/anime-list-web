@@ -898,22 +898,33 @@
  ],
  "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S01": [
   "Orchestral",
-  "Electronic",
-  "Vocal"
+  "Vocal",
+  "Folk/Celtic"
  ],
  "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S02": [
-  "Orchestral"
+  "Orchestral",
+  "Rock",
+  "Vocal"
  ],
  "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S03": [
-  "Vocal"
+  "Orchestral",
+  "Vocal",
+  "Electronic"
+ ],
+ "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S04 Part 1": [
+  "Orchestral",
+  "Vocal",
+  "Electronic"
  ],
  "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S04 Part 2": [
   "Orchestral",
+  "Vocal",
   "Electronic"
  ],
  "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S05": [
   "Orchestral",
-  "Piano"
+  "Vocal",
+  "Electronic"
  ],
  "Is It Wrong to Try to Pick Up Girls in a Dungeon?: Arrow of the Orion": [
   "Orchestral",
@@ -1279,6 +1290,11 @@
  ],
  "NieR:Automata Ver1.1a Part 2: Investigation Report": [
   "Electronic"
+ ],
+ "Night Is Short, Walk on Girl": [
+  "Vocal",
+  "Orchestral",
+  "Rock"
  ],
  "Nippon Sangoku: The Three Nations of the Crimson Sun, S01": [
   "Vocal",
@@ -1901,8 +1917,8 @@
   "Vocal"
  ],
  "The Dawn of the Witch": [
-  "Folk/Celtic",
   "Orchestral",
+  "Folk/Celtic",
   "Electronic"
  ],
  "The Disappearance of Haruhi Suzumiya": [
@@ -2024,24 +2040,24 @@
   "Piano"
  ],
  "The Rising of the Shield Hero, S01": [
+  "Electronic",
   "Orchestral",
-  "Piano",
-  "Electronic"
+  "Vocal"
  ],
  "The Rising of the Shield Hero, S02": [
   "Orchestral",
-  "Vocal",
-  "Electronic"
+  "Electronic",
+  "Vocal"
  ],
  "The Rising of the Shield Hero, S03": [
   "Orchestral",
   "Electronic",
-  "Piano"
+  "Vocal"
  ],
  "The Rising of the Shield Hero, S04": [
   "Orchestral",
   "Electronic",
-  "Rock"
+  "Vocal"
  ],
  "The Slime Diaries": [
   "Vocal",
@@ -2049,12 +2065,24 @@
   "Piano"
  ],
  "The Summer Hikaru Died, S01": [
-  "Piano"
+  "Vocal",
+  "Piano",
+  "Ambient"
  ],
  "The Tatami Galaxy": [
   "Orchestral",
   "Piano",
   "Electronic"
+ ],
+ "The Tatami Galaxy Specials": [
+  "Orchestral",
+  "Piano",
+  "Electronic"
+ ],
+ "The Tatami Time Machine Blues": [
+  "Orchestral",
+  "Piano",
+  "Vocal"
  ],
  "The Tunnel to Summer, the Exit of Goodbyes": [
   "Piano",
@@ -2113,7 +2141,7 @@
  "Tower of God, S01": [
   "Electronic",
   "Orchestral",
-  "Ambient"
+  "Vocal"
  ],
  "Tower of God, S02: Workshop Battle": [
   "Electronic",
@@ -2122,7 +2150,7 @@
  "Tsukimichi -Moonlit Fantasy-, S01": [
   "Orchestral",
   "Rock",
-  "Folk/Celtic"
+  "Vocal"
  ],
  "Tsukimichi -Moonlit Fantasy-, S02": [
   "Orchestral",
@@ -2135,13 +2163,14 @@
   "Electronic"
  ],
  "Vinland Saga, S01": [
-  "Piano",
-  "Orchestral"
+  "Orchestral",
+  "Vocal",
+  "Rock"
  ],
  "Vinland Saga, S02": [
-  "Vocal",
   "Orchestral",
-  "Piano"
+  "Vocal",
+  "Ambient"
  ],
  "Vinland Saga, S02: Same Old Story": [
   "Orchestral",
@@ -2204,8 +2233,8 @@
  ],
  "Witch Hat Atelier, S01": [
   "Orchestral",
-  "Vocal",
-  "Folk/Celtic"
+  "Piano",
+  "Vocal"
  ],
  "Wolf Children": [
   "Orchestral",

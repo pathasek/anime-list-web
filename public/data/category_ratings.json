@@ -5556,7 +5556,7 @@
       "Animace": 7.0,
       "CGI": 7.5,
       "MC": 9.0,
-      "Vedlejší postavy": 8.5,
+      "Vedlejší postavy": 8.0,
       "Waifu": 9.5,
       "Plot": 8.0,
       "Pacing": 7.0,
@@ -5567,6 +5567,77 @@
       "OP": 7.0,
       "ED": 7.0,
       "OST": 8.0
+    }
+  },
+  {
+    "name": "The Tatami Galaxy",
+    "categories": {
+      "Animace": 6.5,
+      "CGI": 7.0,
+      "MC": 6.5,
+      "Vedlejší postavy": 6.0,
+      "Waifu": 7.0,
+      "Plot": 6.0,
+      "Pacing": 5.0,
+      "Story Conclusion": 7.0,
+      "Originalita": 8.0,
+      "Emoce": 5.5,
+      "Enjoyment": 6.0,
+      "OP": 7.0,
+      "ED": 7.0,
+      "OST": 7.5
+    }
+  },
+  {
+    "name": "The Tatami Galaxy Specials",
+    "categories": {
+      "Animace": 5.5,
+      "MC": 5.5,
+      "Vedlejší postavy": 5.5,
+      "Waifu": 6.0,
+      "Plot": 5.0,
+      "Pacing": 6.0,
+      "Story Conclusion": 6.0,
+      "Originalita": 7.0,
+      "Emoce": 5.0,
+      "Enjoyment": 5.0,
+      "OST": 7.0
+    }
+  },
+  {
+    "name": "Night Is Short, Walk on Girl",
+    "categories": {
+      "Animace": 7.5,
+      "CGI": 8.0,
+      "MC": 6.0,
+      "Vedlejší postavy": 6.0,
+      "Waifu": 6.5,
+      "Plot": 6.0,
+      "Pacing": 6.5,
+      "Story Conclusion": 6.5,
+      "Originalita": 8.0,
+      "Emoce": 5.5,
+      "Enjoyment": 6.0,
+      "OST": 8.5
+    }
+  },
+  {
+    "name": "The Tatami Time Machine Blues",
+    "categories": {
+      "Animace": 7.0,
+      "CGI": 8.0,
+      "MC": 7.0,
+      "Vedlejší postavy": 7.0,
+      "Waifu": 7.5,
+      "Plot": 7.5,
+      "Pacing": 7.5,
+      "Story Conclusion": 8.0,
+      "Originalita": 7.0,
+      "Emoce": 6.0,
+      "Enjoyment": 8.0,
+      "OP": 7.0,
+      "ED": 8.0,
+      "OST": 7.5
     }
   }
 ]

@@ -4571,5 +4571,22 @@
     "has_frisson": false,
     "rating_avg": 8.8125,
     "rating_final": 9
+  },
+  {
+    "index": "270.",
+    "anime_name": "The Tatami Time Machine Blues",
+    "type": "ED",
+    "song": "Time Machine Blues",
+    "author": "Chloe Yhun; Phill Matthews",
+    "language": "ENG",
+    "rating_lyrics": 8,
+    "rating_emotion": 7,
+    "rating_melody": 8.75,
+    "rating_video": 5,
+    "rating_voice": 9,
+    "sing_along": 9,
+    "has_frisson": false,
+    "rating_avg": 7.55,
+    "rating_final": 8
   }
 ]
