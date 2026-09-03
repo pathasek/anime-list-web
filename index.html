@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Stránka se nemá objevovat ve vyhledávačích. Odkaz sdílený přímo
+         (kamarádům) funguje dál beze změny; tohle jen brání indexaci. -->
+    <meta name="robots" content="noindex, nofollow, noarchive, noimageindex" />
+    <meta name="googlebot" content="noindex, nofollow, noarchive, noimageindex" />
+    <!-- Posílat jen holou doménu, ne konkrétní adresu stránky. Úplné
+         `no-referrer` tady bylo dřív, jenže YouTube od té doby u licencovaných
+         skladeb (třeba „Gats" z kanálu Susumu Hirasawa - Topic) vyžaduje vědět,
+         která stránka přehrávač vkládá, a bez toho vrátí chybu 153
+         („Chyba konfigurace přehrávače videí") místo hudby.
+         Indexaci to neovlivňuje, tu drží meta robots výše a robots.txt. -->
+    <meta name="referrer" content="strict-origin" />
+
+    <title>Anime List</title>
+    <script type="module" crossorigin src="./assets/index-BwbvHvVF.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CYgi4rEZ.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

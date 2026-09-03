@@ -1,0 +1,1 @@
+import{r as n}from"./index-BwbvHvVF.js";function f(t=!0){n.useEffect(()=>{if(!t)return;const o=document.documentElement,e=document.querySelector(".anime-detail-overlay"),l=o.style.overflow,r=e?e.style.overflow:null;return o.style.overflow="hidden",e&&(e.style.overflow="hidden"),()=>{o.style.overflow=l,e&&(e.style.overflow=r)}},[t])}export{f as u};
