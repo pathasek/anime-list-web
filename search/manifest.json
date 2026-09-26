@@ -1,0 +1,36 @@
+{
+  "formatVersion": 1,
+  "dataVersion": "1790444005573+mal:2026-09-26T17:34:04+00:00",
+  "builderHash": "668e91a12340",
+  "builtAt": "2026-09-26T17:35:26.591Z",
+  "counts": {
+    "terms": 88589,
+    "passages": 53915,
+    "blocks": 18172,
+    "animes": 647,
+    "cat": 31558,
+    "story": 2307,
+    "ep": 12487,
+    "note": 580,
+    "anime": 517,
+    "eptitle": 4667,
+    "song": 1160,
+    "ost": 517,
+    "char": 10,
+    "plan": 95,
+    "guide": 17
+  },
+  "sizes": {
+    "indexRaw": 10939528,
+    "indexGz": 6760952,
+    "entities": 581774,
+    "postings": 7569362
+  },
+  "vectors": {
+    "present": 0,
+    "missing": 53915,
+    "bytes": 0,
+    "similar": 0
+  },
+  "totalTokens": 5680684
+}
