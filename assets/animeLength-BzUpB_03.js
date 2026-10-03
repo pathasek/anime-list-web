@@ -1,0 +1,1 @@
+function e(e){let t=parseInt(e?.episodes,10),n=parseFloat(e?.episode_duration);if(t>0&&n>0)return t*n;let r=parseFloat(e?.total_time);return r>0?r/(1+(parseInt(e?.rewatch_count,10)||0)):0}export{e as t};

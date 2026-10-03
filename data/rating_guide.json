@@ -1,0 +1,241 @@
+{
+  "categories": {
+    "intro": "Každou kategorii hodnotím na škále 5 až 10 s krokem 0,5. Pod pětku nejdu: pětka je moje dno i u finálního hodnocení, tak mají stejné dno i kategorie. Vážený průměr (WA) pak kombinuje všechny kategorie podle vah: na čem mi záleží víc, to má větší slovo. Když kategorie u díla nedává smysl (film bez znělek, anime bez 3D, žádná výrazná ženská postava), nehodnotím ji a její váha se z výpočtu odečte.",
+    "items": {
+      "Animace": {
+        "text": "Plynulost pohybu, sakuga momenty a konzistence kreseb napříč epizodami. Statické záběry snesu, pokud kompenzují atmosférou.",
+        "philosophy": "Nejde jen o pohyb: počítám sem pozadí, barvy, kompozici a režii obrazu. Zajímá mě, jestli animace slouží vyprávění. Stáří titulu nepřepočítávám, hodnotím, co vidím dnes. Trojrozměrné prvky sem nepatří, ty má CGI.\n\nZ praxe: u Grimgaru mě dostala práce s pozadím, akvarelové vrstvy, které se hýbou proti postavám a dávají scénám hloubku. A Monster je poctivá sedmička: starší civilní realismus, čistá práce, jen žádný moment, který bych si po měsíci vybavil.",
+        "th": [
+          "kostrbatá",
+          "čistá práce",
+          "sakuga svátek"
+        ],
+        "tags": [
+          "plynulost",
+          "sakuga",
+          "konzistence",
+          "pozadí",
+          "režie obrazu"
+        ]
+      },
+      "CGI": {
+        "text": "Jak 3D zapadá do 2D scén a co navíc dokáže. Dobře nasazené CGI je prodloužená ruka animátorů a umí záběry, na které samotná kresba nestačí.",
+        "philosophy": "CGI beru jako nástroj, ne nutné zlo, a rád si ho všímám. Když je nasazené specificky a funguje, dostane plné body: vizuál najednou umí věci, na které kresba nestačí. Když je jen plošná úspora, jde známka dolů. A splynutí s kresbou k nerozeznání je samozřejmě taky výhra.\n\nZ praxe: úvodní záběr druhé sezóny Tanyi, prázdná nábojnice padající do vody, je přesně ten moment, kdy CGI udělá scénu, jakou by kresba nezvládla. A vodní simulace ve filmu Slime: Tears of the Azure Sea splývají s prostředím tak, že finální megavír působí jako jedna ruka s animací.",
+        "th": [
+          "ruší imerzi",
+          "splývá s 2D",
+          "umí víc než kresba"
+        ],
+        "tags": [
+          "integrace",
+          "stínování",
+          "framerate",
+          "efekty"
+        ]
+      },
+      "MC": {
+        "text": "Motivace, vývoj a charisma hlavní postavy. Chci hrdinovi fandit, chápat jeho rozhodnutí a vidět, jak ho příběh mění a co ho to stojí.",
+        "philosophy": "Hodnotím napsání i to, jestli mi postava sedla, obojí naráz. Nejvíc boduje zasloužený růst přes utrpení; okamžitá síla bez ceny mě nudí. Hlavní postavu si vybírám sám podle toho, o kom příběh je, ne podle databáze.\n\nZ praxe: Subaru z Re:Zero je můj etalon. Je mi blízký, platí za každý krok a přitom dokáže nabídnout světlé chvíle ve světě, kde se dá umřít na cokoliv. A Myne z Ascendance of a Bookworm ukazuje druhou cestu: dospělá mysl v křehkém těle, která svět mění vůlí, ne silou.",
+        "th": [
+          "nevýrazný, plochý",
+          "fandím mu",
+          "nezapomenutelný"
+        ],
+        "tags": [
+          "vývoj",
+          "motivace",
+          "charisma",
+          "relatabilita"
+        ]
+      },
+      "Vedlejší postavy": {
+        "text": "Hloubka vedlejšího obsazení: vlastní motivace, chemie s hlavní postavou a jestli si zaslouží čas na obrazovce, který dostávají.",
+        "philosophy": "Průměr celého zbytku obsazení včetně antagonisty. Ptám se, jestli mají vlastní cíle, nebo jen krouží kolem hrdiny, a jestli si po dokoukání pamatuju jejich jména. Nejvyšší patra znamenají postavy, které by unesly vlastní příběh.\n\nZ praxe: u Fullmetal Alchemist: Brotherhood mě military část s Royem Mustangem a Olivier Armstrong bavila víc než hlavní linka bratrů; přesně tak vypadá desítka téhle kolonky. Obsazení, které sérii utáhne samo.",
+        "th": [
+          "jen kulisy",
+          "žijí si svým",
+          "kradou scény"
+        ],
+        "tags": [
+          "hloubka",
+          "chemie",
+          "antagonista",
+          "vlastní cíle"
+        ]
+      },
+      "Waifu": {
+        "text": "Výrazné ženské postavy: design, osobnost a aktivita v ději. Nejvíc táhne pouto s hlavní postavou a to, jestli mi zůstanou v hlavě.",
+        "philosophy": "Vážený průměr ženských postav se skutečnou rolí; kdo má víc prostoru, ten víc rozhoduje. Moje desítky skoro vždy stojí na poutu s hlavní postavou a na aktivitě v ději. Když žádná taková postava není, kategorii nehodnotím.\n\nZ praxe: Raphtalia drží desítku napříč všemi sezónami Shield Hero, protože její pouto s Naofumim je jádro celé série. A Shoko z A Silent Voice ve mně probudila fyzické nutkání vlézt za monitor a zastat se jí. Tohle kategorie měří: postavu, která se mnou něco udělá.",
+        "th": [
+          "zapomenutelná",
+          "výrazná v sérii",
+          "ikonická"
+        ],
+        "tags": [
+          "design",
+          "osobnost",
+          "pouto",
+          "aktivita"
+        ]
+      },
+      "Plot": {
+        "text": "Logika světa, konzistence pravidel a stavba zápletky. Trestám díry v příběhu a laciné deus ex machina zvraty; pomalý rozjezd odpustím.",
+        "philosophy": "Jestli události mají příčinu a následek a jestli svět drží vlastní pravidla i ve chvíli, kdy se mu to nehodí. Moje nejpřísnější kategorie: pomalý rozjezd odpustím, díru v příběhu ne. Tempo patří do Pacingu a zakončení do Story Conclusion, tady se hodnotí jen stavba.\n\nZ praxe: u Lord of Mysteries mě dostalo, jak celý příběh stojí na pravidlech světa a Kleinově opatrném plánování; hustý lore dává každému kroku smysl. A Higurashi Kai je pro mě vrchol stavby: odpovědi do sebe zapadly tak, že zpětně povýšily i celou první sérii.",
+        "th": [
+          "děravý, nedomyšlený",
+          "drží pohromadě",
+          "promyšlená stavba"
+        ],
+        "tags": [
+          "konzistence",
+          "zvraty",
+          "logika světa",
+          "vrstvy"
+        ]
+      },
+      "Pacing": {
+        "text": "Tempo vyprávění: rozložení vrcholů a klidu, kolik je výplně a jestli scény dostanou prostor dýchat. Čtu ho i z křivky známek epizod.",
+        "philosophy": "Čtu ho ze dvou stran, z konkrétních scén a z tvaru křivky epizod; propady v ní sedí přesně na filler a recap. Kvalita samotné zápletky sem nepatří, to je Plot.\n\nZ praxe: Link Click přechází od komedie k tragédii a thrilleru bez jediného zadrhnutí, žádná hluchá pasáž. A Frieren je pro mě učebnice opačného tempa: klidné scény tam váží stejně jako akce a přesně proto fungují.",
+        "th": [
+          "drhne a vleče se",
+          "plyne bez odporu",
+          "nese celou sérii"
+        ],
+        "tags": [
+          "rytmus",
+          "gradace",
+          "křivka epizod",
+          "výplň"
+        ]
+      },
+      "Story Conclusion": {
+        "text": "Jak dílo zakončí, co rozehrálo: uzavření linek a síla poslední epizody. Hodnotím závěr konkrétní řady, ne celé série najednou.",
+        "philosophy": "Známka poslední epizody se do téhle kolonky promítá skoro jako vzorec. Otevřený konec není useknutý konec: důstojné uzavření úseku je sedmička i u pokračující série, pětka je useknutí uprostřed věty.\n\nZ praxe: závěr první sezóny Ascendance of a Bookworm je katarzní loučení, které zpětně ospravedlnilo celý pomalý rozjezd; přesně takový konec zvedá hodnotu všeho před sebou. A Maquia dovedla svoji tečku k dokonalosti, poslední scéna mě citově rozložila.",
+        "th": [
+          "visí ve vzduchu",
+          "důstojná tečka",
+          "přeznačí celou sérii"
+        ],
+        "tags": [
+          "payoff",
+          "tečka",
+          "uzavření linek",
+          "poslední díl"
+        ]
+      },
+      "Originalita": {
+        "text": "Nový nápad, nebo aspoň svěží uchopení známého. Chytré přetočení klišé cením stejně jako novinku; poctivá kopie zůstává kopií.",
+        "philosophy": "Měří jen to navíc, ne celkovou kvalitu: poctivé řemeslo bez jiskry má sedmičku. Mám tady nejvyšší čísla z celého systému, protože si originální díla cíleně vybírám, a vím o tom.\n\nZ praxe: Bakemonogatari má ode mě desítku za unikátní audiovizuální jazyk, i když celkově skončilo na sedmičce; tahle kolonka je na celkové známce nejméně závislá. A druhá sezóna Mushoku Tensei ztvárnila trauma hrdiny způsobem, který jsem nikde jinde neviděl, nekomfortní a přesto svěží.",
+        "th": [
+          "už jsem to viděl",
+          "standard až svěží",
+          "vlastní hlas, unikát"
+        ],
+        "tags": [
+          "nápad",
+          "subverze",
+          "svěžest",
+          "unikát"
+        ]
+      },
+      "Emoce": {
+        "text": "Síla zásahu: husí kůže, slzy a scény, které ve mně zůstanou. Počítám, kolikrát mě dílo dostalo a jak silně; na emoce jsem měkký a vím to.",
+        "philosophy": "Hodnotím zásah na mě a zároveň průměr celé série, tedy kolikrát a jak silně. Jedna silná scéna devítku neudělá, když zbytek mlčí. Negativní emoce se počítají, jen když jsou záměrem díla; frustrace ze špatného anime jde opačným směrem.\n\nZ praxe: The Beast Player Erin mi hnala slzy do očí skoro celou sérii, od nekompromisních sebeobětí po tichá loučení s mentory, a Emoce má desítku navzdory slabému vizuálu. U Link Click jsem se u prosby vyděšeného kluka rozbrečel úplně. To jsou zásahy, které ve mně zůstaly dodnes, a přesně za ně tahle kolonka je.",
+        "th": [
+          "nechalo mě chladným",
+          "párkrát zasáhlo",
+          "husí kůže a slzy"
+        ],
+        "tags": [
+          "frisson",
+          "slzy",
+          "zásah",
+          "gradace"
+        ]
+      },
+      "Enjoyment": {
+        "text": "Jak moc mě to bavilo, bez ohledu na objektivní kvalitu. Nejosobnější číslo v systému: měří, jestli mě dílo samo táhlo k dalšímu dílu.",
+        "philosophy": "Shluk všeho ostatního: když sedí postavy, vizuál a tempo, roste samo. Osmička znamená, že jsem se těšil na další díl, devítka, že jsem nedokázal přestat. Drží se blízko průměru epizod, protože obojí je celkový pocit ze sledování.\n\nZ praxe: Somali and the Forest Spirit mě bavilo na maximum, i když je to road movie se slabší animací; prostě jsem se u něj cítil dobře. A u Lord of Mysteries Specials mě pohltilo i pirátské téma, které jinak vůbec nemusím. Přesně tohle Enjoyment měří: co s tím dílo udělá, ne co slibuje žánr.",
+        "th": [
+          "přemáhal jsem se",
+          "bavilo až táhlo",
+          "nešlo se odtrhnout"
+        ],
+        "tags": [
+          "tah",
+          "binge",
+          "zábava",
+          "pohlcení"
+        ]
+      },
+      "OP": {
+        "text": "Openingová znělka. Sedmička je výchozí stav, když ji přeskakuju; nahoru jde, když mě chytne, zasáhne, nebo si s ní dokážu zazpívat.",
+        "philosophy": "Rozhoduju až po dokoukání, z plné verze skladby mimo obraz, protože televizní střih spoustu písní zkresluje. Přidání do oblíbených je závazek: playlist, ne odškrtnutí. Rozhodují emoce, husí kůže a zpívatelnost.\n\nZ praxe: Redo z Re:Zero a Fatima ze Steins;Gate 0 jsou znělky, u kterých mi husí kůže naskočí i po letech; obě série drží moje openingové desítky prakticky samy. A vizuál znělky hraje větší roli, než se zdá: u vrcholů rozhoduje právě on a emoce, melodie je jen vstupenka.",
+        "th": [
+          "vyloženě slabá",
+          "od skipu po slušnou",
+          "do playlistu"
+        ],
+        "tags": [
+          "hook",
+          "playlist",
+          "frisson",
+          "sing-along"
+        ]
+      },
+      "ED": {
+        "text": "Endingová znělka, nejmenší váha v systému: znělka je bonus, anime nedělá. Jinak stejná pravidla jako opening, včetně přidávání zpětně.",
+        "philosophy": "Stejná pravidla jako u openingu, včetně výchozí sedmičky a rozhodování z plné verze. Přidávám i zpětně, když mi skladba sedne až po čase. Ending umí překvapit víc než opening, čekám od něj míň.\n\nZ praxe: Kokoro Somali dozněla přesně ve chvíli, kdy mě závěr Somali rozbrečel, a od té doby ji mám v playlistu jako desítku. A u Tokyo Magnitude 8.0 mě konec sebral natolik, že jsem ending nedokázal vůbec ohodnotit; to se mi stalo jedinkrát v životě.",
+        "th": [
+          "vyloženě slabá",
+          "od skipu po slušnou",
+          "do playlistu"
+        ],
+        "tags": [
+          "outro",
+          "playlist",
+          "frisson",
+          "sing-along"
+        ]
+      },
+      "OST": {
+        "text": "Hudba uvnitř epizod a zvukový design; znělky mají vlastní kolonky. Známka je navázaná na to, co si z díla reálně přidám do playlistu.",
+        "philosophy": "Jediná kategorie s přesným pravidlem: 8 je dobrý soundtrack bez vyčnívající skladby, 8,5 znamená jednu skladbu, kterou si přidám, 9 dvě a 10 soundtrack, kde je dobré skoro všechno. Hudbu neumím trestat, pod 7,5 skoro nechodím.\n\nZ praxe: The Unwanted Undead Adventurer mě hudbou naprosto zaskočil, atmosférická kompozice bez jediné slabiny u jinak obyčejného isekai, jasná desítka. A Berserk je důkaz, že OST hodnotím zvlášť: soundtrack má plné body i u anime, které jinak skončilo na dně.",
+        "th": [
+          "skoro chybí",
+          "dobrý podkres",
+          "skladby do playlistu"
+        ],
+        "tags": [
+          "playlist",
+          "skladby",
+          "atmosféra",
+          "zvuk"
+        ]
+      }
+    }
+  },
+  "episodes": {
+    "intro": "Každá epizoda dostává známku hned po zhlédnutí, dokud je dojem čerstvý: co udělala s příběhem, s postavami a se mnou. Krok 0,25 mi dovoluje odlišit epizody uvnitř stejného tieru a v rámci série známky hlídám tak, aby křivka dávala smysl: lepší díl musí mít vyšší číslo. Čára průměru leží na 7,5.",
+    "tiers": {
+      "Absolute Cinema": "Epizoda, u které jsem zapomněl dýchat. Režie, animace a emoce naráz: moment, kvůli kterému se anime sleduje a na který se nezapomíná.",
+      "Awesome": "Výjimečný díl s vrcholem, zvratem nebo payoffem, který rezonuje dlouho po dokoukání. Často s husí kůží. Jen kousek od dokonalosti.",
+      "Great": "Silná epizoda, která výrazně posouvá příběh nebo postavy. Žádná hluchá pasáž, chci hned pustit další díl.",
+      "Good": "Solidní díl kolem mojí čáry průměru. Funguje a dokouká se sám, ale nemá moment, který by přesáhl rámec epizody a táhl mě dál.",
+      "Regular": "Slabší díl pod mojí čárou: oddechovka bez důvodu, natahování, recap nebo viditelně horší animace. Dokoukám, ale nic si neodnesu.",
+      "Bad": "Epizoda, která mě vyloženě nebavila: filler, nelogičnosti, rozbité tempo. Naštěstí vzácnost, a pod pětku nejdu nikdy."
+    }
+  },
+  "final": {
+    "intro": "Finální hodnocení je celkový pocit přeložený do jednoho čísla. Nejdu podle čísel proto, že to říkají čísla: každou kategorii jsem známkoval podle konkrétního pocitu a vážený průměr (WA) je jen ty pocity posbírané dohromady. Ukazuje, kde by dílo mělo ležet, a skoro vždycky tam podle mě opravdu leží; číslo můj dojem podpírá, nerozhoduje za mě. Když se přece jen rozejdou, vyhrává dojem: ptám se, mezi která svoje anime titul postavím, a podle toho zaokrouhlím nahoru, nebo dolů. Jediná tvrdá výjimka je obsah za mojí hranicí, ten srazí známku na dno bez ohledu na řemeslo.",
+    "levels": {
+      "10": "Absolutní špička a osobní top. Zážitek, který bych si přál umět vymazat z paměti a prožít znovu; přemýšlím o něm ještě dlouho po dokoukání.",
+      "9": "Výjimečný zážitek s drobnými kazy, na kterých nesejde. Doporučuji bez zaváhání, vracím se k němu ve vzpomínkách a láká mě i na rewatch.",
+      "8": "Výrazně nad průměrem: těšil jsem se na další díl a slabší místa celek nesrazila. Tady začínají anime, která s chutí a nahlas doporučuju.",
+      "7": "Slušné řemeslo, ale pod mojí čárou. Něco konkrétního ho sráží, něco jiného drží nad vodou; bavilo mě to jen místy a k příběhu jsem nepřilnul.",
+      "6": "Spíš zklamání než průměr. Dokoukal jsem s výhradami, chvílemi to byla i ztráta času; zachraňuje to jednotlivost: postava, hudba, krátkost.",
+      "5": "Skutečná ztráta času, nebo obsah za mojí hranicí, který řemeslo nevykoupí. Dno mé škály: nedoporučím nikomu a vracet se k tomu nebudu."
+    }
+  },
+  "generated": 1787816398260
+}

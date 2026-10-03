@@ -1,0 +1,20 @@
+[
+  {
+    "language": "JAP",
+    "count": 450,
+    "avgRating": 8.5,
+    "timeMinutes": 150000
+  },
+  {
+    "language": "ENG",
+    "count": 25,
+    "avgRating": 7.2,
+    "timeMinutes": 7500
+  },
+  {
+    "language": "CZ",
+    "count": 5,
+    "avgRating": 6.0,
+    "timeMinutes": 1200
+  }
+]
