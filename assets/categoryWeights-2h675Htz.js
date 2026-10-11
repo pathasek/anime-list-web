@@ -1,0 +1,1 @@
+var e={Animace:2,CGI:1.8,MC:3,"Vedlejší postavy":2.5,Waifu:1.5,Plot:4,Pacing:1.5,"Story Conclusion":1.5,Originalita:2.5,Emoce:3.5,Enjoyment:4,OP:1,ED:.5,OST:2};function t(t){let n=0,r=0;for(let[i,a]of Object.entries(t||{})){if(typeof a!=`number`||!(a>0))continue;let t=e[i]??1;n+=a*t,r+=t}return r>0?n/r:null}export{t as n,e as t};
