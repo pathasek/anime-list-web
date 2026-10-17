@@ -1,0 +1,1 @@
+function e(e,t=`button`){return{role:t,tabIndex:0,onClick:e,onKeyDown:t=>{t.target!==t.currentTarget||t.key!==`Enter`&&t.key!==` `||(t.preventDefault(),e(t))}}}export{e as t};

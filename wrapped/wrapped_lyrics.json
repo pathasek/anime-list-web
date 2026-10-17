@@ -1,0 +1,602 @@
+{
+ "format": 1,
+ "songs": {
+  "https://a.animethemes.moe/DeathParade-ED1.ogg": {
+   "fp": "020db1052be0",
+   "tried": "2026-10-17",
+   "title": "Last Theater",
+   "artist": "NoisyCell",
+   "anime": "Death Parade",
+   "type": "ED",
+   "years": [
+    "2025"
+   ],
+   "roles": [
+    "ed"
+   ],
+   "status": "ok",
+   "lrclib": 33555148,
+   "offsets": [
+    -40.11,
+    -183.47
+   ],
+   "match": 0.77,
+   "lang": "en",
+   "cue": null,
+   "lines": [
+    {
+     "at": 42.19,
+     "end": 46.03,
+     "text": "I'm not gonna make it"
+    },
+    {
+     "at": 46.03,
+     "end": 49.5,
+     "text": "Is it almost over now?"
+    },
+    {
+     "at": 49.5,
+     "end": 55.06,
+     "text": "Can't see the way to go"
+    },
+    {
+     "at": 55.06,
+     "end": 58.23,
+     "text": "I feel so alone"
+    },
+    {
+     "at": 58.23,
+     "end": 61.6,
+     "text": "My blood is on the ground"
+    },
+    {
+     "at": 61.6,
+     "end": 71.6,
+     "text": "I can't forgive this anymore"
+    }
+   ]
+  },
+  "https://a.animethemes.moe/GuimiZhiZhuXiaochouPian-ED1.ogg": {
+   "fp": "7e064ee12d77",
+   "tried": "2026-10-17",
+   "title": "Dark Dream",
+   "artist": "Curley Gao",
+   "anime": "Lord of Mysteries",
+   "type": "ED",
+   "years": [
+    "2025"
+   ],
+   "roles": [
+    "frisson"
+   ],
+   "status": "ok",
+   "lrclib": 36845962,
+   "offsets": [
+    -91.15
+   ],
+   "match": 0.73,
+   "lang": "en",
+   "cue": 69.58,
+   "lines": [
+    {
+     "at": 69.88,
+     "end": 72.68,
+     "text": "Wonder or dismay"
+    },
+    {
+     "at": 72.68,
+     "end": 76.26,
+     "text": "Madness or Decay",
+     "frisson": true
+    },
+    {
+     "at": 76.26,
+     "end": 78.26,
+     "text": "With fragile light"
+    },
+    {
+     "at": 78.26,
+     "end": 83.06,
+     "text": "I vow to guard a world I stay"
+    },
+    {
+     "at": 83.06,
+     "end": 86.38,
+     "text": "Stiring or delay"
+    },
+    {
+     "at": 86.38,
+     "end": 90.5,
+     "text": "Rebirth or be the same"
+    },
+    {
+     "at": 90.5,
+     "end": 92.63,
+     "text": "With whispers in grey"
+    },
+    {
+     "at": 92.63,
+     "end": 95.69,
+     "text": "Guide my shadow way"
+    },
+    {
+     "at": 95.69,
+     "end": 105.69,
+     "text": "Fade away"
+    }
+   ]
+  },
+  "https://a.animethemes.moe/ChikyuuChi-OP1.ogg": {
+   "fp": "prepocitat",
+   "tried": "2026-10-17",
+   "title": "Kaijuu",
+   "artist": "Sakanaction",
+   "anime": "Orb: On the Movements of the Earth",
+   "type": "OP",
+   "years": [
+    "2026"
+   ],
+   "roles": [
+    "frisson"
+   ],
+   "status": "ok",
+   "lrclib": 33210776,
+   "offsets": [
+    -1.23,
+    -20.84
+   ],
+   "match": 0.67,
+   "lang": "ja",
+   "cue": 63.35,
+   "lines": [
+    {
+     "at": 58.21,
+     "end": 67.85,
+     "text": "朝焼けで手が染まる頃にはもう忘れてるんだ",
+     "romaji": "Asayake de te ga somaru koro ni wa mou wasureterun da",
+     "en": "By the time the sunrise stains my hands, I'll have already forgotten it"
+    },
+    {
+     "at": 67.85,
+     "end": 75.01,
+     "text": "この世界は好都合に未完成",
+     "romaji": "Kono sekai wa koutsugou ni mikansei",
+     "en": "This world is conveniently incomplete",
+     "frisson": true
+    },
+    {
+     "at": 75.01,
+     "end": 78.09,
+     "text": "だから知りたいんだ",
+     "romaji": "Dakara shiritain da",
+     "en": "That's why I want to know"
+    },
+    {
+     "at": 78.09,
+     "end": 85.79,
+     "text": "でも怪獣みたいに遠く遠く叫んでも",
+     "romaji": "Demo kaijuu mitai ni tooku tooku sakendemo",
+     "en": "But even if I scream far, far away like a monster"
+    },
+    {
+     "at": 85.79,
+     "end": 95.79,
+     "text": "また消えてしまうんだ",
+     "romaji": "Mata kiete shimau n da",
+     "en": "It'll just disappear again"
+    }
+   ]
+  },
+  "https://a.animethemes.moe/JujutsuKaisen-ED1-NCBD1080.ogg": {
+   "fp": "372de9f690c6",
+   "tried": "2026-10-17",
+   "title": "LOST IN PARADISE",
+   "artist": "ALI; AKLO",
+   "anime": "Jujutsu Kaisen, S01",
+   "type": "ED",
+   "years": [
+    "2024"
+   ],
+   "roles": [
+    "ed"
+   ],
+   "status": "ok",
+   "lrclib": 34225604,
+   "offsets": [
+    -8.89,
+    -189.56
+   ],
+   "match": 0.91,
+   "lang": "other",
+   "cue": null,
+   "lines": [
+    {
+     "at": 52,
+     "end": 55.9,
+     "text": "There's no time to explain"
+    },
+    {
+     "at": 60.52,
+     "end": 63.19,
+     "text": "When time gets rough"
+    },
+    {
+     "at": 63.19,
+     "end": 65.39,
+     "text": "Night and day are fading"
+    },
+    {
+     "at": 65.39,
+     "end": 68.51,
+     "text": "I'm going to relight your feeling"
+    },
+    {
+     "at": 68.51,
+     "end": 71.36,
+     "text": "There's no time to explain"
+    },
+    {
+     "at": 71.36,
+     "end": 73.15,
+     "text": "Lost in paradise"
+    },
+    {
+     "at": 73.15,
+     "end": 74.85,
+     "text": "Night and day are fading out"
+    },
+    {
+     "at": 74.85,
+     "end": 77.08,
+     "text": "When time gets rough"
+    },
+    {
+     "at": 77.08,
+     "end": 79,
+     "text": "Access to your love"
+    },
+    {
+     "at": 79,
+     "end": 80.86,
+     "text": "Lost in paradise"
+    }
+   ]
+  },
+  "https://a.animethemes.moe/JujutsuKaisenS2-OP2-NCBD1080.ogg": {
+   "fp": "4654e457e565",
+   "tried": "2026-10-17",
+   "title": "SPECIALZ",
+   "artist": "King Gnu",
+   "anime": "Jujutsu Kaisen, S02",
+   "type": "OP",
+   "years": [
+    "2024"
+   ],
+   "roles": [
+    "op"
+   ],
+   "status": "ok",
+   "lrclib": 36860297,
+   "offsets": [
+    -0.17
+   ],
+   "match": 0.86,
+   "lang": "ja",
+   "cue": null,
+   "lines": [
+    {
+     "at": 51.36,
+     "end": 55.84,
+     "text": "無茶苦茶にしてくれないかい？",
+     "romaji": "Muchakucha ni shite kurenai kai?",
+     "en": "Won't you mess me up completely?"
+    },
+    {
+     "at": 55.84,
+     "end": 59.66,
+     "text": "一切を存分に喰らい尽くして",
+     "romaji": "Issai o zonbun ni kurai tsukushite",
+     "en": "Devour everything to your heart's content"
+    },
+    {
+     "at": 59.66,
+     "end": 63.98,
+     "text": "一生迷宮廻遊ランデブー",
+     "romaji": "Isshou meikyuu kaiyuu randebuu",
+     "en": "A lifetime of wandering through a labyrinthine rendezvous"
+    },
+    {
+     "at": 63.98,
+     "end": 66.03,
+     "text": "眩暈がする程",
+     "romaji": "Memai ga suru hodo",
+     "en": "To the point of dizziness"
+    },
+    {
+     "at": 66.03,
+     "end": 67.96,
+     "text": "You are my special"
+    },
+    {
+     "at": 67.96,
+     "end": 72.26,
+     "text": "有耶無耶な儘廻る世界",
+     "romaji": "Uyamuya na mama mawaru sekai",
+     "en": "The world spins in a haze"
+    },
+    {
+     "at": 72.26,
+     "end": 73.19,
+     "text": "No no no!"
+    },
+    {
+     "at": 73.19,
+     "end": 76.16,
+     "text": "そう冷静にはならないで",
+     "romaji": "Sou reisei ni wa naranaide",
+     "en": "That's right, don't stay so calm"
+    },
+    {
+     "at": 76.16,
+     "end": 80.4,
+     "text": "一生迷宮廻遊ランデブー",
+     "romaji": "Isshou meikyuu kaiyuu randebuu",
+     "en": "A lifetime of wandering through a labyrinthine rendezvous"
+    },
+    {
+     "at": 80.4,
+     "end": 82.64,
+     "text": "誰が如何言おうと",
+     "romaji": "Dare ga dou iou to",
+     "en": "No matter what anyone says"
+    }
+   ]
+  },
+  "https://a.animethemes.moe/Kaijuu8Gou-OP1-NCBD1080.ogg": {
+   "fp": "9bd9dea600c7",
+   "tried": "2026-10-17",
+   "title": "ABYSS",
+   "artist": "YUNGBLUD",
+   "anime": "Kaiju No.8, S01",
+   "type": "OP",
+   "years": [
+    "2024"
+   ],
+   "roles": [
+    "frisson"
+   ],
+   "status": "ok",
+   "lrclib": 36906202,
+   "offsets": [
+    0.22
+   ],
+   "match": 0.89,
+   "lang": "en",
+   "cue": 69.59,
+   "lines": [
+    {
+     "at": 69.89,
+     "end": 74.02,
+     "text": "Could someone please save my life?"
+    },
+    {
+     "at": 74.02,
+     "end": 78.3,
+     "text": "Could someone please save my life?",
+     "frisson": true
+    },
+    {
+     "at": 78.3,
+     "end": 81.21,
+     "text": "'Cause I've gone cold"
+    },
+    {
+     "at": 81.21,
+     "end": 91.21,
+     "text": "And I'm stuck in the abyss all on my own!"
+    }
+   ]
+  },
+  "https://a.animethemes.moe/ReZeroS4-OP1-NCBD1080.ogg": {
+   "fp": "1e7ce02f40bb",
+   "tried": "2026-10-17",
+   "title": "Recollect",
+   "artist": "Konomi Suzuki; Ashnikko",
+   "anime": "Re:Zero -Starting Life in Another World-, S04",
+   "type": "OP",
+   "years": [
+    "2026"
+   ],
+   "roles": [
+    "op"
+   ],
+   "status": "ok",
+   "lrclib": 36874737,
+   "offsets": [
+    0.29
+   ],
+   "match": 0.58,
+   "lang": "ja",
+   "cue": null,
+   "lines": [
+    {
+     "at": 53.01,
+     "end": 57.37,
+     "text": "愛が答え先へ繋いだ",
+     "romaji": "Ai ga kotae saki e tsunaida",
+     "en": "Love is the answer that connected us to the future"
+    },
+    {
+     "at": 57.37,
+     "end": 60.05,
+     "text": "(Break it, burn it, save it) 繋がれ (Yeah)",
+     "romaji": "(Break it, burn it, save it) tsunagare (Yeah)",
+     "en": "(Break it, burn it, save it) Be connected (Yeah)"
+    },
+    {
+     "at": 60.05,
+     "end": 63.29,
+     "text": "(金輪際) Get you so ready to crave",
+     "romaji": "(Konrinzai) Get you so ready to crave",
+     "en": "(Never again) Get you so ready to crave"
+    },
+    {
+     "at": 63.29,
+     "end": 66.25,
+     "text": "(もう一回) Standing in the desert sand",
+     "romaji": "(Mou ikkai) Standing in the desert sand",
+     "en": "(One more time) Standing in the desert sand"
+    },
+    {
+     "at": 66.25,
+     "end": 69.57,
+     "text": "(この時が) Say my name, we're еnding this now",
+     "romaji": "(Kono toki ga) Say my name, we're ending this now",
+     "en": "(This moment) Say my name, we're ending this now"
+    },
+    {
+     "at": 69.57,
+     "end": 71.81,
+     "text": "(Watch it) You're gonna face more than anyone"
+    },
+    {
+     "at": 71.81,
+     "end": 74.01,
+     "text": "Dying and living, now get up, get up"
+    },
+    {
+     "at": 74.01,
+     "end": 75.81,
+     "text": "Rip the fabric of reality"
+    },
+    {
+     "at": 75.81,
+     "end": 77.93,
+     "text": "Let the magic stitch you back together"
+    },
+    {
+     "at": 77.93,
+     "end": 87.93,
+     "text": "(Oh)"
+    }
+   ]
+  },
+  "https://a.animethemes.moe/SousouNoFrierenS2-ED1-NCBD1080.ogg": {
+   "fp": "8d89b79723ec",
+   "tried": "2026-10-17",
+   "title": "The Story of Us",
+   "artist": "milet",
+   "anime": "Frieren: Beyond Journey's End, S02",
+   "type": "ED",
+   "years": [
+    "2026"
+   ],
+   "roles": [
+    "ed"
+   ],
+   "status": "ok",
+   "lrclib": 34516622,
+   "offsets": [
+    -1.2
+   ],
+   "match": 0.83,
+   "lang": "ja",
+   "cue": null,
+   "lines": [
+    {
+     "at": 56.84,
+     "end": 60.88,
+     "text": "恐れずに進め Oh Holy brave",
+     "romaji": "Osorezu ni susume Oh Holy brave",
+     "en": "Go forward without fear, Oh Holy brave"
+    },
+    {
+     "at": 60.88,
+     "end": 65.74,
+     "text": "振り返ればいつも Holy trace",
+     "romaji": "Furikaereba itsumo Holy trace",
+     "en": "Whenever I look back, there is always a Holy trace"
+    },
+    {
+     "at": 65.74,
+     "end": 69.99,
+     "text": "あなたが笑ってた",
+     "romaji": "Anata ga waratteta",
+     "en": "You were smiling"
+    },
+    {
+     "at": 71.7,
+     "end": 74.98,
+     "text": "だから Holy brave",
+     "romaji": "Dakara Holy brave",
+     "en": "That is why, Holy brave"
+    },
+    {
+     "at": 74.98,
+     "end": 79.5,
+     "text": "躓きながらでも Holy brave",
+     "romaji": "Tsumazukinagara demo Holy brave",
+     "en": "Even as I stumble along, Holy brave"
+    },
+    {
+     "at": 79.5,
+     "end": 83.86,
+     "text": "私は踏みだせる 遠くへ",
+     "romaji": "Watashi wa fumidaseru tooku e",
+     "en": "I can take a step forward into the distance"
+    },
+    {
+     "at": 83.86,
+     "end": 89.28,
+     "text": "あなたがいる場所へ",
+     "romaji": "Anata ga iru basho e",
+     "en": "To the place where you are"
+    }
+   ]
+  },
+  "https://a.animethemes.moe/SteinsGateZero-OP1-NCBD1080.ogg": {
+   "fp": "f25f65397561",
+   "tried": "2026-10-17",
+   "title": "Fatima",
+   "artist": "Kanako Itou",
+   "anime": "Steins;Gate 0",
+   "type": "OP",
+   "years": [
+    "2025"
+   ],
+   "roles": [
+    "op"
+   ],
+   "status": "ok",
+   "lrclib": 18697517,
+   "offsets": [
+    -3.13,
+    -12.47
+   ],
+   "match": 0.48,
+   "lang": "ja",
+   "cue": null,
+   "lines": [
+    {
+     "at": 60.12,
+     "end": 65.56,
+     "text": "傷つく事の痛みより 大事なシーン その全ての",
+     "romaji": "Kizutsuku koto no itami yori daiji na shiin sono subete no",
+     "en": "More than the pain of getting hurt, all of those important scenes..."
+    },
+    {
+     "at": 65.56,
+     "end": 70.9,
+     "text": "ヒカリが今 ゼロを生む",
+     "romaji": "Hikari ga ima zero o umu",
+     "en": "The light now gives birth to zero."
+    },
+    {
+     "at": 70.9,
+     "end": 77.29,
+     "text": "There is no god, wonderful new world"
+    }
+   ]
+  }
+ }
+}

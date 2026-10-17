@@ -1,0 +1,4880 @@
+{
+ "edges": [
+  {
+   "from": ".hack//G.U. Returner",
+   "to": ".hack//Roots",
+   "type": "PARENT"
+  },
+  {
+   "from": ".hack//G.U. Returner",
+   "to": ".hack//SIGN",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": ".hack//G.U. Trilogy",
+   "to": ".hack//G.U. Returner",
+   "type": "SEQUEL"
+  },
+  {
+   "from": ".hack//G.U. Trilogy",
+   "to": "al:110286",
+   "type": "SUMMARY"
+  },
+  {
+   "from": ".hack//G.U. Trilogy",
+   "to": "al:4469",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": ".hack//Gift",
+   "to": ".hack//Legend of The Twilight",
+   "type": "PARENT"
+  },
+  {
+   "from": ".hack//Legend of The Twilight",
+   "to": "al:110286",
+   "type": "SUMMARY"
+  },
+  {
+   "from": ".hack//Legend of The Twilight",
+   "to": "al:1994",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": ".hack//Liminality",
+   "to": ".hack//Legend of The Twilight",
+   "type": "SEQUEL"
+  },
+  {
+   "from": ".hack//Quantum",
+   "to": ".hack//SIGN",
+   "type": "PARENT"
+  },
+  {
+   "from": ".hack//Quantum",
+   "to": "al:10390",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": ".hack//Quantum",
+   "to": "al:110286",
+   "type": "SUMMARY"
+  },
+  {
+   "from": ".hack//Roots",
+   "to": ".hack//G.U. Trilogy",
+   "type": "SEQUEL"
+  },
+  {
+   "from": ".hack//Roots",
+   "to": ".hack//Legend of The Twilight",
+   "type": "PREQUEL"
+  },
+  {
+   "from": ".hack//Roots",
+   "to": "al:110286",
+   "type": "SUMMARY"
+  },
+  {
+   "from": ".hack//SIGN",
+   "to": ".hack//Gift",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": ".hack//SIGN",
+   "to": ".hack//Intermezzo",
+   "type": "SEQUEL"
+  },
+  {
+   "from": ".hack//SIGN",
+   "to": ".hack//Liminality",
+   "type": "SEQUEL"
+  },
+  {
+   "from": ".hack//SIGN",
+   "to": ".hack//Roots",
+   "type": "SEQUEL"
+  },
+  {
+   "from": ".hack//SIGN",
+   "to": ".hack//Unison",
+   "type": "SEQUEL"
+  },
+  {
+   "from": ".hack//SIGN",
+   "to": "al:110286",
+   "type": "SUMMARY"
+  },
+  {
+   "from": ".hack//Versus: The Thanatos Report",
+   "to": ".hack//The Movie: Sekai no Mukou",
+   "type": "PARENT"
+  },
+  {
+   "from": "86 Eighty-Six, S01 Part 1",
+   "to": "86 Eighty-Six, S01 Part 2",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "A Wild Last Boss Appeared!, S01",
+   "to": "A Wild Last Boss Appeared!, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Ajin, S01 OVA",
+   "to": "Ajin: Demi-Human, S01",
+   "type": "PARENT"
+  },
+  {
+   "from": "Ajin, S01 OVA",
+   "to": "Ajin: Demi-Human, S02",
+   "type": "PARENT"
+  },
+  {
+   "from": "Ajin: Demi-Human, S01",
+   "to": "Ajin: Demi-Human, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Ajin: Demi-Human, S01",
+   "to": "al:21212",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Angel Beats! Another Epilogue",
+   "to": "Angel Beats!",
+   "type": "PARENT"
+  },
+  {
+   "from": "Angel Beats! Specials",
+   "to": "Angel Beats!",
+   "type": "PARENT"
+  },
+  {
+   "from": "Anohana: The Flower We Saw That Day",
+   "to": "al:107342",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Anohana: The Flower We Saw That Day",
+   "to": "al:15039",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Another World",
+   "to": "Hello World",
+   "type": "PARENT"
+  },
+  {
+   "from": "Another: The Other",
+   "to": "Another",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Arifureta: From Commonplace to World's Strongest - Prologue",
+   "to": "Arifureta: From Commonplace to World's Strongest, S01",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Arifureta: From Commonplace to World's Strongest Specials",
+   "to": "Arifureta: From Commonplace to World's Strongest, S01",
+   "type": "PARENT"
+  },
+  {
+   "from": "Arifureta: From Commonplace to World's Strongest, S01",
+   "to": "Arifureta: From Commonplace to World's Strongest, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Arifureta: From Commonplace to World's Strongest, S01",
+   "to": "al:213514",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Arifureta: From Commonplace to World's Strongest, S02",
+   "to": "Arifureta: From Commonplace to World's Strongest, S03",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Arifureta: From a Detour to the World's Strongest",
+   "to": "Arifureta: From Commonplace to World's Strongest, S02",
+   "type": "PARENT"
+  },
+  {
+   "from": "Arifureta: Phantom Adventure and Miraculous Encounter",
+   "to": "Arifureta: From Commonplace to World's Strongest, S02",
+   "type": "PARENT"
+  },
+  {
+   "from": "Ascendance of a Bookworm, S01",
+   "to": "Ascendance of a Bookworm, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Ascendance of a Bookworm, S02",
+   "to": "Ascendance of a Bookworm, S03",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Ascendance of a Bookworm, S03",
+   "to": "Ascendance of a Bookworm: Adopted Daughter of an Archduke",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Ascendance of a Bookworm: Side Story",
+   "to": "Ascendance of a Bookworm, S01",
+   "type": "PARENT"
+  },
+  {
+   "from": "Ascendance of a Bookworm: Side Story",
+   "to": "Ascendance of a Bookworm, S02",
+   "type": "PARENT"
+  },
+  {
+   "from": "Attack on Titan OAD",
+   "to": "Attack on Titan, S01",
+   "type": "PARENT"
+  },
+  {
+   "from": "Attack on Titan, S01",
+   "to": "Attack on Titan, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Attack on Titan, S01",
+   "to": "al:119113",
+   "type": "SUMMARY"
+  },
+  {
+   "from": "Attack on Titan, S01",
+   "to": "al:20691",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Attack on Titan, S01",
+   "to": "al:20692",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Attack on Titan, S01",
+   "to": "al:21281",
+   "type": "SPIN_OFF"
+  },
+  {
+   "from": "Attack on Titan, S02",
+   "to": "Attack on Titan, S03 Part 1",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Attack on Titan, S02",
+   "to": "al:100465",
+   "type": "SUMMARY"
+  },
+  {
+   "from": "Attack on Titan, S02",
+   "to": "al:119113",
+   "type": "SUMMARY"
+  },
+  {
+   "from": "Attack on Titan, S03 Part 1",
+   "to": "Attack on Titan, S03 Part 2",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Attack on Titan, S03 Part 1",
+   "to": "al:119113",
+   "type": "SUMMARY"
+  },
+  {
+   "from": "Attack on Titan, S03 Part 2",
+   "to": "Attack on Titan: Final Season Part 1",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Attack on Titan, S03 Part 2",
+   "to": "al:119113",
+   "type": "SUMMARY"
+  },
+  {
+   "from": "Attack on Titan: Final Season - The Final Chapters",
+   "to": "al:162314",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Attack on Titan: Final Season Part 1",
+   "to": "Attack on Titan: Final Season Part 2",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Attack on Titan: Final Season Part 2",
+   "to": "Attack on Titan: Final Season - The Final Chapters",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Attack on Titan: Lost Girls",
+   "to": "Attack on Titan, S01",
+   "type": "PARENT"
+  },
+  {
+   "from": "Attack on Titan: Lost Girls",
+   "to": "Attack on Titan, S03 Part 1",
+   "type": "PARENT"
+  },
+  {
+   "from": "Attack on Titan: No Regrets",
+   "to": "Attack on Titan, S01",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Bakemonogatari",
+   "to": "Nisemonogatari",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Bakemonogatari",
+   "to": "al:143663",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Berserk (1997)",
+   "to": "Berserk: The Golden Age Arc - Memorial Edition",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Berserk (1997)",
+   "to": "al:10218",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Berserk (1997)",
+   "to": "al:12113",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Berserk (1997)",
+   "to": "al:12115",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Berserk of Gluttony, S01",
+   "to": "al:169749",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Berserk of Gluttony, S01",
+   "to": "al:211495",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Berserk, S01",
+   "to": "Berserk, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Berserk, S01",
+   "to": "al:12115",
+   "type": "PREQUEL"
+  },
+  {
+   "from": "Berserk: The Golden Age Arc - Memorial Edition",
+   "to": "Berserk, S01",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Berserk: The Golden Age Arc - Memorial Edition",
+   "to": "al:10218",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Berserk: The Golden Age Arc - Memorial Edition",
+   "to": "al:12113",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Berserk: The Golden Age Arc - Memorial Edition",
+   "to": "al:12115",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Black Butler, S01",
+   "to": "Black Butler, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Black Butler, S01",
+   "to": "Black Butler: Book of Circus",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Black Butler, S01 Special",
+   "to": "Black Butler, S01",
+   "type": "PARENT"
+  },
+  {
+   "from": "Black Butler, S02 Specials",
+   "to": "Black Butler, S02",
+   "type": "PARENT"
+  },
+  {
+   "from": "Black Butler: Book of Circus",
+   "to": "Black Butler, S02",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Black Butler: Book of Circus",
+   "to": "Black Butler: Book of Murder",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Black Butler: Book of Murder",
+   "to": "Black Butler: Book of the Atlantic",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Black Butler: Book of the Atlantic",
+   "to": "Black Butler: Public School Arc",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Black Butler: Public School Arc",
+   "to": "Black Butler: Emerald Witch Arc",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Black Clover, S01",
+   "to": "Black Clover, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Black Clover, S01",
+   "to": "al:110318",
+   "type": "SPIN_OFF"
+  },
+  {
+   "from": "Black Clover, S01",
+   "to": "al:87528",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Black Clover: Sword of the Wizard King",
+   "to": "Black Clover, S01",
+   "type": "PARENT"
+  },
+  {
+   "from": "Black Lagoon",
+   "to": "Black Lagoon: The Second Barrage",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Black Lagoon: The Second Barrage",
+   "to": "Black Lagoon: Roberta's Blood Trail",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Bocchi the Rock!, S01",
+   "to": "al:165253",
+   "type": "SUMMARY"
+  },
+  {
+   "from": "Bocchi the Rock!, S01",
+   "to": "al:171099",
+   "type": "SUMMARY"
+  },
+  {
+   "from": "Bocchi the Rock!, S01",
+   "to": "al:186712",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Burn the Witch #0.8",
+   "to": "Burn the Witch",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Call of the Night, S01",
+   "to": "Call of the Night, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Call of the Night, S01",
+   "to": "al:150583",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Casshern Sins",
+   "to": "al:1598",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Casshern Sins",
+   "to": "al:4810",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Cells at Work!",
+   "to": "Cells at Work!!",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Cells at Work! CODE BLACK!",
+   "to": "Cells at Work!",
+   "type": "PARENT"
+  },
+  {
+   "from": "Cells at Work!: The Common Cold",
+   "to": "Cells at Work!",
+   "type": "PARENT"
+  },
+  {
+   "from": "Chainsaw Man",
+   "to": "Chainsaw Man the Movie: Reze Arc",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Chainsaw Man",
+   "to": "al:198726",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Chainsaw Man the Movie: Reze Arc",
+   "to": "al:204429",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Chainsmoker Cat",
+   "to": "al:208105",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Charlotte: The Strong Ones",
+   "to": "Charlotte",
+   "type": "PARENT"
+  },
+  {
+   "from": "Classroom of the Elite, S01",
+   "to": "Classroom of the Elite, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Classroom of the Elite, S02",
+   "to": "Classroom of the Elite, S03",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Classroom of the Elite, S03",
+   "to": "Classroom of the Elite, S04: Second Year, First Semester",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Classroom of the Elite, S04: Second Year, First Semester",
+   "to": "al:213477",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Code Geass: Akito the Exiled 1 - The Wyvern Arrives",
+   "to": "Code Geass: Akito the Exiled 2 - The Wyvern Divided",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Code Geass: Akito the Exiled 2 - The Wyvern Divided",
+   "to": "Code Geass: Akito the Exiled 3 - The Brightness Falls",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Code Geass: Akito the Exiled 3 - The Brightness Falls",
+   "to": "Code Geass: Akito the Exiled 4 - Memories of Hatred",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Code Geass: Akito the Exiled 4 - Memories of Hatred",
+   "to": "Code Geass: Akito the Exiled 5 - To Beloved Ones",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Code Geass: Lelouch of the Re;surrection",
+   "to": "al:101813",
+   "type": "PREQUEL"
+  },
+  {
+   "from": "Code Geass: Lelouch of the Re;surrection",
+   "to": "al:117408",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Code Geass: Lelouch of the Re;surrection",
+   "to": "al:126830",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Code Geass: Lelouch of the Rebellion R1",
+   "to": "Code Geass: Lelouch of the Rebellion R2",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Code Geass: Lelouch of the Rebellion R1",
+   "to": "al:101811",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Code Geass: Lelouch of the Rebellion R1",
+   "to": "al:17277",
+   "type": "SPIN_OFF"
+  },
+  {
+   "from": "Code Geass: Lelouch of the Rebellion R1",
+   "to": "al:1953",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Code Geass: Lelouch of the Rebellion R2",
+   "to": "al:112900",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Code Geass: Lelouch of the Rebellion R2",
+   "to": "al:132317",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Code Geass: Lelouch of the Rebellion R2",
+   "to": "al:5163",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Code Geass: Lelouch of the Rebellion R2",
+   "to": "al:8728",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Code Geass: Lelouch of the Rebellion R2",
+   "to": "al:9591",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Daemons of the Shadow Realm, S01",
+   "to": "al:217013",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Dead Dead Demons Dededede Destruction",
+   "to": "al:146609",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Dead Dead Demons Dededede Destruction",
+   "to": "al:176218",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Deadman Wonderland: The Red Knife Wielder",
+   "to": "Deadman Wonderland",
+   "type": "PARENT"
+  },
+  {
+   "from": "Death Billiards",
+   "to": "Death Parade",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Death Note",
+   "to": "al:2994",
+   "type": "SUMMARY"
+  },
+  {
+   "from": "Delicious in Dungeon, S01",
+   "to": "al:178031",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Demon Slayer",
+   "to": "Demon Slayer: Mugen Train Arc",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Demon Slayer",
+   "to": "al:112151",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Demon Slayer: Entertainment District Arc",
+   "to": "Demon Slayer: Swordsmith Village Arc",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Demon Slayer: Entertainment District Arc",
+   "to": "al:112151",
+   "type": "PREQUEL"
+  },
+  {
+   "from": "Demon Slayer: Hashira Training Arc",
+   "to": "Demon Slayer: The Movie: Infinity Castle - Part 1: Akaza Returns",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Demon Slayer: Mugen Train Arc",
+   "to": "Demon Slayer: Entertainment District Arc",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Demon Slayer: Mugen Train Arc",
+   "to": "al:112151",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Demon Slayer: Swordsmith Village Arc",
+   "to": "Demon Slayer: Hashira Training Arc",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Demon Slayer: The Movie: Infinity Castle - Part 1: Akaza Returns",
+   "to": "al:195200",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Dorohedoro, S01",
+   "to": "Dorohedoro, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Dorohedoro, S02",
+   "to": "al:212618",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Dorohedoro: Bonus Curse or Extra Evil",
+   "to": "Dorohedoro, S01",
+   "type": "PARENT"
+  },
+  {
+   "from": "Dragon Raja II: The Mourner's Eyes",
+   "to": "al:205375",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Dragon Raja: The Blazing Dawn",
+   "to": "Dragon Raja II: The Mourner's Eyes",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Elfen Lied: In the Passing Rain, or, How Can a Girl Have Reached Such Feelings?",
+   "to": "Elfen Lied",
+   "type": "PARENT"
+  },
+  {
+   "from": "Evangelion: 1.0 You Are (Not) Alone",
+   "to": "Evangelion: 2.0 You Can (Not) Advance",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Evangelion: 2.0 You Can (Not) Advance",
+   "to": "Evangelion: 3.0 You Can (Not) Redo",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Evangelion: 3.0 You Can (Not) Redo",
+   "to": "Evangelion: 3.0+1.0 Thrice Upon a Time",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Evangelion: 3.0 You Can (Not) Redo",
+   "to": "al:155399",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Fate/Apocrypha",
+   "to": "al:356",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Fate/Apocrypha",
+   "to": "al:6922",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Fate/Grand Order: Absolute Demonic Front - Babylonia",
+   "to": "Fate/Grand Order: Final Singularity - Grand Temple of Time: Solomon",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Fate/Grand Order: Absolute Demonic Front - Babylonia Initium Iter",
+   "to": "Fate/Grand Order: Absolute Demonic Front - Babylonia",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Fate/Grand Order: Divine Realm of the Round Table 1 - Camelot Wandering; Agateram",
+   "to": "Fate/Grand Order: Divine Realm of the Round Table 2 - Camelot Paladin; Agateram",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Fate/Grand Order: Divine Realm of the Round Table 2 - Camelot Paladin; Agateram",
+   "to": "Fate/Grand Order: Absolute Demonic Front - Babylonia",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Fate/Grand Order: Final Singularity - Grand Temple of Time: Solomon",
+   "to": "Fate/Grand Order: Moonlight/Lostroom",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Fate/Grand Order: First Order",
+   "to": "Fate/Grand Order: Divine Realm of the Round Table 1 - Camelot Wandering; Agateram",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Fate/Grand Order: First Order",
+   "to": "Fate/Grand Order: Moonlight/Lostroom",
+   "type": "SPIN_OFF"
+  },
+  {
+   "from": "Fate/Grand Order: First Order",
+   "to": "al:100729",
+   "type": "SPIN_OFF"
+  },
+  {
+   "from": "Fate/Grand Order: First Order",
+   "to": "al:356",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Fate/Grand Order: First Order",
+   "to": "al:6922",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Fate/Zero, S01",
+   "to": "Fate/Zero, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Fate/Zero, S01",
+   "to": "al:13263",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Fate/Zero, S02",
+   "to": "Fate/stay night [Unlimited Blade Works], S01",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Fate/Zero, S02",
+   "to": "Fate/stay night: Heaven's Feel - I. Presage Flower",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Fate/Zero, S02",
+   "to": "al:13263",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Fate/Zero, S02",
+   "to": "al:356",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Fate/Zero, S02",
+   "to": "al:6922",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Fate/stay night [Unlimited Blade Works], S01",
+   "to": "Fate/Apocrypha",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Fate/stay night [Unlimited Blade Works], S01",
+   "to": "Fate/Grand Order: First Order",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Fate/stay night [Unlimited Blade Works], S01",
+   "to": "Fate/stay night [Unlimited Blade Works], S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Fate/stay night [Unlimited Blade Works], S01",
+   "to": "Fate/stay night: Heaven's Feel - I. Presage Flower",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Fate/stay night [Unlimited Blade Works], S01",
+   "to": "al:12565",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Fate/stay night [Unlimited Blade Works], S01",
+   "to": "al:14829",
+   "type": "SPIN_OFF"
+  },
+  {
+   "from": "Fate/stay night [Unlimited Blade Works], S01",
+   "to": "al:21717",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Fate/stay night [Unlimited Blade Works], S01",
+   "to": "al:356",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Fate/stay night [Unlimited Blade Works], S01",
+   "to": "al:6922",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Fate/stay night [Unlimited Blade Works], S02",
+   "to": "Fate/stay night [Unlimited Blade Works], S02: Sunny Day",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Fate/stay night [Unlimited Blade Works], S02: Sunny Day",
+   "to": "al:6922",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Fate/stay night: Heaven's Feel - I. Presage Flower",
+   "to": "Fate/Apocrypha",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Fate/stay night: Heaven's Feel - I. Presage Flower",
+   "to": "Fate/Grand Order: First Order",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Fate/stay night: Heaven's Feel - I. Presage Flower",
+   "to": "Fate/stay night: Heaven's Feel - II. Lost Butterfly",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Fate/stay night: Heaven's Feel - I. Presage Flower",
+   "to": "al:12565",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Fate/stay night: Heaven's Feel - I. Presage Flower",
+   "to": "al:14829",
+   "type": "SPIN_OFF"
+  },
+  {
+   "from": "Fate/stay night: Heaven's Feel - I. Presage Flower",
+   "to": "al:21717",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Fate/stay night: Heaven's Feel - I. Presage Flower",
+   "to": "al:356",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Fate/stay night: Heaven's Feel - I. Presage Flower",
+   "to": "al:6922",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Fate/stay night: Heaven's Feel - II. Lost Butterfly",
+   "to": "Fate/stay night: Heaven's Feel - III. Spring Song",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Fate/strange Fake, S01",
+   "to": "al:209984",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Fate/strange Fake: Whispers of Dawn",
+   "to": "Fate/Zero, S01",
+   "type": "PARENT"
+  },
+  {
+   "from": "Fate/strange Fake: Whispers of Dawn",
+   "to": "Fate/strange Fake, S01",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Frieren: Beyond Journey's End, S01",
+   "to": "Frieren: Beyond Journey's End, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Frieren: Beyond Journey's End, S01",
+   "to": "al:170068",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Frieren: Beyond Journey's End, S01",
+   "to": "al:189513",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Frieren: Beyond Journey's End, S02",
+   "to": "al:206425",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Frieren: Beyond Journey's End, S02",
+   "to": "al:209939",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "From Old Country Bumpkin to Master Swordsman, S01",
+   "to": "From Old Country Bumpkin to Master Swordsman, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "From Old Country Bumpkin to Master Swordsman, S02",
+   "to": "al:217232",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Fullmetal Alchemist: Brotherhood",
+   "to": "al:121",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Fullmetal Alchemist: Brotherhood",
+   "to": "al:7902",
+   "type": "SPIN_OFF"
+  },
+  {
+   "from": "Fullmetal Alchemist: Brotherhood OVA Collection",
+   "to": "Fullmetal Alchemist: Brotherhood",
+   "type": "PARENT"
+  },
+  {
+   "from": "Fullmetal Alchemist: The Sacred Star of Milos",
+   "to": "Fullmetal Alchemist: Brotherhood",
+   "type": "PARENT"
+  },
+  {
+   "from": "Fullmetal Alchemist: The Sacred Star of Milos",
+   "to": "al:10842",
+   "type": "SPIN_OFF"
+  },
+  {
+   "from": "GATE, S01 Part 1",
+   "to": "GATE, S01 Part 2",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "GATE, S01 Part 2",
+   "to": "al:195496",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Girls und Panzer",
+   "to": "Girls und Panzer Der Film",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Girls und Panzer",
+   "to": "al:15811",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Girls und Panzer",
+   "to": "al:18619",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Girls und Panzer",
+   "to": "al:188034",
+   "type": "SPIN_OFF"
+  },
+  {
+   "from": "Girls und Panzer",
+   "to": "al:209312",
+   "type": "SPIN_OFF"
+  },
+  {
+   "from": "Girls und Panzer Der Film",
+   "to": "al:21649",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Girls' Last Tour",
+   "to": "al:100180",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Goblin Slayer, S01",
+   "to": "Goblin Slayer: Goblin's Crown",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Goblin Slayer: Goblin's Crown",
+   "to": "Goblin Slayer, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Grand Blue Dreaming, S01",
+   "to": "Grand Blue Dreaming, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Grand Blue Dreaming, S02",
+   "to": "Grand Blue Dreaming, S03",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Grand Blue Dreaming, S03",
+   "to": "al:217136",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Grimgar: Staking Our Youths on the Bath Wall - One More Centimeter",
+   "to": "Grimgar: Ashes and Illusions",
+   "type": "PARENT"
+  },
+  {
+   "from": "Heavenly Delusion",
+   "to": "al:186540",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Hell's Paradise, S01",
+   "to": "Hell's Paradise, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Higurashi: When They Cry",
+   "to": "Higurashi: When They Cry – Kai",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Higurashi: When They Cry",
+   "to": "al:213396",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Higurashi: When They Cry – Cat Killing Chapter",
+   "to": "Higurashi: When They Cry",
+   "type": "PARENT"
+  },
+  {
+   "from": "Higurashi: When They Cry – Gou",
+   "to": "Higurashi: When They Cry – Sotsu",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Higurashi: When They Cry – Kai",
+   "to": "Higurashi: When They Cry – Rei",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Higurashi: When They Cry – Kai",
+   "to": "al:6064",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Higurashi: When They Cry – Kira",
+   "to": "Higurashi: When They Cry – Kai",
+   "type": "PARENT"
+  },
+  {
+   "from": "Higurashi: When They Cry – Outbreak",
+   "to": "Higurashi: When They Cry",
+   "type": "PARENT"
+  },
+  {
+   "from": "Higurashi: When They Cry – Rei",
+   "to": "Higurashi: When They Cry – Gou",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Himouto! Umaru-chan",
+   "to": "Himouto! Umaru-chan R",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Himouto! Umaru-chan OVA",
+   "to": "Himouto! Umaru-chan",
+   "type": "PARENT"
+  },
+  {
+   "from": "Himouto! Umaru-chan Specials",
+   "to": "Himouto! Umaru-chan",
+   "type": "PARENT"
+  },
+  {
+   "from": "Humanity Has Declined",
+   "to": "al:15617",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "I'm Standing on a Million Lives, S01",
+   "to": "I'm Standing on a Million Lives, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "I've Been Killing Slimes for 300 Years and Maxed Out My Level, S01",
+   "to": "I've Been Killing Slimes for 300 Years and Maxed Out My Level, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Is It Wrong to Try to Pick Up Girls in a Dungeon? II: Is It Wrong to go Searching for Herbs on a Deserted Island?",
+   "to": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S02",
+   "type": "PARENT"
+  },
+  {
+   "from": "Is It Wrong to Try to Pick Up Girls in a Dungeon? III: Is It Wrong to Try to Find a Hot Spring in Orario?",
+   "to": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S03",
+   "type": "PARENT"
+  },
+  {
+   "from": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S01",
+   "to": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S01",
+   "to": "al:21676",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S02",
+   "to": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S03",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S03",
+   "to": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S04 Part 1",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S04 Part 1",
+   "to": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S04 Part 2",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S04 Part 2",
+   "to": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S05",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S05",
+   "to": "al:207385",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Is It Wrong to Try to Pick Up Girls in a Dungeon?: Arrow of the Orion",
+   "to": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S01",
+   "type": "PARENT"
+  },
+  {
+   "from": "Is It Wrong to Try to Pick Up Girls in a Dungeon?: Is It Wrong to Expect a Hot Spring in a Dungeon?",
+   "to": "Is It Wrong to Try to Pick Up Girls in a Dungeon?, S01",
+   "type": "PARENT"
+  },
+  {
+   "from": "Jujutsu Kaisen 0",
+   "to": "Jujutsu Kaisen, S01",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Jujutsu Kaisen, S01",
+   "to": "Jujutsu Kaisen, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Jujutsu Kaisen, S02",
+   "to": "Jujutsu Kaisen: The Culling Game Part 1",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Jujutsu Kaisen, S02",
+   "to": "al:192809",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Jujutsu Kaisen, S02",
+   "to": "al:204066",
+   "type": "SUMMARY"
+  },
+  {
+   "from": "Jujutsu Kaisen: The Culling Game Part 1",
+   "to": "al:204066",
+   "type": "PREQUEL"
+  },
+  {
+   "from": "Jujutsu Kaisen: The Culling Game Part 1",
+   "to": "al:209895",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Kabaneri of the Iron Fortress",
+   "to": "Kabaneri of the Iron Fortress: The Battle of Unato",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Kabaneri of the Iron Fortress",
+   "to": "al:98662",
+   "type": "SUMMARY"
+  },
+  {
+   "from": "Kabaneri of the Iron Fortress",
+   "to": "al:98663",
+   "type": "SUMMARY"
+  },
+  {
+   "from": "Kabaneri of the Iron Fortress: The Battle of Unato",
+   "to": "al:98663",
+   "type": "PREQUEL"
+  },
+  {
+   "from": "Kaiju No.8, S01",
+   "to": "Kaiju No.8, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Kaiju No.8, S01",
+   "to": "al:179998",
+   "type": "SUMMARY"
+  },
+  {
+   "from": "Kaiju No.8, S01",
+   "to": "al:186300",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Kaiju No.8, S02",
+   "to": "al:179998",
+   "type": "PREQUEL"
+  },
+  {
+   "from": "Kaiju No.8, S02",
+   "to": "al:204362",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Kaiju No.8: Hoshina's Day Off",
+   "to": "Kaiju No.8, S01",
+   "type": "PARENT"
+  },
+  {
+   "from": "Kaiju No.8: Hoshina's Day Off",
+   "to": "al:179998",
+   "type": "PARENT"
+  },
+  {
+   "from": "Kizumonogatari Part 1: Iron-Blooded",
+   "to": "Kizumonogatari Part 2: Hot-Blooded",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Kizumonogatari Part 1: Iron-Blooded",
+   "to": "al:181970",
+   "type": "SUMMARY"
+  },
+  {
+   "from": "Kizumonogatari Part 2: Hot-Blooded",
+   "to": "Kizumonogatari Part 3: Cold-Blooded",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Kizumonogatari Part 2: Hot-Blooded",
+   "to": "al:181970",
+   "type": "SUMMARY"
+  },
+  {
+   "from": "Kizumonogatari Part 3: Cold-Blooded",
+   "to": "Nekomonogatari Black",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Kizumonogatari Part 3: Cold-Blooded",
+   "to": "al:181970",
+   "type": "SUMMARY"
+  },
+  {
+   "from": "KonoSuba: An Explosion on This Wonderful World!",
+   "to": "KonoSuba: God's Blessing on This Wonderful World!, S01",
+   "type": "PARENT"
+  },
+  {
+   "from": "KonoSuba: God's Blessing on This Wonderful World! - God's Blessing on This Wonderful Choker!",
+   "to": "KonoSuba: God's Blessing on This Wonderful World!, S01",
+   "type": "PARENT"
+  },
+  {
+   "from": "KonoSuba: God's Blessing on This Wonderful World! 2 - God's Blessing on This Wonderful Art!",
+   "to": "KonoSuba: God's Blessing on This Wonderful World!, S02",
+   "type": "PARENT"
+  },
+  {
+   "from": "KonoSuba: God's Blessing on This Wonderful World! 3 OVA",
+   "to": "KonoSuba: God's Blessing on This Wonderful World!, S03",
+   "type": "PARENT"
+  },
+  {
+   "from": "KonoSuba: God's Blessing on This Wonderful World! The Movie: Crimson Legend",
+   "to": "KonoSuba: God's Blessing on This Wonderful World!, S03",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "KonoSuba: God's Blessing on This Wonderful World!, S01",
+   "to": "KonoSuba: God's Blessing on This Wonderful World!, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "KonoSuba: God's Blessing on This Wonderful World!, S02",
+   "to": "KonoSuba: God's Blessing on This Wonderful World! The Movie: Crimson Legend",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "KonoSuba: God's Blessing on This Wonderful World!, S03",
+   "to": "al:187924",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Koyomimonogatari",
+   "to": "Bakemonogatari",
+   "type": "PARENT"
+  },
+  {
+   "from": "Koyomimonogatari",
+   "to": "Monogatari Series: Second Season",
+   "type": "PARENT"
+  },
+  {
+   "from": "Koyomimonogatari",
+   "to": "Nisemonogatari",
+   "type": "PARENT"
+  },
+  {
+   "from": "Koyomimonogatari",
+   "to": "Tsukimonogatari",
+   "type": "PARENT"
+  },
+  {
+   "from": "Land of the Lustrous",
+   "to": "al:19581",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Legend of the Galactic Heroes: Die Neue These",
+   "to": "Legend of the Galactic Heroes: Die Neue These - Stellar War Part 1",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Legend of the Galactic Heroes: Die Neue These",
+   "to": "al:820",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Legend of the Galactic Heroes: Die Neue These - Collision",
+   "to": "Legend of the Galactic Heroes: Die Neue These - Intrigue",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Legend of the Galactic Heroes: Die Neue These - Collision",
+   "to": "al:820",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Legend of the Galactic Heroes: Die Neue These - Intrigue",
+   "to": "al:170816",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Legend of the Galactic Heroes: Die Neue These - Intrigue",
+   "to": "al:820",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Legend of the Galactic Heroes: Die Neue These - Stellar War Part 1",
+   "to": "Legend of the Galactic Heroes: Die Neue These - Collision",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Legend of the Galactic Heroes: Die Neue These - Stellar War Part 1",
+   "to": "al:820",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Link Click Episode 5.5",
+   "to": "Link Click, S01",
+   "type": "PARENT"
+  },
+  {
+   "from": "Link Click, S01",
+   "to": "Link Click, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Link Click, S01",
+   "to": "al:138260",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Link Click, S01",
+   "to": "al:140175",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Link Click, S02",
+   "to": "Link Click: Bridon Arc",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Link Click: Bridon Arc",
+   "to": "Link Click, S03",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Link Click: Bridon Arc",
+   "to": "al:210932",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Log Horizon, S01",
+   "to": "Log Horizon, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Log Horizon, S02",
+   "to": "Log Horizon: Destruction of the Round Table",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Lonely Castle in the Mirror",
+   "to": "al:183885",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Lord El-Melloi II's Case Files: Rail Zeppelin Grace Note",
+   "to": "Fate/Zero, S02",
+   "type": "PARENT"
+  },
+  {
+   "from": "Lord El-Melloi II's Case Files: Rail Zeppelin Grace Note",
+   "to": "Lord El-Melloi II's Case Files: Rail Zeppelin Grace Note - Waver, Reunion, and the Magic Lantern",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Lord El-Melloi II's Case Files: Rail Zeppelin Grace Note - A Grave Keeper, a Cat, and a Mage",
+   "to": "Lord El-Melloi II's Case Files: Rail Zeppelin Grace Note",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Lord of Mysteries",
+   "to": "al:206874",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Lord of Mysteries",
+   "to": "al:206875",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Lord of Mysteries Specials",
+   "to": "Lord of Mysteries",
+   "type": "PARENT"
+  },
+  {
+   "from": "Lycoris Recoil: Friends Are Thieves of Time.",
+   "to": "Lycoris Recoil",
+   "type": "PARENT"
+  },
+  {
+   "from": "Made in Abyss",
+   "to": "Made in Abyss: Dawn of the Deep Soul",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Made in Abyss",
+   "to": "al:101343",
+   "type": "SUMMARY"
+  },
+  {
+   "from": "Made in Abyss",
+   "to": "al:101344",
+   "type": "SUMMARY"
+  },
+  {
+   "from": "Made in Abyss: Dawn of the Deep Soul",
+   "to": "Made in Abyss: The Golden City of the Scorching Sun",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Made in Abyss: Dawn of the Deep Soul",
+   "to": "al:101344",
+   "type": "PREQUEL"
+  },
+  {
+   "from": "Made in Abyss: Dawn of the Deep Soul",
+   "to": "al:114744",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Made in Abyss: The Golden City of the Scorching Sun",
+   "to": "al:153791",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Made in Abyss: The Golden City of the Scorching Sun",
+   "to": "al:160275",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Magi: Adventure of Sinbad",
+   "to": "Magi: The Labyrinth of Magic",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Magi: Adventure of Sinbad",
+   "to": "al:20609",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Magi: The Kingdom of Magic",
+   "to": "al:20609",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Magi: The Labyrinth of Magic",
+   "to": "Magi: The Kingdom of Magic",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Magi: The Labyrinth of Magic",
+   "to": "al:20609",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Magia Record: Puella Magi Madoka Magica Side Story, S01",
+   "to": "Magia Record: Puella Magi Madoka Magica Side Story, S02 - The Eve of Awakening",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Magia Record: Puella Magi Madoka Magica Side Story, S01",
+   "to": "Puella Magi Madoka Magica",
+   "type": "PARENT"
+  },
+  {
+   "from": "Magia Record: Puella Magi Madoka Magica Side Story, S02 - The Eve of Awakening",
+   "to": "Magia Record: Puella Magi Madoka Magica Side Story Final Season",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Monogatari Series: Off & Monster Season",
+   "to": "al:195448",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Monogatari Series: Off & Monster Season - A Cruel Fairy Tale: The Beautiful Princess",
+   "to": "Monogatari Series: Off & Monster Season",
+   "type": "PARENT"
+  },
+  {
+   "from": "Monogatari Series: Second Season",
+   "to": "Owarimonogatari, S01",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Monogatari Series: Second Season",
+   "to": "al:104434",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Mushoku Tensei: Jobless Reincarnation - Eris the Goblin Slayer",
+   "to": "Mushoku Tensei: Jobless Reincarnation, S01 Part 2",
+   "type": "PARENT"
+  },
+  {
+   "from": "Mushoku Tensei: Jobless Reincarnation, S01 Part 1",
+   "to": "Mushoku Tensei: Jobless Reincarnation, S01 Part 2",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Mushoku Tensei: Jobless Reincarnation, S01 Part 2",
+   "to": "Mushoku Tensei: Jobless Reincarnation, S02 Part 1",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Mushoku Tensei: Jobless Reincarnation, S02 Part 1",
+   "to": "Mushoku Tensei: Jobless Reincarnation, S02 Part 2",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Mushoku Tensei: Jobless Reincarnation, S02 Part 2",
+   "to": "Mushoku Tensei: Jobless Reincarnation, S03 Part 1",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Mushoku Tensei: Jobless Reincarnation, S03 Part 1",
+   "to": "al:217434",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "My Dress-Up Darling, S01",
+   "to": "My Dress-Up Darling, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Nekomonogatari Black",
+   "to": "Bakemonogatari",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Neon Genesis Evangelion",
+   "to": "Neon Genesis Evangelion: The End of Evangelion",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Neon Genesis Evangelion",
+   "to": "al:31",
+   "type": "SUMMARY"
+  },
+  {
+   "from": "Neon Genesis Evangelion",
+   "to": "al:4130",
+   "type": "SPIN_OFF"
+  },
+  {
+   "from": "Neon Genesis Evangelion: The End of Evangelion",
+   "to": "Evangelion: 1.0 You Are (Not) Alone",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Neon Genesis Evangelion: The End of Evangelion",
+   "to": "al:31",
+   "type": "SUMMARY"
+  },
+  {
+   "from": "NieR:Automata Ver1.1a Part 1",
+   "to": "NieR:Automata Ver1.1a Part 2",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Night Is Short, Walk on Girl",
+   "to": "The Tatami Galaxy",
+   "type": "PARENT"
+  },
+  {
+   "from": "Nippon Sangoku: The Three Nations of the Crimson Sun, S01",
+   "to": "al:216346",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Nisemonogatari",
+   "to": "Monogatari Series: Second Season",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "No Game, No Life",
+   "to": "al:20769",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "No Game, No Life: Zero",
+   "to": "No Game, No Life",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Noragami",
+   "to": "Noragami Aragoto",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Noragami Aragoto OVA",
+   "to": "Noragami Aragoto",
+   "type": "PARENT"
+  },
+  {
+   "from": "Noragami OVA",
+   "to": "Noragami",
+   "type": "PARENT"
+  },
+  {
+   "from": "Orange",
+   "to": "Orange: Mirai",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Overlord, S01",
+   "to": "Overlord, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Overlord, S01",
+   "to": "al:166035",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Overlord, S01",
+   "to": "al:21305",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Overlord, S01",
+   "to": "al:87489",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Overlord, S01",
+   "to": "al:98873",
+   "type": "SUMMARY"
+  },
+  {
+   "from": "Overlord, S01",
+   "to": "al:98874",
+   "type": "SUMMARY"
+  },
+  {
+   "from": "Overlord, S02",
+   "to": "Overlord, S03",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Overlord, S02",
+   "to": "al:101083",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Overlord, S02",
+   "to": "al:98874",
+   "type": "PREQUEL"
+  },
+  {
+   "from": "Overlord, S03",
+   "to": "Overlord, S04",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Overlord, S03",
+   "to": "al:103209",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Overlord, S04",
+   "to": "Overlord: The Sacred Kingdom",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Overlord, S04",
+   "to": "al:151898",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Owarimonogatari, S01",
+   "to": "Tsukimonogatari",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Owarimonogatari, S02",
+   "to": "Zoku Owarimonogatari",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Patema Inverted",
+   "to": "al:13429",
+   "type": "PREQUEL"
+  },
+  {
+   "from": "Penguindrum",
+   "to": "al:132232",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Penguindrum",
+   "to": "al:148179",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Psycho-Pass, S01",
+   "to": "Psycho-Pass, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Psycho-Pass, S02",
+   "to": "Psycho-Pass: The Movie",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Psycho-Pass, S03",
+   "to": "Psycho-Pass, S03: First Inspector",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Psycho-Pass: Providence",
+   "to": "Psycho-Pass, S03",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Psycho-Pass: Sinners of the System Case.1 - Crime and Punishment",
+   "to": "Psycho-Pass: Sinners of the System Case.3 - On the Other Side of Love and Hate",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Psycho-Pass: Sinners of the System Case.2 - First Guardian",
+   "to": "Psycho-Pass: Sinners of the System Case.1 - Crime and Punishment",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Psycho-Pass: Sinners of the System Case.3 - On the Other Side of Love and Hate",
+   "to": "Psycho-Pass: Providence",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Psycho-Pass: The Movie",
+   "to": "Psycho-Pass: Sinners of the System Case.2 - First Guardian",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Puella Magi Madoka Magica",
+   "to": "Puella Magi Madoka Magica the Movie: Rebellion",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Puella Magi Madoka Magica",
+   "to": "al:11977",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Puella Magi Madoka Magica",
+   "to": "al:11979",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Puella Magi Madoka Magica the Movie: Rebellion",
+   "to": "al:11979",
+   "type": "PREQUEL"
+  },
+  {
+   "from": "Puella Magi Madoka Magica the Movie: Rebellion",
+   "to": "al:133007",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Rage of Bahamut: Genesis",
+   "to": "Rage of Bahamut: Genesis - Short Story",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Rage of Bahamut: Genesis",
+   "to": "al:21322",
+   "type": "SPIN_OFF"
+  },
+  {
+   "from": "Rage of Bahamut: Genesis - Short Story",
+   "to": "Rage of Bahamut: Virgin Soul",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Ranking of Kings",
+   "to": "Ranking of Kings: The Treasure Chest of Courage",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Rascal Does Not Dream of Bunny Girl Senpai",
+   "to": "Rascal Does Not Dream of a Dreaming Girl",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Rascal Does Not Dream of Santa Claus",
+   "to": "al:199340",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Rascal Does Not Dream of a Dreaming Girl",
+   "to": "Rascal Does Not Dream of a Sister Venturing Out",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Rascal Does Not Dream of a Knapsack Kid",
+   "to": "Rascal Does Not Dream of Santa Claus",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Rascal Does Not Dream of a Sister Venturing Out",
+   "to": "Rascal Does Not Dream of a Knapsack Kid",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Re:Zero -Starting Life in Another World- Memory Snow",
+   "to": "Re:Zero -Starting Life in Another World-, S01",
+   "type": "PARENT"
+  },
+  {
+   "from": "Re:Zero -Starting Life in Another World-, S01",
+   "to": "Re:Zero -Starting Life in Another World-, S02 Part 1",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Re:Zero -Starting Life in Another World-, S01",
+   "to": "al:21780",
+   "type": "SPIN_OFF"
+  },
+  {
+   "from": "Re:Zero -Starting Life in Another World-, S01",
+   "to": "al:21891",
+   "type": "SPIN_OFF"
+  },
+  {
+   "from": "Re:Zero -Starting Life in Another World-, S02 Part 1",
+   "to": "Re:Zero -Starting Life in Another World-, S02 Part 2",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Re:Zero -Starting Life in Another World-, S02 Part 1",
+   "to": "al:120700",
+   "type": "SPIN_OFF"
+  },
+  {
+   "from": "Re:Zero -Starting Life in Another World-, S02 Part 2",
+   "to": "Re:Zero -Starting Life in Another World-, S03",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Re:Zero -Starting Life in Another World-, S02 Part 2",
+   "to": "al:128306",
+   "type": "SPIN_OFF"
+  },
+  {
+   "from": "Re:Zero -Starting Life in Another World-, S03",
+   "to": "Re:Zero -Starting Life in Another World-, S04",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Re:Zero -Starting Life in Another World-, S03",
+   "to": "al:182417",
+   "type": "SPIN_OFF"
+  },
+  {
+   "from": "Re:Zero -Starting Life in Another World-, S04",
+   "to": "al:210687",
+   "type": "SPIN_OFF"
+  },
+  {
+   "from": "Reincarnated as a Sword, S01",
+   "to": "Reincarnated as a Sword, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Saga of Tanya the Evil, S01",
+   "to": "Saga of Tanya the Evil: The Movie",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Saga of Tanya the Evil, S01",
+   "to": "al:98186",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Saga of Tanya the Evil, S02",
+   "to": "al:213961",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Saga of Tanya the Evil: Operation Desert Pasta",
+   "to": "Saga of Tanya the Evil, S01",
+   "type": "PARENT"
+  },
+  {
+   "from": "Saga of Tanya the Evil: Operation Desert Pasta",
+   "to": "Saga of Tanya the Evil: The Movie",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Saga of Tanya the Evil: The Movie",
+   "to": "Saga of Tanya the Evil, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Sentenced to Be a Hero, S01",
+   "to": "al:209963",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Shangri-La Frontier, S01",
+   "to": "Shangri-La Frontier, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Shangri-La Frontier, S01",
+   "to": "al:169750",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "Shangri-La Frontier, S02",
+   "to": "al:189323",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "She and Her Cat: Their Standing Points",
+   "to": "She and Her Cat: Everything Flows",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Shiki Specials",
+   "to": "Shiki",
+   "type": "PARENT"
+  },
+  {
+   "from": "Skeleton Knight in Another World, S01",
+   "to": "Skeleton Knight in Another World, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Solo Leveling, S01",
+   "to": "Solo Leveling, S02: Arise from the Shadow",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Solo Leveling, S01",
+   "to": "al:184694",
+   "type": "SUMMARY"
+  },
+  {
+   "from": "Solo Leveling, S02: Arise from the Shadow",
+   "to": "al:184694",
+   "type": "PREQUEL"
+  },
+  {
+   "from": "Solo Leveling, S02: Arise from the Shadow",
+   "to": "al:213846",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Sound of the Sky Specials",
+   "to": "Sound of the Sky",
+   "type": "PARENT"
+  },
+  {
+   "from": "Spice and Wolf: Merchant Meets the Wise Wolf, S01",
+   "to": "al:181951",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Spice and Wolf: Merchant Meets the Wise Wolf, S01",
+   "to": "al:2966",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Spy x Family Code: White",
+   "to": "Spy x Family, S02",
+   "type": "PARENT"
+  },
+  {
+   "from": "Spy x Family, S01 Part 1",
+   "to": "Spy x Family, S01 Part 2",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Spy x Family, S01 Part 2",
+   "to": "Spy x Family, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Spy x Family, S02",
+   "to": "Spy x Family, S03",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Steins;Gate",
+   "to": "Steins;Gate: Egoistic Poriomania",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Steins;Gate 0: Valentine's of Crystal Polymorphism -Bittersweet Intermedio-",
+   "to": "Steins;Gate 0",
+   "type": "PARENT"
+  },
+  {
+   "from": "Steins;Gate: Egoistic Poriomania",
+   "to": "Steins;Gate: The Movie - Load Region of Déjà Vu",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Steins;Gate: Open the Missing Link - Divide By Zero",
+   "to": "Steins;Gate",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Steins;Gate: Open the Missing Link - Divide By Zero",
+   "to": "Steins;Gate 0",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Steins;Gate: The Movie - Load Region of Déjà Vu",
+   "to": "Steins;Gate",
+   "type": "PARENT"
+  },
+  {
+   "from": "Steins;Gate: The Sagacious Wisdom of Cognitive Computing",
+   "to": "Steins;Gate",
+   "type": "PARENT"
+  },
+  {
+   "from": "Sword Art Online Alternative: Gun Gale Online, S01",
+   "to": "Sword Art Online Alternative: Gun Gale Online, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Sword Art Online Alternative: Gun Gale Online, S01",
+   "to": "Sword Art Online, S02",
+   "type": "PARENT"
+  },
+  {
+   "from": "Sword Art Online the Movie: Ordinal Scale",
+   "to": "Sword Art Online: Alicization",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Sword Art Online the Movie: Progressive - Aria of a Starless Night",
+   "to": "Sword Art Online the Movie: Progressive - Scherzo of Deep Night",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Sword Art Online, S01",
+   "to": "Sword Art Online the Movie: Progressive - Aria of a Starless Night",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Sword Art Online, S01",
+   "to": "Sword Art Online, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Sword Art Online, S01",
+   "to": "Sword Art Online: Unanswered//butterfly",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Sword Art Online, S01",
+   "to": "al:20021",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Sword Art Online, S02",
+   "to": "Sword Art Online the Movie: Ordinal Scale",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Sword Art Online, S02",
+   "to": "al:151640",
+   "type": "PARENT"
+  },
+  {
+   "from": "Sword Art Online, S02",
+   "to": "al:20021",
+   "type": "PREQUEL"
+  },
+  {
+   "from": "Sword Art Online: Alicization",
+   "to": "Sword Art Online: Alicization - War of Underworld, Part 1",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Sword Art Online: Alicization - War of Underworld, Part 1",
+   "to": "Sword Art Online: Alicization - War of Underworld, Part 2",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Sword Art Online: Alicization - War of Underworld, Part 2",
+   "to": "al:156631",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Takopi's Original Sin",
+   "to": "al:212539",
+   "type": "SUMMARY"
+  },
+  {
+   "from": "That Time I Got Reincarnated as a Slime OAD",
+   "to": "That Time I Got Reincarnated as a Slime, S01",
+   "type": "PARENT"
+  },
+  {
+   "from": "That Time I Got Reincarnated as a Slime, S01",
+   "to": "That Time I Got Reincarnated as a Slime: Visions of Coleus",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "That Time I Got Reincarnated as a Slime, S01",
+   "to": "al:146503",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "That Time I Got Reincarnated as a Slime, S02 Part 1",
+   "to": "That Time I Got Reincarnated as a Slime, S02 Part 2",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "That Time I Got Reincarnated as a Slime, S02 Part 2",
+   "to": "That Time I Got Reincarnated as a Slime, S03",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "That Time I Got Reincarnated as a Slime, S03",
+   "to": "That Time I Got Reincarnated as a Slime the Movie: Tears of the Azure Sea",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "That Time I Got Reincarnated as a Slime, S03",
+   "to": "That Time I Got Reincarnated as a Slime, S04 Part 1",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "That Time I Got Reincarnated as a Slime, S04 Part 1",
+   "to": "al:217331",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "That Time I Got Reincarnated as a Slime: The Movie - Scarlet Bond",
+   "to": "That Time I Got Reincarnated as a Slime the Movie: Tears of the Azure Sea",
+   "type": "PARENT"
+  },
+  {
+   "from": "That Time I Got Reincarnated as a Slime: The Movie - Scarlet Bond",
+   "to": "That Time I Got Reincarnated as a Slime, S02 Part 2",
+   "type": "PARENT"
+  },
+  {
+   "from": "That Time I Got Reincarnated as a Slime: Visions of Coleus",
+   "to": "That Time I Got Reincarnated as a Slime, S02 Part 1",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Ancient Magus' Bride, S01",
+   "to": "The Ancient Magus' Bride: The Boy from the West and the Knight of the Blue Storm",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Ancient Magus' Bride, S01",
+   "to": "al:100256",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "The Ancient Magus' Bride, S02 Part 1",
+   "to": "The Ancient Magus' Bride, S02 Part 2",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Ancient Magus' Bride: The Boy from the West and the Knight of the Blue Storm",
+   "to": "The Ancient Magus' Bride, S02 Part 1",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Ancient Magus' Bride: Those Awaiting a Star",
+   "to": "The Ancient Magus' Bride, S01",
+   "type": "PARENT"
+  },
+  {
+   "from": "The Apothecary Diaries, S01",
+   "to": "The Apothecary Diaries, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Apothecary Diaries, S01",
+   "to": "al:170508",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "The Apothecary Diaries, S02",
+   "to": "The Apothecary Diaries, S03",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Apothecary Diaries, S02",
+   "to": "al:186148",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "The Apothecary Diaries, S03",
+   "to": "al:200927",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Beginning After the End, S01",
+   "to": "The Beginning After the End, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Dawn of the Witch",
+   "to": "Grimoire of Zero",
+   "type": "PARENT"
+  },
+  {
+   "from": "The Dawn of the Witch",
+   "to": "al:149099",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "The Disappearance of Haruhi Suzumiya",
+   "to": "al:20566",
+   "type": "SPIN_OFF"
+  },
+  {
+   "from": "The Eminence in Shadow, S01",
+   "to": "The Eminence in Shadow, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Eminence in Shadow, S01",
+   "to": "al:156001",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "The Eminence in Shadow, S02",
+   "to": "al:169929",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "The Eminence in Shadow, S02",
+   "to": "al:171952",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Future Diary",
+   "to": "The Future Diary: Redial",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Future Diary",
+   "to": "al:12503",
+   "type": "SIDE_STORY"
+  },
+  {
+   "from": "The Future Diary",
+   "to": "al:8460",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "The Garden of Sinners (Ch. 1 - 6) - Remix: Gate of Seventh Heaven",
+   "to": "The Garden of Sinners Chapter 1: Overlooking View",
+   "type": "PARENT"
+  },
+  {
+   "from": "The Garden of Sinners (Ch. 1 - 6) - Remix: Gate of Seventh Heaven",
+   "to": "The Garden of Sinners Chapter 2: A Study in Murder - Part 1",
+   "type": "PARENT"
+  },
+  {
+   "from": "The Garden of Sinners (Ch. 1 - 6) - Remix: Gate of Seventh Heaven",
+   "to": "The Garden of Sinners Chapter 3: Remaining Sense of Pain",
+   "type": "PARENT"
+  },
+  {
+   "from": "The Garden of Sinners (Ch. 1 - 6) - Remix: Gate of Seventh Heaven",
+   "to": "The Garden of Sinners Chapter 4: The Hollow Shrine",
+   "type": "PARENT"
+  },
+  {
+   "from": "The Garden of Sinners (Ch. 1 - 6) - Remix: Gate of Seventh Heaven",
+   "to": "The Garden of Sinners Chapter 5: Paradox Spiral",
+   "type": "PARENT"
+  },
+  {
+   "from": "The Garden of Sinners (Ch. 1 - 6) - Remix: Gate of Seventh Heaven",
+   "to": "The Garden of Sinners Chapter 6: Oblivion Recording",
+   "type": "PARENT"
+  },
+  {
+   "from": "The Garden of Sinners (Ch. 1 - 6) - Remix: Gate of Seventh Heaven",
+   "to": "The Garden of Sinners Chapter 7: A Study in Murder - Part 2",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Garden of Sinners Chapter 1: Overlooking View",
+   "to": "The Garden of Sinners Chapter 2: A Study in Murder - Part 1",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Garden of Sinners Chapter 2: A Study in Murder - Part 1",
+   "to": "The Garden of Sinners Chapter 3: Remaining Sense of Pain",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Garden of Sinners Chapter 3: Remaining Sense of Pain",
+   "to": "The Garden of Sinners Chapter 4: The Hollow Shrine",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Garden of Sinners Chapter 4: The Hollow Shrine",
+   "to": "The Garden of Sinners Chapter 5: Paradox Spiral",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Garden of Sinners Chapter 5: Paradox Spiral",
+   "to": "The Garden of Sinners Chapter 6: Oblivion Recording",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Garden of Sinners Chapter 6: Oblivion Recording",
+   "to": "The Garden of Sinners Chapter 7: A Study in Murder - Part 2",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Garden of Sinners Chapter 7: A Study in Murder - Part 2",
+   "to": "The Garden of Sinners Chapter 8: Epilogue",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Garden of Sinners Chapter 8: Epilogue",
+   "to": "The Garden of Sinners: Future Gospel",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Garden of Sinners: Future Gospel",
+   "to": "The Garden of Sinners Chapter 7: A Study in Murder - Part 2",
+   "type": "PARENT"
+  },
+  {
+   "from": "The Garden of Sinners: Future Gospel - Extra Chorus",
+   "to": "The Garden of Sinners: Future Gospel",
+   "type": "PARENT"
+  },
+  {
+   "from": "The Melancholy of Haruhi Suzumiya, S01",
+   "to": "The Disappearance of Haruhi Suzumiya",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Melancholy of Haruhi Suzumiya, S02",
+   "to": "The Disappearance of Haruhi Suzumiya",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Melancholy of Haruhi Suzumiya, S02",
+   "to": "The Melancholy of Haruhi Suzumiya, S01",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "The Melancholy of Haruhi Suzumiya, S02",
+   "to": "al:5118",
+   "type": "SPIN_OFF"
+  },
+  {
+   "from": "The Melancholy of Haruhi Suzumiya, S02",
+   "to": "al:5957",
+   "type": "SPIN_OFF"
+  },
+  {
+   "from": "The Promised Neverland, S01",
+   "to": "The Promised Neverland, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Rising of the Shield Hero, S01",
+   "to": "The Rising of the Shield Hero, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Rising of the Shield Hero, S02",
+   "to": "The Rising of the Shield Hero, S03",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Rising of the Shield Hero, S03",
+   "to": "The Rising of the Shield Hero, S04",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Rising of the Shield Hero, S04",
+   "to": "al:199185",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Slime Diaries",
+   "to": "That Time I Got Reincarnated as a Slime, S01",
+   "type": "PARENT"
+  },
+  {
+   "from": "The Summer Hikaru Died, S01",
+   "to": "al:199342",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "The Tatami Galaxy Specials",
+   "to": "The Tatami Galaxy",
+   "type": "PARENT"
+  },
+  {
+   "from": "The Tatami Time Machine Blues",
+   "to": "The Tatami Galaxy",
+   "type": "PARENT"
+  },
+  {
+   "from": "The Unwanted Undead Adventurer, S01",
+   "to": "al:185543",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "To Your Eternity, S01",
+   "to": "To Your Eternity, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "To Your Eternity, S02",
+   "to": "To Your Eternity, S03",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Tokyo Magnitude 8.0",
+   "to": "al:7654",
+   "type": "SUMMARY"
+  },
+  {
+   "from": "Tokyo Revengers, S01",
+   "to": "Tokyo Revengers: Christmas Showdown",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Tokyo Revengers, S01",
+   "to": "al:132467",
+   "type": "SPIN_OFF"
+  },
+  {
+   "from": "Tokyo Revengers: Christmas Showdown",
+   "to": "Tokyo Revengers: Tenjiku Arc",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Tokyo Revengers: Tenjiku Arc",
+   "to": "Tokyo Revengers: War of the Three Titan Arc",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Tokyo Revengers: War of the Three Titan Arc",
+   "to": "al:178084",
+   "type": "SPIN_OFF"
+  },
+  {
+   "from": "Tower of God, S01",
+   "to": "Tower of God, S02: Return of the Prince",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Tsukimichi -Moonlit Fantasy-, S01",
+   "to": "Tsukimichi -Moonlit Fantasy-, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Tsukimichi -Moonlit Fantasy-, S02",
+   "to": "al:178467",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Tsukimonogatari",
+   "to": "Owarimonogatari, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Vinland Saga, S01",
+   "to": "Vinland Saga, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Vinland Saga, S02: Drowning in the Shadow",
+   "to": "Vinland Saga, S02",
+   "type": "PARENT"
+  },
+  {
+   "from": "Vinland Saga, S02: Same Old Story",
+   "to": "Vinland Saga, S02",
+   "type": "PARENT"
+  },
+  {
+   "from": "Violet Evergarden",
+   "to": "Violet Evergarden: Eternity and the Auto Memory Doll",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Violet Evergarden: Eternity and the Auto Memory Doll",
+   "to": "Violet Evergarden: The Movie",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Violet Evergarden: The Day You Understand \"I Love You\" Will Surely Come",
+   "to": "Violet Evergarden",
+   "type": "PARENT"
+  },
+  {
+   "from": "Vivy: Fluorite Eye's Song",
+   "to": "al:138345",
+   "type": "ALTERNATIVE"
+  },
+  {
+   "from": "Wandering Witch: The Journey of Elaina",
+   "to": "al:205444",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Wistoria: Wand and Sword, S01",
+   "to": "Wistoria: Wand and Sword, S02",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Wistoria: Wand and Sword, S02",
+   "to": "al:213656",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Witch Hat Atelier, S01",
+   "to": "al:213702",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Wonder Egg Priority",
+   "to": "Wonder Egg Priority: My Priority",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Your Lie in April: Moments",
+   "to": "Your Lie in April",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Yukikaze",
+   "to": "al:177433",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Zoku Owarimonogatari",
+   "to": "Hanamonogatari",
+   "type": "SEQUEL"
+  },
+  {
+   "from": "Zoku Owarimonogatari",
+   "to": "Monogatari Series: Off & Monster Season",
+   "type": "SEQUEL"
+  }
+ ],
+ "unwatched": {
+  "al:100180": {
+   "title": "Girls' Weekend Class",
+   "romaji": "Shoujo Shuumatsu Jugyou",
+   "format": "ONA",
+   "episodes": 12,
+   "duration": 2,
+   "minutes": 24,
+   "year": 2017,
+   "status": "FINISHED",
+   "idMal": 36468,
+   "ptw": false
+  },
+  "al:100256": {
+   "title": "Mahoyome",
+   "romaji": "Mahoyome",
+   "format": "ONA",
+   "episodes": 25,
+   "duration": 1,
+   "minutes": 25,
+   "year": 2017,
+   "status": "FINISHED",
+   "idMal": 36502,
+   "ptw": false
+  },
+  "al:100465": {
+   "title": "Attack on Titan: The Roar of Awakening",
+   "romaji": "Shingeki no Kyojin Season 2: Kakusei no Houkou",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 120,
+   "minutes": 120,
+   "year": 2018,
+   "status": "FINISHED",
+   "idMal": 36702,
+   "ptw": false
+  },
+  "al:100729": {
+   "title": "Fate/Grand Order: Himuro no Tenchi - 7-nin no Saikyou Gijin-hen",
+   "romaji": "Fate/Grand Order: Himuro no Tenchi - 7-nin no Saikyou Gijin-hen",
+   "format": "SPECIAL",
+   "episodes": 1,
+   "duration": 14,
+   "minutes": 14,
+   "year": 2017,
+   "status": "FINISHED",
+   "idMal": 36914,
+   "ptw": false
+  },
+  "al:101083": {
+   "title": "Overlord: Ple Ple Pleiades 2",
+   "romaji": "Overlord: Ple Ple Pleiades 2",
+   "format": "ONA",
+   "episodes": 13,
+   "duration": 2,
+   "minutes": 26,
+   "year": 2018,
+   "status": "FINISHED",
+   "idMal": 37087,
+   "ptw": false
+  },
+  "al:101343": {
+   "title": "Made in Abyss: Journey's Dawn",
+   "romaji": "Made in Abyss: Tabidachi no Yoake",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 120,
+   "minutes": 120,
+   "year": 2019,
+   "status": "FINISHED",
+   "idMal": 37514,
+   "ptw": false
+  },
+  "al:101344": {
+   "title": "Made in Abyss: Wandering Twilight",
+   "romaji": "Made in Abyss: Hourou Suru Tasogare",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 110,
+   "minutes": 110,
+   "year": 2019,
+   "status": "FINISHED",
+   "idMal": 37515,
+   "ptw": false
+  },
+  "al:101811": {
+   "title": "Code Geass: Lelouch of the Rebellion I - Initiation",
+   "romaji": "Code Geass: Hangyaku no Lelouch I - Koudou",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 135,
+   "minutes": 135,
+   "year": 2017,
+   "status": "FINISHED",
+   "idMal": 34438,
+   "ptw": false
+  },
+  "al:101813": {
+   "title": "Code Geass: Lelouch of the Rebellion III - Glorification",
+   "romaji": "Code Geass: Hangyaku no Lelouch III - Oudou",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 141,
+   "minutes": 141,
+   "year": 2018,
+   "status": "FINISHED",
+   "idMal": 34440,
+   "ptw": false
+  },
+  "al:10218": {
+   "title": "Berserk: The Golden Age Arc I - The Egg of the King",
+   "romaji": "Berserk: Ougon Jidai-hen I - Haou no Tamago",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 76,
+   "minutes": 76,
+   "year": 2012,
+   "status": "FINISHED",
+   "idMal": 10218,
+   "ptw": false
+  },
+  "al:103209": {
+   "title": "Overlord: Ple Ple Pleiades 3",
+   "romaji": "Overlord: Ple Ple Pleiades 3",
+   "format": "ONA",
+   "episodes": 13,
+   "duration": 2,
+   "minutes": 26,
+   "year": 2018,
+   "status": "FINISHED",
+   "idMal": 37781,
+   "ptw": false
+  },
+  "al:10390": {
+   "title": ".hack//Quantum: Kantamu Eizou Tokuten Sore Ike! Bokura no Chim Chim-chan!!",
+   "romaji": ".hack//Quantum: Kantamu Eizou Tokuten Sore Ike! Bokura no Chim Chim-chan!!",
+   "format": "SPECIAL",
+   "episodes": 3,
+   "duration": 3,
+   "minutes": 9,
+   "year": 2011,
+   "status": "FINISHED",
+   "idMal": 10390,
+   "ptw": false
+  },
+  "al:104434": {
+   "title": "Koyomi History",
+   "romaji": "Koyomi History",
+   "format": "OVA",
+   "episodes": 1,
+   "duration": 4,
+   "minutes": 4,
+   "year": 2016,
+   "status": "FINISHED",
+   "idMal": 37139,
+   "ptw": false
+  },
+  "al:107342": {
+   "title": "Ano Hi Mita Hana no Namae wo Bokutachi wa Mada Shiranai.: Menma e no Tegami",
+   "romaji": "Ano Hi Mita Hana no Namae wo Bokutachi wa Mada Shiranai.: Menma e no Tegami",
+   "format": "SPECIAL",
+   "episodes": 1,
+   "duration": 12,
+   "minutes": 12,
+   "year": 2012,
+   "status": "FINISHED",
+   "idMal": 38963,
+   "ptw": false
+  },
+  "al:10842": {
+   "title": "Hagane no Renkinjutsushi: Milos no Seinaru Hoshi Tokubetsu Eizou",
+   "romaji": "Hagane no Renkinjutsushi: Milos no Seinaru Hoshi Tokubetsu Eizou",
+   "format": "SPECIAL",
+   "episodes": 4,
+   "duration": 4,
+   "minutes": 16,
+   "year": 2011,
+   "status": "FINISHED",
+   "idMal": 10842,
+   "ptw": false
+  },
+  "al:110286": {
+   "title": "Daitai 3-pun de Wakaru .hack History",
+   "romaji": "Daitai 3-pun de Wakaru .hack History",
+   "format": "ONA",
+   "episodes": 1,
+   "duration": 5,
+   "minutes": 5,
+   "year": 2017,
+   "status": "FINISHED",
+   "idMal": 36646,
+   "ptw": false
+  },
+  "al:110318": {
+   "title": "Squishy! Black Clover",
+   "romaji": "Mugyutto! Black Clover",
+   "format": "ONA",
+   "episodes": 8,
+   "duration": 8,
+   "minutes": 64,
+   "year": 2019,
+   "status": "FINISHED",
+   "idMal": 40031,
+   "ptw": false
+  },
+  "al:112151": {
+   "title": "Demon Slayer -Kimetsu no Yaiba- The Movie: Mugen Train",
+   "romaji": "Kimetsu no Yaiba: Mugen Ressha-hen",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 117,
+   "minutes": 117,
+   "year": 2020,
+   "status": "FINISHED",
+   "idMal": 40456,
+   "ptw": false
+  },
+  "al:112900": {
+   "title": "Code Geass: Hangyaku no Lelouch Picture Drama - Kiseki no Anniversary",
+   "romaji": "Code Geass: Hangyaku no Lelouch Picture Drama - Kiseki no Anniversary",
+   "format": "SPECIAL",
+   "episodes": 1,
+   "duration": 16,
+   "minutes": 16,
+   "year": 2017,
+   "status": "FINISHED",
+   "idMal": 40334,
+   "ptw": false
+  },
+  "al:114744": {
+   "title": "Marulk's Daily Life",
+   "romaji": "Marulk-chan no Nichijou",
+   "format": "SPECIAL",
+   "episodes": 4,
+   "duration": 4,
+   "minutes": 16,
+   "year": 2020,
+   "status": "FINISHED",
+   "idMal": 40897,
+   "ptw": false
+  },
+  "al:117408": {
+   "title": "Code Geass: Fukkatsu no Lelouch Picture Drama",
+   "romaji": "Code Geass: Fukkatsu no Lelouch Picture Drama",
+   "format": "SPECIAL",
+   "episodes": 2,
+   "duration": 9,
+   "minutes": 18,
+   "year": 2019,
+   "status": "FINISHED",
+   "idMal": 40315,
+   "ptw": false
+  },
+  "al:119113": {
+   "title": "Attack on Titan ~Chronicle~",
+   "romaji": "Shingeki no Kyojin: Chronicle",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 120,
+   "minutes": 120,
+   "year": 2020,
+   "status": "FINISHED",
+   "idMal": 42091,
+   "ptw": false
+  },
+  "al:11977": {
+   "title": "Puella Magi Madoka Magica the Movie Part 1: Beginnings",
+   "romaji": "Mahou Shoujo Madoka☆Magica: Hajimari no Monogatari",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 130,
+   "minutes": 130,
+   "year": 2012,
+   "status": "FINISHED",
+   "idMal": 11977,
+   "ptw": false
+  },
+  "al:11979": {
+   "title": "Puella Magi Madoka Magica the Movie Part 2: Eternal",
+   "romaji": "Mahou Shoujo Madoka☆Magica: Eien no Monogatari",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 109,
+   "minutes": 109,
+   "year": 2012,
+   "status": "FINISHED",
+   "idMal": 11979,
+   "ptw": false
+  },
+  "al:120700": {
+   "title": "Re:Zero kara Hajimeru Kyuukei Jikan (Break Time) 2nd Season",
+   "romaji": "Re:Zero kara Hajimeru Kyuukei Jikan (Break Time) 2nd Season",
+   "format": "ONA",
+   "episodes": 13,
+   "duration": 3,
+   "minutes": 39,
+   "year": 2020,
+   "status": "FINISHED",
+   "idMal": 42364,
+   "ptw": false
+  },
+  "al:121": {
+   "title": "Fullmetal Alchemist",
+   "romaji": "Hagane no Renkinjutsushi",
+   "format": "TV",
+   "episodes": 51,
+   "duration": 25,
+   "minutes": 1275,
+   "year": 2003,
+   "status": "FINISHED",
+   "idMal": 121,
+   "ptw": false
+  },
+  "al:12113": {
+   "title": "Berserk: The Golden Age Arc II - The Battle for Doldrey",
+   "romaji": "Berserk: Ougon Jidai-hen II - Doldrey Kouryaku",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 92,
+   "minutes": 92,
+   "year": 2012,
+   "status": "FINISHED",
+   "idMal": 12113,
+   "ptw": false
+  },
+  "al:12115": {
+   "title": "Berserk: The Golden Age Arc III - The Advent",
+   "romaji": "Berserk: Ougon Jidai-hen III - Kourin",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 110,
+   "minutes": 110,
+   "year": 2013,
+   "status": "FINISHED",
+   "idMal": 12115,
+   "ptw": false
+  },
+  "al:12503": {
+   "title": "The Future Diary: Ura Mirai Nikki",
+   "romaji": "Mirai Nikki: Ura Mirai Nikki",
+   "format": "SPECIAL",
+   "episodes": 10,
+   "duration": 2,
+   "minutes": 20,
+   "year": 2012,
+   "status": "FINISHED",
+   "idMal": 12503,
+   "ptw": false
+  },
+  "al:12565": {
+   "title": "Fate/Prototype",
+   "romaji": "Fate/Prototype",
+   "format": "OVA",
+   "episodes": 1,
+   "duration": 12,
+   "minutes": 12,
+   "year": 2011,
+   "status": "FINISHED",
+   "idMal": 12565,
+   "ptw": false
+  },
+  "al:126830": {
+   "title": "Code Geass: Rozé of the Recapture",
+   "romaji": "Code Geass: Dakkan no Rozé",
+   "format": "ONA",
+   "episodes": 12,
+   "duration": 24,
+   "minutes": 288,
+   "year": 2024,
+   "status": "FINISHED",
+   "idMal": 56835,
+   "ptw": false
+  },
+  "al:128306": {
+   "title": "Re:Zero kara Hajimeru Kyuukei Jikan (Break Time) 2nd Season Part 2",
+   "romaji": "Re:Zero kara Hajimeru Kyuukei Jikan (Break Time) 2nd Season Part 2",
+   "format": "ONA",
+   "episodes": 12,
+   "duration": 3,
+   "minutes": 36,
+   "year": 2021,
+   "status": "FINISHED",
+   "idMal": null,
+   "ptw": false
+  },
+  "al:132232": {
+   "title": "RE:cycle of the PENGUINDRUM Part 1: Your Train Is the Survival Tactic",
+   "romaji": "RE:cycle of the PENGUINDRUM: Zenpen - Kimi no Ressha wa Seizon Senryaku",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 124,
+   "minutes": 124,
+   "year": 2022,
+   "status": "FINISHED",
+   "idMal": 48624,
+   "ptw": false
+  },
+  "al:132317": {
+   "title": "Code Geass: Hangyaku no Lelouch R2 Picture Drama TURN 12.06 - Last Moratorium",
+   "romaji": "Code Geass: Hangyaku no Lelouch R2 Picture Drama TURN 12.06 - Last Moratorium",
+   "format": "SPECIAL",
+   "episodes": 1,
+   "duration": 11,
+   "minutes": 11,
+   "year": 2014,
+   "status": "FINISHED",
+   "idMal": 33156,
+   "ptw": false
+  },
+  "al:132467": {
+   "title": "Tokyo Revengers: Chibi Reve",
+   "romaji": "Tokyo Revengers: Chibi Reve",
+   "format": "ONA",
+   "episodes": 24,
+   "duration": 2,
+   "minutes": 48,
+   "year": 2021,
+   "status": "FINISHED",
+   "idMal": 48735,
+   "ptw": false
+  },
+  "al:13263": {
+   "title": "Fate/Zero: Please! Einzbern Counseling Room",
+   "romaji": "Fate/Zero: Onegai! Einzbern Soudanshitsu",
+   "format": "SPECIAL",
+   "episodes": 6,
+   "duration": 15,
+   "minutes": 90,
+   "year": 2012,
+   "status": "FINISHED",
+   "idMal": 13263,
+   "ptw": false
+  },
+  "al:133007": {
+   "title": "Puella Magi Madoka Magica the Movie -Walpurgisnacht: Rising-",
+   "romaji": "Mahou Shoujo Madoka☆Magica: Walpurgis no Kaiten",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 120,
+   "minutes": 120,
+   "year": 2026,
+   "status": "FINISHED",
+   "idMal": 48820,
+   "ptw": false
+  },
+  "al:13429": {
+   "title": "Patema Inverted: Beginning of the Day",
+   "romaji": "Sakasama no Patema: Beginning of the Day",
+   "format": "SPECIAL",
+   "episodes": 4,
+   "duration": 6,
+   "minutes": 24,
+   "year": 2012,
+   "status": "FINISHED",
+   "idMal": 13429,
+   "ptw": false
+  },
+  "al:138260": {
+   "title": "Link Click: Troubles of Ordinary People",
+   "romaji": "Shiguang Dailiren: Xiaoyao Sanren De Weituo",
+   "format": "ONA",
+   "episodes": 1,
+   "duration": 16,
+   "minutes": 16,
+   "year": 2021,
+   "status": "FINISHED",
+   "idMal": 49652,
+   "ptw": false
+  },
+  "al:138345": {
+   "title": "Vivy: Fluorite Eye’s Song - PILOT MOVIE",
+   "romaji": "Vivy: Fluorite Eye’s Song - PILOT MOVIE",
+   "format": "SPECIAL",
+   "episodes": 1,
+   "duration": 2,
+   "minutes": 2,
+   "year": 2021,
+   "status": "FINISHED",
+   "idMal": 49681,
+   "ptw": false
+  },
+  "al:140175": {
+   "title": "LINK CLICK (Shorts)",
+   "romaji": "Shiguang Dailiren: Xiao Juchang",
+   "format": "ONA",
+   "episodes": 18,
+   "duration": 6,
+   "minutes": 108,
+   "year": 2021,
+   "status": "FINISHED",
+   "idMal": 50105,
+   "ptw": false
+  },
+  "al:143663": {
+   "title": "Bakemonogatari PV",
+   "romaji": "Bakemonogatari PV",
+   "format": "SPECIAL",
+   "episodes": 1,
+   "duration": 3,
+   "minutes": 3,
+   "year": 2022,
+   "status": "FINISHED",
+   "idMal": 51068,
+   "ptw": false
+  },
+  "al:146503": {
+   "title": "Tensei Shitara Slime Datta Ken: Sukuwareru Ramiris",
+   "romaji": "Tensei Shitara Slime Datta Ken: Sukuwareru Ramiris",
+   "format": "ONA",
+   "episodes": 2,
+   "duration": 3,
+   "minutes": 6,
+   "year": 2022,
+   "status": "FINISHED",
+   "idMal": 51309,
+   "ptw": false
+  },
+  "al:146609": {
+   "title": "Dead Dead Demon's Dededededestruction Zenshou",
+   "romaji": "Dead Dead Demon's Dededededestruction Zenshou",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 120,
+   "minutes": 120,
+   "year": 2024,
+   "status": "FINISHED",
+   "idMal": 51358,
+   "ptw": false
+  },
+  "al:148179": {
+   "title": "RE:cycle of the PENGUINDRUM Part 2 I Love You",
+   "romaji": "RE:cycle of the PENGUINDRUM: Kouhen - Boku wa Kimi wo Aishiteru",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 142,
+   "minutes": 142,
+   "year": 2022,
+   "status": "FINISHED",
+   "idMal": null,
+   "ptw": false
+  },
+  "al:14829": {
+   "title": "Fate/kaleid liner Prisma☆Illya",
+   "romaji": "Fate/kaleid liner Prisma☆Illya",
+   "format": "ONA",
+   "episodes": 10,
+   "duration": 24,
+   "minutes": 240,
+   "year": 2013,
+   "status": "FINISHED",
+   "idMal": 14829,
+   "ptw": false
+  },
+  "al:149099": {
+   "title": "Mahoutsukai Reimeiki Mini Anime",
+   "romaji": "Mahoutsukai Reimeiki Mini Anime",
+   "format": "ONA",
+   "episodes": 20,
+   "duration": 2,
+   "minutes": 40,
+   "year": 2022,
+   "status": "FINISHED",
+   "idMal": 51349,
+   "ptw": false
+  },
+  "al:15039": {
+   "title": "Anohana the Movie: The Flower We Saw That Day",
+   "romaji": "Ano Hi Mita Hana no Namae wo Bokutachi wa Mada Shiranai. Movie",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 99,
+   "minutes": 99,
+   "year": 2013,
+   "status": "FINISHED",
+   "idMal": 15039,
+   "ptw": false
+  },
+  "al:150583": {
+   "title": "Yofukashi no Uta Mini",
+   "romaji": "Yofukashi no Uta Mini",
+   "format": "ONA",
+   "episodes": 22,
+   "duration": 1,
+   "minutes": 22,
+   "year": 2022,
+   "status": "FINISHED",
+   "idMal": 52015,
+   "ptw": false
+  },
+  "al:151640": {
+   "title": "Sword Art Online Fatal Bullet -The Third Episode- Pilot-ban",
+   "romaji": "Sword Art Online Fatal Bullet -The Third Episode- Pilot-ban",
+   "format": "ONA",
+   "episodes": 1,
+   "duration": 3,
+   "minutes": 3,
+   "year": 2018,
+   "status": "FINISHED",
+   "idMal": 37278,
+   "ptw": false
+  },
+  "al:151898": {
+   "title": "Overlord: Ple Ple Pleiades 4",
+   "romaji": "Overlord: Ple Ple Pleiades 4",
+   "format": "ONA",
+   "episodes": 13,
+   "duration": 2,
+   "minutes": 26,
+   "year": 2022,
+   "status": "FINISHED",
+   "idMal": 48897,
+   "ptw": false
+  },
+  "al:153791": {
+   "title": "Made in Abyss: Retsujitsu no Ougonkyou - Papa to Issho",
+   "romaji": "Made in Abyss: Retsujitsu no Ougonkyou - Papa to Issho",
+   "format": "SPECIAL",
+   "episodes": 1,
+   "duration": 7,
+   "minutes": 7,
+   "year": 2022,
+   "status": "FINISHED",
+   "idMal": 52149,
+   "ptw": false
+  },
+  "al:155399": {
+   "title": "EVANGELION:3.0 (-46h)",
+   "romaji": "EVANGELION:3.0 (-46h)",
+   "format": "OVA",
+   "episodes": 1,
+   "duration": 11,
+   "minutes": 11,
+   "year": 2023,
+   "status": "FINISHED",
+   "idMal": 53246,
+   "ptw": false
+  },
+  "al:156001": {
+   "title": "Em-Shade! Shorts",
+   "romaji": "Kage-Jitsu!",
+   "format": "ONA",
+   "episodes": 17,
+   "duration": 2,
+   "minutes": 34,
+   "year": 2022,
+   "status": "FINISHED",
+   "idMal": 53406,
+   "ptw": false
+  },
+  "al:15617": {
+   "title": "Humanity Has Declined Specials",
+   "romaji": "Jinrui wa Suitai Shimashita Specials",
+   "format": "SPECIAL",
+   "episodes": 6,
+   "duration": 2,
+   "minutes": 12,
+   "year": 2012,
+   "status": "FINISHED",
+   "idMal": 15617,
+   "ptw": false
+  },
+  "al:156631": {
+   "title": "Sword Art Online: Integral Domain",
+   "romaji": "Sword Art Online: Integral Domain",
+   "format": "MOVIE",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": 2028,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 53529,
+   "ptw": false
+  },
+  "al:15811": {
+   "title": "Girls und Panzer OVA Series",
+   "romaji": "Girls und Panzer Specials",
+   "format": "SPECIAL",
+   "episodes": 6,
+   "duration": 12,
+   "minutes": 72,
+   "year": 2012,
+   "status": "FINISHED",
+   "idMal": 15811,
+   "ptw": false
+  },
+  "al:1598": {
+   "title": "Casshan: Robot Hunter",
+   "romaji": "Casshern",
+   "format": "OVA",
+   "episodes": 4,
+   "duration": 27,
+   "minutes": 108,
+   "year": 1993,
+   "status": "FINISHED",
+   "idMal": 1598,
+   "ptw": false
+  },
+  "al:160275": {
+   "title": "Made in Abyss: Mezameru Shinpi",
+   "romaji": "Made in Abyss: Mezameru Shinpi",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": null,
+   "minutes": null,
+   "year": 2026,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 54250,
+   "ptw": false
+  },
+  "al:162314": {
+   "title": "Attack on Titan Final Season THE FINAL CHAPTERS Special 2",
+   "romaji": "Shingeki no Kyojin: The Final Season - Kanketsu-hen Kouhen",
+   "format": "SPECIAL",
+   "episodes": 1,
+   "duration": 85,
+   "minutes": 85,
+   "year": 2023,
+   "status": "FINISHED",
+   "idMal": null,
+   "ptw": false
+  },
+  "al:165253": {
+   "title": "BOCCHI THE ROCK! Recap Part 1",
+   "romaji": "Bocchi the Rock! Re:",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 92,
+   "minutes": 92,
+   "year": 2024,
+   "status": "FINISHED",
+   "idMal": 55357,
+   "ptw": false
+  },
+  "al:166035": {
+   "title": "Overlord: Ple Ple Pleiades Tokubetsu-hen",
+   "romaji": "Overlord: Ple Ple Pleiades Tokubetsu-hen",
+   "format": "ONA",
+   "episodes": 1,
+   "duration": 5,
+   "minutes": 5,
+   "year": 2015,
+   "status": "FINISHED",
+   "idMal": 51168,
+   "ptw": false
+  },
+  "al:169749": {
+   "title": "Mattari Kaisetsu: Boushoku no Berserk",
+   "romaji": "Mattari Kaisetsu: Boushoku no Berserk",
+   "format": "ONA",
+   "episodes": 6,
+   "duration": 3,
+   "minutes": 18,
+   "year": 2023,
+   "status": "FINISHED",
+   "idMal": 56758,
+   "ptw": false
+  },
+  "al:169750": {
+   "title": "Shangri-La Frontier Mini Anime",
+   "romaji": "Shangri-La Frontier Mini Anime",
+   "format": "ONA",
+   "episodes": 9,
+   "duration": 2,
+   "minutes": 18,
+   "year": 2023,
+   "status": "FINISHED",
+   "idMal": 56791,
+   "ptw": false
+  },
+  "al:169929": {
+   "title": "Em-Shade! Shorts Season 2",
+   "romaji": "Kage-Jitsu! 2nd",
+   "format": "TV_SHORT",
+   "episodes": 12,
+   "duration": 2,
+   "minutes": 24,
+   "year": 2023,
+   "status": "FINISHED",
+   "idMal": 56842,
+   "ptw": false
+  },
+  "al:170068": {
+   "title": "Sousou no Frieren: ●● no Mahou",
+   "romaji": "Sousou no Frieren: ●● no Mahou",
+   "format": "ONA",
+   "episodes": 12,
+   "duration": 1,
+   "minutes": 12,
+   "year": 2023,
+   "status": "FINISHED",
+   "idMal": 56885,
+   "ptw": false
+  },
+  "al:170508": {
+   "title": "Maomao no Hitorigoto",
+   "romaji": "Maomao no Hitorigoto",
+   "format": "ONA",
+   "episodes": 24,
+   "duration": 2,
+   "minutes": 48,
+   "year": 2023,
+   "status": "FINISHED",
+   "idMal": 56975,
+   "ptw": false
+  },
+  "al:170816": {
+   "title": "Ginga Eiyuu Densetsu: Die Neue These (Zoku-hen)",
+   "romaji": "Ginga Eiyuu Densetsu: Die Neue These (Zoku-hen)",
+   "format": null,
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": null,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 57071,
+   "ptw": false
+  },
+  "al:171099": {
+   "title": "BOCCHI THE ROCK! Recap Part 2",
+   "romaji": "Bocchi the Rock! Re:Re:",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 77,
+   "minutes": 77,
+   "year": 2024,
+   "status": "FINISHED",
+   "idMal": null,
+   "ptw": false
+  },
+  "al:171952": {
+   "title": "Kage no Jitsuryokusha ni Naritakute!: Zankyou-hen",
+   "romaji": "Kage no Jitsuryokusha ni Naritakute!: Zankyou-hen",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": null,
+   "minutes": null,
+   "year": 2027,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 57584,
+   "ptw": false
+  },
+  "al:17277": {
+   "title": "Code Geass: Oz the Reflection Picture Drama",
+   "romaji": "Code Geass: Soubou no Oz Picture Drama",
+   "format": "OVA",
+   "episodes": 1,
+   "duration": 21,
+   "minutes": 21,
+   "year": 2013,
+   "status": "FINISHED",
+   "idMal": 17277,
+   "ptw": false
+  },
+  "al:176218": {
+   "title": "Dead Dead Demon's Dededededestruction Koushou",
+   "romaji": "Dead Dead Demon's Dededededestruction Koushou",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 120,
+   "minutes": 120,
+   "year": 2024,
+   "status": "FINISHED",
+   "idMal": null,
+   "ptw": false
+  },
+  "al:177433": {
+   "title": "Sentou Yousei Yukikaze: Experimental Movie",
+   "romaji": "Sentou Yousei Yukikaze: Experimental Movie",
+   "format": "OVA",
+   "episodes": 1,
+   "duration": 5,
+   "minutes": 5,
+   "year": 2008,
+   "status": "FINISHED",
+   "idMal": 51954,
+   "ptw": false
+  },
+  "al:178031": {
+   "title": "Delicious in Dungeon Season 2",
+   "romaji": "Dungeon Meshi 2nd Season",
+   "format": "ONA",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": 2027,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 59068,
+   "ptw": false
+  },
+  "al:178084": {
+   "title": "Douwa Revengers",
+   "romaji": "Douwa Revengers",
+   "format": "ONA",
+   "episodes": 18,
+   "duration": 3,
+   "minutes": 54,
+   "year": 2024,
+   "status": "FINISHED",
+   "idMal": 59091,
+   "ptw": false
+  },
+  "al:178467": {
+   "title": "Tsuki ga Michibiku Isekai Douchuu 3rd Season",
+   "romaji": "Tsuki ga Michibiku Isekai Douchuu 3rd Season",
+   "format": "TV",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": null,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 59139,
+   "ptw": false
+  },
+  "al:179998": {
+   "title": "Kaiju No. 8: Mission Recon",
+   "romaji": "Kaijuu 8-gou Movie",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 120,
+   "minutes": 120,
+   "year": 2025,
+   "status": "FINISHED",
+   "idMal": 59489,
+   "ptw": false
+  },
+  "al:181951": {
+   "title": "Ookami to Koushinryou: MERCHANT MEETS THE WISE WOLF 2nd Season",
+   "romaji": "Ookami to Koushinryou: MERCHANT MEETS THE WISE WOLF 2nd Season",
+   "format": "TV",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": 2027,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 59928,
+   "ptw": false
+  },
+  "al:181970": {
+   "title": "KIZUMONOGATARI -Koyomi Vamp-",
+   "romaji": "Kizumonogatari: Koyomi Vamp",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 144,
+   "minutes": 144,
+   "year": 2024,
+   "status": "FINISHED",
+   "idMal": 56609,
+   "ptw": false
+  },
+  "al:182417": {
+   "title": "Re:Zero kara Hajimeru Kyuukei Jikan (Break Time) 3rd Season",
+   "romaji": "Re:Zero kara Hajimeru Kyuukei Jikan (Break Time) 3rd Season",
+   "format": "ONA",
+   "episodes": 16,
+   "duration": 3,
+   "minutes": 48,
+   "year": 2024,
+   "status": "FINISHED",
+   "idMal": 60012,
+   "ptw": false
+  },
+  "al:183885": {
+   "title": "Kagami no Kojou no Mae to Ato",
+   "romaji": "Kagami no Kojou no Mae to Ato",
+   "format": "SPECIAL",
+   "episodes": 1,
+   "duration": 2,
+   "minutes": 2,
+   "year": 2023,
+   "status": "FINISHED",
+   "idMal": 58628,
+   "ptw": false
+  },
+  "al:184694": {
+   "title": "Solo Leveling -ReAwakening-",
+   "romaji": "Ore dake Level Up na Ken: ReAwakening",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 114,
+   "minutes": 114,
+   "year": 2024,
+   "status": "FINISHED",
+   "idMal": 59841,
+   "ptw": false
+  },
+  "al:185543": {
+   "title": "Nozomanu Fushi no Boukensha 2nd Season",
+   "romaji": "Nozomanu Fushi no Boukensha 2nd Season",
+   "format": "ONA",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": null,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 60525,
+   "ptw": false
+  },
+  "al:186148": {
+   "title": "Maomao no Hitorigoto 2nd Season",
+   "romaji": "Maomao no Hitorigoto 2nd Season",
+   "format": "ONA",
+   "episodes": 24,
+   "duration": 2,
+   "minutes": 48,
+   "year": 2025,
+   "status": "FINISHED",
+   "idMal": 60749,
+   "ptw": false
+  },
+  "al:18619": {
+   "title": "Girls und Panzer: This is the Real Anzio Battle!",
+   "romaji": "Girls und Panzer: Kore ga Hontou no Anzio-sen Desu!",
+   "format": "OVA",
+   "episodes": 1,
+   "duration": 38,
+   "minutes": 38,
+   "year": 2014,
+   "status": "FINISHED",
+   "idMal": 18619,
+   "ptw": false
+  },
+  "al:186300": {
+   "title": "minute! Kaiju No. 8",
+   "romaji": "minute! kaiju no. 8",
+   "format": "ONA",
+   "episodes": 31,
+   "duration": 2,
+   "minutes": 62,
+   "year": 2024,
+   "status": "FINISHED",
+   "idMal": 60480,
+   "ptw": false
+  },
+  "al:186540": {
+   "title": "Tengoku Daimakyou PV",
+   "romaji": "Tengoku Daimakyou PV",
+   "format": "ONA",
+   "episodes": 1,
+   "duration": 1,
+   "minutes": 1,
+   "year": 2018,
+   "status": "FINISHED",
+   "idMal": 55527,
+   "ptw": false
+  },
+  "al:186712": {
+   "title": "Bocchi the Rock! 2nd Season",
+   "romaji": "Bocchi the Rock! 2nd Season",
+   "format": "TV",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": null,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 61006,
+   "ptw": false
+  },
+  "al:187924": {
+   "title": "Kono Subarashii Sekai ni Shukufuku wo! 4",
+   "romaji": "Kono Subarashii Sekai ni Shukufuku wo! 4",
+   "format": "TV",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": 2027,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 61203,
+   "ptw": false
+  },
+  "al:188034": {
+   "title": "Girls und Panzer: Motto Love Love Sakusen desu!",
+   "romaji": "Girls und Panzer: Motto Love Love Sakusen desu!",
+   "format": "MOVIE",
+   "episodes": 4,
+   "duration": 72,
+   "minutes": 288,
+   "year": 2025,
+   "status": "FINISHED",
+   "idMal": 61227,
+   "ptw": false
+  },
+  "al:189323": {
+   "title": "Shangri-La Frontier Season 3",
+   "romaji": "Shangri-La Frontier 3rd Season",
+   "format": "TV",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": 2027,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 61338,
+   "ptw": false
+  },
+  "al:189513": {
+   "title": "Sousou no Frieren: ●● no Mahou Part 2",
+   "romaji": "Sousou no Frieren: ●● no Mahou Part 2",
+   "format": "ONA",
+   "episodes": 6,
+   "duration": 1,
+   "minutes": 6,
+   "year": 2025,
+   "status": "FINISHED",
+   "idMal": null,
+   "ptw": false
+  },
+  "al:192809": {
+   "title": "JUJUTSU KAISEN: Hidden Inventory / Premature Death – The Movie",
+   "romaji": "Jujutsu Kaisen: Kaigyoku・Gyokusetsu",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 111,
+   "minutes": 111,
+   "year": 2025,
+   "status": "FINISHED",
+   "idMal": 59654,
+   "ptw": false
+  },
+  "al:195200": {
+   "title": "Demon Slayer: Kimetsu no Yaiba Infinity Castle Part 2",
+   "romaji": "Kimetsu no Yaiba: Mugenjou-hen Movie 2",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": null,
+   "minutes": null,
+   "year": null,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 62546,
+   "ptw": false
+  },
+  "al:1953": {
+   "title": "Code Geass: Hangyaku no Lelouch Picture Drama",
+   "romaji": "Code Geass: Hangyaku no Lelouch Picture Drama",
+   "format": "SPECIAL",
+   "episodes": 9,
+   "duration": 4,
+   "minutes": 36,
+   "year": 2007,
+   "status": "FINISHED",
+   "idMal": 1953,
+   "ptw": false
+  },
+  "al:195448": {
+   "title": "Monogatari Series: Off & Monster Season Shin Episode",
+   "romaji": "Monogatari Series: Off & Monster Season Shin Episode",
+   "format": null,
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": 2026,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 61968,
+   "ptw": false
+  },
+  "al:195496": {
+   "title": "GATE 2: Jieitai Kano Umi nite, Kaku Tatakaeri",
+   "romaji": "GATE 2: Jieitai Kano Umi nite, Kaku Tatakaeri",
+   "format": "TV",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": 2027,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 61973,
+   "ptw": false
+  },
+  "al:19581": {
+   "title": "Houseki no Kuni PV",
+   "romaji": "Houseki no Kuni PV",
+   "format": "ONA",
+   "episodes": 1,
+   "duration": 2,
+   "minutes": 2,
+   "year": 2013,
+   "status": "FINISHED",
+   "idMal": 19581,
+   "ptw": false
+  },
+  "al:198726": {
+   "title": "Chainsaw Days",
+   "romaji": "Chainsaw Biyori",
+   "format": "ONA",
+   "episodes": 5,
+   "duration": 1,
+   "minutes": 5,
+   "year": 2025,
+   "status": "FINISHED",
+   "idMal": null,
+   "ptw": false
+  },
+  "al:199185": {
+   "title": "Tate no Yuusha no Nariagari Season 5",
+   "romaji": "Tate no Yuusha no Nariagari Season 5",
+   "format": "TV",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": 2027,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 62564,
+   "ptw": false
+  },
+  "al:199340": {
+   "title": "Rascal Does Not Dream of a Dear Friend",
+   "romaji": "Seishun Buta Yarou wa Dear Friend no Yume wo Minai",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": null,
+   "minutes": null,
+   "year": 2026,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 62582,
+   "ptw": false
+  },
+  "al:199342": {
+   "title": "Hikaru ga Shinda Natsu 2nd Season",
+   "romaji": "Hikaru ga Shinda Natsu 2nd Season",
+   "format": "TV",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": null,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 62584,
+   "ptw": false
+  },
+  "al:1994": {
+   "title": ".hack//Legend of the Twilight Offline Meeting Special",
+   "romaji": ".hack//Tasogare no Udewa Densetsu - Offline de Aimashou",
+   "format": "SPECIAL",
+   "episodes": 1,
+   "duration": 20,
+   "minutes": 20,
+   "year": 2003,
+   "status": "FINISHED",
+   "idMal": 1994,
+   "ptw": false
+  },
+  "al:20021": {
+   "title": "Sword Art Online EXTRA EDITION",
+   "romaji": "Sword Art Online: Extra Edition",
+   "format": "SPECIAL",
+   "episodes": 1,
+   "duration": 101,
+   "minutes": 101,
+   "year": 2013,
+   "status": "FINISHED",
+   "idMal": 20021,
+   "ptw": false
+  },
+  "al:200927": {
+   "title": "Kusuriya no Hitorigoto 3rd Season Part 2",
+   "romaji": "Kusuriya no Hitorigoto 3rd Season Part 2",
+   "format": "TV",
+   "episodes": 12,
+   "duration": null,
+   "minutes": null,
+   "year": 2027,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 62841,
+   "ptw": false
+  },
+  "al:204066": {
+   "title": "JUJUTSU KAISEN: Execution -Shibuya Incident x The Culling Game Begins-",
+   "romaji": "Jujutsu Kaisen: Shibuya Jihen Tokubetsu Henshuu-ban x Shimetsu Kaiyuu Senkou Jouei",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 88,
+   "minutes": 88,
+   "year": 2025,
+   "status": "FINISHED",
+   "idMal": 62392,
+   "ptw": false
+  },
+  "al:204362": {
+   "title": "Kaijuu 8-gou: Kanketsu-hen",
+   "romaji": "Kaijuu 8-gou: Kanketsu-hen",
+   "format": null,
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": null,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 63136,
+   "ptw": false
+  },
+  "al:204429": {
+   "title": "Chainsaw Man: Shikaku-hen",
+   "romaji": "Chainsaw Man: Shikaku-hen",
+   "format": null,
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": null,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 63143,
+   "ptw": false
+  },
+  "al:205375": {
+   "title": "Long Zu 3",
+   "romaji": "Long Zu 3",
+   "format": "ONA",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": 2028,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 63235,
+   "ptw": false
+  },
+  "al:205444": {
+   "title": "Majo no Tabitabi Movie",
+   "romaji": "Majo no Tabitabi Movie",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": null,
+   "minutes": null,
+   "year": null,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 63253,
+   "ptw": false
+  },
+  "al:20566": {
+   "title": "The Disappearance of Nagato Yuki-chan",
+   "romaji": "Nagato Yuki-chan no Shoushitsu",
+   "format": "TV",
+   "episodes": 16,
+   "duration": 24,
+   "minutes": 384,
+   "year": 2015,
+   "status": "FINISHED",
+   "idMal": 26351,
+   "ptw": false
+  },
+  "al:20609": {
+   "title": "Magi: Adventure of Sinbad (OVA)",
+   "romaji": "Magi: Sinbad no Bouken OVA",
+   "format": "OVA",
+   "episodes": 5,
+   "duration": 25,
+   "minutes": 125,
+   "year": 2014,
+   "status": "FINISHED",
+   "idMal": 22097,
+   "ptw": false
+  },
+  "al:206425": {
+   "title": "Sousou no Frieren: ●● no Mahou Part 3",
+   "romaji": "Sousou no Frieren: ●● no Mahou Part 3",
+   "format": "ONA",
+   "episodes": 6,
+   "duration": 1,
+   "minutes": 6,
+   "year": 2026,
+   "status": "FINISHED",
+   "idMal": null,
+   "ptw": false
+  },
+  "al:206874": {
+   "title": "Guimi Zhi Zhu: Wu Mian Ren Pian",
+   "romaji": "Guimi Zhi Zhu: Wu Mian Ren Pian",
+   "format": "ONA",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": 2027,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 63632,
+   "ptw": false
+  },
+  "al:206875": {
+   "title": "Lord of Mysteries: Chibi Theatre",
+   "romaji": "Guimi Zhi Zhu: Caidan",
+   "format": "ONA",
+   "episodes": 9,
+   "duration": 2,
+   "minutes": 18,
+   "year": 2025,
+   "status": "FINISHED",
+   "idMal": 62286,
+   "ptw": false
+  },
+  "al:20691": {
+   "title": "Attack on Titan Part I: Crimson Bow and Arrow",
+   "romaji": "Shingeki no Kyojin Zenpen: Guren no Yumiya",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 118,
+   "minutes": 118,
+   "year": 2014,
+   "status": "FINISHED",
+   "idMal": 23775,
+   "ptw": false
+  },
+  "al:20692": {
+   "title": "Attack on Titan Part II: Wings of Freedom",
+   "romaji": "Shingeki no Kyojin Kouhen: Jiyuu no Tsubasa",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 120,
+   "minutes": 120,
+   "year": 2015,
+   "status": "FINISHED",
+   "idMal": 23777,
+   "ptw": false
+  },
+  "al:207385": {
+   "title": "Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka VI",
+   "romaji": "Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka VI",
+   "format": "TV",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": null,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 63442,
+   "ptw": false
+  },
+  "al:20769": {
+   "title": "No Game No Life Specials",
+   "romaji": "No Game No Life Mini OVAs",
+   "format": "SPECIAL",
+   "episodes": 6,
+   "duration": 3,
+   "minutes": 18,
+   "year": 2014,
+   "status": "FINISHED",
+   "idMal": 24991,
+   "ptw": false
+  },
+  "al:208105": {
+   "title": "Yani Neko Mini",
+   "romaji": "Yani Neko Mini",
+   "format": "ONA",
+   "episodes": null,
+   "duration": 1,
+   "minutes": null,
+   "year": 2026,
+   "status": "RELEASING",
+   "idMal": 64008,
+   "ptw": false
+  },
+  "al:209312": {
+   "title": "Girls und Panzer: Ribbon no Musha Pilot-ban",
+   "romaji": "Girls und Panzer: Ribbon no Musha Pilot-ban",
+   "format": "SPECIAL",
+   "episodes": 1,
+   "duration": 5,
+   "minutes": 5,
+   "year": 2026,
+   "status": "FINISHED",
+   "idMal": null,
+   "ptw": false
+  },
+  "al:209895": {
+   "title": "Jujutsu Kaisen: Shimetsu Kaiyuu - Kouhen",
+   "romaji": "Jujutsu Kaisen: Shimetsu Kaiyuu - Kouhen",
+   "format": null,
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": null,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 63824,
+   "ptw": false
+  },
+  "al:209939": {
+   "title": "Sousou no Frieren 3rd Season",
+   "romaji": "Sousou no Frieren 3rd Season",
+   "format": "TV",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": 2027,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 63816,
+   "ptw": false
+  },
+  "al:209963": {
+   "title": "Sentenced to Be a Hero Season 2",
+   "romaji": "Yuusha Kei ni Shosu: Choubatsu Yuusha 9004-tai Keimu Kiroku 2nd Season",
+   "format": "TV",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": null,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 63820,
+   "ptw": false
+  },
+  "al:209984": {
+   "title": "Fate/strange Fake (Zoku-hen)",
+   "romaji": "Fate/strange Fake (Zoku-hen)",
+   "format": "TV",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": null,
+   "status": "NOT_YET_RELEASED",
+   "idMal": null,
+   "ptw": false
+  },
+  "al:210687": {
+   "title": "Re:Zero kara Hajimeru Kyuukei Jikan (Break Time) 4th Season",
+   "romaji": "Re:Zero kara Hajimeru Kyuukei Jikan (Break Time) 4th Season",
+   "format": "ONA",
+   "episodes": null,
+   "duration": 3,
+   "minutes": null,
+   "year": 2026,
+   "status": "RELEASING",
+   "idMal": 63830,
+   "ptw": false
+  },
+  "al:210932": {
+   "title": "Shiguang Dailiren: Xiao Juchang 2",
+   "romaji": "Shiguang Dailiren: Xiao Juchang 2",
+   "format": "ONA",
+   "episodes": 8,
+   "duration": 4,
+   "minutes": 32,
+   "year": 2026,
+   "status": "FINISHED",
+   "idMal": 63957,
+   "ptw": false
+  },
+  "al:211495": {
+   "title": "Boushoku no Berserk 2nd Season",
+   "romaji": "Boushoku no Berserk 2nd Season",
+   "format": "TV",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": 2027,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 64059,
+   "ptw": false
+  },
+  "al:21212": {
+   "title": "AJIN: Demi-Human -Compel-",
+   "romaji": "Ajin: Shoudou",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 104,
+   "minutes": 104,
+   "year": 2015,
+   "status": "FINISHED",
+   "idMal": 30868,
+   "ptw": false
+  },
+  "al:212539": {
+   "title": "Takopii no Genzai: Arigatou, Mata Ashita",
+   "romaji": "Takopii no Genzai: Arigatou, Mata Ashita",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": null,
+   "minutes": null,
+   "year": 2026,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 64266,
+   "ptw": false
+  },
+  "al:212618": {
+   "title": "Dorohedoro Season 3",
+   "romaji": "Dorohedoro Season 3",
+   "format": null,
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": null,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 64290,
+   "ptw": false
+  },
+  "al:21281": {
+   "title": "Attack on Titan: Junior High",
+   "romaji": "Shingeki! Kyojin Chuugakkou",
+   "format": "TV",
+   "episodes": 12,
+   "duration": 18,
+   "minutes": 216,
+   "year": 2015,
+   "status": "FINISHED",
+   "idMal": 31374,
+   "ptw": false
+  },
+  "al:21305": {
+   "title": "Overlord: Ple Ple Pleiades",
+   "romaji": "Overlord: Ple Ple Pleiades",
+   "format": "SPECIAL",
+   "episodes": 8,
+   "duration": 4,
+   "minutes": 32,
+   "year": 2015,
+   "status": "FINISHED",
+   "idMal": 31138,
+   "ptw": false
+  },
+  "al:21322": {
+   "title": "Mysteria Friends",
+   "romaji": "Manaria Friends",
+   "format": "TV_SHORT",
+   "episodes": 10,
+   "duration": 14,
+   "minutes": 140,
+   "year": 2019,
+   "status": "FINISHED",
+   "idMal": 31537,
+   "ptw": false
+  },
+  "al:213396": {
+   "title": "Higurashi no Naku Koro ni (Shin Anime)",
+   "romaji": "Higurashi no Naku Koro ni (Shin Anime)",
+   "format": "TV",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": null,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 64449,
+   "ptw": false
+  },
+  "al:213477": {
+   "title": "Youkoso Jitsuryoku Shijou Shugi no Kyoushitsu e 5th Season",
+   "romaji": "Youkoso Jitsuryoku Shijou Shugi no Kyoushitsu e 5th Season",
+   "format": "TV",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": null,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 64463,
+   "ptw": false
+  },
+  "al:213514": {
+   "title": "Arifureta Shokugyou de Sekai Saikyou Picture Drama",
+   "romaji": "Arifureta Shokugyou de Sekai Saikyou Picture Drama",
+   "format": "ONA",
+   "episodes": 13,
+   "duration": 1,
+   "minutes": 13,
+   "year": 2019,
+   "status": "FINISHED",
+   "idMal": 49700,
+   "ptw": false
+  },
+  "al:213656": {
+   "title": "Tsue to Tsurugi no Wistoria Season 3",
+   "romaji": "Tsue to Tsurugi no Wistoria Season 3",
+   "format": "TV",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": null,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 64500,
+   "ptw": false
+  },
+  "al:213702": {
+   "title": "Witch Hat Atelier Season 2",
+   "romaji": "Tongari Boushi no Atelier 2nd Season",
+   "format": "TV",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": null,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 64516,
+   "ptw": false
+  },
+  "al:213846": {
+   "title": "Solo Leveling: Beyond the System",
+   "romaji": "Ore dake Level Up na Ken: Beyond the System",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": null,
+   "minutes": null,
+   "year": null,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 64546,
+   "ptw": false
+  },
+  "al:213961": {
+   "title": "Youjo Shenki 2",
+   "romaji": "Youjo Shenki 2",
+   "format": "ONA",
+   "episodes": 12,
+   "duration": 2,
+   "minutes": 24,
+   "year": 2026,
+   "status": "FINISHED",
+   "idMal": 64577,
+   "ptw": false
+  },
+  "al:216346": {
+   "title": "Nippon Sangoku (Zoku-hen)",
+   "romaji": "Nippon Sangoku (Zoku-hen)",
+   "format": null,
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": null,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 64905,
+   "ptw": false
+  },
+  "al:21649": {
+   "title": "Girls und Panzer der Film: Alice War!",
+   "romaji": "Girls und Panzer der Film: Alice War!",
+   "format": "SPECIAL",
+   "episodes": 1,
+   "duration": 16,
+   "minutes": 16,
+   "year": 2016,
+   "status": "FINISHED",
+   "idMal": 32740,
+   "ptw": false
+  },
+  "al:21676": {
+   "title": "Sword Oratoria: Is it Wrong to Try to Pick Up Girls in a Dungeon? On the Side",
+   "romaji": "Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka Gaiden: Sword Oratoria",
+   "format": "TV",
+   "episodes": 12,
+   "duration": 25,
+   "minutes": 300,
+   "year": 2017,
+   "status": "FINISHED",
+   "idMal": 32887,
+   "ptw": false
+  },
+  "al:217013": {
+   "title": "Yomi no Tsugai 2nd Season",
+   "romaji": "Yomi no Tsugai 2nd Season",
+   "format": "TV",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": null,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 65024,
+   "ptw": false
+  },
+  "al:217136": {
+   "title": "Grand Blue Season 4",
+   "romaji": "Grand Blue Season 4",
+   "format": "TV",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": null,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 65037,
+   "ptw": false
+  },
+  "al:21717": {
+   "title": "Fate/EXTRA Last Encore",
+   "romaji": "Fate/EXTRA Last Encore",
+   "format": "TV",
+   "episodes": 13,
+   "duration": 24,
+   "minutes": 312,
+   "year": 2018,
+   "status": "FINISHED",
+   "idMal": 33047,
+   "ptw": false
+  },
+  "al:217232": {
+   "title": "Katainaka no Ossan, Kensei ni Naru III",
+   "romaji": "Katainaka no Ossan, Kensei ni Naru III",
+   "format": "TV",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": null,
+   "status": "NOT_YET_RELEASED",
+   "idMal": null,
+   "ptw": false
+  },
+  "al:217331": {
+   "title": "Tensei Shitara Slime Datta Ken 4th Season Part 3",
+   "romaji": "Tensei Shitara Slime Datta Ken 4th Season Part 3",
+   "format": "TV",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": 2027,
+   "status": "NOT_YET_RELEASED",
+   "idMal": 63129,
+   "ptw": false
+  },
+  "al:217434": {
+   "title": "Mushoku Tensei III: Isekai Ittara Honki Dasu Part 2",
+   "romaji": "Mushoku Tensei III: Isekai Ittara Honki Dasu Part 2",
+   "format": "TV",
+   "episodes": null,
+   "duration": null,
+   "minutes": null,
+   "year": 2027,
+   "status": "NOT_YET_RELEASED",
+   "idMal": null,
+   "ptw": false
+  },
+  "al:21780": {
+   "title": "Re:ZERO ~Starting Break Time From Zero~",
+   "romaji": "Re:Zero kara Hajimeru Kyuukei Jikan (Break Time)",
+   "format": "TV_SHORT",
+   "episodes": 11,
+   "duration": 3,
+   "minutes": 33,
+   "year": 2016,
+   "status": "FINISHED",
+   "idMal": 33142,
+   "ptw": false
+  },
+  "al:21891": {
+   "title": "Re:PETIT ~Re: Starting Life in Another World From PETIT~",
+   "romaji": "Re:Petit kara Hajimeru Isekai Seikatsu",
+   "format": "TV_SHORT",
+   "episodes": 14,
+   "duration": 3,
+   "minutes": 42,
+   "year": 2016,
+   "status": "FINISHED",
+   "idMal": 33569,
+   "ptw": false
+  },
+  "al:2966": {
+   "title": "Spice and Wolf",
+   "romaji": "Ookami to Koushinryou",
+   "format": "TV",
+   "episodes": 13,
+   "duration": 24,
+   "minutes": 312,
+   "year": 2008,
+   "status": "FINISHED",
+   "idMal": 2966,
+   "ptw": false
+  },
+  "al:2994": {
+   "title": "Death Note: Relight",
+   "romaji": "DEATH NOTE Rewrite",
+   "format": "SPECIAL",
+   "episodes": 2,
+   "duration": 112,
+   "minutes": 224,
+   "year": 2007,
+   "status": "FINISHED",
+   "idMal": 2994,
+   "ptw": false
+  },
+  "al:31": {
+   "title": "Neon Genesis Evangelion: Death & Rebirth",
+   "romaji": "Shin Seiki Evangelion Movie: Shi to Shinsei",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 104,
+   "minutes": 104,
+   "year": 1997,
+   "status": "FINISHED",
+   "idMal": 31,
+   "ptw": false
+  },
+  "al:356": {
+   "title": "Fate/stay night",
+   "romaji": "Fate/stay night",
+   "format": "TV",
+   "episodes": 24,
+   "duration": 24,
+   "minutes": 576,
+   "year": 2006,
+   "status": "FINISHED",
+   "idMal": 356,
+   "ptw": false
+  },
+  "al:4130": {
+   "title": "Petit Eva: Evangelion@School",
+   "romaji": "Petit Eva: Evangelion@School",
+   "format": "ONA",
+   "episodes": 24,
+   "duration": 3,
+   "minutes": 72,
+   "year": 2007,
+   "status": "FINISHED",
+   "idMal": 4130,
+   "ptw": false
+  },
+  "al:4469": {
+   "title": ".hack//G.U. Trilogy: Parody Mode",
+   "romaji": ".hack//G.U. Trilogy: Parody Mode",
+   "format": "SPECIAL",
+   "episodes": 1,
+   "duration": 6,
+   "minutes": 6,
+   "year": 2008,
+   "status": "FINISHED",
+   "idMal": 4469,
+   "ptw": false
+  },
+  "al:4810": {
+   "title": "Neo Human Casshan",
+   "romaji": "Shinzou Ningen Casshern",
+   "format": "TV",
+   "episodes": 35,
+   "duration": 25,
+   "minutes": 875,
+   "year": 1973,
+   "status": "FINISHED",
+   "idMal": 4810,
+   "ptw": false
+  },
+  "al:5118": {
+   "title": "The Melancholy of Haruhi-chan Suzumiya",
+   "romaji": "Suzumiya Haruhi-chan no Yuuutsu",
+   "format": "ONA",
+   "episodes": 25,
+   "duration": 5,
+   "minutes": 125,
+   "year": 2009,
+   "status": "FINISHED",
+   "idMal": 5118,
+   "ptw": false
+  },
+  "al:5163": {
+   "title": "Code Geass: Hangyaku no Lelouch R2 Picture Drama",
+   "romaji": "Code Geass: Hangyaku no Lelouch R2 Picture Drama",
+   "format": "SPECIAL",
+   "episodes": 9,
+   "duration": 5,
+   "minutes": 45,
+   "year": 2008,
+   "status": "FINISHED",
+   "idMal": 5163,
+   "ptw": false
+  },
+  "al:5957": {
+   "title": "Nyoron! Churuya-san",
+   "romaji": "Nyoro-n☆Churuya-san",
+   "format": "ONA",
+   "episodes": 13,
+   "duration": 2,
+   "minutes": 26,
+   "year": 2009,
+   "status": "FINISHED",
+   "idMal": 5957,
+   "ptw": false
+  },
+  "al:6064": {
+   "title": "Ura☆Higu",
+   "romaji": "Ura☆Higu",
+   "format": "SPECIAL",
+   "episodes": 24,
+   "duration": 1,
+   "minutes": 24,
+   "year": 2007,
+   "status": "FINISHED",
+   "idMal": 6064,
+   "ptw": false
+  },
+  "al:6922": {
+   "title": "Fate/stay night: Unlimited Blade Works (Movie)",
+   "romaji": "Fate/stay night Movie: UNLIMITED BLADE WORKS",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 105,
+   "minutes": 105,
+   "year": 2010,
+   "status": "FINISHED",
+   "idMal": 6922,
+   "ptw": false
+  },
+  "al:7654": {
+   "title": "Tokyo Magnitude 8.0 Soushuuhen",
+   "romaji": "Tokyo Magnitude 8.0 Soushuuhen",
+   "format": "SPECIAL",
+   "episodes": 1,
+   "duration": 55,
+   "minutes": 55,
+   "year": 2009,
+   "status": "FINISHED",
+   "idMal": 7654,
+   "ptw": false
+  },
+  "al:7902": {
+   "title": "Fullmetal Alchemist: Brotherhood: 4-Koma Theater",
+   "romaji": "Hagane no Renkinjutsushi: FULLMETAL ALCHEMIST - Arakawa Hiromu Kaki Oroshi 4-koma Gekijou",
+   "format": "SPECIAL",
+   "episodes": 16,
+   "duration": 2,
+   "minutes": 32,
+   "year": 2009,
+   "status": "FINISHED",
+   "idMal": 7902,
+   "ptw": false
+  },
+  "al:820": {
+   "title": "Legend of the Galactic Heroes",
+   "romaji": "Ginga Eiyuu Densetsu",
+   "format": "OVA",
+   "episodes": 110,
+   "duration": 26,
+   "minutes": 2860,
+   "year": 1988,
+   "status": "FINISHED",
+   "idMal": 820,
+   "ptw": true
+  },
+  "al:8460": {
+   "title": "Mirai Nikki OVA",
+   "romaji": "Mirai Nikki OVA",
+   "format": "OVA",
+   "episodes": 1,
+   "duration": 8,
+   "minutes": 8,
+   "year": 2010,
+   "status": "FINISHED",
+   "idMal": 8460,
+   "ptw": false
+  },
+  "al:8728": {
+   "title": "Code Geass: Hangyaku no Lelouch - Kiseki no Birthday Picture Drama",
+   "romaji": "Code Geass: Hangyaku no Lelouch - Kiseki no Birthday Picture Drama",
+   "format": "SPECIAL",
+   "episodes": 1,
+   "duration": 27,
+   "minutes": 27,
+   "year": 2010,
+   "status": "FINISHED",
+   "idMal": 8728,
+   "ptw": false
+  },
+  "al:87489": {
+   "title": "Overlord: Ple Ple Pleiades - Nazarick Saidai no Kiki",
+   "romaji": "Overlord: Ple Ple Pleiades - Nazarick Saidai no Kiki",
+   "format": "OVA",
+   "episodes": 1,
+   "duration": 31,
+   "minutes": 31,
+   "year": 2016,
+   "status": "FINISHED",
+   "idMal": 33372,
+   "ptw": false
+  },
+  "al:87528": {
+   "title": "Black Clover: Jump Festa 2016 Special",
+   "romaji": "Black Clover: Jump Festa 2016 Special",
+   "format": "SPECIAL",
+   "episodes": 1,
+   "duration": 27,
+   "minutes": 27,
+   "year": 2016,
+   "status": "FINISHED",
+   "idMal": 33950,
+   "ptw": false
+  },
+  "al:9591": {
+   "title": "Code Geass: Lelouch of the Rebellion R2: Flash Specials",
+   "romaji": "Code Geass: Hangyaku no Lelouch R2 FLASH Flash - Kaette Kita BABA Gekijou",
+   "format": "SPECIAL",
+   "episodes": 9,
+   "duration": 1,
+   "minutes": 9,
+   "year": 2008,
+   "status": "FINISHED",
+   "idMal": 9591,
+   "ptw": false
+  },
+  "al:98186": {
+   "title": "Youjo Shenki",
+   "romaji": "Youjo Shenki",
+   "format": "ONA",
+   "episodes": 13,
+   "duration": 3,
+   "minutes": 39,
+   "year": 2017,
+   "status": "FINISHED",
+   "idMal": 34742,
+   "ptw": false
+  },
+  "al:98662": {
+   "title": "Kabaneri of the Iron Fortress: Light That Gathers",
+   "romaji": "Koutetsujou no Kabaneri Soushuuhen Zenpen: Tsudou Hikari",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 107,
+   "minutes": 107,
+   "year": 2016,
+   "status": "FINISHED",
+   "idMal": 33519,
+   "ptw": false
+  },
+  "al:98663": {
+   "title": "Kabaneri of the Iron Fortress: Life That Burns",
+   "romaji": "Koutetsujou no Kabaneri Soushuuhen Kouhen: Moeru Inochi",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 104,
+   "minutes": 104,
+   "year": 2017,
+   "status": "FINISHED",
+   "idMal": 33520,
+   "ptw": false
+  },
+  "al:98873": {
+   "title": "Overlord: The Undead King",
+   "romaji": "Overlord: Fushisha no Ou",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 105,
+   "minutes": 105,
+   "year": 2017,
+   "status": "FINISHED",
+   "idMal": 34161,
+   "ptw": false
+  },
+  "al:98874": {
+   "title": "Overlord: The Dark Hero",
+   "romaji": "Overlord: Shikkoku no Senshi",
+   "format": "MOVIE",
+   "episodes": 1,
+   "duration": 93,
+   "minutes": 93,
+   "year": 2017,
+   "status": "FINISHED",
+   "idMal": 34428,
+   "ptw": false
+  }
+ },
+ "stats": {
+  "anime": 536,
+  "anilistMissing": 11,
+  "edges": 548,
+  "edgesToUnwatched": 220,
+  "animeWithRelations": 432,
+  "unwatched": 177,
+  "unwatchedInPtw": 1,
+  "matchedByTitle": 2
+ }
+}
