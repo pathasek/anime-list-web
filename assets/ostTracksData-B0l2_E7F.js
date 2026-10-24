@@ -1,0 +1,1 @@
+import{i as e}from"./react-B3wUxFed.js";import{t}from"./animeDataLoader-D_oS4BFB.js";var n=e({loadOstTracksFor:()=>r}),r=t(`data/ost_tracks_index.json`,`data/ost_tracks`);export{n,r as t};

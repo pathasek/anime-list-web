@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="136 78 334 334">
+  <title>Anime List</title>
+  <!-- Logo z postranního panelu (téma Re:Zero, Tome of Wisdom, App.jsx), výřez těsně kolem knihy -->
+  <defs>
+    <linearGradient id="coverGrad" gradientUnits="userSpaceOnUse" x1="390" y1="95" x2="185" y2="335">
+      <stop offset="0" stop-color="#373044"/>
+      <stop offset="0.45" stop-color="#1e1a27"/>
+      <stop offset="1" stop-color="#121017"/>
+    </linearGradient>
+    <linearGradient id="spineGrad" gradientUnits="userSpaceOnUse" x1="140" y1="150" x2="220" y2="400">
+      <stop offset="0" stop-color="#241f30"/>
+      <stop offset="1" stop-color="#0d0b11"/>
+    </linearGradient>
+    <linearGradient id="pagesGrad" gradientUnits="userSpaceOnUse" x1="456" y1="294" x2="214" y2="385">
+      <stop offset="0" stop-color="#f6ecd4"/>
+      <stop offset="0.55" stop-color="#e0d0ac"/>
+      <stop offset="1" stop-color="#bda879"/>
+    </linearGradient>
+    <linearGradient id="rimWarm" gradientUnits="userSpaceOnUse" x1="140" y1="140" x2="455" y2="285">
+      <stop offset="0" stop-color="#9a6cc9"/>
+      <stop offset="0.45" stop-color="#e8935a"/>
+      <stop offset="1" stop-color="#f7ad60"/>
+    </linearGradient>
+    <linearGradient id="rimPurple" gradientUnits="userSpaceOnUse" x1="150" y1="204" x2="218" y2="396">
+      <stop offset="0" stop-color="#8b5cf6"/>
+      <stop offset="1" stop-color="#8b5cf6" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="sheen" gradientUnits="userSpaceOnUse" cx="150" cy="55" r="120">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="coverClip">
+      <rect x="0" y="0" width="200" height="280"/>
+    </clipPath>
+  </defs>
+  <path d="M140,140 L205,330 L215,394 Q175,302 150,204 Z" fill="url(#spineGrad)"/>
+  <path d="M215,394 Q175,302 150,204 L140,140" fill="none" stroke="url(#rimPurple)" stroke-width="4" stroke-linecap="round"/>
+  <path d="M205,330 L455,285 L456.5,294 L206.5,339 Z" fill="#14111a"/>
+  <path d="M206.5,339 L456.5,294 L463.5,340 L213.5,385 Z" fill="url(#pagesGrad)"/>
+  <path d="M213.5,385 L463.5,340 L465,349 L215,394 Z" fill="#0d0b10"/>
+  <path d="M140,140 L390,95 L455,285 L205,330 Z" fill="url(#coverGrad)"/>
+  <g transform="matrix(1.25 -0.225 0.232143 0.678571 140 140)" clip-path="url(#coverClip)">
+    <circle cx="150" cy="55" r="120" fill="url(#sheen)"/>
+    <rect x="12" y="12" width="176" height="256" rx="8" fill="none" stroke="#8a7c68" stroke-width="3" vector-effect="non-scaling-stroke"/>
+    <g fill="#0b0a10" stroke="#8a78b0" stroke-width="3" vector-effect="non-scaling-stroke">
+      <path d="M88,114 C70,105 57,111 55,124 C41,120 31,130 33,140 C31,150 41,160 55,156 C57,169 70,175 88,166 Z"/>
+      <path d="M88,114 C70,105 57,111 55,124 C41,120 31,130 33,140 C31,150 41,160 55,156 C57,169 70,175 88,166 Z" transform="translate(200 0) scale(-1 1)"/>
+      <rect x="90" y="110" width="20" height="60" rx="2"/>
+    </g>
+  </g>
+  <path d="M140,140 L390,95 L455,285" fill="none" stroke="url(#rimWarm)" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+</svg>
