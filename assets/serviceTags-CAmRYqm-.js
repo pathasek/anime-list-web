@@ -1,0 +1,1 @@
+function e(e){return/^\[\[.*\]\]$/.test(String(e||``).trim())}export{e as t};

@@ -1,0 +1,572 @@
+[
+  {
+    "key": "r80357",
+    "name": "Doki Doki Literature Club Plus!",
+    "order": 1,
+    "release": "r80357",
+    "interactivity": "Kosmetické volby",
+    "release_date": "2021-06-30",
+    "rating": null,
+    "start_date": "2026-10-24",
+    "end_date": "2026-10-25",
+    "replay_count": 0,
+    "manual_hours": null,
+    "status": null,
+    "exists": null,
+    "thumbnail": null,
+    "unit_count": 0,
+    "unit_hours": null,
+    "played_seconds": 34652,
+    "time_source": "amd",
+    "start_from_amd": false,
+    "end_from_amd": false,
+    "vndb": {
+      "vn": "v21905",
+      "title": "Doki Doki Literature Club!",
+      "original": null,
+      "olang": "en",
+      "released": "2017-09-22",
+      "devstatus": 0,
+      "developers": [
+        "Team Salvato"
+      ],
+      "length_minutes": 390,
+      "length_votes": 767,
+      "rating": 69.1,
+      "votecount": 19591,
+      "platforms": [
+        "win",
+        "mac"
+      ],
+      "voiced": 1,
+      "minage": 17,
+      "engine": "Unity",
+      "tags": [
+        {
+          "id": "g2147",
+          "name": "Unavoidable Heroine Death",
+          "rating": 2.94,
+          "spoiler": 2
+        },
+        {
+          "id": "g1004",
+          "name": "Metafiction",
+          "rating": 2.93,
+          "spoiler": 2
+        },
+        {
+          "id": "g1797",
+          "name": "Poetry",
+          "rating": 2.93,
+          "spoiler": 0
+        },
+        {
+          "id": "g580",
+          "name": "Breaking the Fourth Wall",
+          "rating": 2.92,
+          "spoiler": 2
+        },
+        {
+          "id": "g691",
+          "name": "Genre Shift",
+          "rating": 2.9,
+          "spoiler": 2
+        },
+        {
+          "id": "g3520",
+          "name": "Psychological Horror",
+          "rating": 2.89,
+          "spoiler": 2
+        },
+        {
+          "id": "g170",
+          "name": "Suicide",
+          "rating": 2.87,
+          "spoiler": 2
+        },
+        {
+          "id": "g181",
+          "name": "One True End",
+          "rating": 2.81,
+          "spoiler": 1
+        },
+        {
+          "id": "g497",
+          "name": "Heroine with Psychological Problems",
+          "rating": 2.79,
+          "spoiler": 2
+        },
+        {
+          "id": "g3005",
+          "name": "Major Antagonist",
+          "rating": 2.79,
+          "spoiler": 2
+        },
+        {
+          "id": "g192",
+          "name": "Yandere Heroine",
+          "rating": 2.78,
+          "spoiler": 2
+        },
+        {
+          "id": "g933",
+          "name": "Student Club President Heroine",
+          "rating": 2.78,
+          "spoiler": 0
+        },
+        {
+          "id": "g1097",
+          "name": "Villainous Heroine",
+          "rating": 2.76,
+          "spoiler": 2
+        },
+        {
+          "id": "g1212",
+          "name": "Student Club Member Heroine",
+          "rating": 2.76,
+          "spoiler": 0
+        },
+        {
+          "id": "g1213",
+          "name": "Student Club Member Protagonist",
+          "rating": 2.76,
+          "spoiler": 0
+        },
+        {
+          "id": "g3171",
+          "name": "High School Student Heroine",
+          "rating": 2.76,
+          "spoiler": 0
+        },
+        {
+          "id": "g3027",
+          "name": "Suicidal Heroine",
+          "rating": 2.74,
+          "spoiler": 2
+        },
+        {
+          "id": "g32",
+          "name": "ADV",
+          "rating": 2.73,
+          "spoiler": 0
+        },
+        {
+          "id": "g579",
+          "name": "Player as a Character",
+          "rating": 2.73,
+          "spoiler": 2
+        },
+        {
+          "id": "g1757",
+          "name": "Protagonist as the Only Male",
+          "rating": 2.72,
+          "spoiler": 0
+        },
+        {
+          "id": "g149",
+          "name": "Enforced Playing Order",
+          "rating": 2.71,
+          "spoiler": 1
+        },
+        {
+          "id": "g7",
+          "name": "Horror",
+          "rating": 2.69,
+          "spoiler": 2
+        },
+        {
+          "id": "g443",
+          "name": "Obsession",
+          "rating": 2.67,
+          "spoiler": 2
+        },
+        {
+          "id": "g1335",
+          "name": "Central Heroine",
+          "rating": 2.63,
+          "spoiler": 2
+        },
+        {
+          "id": "g1184",
+          "name": "High School Student Protagonist",
+          "rating": 2.61,
+          "spoiler": 0
+        },
+        {
+          "id": "g48",
+          "name": "High School",
+          "rating": 2.6,
+          "spoiler": 0
+        },
+        {
+          "id": "g523",
+          "name": "Student Club",
+          "rating": 2.6,
+          "spoiler": 0
+        },
+        {
+          "id": "g203",
+          "name": "Nameable Protagonist",
+          "rating": 2.55,
+          "spoiler": 0
+        },
+        {
+          "id": "g1646",
+          "name": "Varied Title Screens",
+          "rating": 2.54,
+          "spoiler": 1
+        },
+        {
+          "id": "g3374",
+          "name": "No Support Characters",
+          "rating": 2.45,
+          "spoiler": 0
+        },
+        {
+          "id": "g201",
+          "name": "Protagonist's Childhood Friend as a Heroine",
+          "rating": 2.44,
+          "spoiler": 0
+        },
+        {
+          "id": "g2153",
+          "name": "No Gallery",
+          "rating": 2.44,
+          "spoiler": 0
+        },
+        {
+          "id": "g876",
+          "name": "Bad Endings with Story",
+          "rating": 2.42,
+          "spoiler": 1
+        },
+        {
+          "id": "g1447",
+          "name": "Fake Choices",
+          "rating": 2.4,
+          "spoiler": 2
+        },
+        {
+          "id": "g352",
+          "name": "Existential Crisis",
+          "rating": 2.39,
+          "spoiler": 2
+        },
+        {
+          "id": "g672",
+          "name": "Bad Ending(s)",
+          "rating": 2.39,
+          "spoiler": 1
+        },
+        {
+          "id": "g235",
+          "name": "No Sexual Content",
+          "rating": 2.37,
+          "spoiler": 0
+        },
+        {
+          "id": "g125",
+          "name": "AI Heroine",
+          "rating": 2.33,
+          "spoiler": 2
+        },
+        {
+          "id": "g522",
+          "name": "Bookworm Heroine",
+          "rating": 2.33,
+          "spoiler": 0
+        },
+        {
+          "id": "g677",
+          "name": "Ponytail Heroine",
+          "rating": 2.32,
+          "spoiler": 0
+        },
+        {
+          "id": "g1078",
+          "name": "Unrequited Love",
+          "rating": 2.31,
+          "spoiler": 2
+        },
+        {
+          "id": "g258",
+          "name": "Shy Heroine",
+          "rating": 2.29,
+          "spoiler": 0
+        },
+        {
+          "id": "g190",
+          "name": "Airhead Heroine",
+          "rating": 2.27,
+          "spoiler": 0
+        },
+        {
+          "id": "g1398",
+          "name": "Mind Screw",
+          "rating": 2.26,
+          "spoiler": 2
+        },
+        {
+          "id": "g848",
+          "name": "Death of Heroine",
+          "rating": 2.25,
+          "spoiler": 2
+        },
+        {
+          "id": "g160",
+          "name": "Bloody Scenes",
+          "rating": 2.24,
+          "spoiler": 2
+        },
+        {
+          "id": "g461",
+          "name": "Heroine with Zettai Ryouiki",
+          "rating": 2.23,
+          "spoiler": 0
+        },
+        {
+          "id": "g602",
+          "name": "Tsundere Heroine",
+          "rating": 2.23,
+          "spoiler": 0
+        },
+        {
+          "id": "g627",
+          "name": "Depression (obsolete)",
+          "rating": 2.23,
+          "spoiler": 2
+        },
+        {
+          "id": "g246",
+          "name": "Brief Branches Only",
+          "rating": 2.22,
+          "spoiler": 0
+        },
+        {
+          "id": "g133",
+          "name": "Male Protagonist",
+          "rating": 2.2,
+          "spoiler": 0
+        },
+        {
+          "id": "g158",
+          "name": "Graphic Violence",
+          "rating": 2.2,
+          "spoiler": 2
+        },
+        {
+          "id": "g168",
+          "name": "Life and Death Drama",
+          "rating": 2.2,
+          "spoiler": 2
+        },
+        {
+          "id": "g96",
+          "name": "Romance",
+          "rating": 2.13,
+          "spoiler": 0
+        },
+        {
+          "id": "g193",
+          "name": "Modern Tsundere Heroine",
+          "rating": 2.08,
+          "spoiler": 0
+        },
+        {
+          "id": "g188",
+          "name": "Otaku Heroine",
+          "rating": 2.07,
+          "spoiler": 0
+        },
+        {
+          "id": "g161",
+          "name": "Gore",
+          "rating": 2.04,
+          "spoiler": 2
+        },
+        {
+          "id": "g2689",
+          "name": "Modifications",
+          "rating": 2.0,
+          "spoiler": 0
+        },
+        {
+          "id": "g1373",
+          "name": "Heroine with a Fang",
+          "rating": 1.97,
+          "spoiler": 0
+        },
+        {
+          "id": "g1467",
+          "name": "Meaningless Choices",
+          "rating": 1.97,
+          "spoiler": 1
+        },
+        {
+          "id": "g875",
+          "name": "Twin Tail Heroine",
+          "rating": 1.96,
+          "spoiler": 0
+        },
+        {
+          "id": "g1643",
+          "name": "Multi-Selection Choices",
+          "rating": 1.95,
+          "spoiler": 0
+        },
+        {
+          "id": "g2408",
+          "name": "Jump Scares",
+          "rating": 1.93,
+          "spoiler": 2
+        },
+        {
+          "id": "g221",
+          "name": "Modern Day Japan",
+          "rating": 1.92,
+          "spoiler": 0
+        },
+        {
+          "id": "g1671",
+          "name": "Only One Good Ending",
+          "rating": 1.91,
+          "spoiler": 2
+        },
+        {
+          "id": "g1019",
+          "name": "High Amount of Special Effects",
+          "rating": 1.82,
+          "spoiler": 0
+        },
+        {
+          "id": "g143",
+          "name": "Modern Day",
+          "rating": 1.76,
+          "spoiler": 0
+        },
+        {
+          "id": "g328",
+          "name": "Modern Day Setting in a Fictional World",
+          "rating": 1.7,
+          "spoiler": 1
+        },
+        {
+          "id": "g538",
+          "name": "School Festival",
+          "rating": 1.69,
+          "spoiler": 0
+        },
+        {
+          "id": "g1069",
+          "name": "Heroine with Intake Hairstyle",
+          "rating": 1.69,
+          "spoiler": 0
+        },
+        {
+          "id": "g356",
+          "name": "Parody",
+          "rating": 1.62,
+          "spoiler": 1
+        },
+        {
+          "id": "g145",
+          "name": "Linear Plot",
+          "rating": 1.46,
+          "spoiler": 1
+        },
+        {
+          "id": "g373",
+          "name": "Student Heroine",
+          "rating": 1.43,
+          "spoiler": 0
+        },
+        {
+          "id": "g544",
+          "name": "Student Protagonist",
+          "rating": 1.41,
+          "spoiler": 0
+        },
+        {
+          "id": "g1642",
+          "name": "Choices with 4 or More Options",
+          "rating": 1.35,
+          "spoiler": 0
+        },
+        {
+          "id": "g960",
+          "name": "Denpa",
+          "rating": 1.33,
+          "spoiler": 2
+        },
+        {
+          "id": "g3137",
+          "name": "Non-sexual Child Abuse",
+          "rating": 1.3,
+          "spoiler": 2
+        },
+        {
+          "id": "g47",
+          "name": "School",
+          "rating": 1.24,
+          "spoiler": 0
+        },
+        {
+          "id": "g2651",
+          "name": "No Quick Save/Load",
+          "rating": 1.07,
+          "spoiler": 0
+        },
+        {
+          "id": "g1695",
+          "name": "Unlockable Bonus Content",
+          "rating": 1.04,
+          "spoiler": 0
+        },
+        {
+          "id": "g1258",
+          "name": "No Backlog",
+          "rating": 0.83,
+          "spoiler": 0
+        },
+        {
+          "id": "g148",
+          "name": "Multiple Endings",
+          "rating": 0.7,
+          "spoiler": 1
+        },
+        {
+          "id": "g1471",
+          "name": "Blind Choices",
+          "rating": 0.63,
+          "spoiler": 0
+        },
+        {
+          "id": "g2542",
+          "name": "Domestic Violence",
+          "rating": 0.51,
+          "spoiler": 2
+        },
+        {
+          "id": "g2186",
+          "name": "Tall Heroine",
+          "rating": 0.3,
+          "spoiler": 0
+        },
+        {
+          "id": "g164",
+          "name": "Child Abuse",
+          "rating": 0.27,
+          "spoiler": 2
+        },
+        {
+          "id": "g553",
+          "name": "Multiple Route Mystery",
+          "rating": 0.21,
+          "spoiler": 2
+        }
+      ],
+      "cover": "images/medium/vn/covers/v21905.webp",
+      "cover_hidden": false
+    }
+  }
+]

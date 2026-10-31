@@ -1,0 +1,1 @@
+import{o as e,t}from"./react-B3wUxFed.js";var n=e(t(),1),r=`(max-width: 767px)`;function i(){let[e,t]=(0,n.useState)(()=>typeof window<`u`&&window.matchMedia(r).matches);return(0,n.useEffect)(()=>{let e=window.matchMedia(r),n=e=>t(e.matches);return e.addEventListener(`change`,n),t(e.matches),()=>e.removeEventListener(`change`,n)},[]),e}export{i as t};

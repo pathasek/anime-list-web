@@ -1,0 +1,48 @@
+[
+  {
+    "key": "r80357",
+    "vn": "v21905",
+    "characters": [
+      {
+        "id": "c64506",
+        "name": "Protagonist",
+        "original": null,
+        "role": "main",
+        "spoiler": 0,
+        "image": "images/medium/vn/chars/c64506.webp"
+      },
+      {
+        "id": "c64502",
+        "name": "Monika",
+        "original": null,
+        "role": "primary",
+        "spoiler": 0,
+        "image": "images/medium/vn/chars/c64502.webp"
+      },
+      {
+        "id": "c64503",
+        "name": "Sayori",
+        "original": null,
+        "role": "primary",
+        "spoiler": 0,
+        "image": "images/medium/vn/chars/c64503.webp"
+      },
+      {
+        "id": "c64504",
+        "name": "Yuri",
+        "original": null,
+        "role": "primary",
+        "spoiler": 0,
+        "image": "images/medium/vn/chars/c64504.webp"
+      },
+      {
+        "id": "c64505",
+        "name": "Natsuki",
+        "original": null,
+        "role": "primary",
+        "spoiler": 0,
+        "image": "images/medium/vn/chars/c64505.webp"
+      }
+    ]
+  }
+]

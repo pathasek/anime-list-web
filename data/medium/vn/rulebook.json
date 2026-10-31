@@ -1,0 +1,1427 @@
+{
+  "verze": "0.1",
+  "generated": 1793194765387,
+  "casti": [
+    {
+      "id": "Start",
+      "nazev": "Start"
+    },
+    {
+      "id": "I",
+      "nazev": "Základ"
+    },
+    {
+      "id": "II",
+      "nazev": "Jak se to počítá"
+    },
+    {
+      "id": "III",
+      "nazev": "Části a hraní"
+    },
+    {
+      "id": "IV",
+      "nazev": "Patnáct kategorií"
+    },
+    {
+      "id": "V",
+      "nazev": "Můj vkus"
+    },
+    {
+      "id": "VI",
+      "nazev": "Jak vzniká záznam"
+    },
+    {
+      "id": "VII",
+      "nazev": "Případové studie"
+    },
+    {
+      "id": "Přílohy",
+      "nazev": "Přílohy"
+    }
+  ],
+  "kapitoly": [
+    {
+      "cislo": 0,
+      "slug": "start",
+      "typ": "start",
+      "cast": "Start",
+      "nazev": "Jak číst moje čísla u VN",
+      "podtitul": "Škála, kotva a mapa systému VN za minutu.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- FH, PVH a průměr částí na jednom místě a co které číslo říká.\n- Škála 5 až 10 s kotvou sedm a půl, stejná jako u anime.\n- Mapa systému: patnáct kategorií, části místo epizod a stupeň interaktivity bez vlivu na skóre."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Jak číst moje čísla (0): upraví se pro VN."
+        }
+      ],
+      "slova": 55
+    },
+    {
+      "cislo": 1,
+      "slug": "proc",
+      "typ": "pravidlo",
+      "cast": "I",
+      "nazev": "Proč tohle píšu",
+      "podtitul": "Co Rulebook VN je a proč má vlastní text vedle anime.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Proč má VN vlastní Rulebook a nesdílí text s anime.\n- Komu je určený a co v něm není."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Proč tohle píšu (1): převezme se skoro beze změny."
+        }
+      ],
+      "slova": 32
+    },
+    {
+      "cislo": 2,
+      "slug": "dve-vrstvy",
+      "typ": "pravidlo",
+      "cast": "I",
+      "nazev": "Dvě vrstvy: moje hodnocení a faktický rozbor",
+      "podtitul": "Co je u VN ode mě a co je popis, který píše AI.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Moje známky, poznámky a recenze proti faktickému rozboru, který píše AI.\n- U VN navíc kontrola rozboru proti textu hry. Text hry ani obrázky ze hry se nikde nezveřejňují."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Dvě vrstvy (2): převezme se a doplní se kontrola proti hře."
+        }
+      ],
+      "slova": 44
+    },
+    {
+      "cislo": 3,
+      "slug": "co-hodnotim",
+      "typ": "pravidlo",
+      "cast": "I",
+      "nazev": "Co přesně hodnotím: vydání, verze a dohráno",
+      "podtitul": "Které vydání hodnotím a kdy je pro mě VN dohraná.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Hodnotím vydání, které jsem hrál, s jeho odkazem a datem vydání. Originál a remake nebo verze Plus jsou dvě položky (rozhodnuto 27. 10. 2026).\n- Statusy Hraju, Dohráno, Odloženo a Drop a poznámka „Existuje X“, když hra má další routu, konec nebo side stories.\n- Co do hodnocení vydání nepatří: obsah jiných vydání a pokračování. Fan disk je samostatná VN."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Nová kapitola, vychází z hodnoticího systému VN (vydání, statusy a části)."
+        },
+        {
+          "id": "otevrene-otazky",
+          "nazev": "Otevřené otázky",
+          "md": "- Kdy je VN s víc routami dohraná pro FH: zatím po první routě, varianta po true endu je na zvážení (kapitola 11)."
+        }
+      ],
+      "slova": 96
+    },
+    {
+      "cislo": 4,
+      "slug": "skala",
+      "typ": "pravidlo",
+      "cast": "I",
+      "nazev": "Škála 5 až 10 a sedm a půl",
+      "podtitul": "Proč hodnotím od pětky, co znamená střed a jak čtu půlbody.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Škála 5 až 10 s kotvou sedm a půl, beze změny proti anime.\n- Proč je pětka dno i u VN."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Škála 5 až 10 a sedm a půl (3)."
+        },
+        {
+          "id": "otevrene-otazky",
+          "nazev": "Otevřené otázky",
+          "md": "- U anime stojí dno na tom, že každé anime má animaci a hlasy. VN hlasy mít nemusí a obraz bývá statický, zdůvodnění dna je potřeba napsat pro VN znovu."
+        }
+      ],
+      "slova": 64
+    },
+    {
+      "cislo": 5,
+      "slug": "postup",
+      "typ": "pravidlo",
+      "cast": "I",
+      "nazev": "Jak hodnocení vzniká, krok za krokem",
+      "podtitul": "Od první části k finální známce a zápisu do sešitu.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Známka části hned po jejím dohrání, poznámky při hraní a čas z AMD Adrenalinu.\n- Kategorie po dohrání, PVH, průměr částí a FH, zápis do sešitu VN a export na web."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Jak hodnocení vzniká (4): upraví se pro části a sešit VN."
+        }
+      ],
+      "slova": 46
+    },
+    {
+      "cislo": 6,
+      "slug": "vyber",
+      "typ": "pravidlo",
+      "cast": "I",
+      "nazev": "Jak si vybírám a kdy dropuju",
+      "podtitul": "Odkud VN beru a co dělám s hrou, která mě nebaví.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Odkud se VN v listu berou: Plan to Play, VNDB a předlohy anime, která jsem viděl.\n- Kdy VN odložím a kdy je to Drop."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Jak si vybírám a proč nedropuju (5): upraví se."
+        },
+        {
+          "id": "otevrene-otazky",
+          "nazev": "Otevřené otázky",
+          "md": "- U anime platí, že nedropuju. VN mívají 30 a víc hodin a status Drop v sešitu je. Kdy je drop v pořádku a dostane pak VN FH?"
+        }
+      ],
+      "slova": 66
+    },
+    {
+      "cislo": 7,
+      "slug": "bias",
+      "typ": "pravidlo",
+      "cast": "I",
+      "nazev": "Kde jsem zaujatý",
+      "podtitul": "Co mi u VN posouvá čísla a vím o tom.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Zaujatosti převzaté z anime a nové u VN: žánr, délka hry a to, že jsem VN teprve začal hrát."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Kde jsem zaujatý (6): převezme se a doplní."
+        }
+      ],
+      "slova": 31
+    },
+    {
+      "cislo": 8,
+      "slug": "vahy",
+      "typ": "pravidlo",
+      "cast": "II",
+      "nazev": "Patnáct kategorií a jejich váhy",
+      "podtitul": "Co u VN rozebírám, čeho si cením nejvíc a jak to souvisí s výsledkem.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Patnáct kategorií s vahami a podíly. Nejvýš Plot a Enjoyment, pak Emoce, MC a Psaní.\n- Proč přibylo Psaní a proč je Hudba jedna kategorie bez OP a ED zvlášť a bez hlasů.\n\n```tabulka vahy\ndata: váhy z konfigurace média\nsloupce: kategorie, váha, podíl na součtu vah\n```"
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Čtrnáct kategorií a jejich váhy (7): upraví se.\n- Váhy rozhodnuté 27. 10. 2026, kategorie převzaté z anime mají zatím anime váhu."
+        },
+        {
+          "id": "otevrene-otazky",
+          "nazev": "Otevřené otázky",
+          "md": "- Kalibrace vah po 3 až 5 dohraných VN. Kategorií je patnáct, o jednu víc než rámec, sloučení se rozhodne později."
+        }
+      ],
+      "slova": 95
+    },
+    {
+      "cislo": 9,
+      "slug": "pvh",
+      "typ": "pravidlo",
+      "cast": "II",
+      "nazev": "Vážený průměr kategorií (PVH)",
+      "podtitul": "Jak počítám PVH a kdy kategorii vynechám.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Výpočet PVH z patnácti kategorií.\n- Kdy se kategorie vynechá i s vahou: Interaktivita u kinetic novely, Waifu jako u anime, Vedlejší postavy jen u hry bez dalších postav, Sprity a výrazy u hry bez spritů."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Vážený průměr kategorií (8): převezme se a doplní se vynechání u VN."
+        }
+      ],
+      "slova": 52
+    },
+    {
+      "cislo": 10,
+      "slug": "prumer-casti",
+      "typ": "pravidlo",
+      "cast": "II",
+      "nazev": "Průměr částí",
+      "podtitul": "Druhé číslo vedle PVH a co do něj počítám.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Části místo epizod: routa, kapitola, akt nebo herní den podle stavby hry, známka 5 až 10 po čtvrtbodech.\n- Prostý průměr částí, vážený délkou ne (rozhodnuto 28. 10. 2026).\n- Společná routa je samostatná část, side a after stories jen když je hraju, bad endy jen v poznámce části."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Průměr epizod (9): upraví se."
+        },
+        {
+          "id": "otevrene-otazky",
+          "nazev": "Otevřené otázky",
+          "md": "- Routy mají velmi různou délku. Zatím platí prostý průměr, vrátit se k tomu po VN s víc routami.\n- Jestli se části hodnotí u každé VN, nebo jako u filmů bez známek částí, se rozhodne po prvních rozborech."
+        }
+      ],
+      "slova": 97
+    },
+    {
+      "cislo": 11,
+      "slug": "fh",
+      "typ": "pravidlo",
+      "cast": "II",
+      "nazev": "Finální hodnocení: proč to není vzorec",
+      "podtitul": "Jak z průměrů vznikne jedno celé číslo a kdy FH dávám.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- FH je celé číslo, ne vzorec. Když je PVH blízko půlbodu, rozhoduje Enjoyment jako u anime.\n- FH zatím po první dohrané routě, jako u anime po dokoukání (rozhodnuto 27. 10. 2026)."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Finální hodnocení: proč to není vzorec (10): převezme se."
+        },
+        {
+          "id": "otevrene-otazky",
+          "nazev": "Otevřené otázky",
+          "md": "- Varianta „FH až po true endu“ je na zvážení po 3 až 5 VN s víc routami."
+        }
+      ],
+      "slova": 63
+    },
+    {
+      "cislo": 12,
+      "slug": "z-principu",
+      "typ": "pravidlo",
+      "cast": "II",
+      "nazev": "Když srazím hodnocení z principu",
+      "podtitul": "Kdy jdu vědomě hodně pod průměr a kdy to neplatí.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Srážení z principu převzaté z anime a co z něj platí u VN."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Když srazím hodnocení z principu (11)."
+        },
+        {
+          "id": "otevrene-otazky",
+          "nazev": "Otevřené otázky",
+          "md": "- Hranice obsahu u VN pro dospělé, souvisí s kapitolou 42."
+        }
+      ],
+      "slova": 34
+    },
+    {
+      "cislo": 13,
+      "slug": "casti-a-kategorie",
+      "typ": "pravidlo",
+      "cast": "II",
+      "nazev": "Rozdíl mezi částmi a kategoriemi",
+      "podtitul": "Co znamená, když se průměr částí a PVH rozejdou.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Proč se průměr částí a PVH u VN rozcházejí jinak než u anime: dlouhá společná routa a krátký závěr.\n- Pilotní hodnocení DDLC Plus jako první příklad."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Rozdíl mezi epizodami a kategoriemi (12): upraví se."
+        }
+      ],
+      "slova": 39
+    },
+    {
+      "cislo": 14,
+      "slug": "silny-konec",
+      "typ": "pravidlo",
+      "cast": "II",
+      "nazev": "Pravidlo silného konce",
+      "podtitul": "Kdy silný závěr zvedne celou VN.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Obdoba Bookworm Rule pro VN: kdy silná poslední část zvedne FH."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Bookworm Rule (13)."
+        },
+        {
+          "id": "otevrene-otazky",
+          "nazev": "Otevřené otázky",
+          "md": "- Zamčená true routa bývá silná schválně, pravidlo by se spouštělo skoro vždy. Platí u VN vůbec, a když ano, s jakou podmínkou?"
+        }
+      ],
+      "slova": 41
+    },
+    {
+      "cislo": 15,
+      "slug": "replay",
+      "typ": "pravidlo",
+      "cast": "II",
+      "nazev": "Replay a přehodnocení",
+      "podtitul": "Kdy hraju znovu a co se pak stane se známkami.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Replay je celá hra znovu po delší době, další routa replay není (rozhodnuto 27. 10. 2026).\n- Známky částí se v replay podle situace přepíšou, nebo zůstanou. Druhá křivka se nedělá.\n- Přehodnocení FH po další routě."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Rewatch a revize (14): upraví se."
+        }
+      ],
+      "slova": 47
+    },
+    {
+      "cislo": 16,
+      "slug": "cast",
+      "typ": "pravidlo",
+      "cast": "III",
+      "nazev": "Kdy a jak hodnotím část",
+      "podtitul": "Známka hned po části a co znamenají pásma od pětky do desítky.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Kdy část končí a kdy dávám známku.\n- Pásma známek části, stejná jako u epizod.\n- Odehraný čas části ze sezení v AMD Adrenalinu nebo ručně."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Kdy a jak hodnotím epizodu (15)."
+        },
+        {
+          "id": "otevrene-otazky",
+          "nazev": "Otevřené otázky",
+          "md": "- Stavbu částí zatím navrhne faktický rozbor podle hry a v sešitu ji můžu upravit (28. 10. 2026)."
+        }
+      ],
+      "slova": 54
+    },
+    {
+      "cislo": 17,
+      "slug": "spolecna-routa",
+      "typ": "pravidlo",
+      "cast": "III",
+      "nazev": "Společná routa a pořadí rout",
+      "podtitul": "Jak hodnotím společný začátek a v jakém pořadí hraju routy.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Společná routa jako samostatná část a první bod křivky.\n- Pořadí částí podle toho, jak hraju, ne podle pořadí ve hře.\n- Doporučené pořadí rout a zamčené routy."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Nová kapitola, vychází z hodnoticího systému VN (části)."
+        },
+        {
+          "id": "otevrene-otazky",
+          "nazev": "Otevřené otázky",
+          "md": "- Jak se do hodnocení promítne doporučené pořadí rout, když ho nedodržím?"
+        }
+      ],
+      "slova": 50
+    },
+    {
+      "cislo": 18,
+      "slug": "konce",
+      "typ": "pravidlo",
+      "cast": "III",
+      "nazev": "Konce: true, dobré a bad",
+      "podtitul": "Které konce hodnotím a jak se promítnou do Story Conclusion.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- True end, dobré konce a bad endy. Bad end jen v poznámce části, ve které na něj narazím.\n- Story Conclusion hodnotí poslední konec, ke kterému dojdu, po dalších routách se dá upravit."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Nová kapitola, vychází z hodnoticího systému VN (Story Conclusion a části)."
+        },
+        {
+          "id": "otevrene-otazky",
+          "nazev": "Otevřené otázky",
+          "md": "- U anime jsou Story Conclusion poslední díly. VN má víc konců: který rozhoduje, když jich dohraju víc?"
+        }
+      ],
+      "slova": 64
+    },
+    {
+      "cislo": 19,
+      "slug": "co-srazi",
+      "typ": "pravidlo",
+      "cast": "III",
+      "nazev": "Co část sráží",
+      "podtitul": "Co u části VN srazí známku.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Vata a opakované scény, nucené volby, návrat kvůli bad endu a spěch přes klíčové chvíle."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Co epizodu sráží (16): upraví se."
+        }
+      ],
+      "slova": 25
+    },
+    {
+      "cislo": 20,
+      "slug": "co-zveda",
+      "typ": "pravidlo",
+      "cast": "III",
+      "nazev": "Co část zvedá",
+      "podtitul": "Co u části VN zvedne známku.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Emoce a frisson, odhalení, které změní čtení všeho předtím, a scény, kde obraz, hudba a text zapadnou do sebe."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Co epizodu zvedá (17): upraví se."
+        }
+      ],
+      "slova": 29
+    },
+    {
+      "cislo": 21,
+      "slug": "krivka",
+      "typ": "pravidlo",
+      "cast": "III",
+      "nazev": "Křivka částí",
+      "podtitul": "Co mi říká tvar řady čísel po dohrání.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Body křivky rovnoměrně, hodiny jen v popisku bodu (rozhodnuto 28. 10. 2026).\n- Trend až od 8 částí, u méně bodů nic neříká."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Křivka epizod (18): upraví se."
+        }
+      ],
+      "slova": 32
+    },
+    {
+      "cislo": 22,
+      "slug": "tempo-a-sezeni",
+      "typ": "pravidlo",
+      "cast": "III",
+      "nazev": "Tempo a sezení",
+      "podtitul": "Jak délka sezení a přestávky mezi nimi mění dojem.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Hraní po sezeních místo weekly a binge, čas z AMD Adrenalinu po dnech.\n- Dlouhé VN a přestávky mezi sezeními."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Weekly a binge (19): upraví se."
+        }
+      ],
+      "slova": 30
+    },
+    {
+      "cislo": 23,
+      "slug": "plot",
+      "typ": "kategorie",
+      "cast": "IV",
+      "nazev": "Plot",
+      "podtitul": "Jestli příběh drží pohromadě, i když ho domyslím.",
+      "stav": "kostra",
+      "kategorie": "Plot",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Stavba příběhu: příčina a následek, pravidla světa, záhada a zvraty, co je v sázce.\n- Jak do sebe zapadá společná routa, routy hrdinek a závěrečná routa.\n- Hloubka témat patří sem, o jakých tématech hra mluví, patří do Originality."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Plot (20), a hodnoticí systém VN."
+        }
+      ],
+      "slova": 49
+    },
+    {
+      "cislo": 24,
+      "slug": "pacing",
+      "typ": "kategorie",
+      "cast": "IV",
+      "nazev": "Pacing",
+      "podtitul": "Jestli scény dostanou tolik času, kolik potřebují.",
+      "stav": "kostra",
+      "kategorie": "Pacing",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Tempo, výplň a spěch, rozjezd a tempo společné routy.\n- Jestli si hra svou délku zaslouží. Přeskakování přečteného textu patří do Prezentace a rozhraní."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Pacing (21), a hodnoticí systém VN."
+        }
+      ],
+      "slova": 34
+    },
+    {
+      "cislo": 25,
+      "slug": "story-conclusion",
+      "typ": "kategorie",
+      "cast": "IV",
+      "nazev": "Story Conclusion",
+      "podtitul": "Jak hra dohraje to, co rozehrála.",
+      "stav": "kostra",
+      "kategorie": "Story Conclusion",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Poslední konec, ke kterému dojdu, a jestli uzavře linky a zaplatí, co hra slibovala.\n- Bad endy sem nepatří, jen do poznámky části."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Story Conclusion (22), a hodnoticí systém VN."
+        },
+        {
+          "id": "otevrene-otazky",
+          "nazev": "Otevřené otázky",
+          "md": "- Který konec rozhoduje u VN s víc konci (kapitola 18)."
+        }
+      ],
+      "slova": 45
+    },
+    {
+      "cislo": 26,
+      "slug": "originalita",
+      "typ": "kategorie",
+      "cast": "IV",
+      "nazev": "Originalita",
+      "podtitul": "Jestli mi hra ukázala něco, co jsem ještě neviděl ani nehrál.",
+      "stav": "kostra",
+      "kategorie": "Originalita",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Premisa, pravidla světa, mechaniky, úhel pohledu a nápad meta prvků.\n- Témata, o kterých hra mluví. Srovnávám s tím, co jsem hrál i viděl, anime se počítá."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Originalita (23), a hodnoticí systém VN."
+        },
+        {
+          "id": "otevrene-otazky",
+          "nazev": "Otevřené otázky",
+          "md": "- Témata pod Originalitou platí zatím, ověří se na dalších VN."
+        }
+      ],
+      "slova": 48
+    },
+    {
+      "cislo": 27,
+      "slug": "enjoyment",
+      "typ": "kategorie",
+      "cast": "IV",
+      "nazev": "Enjoyment",
+      "podtitul": "Jak moc mě hraní bavilo, ať je hra udělaná jakkoli.",
+      "stav": "kostra",
+      "kategorie": "Enjoyment",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Jak mě hraní táhlo k dalšímu sezení a jak se ten pocit během hry vyvíjel.\n- Imerze: zapomenu, že čtu."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Enjoyment (24), a hodnoticí systém VN."
+        }
+      ],
+      "slova": 30
+    },
+    {
+      "cislo": 28,
+      "slug": "emoce",
+      "typ": "kategorie",
+      "cast": "IV",
+      "nazev": "Emoce",
+      "podtitul": "Kolikrát a jak silně mě hra zasáhla.",
+      "stav": "kostra",
+      "kategorie": "Emoce",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Frisson, 🥹 a pláč, smutek i radost.\n- Napětí, strach a tíseň, když je hra vyvolává záměrně, atmosféra a jak dlouho na hru myslím po dohrání."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Emoce (25), a hodnoticí systém VN."
+        }
+      ],
+      "slova": 36
+    },
+    {
+      "cislo": 29,
+      "slug": "mc",
+      "typ": "kategorie",
+      "cast": "IV",
+      "nazev": "MC",
+      "podtitul": "Jestli hlavní hrdina unese příběh, když čtu celou hru jeho hlavou.",
+      "stav": "kostra",
+      "kategorie": "MC",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Osobnost, rozhodnost, vývoj a vnitřní hlas hlavního hrdiny.\n- Bezejmenný hrdina pro hráče se hodnotí stejně. Jak dobře je jeho vyprávění napsané, patří do Psaní."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, MC (26), a hodnoticí systém VN."
+        }
+      ],
+      "slova": 35
+    },
+    {
+      "cislo": 30,
+      "slug": "vedlejsi",
+      "typ": "kategorie",
+      "cast": "IV",
+      "nazev": "Vedlejší postavy",
+      "podtitul": "Jestli zbytek obsazení žije vlastním životem i mimo svou routu.",
+      "stav": "kostra",
+      "kategorie": "Vedlejší postavy",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Celé obsazení kromě MC, hrdinky jako součást obsazení jako u anime.\n- Jestli se postavy chovají stejně ve všech routách. Vynechá se jen u hry, kde kromě MC nikdo není."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Vedlejší postavy (27), a hodnoticí systém VN."
+        }
+      ],
+      "slova": 41
+    },
+    {
+      "cislo": 31,
+      "slug": "waifu",
+      "typ": "kategorie",
+      "cast": "IV",
+      "nazev": "Waifu",
+      "podtitul": "Ženské postavy s rolí v ději a jestli si mě získaly.",
+      "stav": "kostra",
+      "kategorie": "Waifu",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Ženské postavy s rolí v ději dohromady, víc váží ta, která je na obrazovce nejdéle, ve VN typicky hrdinka hrané routy.\n- Vztah s MC, romance a chemie. Vynechá se jako u anime, třeba u otome hry s mužskými hrdiny."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Waifu (28), definice beze změny."
+        }
+      ],
+      "slova": 49
+    },
+    {
+      "cislo": 32,
+      "slug": "psani",
+      "typ": "kategorie",
+      "cast": "IV",
+      "nazev": "Psaní",
+      "podtitul": "Jak je text napsaný, když ho čtu desítky hodin.",
+      "stav": "kostra",
+      "kategorie": "Psaní",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Próza a dialogy, ve kterých každá postava mluví po svém, vypravěč a vnitřní monolog po stránce textu.\n- Humor, čtivost a rytmus a texty ve hře: básně, dopisy a deníky. Překlad se nehodnotí."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Nová kategorie, vychází z hodnoticího systému VN."
+        }
+      ],
+      "slova": 42
+    },
+    {
+      "cislo": 33,
+      "slug": "art",
+      "typ": "kategorie",
+      "cast": "IV",
+      "nazev": "Art",
+      "podtitul": "Pozadí a CG, ve kterých se hra odehrává.",
+      "stav": "kostra",
+      "kategorie": "Art",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Pozadí: kresba, atmosféra, počet a pestrost.\n- CG u velkých scén a celkový vizuální styl. Postavy v popředí patří do Spritů a výrazů."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Animace (29), upravená pro VN, a hodnoticí systém VN."
+        }
+      ],
+      "slova": 36
+    },
+    {
+      "cislo": 34,
+      "slug": "sprity",
+      "typ": "kategorie",
+      "cast": "IV",
+      "nazev": "Sprity a výrazy",
+      "podtitul": "Jak postavy v popředí hrají emoce.",
+      "stav": "kostra",
+      "kategorie": "Sprity a výrazy",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Pózy a výrazy obličeje postav v popředí a jak hrají emoce.\n- Design postav. Vynechá se jen u hry bez spritů."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Animace (29), upravená pro VN, a hodnoticí systém VN."
+        }
+      ],
+      "slova": 34
+    },
+    {
+      "cislo": 35,
+      "slug": "prezentace",
+      "typ": "kategorie",
+      "cast": "IV",
+      "nazev": "Prezentace a rozhraní",
+      "podtitul": "Jak hra pracuje s tím, že je proklikávaná prezentace.",
+      "stav": "kostra",
+      "kategorie": "Prezentace a rozhraní",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Přechody, efekty, pohyb a režie scén, načasování textu s obrazem, hudbou a zvukem, meta prvky.\n- Rozhraní: textové okno, menu, přeskakování, historie a ukládání. Známka hlavně za prezentaci, rozhraní ji jen sráží, když vadí."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Nová kategorie, vychází z hodnoticího systému VN."
+        }
+      ],
+      "slova": 43
+    },
+    {
+      "cislo": 36,
+      "slug": "hudba",
+      "typ": "kategorie",
+      "cast": "IV",
+      "nazev": "Hudba",
+      "podtitul": "Všechno, co ve hře slyším, a kolik si odnesu do playlistu.",
+      "stav": "kostra",
+      "kategorie": "Hudba",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Podkres, OP a ED, písně ve hře, zvukové efekty a práce s tichem. Hlasy postav sem nepatří.\n- Vodítko je pravidlo playlistu z anime OST, písně a zvuk k tomu přidají nebo uberou."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, OST (31), upravená pro VN, a hodnoticí systém VN."
+        },
+        {
+          "id": "otevrene-otazky",
+          "nazev": "Otevřené otázky",
+          "md": "- U anime jdou do playlistu nejvýš dvě skladby ze série. Soundtracky VN bývají velké, platí stejné pravidlo?"
+        }
+      ],
+      "slova": 64
+    },
+    {
+      "cislo": 37,
+      "slug": "interaktivita",
+      "typ": "kategorie",
+      "cast": "IV",
+      "nazev": "Interaktivita",
+      "podtitul": "Jak volby a herní části slouží příběhu.",
+      "stav": "kostra",
+      "kategorie": "Interaktivita",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Volby, minihry, hádanky a znovuhratelnost.\n- Stupeň interaktivity (šest stupňů od Kinetic po Hybrid se hrou) skóre nemění. Známka se vynechá u kinetic novely."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Nová kategorie, vychází z hodnoticího systému VN."
+        },
+        {
+          "id": "otevrene-otazky",
+          "nazev": "Otevřené otázky",
+          "md": "- Hry, kde volby jen vybírají hrdinku, se zatím hodnotí. Vrátit se k tomu po pár VN."
+        }
+      ],
+      "slova": 50
+    },
+    {
+      "cislo": 38,
+      "slug": "hranice",
+      "typ": "pravidlo",
+      "cast": "IV",
+      "nazev": "Hranice mezi kategoriemi",
+      "podtitul": "Kam dávám věci, které by se daly zapsat do dvou kategorií.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Hranice převzaté z anime: věc se hodnotí tam, kam věcně patří, Emoce a Enjoyment jsou výjimka.\n- Nové u VN: co zní, je Hudba, kdy a s čím to zazní, je Prezentace. Skládání básní je Interaktivita, básně jako text jsou Psaní.\n- Postava na CG je Art, postava v popředí je Sprity a výrazy. Nápad meta prvku hodnotí Originalita, jeho provedení Prezentace."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Hranice mezi kategoriemi (34), a hodnoticí systém VN."
+        }
+      ],
+      "slova": 74
+    },
+    {
+      "cislo": 39,
+      "slug": "zanry",
+      "typ": "vkus",
+      "cast": "V",
+      "nazev": "Žánry, tagy a vývojáři",
+      "podtitul": "Co mi v listu VN vychází nahoře, co dole a jak moc tomu věřit.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Žánry a tagy z VNDB, vývojáři a scenáristé. Má smysl až s víc dohranými VN."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Žánry, témata a tagy (36): upraví se."
+        }
+      ],
+      "slova": 26
+    },
+    {
+      "cislo": 40,
+      "slug": "tropes",
+      "typ": "vkus",
+      "cast": "V",
+      "nazev": "Tropes, které mě táhnou",
+      "podtitul": "Motivy, ke kterým se ve VN vracím.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Motivy, které mě ve VN táhnou, a které mě nechytnou."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Tropes, které mě táhnou (37)."
+        }
+      ],
+      "slova": 19
+    },
+    {
+      "cislo": 41,
+      "slug": "postavy",
+      "typ": "vkus",
+      "cast": "V",
+      "nazev": "Postavy, které mi sedí",
+      "podtitul": "Typy postav napříč MC, Vedlejšími postavami a Waifu.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Typy postav, ke kterým se ve VN vracím."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Postavy, které mi sedí (38)."
+        }
+      ],
+      "slova": 17
+    },
+    {
+      "cislo": 42,
+      "slug": "hranice-obsahu",
+      "typ": "vkus",
+      "cast": "V",
+      "nazev": "Obsahové hranice a 18+",
+      "podtitul": "Co mi srazí známku bez ohledu na řemeslo a které vydání volím.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Obsahové hranice převzaté z anime.\n- Na webu se obálky s příznakem 18+ nezobrazují a nejsou tam žádná CG ani snímky ze hry."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Obsahové hranice (39): upraví se."
+        },
+        {
+          "id": "otevrene-otazky",
+          "nazev": "Otevřené otázky",
+          "md": "- VN pro dospělé mívají vydání all-ages a 18+. Které vydání hraju a hodnotím a jak se k obsahu 18+ stavím?"
+        }
+      ],
+      "slova": 53
+    },
+    {
+      "cislo": 43,
+      "slug": "adaptace",
+      "typ": "vkus",
+      "cast": "V",
+      "nazev": "VN a jejich anime adaptace",
+      "podtitul": "Jak spolu souvisí hodnocení VN a anime podle ní.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Vazba VN na anime adaptace na webu: ikona u předlohy v detailu anime a oddíl Anime adaptace v detailu VN.\n- Srovnání známek předlohy a adaptace. Anime Rulebook hodnotí obrazovku, ne předlohu, tady je pohled obrácený."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Hodnotím obrazovku, ne předlohu (40): obrácený pohled."
+        }
+      ],
+      "slova": 47
+    },
+    {
+      "cislo": 44,
+      "slug": "poznamky",
+      "typ": "pravidlo",
+      "cast": "VI",
+      "nazev": "Poznámky při hraní",
+      "podtitul": "Co si píšu během hraní a proč z toho později skládám známky.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Šablona poznámek VN a poznámky po částech.\n- Když se poznámka a hra rozcházejí, rozbor jde podle hry a rozdíl se ukáže."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Poznámky při sledování (41): upraví se."
+        }
+      ],
+      "slova": 32
+    },
+    {
+      "cislo": 45,
+      "slug": "rozbor",
+      "typ": "pravidlo",
+      "cast": "VI",
+      "nazev": "Faktický rozbor",
+      "podtitul": "Jak vzniká popis děje a složek VN.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Rozbory od Gemini (hlavní, děj a kategorie), sloučení přes Copilota a kontrola proti textu hry.\n- V rozboru nejvýš krátká citace, text hry ani obrázky se nezveřejňují."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Faktický rozbor (42): doplní se kontrola proti hře."
+        }
+      ],
+      "slova": 39
+    },
+    {
+      "cislo": 46,
+      "slug": "recenze",
+      "typ": "pravidlo",
+      "cast": "VI",
+      "nazev": "Jak vzniká recenze",
+      "podtitul": "Z čeho recenzi VN skládám.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Z čeho recenzi VN skládám, jak je dlouhá a co do ní nepatří."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Jak vzniká recenze (43)."
+        }
+      ],
+      "slova": 21
+    },
+    {
+      "cislo": 47,
+      "slug": "top10-hm",
+      "typ": "pravidlo",
+      "cast": "VI",
+      "nazev": "TOP 10 a čestná uznání",
+      "podtitul": "Podle čeho VN dostane místo mezi nejoblíbenějšími.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Top VN a postavy z malého listu TOP v sešitu VN."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, TOP 10 a čestná uznání (44)."
+        }
+      ],
+      "slova": 21
+    },
+    {
+      "cislo": 48,
+      "slug": "studie",
+      "typ": "pravidlo",
+      "cast": "VII",
+      "nazev": "Případové studie",
+      "podtitul": "Studie, na kterých bude vidět, jak systém VN funguje v praxi.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Studie až s daty z víc VN, první kandidát je pilotní hodnocení DDLC Plus."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Případové studie (45)."
+        }
+      ],
+      "slova": 21
+    },
+    {
+      "cislo": 49,
+      "slug": "kalibrace",
+      "typ": "priloha",
+      "cast": "Přílohy",
+      "nazev": "Kalibrace v číslech",
+      "podtitul": "Tabulky, ve kterých se dá ověřit, jestli pravidla VN sedí s tím, co jsem opravdu dal.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Tabulky kategorií a FH, až budou data z 3 až 5 VN."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Kalibrace v číslech (46)."
+        }
+      ],
+      "slova": 20
+    },
+    {
+      "cislo": 50,
+      "slug": "top10-hm-seznam",
+      "typ": "priloha",
+      "cast": "Přílohy",
+      "nazev": "Seznam TOP 10 a HM",
+      "podtitul": "Top VN a postavy, jak je mám v datech.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Seznam Top VN, čestných uznání a postav z listu TOP."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Seznam TOP 10 a HM (47)."
+        }
+      ],
+      "slova": 20
+    },
+    {
+      "cislo": 51,
+      "slug": "nejistoty",
+      "typ": "priloha",
+      "cast": "Přílohy",
+      "nazev": "Kde si nejsem jistý",
+      "podtitul": "Místa, kde u VN zatím nemám pevné pravidlo.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Deník posunů: co se po dalších VN změnilo a proč.\n- Otevřené otázky kostry: drop (kapitola 6), průměr částí (kapitola 10), FH po true endu (kapitola 11), silný konec (kapitola 14), víc konců (kapitola 18), playlist (kapitola 36), volba hrdinky (kapitola 37) a obsah 18+ (kapitola 42)."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Kde si nejsem jistý (48)."
+        }
+      ],
+      "slova": 56
+    },
+    {
+      "cislo": 52,
+      "slug": "slovnicek",
+      "typ": "priloha",
+      "cast": "Přílohy",
+      "nazev": "Slovníček",
+      "podtitul": "Zkratky a výrazy VN, které v Rulebooku používám.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Pojmy VN: routa, společná routa, true end, bad end, kinetic novela, CG, sprite, ADV a NVL, část, vydání a stupeň interaktivity.\n- FH, PVH a váha jako u anime."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Slovníček (49): doplní se pojmy VN."
+        }
+      ],
+      "slova": 39
+    },
+    {
+      "cislo": 53,
+      "slug": "poradi-zdroju",
+      "typ": "priloha",
+      "cast": "Přílohy",
+      "nazev": "Co platí, když si nebudeš jistý",
+      "podtitul": "Pořadí zdrojů pro případ, že si moje záznamy odporují.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Pořadí zdrojů: sešit VN, poznámky, faktický rozbor a text hry jako zdroj faktů o ději."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Co platí, když si nebudeš jistý (50)."
+        }
+      ],
+      "slova": 26
+    },
+    {
+      "cislo": 54,
+      "slug": "changelog",
+      "typ": "priloha",
+      "cast": "Přílohy",
+      "nazev": "Changelog",
+      "podtitul": "Jak Rulebook VN vzniká a co se mezi verzemi změnilo.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Verze 0.1 (28. 10. 2026): kostra kapitol, texty přibudou po prvních dohraných VN."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Changelog (51)."
+        }
+      ],
+      "slova": 19
+    },
+    {
+      "cislo": 55,
+      "slug": "rejstrik",
+      "typ": "priloha",
+      "cast": "Přílohy",
+      "nazev": "Rejstřík titulů",
+      "podtitul": "Kde v Rulebooku VN který titul zmiňuju.",
+      "stav": "kostra",
+      "plakaty": [],
+      "oddily": [
+        {
+          "id": "co-tu-bude",
+          "nazev": "Co tu bude",
+          "md": "- Rejstřík se posbírá ze všech kapitol, až budou mít texty."
+        },
+        {
+          "id": "z-ceho-vychazi",
+          "nazev": "Z čeho vychází",
+          "md": "- Anime Rulebook, Rejstřík titulů (52)."
+        }
+      ],
+      "slova": 17
+    }
+  ]
+}

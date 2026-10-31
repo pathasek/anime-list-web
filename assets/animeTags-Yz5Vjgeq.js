@@ -1,0 +1,1 @@
+import{t as e}from"./serviceTags-CAmRYqm-.js";function t(t){if(!t||typeof t!=`string`)return[];let n=[];for(let r of t.split(`;`)){let t=/^\s*([^:]+):(\d+):(.*)$/s.exec(r);if(!t){n.length&&r.trim()&&(n[n.length-1].desc+=`; ${r.trim()}`);continue}let i=t[1].trim();i&&!e(i)&&n.push({name:i,rank:Number(t[2])||0,desc:t[3].trim()})}return n}export{t};
