@@ -1,0 +1,1 @@
+var e=/(?<!\*)\*\*(?![\s*])((?:[^*\n|]|(?<!\*)\*(?![\s*])[^*\n|]+?(?<![\s*])\*(?!\*))+?)(?<![\s*])\*\*(?!\*)/g,t=/\*([^*]+)\*/;function n(n){let r=String(n??``);return r.includes(`**`)?r.replace(e,(e,n)=>n.includes(`*`)?n.split(t).map((e,t)=>t%2?`***${e}***`:e?`**${e}**`:``).join(``):e):r}export{n as t};

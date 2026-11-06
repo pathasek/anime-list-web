@@ -1,0 +1,1521 @@
+{
+ "format": 1,
+ "years": {
+  "2020": {
+   "persona": {
+    "fp": "f9e583df85d0",
+    "facts": {
+     "rok": "2020",
+     "stav": "rok je uzavřený",
+     "pocetAnime": 0,
+     "prumerPasmo": 8.5,
+     "stitekMal": "Velmi dobré",
+     "top3": [
+      "Spirited Away",
+      "Death Note"
+     ],
+     "vicNezObvykle": [
+      "Romance",
+      "Psychological",
+      "Drama"
+     ],
+     "minNezObvykle": [
+      "Action",
+      "Mystery",
+      "Comedy"
+     ],
+     "kategorieLepsiNezObvykle": [],
+     "kategorieHorsiNezObvykle": []
+    },
+    "text": {
+     "nazev": "Snílek hledající hluboké emoce",
+     "text": "Letos tě lákaly romance, psychologické příběhy a dramata, zatímco akční žánry, detektivky a komedie šly stranou. V klidu jsi prožíval osudy postav jako ve Spirited Away a hledal jsi hlavně hlubší emoce."
+    },
+    "generated": "2026-10-14"
+   }
+  },
+  "2024": {
+   "persona": {
+    "fp": "5690b789ac41",
+    "facts": {
+     "rok": "2024",
+     "stav": "rok je uzavřený",
+     "pocetAnime": 25,
+     "prumerPasmo": 8.5,
+     "stitekMal": "Velmi dobré",
+     "top3": [
+      "Jujutsu Kaisen, S02",
+      "Frieren: Beyond Journey's End, S01",
+      "NieR:Automata Ver1.1a Part 1"
+     ],
+     "vicNezObvykle": [
+      "Parody",
+      "School",
+      "Isekai"
+     ],
+     "minNezObvykle": [
+      "Mystery",
+      "Drama",
+      "Reincarnation"
+     ],
+     "kategorieLepsiNezObvykle": [
+      "Animace",
+      "Enjoyment"
+     ],
+     "kategorieHorsiNezObvykle": []
+    },
+    "text": {
+     "nazev": "Hravý školní isekai fanoušek",
+     "text": "Letos tě bavily parodie, škola a isekai, zatímco záhady a drama jsi sledoval méně často. U animace a celkového požitku jsi byl nadšenější než kdy dřív."
+    },
+    "generated": "2026-10-14"
+   },
+   "citat": {
+    "fp": "4023542adc3d",
+    "facts": {
+     "rok": "2024",
+     "zdroje": [
+      {
+       "nazev": "Frieren: Beyond Journey's End, S01",
+       "poznamka": "Frieren: Beyond Journey's End, S01 začíná netradičně tam, kde většina legend končí. Po pohřbu hrdiny Himmela si elfská čarodějka Frieren, pro niž byla celá desetiletá výprava pouhým mžikem, uvědomuje drtivou váhu času a promarněných příležitostí poznat krásu i bolest krátkého lidského života. Tato Originalita (10/10) mění klasické fantasy v melancholickou pouť plnou tichých vzpomínek, kde i prosté čištění soch má hluboký, sentimentální význam. Sledujeme Frieren (MC 10/10), jak skrze vášnivé sbírání zdánlivě „zbytečných“ kouzel a péči o své svěřence, jako je věčně ustaraná Fern a bojácný, leč silný Stark (Vedlejší postavy 10/10), pomalu chápe podstatu emocí. Vizuální stránka předvádí mistrovství, kde Animace (10/10) a nenásilné CGI (9,5/10) excelují v dechberoucí akci, ať už jde o ikonický „Aura“ moment či souboj s dokonalým klonem. Do děje skvěle zapadají i komplexní vedlejší figury jako pragmatický veterán Denken, neváhající užít pěsti, či nebezpečně nevyzpytatelná Übel, ukazující rozmanitost magie založené na vizualizaci. Ta celému světu dodává hloubku, zatímco fenomenální keltský soundtrack (OST 10/10) povyšuje každou scénu, ať už jde o noblesní valčík nebo pouhé vyčarování pole květin. Celkový Pacing (10/10) seriálu je naprosto bezchybný; pomalé pasáže dávají vyniknout Emocím (9,5/10), které často, díky nostalgii po Himmelovi, vhání slzy do očí. Příběh graduje v precizním S"
+      },
+      {
+       "nazev": "Jujutsu Kaisen, S02",
+       "poznamka": "Jujutsu Kaisen, S02 začíná jako melancholická vzpomínka na mládí v \"Hidden Inventory\", kde se zrodil \"nejsilnější\" Gojo, ale končí jako brutální dekonstrukce hrdinství v popelu Shibuyi. Tragický rozkol mezi Gojem a Getem zde funguje jako nezbytný emocionální základ pro nadcházející masakr. Vizuální stránka pod novým vedením exceluje; experimentální Animace (10/10) využívá rotoscoping a dynamickou kameru, což v kombinaci s precizním CGI (9/10) vrcholí v apokalyptickém střetu Sukuny s Mahoragou, kde destrukce města a adaptace schopností nezná hranic. Seriál dominuje v Originalitě (10/10) díky unikátnímu vypravěčskému přístupu, který organicky rozkrývá komplexitu prokletých technik a domén přímo v zápalu boje, čímž divák chápe každou taktickou nuanci, aniž by tempo vázlo. Vedlejší postavy (10/10) dostávají maximální prostor, ať už jde o Megumiho sebevražedný rituál, děsivou fyzickou dominanci Tojiho, který bez „cursed energy“ sráží Sorcerery na kolena, nebo o tragický osud Nanamiho. Emoce (8,5/10) zasahují nečekaně hluboko, zejména při loučení Miwy (Waifu 9/10) s Mechamaruem, které vhání slzy do očí. Yuji (MC 8,5/10) dospívá v bolesti; tváří v tvář Mahitovi, svému zvrácenému zrcadlu, za pomoci Toda definitivně opouští naivitu a přijímá chladnou roli lovce. S dravým Pacingem (9,5/10) a dunivým OST (10/10) směřuje děj k temnému Story Conclusion (9/10). Právě v závěru se Plot (8,5/10"
+      },
+      {
+       "nazev": "Chainsaw Man",
+       "poznamka": "Chainsaw Man je surový akční horor, který známou šónenovou konstrukci převádí do světa dluhů, institucionální kontroly a absurdně obyčejných tužeb. Denjiho prosté, přízemní motivace (MC 7/10) dávají vzhledem k minulosti smysl, jako protagonista mě však nedokázal zaujmout tolik jako jeho okolí. Mnohem silněji funguje jeho soužití s disciplinovaným Akim a chaotickou Power. Jejich hádky, společné jídlo a postupná vzájemná odpovědnost vytvářejí přesvědčivou dysfunkční rodinu; Himeno, Kobeni a Kishibe navíc dostávají vlastní výrazné role (Vedlejší postavy 9/10). Makima mě zaujala klidnou autoritou, tajemstvím schopností a děsivě přesnou manipulací Denjiho potřeb (Waifu 9/10). Plot (8,5/10) plynule přechází od lovu démonů ke koordinovanému útoku a psychologickému thrilleru, přičemž kontrakty placené tělem či délkou života dávají světu důsledky. Právě převrácení hrdinských šablon, démoni zrození ze strachu a moc fungující jako další dluh tvoří Originalitu (Originalita 10/10). Pacing (8/10) občas zpomalí u rutin, ticha a dozvuků násilí, většinou tím ale posiluje náhlé výbuchy akce. Animace (10/10) vyniká filmovou kompozicí, mikromimikou, fyzickou váhou pohybu a čitelnou choreografií. CGI (10/10) u pil, démonů i prostoru drží složité perspektivy a přirozeně se propojuje s kresbou. Ocenil jsem i kontrast opotřebovaného Tokia s groteskními podobami jednotlivých démonů. Ztráty, Akiho tiché"
+      },
+      {
+       "nazev": "Jujutsu Kaisen, S01",
+       "poznamka": "Jujutsu Kaisen, S01 je temné akční anime o světě, kde se z lidských negativních emocí rodí kletby a lidé se stávají jejich nevědomými oběťmi. Po pozření Sukunova prstu se fyzicky mimořádně nadaný student stává jeho nádobou a přijímá boj jako cestu k odvrácení dalších zbytečných smrtí. Yujiho (MC 7,5/10) jsem ocenil pro fyzickou zdatnost, odhodlání bojovat navzdory rozsudku smrti a snahu zajistit druhým správný konec, jako protagonista mě však nezaujal tolik jako jeho okolí. Právě Vedlejší postavy (9/10) jsou největší předností: Gojo baví arogancí podloženou nedotknutelností, Nanami pragmatismem a odporem k přesčasům, zatímco Todo proměňuje náhlé bratrství s Yujim ve výbornou chemii. Nobara si mě získala sebejistotou, agresivní technikou s hřebíky a odmítáním žánrových klišé (Waifu 9/10). Plot (8/10) se nebojí temnějších následků, zvlášť v linii s Mahitem, jeho manipulací lidí a úvahami o tvaru duše. Propojení kleteb s lidskou negativitou a střet ideálu správné smrti s krutou realitou mě zaujaly (Originalita 9/10), citově však řada nerezonovala stejně silně (Emoce 7/10). Animace (9,5/10) dává soubojům váhu, rychlost a čitelnou dynamiku, zejména při Black Flash a Hollow Purple. CGI (8/10) většinou podporuje prostor, v lesích však občas působí hruběji. OST (10/10) střídá neobvyklé, dravé žánry a přesně určuje atmosféru scén. Agresivní tempo téměř nezastavuje (Pacing 9/10) a závěre"
+      },
+      {
+       "nazev": "Jujutsu Kaisen 0",
+       "poznamka": "Jujutsu Kaisen 0 je temná akční předehra o osamělosti, traumatu a lásce proměněné v prokletí. Okkotsu (MC 8/10) se kvůli neovladatelné Rice izoluje a raději by zmizel, aby nikomu neublížil. Ocenil jsem, jak pod Gojovým vedením postupně přijímá vlastní sílu, navazuje vztahy a nachází důvod znovu žít. Maki ho nejprve odmítá, ale její bojovnost, přímost a rostoucí respekt z ní dělají důležitou oporu jeho proměny (Waifu 8,5/10). Inumakiho laskavost ukrytá za omezenou řečí, Gojovo charisma a Getův fanatismus dávají každému vztahu jasnou funkci (Vedlejší postavy 8,5/10). Rika přitom zůstává monstrózní ochránkyní, jejíž oddanost Okkotsua chrání, ale zároveň prohlubuje jeho vinu, strach z blízkosti a dobrovolnou samotu. Přímočarý Plot (8/10) stojí hlavně na Yutově cestě k sebepřijetí a na hrozbě, kterou představuje Getova vize světa pouze pro sorcerery. Originalita (8,5/10) mě zaujala pojetím traumatu a tím, jak ochranné pouto současně ničí možnost normální blízkosti. Film svižně střídá školní vývoj, konflikty a velké finále, aniž by ztrácel tah (Pacing 9/10, Enjoyment 9/10). Animace (10/10) vyniká plynulostí, choreografií a dynamickou kamerou, zatímco CGI (9/10) přirozeně podpírá rozsáhlé scény a efekty. OST (10/10) dodává soubojům dravost, energii a přesně stupňuje napětí. Závěrečný střet i vztah Okkotsua a Riky mě zasáhly svou tragikou a rozhodnutím čelit minulosti, přičemž nechávaj"
+      },
+      {
+       "nazev": "My Dress-Up Darling, S01",
+       "poznamka": "My Dress-Up Darling je naprosto okouzlující a vizuálně dokonalá romance, která si získává srdce diváků díky svému upřímnému příběhu o dvou zcela odlišných světech, které se střetnou a vytvoří něco nádherného. Příběh sleduje Wakana Goja, tichého a talentovaného studenta, jehož vášní je výroba tradičních panenek Hina, a Marin Kitagawy, energické, populární a krásné dívky s tajnou láskou ke cosplayi. Jejich nepravděpodobné partnerství je jádrem celé série. Marin je ztělesněním Waifu (10/10) – není jen atraktivní, ale především neuvěřitelně podporující, nadšená a absolutně nesoudí Wakanovy zájmy, což mu pomáhá překonat trauma z dětství. Série exceluje v zobrazení jejich společné vášně; proces tvorby kostýmů, od pečlivého měření až po výběr látek a finální focení, je zobrazen s láskou a respektem, což podtrhuje vysokou Originalitu (9/10). Vizuální stránka je bezchybná – Animace (10/10) je fluidní, barevná a plná života, dokonale zachycuje Marininu nakažlivou energii a Wakanovy jemné emoce. Ačkoliv seriál obsahuje prvky fanservisu, nikdy nezastiňují upřímné pouto mezi hlavními postavami a jejich pomalu se rozvíjející romanci. Jedná se o mistrovské dílo žánru, které si plně zaslouží své téměř dokonalé hodnocení._x000D_\n_x000D_"
+      }
+     ]
+    },
+    "text": {
+     "citat": "Ocenil jsem, jak pod Gojovým vedením postupně přijímá vlastní sílu, navazuje vztahy a nachází důvod znovu žít.",
+     "nazev": "Jujutsu Kaisen 0"
+    },
+    "generated": "2026-10-14"
+   },
+   "ceny": {
+    "fp": "c9301df16a85",
+    "facts": {
+     "kategorie": [
+      {
+       "kategorie": "Animace",
+       "kandidati": [
+        {
+         "nazev": "Frieren: Beyond Journey's End, S01",
+         "z_poznamek": [
+          "Vizuální stránka předvádí mistrovství, kde Animace (10/10) a nenásilné CGI (9,5/10) excelují v dechberoucí akci, ať už jde o ikonický „Aura“ moment či souboj s dokonalým klonem."
+         ]
+        },
+        {
+         "nazev": "Jujutsu Kaisen, S02",
+         "z_poznamek": [
+          "Vizuální stránka pod novým vedením exceluje; experimentální Animace (10/10) využívá rotoscoping a dynamickou kameru, což v kombinaci s precizním CGI (9/10) vrcholí v apokalyptickém střetu Sukuny s Mahoragou, kde destrukce města a adaptace schopností nezná hranic."
+         ]
+        },
+        {
+         "nazev": "Chainsaw Man",
+         "z_poznamek": [
+          "Animace (10/10) vyniká filmovou kompozicí, mikromimikou, fyzickou váhou pohybu a čitelnou choreografií."
+         ]
+        },
+        {
+         "nazev": "Jujutsu Kaisen 0",
+         "z_poznamek": [
+          "Animace (10/10) vyniká plynulostí, choreografií a dynamickou kamerou, zatímco CGI (9/10) přirozeně podpírá rozsáhlé scény a efekty."
+         ]
+        },
+        {
+         "nazev": "My Dress-Up Darling, S01",
+         "z_poznamek": [
+          "Vizuální stránka je bezchybná – Animace (10/10) je fluidní, barevná a plná života, dokonale zachycuje Marininu nakažlivou energii a Wakanovy jemné emoce."
+         ]
+        }
+       ]
+      },
+      {
+       "kategorie": "Vedlejší postavy",
+       "kandidati": [
+        {
+         "nazev": "Frieren: Beyond Journey's End, S01",
+         "z_poznamek": [
+          "Sledujeme Frieren (MC 10/10), jak skrze vášnivé sbírání zdánlivě „zbytečných“ kouzel a péči o své svěřence, jako je věčně ustaraná Fern a bojácný, leč silný Stark (Vedlejší postavy 10/10), pomalu chápe podstatu emocí."
+         ]
+        },
+        {
+         "nazev": "Jujutsu Kaisen, S02",
+         "z_poznamek": [
+          "Vedlejší postavy (10/10) dostávají maximální prostor, ať už jde o Megumiho sebevražedný rituál, děsivou fyzickou dominanci Tojiho, který bez „cursed energy“ sráží Sorcerery na kolena, nebo o tragický osud Nanamiho."
+         ]
+        }
+       ]
+      },
+      {
+       "kategorie": "Originalita",
+       "kandidati": [
+        {
+         "nazev": "Frieren: Beyond Journey's End, S01",
+         "z_poznamek": [
+          "Tato Originalita (10/10) mění klasické fantasy v melancholickou pouť plnou tichých vzpomínek, kde i prosté čištění soch má hluboký, sentimentální význam."
+         ]
+        },
+        {
+         "nazev": "Jujutsu Kaisen, S02",
+         "z_poznamek": []
+        },
+        {
+         "nazev": "Chainsaw Man",
+         "z_poznamek": [
+          "Právě převrácení hrdinských šablon, démoni zrození ze strachu a moc fungující jako další dluh tvoří Originalitu (Originalita 10/10)."
+         ]
+        }
+       ]
+      },
+      {
+       "kategorie": "Enjoyment",
+       "kandidati": [
+        {
+         "nazev": "Frieren: Beyond Journey's End, S01",
+         "z_poznamek": [
+          "Díky brilantnímu Plotu (10/10) a obrovskému Enjoymentu (10/10) jde o nezapomenutelnou definici žánru a jasné FH 10/10._x000D_\n_x000D_"
+         ]
+        },
+        {
+         "nazev": "Jujutsu Kaisen, S02",
+         "z_poznamek": [
+          "Celkový Enjoyment (10/10) je pohlcující a potvrzuje FH 10/10._x000D_\n_x000D_"
+         ]
+        }
+       ]
+      },
+      {
+       "kategorie": "OP",
+       "kandidati": [
+        {
+         "nazev": "Frieren: Beyond Journey's End, S01",
+         "z_poznamek": []
+        },
+        {
+         "nazev": "Jujutsu Kaisen, S02",
+         "z_poznamek": [
+          "Jujutsu Kaisen, S02 začíná jako melancholická vzpomínka na mládí v \"Hidden Inventory\", kde se zrodil \"nejsilnější\" Gojo, ale končí jako brutální dekonstrukce hrdinství v popelu Shibuyi.",
+          "Vizuální stránka pod novým vedením exceluje; experimentální Animace (10/10) využívá rotoscoping a dynamickou kameru, což v kombinaci s precizním CGI (9/10) vrcholí v apokalyptickém střetu Sukuny s Mahoragou, kde destrukce města a adaptace schopností nezná hranic.",
+          "Yuji (MC 8,5/10) dospívá v bolesti; tváří v tvář Mahitovi, svému zvrácenému zrcadlu, za pomoci Toda definitivně opouští naivitu a přijímá chladnou roli lovce."
+         ]
+        },
+        {
+         "nazev": "Chainsaw Man",
+         "z_poznamek": [
+          "Makima mě zaujala klidnou autoritou, tajemstvím schopností a děsivě přesnou manipulací Denjiho potřeb (Waifu 9/10).",
+          "CGI (10/10) u pil, démonů i prostoru drží složité perspektivy a přirozeně se propojuje s kresbou.",
+          "Ocenil jsem i kontrast opotřebovaného Tokia s groteskními podobami jednotlivých démonů."
+         ]
+        },
+        {
+         "nazev": "Classroom of the Elite, S03",
+         "z_poznamek": [
+          "Úvodní Pacing (7,5/10) působí zrychleně, avšak Plot (8/10) houstne, když Arisu Sakayanagi rozehrává partii intrik s cílem zničit oponenty v novém, krutém třídním hlasování.",
+          "Suzune naopak osobnostně roste, přebírá otěže vůdcovství a po rozloučení s bratrem činí symbolický krok k nezávislosti."
+         ]
+        },
+        {
+         "nazev": "Kaiju No.8, S01",
+         "z_poznamek": []
+        }
+       ]
+      },
+      {
+       "kategorie": "ED",
+       "kandidati": [
+        {
+         "nazev": "Frieren: Beyond Journey's End, S01",
+         "z_poznamek": [
+          "Sledujeme Frieren (MC 10/10), jak skrze vášnivé sbírání zdánlivě „zbytečných“ kouzel a péči o své svěřence, jako je věčně ustaraná Fern a bojácný, leč silný Stark (Vedlejší postavy 10/10), pomalu chápe podstatu emocí.",
+          "Vizuální stránka předvádí mistrovství, kde Animace (10/10) a nenásilné CGI (9,5/10) excelují v dechberoucí akci, ať už jde o ikonický „Aura“ moment či souboj s dokonalým klonem.",
+          "Do děje skvěle zapadají i komplexní vedlejší figury jako pragmatický veterán Denken, neváhající užít pěsti, či nebezpečně nevyzpytatelná Übel, ukazující rozmanitost magie založené na vizualizaci."
+         ]
+        },
+        {
+         "nazev": "Jujutsu Kaisen, S02",
+         "z_poznamek": [
+          "Vizuální stránka pod novým vedením exceluje; experimentální Animace (10/10) využívá rotoscoping a dynamickou kameru, což v kombinaci s precizním CGI (9/10) vrcholí v apokalyptickém střetu Sukuny s Mahoragou, kde destrukce města a adaptace schopností nezná hranic.",
+          "Vedlejší postavy (10/10) dostávají maximální prostor, ať už jde o Megumiho sebevražedný rituál, děsivou fyzickou dominanci Tojiho, který bez „cursed energy“ sráží Sorcerery na kolena, nebo o tragický osud Nanamiho."
+         ]
+        },
+        {
+         "nazev": "Chainsaw Man",
+         "z_poznamek": [
+          "Denjiho prosté, přízemní motivace (MC 7/10) dávají vzhledem k minulosti smysl, jako protagonista mě však nedokázal zaujmout tolik jako jeho okolí.",
+          "Jejich hádky, společné jídlo a postupná vzájemná odpovědnost vytvářejí přesvědčivou dysfunkční rodinu; Himeno, Kobeni a Kishibe navíc dostávají vlastní výrazné role (Vedlejší postavy 9/10).",
+          "Plot (8,5/10) plynule přechází od lovu démonů ke koordinovanému útoku a psychologickému thrilleru, přičemž kontrakty placené tělem či délkou života dávají světu důsledky."
+         ]
+        },
+        {
+         "nazev": "Jujutsu Kaisen, S01",
+         "z_poznamek": [
+          "Právě Vedlejší postavy (9/10) jsou největší předností: Gojo baví arogancí podloženou nedotknutelností, Nanami pragmatismem a odporem k přesčasům, zatímco Todo proměňuje náhlé bratrství s Yujim ve výbornou chemii.",
+          "Plot (8/10) se nebojí temnějších následků, zvlášť v linii s Mahitem, jeho manipulací lidí a úvahami o tvaru duše.",
+          "Díky souhře akce, postav a hudby mě sledování výrazně bavilo (Enjoyment 9/10)."
+         ]
+        },
+        {
+         "nazev": "Kaiju No.8, S01",
+         "z_poznamek": [
+          "8, S01 představuje svět, kde sny umírají pod troskami budov drcených monstry.",
+          "Jeho rezignace je hmatatelná, živená pohledem na úspěchy těch, kteří jeho sen žijí.",
+          "S novou, děsivou silou přichází i existenční dilema: jak se stát hrdinou, když jste veřejný nepřítel číslo jedna?"
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    "text": {
+     "volby": [
+      {
+       "kategorie": "Animace",
+       "nazev": "Jujutsu Kaisen, S02"
+      },
+      {
+       "kategorie": "Vedlejší postavy",
+       "nazev": "Jujutsu Kaisen, S02"
+      },
+      {
+       "kategorie": "Originalita",
+       "nazev": "Frieren: Beyond Journey's End, S01"
+      },
+      {
+       "kategorie": "Enjoyment",
+       "nazev": "Frieren: Beyond Journey's End, S01"
+      },
+      {
+       "kategorie": "OP",
+       "nazev": "Frieren: Beyond Journey's End, S01"
+      },
+      {
+       "kategorie": "ED",
+       "nazev": "Frieren: Beyond Journey's End, S01"
+      }
+     ]
+    },
+    "generated": "2026-10-14"
+   }
+  },
+  "2025": {
+   "persona": {
+    "fp": "07a2cf861b74",
+    "facts": {
+     "rok": "2025",
+     "stav": "rok je uzavřený",
+     "pocetAnime": 325,
+     "prumerPasmo": 8.25,
+     "stitekMal": "Velmi dobré",
+     "top3": [
+      "Ascendance of a Bookworm, S01",
+      "Ascendance of a Bookworm, S02",
+      "Sword Art Online: Alicization"
+     ],
+     "vicNezObvykle": [
+      "Mecha",
+      "Survival",
+      "Vampire"
+     ],
+     "minNezObvykle": [
+      "Detective",
+      "Adult Cast",
+      "Anthropomorphic"
+     ],
+     "kategorieLepsiNezObvykle": [
+      "Emoce",
+      "Vedlejší postavy"
+     ],
+     "kategorieHorsiNezObvykle": []
+    },
+    "text": {
+     "nazev": "Mecha stratég pro přežití",
+     "text": "Letos ti vládla mecha a upíři, detektivky a dospělé postavy jsi naopak omezil. Emoce a vedlejší postavy tě bavily víc než obvykle."
+    },
+    "generated": "2026-10-14"
+   },
+   "hottake": {
+    "fp": "95cde8c1391c",
+    "facts": {
+     "nazev": "Nisemonogatari",
+     "tvojeZnamka": 5,
+     "skoreMal": 8.1,
+     "nejslabsiKategorie": "MC 6"
+    },
+    "text": {
+     "text": "Zatímco dav miluje Nisemonogatari, ty se s ním rozcházíš kvůli slabým hlavním postavám."
+    },
+    "generated": "2026-10-14"
+   },
+   "citat": {
+    "fp": "9dbe694a615a",
+    "facts": {
+     "rok": "2025",
+     "zdroje": [
+      {
+       "nazev": "Lord of Mysteries",
+       "poznamka": "Lord of Mysteries vás okamžitě pohltí do fascinujícího, temného světa, kde se viktoriánská estetika mísí s lovecraftovským hororem a industriální párou. Příběh sleduje Kleina Morettiho, jenž se po transmigraci probouzí v cizím těle a brzy zjišťuje, že přežití v tomto nebezpečném světě závisí na dokonalém hereckém výkonu a dodržování „Acting Method“. Jako tajemný „The Fool“ předsedá schůzkám nad šedou mlhou, zatímco v realitě se připojuje k jednotce Nighthawks. Fenomenální Animace (10/10) a bezchybné CGI (10/10) dechberoucím způsobem vykreslují detailní kulisy města Tingen i děsivé transformace monster. Příběh pevně stojí na genialitě Kleina (MC 10/10), jehož vnitřní monology, opatrné plánování a dojemná starost o sourozence, Melissu a Bensona, dodávají dílu nezbytný lidský rozměr. Ačkoliv Pacing (8/10) může kvůli hustému loru působit zrychleně, děj vás nepustí a Originalita (10/10) světa vás ohromí. Skutečná síla seriálu však tkví v neúprosné gradaci Emocí (10/10). Odhalení tragické, nekonečné minulosti pana Azika či srdcervoucí pád mentora Neila vás citově vyždímají. Vše podtrhuje epický OST (10/10). Vedlejší postavy (10/10), v čele se zapomnětlivým kapitánem Dunnem, tvoří rodinu, o kterou se bojíte. I když Waifu (9/10) jako je elegantní Audrey či tajemná Daly ustupují komplexnímu Plotu (10/10), každá má svou roli. Story Conclusion (10/10) je mistrovstvím emocí; tiché sbohem, "
+      },
+      {
+       "nazev": "Demon Slayer: The Movie: Infinity Castle - Part 1: Akaza Returns",
+       "poznamka": "Demon Slayer: The Movie: Infinity Castle - Part 1: Akaza Returns nás vrhá do srdce multidimenzionálního pekla, kde fyzikální zákony neplatí a každá posuvná stěna skrývá smrtelné nebezpečí. Úvod okamžitě nastoluje tísnivou atmosféru finální války, kterou animátoři přetavili v technický zázrak. Naprosto bezkonkurenční Animace (10/10) se zde snoubí s dechberoucím CGI (10/10), čímž vzniká dynamické a dezorientující bojiště, které se doslova točí kolem našich hrdinů. Děj se mistrně dělí mezi tři klíčové střety, jež jdou hluboko na dřeň charakterům. Sledujeme mrazivý, kalkulovaný pád Shinobu i zlomový moment, kdy Zenitsu překračuje svůj stín a namísto spánku s chladnou, vědomou zuřivostí odhaluje vlastní, nově vynalezenou techniku. Právě tento vývoj MC (10/10) a hloubka Vedlejších postav (10/10) povyšují frenetickou akci na silný emocionální zážitek. Jádrem filmu je však brutální duel Tanjira a Giyua proti Akazovi, jenž nese tíhu minulé ztráty a odhaluje Tanjirovu schopnost vstoupit do „průhledného světa“. Dojemné flashbacky dávají démonům tragickou lidskou tvář a prohlubují přímočarý Plot (8/10). Ačkoliv Waifu (8/10) faktor ustupuje vážnosti situace, Emoce (8/10) v těchto osudových chvílích rezonují naplno. Vše neúprosně pohání vpřed fenomenální a dunivý OST (10/10) spolu s dravým Pacingem (10/10), který nedovolí vydechnout až do samého finále. Story Conclusion (10/10) funguje jako "
+      },
+      {
+       "nazev": "Demon Slayer: Entertainment District Arc",
+       "poznamka": "Demon Slayer: Entertainment District Arc nás vrhá do neony ozářené, ale zrádné čtvrti Yoshiwara, kde se mísí noční krása s temným nebezpečím. Po tragické ztrátě Rengokua nese Tanjiro v srdci jeho plamenný odkaz „Set your heart ablaze“, což formuje hutnou atmosféru celého Arcu. Spolu s excentrickým Tengenem, jehož Shinobi minulost skvěle prohlubuje děj, se vydáváme na misi plnou intrik. Zdejší hodnocení (Vedlejší postavy 10/10) však náleží hlavně naší dvojici, Nezuko a démonickým sourozencům. Ačkoliv mi zpočátku zasazení mezi kurtizány a linka s třemi manželkami nesedly, čímž enjoyment klesal, od poloviny série mě vývoj naprosto pohltil (Plot 8/10). Sledujeme Tanjira, který něžně zpívá matčinu ukolébavku, aby uklidnil Nezuko, jež poprvé ve své dospělejší formě (Waifu 9/10) děsivě ztrácí kontrolu, a později odmítá svody zla tou nejdivočejší „hlavičkou“. Vizuálně jde o absolutní špičku. Famózní Animace (10/10) se snoubí s precizním CGI (10/10) a epickým OST (10/10), což vše graduje v desáté epizodě – ta je pro mě bezkonkurenčním akčním zážitkem a definicí slova „peak“. Závěr však nepatří jen mečům, ale i Emocím (9/10). Odhalení tragické minulosti sourozenců démonů, kteří smutně zrcadlí osud hlavních hrdinů (Originalita 9/10), povyšuje tento Story Conclusion (10/10) na nezapomenutelné drama. Díky strhujícímu Pacingu (9/10) a Tanjirově nezlomnosti (MC 10/10) jde o mistrovské dílo. Z"
+      },
+      {
+       "nazev": "Demon Slayer",
+       "poznamka": "Demon Slayer nás okamžitě vrhá do nelítostné atmosféry zasněžených hor, kde křehký klid naruší pach čerstvé krve a brutální ztráta celé rodiny. Sledujeme neobyčejně laskavého Tanjira (MC 10/10), jehož neuvěřitelný čich a ryzí empatie ho odlišují od běžných hrdinů, stejně jako jeho schopnost rozdávat extrémně tvrdé rány hlavou. I když pevně třímá své Nichirin meče proti monstrům, jeho soucit s démony, kteří kdysi bývali lidmi s často depresivní minulostí, dodává každému souboji hluboký, až tragický rozměr. Vizuální stránka je kapitolou sama pro sebe; Animace (10/10) mistrně využívá dynamický „2D“ pohyb v 3D prostoru, přičemž náročná integrace CGI (10/10) elementů jako sníh či voda je do scény vpleteno s nevídanou přirozeností. Na své nebezpečné pouti není Tanjiro sám; doprovází ho roztomilá, mlčící Nezuko (Waifu 9/10) a chaotické duo – Zenitsu, jenž teprve v hlubokém bezvědomí předvádí nečekanou sílu, a divoký Inosuke (Vedlejší postavy 9/10). Ačkoliv může být Pacing (9/10) zpočátku, například ve třetí epizodě, velmi rychlý, Plot (9/10) skvěle graduje, zejména v momentě šokujícího odhalení prastarého Muzana žijícího skrytě mezi lidmi. Emoční horská dráha vrcholí v nezapomenutelné 19. epizodě, kde se Emoce (9/10) a grandiózní, epický OST (10/10) slijí v dokonalou audiovizuální extázi. I když Závěr příběhu (9/10) slouží spíše jako lákadlo na pokračování, Originalita (9/10) a celkov"
+      },
+      {
+       "nazev": "Demon Slayer: Mugen Train Arc",
+       "poznamka": "Demon Slayer: Mugen Train Arc plynule navazuje na předchozí dění a okamžitě nás uvrhá do stísněných, temných prostor jedoucího vlaku, kde se mísí vůně bento boxů s plíživým nebezpečím. To, co zpočátku působí jako přímočará mise pro charismatického Rengokua a naši známou trojici, se rychle mění v psychologickou noční můru, když všichni padnou do spárů démona Enmua. Právě v těchto momentech září neuvěřitelná, až děsivá vůle Tanjira (MC 10/10). Sledovat ho, jak se marně snaží probudit Nezučiným „hlavičkování“, aby se nakonec v slzách loučil s iluzí rodiny a opakovaně páchal ve snu sebevraždu, je drásajícím důkazem jeho odhodlání. I když je Plot (8/10) přímočarý, je podpořen dechberoucí Animací (10/10) a bezchybným CGI (10/10), které dává vlaku i útokům organický děs. Skutečný emoční vrchol však přináší až šokující příchod Akazy. Rengoku (Vedlejší postavy 10/10) tváří v tvář smrti odmítá nabídku stát se démonem a jeho nezlomná morální síla je v dokonalé harmonii s epickým OST (10/10). Celý tento střet má strhující Pacing (10/10), který nedá vydechnout až do východu slunce. Tanjiroův zoufalý křik na prchajícího démona o zbabělosti a podstatě jejich boje jen podtrhuje nespravedlnost světa. Závěr příběhu (10/10) tak není o tradičním vítězství, ale o inspiraci a oběti, která všechny přítomné dojme k slzám (Emoce 8,5/10). Rengokuova slova „Set your heart ablaze“ rezonují dlouho po konci"
+      },
+      {
+       "nazev": "Ascendance of a Bookworm, S01",
+       "poznamka": "Ascendance of a Bookworm, S01 je netypické isekai o tom, jak moc dokáže člověka definovat jeho vášeň, když se ocitne ve světě, kde jsou knihy výsadou šlechty. Myne má dospělou mysl plnou znalostí, ale křehké tělo pětileté dívky, které sužuje záhadná a bolestivá nemoc. Obdivoval jsem, s jakou tvrdohlavostí se po každém kolapsu pouští do dalšího pokusu (MC 10/10). Místo soubojů sleduji, jak se vzpírá strnulé hierarchii a lhostejnosti okolí, kterému psané slovo nic neříká. Originalita (10/10) proto nestojí na magii, nýbrž na řemesle, obchodu a vyjednávání. Plot (9/10) ukazuje, jak se zoufalá touha po čtení mění v jeden vynález za druhým, a žádný úspěch nepřichází zadarmo, protože první pokusy o knihu ztroskotají a každé vypětí ji stojí zdraví. Metodický Pacing (10/10) dává řemeslu i střídání ročních období dost času, takže mě první epizody zaujaly spíše pozvolna, s každou další mě však série vtahovala více. Vedlejší postavy (10/10) tvoří lidé, kteří v Myne vidí víc než nemocné dítě, od Lutze, jenž za ni odvádí fyzickou práci, přes obchodníka Benna až po rodinu. Nejsilnější chvíle přicházejí, když se její ambice střetnou s láskou k nové rodině, a zasáhl mě i rozhovor, v němž Lutz chce vědět, kým doopravdy je (Emoce 10/10). Prostá Animace (6,5/10) i nenápadné CGI (7/10) příběhu nepřekážejí. Finále nestaví na vítězství, ale na kompromisu, bez kterého by Myne nepřežila, a právě proto "
+      }
+     ]
+    },
+    "text": {
+     "citat": "Ačkoliv mi zpočátku zasazení mezi kurtizány a linka s třemi manželkami nesedly, čímž enjoyment klesal, od poloviny série mě vývoj naprosto pohltil",
+     "nazev": "Demon Slayer: Entertainment District Arc"
+    },
+    "generated": "2026-10-14"
+   },
+   "podtitulky": {
+    "fp": "76f6213ca5b1",
+    "facts": {
+     "stav": "rok je uzavřený",
+     "ep1": [
+      "nových titulů: stovky",
+      "čas u anime: přes tisíc hodin"
+     ],
+     "ep2": [
+      "anime skoro každý den",
+      "nejvíc epizod: leden",
+      "koukalo se hlavně ve všední dny"
+     ],
+     "ep3": [
+      "nejlépe hodnocená sezóna novinek: léto",
+      "novinek málo, hlavně starší kousky",
+      "novinky sledované hned během vysílání"
+     ],
+     "ep4": [
+      "víc než obvykle: mecha, přežití, upíři",
+      "míň než obvykle: detektivky, dospělí hrdinové",
+      "průměrná známka slovy: velmi dobré"
+     ],
+     "ep5": [
+      "titul proti davu (ty hůř než komunita): komedie, záhady, nadpřirozeno, ecchi",
+      "proti davu víc dílů téže série",
+      "celkově štědřejší než komunita",
+      "epizoda roku za plný počet"
+     ],
+     "ep6": [
+      "husí kůže u víc než poloviny hodnocených znělek",
+      "poslech hudby z anime: zhruba polovina času sledování"
+     ],
+     "ep7": [
+      "číslo jedna roku: fantasy, isekai, reinkarnace, středověk, třídní boj",
+      "dvojka roku: fantasy, isekai, reinkarnace, Isekai, Work",
+      "v síni slávy samé desítky"
+     ]
+    },
+    "text": {
+     "ep1": "Stovky nových světů v tisících hodinách",
+     "ep2": "Lednový start a maratony ve všední dny",
+     "ep3": "Letní novinky sledované hned za horka",
+     "ep4": "Roboti a upíři v boji o přežití",
+     "ep5": "Vlastní pohled a jedna dokonalá epizoda",
+     "ep6": "Znělky které ti nahnaly husí kůži",
+     "ep7": "Fantasy světy plné dokonalých hodnocení"
+    },
+    "generated": "2026-10-15"
+   },
+   "ceny": {
+    "fp": "f88228d3c5fe",
+    "facts": {
+     "kategorie": [
+      {
+       "kategorie": "Animace",
+       "kandidati": [
+        {
+         "nazev": "Lord of Mysteries",
+         "z_poznamek": [
+          "Fenomenální Animace (10/10) a bezchybné CGI (10/10) dechberoucím způsobem vykreslují detailní kulisy města Tingen i děsivé transformace monster."
+         ]
+        },
+        {
+         "nazev": "Demon Slayer",
+         "z_poznamek": [
+          "Vizuální stránka je kapitolou sama pro sebe; Animace (10/10) mistrně využívá dynamický „2D“ pohyb v 3D prostoru, přičemž náročná integrace CGI (10/10) elementů jako sníh či voda je do scény vpleteno s nevídanou přirozeností."
+         ]
+        },
+        {
+         "nazev": "Demon Slayer: Entertainment District Arc",
+         "z_poznamek": [
+          "Famózní Animace (10/10) se snoubí s precizním CGI (10/10) a epickým OST (10/10), což vše graduje v desáté epizodě – ta je pro mě bezkonkurenčním akčním zážitkem a definicí slova „peak“."
+         ]
+        },
+        {
+         "nazev": "Demon Slayer: Mugen Train Arc",
+         "z_poznamek": [
+          "I když je Plot (8/10) přímočarý, je podpořen dechberoucí Animací (10/10) a bezchybným CGI (10/10), které dává vlaku i útokům organický děs."
+         ]
+        },
+        {
+         "nazev": "Demon Slayer: The Movie: Infinity Castle - Part 1: Akaza Returns",
+         "z_poznamek": [
+          "Naprosto bezkonkurenční Animace (10/10) se zde snoubí s dechberoucím CGI (10/10), čímž vzniká dynamické a dezorientující bojiště, které se doslova točí kolem našich hrdinů."
+         ]
+        },
+        {
+         "nazev": "Demon Slayer: Swordsmith Village Arc",
+         "z_poznamek": [
+          "Demon Slayer: Swordsmith Village Arc nás vítá vizuálním teaserem do Infinity Castle, kde bezkonkurenční Animace (10/10) a precizní CGI (10/10) okamžitě nastavují nedostižnou laťku."
+         ]
+        },
+        {
+         "nazev": "Demon Slayer: Hashira Training Arc",
+         "z_poznamek": [
+          "Bezchybná Animace (10/10) v kombinaci s neuvěřitelným CGI (10/10) graduje v dechberoucím finále."
+         ]
+        },
+        {
+         "nazev": "Chainsaw Man: The Compilation",
+         "z_poznamek": [
+          "Technická stránka je zde absolutní špičkou; fotorealistická Animace (10/10) a bezchybné CGI (10/10) dodávají jak akčním pasážím, tak tichým momentům hmatatelnou váhu."
+         ]
+        }
+       ]
+      },
+      {
+       "kategorie": "Waifu",
+       "kandidati": [
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S01",
+         "z_poznamek": [
+          "Skutečným srdcem díla je však Waifu (10/10) Rem."
+         ]
+        },
+        {
+         "nazev": "Steins;Gate",
+         "z_poznamek": []
+        },
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S03",
+         "z_poznamek": [
+          "Zdejší Waifu (10/10) už rozhodně nejsou jen na ozdobu, protože Emilia konečně dorůstá v neústupnou bojovnici, jež chladnokrevně čelí psychopatickým hrozbám čistou ledovou magií."
+         ]
+        },
+        {
+         "nazev": "The Rising of the Shield Hero, S01",
+         "z_poznamek": [
+          "Jejich pomalu budovaný vztah, založený na vzájemné potřebě a ochraně, je emocionálním jádrem seriálu (Waifu 10/10)."
+         ]
+        },
+        {
+         "nazev": "Spice and Wolf: Merchant Meets the Wise Wolf, S01",
+         "z_poznamek": [
+          "Jádrem celého zážitku je naprosto fenomenální dynamika mezi Kraftem a Holo (MC 9/10, Waifu 10/10)."
+         ]
+        },
+        {
+         "nazev": "Summer Time Rendering",
+         "z_poznamek": [
+          "Ushio má energii, humor i odhodlání a bez ní by příběh ani jeho emoce nefungovaly stejně (Waifu 10/10)."
+         ]
+        },
+        {
+         "nazev": "Rascal Does Not Dream of Bunny Girl Senpai",
+         "z_poznamek": [
+          "Jeho cesta začíná, když potká svou senpai, slavnou herečku Mai Sakurajimu (Waifu 10/10), jejíž existence je pro okolní svět stále pomíjivější."
+         ]
+        },
+        {
+         "nazev": "Chainsaw Man the Movie: Reze Arc",
+         "z_poznamek": [
+          "Vedlejší postavy (9/10) září skrze Beama v boji i ironii osudu u Anděla, ale zrak nelze odtrhnout od Reze (Waifu 10/10), jejíž dualita fascinuje a která svou chůzí i pohledem dokonale mate tělem."
+         ]
+        }
+       ]
+      },
+      {
+       "kategorie": "Vedlejší postavy",
+       "kandidati": [
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S01",
+         "z_poznamek": [
+          "Vedlejší postavy (10/10) tvoří živoucí svět plný intrik, ať už je to Sword Demon Wilhelm, jízlivá Ram či děsivý arcibiskup Betelgeuse."
+         ]
+        },
+        {
+         "nazev": "Steins;Gate",
+         "z_poznamek": []
+        },
+        {
+         "nazev": "Steins;Gate 0",
+         "z_poznamek": []
+        },
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S03",
+         "z_poznamek": [
+          "Skutečnou páteří narativu jsou ovšem i Vedlejší postavy (10/10)."
+         ]
+        },
+        {
+         "nazev": "Lord of Mysteries",
+         "z_poznamek": [
+          "Vedlejší postavy (10/10), v čele se zapomnětlivým kapitánem Dunnem, tvoří rodinu, o kterou se bojíte."
+         ]
+        },
+        {
+         "nazev": "Higurashi: When They Cry – Kai",
+         "z_poznamek": []
+        },
+        {
+         "nazev": "Ascendance of a Bookworm, S01",
+         "z_poznamek": [
+          "Vedlejší postavy (10/10) tvoří lidé, kteří v Myne vidí víc než nemocné dítě, od Lutze, jenž za ni odvádí fyzickou práci, přes obchodníka Benna až po rodinu."
+         ]
+        },
+        {
+         "nazev": "Puella Magi Madoka Magica",
+         "z_poznamek": []
+        }
+       ]
+      },
+      {
+       "kategorie": "Plot",
+       "kandidati": [
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S01",
+         "z_poznamek": [
+          "Mrazivý Plot (10/10) vás nenechá vydechnout; Subaru čelí krvavým traumatům, a přestože Pacing (9/10) kolem jedenácté epizody lehce klopýtne, neustálé napětí vás pohltí."
+         ]
+        },
+        {
+         "nazev": "Steins;Gate",
+         "z_poznamek": []
+        },
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S02 Part 2",
+         "z_poznamek": [
+          "Každá dějová linka tohoto geniálního Plotu (10/10) do sebe zapadá, což umocňuje orchestrální OST (10/10)."
+         ]
+        },
+        {
+         "nazev": "Lord of Mysteries",
+         "z_poznamek": [
+          "I když Waifu (9/10) jako je elegantní Audrey či tajemná Daly ustupují komplexnímu Plotu (10/10), každá má svou roli."
+         ]
+        },
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S02 Part 1",
+         "z_poznamek": [
+          "Ačkoliv Animace (7/10) a CGI (6,5/10) vizuálně stagnují, Plot (10/10) se mění v temnou psychologickou hru, jež skrze drtivé časové smyčky chytře boří klasický mýtus o neomylném spasiteli."
+         ]
+        },
+        {
+         "nazev": "Higurashi: When They Cry – Kai",
+         "z_poznamek": [
+          "Síla série je v jejím bezchybném scénáři, což dokazují perfektní známky 10/10 pro Plot, Pacing, Závěr, Originalitu, Emoce i Postavy."
+         ]
+        },
+        {
+         "nazev": "Tokyo Magnitude 8.0",
+         "z_poznamek": []
+        }
+       ]
+      },
+      {
+       "kategorie": "Pacing",
+       "kandidati": [
+        {
+         "nazev": "Steins;Gate",
+         "z_poznamek": []
+        },
+        {
+         "nazev": "Higurashi: When They Cry – Kai",
+         "z_poznamek": [
+          "Síla série je v jejím bezchybném scénáři, což dokazují perfektní známky 10/10 pro Plot, Pacing, Závěr, Originalitu, Emoce i Postavy."
+         ]
+        },
+        {
+         "nazev": "Ascendance of a Bookworm, S01",
+         "z_poznamek": [
+          "Metodický Pacing (10/10) dává řemeslu i střídání ročních období dost času, takže mě první epizody zaujaly spíše pozvolna, s každou další mě však série vtahovala více."
+         ]
+        },
+        {
+         "nazev": "Puella Magi Madoka Magica",
+         "z_poznamek": []
+        },
+        {
+         "nazev": "Ascendance of a Bookworm, S02",
+         "z_poznamek": [
+          "Pacing (10/10) trpělivě buduje svět a míří k vrcholům, jako je děsivý střet s Trombe, při němž se ukáže její skrytá síla, nebo finále, v němž se Myne vyrovná s životem, o který přišla."
+         ]
+        },
+        {
+         "nazev": "Tokyo Magnitude 8.0",
+         "z_poznamek": []
+        },
+        {
+         "nazev": "Demon Slayer: Mugen Train Arc",
+         "z_poznamek": [
+          "Celý tento střet má strhující Pacing (10/10), který nedá vydechnout až do východu slunce."
+         ]
+        },
+        {
+         "nazev": "Takopi's Original Sin",
+         "z_poznamek": []
+        }
+       ]
+      },
+      {
+       "kategorie": "Story Conclusion",
+       "kandidati": [
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S01",
+         "z_poznamek": [
+          "Nádherné Story Conclusion (10/10), ve kterém konečně vyzná Emilii upřímnou lásku, dokonale uzavírá tuto drásavou pouť."
+         ]
+        },
+        {
+         "nazev": "Steins;Gate",
+         "z_poznamek": []
+        },
+        {
+         "nazev": "Steins;Gate 0",
+         "z_poznamek": []
+        },
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S02 Part 2",
+         "z_poznamek": [
+          "V závěru, když Subaru v hořícím infernu nevolí hrdinskou roli mesiáše, ale sobecky prosí o vlastní záchranu, přináší to naprosto nezapomenutelné Story Conclusion (10/10)."
+         ]
+        },
+        {
+         "nazev": "Lord of Mysteries",
+         "z_poznamek": [
+          "Story Conclusion (10/10) je mistrovstvím emocí; tiché sbohem, kde šťastný, přehnaný a směšný úsměv s květinami je posledním darem nic netušící rodině."
+         ]
+        },
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S02 Part 1",
+         "z_poznamek": [
+          "Story Conclusion (10/10) nepřináší laciné vítězství, nýbrž drsný budíček a prozření, že zachránce musí nejprve milovat sám sebe."
+         ]
+        },
+        {
+         "nazev": "Higurashi: When They Cry – Kai",
+         "z_poznamek": []
+        },
+        {
+         "nazev": "Ascendance of a Bookworm, S01",
+         "z_poznamek": [
+          "Finále nestaví na vítězství, ale na kompromisu, bez kterého by Myne nepřežila, a právě proto působí katarzně (Story Conclusion 10/10)."
+         ]
+        }
+       ]
+      },
+      {
+       "kategorie": "Originalita",
+       "kandidati": [
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S01",
+         "z_poznamek": [
+          "Ačkoliv občasná statičtější Animace (7/10) a slabé CGI (6,5/10) davů a Mabeasts vizuálně neoslní, neuvěřitelně expresivní mimika hrůzy a temná Originalita (10/10) smyček to naprosto vynahrazují."
+         ]
+        },
+        {
+         "nazev": "Steins;Gate",
+         "z_poznamek": []
+        },
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S02 Part 2",
+         "z_poznamek": [
+          "částí, Originalita (10/10) psychologického přístupu k časovým smyčkám a sázce s fatalistickým Roswaalem to plně vynahrazuje."
+         ]
+        },
+        {
+         "nazev": "Lord of Mysteries",
+         "z_poznamek": [
+          "Ačkoliv Pacing (8/10) může kvůli hustému loru působit zrychleně, děj vás nepustí a Originalita (10/10) světa vás ohromí."
+         ]
+        },
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S02 Part 1",
+         "z_poznamek": [
+          "Originalita (10/10) tkví v interakcích s Čarodějkami hříchu, zejména s Echidnou, jež zmučenému Subaruovi nabízí toxické intelektuální útočiště."
+         ]
+        },
+        {
+         "nazev": "Higurashi: When They Cry – Kai",
+         "z_poznamek": []
+        },
+        {
+         "nazev": "Ascendance of a Bookworm, S01",
+         "z_poznamek": [
+          "Originalita (10/10) proto nestojí na magii, nýbrž na řemesle, obchodu a vyjednávání."
+         ]
+        },
+        {
+         "nazev": "Ascendance of a Bookworm, S02",
+         "z_poznamek": []
+        }
+       ]
+      },
+      {
+       "kategorie": "Emoce",
+       "kandidati": [
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S01",
+         "z_poznamek": [
+          "EP, který Subaruovi vlil novou krev do žil, šroubují Emoce (10/10) na maximum."
+         ]
+        },
+        {
+         "nazev": "Steins;Gate",
+         "z_poznamek": []
+        },
+        {
+         "nazev": "Steins;Gate 0",
+         "z_poznamek": []
+        },
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S02 Part 2",
+         "z_poznamek": [
+          "Sledovat slzy malé Emilie, srdcervoucí osud Fortuny a Geuseho nevyhnutelný pád do šílenství přináší naprosto syrové Emoce (10/10), které gradují v neuvěřitelné šesté epizodě."
+         ]
+        },
+        {
+         "nazev": "Lord of Mysteries",
+         "z_poznamek": [
+          "Skutečná síla seriálu však tkví v neúprosné gradaci Emocí (10/10).",
+          "Story Conclusion (10/10) je mistrovstvím emocí; tiché sbohem, kde šťastný, přehnaný a směšný úsměv s květinami je posledním darem nic netušící rodině."
+         ]
+        },
+        {
+         "nazev": "Higurashi: When They Cry – Kai",
+         "z_poznamek": [
+          "Síla série je v jejím bezchybném scénáři, což dokazují perfektní známky 10/10 pro Plot, Pacing, Závěr, Originalitu, Emoce i Postavy.",
+          "Tato emocionální horská dráha vede ke strhujícímu a nesmírně uspokojivému finále, které elegantně zodpoví každou otázku."
+         ]
+        },
+        {
+         "nazev": "Ascendance of a Bookworm, S01",
+         "z_poznamek": [
+          "Myne má dospělou mysl plnou znalostí, ale křehké tělo pětileté dívky, které sužuje záhadná a bolestivá nemoc.",
+          "Vedlejší postavy (10/10) tvoří lidé, kteří v Myne vidí víc než nemocné dítě, od Lutze, jenž za ni odvádí fyzickou práci, přes obchodníka Benna až po rodinu.",
+          "Nejsilnější chvíle přicházejí, když se její ambice střetnou s láskou k nové rodině, a zasáhl mě i rozhovor, v němž Lutz chce vědět, kým doopravdy je (Emoce 10/10)."
+         ]
+        },
+        {
+         "nazev": "Ascendance of a Bookworm, S02",
+         "z_poznamek": [
+          "Obě vyvrcholení mě vzala za srdce (Emoce 10/10) a přinesla velké zadostiučinění."
+         ]
+        }
+       ]
+      },
+      {
+       "kategorie": "Enjoyment",
+       "kandidati": [
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S01",
+         "z_poznamek": [
+          "Díky tomuto a dalším 2000 detailů, které povyšují toto Anime, mohu říct, že se jedná o narativní klenot (Enjoyment 10/10), který si zaslouží své FH 10/10._x000D_\n_x000D_"
+         ]
+        },
+        {
+         "nazev": "Steins;Gate",
+         "z_poznamek": []
+        },
+        {
+         "nazev": "Steins;Gate 0",
+         "z_poznamek": []
+        },
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S03",
+         "z_poznamek": [
+          "Je to podmanivé psychologické pokračování s naprostým Enjoyment (10/10), který si právem odnáší FH 10/10._x000D_\n_x000D_"
+         ]
+        },
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S02 Part 2",
+         "z_poznamek": [
+          "Tento dokonalý triumf zpečetěný hrdou rytířskou přísahou, je narativní klenot s absolutním Enjoyment (10/10) hodný FH 10/10._x000D_\n_x000D_"
+         ]
+        },
+        {
+         "nazev": "Lord of Mysteries",
+         "z_poznamek": [
+          "Je to vizuální i narativní skvost s absolutním Enjoyment (10/10) hodného FH 10/10._x000D_\n_x000D_"
+         ]
+        },
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S02 Part 1",
+         "z_poznamek": [
+          "Výsledkem je psychologické inferno a naprostý Enjoyment (10/10), zasluhující si plnohodnotné FH 10/10._x000D_\n_x000D_"
+         ]
+        },
+        {
+         "nazev": "Demon Slayer",
+         "z_poznamek": [
+          "I když Závěr příběhu (9/10) slouží spíše jako lákadlo na pokračování, Originalita (9/10) a celkový Enjoyment (10/10) jsou bezkonkurenční."
+         ]
+        }
+       ]
+      },
+      {
+       "kategorie": "CGI",
+       "kandidati": [
+        {
+         "nazev": "Lord of Mysteries",
+         "z_poznamek": [
+          "Fenomenální Animace (10/10) a bezchybné CGI (10/10) dechberoucím způsobem vykreslují detailní kulisy města Tingen i děsivé transformace monster."
+         ]
+        },
+        {
+         "nazev": "Demon Slayer",
+         "z_poznamek": [
+          "Vizuální stránka je kapitolou sama pro sebe; Animace (10/10) mistrně využívá dynamický „2D“ pohyb v 3D prostoru, přičemž náročná integrace CGI (10/10) elementů jako sníh či voda je do scény vpleteno s nevídanou přirozeností."
+         ]
+        },
+        {
+         "nazev": "Demon Slayer: Entertainment District Arc",
+         "z_poznamek": [
+          "Famózní Animace (10/10) se snoubí s precizním CGI (10/10) a epickým OST (10/10), což vše graduje v desáté epizodě – ta je pro mě bezkonkurenčním akčním zážitkem a definicí slova „peak“."
+         ]
+        },
+        {
+         "nazev": "Demon Slayer: Mugen Train Arc",
+         "z_poznamek": [
+          "I když je Plot (8/10) přímočarý, je podpořen dechberoucí Animací (10/10) a bezchybným CGI (10/10), které dává vlaku i útokům organický děs."
+         ]
+        },
+        {
+         "nazev": "Demon Slayer: The Movie: Infinity Castle - Part 1: Akaza Returns",
+         "z_poznamek": [
+          "Naprosto bezkonkurenční Animace (10/10) se zde snoubí s dechberoucím CGI (10/10), čímž vzniká dynamické a dezorientující bojiště, které se doslova točí kolem našich hrdinů."
+         ]
+        },
+        {
+         "nazev": "Demon Slayer: Swordsmith Village Arc",
+         "z_poznamek": [
+          "Demon Slayer: Swordsmith Village Arc nás vítá vizuálním teaserem do Infinity Castle, kde bezkonkurenční Animace (10/10) a precizní CGI (10/10) okamžitě nastavují nedostižnou laťku."
+         ]
+        },
+        {
+         "nazev": "Demon Slayer: Hashira Training Arc",
+         "z_poznamek": [
+          "Bezchybná Animace (10/10) v kombinaci s neuvěřitelným CGI (10/10) graduje v dechberoucím finále."
+         ]
+        },
+        {
+         "nazev": "Chainsaw Man: The Compilation",
+         "z_poznamek": [
+          "Technická stránka je zde absolutní špičkou; fotorealistická Animace (10/10) a bezchybné CGI (10/10) dodávají jak akčním pasážím, tak tichým momentům hmatatelnou váhu."
+         ]
+        }
+       ]
+      },
+      {
+       "kategorie": "OP",
+       "kandidati": [
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S01",
+         "z_poznamek": [
+          "Re:Zero -Starting Life in Another World-, S01 okamžitě rozbíjí naivní isekai fantazie a vrhá obyčejného Subarua do nemilosrdného světa, kde jeho jedinou schopností je neustálý a silně traumatizující Návrat smrtí po každém fatálním selhání.",
+          "Mrazivý Plot (10/10) vás nenechá vydechnout; Subaru čelí krvavým traumatům, a přestože Pacing (9/10) kolem jedenácté epizody lehce klopýtne, neustálé napětí vás pohltí."
+         ]
+        },
+        {
+         "nazev": "Steins;Gate 0",
+         "z_poznamek": [
+          "Okabe and Maho warm up to each other), EP 11 (Okabe surrenders Kurisu's laptop to DURPA, but it gets destroyed by third party."
+         ]
+        },
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S02 Part 1",
+         "z_poznamek": [
+          "Vedlejší postavy (9/10) naopak excelují; ať už kalkulující Roswaal, nebo nečekaně loajální kupec Otto."
+         ]
+        },
+        {
+         "nazev": "Demon Slayer",
+         "z_poznamek": [
+          "Sledujeme neobyčejně laskavého Tanjira (MC 10/10), jehož neuvěřitelný čich a ryzí empatie ho odlišují od běžných hrdinů, stejně jako jeho schopnost rozdávat extrémně tvrdé rány hlavou.",
+          "Na své nebezpečné pouti není Tanjiro sám; doprovází ho roztomilá, mlčící Nezuko (Waifu 9/10) a chaotické duo – Zenitsu, jenž teprve v hlubokém bezvědomí předvádí nečekanou sílu, a divoký Inosuke (Vedlejší postavy 9/10)."
+         ]
+        },
+        {
+         "nazev": "Demon Slayer: Mugen Train Arc",
+         "z_poznamek": [
+          "Sledovat ho, jak se marně snaží probudit Nezučiným „hlavičkování“, aby se nakonec v slzách loučil s iluzí rodiny a opakovaně páchal ve snu sebevraždu, je drásajícím důkazem jeho odhodlání."
+         ]
+        },
+        {
+         "nazev": "Takopi's Original Sin",
+         "z_poznamek": [
+          "Příběh sleduje naivního mimozemšťana Takopiho z \"planety Happy\", jehož cílem je šířit radost pomocí svých \"happy\" gadgetů.",
+          "_x000B_Byl jsem překvapen příběhem v tom smyslu, že z OP videa bylo vidět, že by story mohlo skončit na pozitivní notě, ale ve skutečnosti se příběh vydal úplně jiným směrem..."
+         ]
+        },
+        {
+         "nazev": "Higurashi: When They Cry – Gou",
+         "z_poznamek": [
+          "Nový konflikt, zrozený z touhy jedné postavy opustit Hinamizawu a touhy druhé zůstat, představuje pro Riku zcela novou, osobní hrozbu.",
+          "Atmosféru skvěle podtrhuje fenomenální OP (10/10), které perfektně navozuje pocit tajemna a očekávání.",
+          "Pacing (7/10) je však občas slabší, protože první polovina záměrně opakuje scénáře podobné první sérii."
+         ]
+        },
+        {
+         "nazev": "The Apothecary Diaries, S01",
+         "z_poznamek": []
+        }
+       ]
+      },
+      {
+       "kategorie": "ED",
+       "kandidati": [
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S01",
+         "z_poznamek": [
+          "Re:Zero -Starting Life in Another World-, S01 okamžitě rozbíjí naivní isekai fantazie a vrhá obyčejného Subarua do nemilosrdného světa, kde jeho jedinou schopností je neustálý a silně traumatizující Návrat smrtí po každém fatálním selhání.",
+          "Sledovat jeho psychický pád a následnou evoluci ze zlomeného chlapce v charismatického stratéga je fascinující.",
+          "Mrazivý Plot (10/10) vás nenechá vydechnout; Subaru čelí krvavým traumatům, a přestože Pacing (9/10) kolem jedenácté epizody lehce klopýtne, neustálé napětí vás pohltí."
+         ]
+        },
+        {
+         "nazev": "Steins;Gate 0",
+         "z_poznamek": [
+          "EP 3 (Christmas party at the FGL with every1), EP 4 (Okabe's mind travelled in time.",
+          "Suzuha searches for Kagari) , EP 5 (Moeka comes to FGL, Kagari is found by Ruka), EP 6 (Celebration of New Year at Ruka's shirne), EP 7 (FGL attacked by unknown assailants, they want Kagari), EP 8 (Okabe landed in Alpha Worldline, where he refused to let go of Kurisu), EP 9 (Okabe returns to Beta Worldline, lots is hap",
+          "Okabe and Maho warm up to each other), EP 11 (Okabe surrenders Kurisu's laptop to DURPA, but it gets destroyed by third party."
+         ]
+        },
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S02 Part 2",
+         "z_poznamek": [
+          "Jeho vývoj od izolovaného mučedníka ke skutečnému partnerovi, který asertivně projevuje svou bezpodmínečnou lásku, je fascinující.",
+          "Sledovat slzy malé Emilie, srdcervoucí osud Fortuny a Geuseho nevyhnutelný pád do šílenství přináší naprosto syrové Emoce (10/10), které gradují v neuvěřitelné šesté epizodě.",
+          "Vedlejší postavy (9,5/10) tvoří živoucí hybatele spletitého děje; ať už je to Garfiel, který překoná svůj paralyzující strach z venčí a stane se oddaným spojencem, nebo komplexní vztah Ram a Roswaala."
+         ]
+        },
+        {
+         "nazev": "Lord of Mysteries",
+         "z_poznamek": [
+          "Příběh sleduje Kleina Morettiho, jenž se po transmigraci probouzí v cizím těle a brzy zjišťuje, že přežití v tomto nebezpečném světě závisí na dokonalém hereckém výkonu a dodržování „Acting Method“.",
+          "Jako tajemný „The Fool“ předsedá schůzkám nad šedou mlhou, zatímco v realitě se připojuje k jednotce Nighthawks.",
+          "Vedlejší postavy (10/10), v čele se zapomnětlivým kapitánem Dunnem, tvoří rodinu, o kterou se bojíte."
+         ]
+        },
+        {
+         "nazev": "Demon Slayer",
+         "z_poznamek": [
+          "Sledujeme neobyčejně laskavého Tanjira (MC 10/10), jehož neuvěřitelný čich a ryzí empatie ho odlišují od běžných hrdinů, stejně jako jeho schopnost rozdávat extrémně tvrdé rány hlavou.",
+          "Na své nebezpečné pouti není Tanjiro sám; doprovází ho roztomilá, mlčící Nezuko (Waifu 9/10) a chaotické duo – Zenitsu, jenž teprve v hlubokém bezvědomí předvádí nečekanou sílu, a divoký Inosuke (Vedlejší postavy 9/10)."
+         ]
+        },
+        {
+         "nazev": "The Rising of the Shield Hero, S01",
+         "z_poznamek": [
+          "Tato událost formuje jeho hluboce cynický a nedůvěřivý pohled na svět (MC 9/10) a nutí ho spolehnout se na pragmatické metody přežití.",
+          "Sledujeme, jak se Naofumiho cynismus střetává s její neochvějnou loajalitou, což vytváří silné, zasloužené (Emoce 9/10).",
+          "Dynamika skupiny je vynikající (stejně jako vývoj klíčových vedlejších postav (Vedlejší postavy 9/10)) a seriál exceluje v momentech, kdy postavy čelí minulosti."
+         ]
+        },
+        {
+         "nazev": "Somali and the Forest Spirit",
+         "z_poznamek": [
+          "Příběh sleduje její dojemné putování s Golemem, starodávným strážcem lesa, kterému neúprosně tikají hodiny života.",
+          "Síla seriálu tkví v drobných nuancích a Vedlejších postavách (8/10), které dokreslují morální dilemata světa.",
+          "Díky tomuto silnému dopadu je výsledný Enjoyment (10/10) maximální a seriál si plně zaslouží FH 9/10."
+         ]
+        },
+        {
+         "nazev": "Steins;Gate: Egoistic Poriomania",
+         "z_poznamek": [
+          "Okabe se chová jako \"Mad Scientists\" a konverzuje s Kurisu ohledně jeho relationship během Alpha Worldline."
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    "text": {
+     "volby": [
+      {
+       "kategorie": "Animace",
+       "nazev": "Demon Slayer: Entertainment District Arc"
+      },
+      {
+       "kategorie": "Waifu",
+       "nazev": "Re:Zero -Starting Life in Another World-, S01"
+      },
+      {
+       "kategorie": "Vedlejší postavy",
+       "nazev": "Lord of Mysteries"
+      },
+      {
+       "kategorie": "Plot",
+       "nazev": "Re:Zero -Starting Life in Another World-, S02 Part 2"
+      },
+      {
+       "kategorie": "Pacing",
+       "nazev": "Demon Slayer: Mugen Train Arc"
+      },
+      {
+       "kategorie": "Story Conclusion",
+       "nazev": "Lord of Mysteries"
+      },
+      {
+       "kategorie": "Originalita",
+       "nazev": "Re:Zero -Starting Life in Another World-, S01"
+      },
+      {
+       "kategorie": "Emoce",
+       "nazev": "Ascendance of a Bookworm, S01"
+      },
+      {
+       "kategorie": "Enjoyment",
+       "nazev": "Re:Zero -Starting Life in Another World-, S02 Part 2"
+      },
+      {
+       "kategorie": "CGI",
+       "nazev": "Demon Slayer: The Movie: Infinity Castle - Part 1: Akaza Returns"
+      },
+      {
+       "kategorie": "OP",
+       "nazev": "Higurashi: When They Cry – Gou"
+      },
+      {
+       "kategorie": "ED",
+       "nazev": "Re:Zero -Starting Life in Another World-, S01"
+      }
+     ]
+    },
+    "generated": "2026-10-14"
+   }
+  },
+  "2026": {
+   "persona": {
+    "fp": "9b12c6e33ed7",
+    "facts": {
+     "rok": "2026",
+     "stav": "rok ještě běží, zatím k říjnu",
+     "pocetAnime": 150,
+     "prumerPasmo": 7.5,
+     "stitekMal": "Dobré",
+     "top3": [
+      "Witch Hat Atelier, S01",
+      "Link Click, S01",
+      "Lord of Mysteries Specials"
+     ],
+     "vicNezObvykle": [
+      "Detective",
+      "Anthropomorphic",
+      "Time Travel"
+     ],
+     "minNezObvykle": [
+      "Supernatural",
+      "Mecha",
+      "Military"
+     ],
+     "kategorieLepsiNezObvykle": [],
+     "kategorieHorsiNezObvykle": [
+      "Emoce",
+      "Vedlejší postavy"
+     ]
+    },
+    "text": {
+     "nazev": "Zvířecí detektiv v čase",
+     "text": "Zatím tě letos bavily detektivky, cestování časem i antropomorfní příběhy, zatímco nadpřirozeno a mecha šly stranou. U emocí a vedlejších postav jsi byl o něco přísnější."
+    },
+    "generated": "2026-10-14"
+   },
+   "hottake": {
+    "fp": "46effbf70929",
+    "facts": {
+     "nazev": "The Tatami Galaxy",
+     "tvojeZnamka": 6,
+     "skoreMal": 8.6,
+     "nejslabsiKategorie": "Pacing 5"
+    },
+    "text": {
+     "text": "The Tatami Galaxy tě štve hlavně tempem, zatímco zbytek světa ho považuje za naprostý skvost."
+    },
+    "generated": "2026-10-14"
+   },
+   "citat": {
+    "fp": "7ef85322a1da",
+    "facts": {
+     "rok": "2026",
+     "zdroje": [
+      {
+       "nazev": "Re:Zero -Starting Life in Another World-, S04",
+       "poznamka": "Re:Zero -Starting Life in Another World-, S04 je psychologický fantasy horor, který výpravu k Plejádské strážní věži mění v boj s pamětí, identitou a bezvýchodnými pravidly. Plot (10/10) mě nepřestával překvapovat: návraty poskytují minimum času, každá informace něco stojí a záhada věže se vrství bez hluchých odboček. Originalita (10/10) vrcholí ztrátou vzpomínek, knihami mrtvých a Subaruovým střetem s vlastní představou hrdiny. Subaru je starostlivý, vynalézavý a navzdory psychickému rozkladu hledá cestu, jak zachránit všechny (MC 10/10). Když bez vzpomínek zkoumá vlastní minulost, marně hledá superschopnost vysvětlující jeho výjimečnost. Postupně poznává, že jej definuje láska k ostatním, vytrvalost a ochota nést každé selhání. Emilia trpělivostí, důvěrou a připomínkou jeho identity potvrdila pozici nejlepší Waifu (10/10). Shaula mě vedle roztomilé potrhlosti zasáhla samotou a oddaností, zatímco Patrasche pomáhá Subaruovi, i když si její věrnost nezaslouží. Vedlejší postavy (9,5/10) dostávají vlastní boje: Julius hledá rytířskou hrdost, Ram bojuje za Rem, Meili se učí přijmout pomoc a Beatrice Subaruovi věří, i když jej ostatní podezírají. Anastasia s Echidnou navíc přinášejí zajímavé tajemství. Vědomí, kolika lidmi byl přijat, odpuštěn, zachráněn a milován, dává jeho cestě váhu. Emoce (10/10) pramení hlavně z hororu, psychologie a slov postav; cítil jsem lítost, napětí, husí"
+      },
+      {
+       "nazev": "Link Click, S01",
+       "poznamka": "Link Click, S01 je mysteriózní drama o vstupování do fotografií, postavené na třech pravidlech: dvanáct hodin, následovat pokyny a neměnit minulost ani budoucnost. Právě způsob, jakým seriál tato pravidla odkrývá, zkouší a rozšiřuje, mě nepřestával bavit (Originalita 9,5/10). Cheng Xiaoshi prožívá vzpomínky i pocity lidí, jejichž těla ovládá, takže jeho impulzivní snaha pomoci působí lidsky a zároveň nebezpečně. Lu Guang jej svou rozvahou doplňuje a jejich schopnosti společně umožňují chytřejší postupy (MC 9,5/10). Qiao Ling dodává trojici sourozenecké hašteření, energii i citové zázemí; klienti, jimž pomáhají navíc dokážou během krátkých příběhů zanechat silný dojem (Vedlejší postavy 9/10, Waifu 9/10). Nejvíce jsem si užíval právě menší zakázky, které samy fungují, přestože celkovou zápletku bylo občas těžší skládat (Plot 8,5/10). Výborné střihy dávkují informace jako puzzle a bez hluchých míst přecházejí od komedie k tragédii či thrilleru (Pacing 9,5/10, Enjoyment 9,5/10). Animace (8/10) má pěkný manhwa design, filmové kompozice a většinou plynulý pohyb, ale někdy ztrácí snímky a pozadí jsou jednodušší. CGI (8,5/10) u míče, kola či nákladního auta téměř splývá s kresbou, pouze pozdější auta působí slaběji. OST (10/10) spolu se střihem vytváří osobitou atmosféru a vokální skladby přesně zesilují vrcholy. Opakovaně jsem cítil smutek, dvakrát jsem téměř plakal a při prosbě chlap"
+      },
+      {
+       "nazev": "Lord of Mysteries Specials",
+       "poznamka": "Lord of Mysteries Specials je dvojice vedlejších příběhů odehrávajících se souběžně se S01 a odhaluje první misi tajemného Tarot Clubu, o němž se zatím málo ví; Derrick čelí kletbě Města stříbra a Alger Wilson loví piráta zvaného Qilangos. Klein zůstává MC (9,5/10) a exceluje; ocenil jsem, jak mistrně manipuluje informacemi a přepíná mezi svou civilní zranitelností a všemocnou aurou božského „The Fool“. Vedlejší postavy (9,5/10) jsou pestré: Lovia dokáže přivolat Stříbrného rytíře, ale její schopnost požírání spoluhráčů je odpudivá, a u záhadného Azika se jediným gestem potvrzují fámy o jeho takřka božské síle. Renomovaná autorka Fors Wall otevírá zajímavé možnosti do budoucna. Za Waifu (9,5/10) považuji Audrey, chladnokrevnou detektivku, která i ve vystrašení udrží hlavu. Plot (9/10) elegantně propojuje prokletí Města stříbra s pirátskou intrikou kolem schopnosti Creeping Hunger, byť mi u Derrickovy linky chybělo více vysvětlení. Pacing (8,5/10) za to pyká, ačkoliv napínavé pasáže v Backlundu tempo zrychlují. Originalita (10/10) univerza se rozšiřuje kombinací lovecraftiánské hrůzy s piráty. Emoce (8,5/10) gradují pozvolna, ale v klíčových momentech, jako je Derrickovo vynucené rozloučení s rodiči, naplno zasáhnou. Story Conclusion (9,5/10) uzavírá pirátskou linku uspokojivě. Animace (10/10) v akčních scénách exceluje plynulou dynamikou pohybu, CGI (10/10) ztvárňuje lodě i pan"
+      },
+      {
+       "nazev": "Witch Hat Atelier, S01",
+       "poznamka": "Witch Hat Atelier, S01 je promyšlené fantasy o magii jako řemeslu, kde přesnost čar, inkoust i podklad rozhodují o výsledku kouzla. Právě tento pevně vymezený systém, proměnlivost znaků a knižní stylizace tvoří Originalitu (10/10), která mě nepřestávala překvapovat. Bavilo mě objevovat pravidla společně s Coco a poznávat, že ani čarodějové nemohou vše vyřešit snadno. Coco je zvídavá, energická a při řešení problémů využívá zkušenosti z krejčovského řemesla (MC 9/10). Její radost a pozitivitu k magii sdílím (Enjoyment 10/10). Vedlejší postavy (9,5/10) dodávají světu nové úhly pohledu. Qifrey dokáže působit jako laskavý učitel i znepokojivě posedlý muž, takže jsem nikdy přesně nevěděl, co od něj čekat. Tartah mě zaujal chytrým využitím magie navzdory svému omezení, Agott postupně odhaluje mentalitu ukrytou za tvrdostí a Tetia přináší upřímnou radost. Nejbližší mi však byla svéhlavá, uzavřená Richeh, jejíž odpor ke kopírování cizích kouzel a potřeba tvořit po svém mi byly velmi blízké (Waifu 8,5/10). Animace (10/10) vyniká mimikou, herectvím postav, úhly kamery, detailními pozadími a choreografií magie. Prostorové rotace kolem ateliéru zapojují CGI (9/10), zatímco OST (8,5/10) podporuje objevování i napětí. Plot (8,5/10) mě bavil mysteriózní linkou zakázané magie a společenskými pravidly; Pacing (8,5/10) většinou dobře střídá výuku, klid a nebezpečí, pouze jeden pozdější vývoj půs"
+      },
+      {
+       "nazev": "Frieren: Beyond Journey's End, S02",
+       "poznamka": "Frieren: Beyond Journey's End, S02 otevírá brány Severní plošině, kde Frieren, Fern a Stark pokračují ve své dlouhé cestě do Ende. Tato sezóna se mírně odklání od velkých bitev a sází na hlubší, epizodické vyprávění plné drobných logistických problémů a tichých, procítěných momentů. Ačkoliv Pacing (9/10) občas trpí kvůli častým časovým skokům a vynechaným soubojům oproti první řadě, Originalita (10/10) retrospektivního objevování fiktivního světa a lore dumpů, jako byla fantastická loutková hra ve druhé epizodě, mě naprosto pohltila. Naše letargická elfka pomalu otevírá své srdce, což je znát při každé interakci se Starkem či Fern (MC 10/10). Výborně fungují i Vedlejší postavy (10/10); ať už jde o trpaslíka Gehena naplňujícího Himmelův odkaz, cynického mága Genaua bránícího sirotka, či elegantní Methode (Waifu 8,5/10) s humornou obsesí hladit Frieren. I když má Plot (9/10) komornější tempo, vše vrcholí v epické 8. epizodě. Brutální a dynamický střet Starka a Genaua proti generálu Revoltemu dokazuje, že Animace (9,5/10) a CGI (9,5/10) jsou na špičkové úrovni, byť s mírně odlišným vizuálním stylem. Emoce (9/10) dosahují vrcholu v 9. epizodě při čtení Himmelových pamětí, jež hluboce rezonují úctou a melancholií. Absolutním klenotem je opět epický folkový OST (10/10) při seslání Zoltraaku. Fenomenální Story Conclusion (10/10) završuje nádherný vizuál zářivých sněžných krystalů a zl"
+      },
+      {
+       "nazev": "Mushoku Tensei: Jobless Reincarnation, S03 Part 1",
+       "poznamka": "Mushoku Tensei: Jobless Reincarnation, S03 Part 1 otevírá dosud nejtemnější kapitolu Rudyho života, kde může jediná šedá krysa zničit vše, co dlouho budoval. Plot (9/10) nejprve rozvíjí rodinné soužití, výcvik Eris a Nanahoshin výzkum, poté je propojí s hrozbou, která zásadně mění směr příběhu. Pacing (9/10) nechává klidné chvíle přirozeně dozrát, ale od návštěvy Chaos Breakeru téměř nepoleví. Ocenil jsem také návraty k dřívějším událostem, protože tentokrát rozšiřují perspektivu místo pouhého opakování známých scén. Rudyho síla mě baví právě proto, že není jednoduchým řešením. V neobvyklých bojích musí pod tlakem zvažovat správné kouzlo i riziko pro spojence, přičemž jeho úzkost působí lidsky a ukazuje, jak náročná je role mága. Zároveň mě rušil návrat výraznějších nevhodných návyků a alternativní vývoj naznačil, jak snadno může přijít o svůj charakterový posun (MC 8,5/10). Originalita (9,5/10) vyniká dospěle podanou polygamní rodinou, atypickými démony a důsledky zdánlivě nepatrného rozhodnutí. Sylphy a Roxy řeší společný vztah s obdivuhodnou vyzrálostí (Waifu 9/10). Nanahoshi mě zasáhla osamělostí a touhou vrátit se domů, Eris svou tvrdohlavou oddaností a Perugius rozvahou, mocí i fascinujícím lore (Vedlejší postavy 9,5/10). Animace (9/10) má filmové zrno, působivé krajiny a čitelné souboje; CGI (9/10) přirozeně zapojuje létající pevnost, jejíž první pohled mě uchvátil, i Hi"
+      }
+     ]
+    },
+    "text": {
+     "citat": "Bavilo mě objevovat pravidla společně s Coco a poznávat, že ani čarodějové nemohou vše vyřešit snadno.",
+     "nazev": "Witch Hat Atelier, S01"
+    },
+    "generated": "2026-10-14"
+   },
+   "podtitulky": {
+    "fp": "28280d44f99a",
+    "facts": {
+     "stav": "rok ještě běží, zatím k říjnu",
+     "ep1": [
+      "nových titulů: přes stovku",
+      "čas u anime: stovky hodin"
+     ],
+     "ep2": [
+      "anime skoro každý den",
+      "nejvíc epizod: leden",
+      "hodně se koukalo o víkendech"
+     ],
+     "ep3": [
+      "nejlépe hodnocená sezóna novinek: zima",
+      "novinek málo, hlavně starší kousky",
+      "novinky sledované hned během vysílání"
+     ],
+     "ep4": [
+      "víc než obvykle: detektivky, polidštěná zvířata, cestování časem",
+      "míň než obvykle: nadpřirozeno, mecha",
+      "průměrná známka slovy: dobré"
+     ],
+     "ep5": [
+      "titul proti davu (ty hůř než komunita): komedie, záhady, romantika, napětí",
+      "celkově přísnější než komunita",
+      "epizoda roku za plný počet"
+     ],
+     "ep6": [
+      "husí kůže u zhruba třetiny hodnocených znělek",
+      "poslech hudby z anime: víc než sledování"
+     ],
+     "ep7": [
+      "číslo jedna roku: fantasy, magie, čarodějnice, kreslení, dospívání",
+      "dvojka roku: drama, záhady, napětí, dospělí hrdinové, superschopnosti",
+      "v síni slávy samé desítky"
+     ]
+    },
+    "text": {
+     "ep1": "Rok v zajetí stovek hodin",
+     "ep2": "Lednový start a víkendové maratony",
+     "ep3": "Zima ovládla výběr starších kousků",
+     "ep4": "Detektivky a zvířata v hlavní roli",
+     "ep5": "Přísnější pohled na davové šílenství",
+     "ep6": "Znělky co nenechají uši v klidu",
+     "ep7": "Magie z pera a dospělá dramata"
+    },
+    "generated": "2026-10-15"
+   },
+   "ceny": {
+    "fp": "5093653e6838",
+    "facts": {
+     "kategorie": [
+      {
+       "kategorie": "Animace",
+       "kandidati": [
+        {
+         "nazev": "Witch Hat Atelier, S01",
+         "z_poznamek": [
+          "Animace (10/10) vyniká mimikou, herectvím postav, úhly kamery, detailními pozadími a choreografií magie."
+         ]
+        },
+        {
+         "nazev": "Lord of Mysteries Specials",
+         "z_poznamek": [
+          "Animace (10/10) v akčních scénách exceluje plynulou dynamikou pohybu, CGI (10/10) ztvárňuje lodě i panorama Backlundu, OST (9,5/10) gradující v akčních i emotivních scénách sedí dokonale."
+         ]
+        },
+        {
+         "nazev": "Jujutsu Kaisen: The Culling Game Part 1",
+         "z_poznamek": [
+          "Naprosto fluidní Animace (10/10) magicky pracuje se střihy i hloubkou prostoru, zatímco špičkové CGI (9,5/10) bezchybně oživuje hroutící se budovy nebo obrovské roje hmyzu."
+         ]
+        }
+       ]
+      },
+      {
+       "kategorie": "Story Conclusion",
+       "kandidati": [
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S04",
+         "z_poznamek": [
+          "Story Conclusion (10/10) přináší bolestivé zadostiučinění."
+         ]
+        },
+        {
+         "nazev": "Link Click, S01",
+         "z_poznamek": [
+          "Finální plán mě nadchl svou chytrostí, následné odhalení však všechno převrátilo a zanechalo výborný cliffhanger (Story Conclusion 10/10)."
+         ]
+        },
+        {
+         "nazev": "Frieren: Beyond Journey's End, S02",
+         "z_poznamek": [
+          "Fenomenální Story Conclusion (10/10) završuje nádherný vizuál zářivých sněžných krystalů a zlověstný příslib Machta."
+         ]
+        },
+        {
+         "nazev": "Fate/strange Fake, S01",
+         "z_poznamek": [
+          "Vše vrcholí nečekaným návratem do Fuyuki z Fate/Zero, který mě zaskočil i upřímně velmi potěšil (Story Conclusion 10/10)."
+         ]
+        },
+        {
+         "nazev": "Jujutsu Kaisen: The Culling Game Part 1",
+         "z_poznamek": [
+          "Seriál tak doručuje nadupané Story Conclusion (10/10) s FH 9/10._x000D_\n_x000D_"
+         ]
+        }
+       ]
+      },
+      {
+       "kategorie": "Originalita",
+       "kandidati": [
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S04",
+         "z_poznamek": [
+          "Originalita (10/10) vrcholí ztrátou vzpomínek, knihami mrtvých a Subaruovým střetem s vlastní představou hrdiny."
+         ]
+        },
+        {
+         "nazev": "Witch Hat Atelier, S01",
+         "z_poznamek": []
+        },
+        {
+         "nazev": "Frieren: Beyond Journey's End, S02",
+         "z_poznamek": [
+          "Ačkoliv Pacing (9/10) občas trpí kvůli častým časovým skokům a vynechaným soubojům oproti první řadě, Originalita (10/10) retrospektivního objevování fiktivního světa a lore dumpů, jako byla fantastická loutková hra ve druhé epizodě, mě naprosto pohltila."
+         ]
+        },
+        {
+         "nazev": "Lord of Mysteries Specials",
+         "z_poznamek": [
+          "Originalita (10/10) univerza se rozšiřuje kombinací lovecraftiánské hrůzy s piráty."
+         ]
+        },
+        {
+         "nazev": "Ergo Proxy",
+         "z_poznamek": []
+        },
+        {
+         "nazev": "Berserk (1997)",
+         "z_poznamek": [
+          "Seriál zezačátku působí jako realistický středověký válečný příběh, ale postupně nabírá nečekaný temný nadpřirozený rozměr (Originalita 10/10)."
+         ]
+        },
+        {
+         "nazev": "Cells at Work! CODE BLACK!",
+         "z_poznamek": [
+          "Největším překvapením byla Originalita (10/10)."
+         ]
+        },
+        {
+         "nazev": "Ascendance of a Bookworm: Adopted Daughter of an Archduke",
+         "z_poznamek": []
+        }
+       ]
+      },
+      {
+       "kategorie": "Emoce",
+       "kandidati": [
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S04",
+         "z_poznamek": [
+          "Shaula mě vedle roztomilé potrhlosti zasáhla samotou a oddaností, zatímco Patrasche pomáhá Subaruovi, i když si její věrnost nezaslouží.",
+          "Emoce (10/10) pramení hlavně z hororu, psychologie a slov postav; cítil jsem lítost, napětí, husí kůži i radost."
+         ]
+        },
+        {
+         "nazev": "Witch Hat Atelier, S01",
+         "z_poznamek": [
+          "Plakal jsem už při úvodní tragédii a další malé úspěchy i krize mě opakovaně zasáhly (Emoce 10/10)."
+         ]
+        },
+        {
+         "nazev": "Link Click, S01",
+         "z_poznamek": [
+          "Opakovaně jsem cítil smutek, dvakrát jsem téměř plakal a při prosbě chlapce, které se bálo tmy a samoty, jsem se rozplakal (Emoce 10/10)."
+         ]
+        },
+        {
+         "nazev": "The Beast Player Erin",
+         "z_poznamek": [
+          "Seriál u mě absolutně boduje přes Emoce (10/10).",
+          "Od srdcervoucích nekompromisních sebeobětí po tichá loučení s mentory, příběh mi neustále vháněl slzy do očí.",
+          "Story Conclusion (9/10) shazuje jen neplynulá režie s podivnými zvraty, ale finální sounáležitost šelmy a člověka mě hluboce zasáhla."
+         ]
+        }
+       ]
+      },
+      {
+       "kategorie": "Enjoyment",
+       "kandidati": [
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S04",
+         "z_poznamek": [
+          "Fanservice mi místy vadil, přesto Enjoyment (10/10) je masivní."
+         ]
+        },
+        {
+         "nazev": "Witch Hat Atelier, S01",
+         "z_poznamek": [
+          "Bavilo mě objevovat pravidla společně s Coco a poznávat, že ani čarodějové nemohou vše vyřešit snadno.",
+          "Její radost a pozitivitu k magii sdílím (Enjoyment 10/10).",
+          "Plot (8,5/10) mě bavil mysteriózní linkou zakázané magie a společenskými pravidly; Pacing (8,5/10) většinou dobře střídá výuku, klid a nebezpečí, pouze jeden pozdější vývoj působil urychleně."
+         ]
+        },
+        {
+         "nazev": "Lord of Mysteries Specials",
+         "z_poznamek": [
+          "Pirátské téma mě běžně nebaví, tady mě ale nečekaně pohltilo, Enjoyment (10/10) tak vychází na FH 10/10._x000D_\n_x000D_"
+         ]
+        }
+       ]
+      },
+      {
+       "kategorie": "OP",
+       "kandidati": [
+        {
+         "nazev": "Re:Zero -Starting Life in Another World-, S04",
+         "z_poznamek": [
+          "Když bez vzpomínek zkoumá vlastní minulost, marně hledá superschopnost vysvětlující jeho výjimečnost."
+         ]
+        },
+        {
+         "nazev": "Orb: On the Movements of the Earth",
+         "z_poznamek": [
+          "Plot (9/10) mě zaujal tím, jak propojuje astronomii, církevní moc, gramotnost a šíření informací.",
+          "Jolenta mě zaujala schopnostmi, vytrvalostí a cestou od potlačované badatelky k rozhodné vůdkyni (Waifu 9/10)."
+         ]
+        },
+        {
+         "nazev": "The Beast Player Erin",
+         "z_poznamek": [
+          "V tomto prostředí vyrůstá dobrosrdečná Erin, dcera veterinářky z opovrhovaného Lidu mlhy.",
+          "Naopak zlodějíčci Mokku a Nukku občas iritují, ale plně podporují Erin."
+         ]
+        }
+       ]
+      },
+      {
+       "kategorie": "ED",
+       "kandidati": [
+        {
+         "nazev": "Frieren: Beyond Journey's End, S02",
+         "z_poznamek": [
+          "Výborně fungují i Vedlejší postavy (10/10); ať už jde o trpaslíka Gehena naplňujícího Himmelův odkaz, cynického mága Genaua bránícího sirotka, či elegantní Methode (Waifu 8,5/10) s humornou obsesí hladit Frieren."
+         ]
+        },
+        {
+         "nazev": "Lord of Mysteries Specials",
+         "z_poznamek": [
+          "Lord of Mysteries Specials je dvojice vedlejších příběhů odehrávajících se souběžně se S01 a odhaluje první misi tajemného Tarot Clubu, o němž se zatím málo ví; Derrick čelí kletbě Města stříbra a Alger Wilson loví piráta zvaného Qilangos.",
+          "Vedlejší postavy (9,5/10) jsou pestré: Lovia dokáže přivolat Stříbrného rytíře, ale její schopnost požírání spoluhráčů je odpudivá, a u záhadného Azika se jediným gestem potvrzují fámy o jeho takřka božské síle.",
+          "Animace (10/10) v akčních scénách exceluje plynulou dynamikou pohybu, CGI (10/10) ztvárňuje lodě i panorama Backlundu, OST (9,5/10) gradující v akčních i emotivních scénách sedí dokonale."
+         ]
+        },
+        {
+         "nazev": "Agents of the Four Seasons: Dance of Spring",
+         "z_poznamek": [
+          "Největší silou Anime jsou vztahy Zástupců a jejich strážců (Vedlejší postavy 9/10).",
+          "Plot (7,5/10) však kolísá mezi předvídatelností a zvláštními zvraty; hlavně motivace Misuzu mi připadala přehnaně vyšinutá.",
+          "Výsledkem je skutečně zasloužené FH 9/10._x000D_\n_x000D_"
+         ]
+        },
+        {
+         "nazev": "Hell's Paradise, S01",
+         "z_poznamek": [
+          "Hell's Paradise předkládá fascinující, vizuálně opojnou studii mortality, kde se estetika kvetoucího ráje snoubí s groteskním body-hororem parazitujícím na lidství.",
+          "Příběh sleduje „Prázdného“ Gabimara, elitního shinobiho, jehož domnělá apatie slouží jako štít chránící hlubokou oddanost manželce.",
+          "Tato motivace ho, pod dohledem popravčí Sagiri, žene na izolovaný ostrov hledat bájný elixír života."
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    "text": {
+     "volby": [
+      {
+       "kategorie": "Animace",
+       "nazev": "Witch Hat Atelier, S01"
+      },
+      {
+       "kategorie": "Story Conclusion",
+       "nazev": "Frieren: Beyond Journey's End, S02"
+      },
+      {
+       "kategorie": "Originalita",
+       "nazev": "Frieren: Beyond Journey's End, S02"
+      },
+      {
+       "kategorie": "Emoce",
+       "nazev": "Link Click, S01"
+      },
+      {
+       "kategorie": "Enjoyment",
+       "nazev": "Lord of Mysteries Specials"
+      },
+      {
+       "kategorie": "OP",
+       "nazev": "Re:Zero -Starting Life in Another World-, S04"
+      },
+      {
+       "kategorie": "ED",
+       "nazev": "Frieren: Beyond Journey's End, S02"
+      }
+     ]
+    },
+    "generated": "2026-10-14"
+   }
+  }
+ }
+}

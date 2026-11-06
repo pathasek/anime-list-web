@@ -1,0 +1,198 @@
+[
+  {
+    "key": "r80357",
+    "vn": "v21905",
+    "characters": [
+      {
+        "id": "c64506",
+        "name": "Protagonist",
+        "original": null,
+        "role": "main",
+        "spoiler": 0,
+        "image": "images/medium/vn/chars/c64506.webp"
+      },
+      {
+        "id": "c64502",
+        "name": "Monika",
+        "original": null,
+        "role": "primary",
+        "spoiler": 0,
+        "image": "images/medium/vn/chars/c64502.webp"
+      },
+      {
+        "id": "c64503",
+        "name": "Sayori",
+        "original": null,
+        "role": "primary",
+        "spoiler": 0,
+        "image": "images/medium/vn/chars/c64503.webp"
+      },
+      {
+        "id": "c64504",
+        "name": "Yuri",
+        "original": null,
+        "role": "primary",
+        "spoiler": 0,
+        "image": "images/medium/vn/chars/c64504.webp"
+      },
+      {
+        "id": "c64505",
+        "name": "Natsuki",
+        "original": null,
+        "role": "primary",
+        "spoiler": 0,
+        "image": "images/medium/vn/chars/c64505.webp"
+      }
+    ]
+  },
+  {
+    "key": "r93152",
+    "vn": "v22505",
+    "characters": [
+      {
+        "id": "c4655",
+        "name": "Nishijou Takumi",
+        "original": "西條 拓巳",
+        "role": "main",
+        "spoiler": 0,
+        "image": "images/medium/vn/chars/c4655.webp"
+      },
+      {
+        "id": "c4656",
+        "name": "Sakihata Rimi",
+        "original": "咲畑 梨深",
+        "role": "primary",
+        "spoiler": 0,
+        "image": "images/medium/vn/chars/c4656.webp"
+      },
+      {
+        "id": "c4657",
+        "name": "Nishijou Nanami",
+        "original": "西條 七海",
+        "role": "primary",
+        "spoiler": 0,
+        "image": "images/medium/vn/chars/c4657.webp"
+      },
+      {
+        "id": "c4658",
+        "name": "Kishimoto Ayase",
+        "original": "岸本 あやせ",
+        "role": "primary",
+        "spoiler": 0,
+        "image": "images/medium/vn/chars/c4658.webp"
+      },
+      {
+        "id": "c4659",
+        "name": "Kusunoki Yua",
+        "original": "楠 優愛",
+        "role": "primary",
+        "spoiler": 0,
+        "image": "images/medium/vn/chars/c4659.webp"
+      },
+      {
+        "id": "c4660",
+        "name": "Aoi Sena",
+        "original": "蒼井 セナ",
+        "role": "primary",
+        "spoiler": 0,
+        "image": "images/medium/vn/chars/c4660.webp"
+      },
+      {
+        "id": "c4661",
+        "name": "Orihara Kozue",
+        "original": "折原 梢",
+        "role": "primary",
+        "spoiler": 0,
+        "image": "images/medium/vn/chars/c4661.webp"
+      },
+      {
+        "id": "c4662",
+        "name": "Seira Orgel",
+        "original": "星来 オルジェル",
+        "role": "side",
+        "spoiler": 0,
+        "image": "images/medium/vn/chars/c4662.webp"
+      },
+      {
+        "id": "c4663",
+        "name": "Grimm",
+        "original": "グリム",
+        "role": "side",
+        "spoiler": 0,
+        "image": "images/medium/vn/chars/c4663.webp"
+      },
+      {
+        "id": "c4664",
+        "name": "Shogun",
+        "original": "将軍",
+        "role": "side",
+        "spoiler": 1,
+        "image": "images/medium/vn/chars/c4664.webp"
+      },
+      {
+        "id": "c4665",
+        "name": "Misumi Daisuke",
+        "original": "三住 大輔",
+        "role": "side",
+        "spoiler": 0,
+        "image": "images/medium/vn/chars/c4665.webp"
+      },
+      {
+        "id": "c4666",
+        "name": "Ban Yasuji",
+        "original": "判 安二",
+        "role": "side",
+        "spoiler": 0,
+        "image": "images/medium/vn/chars/c4666.webp"
+      },
+      {
+        "id": "c4667",
+        "name": "Suwa Mamoru",
+        "original": "諏訪 護",
+        "role": "side",
+        "spoiler": 0,
+        "image": "images/medium/vn/chars/c4667.webp"
+      },
+      {
+        "id": "c4668",
+        "name": "Momose Katsuko",
+        "original": "百瀬 克子",
+        "role": "side",
+        "spoiler": 0,
+        "image": "images/medium/vn/chars/c4668.webp"
+      },
+      {
+        "id": "c4669",
+        "name": "Hazuki Shino",
+        "original": "葉月 志乃",
+        "role": "side",
+        "spoiler": 0,
+        "image": "images/medium/vn/chars/c4669.webp"
+      },
+      {
+        "id": "c4670",
+        "name": "Takashina Fumio",
+        "original": "高科 史男",
+        "role": "side",
+        "spoiler": 0,
+        "image": "images/medium/vn/chars/c4670.webp"
+      },
+      {
+        "id": "c44241",
+        "name": "Kusunoki Mia",
+        "original": "楠 美愛",
+        "role": "side",
+        "spoiler": 1,
+        "image": "images/medium/vn/chars/c44241.webp"
+      },
+      {
+        "id": "c64650",
+        "name": "Norose Gen'ichi",
+        "original": "野呂瀬 玄一",
+        "role": "side",
+        "spoiler": 1,
+        "image": "images/medium/vn/chars/c64650.webp"
+      }
+    ]
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "page_backgrounds": {
+    "ratings_split_left": {
+      "src": "images/custom/rezero_character.jpg",
+      "opacity": 0.16,
+      "position": "0% 85%",
+      "size": "auto 130%",
+      "label": "Subaru - Re:Zero (Shinichi Kurita)"
+    },
+    "ratings_split_right": {
+      "src": "images/custom/echidna_reading.png",
+      "opacity": 0.16,
+      "position": "100% 85%",
+      "size": "auto 138%",
+      "label": "Echidna - Re:Zero"
+    }
+  },
+  "custom_images": [
+    {
+      "id": "echidna_reading",
+      "filename": "echidna_reading.png",
+      "label": "Echidna - Re:Zero",
+      "category": "character",
+      "added": "2026-06-14"
+    },
+    {
+      "id": "rezero_character",
+      "filename": "rezero_character.jpg",
+      "label": "Subaru - Re:Zero (Shinichi Kurita)",
+      "category": "character",
+      "added": "2026-06-14"
+    }
+  ]
+}

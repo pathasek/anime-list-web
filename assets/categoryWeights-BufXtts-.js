@@ -1,0 +1,1 @@
+import{s as e,t}from"./registry-MHaY3ZQ5.js";var n=e(t.anime);function r(e,t=n){let r=0,i=0;for(let[n,a]of Object.entries(e||{})){if(typeof a!=`number`||!(a>0))continue;let e=t[n]??1;r+=a*e,i+=e}return i>0?r/i:null}export{r as n,n as t};

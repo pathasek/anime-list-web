@@ -1,0 +1,9 @@
+{
+  "media": [
+    {
+      "id": "vn",
+      "label": "Visual Novel",
+      "dir": "data/medium/vn/"
+    }
+  ]
+}

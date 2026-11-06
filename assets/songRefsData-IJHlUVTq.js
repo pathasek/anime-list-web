@@ -1,0 +1,1 @@
+import{t as e}from"./animeDataLoader-Dj3WSuNt.js";var t=e(`data/song_refs_index.json`,`data/song_refs`);export{t};
