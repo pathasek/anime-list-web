@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <title>Přenos nastavení</title>
+  <style>
+    :root {
+      color-scheme: dark light;
+      --pozadi: #121216;
+      --karta: #17171d;
+      --okraj: #3b3a42;
+      --text: #ebebeb;
+      --text2: #b9b7c2;
+      --akcent: #ee9a46;
+      --akcent-text: #17171d;
+      --varovani: #f6b55a;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --pozadi: #faf5ff;
+        --karta: #ffffff;
+        --okraj: #e2d5f0;
+        --text: #1e1b2e;
+        --text2: #6b5f7c;
+        --akcent: #7c3aed;
+        --akcent-text: #ffffff;
+        --varovani: #b45309;
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      background: var(--pozadi);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    main {
+      width: 100%;
+      max-width: 460px;
+      padding: 32px 28px;
+      background: var(--karta);
+      border: 1px solid var(--okraj);
+      border-radius: 16px;
+    }
+    h1 { margin: 0 0 12px; font-size: 1.375rem; font-weight: 700; }
+    p { margin: 0 0 12px; color: var(--text2); }
+    p:empty { display: none; }
+    .varovani { color: var(--varovani); }
+    .tlacitka { display: flex; flex-wrap: wrap; gap: 8px; }
+    button {
+      flex: 1 1 auto;
+      min-height: 44px;
+      padding: 0 16px;
+      border: 1px solid var(--okraj);
+      border-radius: 10px;
+      background: transparent;
+      color: var(--text);
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:first-child {
+      border-color: var(--akcent);
+      background: var(--akcent);
+      color: var(--akcent-text);
+    }
+    #zprava { margin: 12px 0 0; }
+  </style>
+</head>
+<body>
+  <main id="obsah">
+    <h1>Přenos nastavení</h1>
+    <p>Položek nastavení k přenosu: <strong id="pocet">0</strong></p>
+
+    <div id="stav-prenos" hidden>
+      <p>Posílám nastavení na nový web, nech tohle okno otevřené. Na telefonu se teď vrať do karty s novým webem.</p>
+    </div>
+
+    <div id="stav-hotovo" hidden>
+      <p>Hotovo, nastavení je na novém webu. Tohle okno můžeš zavřít.</p>
+    </div>
+
+    <div id="stav-zaloha" hidden>
+      <p>Otevři nový web svým osobním odkazem a v kartě Přenést nastavení vlož tenhle kód nebo nahraj soubor.</p>
+      <p class="varovani">Kód i soubor obsahují i tvůj klíč AI, nikomu je neposílej.</p>
+      <div class="tlacitka">
+        <button type="button" id="kopirovat">Zkopírovat kód</button>
+        <button type="button" id="stahnout">Stáhnout soubor</button>
+      </div>
+    </div>
+
+    <p id="zprava" role="status" aria-live="polite"></p>
+  </main>
+
+  <script type="application/json" id="blokovane">[
+    "data_last_updated*",
+    "jikan_anime_info_*",
+    "jikan_airing_stats_*",
+    "jikan_url_blackouts",
+    "journey_poster_*",
+    "anilist_artists_cache_*",
+    "spotify-covers:*",
+    "dashboard-cal-events-v2",
+    "xl_season_totals_v1",
+    "ds_migrated_idb",
+    "anime_ai_demo",
+    "prenos_hotovo",
+    "prenos_skryto"
+  ]</script>
+
+  <script>
+    (function () {
+      const NOVY_PUVOD = 'https://anime-pathasek.pages.dev'
+      const VERZE = 1
+      const MAX_KLICU = 5000
+      const MAX_DELKA_ZNAKU = 30000000
+      const PREDPONA_KODU = 'ALP1.'
+      const NEBEZPECNE_KLICE = new Set(['__proto__', 'constructor', 'prototype'])
+
+      const elPocet = document.getElementById('pocet')
+      const elStavPrenos = document.getElementById('stav-prenos')
+      const elStavHotovo = document.getElementById('stav-hotovo')
+      const elStavZaloha = document.getElementById('stav-zaloha')
+      const elZprava = document.getElementById('zprava')
+      const tlKopirovat = document.getElementById('kopirovat')
+      const tlStahnout = document.getElementById('stahnout')
+
+      function nastavZpravu(text) {
+        if (elZprava) elZprava.textContent = text
+      }
+
+      let blokovaneVzory = []
+      try {
+        const zdroj = document.getElementById('blokovane')
+        blokovaneVzory = JSON.parse(zdroj ? zdroj.textContent : '[]')
+      } catch {
+        nastavZpravu('Stránka se nenačetla celá. Obnov ji a zkus to znovu.')
+        return
+      }
+
+      function jeBlokovany(klic) {
+        if (typeof klic !== 'string' || klic.length === 0) return true
+        for (let i = 0; i < blokovaneVzory.length; i++) {
+          const vzor = blokovaneVzory[i]
+          if (vzor.endsWith("*")) {
+            if (klic.startsWith(vzor.slice(0, -1))) return true
+          } else if (klic === vzor) {
+            return true
+          }
+        }
+        return false
+      }
+
+      function vyberPolozky(uloziste) {
+        const vysledek = {}
+        if (!uloziste || typeof uloziste.length !== 'number') return vysledek
+        for (let i = 0; i < uloziste.length; i++) {
+          const klic = uloziste.key(i)
+          if (typeof klic !== 'string' || klic.length === 0) continue
+          if (NEBEZPECNE_KLICE.has(klic) || jeBlokovany(klic)) continue
+          const hodnota = uloziste.getItem(klic)
+          if (typeof hodnota === 'string') {
+            Object.defineProperty(vysledek, klic, {
+              value: hodnota,
+              enumerable: true,
+              writable: true,
+              configurable: true,
+            })
+          }
+        }
+        return vysledek
+      }
+
+      function overTvar(data) {
+        if (!data || typeof data !== 'object' || Array.isArray(data)) return false
+        if (data.typ !== 'al-prenos' || data.verze !== VERZE) return false
+        const polozky = data.polozky
+        if (!polozky || typeof polozky !== 'object' || Array.isArray(polozky)) return false
+        const proto = Object.getPrototypeOf(polozky)
+        if (proto !== Object.prototype && proto !== null) return false
+
+        const klice = Object.keys(polozky)
+        if (klice.length > MAX_KLICU) return false
+
+        let soucetDelek = 0
+        for (let i = 0; i < klice.length; i++) {
+          const klic = klice[i]
+          if (typeof klic !== 'string' || klic.length === 0) return false
+          const hodnota = polozky[klic]
+          if (typeof hodnota !== 'string') return false
+          soucetDelek += hodnota.length
+          if (klic.length > 10000) soucetDelek += klic.length
+          if (soucetDelek > MAX_DELKA_ZNAKU) return false
+        }
+        return true
+      }
+
+      function overPotvrzeni(udalost) {
+        if (!udalost || udalost.origin !== NOVY_PUVOD || udalost.source !== window.opener) return false
+        const data = udalost.data
+        if (!data || typeof data !== 'object' || Array.isArray(data)) return false
+        return data.typ === 'al-prenos-ok'
+      }
+
+      let polozky
+      try {
+        polozky = vyberPolozky(window.localStorage)
+      } catch {
+        nastavZpravu('Prohlížeč nedovolil přečíst uložené nastavení.')
+        return
+      }
+
+      const zprava = {
+        typ: 'al-prenos',
+        verze: VERZE,
+        polozky: polozky,
+      }
+
+      if (!overTvar(zprava)) {
+        nastavZpravu('Nastavení je příliš velké na přenos. Napiš Patrikovi.')
+        return
+      }
+
+      const pocet = Object.keys(polozky).length
+      if (elPocet) elPocet.textContent = pocet.toLocaleString('cs-CZ')
+
+      async function zabalKod() {
+        const json = JSON.stringify(zprava)
+        const vstupniBajty = new TextEncoder().encode(json)
+        const ds = new CompressionStream('gzip')
+        const zapis = (async function () {
+          const writer = ds.writable.getWriter()
+          await writer.write(vstupniBajty)
+          await writer.close()
+        })()
+        const cteni = new Response(ds.readable).arrayBuffer()
+        const vysledky = await Promise.all([zapis, cteni])
+        const komprimovano = new Uint8Array(vysledky[1])
+
+        const VELIKOST_BLOKU = 0x8000
+        const casti = []
+        for (let i = 0; i < komprimovano.length; i += VELIKOST_BLOKU) {
+          const vyrez = komprimovano.subarray(i, i + VELIKOST_BLOKU)
+          casti.push(String.fromCharCode.apply(null, vyrez))
+        }
+        return PREDPONA_KODU + btoa(casti.join(''))
+      }
+
+      function kopirujPresTextarea(text) {
+        const prvek = document.createElement('textarea')
+        prvek.value = text
+        prvek.setAttribute('readonly', '')
+        document.body.appendChild(prvek)
+        prvek.select()
+        const uspech = document.execCommand('copy')
+        document.body.removeChild(prvek)
+        return uspech
+      }
+
+      if (tlKopirovat) {
+        tlKopirovat.addEventListener('click', async function () {
+          try {
+            const kod = await zabalKod()
+            let zkopirovano = false
+            if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+              try {
+                await navigator.clipboard.writeText(kod)
+                zkopirovano = true
+              } catch {
+                zkopirovano = kopirujPresTextarea(kod)
+              }
+            } else {
+              zkopirovano = kopirujPresTextarea(kod)
+            }
+            nastavZpravu(zkopirovano ? 'Kód je ve schránce, vlož ho na novém webu.' : 'Kopírování nevyšlo, stáhni si soubor.')
+          } catch {
+            nastavZpravu('Kód se nepodařilo připravit, stáhni si soubor.')
+          }
+        })
+      }
+
+      if (tlStahnout) {
+        tlStahnout.addEventListener('click', async function () {
+          try {
+            const kod = await zabalKod()
+            const blob = new Blob([kod], { type: 'text/plain;charset=utf-8' })
+            const url = URL.createObjectURL(blob)
+            const odkaz = document.createElement('a')
+            odkaz.href = url
+            odkaz.download = 'anime-list-nastaveni.txt'
+            document.body.appendChild(odkaz)
+            odkaz.click()
+            document.body.removeChild(odkaz)
+            URL.revokeObjectURL(url)
+            nastavZpravu('Soubor je stažený, nahraj ho na novém webu.')
+          } catch {
+            nastavZpravu('Soubor se nepodařilo připravit, zkopíruj kód.')
+          }
+        })
+      }
+
+      function ukazZalohu() {
+        if (elStavPrenos) elStavPrenos.hidden = true
+        if (elStavHotovo) elStavHotovo.hidden = true
+        // Bez nastavení není co kopírovat.
+        if (pocet === 0) {
+          nastavZpravu('V tomhle prohlížeči žádné nastavení není, není co přenášet.')
+          return
+        }
+        if (elStavZaloha) elStavZaloha.hidden = false
+      }
+
+      function maPlatnyOpener() {
+        try {
+          return Boolean(window.opener && !window.opener.closed)
+        } catch {
+          return false
+        }
+      }
+
+      if (!maPlatnyOpener()) {
+        ukazZalohu()
+        return
+      }
+
+      let potvrzeno = false
+      let casovacInterval = null
+      let casovacLimit = null
+
+      function uklidCasovace() {
+        if (casovacInterval !== null) {
+          clearInterval(casovacInterval)
+          casovacInterval = null
+        }
+        if (casovacLimit !== null) {
+          clearTimeout(casovacLimit)
+          casovacLimit = null
+        }
+      }
+
+      function priZprave(udalost) {
+        // Výzva z nového webu po návratu do jeho karty: poslat hned, časovač může být uspaný.
+        if (udalost && udalost.origin === NOVY_PUVOD && udalost.source === window.opener &&
+            udalost.data && udalost.data.typ === 'al-prenos-vyzva') {
+          odesliPokus()
+          return
+        }
+        if (!overPotvrzeni(udalost)) return
+        potvrzeno = true
+        uklidCasovace()
+        window.removeEventListener('message', priZprave)
+        if (elStavPrenos) elStavPrenos.hidden = true
+        if (elStavZaloha) elStavZaloha.hidden = true
+        if (elStavHotovo) elStavHotovo.hidden = false
+        try {
+          window.close()
+        } catch {
+          // Ignorovat, pokud prohlížeč nedovolí zavřít okno
+        }
+      }
+
+      function odesliPokus() {
+        if (potvrzeno) return
+        if (!maPlatnyOpener()) {
+          uklidCasovace()
+          window.removeEventListener('message', priZprave)
+          ukazZalohu()
+          return
+        }
+        try {
+          window.opener.postMessage(zprava, NOVY_PUVOD)
+        } catch {
+          // Na telefonu může být karta opener uspaná, zkusíme znovu v dalším kroku
+        }
+      }
+
+      if (elStavPrenos) elStavPrenos.hidden = false
+      window.addEventListener('message', priZprave)
+      odesliPokus()
+      casovacInterval = setInterval(odesliPokus, 1000)
+      casovacLimit = setTimeout(function () {
+        if (potvrzeno) return
+        uklidCasovace()
+        window.removeEventListener('message', priZprave)
+        ukazZalohu()
+      }, 30000)
+    })()
+  </script>
+</body>
+</html>
